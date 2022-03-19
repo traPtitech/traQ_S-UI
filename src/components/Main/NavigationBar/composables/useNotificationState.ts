@@ -1,12 +1,12 @@
 import { computed, reactive, Ref } from 'vue'
 import { deepSome } from '/@/lib/basic/tree'
-import { useMeStore } from '/@/store/domain/me'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { ChannelId } from '/@/types/entity-ids'
 
 const useNotificationState = <T extends { id: ChannelId; children: T[] }>(
   channelTree: Ref<{ id: ChannelId; children?: T[] }>
 ) => {
-  const { unreadChannelsMap } = useMeStore()
+  const { unreadChannelsMap } = useSubscriptionStore()
   const unreadChannel = computed(() =>
     unreadChannelsMap.value.get(channelTree.value.id)
   )

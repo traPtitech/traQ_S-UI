@@ -17,14 +17,14 @@ import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
 import { computed } from 'vue'
 import { User } from '@traptitech/traq'
 import { constructUserPath } from '/@/router'
-import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
 
 const props = defineProps<{
   user: User
 }>()
 
-const { unreadChannelsMap } = useMeStore()
+const { unreadChannelsMap } = useSubscriptionStore()
 const { userIdToDmChannelIdMap } = useChannelsStore()
 
 const dmChannelPath = computed(() => {

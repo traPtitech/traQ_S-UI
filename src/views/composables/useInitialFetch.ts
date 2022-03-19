@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 import useLoginCheck from './useLoginCheck'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
-import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -11,6 +10,7 @@ import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
 import { useViewStatesStore } from '/@/store/domain/viewStates'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
 
 const useInitialFetch_ = () => {
   const { fetchUsers } = useUsersStore()
@@ -19,7 +19,7 @@ const useInitialFetch_ = () => {
   const { fetchStamps } = useStampsStore()
   const { fetchStampPalettes } = useStampPalettesStore()
   const { fetchClipFolders } = useClipFoldersStore()
-  const { fetchUnreadChannels, fetchSubscriptions } = useMeStore()
+  const { fetchUnreadChannels, fetchSubscriptions } = useSubscriptionStore()
   const { fetchViewStates } = useViewStatesStore()
   const { fetchStampHistory } = useStampHistory()
   const { fetchStaredChannels } = useStaredChannels()

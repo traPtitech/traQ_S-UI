@@ -7,7 +7,7 @@ import router, { rewriteChannelPath } from '/@/router'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId } from '/@/types/entity-ids'
 import { entityMitt } from '/@/store/entities/mitt'
-import { useMeStore, meMitt } from '/@/store/domain/me'
+import { subscriptionMitt, useSubscriptionStore } from './subscription'
 import { useChannelsStore } from '../entities/channels'
 
 type ChannelTreeEventMap = {
@@ -31,7 +31,7 @@ channelTreeMitt.on('moved', ({ oldPath, newPath }) => {
 })
 
 const useChannelTreePinia = defineStore('domain/channelTree', () => {
-  const meStore = useMeStore()
+  const subscriptionStore = useSubscriptionStore()
   const channelsStore = useChannelsStore()
 
   const channelTree = ref<Readonly<ChannelTree>>({ children: [] })
@@ -69,7 +69,7 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
     const topLevelChannelIds = topLevelChannels.value.map(c => c.id)
     // TODO: 効率が悪いので改善
     const subscribedOrForceChannels = new Set([
-      ...meStore.subscribedChannels.value,
+      ...subscriptionStore.subscribedChannels.value,
       ...forcedChannels.value.map(c => c.id)
     ])
     const tree = {
@@ -132,10 +132,10 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
     }
   })
 
-  meMitt.on('setSubscriptions', () => {
+  subscriptionMitt.on('setSubscriptions', () => {
     constructHomeChannelTree()
   })
-  meMitt.on('updateSubscriptions', () => {
+  subscriptionMitt.on('updateSubscriptions', () => {
     constructHomeChannelTree()
   })
 
