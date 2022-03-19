@@ -4,22 +4,18 @@
     <div :class="$style.layoutContainer" :data-layout="layout">
       <primary-view-selector :is-ready="isMounted" />
       <div id="sidebar-opener" :class="$style.hidden" />
-      <main-view-component-selector
-        v-if="secondaryView"
-        :class="[$style.componentContainer, $style.secondary]"
-        :view-info="secondaryView"
-      />
+      <secondary-view-selector v-if="layout !== 'single'" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import MainViewComponentSelector from './MainViewComponentSelector.vue'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import PrimaryViewSelector from './PrimaryViewSelector.vue'
+import SecondaryViewSelector from './SecondaryViewSelector.vue'
 
-const { layout, secondaryView } = useMainViewStore()
+const { layout } = useMainViewStore()
 
 const isMounted = ref(false)
 onMounted(() => {
@@ -35,15 +31,12 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
 }
+
 .headerContainer {
   width: 100%;
   z-index: $z-index-header;
 }
-.componentContainer {
-  height: 100%;
-}
 
-// レイアウト系
 .layoutContainer {
   position: relative;
   height: 100%;
@@ -51,11 +44,6 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
 
-  &[data-layout='single'] {
-    .secondary {
-      display: none;
-    }
-  }
   &[data-layout|='split'] {
     display: flex;
   }
