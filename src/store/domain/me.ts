@@ -164,18 +164,6 @@ const useMeStorePinia = defineStore('domain/me', () => {
     )
   }
 
-  const staredChannelSet = ref(new Set<ChannelId>())
-  const staredChannelSetFetched = ref(false)
-  const fetchStaredChannels = async ({
-    ignoreCache = false
-  }: { ignoreCache?: boolean } = {}) => {
-    if (!ignoreCache && staredChannelSetFetched.value) return
-
-    const { data } = await apis.getMyStars()
-    staredChannelSet.value = new Set(data)
-    staredChannelSetFetched.value = true
-  }
-
   const subscriptionMap = ref(new Map<ChannelId, ChannelSubscribeLevel>())
   const subscriptionMapFetched = ref(false)
   const subscribedChannels = computed(
@@ -254,22 +242,12 @@ const useMeStorePinia = defineStore('domain/me', () => {
   wsListener.on('MESSAGE_READ', ({ id }) => {
     deleteUnreadChannel(id)
   })
-  wsListener.on('CHANNEL_STARED', ({ id }) => {
-    staredChannelSet.value.add(id)
-  })
-  wsListener.on('CHANNEL_UNSTARED', ({ id }) => {
-    staredChannelSet.value.delete(id)
-  })
-  wsListener.on('CHANNEL_DELETED', ({ id }) => {
-    staredChannelSet.value.delete(id)
-  })
   wsListener.on('USER_VIEWSTATE_CHANGED', ({ view_states: newViewStates }) => {
     viewStates.value = new Map(newViewStates.map(v => [v.key, v]))
   })
   wsListener.on('reconnect', () => {
     fetchMe()
     fetchUnreadChannels({ ignoreCache: true })
-    fetchStaredChannels({ ignoreCache: true })
     fetchSubscriptions({ ignoreCache: true })
     fetchViewStates({ ignoreCache: true })
   })
@@ -302,7 +280,6 @@ const useMeStorePinia = defineStore('domain/me', () => {
     myId,
     unreadChannelsMap,
     unreadChannelsMapInitialFetchPromise,
-    staredChannelSet,
     subscriptionMap,
     subscribedChannels,
     monitoringChannels,
@@ -310,7 +287,6 @@ const useMeStorePinia = defineStore('domain/me', () => {
     logout,
     deleteUnreadChannelWithSend,
     fetchUnreadChannels,
-    fetchStaredChannels,
     isChannelSubscribed,
     fetchSubscriptions,
     changeSubscriptionLevel,
