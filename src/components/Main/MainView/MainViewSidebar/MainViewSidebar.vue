@@ -1,7 +1,9 @@
 <template>
-  <teleport v-if="shouldShowSidebar" :to="portalTarget">
-    <slot name="page" />
-  </teleport>
+  <template v-if="shouldShowSidebar">
+    <teleport :disabled="!isMobile" to="#sidebar-mobile">
+      <slot name="page" />
+    </teleport>
+  </template>
   <!-- #sidebar-openerが存在する前にはマウントできないのでisSidebarOpenerReadyをチェック -->
   <teleport v-else-if="isSidebarOpenerReady" to="#sidebar-opener">
     <slot name="opener" />
@@ -9,7 +11,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import useSidebar from '/@/composables/mainView/useSidebar'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
@@ -19,8 +20,4 @@ defineProps<{
 
 const { shouldShowSidebar } = useSidebar()
 const { isMobile } = useResponsiveStore()
-
-const portalTarget = computed(() =>
-  isMobile.value ? '#sidebar-mobile' : '#sidebar'
-)
 </script>

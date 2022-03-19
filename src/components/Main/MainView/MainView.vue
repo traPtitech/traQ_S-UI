@@ -2,10 +2,7 @@
   <div :class="$style.container">
     <div id="header" :class="$style.headerContainer"></div>
     <div :class="$style.layoutContainer" :data-layout="layout">
-      <div :class="$style.primaryContainer">
-        <primary-view-selector :is-ready="isMounted" />
-        <div id="sidebar" :class="$style.sidebar" />
-      </div>
+      <primary-view-selector :is-ready="isMounted" />
       <div id="sidebar-opener" :class="$style.hidden" />
       <main-view-component-selector
         v-if="secondaryView"
@@ -75,18 +72,5 @@ onBeforeUnmount(() => {
   right: 0;
   top: 0;
   pointer-events: none;
-}
-.primary {
-  min-width: 0;
-  width: 100%;
-}
-.primaryContainer {
-  display: flex;
-  height: 100%;
-}
-.sidebar {
-  height: 100%;
-  flex-shrink: 0;
-  z-index: $z-index-sidebar;
 }
 </style>
