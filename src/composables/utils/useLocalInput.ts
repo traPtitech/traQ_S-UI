@@ -22,8 +22,8 @@ const useLocalInput = <T>(
   watch(isEditing, async newIsEditing => {
     if (!newIsEditing) {
       const success = await doUpdate(localValue.value)
-      if (success) {
-        isEditing.value = false
+      if (!success) {
+        isEditing.value = true
       }
     }
   })
