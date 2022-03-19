@@ -10,6 +10,7 @@
 - 注意点
   - `watch`はデフォルトで`flush: post`なので`await nextTick()`をしないと実行されない
   - `onMounted`などのライフサイクルフックは`tests/unit/composables/testUtils.ts`の`withSetup`を利用しないと実行されない
+  - ストアを利用しているものは`beforeEach`で`createTestingPinia`を呼び出してモックすること
 
 ### component (`components`以下など)
 TBD
