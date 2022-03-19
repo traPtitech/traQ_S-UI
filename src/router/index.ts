@@ -38,82 +38,82 @@ export const isMessageScrollerRoute = (
   )
 }
 
-const Main = () => import('/@/views/MainPage.vue')
-const GroupManager = () => import('/@/views/GroupManagerPage.vue')
-const Settings = () => import('/@/views/SettingsPage.vue')
-const ShareTarget = () => import('/@/views/ShareTargetPage.vue')
-const Auth = () => import('/@/views/AuthPage.vue')
-const NotFound = () => import('/@/views/NotFoundPage.vue')
+const MainPage = () => import('/@/views/MainPage.vue')
+const GroupManagerPage = () => import('/@/views/GroupManagerPage.vue')
+const SettingsPage = () => import('/@/views/SettingsPage.vue')
+const ShareTargetPage = () => import('/@/views/ShareTargetPage.vue')
+const AuthPage = () => import('/@/views/AuthPage.vue')
+const NotFoundPage = () => import('/@/views/NotFoundPage.vue')
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: RouteName.Index,
-    component: Main
+    component: MainPage
   },
   {
     path: constructChannelPath(':channel(.*)'),
     name: RouteName.Channel,
-    component: Main
+    component: MainPage
   },
   {
     path: constructUserPath(':user'),
     name: RouteName.User,
-    component: Main
+    component: MainPage
   },
   {
     path: constructMessagesPath(':id'),
     name: RouteName.Message,
-    component: Main
+    component: MainPage
   },
   {
     path: constructFilesPath(':id'),
     name: RouteName.File,
-    component: Main
+    component: MainPage
   },
   {
     path: constructClipFoldersPath(':id'),
     name: RouteName.ClipFolders,
-    component: Main
+    component: MainPage
   },
   {
     path: '/group-manager',
     name: RouteName.GroupManager,
-    component: GroupManager
+    component: GroupManagerPage
   },
   {
     path: '/settings/:setting?',
     name: RouteName.Settings,
-    component: Settings,
+    component: SettingsPage,
     children: settingsRoutes
   },
   {
     path: '/share-target',
     name: RouteName.ShareTarget,
-    component: ShareTarget
+    component: ShareTargetPage
   },
   {
     path: '/login',
     name: RouteName.Login,
-    component: Auth,
+    component: AuthPage,
     props: { type: 'login' }
   },
   {
     path: '/registration',
     name: RouteName.Registration,
-    component: Auth,
+    component: AuthPage,
     props: { type: 'registration' }
   },
   {
     path: '/consent',
     name: RouteName.Consent,
-    component: Auth,
+    component: AuthPage,
     props: { type: 'consent' }
   },
   {
     path: '/:catchAll(.*)',
     name: RouteName.NotFound,
-    component: NotFound
+    component: NotFoundPage
   }
 ]
 
