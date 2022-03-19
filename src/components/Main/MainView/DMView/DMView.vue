@@ -1,7 +1,7 @@
 <template>
   <primary-view-frame :is-ready="isReady">
     <template #header>
-      <channel-header :channel-id="channelId" />
+      <d-m-header :user-name="userName" />
     </template>
     <template #default>
       <channel-view-content
@@ -10,8 +10,9 @@
       />
     </template>
     <template #sidebar>
-      <channel-sidebar
+      <d-m-sidebar
         :channel-id="channelId"
+        :user-name="userName"
         :is-sidebar-opener-ready="isReady"
       />
     </template>
@@ -20,14 +21,15 @@
 
 <script lang="ts" setup>
 import PrimaryViewFrame from '../PrimaryViewFrame.vue'
-import ChannelHeader from './ChannelHeader/ChannelHeader.vue'
-import ChannelViewContent from './ChannelViewContent/ChannelViewContent.vue'
-import ChannelSidebar from './ChannelSidebar/ChannelSidebar.vue'
+import DMHeader from './DMHeader/DMHeader.vue'
+import ChannelViewContent from '../ChannelView/ChannelViewContent/ChannelViewContent.vue'
+import DMSidebar from './DMSidebar/DMSidebar.vue'
 import { ChannelId, MessageId } from '/@/types/entity-ids'
 
 defineProps<{
   isReady: boolean
   channelId: ChannelId
   entryMessageId?: MessageId
+  userName: string
 }>()
 </script>

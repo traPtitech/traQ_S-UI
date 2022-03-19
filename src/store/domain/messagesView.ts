@@ -264,11 +264,6 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
     }
   }
 
-  const setReceiveLatestMessages = (receiveLatestMessagesVal: boolean) => {
-    receiveLatestMessages.value = receiveLatestMessagesVal
-    syncViewState()
-  }
-
   wsListener.on('CHANNEL_VIEWERS_CHANGED', ({ viewers }) => {
     currentViewers.value = viewers
   })

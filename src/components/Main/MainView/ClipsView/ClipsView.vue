@@ -1,23 +1,29 @@
 <template>
-  <div :class="$style.container">
-    <clips-view-content :clip-folder-id="clipFolderId" />
-  </div>
+  <primary-view-frame :is-ready="isReady">
+    <template #header>
+      <clips-header :clip-folder-id="clipFolderId" />
+    </template>
+    <template #default>
+      <clips-view-content :clip-folder-id="clipFolderId" />
+    </template>
+    <template #sidebar>
+      <clips-sidebar
+        :clip-folder-id="clipFolderId"
+        :is-sidebar-opener-ready="isReady"
+      />
+    </template>
+  </primary-view-frame>
 </template>
 
 <script lang="ts" setup>
-import ClipsViewContent from './ClipsViewContent.vue'
+import PrimaryViewFrame from '../PrimaryViewFrame.vue'
+import ClipsHeader from './ClipsHeader/ClipsHeader.vue'
+import ClipsViewContent from './ClipsViewContent/ClipsViewContent.vue'
+import ClipsSidebar from './ClipsSidebar/ClipsSidebar.vue'
 import { ClipFolderId } from '/@/types/entity-ids'
 
 defineProps<{
+  isReady: boolean
   clipFolderId: ClipFolderId
 }>()
 </script>
-
-<style lang="scss" module>
-.container {
-  @include color-ui-primary;
-  width: 100%;
-  height: 100%;
-  background: var(--specific-main-view-background);
-}
-</style>
