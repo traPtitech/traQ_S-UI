@@ -1,4 +1,4 @@
-import { onBeforeUnmount, watch, ref } from 'vue'
+import { onBeforeUnmount, watch, ref, onMounted } from 'vue'
 import { setTimelineStreamingState } from '/@/lib/websocket'
 import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
@@ -15,7 +15,7 @@ const getActivityTimeline = createSingleflight(
   apis.getActivityTimeline.bind(apis)
 )
 
-const useActivityStream = (props: { show: boolean }) => {
+const useActivityStream = () => {
   const { restoringPromise, activityMode: mode } = useBrowserSettings()
   const { isChannelSubscribed } = useSubscriptionStore()
   const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
@@ -49,17 +49,10 @@ const useActivityStream = (props: { show: boolean }) => {
   }
 
   // 一番最初に表示されたときに実行する
-  const stopWatchShow = watch(
-    () => props.show,
-    async newShow => {
-      if (!newShow) return
-      stopWatchShow()
-
-      setTimelineStreamingState(mode.value.all)
-      await fetch()
-    },
-    { immediate: true }
-  )
+  onMounted(async () => {
+    setTimelineStreamingState(mode.value.all)
+    await fetch()
+  })
 
   watch(
     mode,
