@@ -43,11 +43,11 @@ import {
   useMessageInputStateAttachment
 } from '/@/store/ui/messageInputState'
 import { useToastStore } from '/@/store/ui/toast'
-import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import { useStampHistory } from '/@/store/domain/stampHistory'
 
-const { fetchStampHistory } = useMeStore()
+const { fetchStampHistory } = useStampHistory()
 const { fetchStamps } = useStampsStore()
 const { fetchStampPalettes } = useStampPalettesStore()
 const { state } = useMessageInputState('share-target')

@@ -8,6 +8,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+import { useStampHistory } from '/@/store/domain/stampHistory'
 
 const useInitialFetch_ = () => {
   const { fetchUsers } = useUsersStore()
@@ -20,9 +21,9 @@ const useInitialFetch_ = () => {
     fetchUnreadChannels,
     fetchSubscriptions,
     fetchViewStates,
-    fetchStampHistory,
     fetchStaredChannels
   } = useMeStore()
+  const { fetchStampHistory } = useStampHistory()
   const { fetchRTCState } = useDomainRtcStore()
   return () => {
     // 初回fetch

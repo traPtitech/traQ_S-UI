@@ -1,4 +1,4 @@
-import { StampId, ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
+import { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 import {
   UnreadChannel,
   ChannelSubscribeLevel,
@@ -22,7 +22,6 @@ import { wsListener } from '/@/lib/websocket'
 import apis from '/@/lib/apis'
 import mitt from 'mitt'
 import { useTrueChangedPromise } from '/@/store/utils/promise'
-import { useStampsStore } from '/@/store/entities/stamps'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const isBadgingAPISupported = checkBadgeAPISupport()
@@ -55,7 +54,6 @@ export type IDBState = {
 }
 
 const useMeStorePinia = defineStore('domain/me', () => {
-  const stampsStore = useStampsStore()
   const channelsStore = useChannelsStore()
 
   const initialValue: IDBState = {
@@ -88,34 +86,6 @@ const useMeStorePinia = defineStore('domain/me', () => {
     state.detail = undefined
     await apis.logout(undefined, allSession)
     deleteToken()
-  }
-
-  const stampHistory = ref(new Map<StampId, Date>())
-  const stampHistoryFetched = ref(false)
-  const recentStampIds = computed(() =>
-    [...stampHistory.value.entries()]
-      .filter(([stampId]) => stampsStore.stampsMap.value.has(stampId))
-      .sort((e1, e2) => {
-        // 日付の降順
-        if (e1[1] > e2[1]) return -1
-        if (e1[1] < e2[1]) return 1
-        return 0
-      })
-      .map(([key]) => key)
-  )
-  const upsertLocalStampHistory = (stampId: StampId, datetime: Date) => {
-    stampHistory.value.set(stampId, datetime)
-  }
-  const fetchStampHistory = async ({
-    ignoreCache = false
-  }: { ignoreCache?: boolean } = {}) => {
-    if (!ignoreCache && stampHistoryFetched.value) return
-
-    const { data } = await apis.getMyStampHistory()
-    stampHistory.value = new Map(
-      data.map(h => [h.stampId, new Date(h.datetime)])
-    )
-    stampHistoryFetched.value = true
   }
 
   const unreadChannelsMap = ref(
@@ -330,7 +300,6 @@ const useMeStorePinia = defineStore('domain/me', () => {
   return {
     ...toRefs(state),
     myId,
-    recentStampIds,
     unreadChannelsMap,
     unreadChannelsMapInitialFetchPromise,
     staredChannelSet,
@@ -339,8 +308,6 @@ const useMeStorePinia = defineStore('domain/me', () => {
     monitoringChannels,
     fetchMe,
     logout,
-    upsertLocalStampHistory,
-    fetchStampHistory,
     deleteUnreadChannelWithSend,
     fetchUnreadChannels,
     fetchStaredChannels,

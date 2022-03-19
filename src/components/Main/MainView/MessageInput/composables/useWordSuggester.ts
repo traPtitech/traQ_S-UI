@@ -3,7 +3,7 @@ import getCaretPosition from '/@/lib/dom/caretPosition'
 import { getCurrentWord, Target } from '/@/lib/suggestion'
 import useWordSuggesterList, { Word } from './useWordSuggestionList'
 import useInsertText from '/@/composables/dom/useInsertText'
-import { useMeStore } from '/@/store/domain/me'
+import { useStampHistory } from '/@/store/domain/stampHistory'
 
 export type WordOrConfirmedPart =
   | Word
@@ -22,7 +22,7 @@ const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: WritableComputedRef<string>
 ) => {
-  const { upsertLocalStampHistory } = useMeStore()
+  const { upsertLocalStampHistory } = useStampHistory()
 
   const isSuggesterShown = ref(false)
   const target = ref<Target>({

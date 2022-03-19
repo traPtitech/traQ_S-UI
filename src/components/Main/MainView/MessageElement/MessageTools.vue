@@ -87,7 +87,6 @@ import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
-import { useMeStore } from '/@/store/domain/me'
 import useContextMenu from '/@/composables/useContextMenu'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { Stamp } from '@traptitech/traq'
@@ -95,6 +94,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import MessageContextMenu from './MessageContextMenu.vue'
 import useToggle from '/@/composables/utils/useToggle'
+import { useStampHistory } from '/@/store/domain/stampHistory'
 
 const props = withDefaults(
   defineProps<{
@@ -108,7 +108,7 @@ const props = withDefaults(
   }
 )
 
-const { recentStampIds, upsertLocalStampHistory } = useMeStore()
+const { recentStampIds, upsertLocalStampHistory } = useStampHistory()
 const { addErrorToast } = useToastStore()
 const { initialRecentStamps } = useStampsStore()
 
