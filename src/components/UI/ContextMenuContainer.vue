@@ -16,7 +16,7 @@
 import { computed, ref, toRef } from 'vue'
 import { Point } from '/@/lib/basic/point'
 import ClickOutside from '/@/components/UI/ClickOutside'
-import useHeightObserver from '/@/composables/dom/useHeightObserver'
+import useBoxSize from '/@/composables/dom/useBoxSize'
 
 const props = defineProps<{
   position: Point
@@ -29,7 +29,7 @@ const emit = defineEmits<{
 const position = toRef(props, 'position')
 
 const menuContainerRef = ref<HTMLDivElement | null>(null)
-const { height } = useHeightObserver(menuContainerRef)
+const { height } = useBoxSize(menuContainerRef)
 
 const toolsMenuStyle = computed(() => {
   const margin = 20

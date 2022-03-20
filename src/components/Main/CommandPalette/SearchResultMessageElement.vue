@@ -57,7 +57,7 @@ import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
 import SearchResultMessageElementContent from './SearchResultMessageElementContent.vue'
 import useToggle from '/@/composables/utils/useToggle'
 import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
-import useHeightObserver from '/@/composables/dom/useHeightObserver'
+import useBoxSize from '/@/composables/dom/useBoxSize'
 import { useMessagesStore } from '/@/store/entities/messages'
 
 const props = defineProps<{
@@ -122,7 +122,7 @@ const onClick = (e: MouseEvent) => {
 const maxHeight = 200
 
 const contentRef = shallowRef<HTMLElement | null>(null)
-const { height } = useHeightObserver(contentRef)
+const { height } = useBoxSize(contentRef)
 const oversized = computed(
   () => height.value !== undefined && height.value >= maxHeight
 )
