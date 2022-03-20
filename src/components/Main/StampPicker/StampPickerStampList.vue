@@ -71,6 +71,8 @@ const onStampUnhover = () => {
   padding: 4px;
   cursor: pointer;
   user-select: none;
+  content-visibility: auto;
+  contain-intrinsic-size: 32px 32px;
   &:hover {
     @include background-secondary;
   }
