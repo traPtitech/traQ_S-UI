@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, toRaw } from 'vue'
 import useChannelFilter from './composables/useChannelFilter'
 import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
@@ -58,7 +58,8 @@ const { channelTree } = useChannelTree()
 const { staredChannelSet } = useStaredChannels()
 const { channelsMap } = useChannelsStore()
 const topLevelChannels = computed(() =>
-  filterTrees(channelTree.value.children, channel => !channel.archived)
+  // filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
+  filterTrees(toRaw(channelTree.value.children), channel => !channel.archived)
 )
 const staredChannels = computed(() => {
   const trees = constructTreeFromIds(

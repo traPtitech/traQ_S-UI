@@ -41,7 +41,7 @@ import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelLis
 import ChannelTree from '/@/components/Main/NavigationBar/ChannelList/ChannelTree.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
-import { computed } from 'vue'
+import { computed, toRaw } from 'vue'
 import { isDefined } from '/@/lib/basic/array'
 import { constructTreeFromIds } from '/@/lib/channelTree'
 import { useChannelTree } from '/@/store/domain/channelTree'
@@ -70,7 +70,8 @@ const { channelsWithNotification, dmChannelsWithNotification } =
   useChannelsWithNotification()
 
 const topLevelChannels = computed(() =>
-  filterTrees(homeChannelTree.value.children, node => !node.archived)
+  // filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
+  filterTrees(toRaw(homeChannelTree.value.children), node => !node.archived)
 )
 const channelsWithRtc = computed(() =>
   [...channelSessionsMap.value.entries()]
