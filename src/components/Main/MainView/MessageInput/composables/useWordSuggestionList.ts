@@ -95,7 +95,7 @@ const useWordSuggestionList = (
   const tree = useCandidateTree()
   const candidates = computed(() =>
     target.value.word.length >= minLength
-      ? tree.value.search(target.value.word.replace(/＠/g, '@'))
+      ? tree.value.search(target.value.word.replaceAll('＠', '@'))
       : []
   )
   const confirmedPart = computed(() =>

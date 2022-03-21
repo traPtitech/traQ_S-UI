@@ -34,7 +34,7 @@ Object.entries(emojis).forEach(([key, e]) => {
   if (e.category === 'modifier') return
   if (e.name.endsWith('skin tone')) return
 
-  const name = e.shortname.replace(/:/g, '')
+  const name = e.shortname.replaceAll(':', '')
   categoryMap[e.category].emojis.push({ name, order: e.order })
 
   const unicodeString = key
@@ -44,7 +44,7 @@ Object.entries(emojis).forEach(([key, e]) => {
   unicodeTable[unicodeString] = name
 
   e.shortname_alternates.forEach(altName => {
-    altNameTable[altName.replace(/:/g, '')] = name
+    altNameTable[altName.replaceAll(':', '')] = name
   })
 })
 
