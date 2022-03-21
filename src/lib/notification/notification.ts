@@ -154,7 +154,8 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     wait(5000)
   ])
   if (!token) {
-    // 何故かgetTokenFbのawaitが終わらないことがある
+    // 何故かregistration.pushManager.subscribe(～)が終わらないことで、
+    // getTokenFbのawaitが終わらないことがある
     // eslint-disable-next-line no-console
     console.warn('[Notification] getToken timed out')
     return
