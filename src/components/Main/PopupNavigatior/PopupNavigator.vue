@@ -78,11 +78,14 @@ const useIsLongClicking = (
 ) => {
   let isLongClicking = false
   let timer = 0
+  let isClickStarted = false
 
   const onMouseTouchStart = (e: MouseEvent | TouchEvent) => {
     if (!isTarget(e.target)) return
     // スワイプを無効化するため
     e.stopPropagation()
+
+    isClickStarted = true
 
     timer = window.setTimeout(() => {
       isLongClicking = true
@@ -90,6 +93,11 @@ const useIsLongClicking = (
     }, LONG_CLICK_DELAY)
   }
   const onMouseTouchEnd = (e: MouseEvent | TouchEvent) => {
+    // document.elementFromPointが起きるとレイアウトの計算がかかるので、
+    // targetでのmousetouchstartが起きていないなら無視する
+    if (!isClickStarted) return
+
+    isClickStarted = false
     window.clearTimeout(timer)
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
