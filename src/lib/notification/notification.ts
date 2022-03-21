@@ -17,6 +17,7 @@ import {
   getToken as getTokenFb,
   deleteToken as deleteTokenFb
 } from 'firebase/messaging'
+import { wait } from '/@/lib/basic/timer'
 
 const appName = window.traQConfig.name || 'traQ'
 const ignoredChannels = window.traQConfig.inlineReplyDisableChannels ?? []
@@ -103,7 +104,12 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 
   setupUpdateToast(registration, onCanUpdate)
 
-  if (window.Notification?.permission !== 'granted' || !firebaseApp) {
+  if (window.Notification?.permission !== 'granted') {
+    // eslint-disable-next-line no-console
+    console.warn(`[Notification] permission ${window.Notification?.permission}`)
+    return
+  }
+  if (!firebaseApp) {
     return
   }
   const messaging = getMessaging(firebaseApp)
@@ -140,10 +146,19 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     }
   })
 
-  const token = await getTokenFb(messaging, {
-    vapidKey,
-    serviceWorkerRegistration: registration
-  })
+  const token = await Promise.race([
+    getTokenFb(messaging, {
+      vapidKey,
+      serviceWorkerRegistration: registration
+    }),
+    wait(5000)
+  ])
+  if (!token) {
+    // 何故かgetTokenFbのawaitが終わらないことがある
+    // eslint-disable-next-line no-console
+    console.warn('[Notification] getToken timed out')
+    return
+  }
   apis.registerFCMDevice({ token })
 }
 
