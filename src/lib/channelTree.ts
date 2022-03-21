@@ -59,17 +59,17 @@ export const constructTree = (
 
   /** 表示しないものをフィルタした子孫チャンネル */
   const children = channel.children
-    .reduce((acc, id) => {
+    .flatMap(id => {
       const child = channelEntities.get(id)
       if (!child) {
-        return acc
+        return []
       }
       const result = constructTree(child, channelEntities, subscribedChannels)
       if (result) {
-        acc.push(result)
+        return [result]
       }
-      return acc
-    }, [] as ChannelTreeNode[])
+      return []
+    })
     .sort(channelNameSortFunction)
   if (children.length === 0 && !isSubscribed) {
     // 子がいない非購読チャンネル

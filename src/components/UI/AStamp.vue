@@ -3,7 +3,6 @@
     <img
       v-if="imageUrl.length > 0"
       :class="$style.img"
-      loading="lazy"
       :src="imageUrl"
       :alt="name"
       :title="!withoutTitle ? name : undefined"

@@ -1,32 +1,26 @@
 <template>
-  <div :class="$style.container">
-    <!--
-      templateのkeyはstamp.idにしてv-forでそれぞれのスタンプの要素が使いまわされるように
-      a-stampのkeyはkeyにしてアニメーションが動くようにしている
-
-      durationをcss側ではなくてこっちで調節しているのは、
-    -->
-    <template v-for="{ stamp, key } in stampsWithAnimationKey" :key="stamp.id">
-      <transition name="stamp-pressed" mode="out-in">
-        <a-stamp
-          :key="key"
-          :stamp-id="stamp.id"
-          :size="32"
-          :class="$style.stampListItem"
-          @click="onClickStamp(stamp.id)"
-          @mouseenter="onStampHover(stamp.name)"
-          @mouseleave="onStampUnhover"
+  <div ref="targetRef" :class="$style.frame" @scroll.passive="onScroll">
+    <div :style="containerStyle">
+      <div :class="$style.panel" :style="panelStyle">
+        <stamp-picker-stamp-list-item
+          v-for="{ stamp, key } in stampsWithAnimationKey"
+          :key="stamp.id"
+          :stamp="stamp"
+          :pressed-animation-key="key"
+          @input-stamp="onInputStamp"
+          @hover-stamp="onHoverStamp"
         />
-      </transition>
-    </template>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import AStamp from '/@/components/UI/AStamp.vue'
+import StampPickerStampListItem from './StampPickerStampListItem.vue'
 import { StampId } from '/@/types/entity-ids'
 import { Stamp } from '@traptitech/traq'
-import { computed } from 'vue'
+import { computed, shallowRef } from 'vue'
+import useStampListVirtualScroll from './composables/useStampListVirtualScroll'
 
 const props = defineProps<{
   stamps: readonly Stamp[]
@@ -38,41 +32,39 @@ const emit = defineEmits<{
   (e: 'hoverStamp', name?: string): void
 }>()
 
+const targetRef = shallowRef<HTMLElement | null>(null)
+const { onScroll, showStartIndex, showEndIndex, containerStyle, panelStyle } =
+  useStampListVirtualScroll(
+    targetRef,
+    computed(() => props.stamps.length)
+  )
+
 const stampsWithAnimationKey = computed(() =>
-  props.stamps.map(stamp => ({
+  props.stamps.slice(showStartIndex.value, showEndIndex.value).map(stamp => ({
     stamp,
     key: `${stamp.id}-${props.animationKeys.get(stamp.id) ?? 0}`
   }))
 )
 
-const onClickStamp = (id: StampId) => {
+const onInputStamp = (id: StampId) => {
   emit('inputStamp', id)
 }
-const onStampHover = (name: string) => {
+const onHoverStamp = (name?: string) => {
   emit('hoverStamp', name)
-}
-const onStampUnhover = () => {
-  emit('hoverStamp')
 }
 </script>
 
 <style lang="scss" module>
-.container {
-  display: flex;
-  flex-flow: row wrap;
+.frame {
   height: 100%;
   overflow-y: scroll;
-  align-content: flex-start;
   backface-visibility: hidden;
   contain: content;
 }
 
-.stampListItem {
-  padding: 4px;
-  cursor: pointer;
-  user-select: none;
-  &:hover {
-    @include background-secondary;
-  }
+.panel {
+  display: flex;
+  flex-flow: row wrap;
+  align-content: flex-start;
 }
 </style>

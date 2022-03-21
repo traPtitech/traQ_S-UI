@@ -21,10 +21,23 @@ type ToRefsedStore<SS> = Omit<SS, keyof StoreToRefs<SS>> & StoreToRefs<SS>
 export const convertToRefsStore = <SS extends Store>(
   useStore: (pinia?: Pinia | null | undefined, hot?: StoreGeneric) => SS
 ) => {
+  let prevPinia: Pinia | null | undefined
+  let prevHot: StoreGeneric | undefined
+  let prevResult: ToRefsedStore<SS> | undefined
+
   return (
     pinia?: Pinia | null | undefined,
     hot?: StoreGeneric
   ): ToRefsedStore<SS> => {
+    /*
+     * 呼び出すたびに変換するのはコストがかかるので、
+     * 同じものであればキャッシュする
+     * 本番ではpiniaとhotが変わることは多くないので一つしかキャッシュしない
+     */
+    if (prevPinia === pinia && prevHot === hot && prevResult !== undefined) {
+      return prevResult
+    }
+
     const store = useStore(pinia, hot)
 
     if (!import.meta.env.PROD) {
@@ -48,9 +61,15 @@ export const convertToRefsStore = <SS extends Store>(
       }
     }
 
-    return {
+    const result = {
       ...store,
       ...storeToRefs(store)
     }
+
+    prevPinia = pinia
+    prevHot = hot
+    prevResult = result
+
+    return result
   }
 }

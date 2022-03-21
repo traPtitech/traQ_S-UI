@@ -61,11 +61,7 @@ import ActivityElement from './ActivityElement.vue'
 import ToggleButton from './ToggleButton.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 
-const props = defineProps<{
-  show: boolean
-}>()
-
-const { timeline } = useActivityStream(props)
+const { timeline } = useActivityStream()
 const { isNotAll, isPerChannel } = useActivityMode()
 </script>
 

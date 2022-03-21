@@ -1,19 +1,21 @@
 <template>
   <div :class="$style.container">
     <navigation-content-title :current-navigation="currentNavigation" />
-    <home-tab v-show="currentNavigation === 'home'" :class="$style.content" />
+    <home-tab v-if="currentNavigation === 'home'" :class="$style.content" />
     <channels-tab
-      v-show="currentNavigation === 'channels'"
+      v-if="currentNavigation === 'channels'"
       :class="$style.content"
     />
-    <activity-tab
-      v-show="currentNavigation === 'activity'"
-      :show="currentNavigation === 'activity'"
-      :class="$style.content"
-    />
-    <users-tab v-show="currentNavigation === 'users'" :class="$style.content" />
+    <!-- アクティビティの内容は保持しておきたいため -->
+    <keep-alive>
+      <activity-tab
+        v-if="currentNavigation === 'activity'"
+        :class="$style.content"
+      />
+    </keep-alive>
+    <users-tab v-if="currentNavigation === 'users'" :class="$style.content" />
     <clip-folders-tab
-      v-show="currentNavigation === 'clips'"
+      v-if="currentNavigation === 'clips'"
       :class="$style.content"
     />
   </div>
