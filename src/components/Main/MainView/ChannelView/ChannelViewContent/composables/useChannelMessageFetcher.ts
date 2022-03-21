@@ -24,13 +24,16 @@ const useChannelMessageFetcher = (
     unreadChannelsMapInitialFetchPromise,
     deleteUnreadChannelWithSend
   } = useSubscriptionStore()
-  const { fetchLimit, waitMounted } = useFetchLimit(scrollerEle, MESSAGE_HEIGHT)
+  const { fetchLimit, waitHeightResolved } = useFetchLimit(
+    scrollerEle,
+    MESSAGE_HEIGHT
+  )
   const loadedMessageLatestDate = ref<Date>()
   const loadedMessageOldestDate = ref<Date>()
   const unreadSince = ref()
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
-    await waitMounted
+    await waitHeightResolved
     const { messages, hasMore } = await fetchMessagesByChannelId({
       channelId: props.channelId,
       limit: fetchLimit.value,
@@ -59,7 +62,7 @@ const useChannelMessageFetcher = (
   const fetchLatterMessages = async (
     isReachedLatest: Ref<boolean>
   ): Promise<ChannelId[]> => {
-    await waitMounted
+    await waitHeightResolved
     const { messages, hasMore } = await fetchMessagesByChannelId({
       channelId: props.channelId,
       limit: fetchLimit.value,
@@ -94,7 +97,7 @@ const useChannelMessageFetcher = (
     loadedMessageLatestDate.value = date
     loadedMessageOldestDate.value = date
 
-    await waitMounted
+    await waitHeightResolved
     const [formerMessageIds, latterMessageIds] = await Promise.all([
       fetchFormerMessages(isReachedEnd),
       fetchLatterMessages(isReachedLatest)
@@ -109,7 +112,7 @@ const useChannelMessageFetcher = (
   }
 
   const fetchNewMessages = async (isReachedLatest: Ref<boolean>) => {
-    await waitMounted
+    await waitHeightResolved
     const { messages, hasMore } = await fetchMessagesByChannelId({
       channelId: props.channelId,
       limit: fetchLimit.value,

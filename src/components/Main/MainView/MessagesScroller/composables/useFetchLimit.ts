@@ -1,23 +1,35 @@
-import { onMounted, Ref, ref } from 'vue'
+import { computed, Ref, watch } from 'vue'
+import useBoxSize from '/@/composables/dom/useBoxSize'
+
+const MAX_COUNT = 20
 
 const useFetchLimit = (
   scrollerEle: Ref<{ $el: HTMLDivElement } | undefined>,
   messageHeight: number
 ) => {
-  const fetchLimit = ref(0)
-  onMounted(() => {
-    fetchLimit.value = Math.ceil(
-      (scrollerEle.value?.$el.clientHeight ?? 0) / messageHeight
+  const { height } = useBoxSize(
+    computed(() => scrollerEle.value?.$el ?? null),
+    false
+  )
+
+  const fetchLimit = computed(() =>
+    Math.min(Math.ceil((height.value ?? 0) / messageHeight), MAX_COUNT)
+  )
+
+  const waitHeightResolved = new Promise<void>(resolve => {
+    const stop = watch(
+      height,
+      newHeight => {
+        if (newHeight !== undefined) {
+          stop()
+          resolve()
+        }
+      },
+      { immediate: true }
     )
   })
 
-  const waitMounted = new Promise<void>(resolve => {
-    onMounted(() => {
-      resolve()
-    })
-  })
-
-  return { fetchLimit, waitMounted }
+  return { fetchLimit, waitHeightResolved }
 }
 
 export default useFetchLimit

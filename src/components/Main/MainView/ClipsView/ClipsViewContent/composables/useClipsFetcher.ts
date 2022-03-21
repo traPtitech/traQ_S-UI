@@ -29,7 +29,10 @@ const useClipsFetcher = (
 ) => {
   const { fetchMessagesInClipFolder, syncViewState } = useMessagesView()
   const { fetchMessage } = useMessagesStore()
-  const { fetchLimit, waitMounted } = useFetchLimit(scrollerEle, MESSAGE_HEIGHT)
+  const { fetchLimit, waitHeightResolved } = useFetchLimit(
+    scrollerEle,
+    MESSAGE_HEIGHT
+  )
   const state = reactive({
     nextLoadOffset: 0
   })
@@ -43,7 +46,7 @@ const useClipsFetcher = (
   }
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
-    await waitMounted
+    await waitHeightResolved
     const { clips, hasMore } = await fetchMessagesInClipFolder({
       folderId: props.clipFolderId,
       limit: fetchLimit.value,
