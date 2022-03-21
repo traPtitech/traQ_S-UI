@@ -24,7 +24,7 @@ export type HSLColor = {
 }
 
 const mustConvertHex = (hex: string) => {
-  if (!/[0-9A-F]+/.test(hex)) {
+  if (!/^[0-9a-fA-F]+$/.test(hex)) {
     throw new Error('Invalid Hex')
   }
   return parseInt(hex, 16)
