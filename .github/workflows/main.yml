@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16.14.2
           cache: npm
@@ -26,9 +26,9 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16.14.2
           cache: npm
@@ -44,9 +44,9 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16.14.2
           cache: npm
@@ -62,13 +62,13 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16.14.2
           cache: npm
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ./public/fonts
           key: font-build-${{ runner.os }}
@@ -86,9 +86,9 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16.14.2
           cache: npm
@@ -98,7 +98,7 @@ jobs:
           CYPRESS_INSTALL_BINARY: 0
       - name: run test:unit
         run: npm run test:unit
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: coverage
           path: ./coverage
@@ -108,8 +108,8 @@ jobs:
     needs: [test-unit]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+        uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
         with:
           name: coverage
           path: ./coverage
@@ -121,13 +121,13 @@ jobs:
     if: (github.repository_owner == 'traPtitech' && github.actor != 'dependabot[bot]')
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16.14.2
           cache: npm
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ./public/fonts
           key: font-build-${{ runner.os }}
@@ -141,7 +141,7 @@ jobs:
         env:
           CYPRESS_username: ${{ secrets.traQ_username }}
           CYPRESS_password: ${{ secrets.traQ_password }}
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: failed-screenshots
           path: ./tests/e2e/screenshots
