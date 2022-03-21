@@ -63,8 +63,13 @@ describe('parseColor', () => {
       expected: null
     },
     {
-      name: 'can fail with invalid value 6/8 length hex notation',
+      name: 'can fail with invalid value 6/8 length hex notation (1)',
       input: '#034034XX',
+      expected: null
+    },
+    {
+      name: 'can fail with invalid value 6/8 length hex notation (2)',
+      input: '#0000Xa',
       expected: null
     },
     {
