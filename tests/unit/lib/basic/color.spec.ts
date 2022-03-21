@@ -58,6 +58,39 @@ describe('parseColor', () => {
       }
     },
     {
+      name: 'can parse lower case hex notation',
+      input: '#abcdef',
+      expected: {
+        type: 'rgb',
+        r: 171,
+        g: 205,
+        b: 239,
+        a: 1
+      }
+    },
+    {
+      name: 'can parse upper case hex notation',
+      input: '#ABCDEF',
+      expected: {
+        type: 'rgb',
+        r: 171,
+        g: 205,
+        b: 239,
+        a: 1
+      }
+    },
+    {
+      name: 'can parse mixed case hex notation',
+      input: '#aBcDeF',
+      expected: {
+        type: 'rgb',
+        r: 171,
+        g: 205,
+        b: 239,
+        a: 1
+      }
+    },
+    {
       name: 'can fail with invalid value 3/4 length hex notation',
       input: '#034X',
       expected: null

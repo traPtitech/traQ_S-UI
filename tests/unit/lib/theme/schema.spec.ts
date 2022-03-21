@@ -6,9 +6,9 @@ describe('themeSchema', () => {
       version: 2,
       basic: {
         accent: {
-          primary: '#005BAC',
-          notification: '#F2994A',
-          online: '#28F0E4',
+          primary: '#005BAC', // upper case
+          notification: '#f2994a', // lower case
+          online: '#28f0E4', // mixed case
           error: '#F26451',
           focus: '#005BACC0'
         },
