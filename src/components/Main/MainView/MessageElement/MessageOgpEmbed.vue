@@ -38,6 +38,7 @@ const props = withDefaults(
 const { value: isContentShown, open: showContent } = useToggle()
 
 const containerStyle = computed(() => ({
+  // TODO: Safariが15以降で aspect-ratio に対応している
   paddingTop: `${props.aspectRatio * 100}%`
 }))
 </script>
