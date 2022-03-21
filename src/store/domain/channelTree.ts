@@ -1,6 +1,6 @@
 import mitt from 'mitt'
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, toRaw, watch } from 'vue'
 import { channelIdToPathString } from '/@/lib/channel'
 import { ChannelTree, constructTree, rootChannelId } from '/@/lib/channelTree'
 import router, { rewriteChannelPath } from '/@/router'
@@ -60,7 +60,8 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
             archived: false,
             children: topLevelChannelIds
           },
-          channelsStore.channelsMap.value
+          // constructTreeは重いのと内部ではreactiveである必要がないのでtoRawする
+          toRaw(channelsStore.channelsMap.value)
         )?.children ?? []
     }
     channelTree.value = tree
@@ -82,8 +83,9 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
             archived: false,
             children: topLevelChannelIds
           },
-          channelsStore.channelsMap.value,
-          subscribedOrForceChannels
+          // constructTreeは重いのと内部ではreactiveである必要がないのでtoRawする
+          toRaw(channelsStore.channelsMap.value),
+          toRaw(subscribedOrForceChannels)
         )?.children ?? []
     }
     homeChannelTree.value = tree
