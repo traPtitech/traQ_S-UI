@@ -1,13 +1,17 @@
 <template>
-  <div :class="$style.container">
-    <stamp-picker-stamp-list-item
-      v-for="{ stamp, key } in stampsWithAnimationKey"
-      :key="stamp.id"
-      :stamp="stamp"
-      :pressed-animation-key="key"
-      @input-stamp="onInputStamp"
-      @hover-stamp="onHoverStamp"
-    />
+  <div ref="targetRef" :class="$style.frame" @scroll.passive="onScroll">
+    <div :style="containerStyle">
+      <div :class="$style.panel" :style="panelStyle">
+        <stamp-picker-stamp-list-item
+          v-for="{ stamp, key } in stampsWithAnimationKey"
+          :key="stamp.id"
+          :stamp="stamp"
+          :pressed-animation-key="key"
+          @input-stamp="onInputStamp"
+          @hover-stamp="onHoverStamp"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -15,7 +19,8 @@
 import StampPickerStampListItem from './StampPickerStampListItem.vue'
 import { StampId } from '/@/types/entity-ids'
 import { Stamp } from '@traptitech/traq'
-import { computed } from 'vue'
+import { computed, shallowRef } from 'vue'
+import useStampListVirtualScroll from './composables/useStampListVirtualScroll'
 
 const props = defineProps<{
   stamps: readonly Stamp[]
@@ -27,8 +32,15 @@ const emit = defineEmits<{
   (e: 'hoverStamp', name?: string): void
 }>()
 
+const targetRef = shallowRef<HTMLElement | null>(null)
+const { onScroll, showStartIndex, showEndIndex, containerStyle, panelStyle } =
+  useStampListVirtualScroll(
+    targetRef,
+    computed(() => props.stamps.length)
+  )
+
 const stampsWithAnimationKey = computed(() =>
-  props.stamps.map(stamp => ({
+  props.stamps.slice(showStartIndex.value, showEndIndex.value).map(stamp => ({
     stamp,
     key: `${stamp.id}-${props.animationKeys.get(stamp.id) ?? 0}`
   }))
@@ -43,13 +55,16 @@ const onHoverStamp = (name?: string) => {
 </script>
 
 <style lang="scss" module>
-.container {
-  display: flex;
-  flex-flow: row wrap;
+.frame {
   height: 100%;
   overflow-y: scroll;
-  align-content: flex-start;
   backface-visibility: hidden;
   contain: content;
+}
+
+.panel {
+  display: flex;
+  flex-flow: row wrap;
+  align-content: flex-start;
 }
 </style>
