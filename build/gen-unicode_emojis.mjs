@@ -12,14 +12,17 @@ const [{ data: emojis }, { data: categories }] = await Promise.all([
   )
 ])
 
-const categoryMap = {}
-
-categories.forEach(c => {
-  categoryMap[c.category] = {
-    category: c.category,
-    emojis: []
-  }
-})
+const categoryMap = Object.fromEntries(
+  categories.map(c => [
+    c.category,
+    {
+      order: c.order,
+      category: c.category,
+      category_label: c.category_label,
+      emojis: []
+    }
+  ])
+)
 
 categoryMap['regional'] = {
   order: categories.length + 1,
@@ -48,21 +51,33 @@ Object.entries(emojis).forEach(([key, e]) => {
   })
 })
 
-const result = []
-Object.entries(categoryMap).forEach(([key, category]) => {
+const result = Object.entries(categoryMap).map(([key, category]) => {
   if (key === 'regional') {
     category.emojis.sort((a, b) => (a.order > b.order ? -1 : 1))
   } else {
     category.emojis.sort((a, b) => (a.order < b.order ? -1 : 1))
   }
-  category.emojis = category.emojis.map(({ name }) => name)
-  result.push(category)
+
+  return {
+    category: category.category,
+    emojis: category.emojis.map(({ name }) => name)
+  }
 })
+
+const sortedAltNameTable = Object.fromEntries(
+  Object.entries(altNameTable).sort((a, b) => (a[0] > b[0] ? 1 : -1))
+)
+const sortedUnicodeTable = Object.fromEntries(
+  Object.entries(unicodeTable).sort((a, b) => (a[0] > b[0] ? 1 : -1))
+)
 
 await Promise.all([
   fs.writeFile('./src/assets/unicode_emojis.json', JSON.stringify(result)),
   fs.writeFile(
     './src/assets/emoji_altname_table.json',
-    JSON.stringify({ altNameTable, unicodeTable })
+    JSON.stringify({
+      altNameTable: sortedAltNameTable,
+      unicodeTable: sortedUnicodeTable
+    })
   )
 ])
