@@ -132,8 +132,7 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
     currentChannelId.value = undefined
     currentClipFolderId.value = undefined
     pinnedMessages.value = []
-    // see https://github.com/traPtitech/traQ_S-UI/pull/2804#issuecomment-963711505
-    // renderedContentMap.value = new Map()
+    renderedContentMap.value = new Map()
     currentViewers.value = []
   }
 
