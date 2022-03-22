@@ -30,14 +30,10 @@
           :title="createdDate(messageId)"
           :class="$style.dateSeparator"
         />
-        <component
-          :is="messageComponent"
-          :class="$style.element"
+        <slot
           :message-id="messageId"
-          :is-entry-message="entryMessageId === messageId"
-          :is-archived="isArchived"
-          @change-height="onChangeHeight"
-          @entry-message-loaded="onEntryMessageLoaded"
+          :on-change-height="onChangeHeight"
+          :on-entry-message-loaded="onEntryMessageLoaded"
         />
       </div>
     </div>
@@ -57,8 +53,6 @@ import {
 } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import { LoadingDirection } from '/@/store/domain/messagesView'
-import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
-import ClipElement from '/@/components/Main/MainView/MessageElement/ClipElement.vue'
 import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
 import { throttle } from 'throttle-debounce'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
@@ -172,15 +166,12 @@ const props = withDefaults(
     messageIds: MessageId[]
     isReachedEnd: boolean
     isReachedLatest: boolean
-    entryMessageId?: MessageId
-    isArchived?: boolean
     isLoading?: boolean
     lastLoadingDirection: LoadingDirection
     unreadSince?: string
     withoutSeparator?: boolean
   }>(),
   {
-    isArchived: false,
     isLoading: false,
     withoutSeparator: false
   }
@@ -191,7 +182,7 @@ const emit = defineEmits<{
   (e: 'requestLoadLatter'): void
 }>()
 
-const { lastScrollPosition, primaryView } = useMainViewStore()
+const { lastScrollPosition } = useMainViewStore()
 const { messagesMap } = useMessagesStore()
 
 // メッセージスタンプ表示時にスタンプが存在していないと
@@ -223,10 +214,6 @@ const unreadIndex = computed(() => {
 
 const { onChangeHeight, onEntryMessageLoaded } =
   useMessageScrollerElementResizeObserver(rootRef, props, state)
-
-const messageComponent = computed(() =>
-  primaryView.value.type === 'clips' ? ClipElement : MessageElement
-)
 
 onMounted(() => {
   // 表示されている

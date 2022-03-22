@@ -36,7 +36,7 @@ import MessageStampList from './MessageStampList.vue'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
-import { computed, shallowRef } from 'vue'
+import { computed, shallowRef, toRef } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useElementRenderObserver, {
@@ -73,7 +73,13 @@ const isEditing = computed(() => props.messageId === editingMessageId.value)
 
 const { embeddingsState } = useEmbeddings(props)
 
-useElementRenderObserver(bodyRef, props, message, embeddingsState, emit)
+useElementRenderObserver(
+  bodyRef,
+  toRef(props, 'isEntryMessage'),
+  message,
+  embeddingsState,
+  emit
+)
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 </script>

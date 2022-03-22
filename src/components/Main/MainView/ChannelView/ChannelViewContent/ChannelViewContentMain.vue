@@ -6,14 +6,23 @@
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
       :is-reached-latest="isReachedLatest"
-      :entry-message-id="entryMessageId"
-      :is-archived="isArchived"
       :is-loading="isLoading"
       :last-loading-direction="lastLoadingDirection"
       :unread-since="unreadSince"
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
-    />
+    >
+      <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
+        <message-element
+          :class="$style.element"
+          :message-id="messageId"
+          :is-archived="isArchived"
+          :is-entry-message="messageId === entryMessageId"
+          @change-height="onChangeHeight"
+          @entry-message-loaded="onEntryMessageLoaded"
+        />
+      </template>
+    </messages-scroller>
     <message-input :channel-id="channelId" />
   </div>
 </template>
@@ -26,6 +35,7 @@ import { computed, shallowRef } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
 import { useChannelsStore } from '/@/store/entities/channels'
+import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -69,5 +79,10 @@ const isArchived = computed(
   right: 0;
   height: 12px;
   z-index: $z-index-message-loading;
+}
+
+.element {
+  margin: 4px 0;
+  contain: content;
 }
 </style>

@@ -1,4 +1,4 @@
-import { Ref, watchEffect, watch } from 'vue'
+import { Ref, watchEffect, watch, unref } from 'vue'
 import { ExternalUrl, FileId } from '/@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 import { useRoute } from 'vue-router'
@@ -14,7 +14,7 @@ export type ChangeHeightData = Readonly<{
 
 const useElementRenderObserver = (
   bodyRef: Ref<HTMLDivElement | null>,
-  props: { isEntryMessage: boolean },
+  isEntryMessage: Ref<boolean> | boolean,
   message: Ref<Message | undefined>,
   embeddingsState: Readonly<{
     fileIds: readonly FileId[]
@@ -38,7 +38,7 @@ const useElementRenderObserver = (
       stop()
 
       // エントリーメッセージだった場合は高さを報告する
-      if (bodyRef.value && props.isEntryMessage) {
+      if (bodyRef.value && unref(isEntryMessage)) {
         const parentTop =
           bodyRef.value.parentElement?.getBoundingClientRect().top ?? 0
         const { top } = bodyRef.value.getBoundingClientRect()
@@ -61,7 +61,7 @@ const useElementRenderObserver = (
   const stop = watchEffect(
     () => {
       if (
-        (props.isEntryMessage ||
+        (unref(isEntryMessage) ||
           embeddingsState.fileIds.length > 0 ||
           embeddingsState.externalUrls.length > 0) &&
         bodyRef.value

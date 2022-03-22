@@ -4,7 +4,6 @@
     ref="bodyRef"
     :class="$style.body"
     :data-is-mobile="$boolAttr(isMobile)"
-    :data-is-entry="$boolAttr(isEntryMessage)"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
@@ -33,15 +32,9 @@ import useEmbeddings from '/@/composables/message/useEmbeddings'
 import useHover from '/@/composables/dom/useHover'
 import { useMessagesStore } from '/@/store/entities/messages'
 
-const props = withDefaults(
-  defineProps<{
-    messageId: MessageId
-    isEntryMessage?: boolean
-  }>(),
-  {
-    isEntryMessage: false
-  }
-)
+const props = defineProps<{
+  messageId: MessageId
+}>()
 
 const emit = defineEmits<{
   (e: 'entryMessageLoaded', _relativePos: number): void
@@ -56,7 +49,7 @@ const message = computed(() => messagesMap.value.get(props.messageId))
 
 const { embeddingsState } = useEmbeddings(props)
 
-useElementRenderObserver(bodyRef, props, message, embeddingsState, emit)
+useElementRenderObserver(bodyRef, false, message, embeddingsState, emit)
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 </script>
@@ -75,11 +68,7 @@ $messagePaddingMobile: 16px;
   &[data-is-mobile] {
     padding: 8px $messagePaddingMobile;
   }
-  &[data-is-entry] {
-    // TODO: 色を正しくする
-    background: $common-background-pin;
-  }
-  &:not([data-is-entry]):hover {
+  &:hover {
     background: var(--specific-message-hover-background);
   }
 }
