@@ -49,15 +49,9 @@ import useEmbeddings from '/@/composables/message/useEmbeddings'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 
-const props = withDefaults(
-  defineProps<{
-    messageId: MessageId
-    isEntryMessage?: boolean
-  }>(),
-  {
-    isEntryMessage: false
-  }
-)
+const props = defineProps<{
+  messageId: MessageId
+}>()
 
 const { editingMessageId } = useMessagesView()
 const { messagesMap } = useMessagesStore()

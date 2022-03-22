@@ -59,7 +59,7 @@ import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { computed, onBeforeUnmount, ref, toRef, watchEffect } from 'vue'
-import { ChannelId, DMChannelId } from '/@/types/entity-ids'
+import { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
 import useAttachments from './composables/useAttachments'
@@ -73,11 +73,11 @@ import {
   useMessageInputStateAttachment
 } from '/@/store/ui/messageInputState'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useMessagesView } from '/@/store/domain/messagesView'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const props = defineProps<{
   channelId: ChannelId | DMChannelId
+  typingUsers: UserId[]
 }>()
 
 const { isMobile } = useResponsiveStore()
@@ -92,7 +92,6 @@ const { addAttachment, destroy } = useAttachments(addStateAttachment)
 const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
   useModifierKey()
 const { sendWithModifierKey } = useBrowserSettings()
-const { typingUsers } = useMessagesView()
 const { channelsMap } = useChannelsStore()
 const isLeftControlsExpanded = ref(false)
 const isPreviewShown = ref(false)

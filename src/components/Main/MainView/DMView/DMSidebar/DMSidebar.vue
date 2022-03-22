@@ -7,7 +7,7 @@
         </template>
         <template #content>
           <sidebar-content
-            :viewer-ids="viewerIds"
+            :viewer-ids="viewingUsers"
             :pinned-messages-count="pinnedMessages.length"
             @move-to-pinned="moveToPinnedPage"
             @move-to-events="moveToEventsPage"
@@ -26,7 +26,7 @@
       />
     </template>
     <template #opener>
-      <channel-sidebar-hidden :viewer-ids="viewerIds" @open="openSidebar" />
+      <channel-sidebar-hidden :viewer-ids="viewingUsers" @open="openSidebar" />
     </template>
   </primary-view-sidebar>
 </template>
@@ -40,12 +40,15 @@ import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/Sideba
 import SidebarContent from './DMSidebarContent.vue'
 import SidebarEventsPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarEventsPage.vue'
 import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
-import { ChannelId } from '/@/types/entity-ids'
+import { ChannelId, UserId } from '/@/types/entity-ids'
+import { Pin } from '@traptitech/traq'
 
 defineProps<{
   channelId: ChannelId
   userName: string
   isSidebarOpenerReady: boolean
+  pinnedMessages: Pin[]
+  viewingUsers: UserId[]
 }>()
 
 const {
@@ -53,8 +56,6 @@ const {
   moveToDefaultPage,
   moveToPinnedPage,
   moveToEventsPage,
-  pinnedMessages,
-  viewerIds,
   openSidebar
 } = useChannelSidebarCommon()
 </script>

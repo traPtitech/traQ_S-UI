@@ -12,13 +12,15 @@
     <channel-view-content-main
       :channel-id="channelId"
       :entry-message-id="entryMessageId"
+      :pinned-messages="pinnedMessages"
+      :typing-users="typingUsers"
     />
   </div>
 </template>
 
 <script lang="ts">
 import { computed, ref, Ref, toRef } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
+import { ChannelId, UserId } from '/@/types/entity-ids'
 import { debounce, throttle } from 'throttle-debounce'
 import { useMessageInputStateAttachment } from '/@/store/ui/messageInputState'
 import { useToastStore } from '/@/store/ui/toast'
@@ -74,10 +76,13 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
 <script lang="ts" setup>
 import ChannelViewContentMain from './ChannelViewContentMain.vue'
 import ChannelViewContentFileUploadOverlay from './ChannelViewContentFileUploadOverlay.vue'
+import { Pin } from '@traptitech/traq'
 
 const props = defineProps<{
   channelId: ChannelId
   entryMessageId?: ChannelId
+  pinnedMessages: Pin[]
+  typingUsers: UserId[]
 }>()
 
 const { canDrop, onDrop, onDragStart, onDragOver } = useDragDrop(

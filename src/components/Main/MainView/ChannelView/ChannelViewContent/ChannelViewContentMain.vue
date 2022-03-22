@@ -6,15 +6,34 @@
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
       :is-reached-latest="isReachedLatest"
-      :entry-message-id="entryMessageId"
-      :is-archived="isArchived"
       :is-loading="isLoading"
       :last-loading-direction="lastLoadingDirection"
-      :unread-since="unreadSince"
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
-    />
-    <message-input :channel-id="channelId" />
+    >
+      <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
+        <messages-scroller-separator
+          v-if="messageId === firstUnreadMessageId"
+          title="ここから未読"
+          :class="$style.unreadSeparator"
+        />
+        <messages-scroller-separator
+          v-if="dayDiffMessages.has(messageId)"
+          :title="createdDate(messageId)"
+          :class="$style.dateSeparator"
+        />
+        <message-element
+          :class="$style.element"
+          :message-id="messageId"
+          :is-archived="isArchived"
+          :is-entry-message="messageId === entryMessageId"
+          :pinned-user-id="messagePinnedUserMap.get(messageId)"
+          @change-height="onChangeHeight"
+          @entry-message-loaded="onEntryMessageLoaded"
+        />
+      </template>
+    </messages-scroller>
+    <message-input :channel-id="channelId" :typing-users="typingUsers" />
   </div>
 </template>
 
@@ -23,16 +42,22 @@ import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/Messa
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import { computed, shallowRef } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
+import { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
 import { useChannelsStore } from '/@/store/entities/channels'
+import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
+import MessagesScrollerSeparator from '/@/components/Main/MainView/MessagesScroller/MessagesScrollerSeparator.vue'
+import { useMessagesStore } from '/@/store/entities/messages'
+import useDayDiffMessages from './composables/useDayDiffMessages'
+import { getFullDayString } from '/@/lib/basic/date'
+import { Pin } from '@traptitech/traq'
 
 const props = defineProps<{
   channelId: ChannelId
   entryMessageId?: string
+  pinnedMessages: Pin[]
+  typingUsers: UserId[]
 }>()
-
-const { channelsMap } = useChannelsStore()
 
 const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
 const {
@@ -47,8 +72,32 @@ const {
   onLoadAroundMessagesRequest
 } = useChannelMessageFetcher(scrollerEle, props)
 
+const { messagesMap } = useMessagesStore()
+const firstUnreadMessageId = computed(() => {
+  if (!unreadSince.value) return ''
+  return (
+    messageIds.value.find(
+      id => messagesMap.value.get(id)?.createdAt === unreadSince.value
+    ) ?? ''
+  )
+})
+
+const dayDiffMessages = useDayDiffMessages(messageIds)
+const createdDate = (id: MessageId) => {
+  const message = messagesMap.value.get(id)
+  if (!message) {
+    return ''
+  }
+
+  return getFullDayString(new Date(message.createdAt))
+}
+
+const { channelsMap } = useChannelsStore()
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
+)
+const messagePinnedUserMap = computed(
+  () => new Map(props.pinnedMessages.map(pin => [pin.message.id, pin.userId]))
 )
 </script>
 
@@ -69,5 +118,17 @@ const isArchived = computed(
   right: 0;
   height: 12px;
   z-index: $z-index-message-loading;
+}
+
+.unreadSeparator {
+  color: $theme-accent-notification-default;
+}
+
+.dateSeparator {
+  @include color-ui-secondary;
+}
+.element {
+  margin: 4px 0;
+  contain: content;
 }
 </style>

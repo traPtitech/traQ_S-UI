@@ -8,19 +8,16 @@
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
-import { MessageId } from '/@/types/entity-ids'
-import { useMessagesView } from '/@/store/domain/messagesView'
+import { UserId } from '/@/types/entity-ids'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
-  messageId: MessageId
+  pinnedUserId: UserId
 }>()
 
 const { usersMap } = useUsersStore()
-const { pinnedMessages } = useMessagesView()
 const userDisplayName = computed(() => {
-  const pin = pinnedMessages.value.find(v => v.message.id === props.messageId)
-  const user = usersMap.value.get(pin?.userId ?? '')
+  const user = usersMap.value.get(props.pinnedUserId)
   return user?.displayName
 })
 </script>

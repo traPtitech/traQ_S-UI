@@ -1,16 +1,14 @@
-import { ChannelViewer, ChannelViewState, Message, Pin } from '@traptitech/traq'
+import { ChannelViewState, Message } from '@traptitech/traq'
 import { EmbeddingOrUrl, ExternalUrl } from '@traptitech/traq-markdown-it'
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import apis from '/@/lib/apis'
-import { createSingleflight } from '/@/lib/basic/async'
 import { isExternalUrl, isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
-import { changeViewState, wsListener } from '/@/lib/websocket'
+import { changeViewState } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId, ClipFolderId, MessageId } from '/@/types/entity-ids'
 import { messageMitt, useMessagesStore } from '/@/store/entities/messages'
-import { useMeStore } from '/@/store/domain/me'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 interface BaseGetMessagesParams {
@@ -60,18 +58,14 @@ const isIncludedHost = (url: ExternalUrl) => {
   }
 }
 
-const getPin = createSingleflight(apis.getPin.bind(apis))
-
 // FIXME: 分離
 const useMessagesViewPinia = defineStore('domain/messagesView', () => {
-  const meStore = useMeStore()
   const messagesStore = useMessagesStore()
 
   /** 現在のチャンネルID、日時ベースのフェッチを行う */
   const currentChannelId = ref<ChannelId>()
   /** 現在のクリップフォルダID、オフセットベースのフェッチを行う */
   const currentClipFolderId = ref<ClipFolderId>()
-  const pinnedMessages = ref<Pin[]>([])
   /**
    * 最新のメッセージを受信する状態かどうか
    *
@@ -80,61 +74,13 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
   const receiveLatestMessages = ref(false)
   const renderedContentMap = ref(new Map<MessageId, string>())
   const embeddingsMap = ref(new Map<MessageId, EmbeddingOrUrl[]>())
-  /** チャンネルを見ている人の一覧(古い順) */
-  const currentViewers = ref<ChannelViewer[]>([])
   /** 現在編集中のメッセージID */
   const editingMessageId = ref<MessageId>()
-
-  /**
-   * チャンネルを見ている人(入力中も含む)のIDの一覧(古い順)
-   */
-  const viewingUsers = computed(() =>
-    currentViewers.value
-      .filter(
-        v => v.state === ChannelViewState.Monitoring || ChannelViewState.Editing
-      )
-      .map(v => v.userId)
-  )
-
-  /**
-   * チャンネルで入力中の人のIDの一覧(新しい順)
-   */
-  const typingUsers = computed(() => {
-    const myId = meStore.myId.value
-    return currentViewers.value
-      .filter(v => v.state === ChannelViewState.Editing && v.userId !== myId)
-      .map(v => v.userId)
-      .reverse()
-  })
-
-  const addPinnedMessage = (message: Pin) => {
-    pinnedMessages.value.push(message)
-  }
-  const updatePinnedMessage = (message: Message) => {
-    const index = pinnedMessages.value.findIndex(
-      element => element.message.id === message.id
-    )
-    if (index > -1) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      pinnedMessages.value[index]!.message = message
-    }
-  }
-  const removePinnedMessage = (messageId: MessageId) => {
-    const index = pinnedMessages.value.findIndex(
-      element => element.message.id === messageId
-    )
-    if (index > -1) {
-      pinnedMessages.value.splice(index, 1)
-    }
-  }
 
   const resetViewState = () => {
     currentChannelId.value = undefined
     currentClipFolderId.value = undefined
-    pinnedMessages.value = []
-    // see https://github.com/traPtitech/traQ_S-UI/pull/2804#issuecomment-963711505
-    // renderedContentMap.value = new Map()
-    currentViewers.value = []
+    renderedContentMap.value = new Map()
   }
 
   const changeCurrentChannel = (payload: {
@@ -147,8 +93,6 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
     // ここの二行は同時に実行されないとmessagesFetcherのrunWithIdentifierCheckに失敗する
     resetViewState()
     currentChannelId.value = payload.channelId
-
-    fetchPinnedMessages()
   }
 
   /** クリップフォルダに移行 */
@@ -189,12 +133,6 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'
     }
-  }
-
-  const fetchPinnedMessages = async () => {
-    if (!currentChannelId.value) throw 'no channel id'
-    const res = await apis.getChannelPins(currentChannelId.value)
-    pinnedMessages.value = res.data
   }
 
   const renderMessageContent = async (messageId: string) => {
@@ -264,47 +202,19 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
     }
   }
 
-  wsListener.on('CHANNEL_VIEWERS_CHANGED', ({ viewers }) => {
-    currentViewers.value = viewers
-  })
   // 再接続時の再取得はmessagesFetcherで行う
-
   messageMitt.on('updateMessage', async message => {
     if (currentChannelId.value !== message.channelId) return
-    updatePinnedMessage(message)
     await updateAndRenderMessageId(message)
-  })
-  messageMitt.on('deleteMessage', messageId => {
-    removePinnedMessage(messageId)
-  })
-  messageMitt.on('changeMessagePinned', async ({ message, pinned }) => {
-    if (currentChannelId.value !== message.channelId) return
-
-    if (!pinned) {
-      removePinnedMessage(message.id)
-      return
-    }
-
-    const [{ data: pin }, shared] = await getPin(message.id)
-    if (shared) return
-
-    addPinnedMessage({
-      userId: pin.userId,
-      message,
-      pinnedAt: pin.pinnedAt
-    })
   })
 
   return {
     currentChannelId,
     currentClipFolderId,
     editingMessageId,
-    pinnedMessages,
     renderedContentMap,
     embeddingsMap,
     receiveLatestMessages,
-    viewingUsers,
-    typingUsers,
     fetchMessagesByChannelId,
     fetchMessagesInClipFolder,
     renderMessageContent,

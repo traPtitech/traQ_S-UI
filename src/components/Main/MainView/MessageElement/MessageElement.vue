@@ -11,8 +11,8 @@
     @mouseleave="onMouseLeave"
   >
     <message-pinned
-      v-if="message.pinned"
-      :message-id="messageId"
+      v-if="pinnedUserId"
+      :pinned-user-id="pinnedUserId"
       :class="$style.pinned"
     />
     <message-tools
@@ -21,11 +21,7 @@
       :message-id="messageId"
       :is-minimum="isArchived"
     />
-    <message-contents
-      :class="$style.messageContents"
-      :message-id="messageId"
-      :is-entry-message="isEntryMessage"
-    />
+    <message-contents :class="$style.messageContents" :message-id="messageId" />
     <message-stamp-list
       :show-detail-button="isHovered"
       :message-id="messageId"
@@ -40,8 +36,8 @@ import MessageStampList from './MessageStampList.vue'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
-import { computed, shallowRef } from 'vue'
-import { MessageId } from '/@/types/entity-ids'
+import { computed, shallowRef, toRef } from 'vue'
+import { MessageId, UserId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useElementRenderObserver, {
   ChangeHeightData
@@ -54,6 +50,7 @@ import { useMessagesStore } from '/@/store/entities/messages'
 const props = withDefaults(
   defineProps<{
     messageId: MessageId
+    pinnedUserId?: UserId
     isEntryMessage?: boolean
     isArchived?: boolean
   }>(),
@@ -77,7 +74,13 @@ const isEditing = computed(() => props.messageId === editingMessageId.value)
 
 const { embeddingsState } = useEmbeddings(props)
 
-useElementRenderObserver(bodyRef, props, message, embeddingsState, emit)
+useElementRenderObserver(
+  bodyRef,
+  toRef(props, 'isEntryMessage'),
+  message,
+  embeddingsState,
+  emit
+)
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 </script>
