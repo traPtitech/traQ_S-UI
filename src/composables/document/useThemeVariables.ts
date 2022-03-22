@@ -49,8 +49,7 @@ export const useThemeVariables = (): ComputedRef<
       '--specific-navigation-bar-mobile-background':
         theme.specific.navigationBarMobileBackground,
       '--specific-main-view-background': theme.specific.mainViewBackground,
-      '--specific-side-bar-background':
-        theme.specific.navigationBarMobileBackground,
+      '--specific-side-bar-background': theme.specific.sideBarBackground,
       '--specific-channel-hash-opened': theme.specific.channelHashOpened,
       '--specific-channel-unread-badge-text':
         theme.specific.channelUnreadBadgeText,
