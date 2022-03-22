@@ -43,7 +43,29 @@ export default defineConfig(({ command, mode }) => ({
   build: {
     target: resolveToEsbuildTarget(browserslist(), {
       printUnknownTargets: false
-    })
+    }),
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/katex')) return 'katex'
+          if (['@traptitech/traq/', 'axios'].some(t => id.includes(t))) {
+            return 'apis'
+          }
+          if (id.includes('node_modules/highlight.js')) {
+            // hljsは適当に二つに分割する
+            const t = 'node_modules/highlight.js/lib/languages/'
+            const firstLetter = id.slice(id.indexOf(t) + t.length)[0]
+            if (firstLetter < 'i') {
+              return 'hljs'
+            }
+            if (firstLetter < 'r') {
+              return 'hljs2'
+            }
+            return 'hljs3'
+          }
+        }
+      }
+    }
   },
   css: {
     preprocessorOptions: {
