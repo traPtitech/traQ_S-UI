@@ -15,11 +15,7 @@
         title="これ以上メッセージはありません"
         :class="$style.noMoreSeparator"
       />
-      <div
-        v-for="(messageId, index) in messageIds"
-        :key="messageId"
-        :class="$style.messageContainer"
-      >
+      <template v-for="(messageId, index) in messageIds" :key="messageId">
         <messages-scroller-separator
           v-if="!withoutSeparator && index === unreadIndex"
           title="ここから未読"
@@ -35,7 +31,7 @@
           :on-change-height="onChangeHeight"
           :on-entry-message-loaded="onEntryMessageLoaded"
         />
-      </div>
+      </template>
     </div>
     <div :class="$style.bottomSpacer"></div>
   </div>
@@ -307,10 +303,6 @@ const dayDiff = useCompareDate(props)
   overflow-anchor: none;
   // iOSで無限にロードが走るのを防止する
   -webkit-overflow-scrolling: auto;
-}
-
-.messageContainer {
-  display: contents;
 }
 
 .viewport {
