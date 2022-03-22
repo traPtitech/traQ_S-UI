@@ -44,10 +44,12 @@ import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { Pin } from '@traptitech/traq'
 
 const props = defineProps<{
   channelId: ChannelId
   isSidebarOpenerReady: boolean
+  pinnedMessages: Pin[]
 }>()
 
 const { channelsMap } = useChannelsStore()
@@ -56,7 +58,6 @@ const {
   moveToDefaultPage,
   moveToPinnedPage,
   moveToEventsPage,
-  pinnedMessages,
   viewerIds,
   openSidebar,
   closeSidebar

@@ -11,8 +11,8 @@
     @mouseleave="onMouseLeave"
   >
     <message-pinned
-      v-if="message.pinned"
-      :message-id="messageId"
+      v-if="pinnedUserId"
+      :pinned-user-id="pinnedUserId"
       :class="$style.pinned"
     />
     <message-tools
@@ -37,7 +37,7 @@ import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
 import { computed, shallowRef, toRef } from 'vue'
-import { MessageId } from '/@/types/entity-ids'
+import { MessageId, UserId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useElementRenderObserver, {
   ChangeHeightData
@@ -50,6 +50,7 @@ import { useMessagesStore } from '/@/store/entities/messages'
 const props = withDefaults(
   defineProps<{
     messageId: MessageId
+    pinnedUserId?: UserId
     isEntryMessage?: boolean
     isArchived?: boolean
   }>(),

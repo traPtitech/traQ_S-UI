@@ -41,11 +41,13 @@ import SidebarContent from './DMSidebarContent.vue'
 import SidebarEventsPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarEventsPage.vue'
 import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
 import { ChannelId } from '/@/types/entity-ids'
+import { Pin } from '@traptitech/traq'
 
 defineProps<{
   channelId: ChannelId
   userName: string
   isSidebarOpenerReady: boolean
+  pinnedMessages: Pin[]
 }>()
 
 const {
@@ -53,7 +55,6 @@ const {
   moveToDefaultPage,
   moveToPinnedPage,
   moveToEventsPage,
-  pinnedMessages,
   viewerIds,
   openSidebar
 } = useChannelSidebarCommon()

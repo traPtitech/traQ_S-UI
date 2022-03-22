@@ -5,7 +5,7 @@ import { useMessagesView } from '/@/store/domain/messagesView'
 type ChannelSidebarPage = 'default' | 'pinned' | 'events'
 
 const useChannelSidebarCommon = () => {
-  const { pinnedMessages, viewingUsers: viewerIds } = useMessagesView()
+  const { viewingUsers: viewerIds } = useMessagesView()
 
   const page = ref<ChannelSidebarPage>('default')
   const moveToDefaultPage = () => {
@@ -25,7 +25,6 @@ const useChannelSidebarCommon = () => {
     moveToDefaultPage,
     moveToPinnedPage,
     moveToEventsPage,
-    pinnedMessages,
     viewerIds,
     openSidebar,
     closeSidebar

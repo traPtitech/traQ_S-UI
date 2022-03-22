@@ -12,6 +12,7 @@
     <channel-view-content-main
       :channel-id="channelId"
       :entry-message-id="entryMessageId"
+      :pinned-messages="pinnedMessages"
     />
   </div>
 </template>
@@ -74,10 +75,12 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
 <script lang="ts" setup>
 import ChannelViewContentMain from './ChannelViewContentMain.vue'
 import ChannelViewContentFileUploadOverlay from './ChannelViewContentFileUploadOverlay.vue'
+import { Pin } from '@traptitech/traq'
 
 const props = defineProps<{
   channelId: ChannelId
   entryMessageId?: ChannelId
+  pinnedMessages: Pin[]
 }>()
 
 const { canDrop, onDrop, onDragStart, onDragOver } = useDragDrop(

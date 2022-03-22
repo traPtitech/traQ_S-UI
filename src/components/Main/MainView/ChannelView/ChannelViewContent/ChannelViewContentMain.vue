@@ -27,6 +27,7 @@
           :message-id="messageId"
           :is-archived="isArchived"
           :is-entry-message="messageId === entryMessageId"
+          :pinned-user-id="messagePinnedUserMap.get(messageId)"
           @change-height="onChangeHeight"
           @entry-message-loaded="onEntryMessageLoaded"
         />
@@ -49,10 +50,12 @@ import MessagesScrollerSeparator from '/@/components/Main/MainView/MessagesScrol
 import { useMessagesStore } from '/@/store/entities/messages'
 import useDayDiffMessages from './composables/useDayDiffMessages'
 import { getFullDayString } from '/@/lib/basic/date'
+import { Pin } from '@traptitech/traq'
 
 const props = defineProps<{
   channelId: ChannelId
   entryMessageId?: string
+  pinnedMessages: Pin[]
 }>()
 
 const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
@@ -91,6 +94,9 @@ const createdDate = (id: MessageId) => {
 const { channelsMap } = useChannelsStore()
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
+)
+const messagePinnedUserMap = computed(
+  () => new Map(props.pinnedMessages.map(pin => [pin.message.id, pin.userId]))
 )
 </script>
 
