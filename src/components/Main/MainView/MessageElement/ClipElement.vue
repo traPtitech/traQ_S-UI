@@ -14,11 +14,7 @@
       :message-id="messageId"
       is-minimum
     />
-    <message-contents
-      :class="$style.messageContents"
-      :message-id="messageId"
-      :is-entry-message="isEntryMessage"
-    />
+    <message-contents :class="$style.messageContents" :message-id="messageId" />
     <message-quote-list-item-footer :class="$style.footer" :message="message" />
   </div>
 </template>
