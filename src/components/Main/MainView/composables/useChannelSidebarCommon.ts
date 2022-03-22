@@ -1,12 +1,9 @@
 import { ref } from 'vue'
 import useSidebar from '/@/composables/mainView/useSidebar'
-import { useMessagesView } from '/@/store/domain/messagesView'
 
 type ChannelSidebarPage = 'default' | 'pinned' | 'events'
 
 const useChannelSidebarCommon = () => {
-  const { viewingUsers: viewerIds } = useMessagesView()
-
   const page = ref<ChannelSidebarPage>('default')
   const moveToDefaultPage = () => {
     page.value = 'default'
@@ -25,7 +22,6 @@ const useChannelSidebarCommon = () => {
     moveToDefaultPage,
     moveToPinnedPage,
     moveToEventsPage,
-    viewerIds,
     openSidebar,
     closeSidebar
   }

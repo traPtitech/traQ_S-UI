@@ -8,6 +8,7 @@
         :channel-id="channelId"
         :entry-message-id="entryMessageId"
         :pinned-messages="pinnedMessages"
+        :typing-users="typingUsers"
       />
     </template>
     <template #sidebar>
@@ -15,6 +16,7 @@
         :channel-id="channelId"
         :is-sidebar-opener-ready="isReady"
         :pinned-messages="pinnedMessages"
+        :viewing-users="viewingUsers"
       />
     </template>
   </primary-view-frame>
@@ -28,6 +30,7 @@ import ChannelSidebar from './ChannelSidebar/ChannelSidebar.vue'
 import { ChannelId, MessageId } from '/@/types/entity-ids'
 import { toRef } from 'vue'
 import usePinnedMessages from '/@/composables/message/usePinnedMessages'
+import useCurrentViewers from '/@/composables/useCurrentViewers'
 
 const props = defineProps<{
   isReady: boolean
@@ -35,5 +38,7 @@ const props = defineProps<{
   entryMessageId?: MessageId
 }>()
 
-const pinnedMessages = usePinnedMessages(toRef(props, 'channelId'))
+const channelId = toRef(props, 'channelId')
+const pinnedMessages = usePinnedMessages(channelId)
+const { viewingUsers, typingUsers } = useCurrentViewers(channelId)
 </script>

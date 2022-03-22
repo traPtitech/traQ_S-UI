@@ -33,7 +33,7 @@
         />
       </template>
     </messages-scroller>
-    <message-input :channel-id="channelId" />
+    <message-input :channel-id="channelId" :typing-users="typingUsers" />
   </div>
 </template>
 
@@ -42,7 +42,7 @@ import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/Messa
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import { computed, shallowRef } from 'vue'
-import { ChannelId, MessageId } from '/@/types/entity-ids'
+import { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
 import { useChannelsStore } from '/@/store/entities/channels'
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
@@ -56,6 +56,7 @@ const props = defineProps<{
   channelId: ChannelId
   entryMessageId?: string
   pinnedMessages: Pin[]
+  typingUsers: UserId[]
 }>()
 
 const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()

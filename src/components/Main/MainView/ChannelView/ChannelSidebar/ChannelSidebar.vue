@@ -8,7 +8,7 @@
         <template #content>
           <channel-sidebar-content
             :channel-id="channelId"
-            :viewer-ids="viewerIds"
+            :viewer-ids="viewingUsers"
             :pinned-messages-count="pinnedMessages.length"
             @move-to-pinned="moveToPinnedPage"
             @move-to-events="moveToEventsPage"
@@ -27,7 +27,7 @@
       />
     </template>
     <template #opener>
-      <channel-sidebar-hidden :viewer-ids="viewerIds" @open="openSidebar" />
+      <channel-sidebar-hidden :viewer-ids="viewingUsers" @open="openSidebar" />
     </template>
   </primary-view-sidebar>
 </template>
@@ -41,7 +41,7 @@ import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
 import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
 import SidebarEventsPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarEventsPage.vue'
 import { computed } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
+import { ChannelId, UserId } from '/@/types/entity-ids'
 import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { Pin } from '@traptitech/traq'
@@ -50,6 +50,7 @@ const props = defineProps<{
   channelId: ChannelId
   isSidebarOpenerReady: boolean
   pinnedMessages: Pin[]
+  viewingUsers: UserId[]
 }>()
 
 const { channelsMap } = useChannelsStore()
@@ -58,7 +59,6 @@ const {
   moveToDefaultPage,
   moveToPinnedPage,
   moveToEventsPage,
-  viewerIds,
   openSidebar,
   closeSidebar
 } = useChannelSidebarCommon()
