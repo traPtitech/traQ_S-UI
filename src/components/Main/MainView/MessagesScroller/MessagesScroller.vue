@@ -17,11 +17,6 @@
       />
       <template v-for="(messageId, index) in messageIds" :key="messageId">
         <messages-scroller-separator
-          v-if="!withoutSeparator && index === unreadIndex"
-          title="ここから未読"
-          :class="$style.unreadSeparator"
-        />
-        <messages-scroller-separator
           v-if="!withoutSeparator && dayDiff(index)"
           :title="createdDate(messageId)"
           :class="$style.dateSeparator"
@@ -201,13 +196,6 @@ const createdDate = (id: MessageId) => {
   return getFullDayString(new Date(message.createdAt))
 }
 
-const unreadIndex = computed(() => {
-  if (!props.unreadSince) return -1
-  return props.messageIds.findIndex(
-    id => messagesMap.value.get(id)?.createdAt === props.unreadSince
-  )
-})
-
 const { onChangeHeight, onEntryMessageLoaded } =
   useMessageScrollerElementResizeObserver(rootRef, props, state)
 
@@ -319,10 +307,6 @@ const dayDiff = useCompareDate(props)
 .bottomSpacer {
   width: 100%;
   height: 12px;
-}
-
-.unreadSeparator {
-  color: $theme-accent-notification-default;
 }
 
 .dateSeparator,
