@@ -129,7 +129,7 @@ export default defineConfig(({ command, mode }) => ({
   test: {
     include: ['tests/unit/**/*.spec.ts'],
     globals: true,
-    setupFiles: ['tests/unit/setup.ts'],
+    setupFiles: ['tests/unit/setup.ts', 'tests/unit/expectExtends.ts'],
     environment: 'jsdom',
     reporters: process.env.CI
       ? new GithubActionsReporter({ hideStackTrace: true })
