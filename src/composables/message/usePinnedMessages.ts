@@ -1,5 +1,6 @@
 import { Pin, Message } from '@traptitech/traq'
 import { Ref, ref, watch } from 'vue'
+import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
 import { messageMitt } from '/@/store/entities/messages'
@@ -43,29 +44,33 @@ const usePinnedMessages = (channelId: Ref<ChannelId>) => {
     { immediate: true }
   )
 
-  messageMitt.on('updateMessage', async message => {
+  useMittListener(messageMitt, 'updateMessage', async message => {
     if (channelId.value !== message.channelId) return
     updatePinnedMessage(message)
   })
-  messageMitt.on('deleteMessage', messageId => {
+  useMittListener(messageMitt, 'deleteMessage', messageId => {
     removePinnedMessage(messageId)
   })
-  messageMitt.on('changeMessagePinned', async ({ message, pinned }) => {
-    if (channelId.value !== message.channelId) return
+  useMittListener(
+    messageMitt,
+    'changeMessagePinned',
+    async ({ message, pinned }) => {
+      if (channelId.value !== message.channelId) return
 
-    if (!pinned) {
-      removePinnedMessage(message.id)
-      return
+      if (!pinned) {
+        removePinnedMessage(message.id)
+        return
+      }
+
+      const { data: pin } = await apis.getPin(message.id)
+      addPinnedMessage({
+        userId: pin.userId,
+        message,
+        pinnedAt: pin.pinnedAt
+      })
     }
-
-    const { data: pin } = await apis.getPin(message.id)
-    addPinnedMessage({
-      userId: pin.userId,
-      message,
-      pinnedAt: pin.pinnedAt
-    })
-  })
-  wsListener.on('reconnect', async () => {
+  )
+  useMittListener(wsListener, 'reconnect', async () => {
     await fetchPins(channelId.value)
   })
 

@@ -7,7 +7,8 @@ import {
 } from '/@/lib/websocket/events'
 import { UserId } from '/@/types/entity-ids'
 import { UserDetail } from '@traptitech/traq'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import useMittListener from '/@/composables/utils/useMittListener'
 
 const useUserDetail = (props: { id: UserId }) => {
   const userDetail = ref<UserDetail>()
@@ -27,17 +28,10 @@ const useUserDetail = (props: { id: UserId }) => {
     fetch()
   }
 
-  wsListener.on('reconnect', fetch)
-  wsListener.on('USER_UPDATED', onUserUpdated)
-  wsListener.on('USER_TAGS_UPDATED', onUserUpdated)
-  wsListener.on('USER_ICON_UPDATED', onUserUpdated)
-
-  onBeforeUnmount(() => {
-    wsListener.off('reconnect', fetch)
-    wsListener.off('USER_UPDATED', onUserUpdated)
-    wsListener.off('USER_TAGS_UPDATED', onUserUpdated)
-    wsListener.off('USER_ICON_UPDATED', onUserUpdated)
-  })
+  useMittListener(wsListener, 'reconnect', fetch)
+  useMittListener(wsListener, 'USER_UPDATED', onUserUpdated)
+  useMittListener(wsListener, 'USER_TAGS_UPDATED', onUserUpdated)
+  useMittListener(wsListener, 'USER_ICON_UPDATED', onUserUpdated)
 
   return { userDetail }
 }

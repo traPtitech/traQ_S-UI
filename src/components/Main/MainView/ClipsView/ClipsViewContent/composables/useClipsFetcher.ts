@@ -1,21 +1,11 @@
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import { MessageId, ClipFolderId } from '/@/types/entity-ids'
-import {
-  reactive,
-  Ref,
-  watch,
-  onMounted,
-  onActivated,
-  onBeforeUnmount
-} from 'vue'
+import { reactive, Ref, watch, onMounted, onActivated } from 'vue'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
 import { wsListener } from '/@/lib/websocket'
-import {
-  ClipFolderMessageAddedEvent,
-  ClipFolderMessageDeletedEvent
-} from '/@/lib/websocket/events'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
+import useMittListener from '/@/composables/utils/useMittListener'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 80
@@ -94,35 +84,29 @@ const useClipsFetcher = (
 
   // クリップフォルダは、wsの再接続時にうまく取得ができないので、
   // 自動で再取得するのはあきらめる
-  const onAdded = async ({
-    folder_id,
-    message_id
-  }: ClipFolderMessageAddedEvent) => {
-    if (props.clipFolderId !== folder_id) return
+  useMittListener(
+    wsListener,
+    'CLIP_FOLDER_MESSAGE_ADDED',
+    async ({ folder_id, message_id }) => {
+      if (props.clipFolderId !== folder_id) return
 
-    await fetchMessage({
-      messageId: message_id
-    })
-    messagesFetcher.addNewMessage(message_id)
-  }
-  const onDeleted = ({
-    folder_id,
-    message_id
-  }: ClipFolderMessageDeletedEvent) => {
-    if (props.clipFolderId !== folder_id) return
+      await fetchMessage({
+        messageId: message_id
+      })
+      messagesFetcher.addNewMessage(message_id)
+    }
+  )
+  useMittListener(
+    wsListener,
+    'CLIP_FOLDER_MESSAGE_DELETED',
+    ({ folder_id, message_id }) => {
+      if (props.clipFolderId !== folder_id) return
 
-    const index = messagesFetcher.messageIds.value.indexOf(message_id)
-    if (index === -1) return
-    messagesFetcher.messageIds.value.splice(index, 1)
-  }
-  onMounted(() => {
-    wsListener.on('CLIP_FOLDER_MESSAGE_ADDED', onAdded)
-    wsListener.on('CLIP_FOLDER_MESSAGE_DELETED', onDeleted)
-  })
-  onBeforeUnmount(() => {
-    wsListener.off('CLIP_FOLDER_MESSAGE_ADDED', onAdded)
-    wsListener.off('CLIP_FOLDER_MESSAGE_DELETED', onDeleted)
-  })
+      const index = messagesFetcher.messageIds.value.indexOf(message_id)
+      if (index === -1) return
+      messagesFetcher.messageIds.value.splice(index, 1)
+    }
+  )
 
   return messagesFetcher
 }

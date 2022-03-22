@@ -1,13 +1,14 @@
-import { onBeforeUnmount, watch, ref, onMounted } from 'vue'
+import { watch, ref, onMounted } from 'vue'
 import { setTimelineStreamingState } from '/@/lib/websocket'
-import { ActivityTimelineMessage, Message } from '@traptitech/traq'
+import { ActivityTimelineMessage } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { messageMitt } from '/@/store/entities/messages'
-import { ChannelId, MessageId } from '/@/types/entity-ids'
+import { ChannelId } from '/@/types/entity-ids'
 import { createSingleflight } from '/@/lib/basic/async'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import useMittListener from '/@/composables/utils/useMittListener'
 
 export const ACTIVITY_LENGTH = 50
 
@@ -65,11 +66,7 @@ const useActivityStream = () => {
     { deep: true }
   )
 
-  const onReconnect = async () => {
-    setTimelineStreamingState(mode.value.all)
-    await fetch()
-  }
-  const onAddMessage = ({ message: activity }: { message: Message }) => {
+  useMittListener(messageMitt, 'addMessage', ({ message: activity }) => {
     // 通常のチャンネルではない、つまりDMのときは無視
     if (!channelsMap.value.has(activity.channelId)) return
 
@@ -104,8 +101,8 @@ const useActivityStream = () => {
         timelineChannelMap.value.delete(lastActivity.channelId)
       }
     }
-  }
-  const onUpdateMessage = (activity: Message) => {
+  })
+  useMittListener(messageMitt, 'updateMessage', activity => {
     // 通常のチャンネルではない、つまりDMのときは無視
     if (!channelsMap.value.has(activity.channelId)) return
 
@@ -113,8 +110,8 @@ const useActivityStream = () => {
     if (sameMessageIndex < 0) return
 
     timeline.value[sameMessageIndex] = activity
-  }
-  const onDeleteMessage = (messageId: MessageId) => {
+  })
+  useMittListener(messageMitt, 'deleteMessage', messageId => {
     const sameMessageIndex = timeline.value.findIndex(a => a.id === messageId)
     if (sameMessageIndex < 0) return
 
@@ -125,18 +122,10 @@ const useActivityStream = () => {
     if (timelineChannelMap.value.get(activity.channelId)?.id === activity.id) {
       timelineChannelMap.value.delete(activity.channelId)
     }
-  }
-
-  messageMitt.on('reconnect', onReconnect)
-  messageMitt.on('addMessage', onAddMessage)
-  messageMitt.on('updateMessage', onUpdateMessage)
-  messageMitt.on('deleteMessage', onDeleteMessage)
-
-  onBeforeUnmount(() => {
-    messageMitt.off('reconnect', onReconnect)
-    messageMitt.off('addMessage', onAddMessage)
-    messageMitt.off('updateMessage', onUpdateMessage)
-    messageMitt.off('deleteMessage', onDeleteMessage)
+  })
+  useMittListener(messageMitt, 'reconnect', async () => {
+    setTimelineStreamingState(mode.value.all)
+    await fetch()
   })
 
   return { timeline }

@@ -16,29 +16,24 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, watchEffect, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { Tag } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
-import { UserTagsUpdatedEvent } from '/@/lib/websocket/events'
 import { useUsersStore } from '/@/store/entities/users'
+import useMittListener from '/@/composables/utils/useMittListener'
 
 const useTag = (props: { id: string }) => {
   const tag = ref<Tag | null>()
   const fetchTag = async () => {
     tag.value = (await apis.getTag(props.id)).data
   }
-  const onTagsUpdated = ({ tag_id }: UserTagsUpdatedEvent) => {
-    if (tag_id !== props.id) return
-    fetchTag()
-  }
 
   watchEffect(fetchTag)
-  onMounted(() => {
-    wsListener.on('USER_TAGS_UPDATED', onTagsUpdated)
-  })
-  onBeforeUnmount(() => {
-    wsListener.off('USER_TAGS_UPDATED', onTagsUpdated)
+
+  useMittListener(wsListener, 'USER_TAGS_UPDATED', ({ tag_id }) => {
+    if (tag_id !== props.id) return
+    fetchTag()
   })
 
   return tag

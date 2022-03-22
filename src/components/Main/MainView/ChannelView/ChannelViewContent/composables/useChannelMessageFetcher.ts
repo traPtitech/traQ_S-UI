@@ -1,12 +1,13 @@
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import { ChannelId, MessageId } from '/@/types/entity-ids'
-import { Ref, watch, onMounted, onBeforeUnmount, onActivated, ref } from 'vue'
+import { Ref, watch, onMounted, onActivated, ref } from 'vue'
 import { Message } from '@traptitech/traq'
 import { wsListener } from '/@/lib/websocket'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
 import { messageMitt } from '/@/store/entities/messages'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import useMittListener from '/@/composables/utils/useMittListener'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 60
@@ -199,30 +200,21 @@ const useChannelMessageFetcher = (
     }
   )
 
-  const onReconnect = () => {
-    messagesFetcher.loadNewMessages()
-  }
-  const onAdded = ({ message }: { message: Message }) => {
+  useMittListener(messageMitt, 'addMessage', ({ message }) => {
     if (props.channelId !== message.channelId) return
     if (!messagesFetcher.isReachedLatest.value) return
 
     messagesFetcher.addNewMessage(message.id)
-  }
-  const onDeleted = (messageId: MessageId) => {
+  })
+  useMittListener(messageMitt, 'deleteMessage', messageId => {
     const index = messagesFetcher.messageIds.value.indexOf(messageId)
     if (index === -1) return
     messagesFetcher.messageIds.value.splice(index, 1)
-  }
-  onMounted(() => {
-    wsListener.on('reconnect', onReconnect)
-    messageMitt.on('addMessage', onAdded)
-    messageMitt.on('deleteMessage', onDeleted)
   })
-  onBeforeUnmount(() => {
-    wsListener.off('reconnect', onReconnect)
-    messageMitt.off('addMessage', onAdded)
-    messageMitt.off('deleteMessage', onDeleted)
+  useMittListener(wsListener, 'reconnect', () => {
+    messagesFetcher.loadNewMessages()
   })
+
   onActivated(() => {
     messagesFetcher.loadNewMessages()
 

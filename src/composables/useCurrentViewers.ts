@@ -3,6 +3,7 @@ import { ref, computed, Ref } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import { wsListener } from '/@/lib/websocket'
 import { useMeStore } from '/@/store/domain/me'
+import useMittListener from '/@/composables/utils/useMittListener'
 
 const useCurrentViewers = (channelId: Ref<ChannelId>) => {
   const meStore = useMeStore()
@@ -32,7 +33,7 @@ const useCurrentViewers = (channelId: Ref<ChannelId>) => {
       .reverse()
   })
 
-  wsListener.on('CHANNEL_VIEWERS_CHANGED', ({ id, viewers }) => {
+  useMittListener(wsListener, 'CHANNEL_VIEWERS_CHANGED', ({ id, viewers }) => {
     if (channelId.value === id) {
       currentViewers.value = viewers
     }

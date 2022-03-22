@@ -19,5 +19,12 @@ export const withSetup =
       }
     })
     app.mount(document.createElement('div'))
-    return [result] as const
+
+    const funcs = {
+      unmount: () => {
+        app.unmount()
+      }
+    }
+
+    return [result, funcs] as const
   }

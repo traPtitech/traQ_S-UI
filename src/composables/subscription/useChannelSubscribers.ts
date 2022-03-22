@@ -1,9 +1,9 @@
 import apis from '/@/lib/apis'
 import { createSingleflight } from '/@/lib/basic/async'
 import { wsListener } from '/@/lib/websocket'
-import { ChannelSubscribersChangedEvent } from '/@/lib/websocket/events'
 import { ChannelId } from '/@/types/entity-ids'
-import { onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
+import useMittListener from '/@/composables/utils/useMittListener'
 
 const getChannelSubscribers = createSingleflight(
   apis.getChannelSubscribers.bind(apis)
@@ -31,20 +31,11 @@ const useChannelSubscribers = (props: { channelId: ChannelId }) => {
     fetch()
   })
 
-  const onSubscribersChanged = ({ id }: ChannelSubscribersChangedEvent) => {
+  useMittListener(wsListener, 'CHANNEL_SUBSCRIBERS_CHANGED', ({ id }) => {
     if (id !== props.channelId) return
     fetch()
-  }
-
-  onMounted(() => {
-    wsListener.on('reconnect', fetch)
-    wsListener.on('CHANNEL_SUBSCRIBERS_CHANGED', onSubscribersChanged)
   })
-
-  onBeforeUnmount(() => {
-    wsListener.off('reconnect', fetch)
-    wsListener.off('CHANNEL_SUBSCRIBERS_CHANGED', onSubscribersChanged)
-  })
+  useMittListener(wsListener, 'reconnect', fetch)
 
   return subscribers
 }
