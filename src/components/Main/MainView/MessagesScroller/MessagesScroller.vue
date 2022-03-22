@@ -15,12 +15,7 @@
         title="これ以上メッセージはありません"
         :class="$style.noMoreSeparator"
       />
-      <template v-for="(messageId, index) in messageIds" :key="messageId">
-        <messages-scroller-separator
-          v-if="!withoutSeparator && dayDiff(index)"
-          :title="createdDate(messageId)"
-          :class="$style.dateSeparator"
-        />
+      <template v-for="messageId in messageIds" :key="messageId">
         <slot
           :message-id="messageId"
           :on-change-height="onChangeHeight"
@@ -47,13 +42,11 @@ import { LoadingDirection } from '/@/store/domain/messagesView'
 import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
 import { throttle } from 'throttle-debounce'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
-import { getFullDayString } from '/@/lib/basic/date'
 import { embeddingOrigin } from '/@/lib/apis'
 import { useRoute, useRouter } from 'vue-router'
 import { isMessageScrollerRoute, RouteName } from '/@/router'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import { useMainViewStore } from '/@/store/ui/mainView'
-import { useMessagesStore } from '/@/store/entities/messages'
 import { useStampsStore } from '/@/store/entities/stamps'
 
 const LOAD_MORE_THRESHOLD = 10
@@ -107,24 +100,6 @@ const useMarkdownInternalHandler = () => {
   return { onClick }
 }
 
-const useCompareDate = (props: { messageIds: MessageId[] }) => {
-  const { messagesMap } = useMessagesStore()
-
-  const dayDiff = (index: number) => {
-    if (index <= 0) {
-      return true
-    }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const pre = messagesMap.value.get(props.messageIds[index - 1]!)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const current = messagesMap.value.get(props.messageIds[index]!)
-    const preDate = new Date(pre?.createdAt ?? '')
-    const currentDate = new Date(current?.createdAt ?? '')
-    return preDate.toDateString() !== currentDate.toDateString()
-  }
-  return dayDiff
-}
-
 /** 設定などから戻ってきた際のスクロール位置リストア */
 const useScrollRestoration = (
   rootRef: Ref<HTMLElement | null>,
@@ -159,12 +134,9 @@ const props = withDefaults(
     isReachedLatest: boolean
     isLoading?: boolean
     lastLoadingDirection: LoadingDirection
-    unreadSince?: string
-    withoutSeparator?: boolean
   }>(),
   {
-    isLoading: false,
-    withoutSeparator: false
+    isLoading: false
   }
 )
 
@@ -174,7 +146,6 @@ const emit = defineEmits<{
 }>()
 
 const { lastScrollPosition } = useMainViewStore()
-const { messagesMap } = useMessagesStore()
 
 // メッセージスタンプ表示時にスタンプが存在していないと
 // 場所が確保されないくてずれてしまうので、取得完了を待つ
@@ -185,16 +156,6 @@ const state = reactive({
   height: 0,
   scrollTop: lastScrollPosition.value
 })
-
-// DaySeparatorの表示
-const createdDate = (id: MessageId) => {
-  const message = messagesMap.value.get(id)
-  if (!message) {
-    return ''
-  }
-
-  return getFullDayString(new Date(message.createdAt))
-}
 
 const { onChangeHeight, onEntryMessageLoaded } =
   useMessageScrollerElementResizeObserver(rootRef, props, state)
@@ -275,8 +236,6 @@ const handleScroll = throttle(17, () => {
 
 const { onClick } = useMarkdownInternalHandler()
 useScrollRestoration(rootRef, state)
-
-const dayDiff = useCompareDate(props)
 </script>
 
 <style lang="scss" module>
@@ -309,7 +268,6 @@ const dayDiff = useCompareDate(props)
   height: 12px;
 }
 
-.dateSeparator,
 .noMoreSeparator {
   @include color-ui-secondary;
 }

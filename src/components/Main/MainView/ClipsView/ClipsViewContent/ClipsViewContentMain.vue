@@ -8,7 +8,6 @@
       :is-reached-latest="isReachedLatest"
       :is-loading="isLoading"
       :last-loading-direction="lastLoadingDirection"
-      without-separator
       @request-load-former="onLoadFormerMessagesRequest"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">

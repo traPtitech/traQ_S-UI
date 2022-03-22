@@ -8,7 +8,6 @@
       :is-reached-latest="isReachedLatest"
       :is-loading="isLoading"
       :last-loading-direction="lastLoadingDirection"
-      :unread-since="unreadSince"
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
     >
@@ -17,6 +16,11 @@
           v-if="messageId === firstUnreadMessageId"
           title="ここから未読"
           :class="$style.unreadSeparator"
+        />
+        <messages-scroller-separator
+          v-if="dayDiffMessages.has(messageId)"
+          :title="createdDate(messageId)"
+          :class="$style.dateSeparator"
         />
         <message-element
           :class="$style.element"
@@ -37,12 +41,14 @@ import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/Messa
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import { computed, shallowRef } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
+import { ChannelId, MessageId } from '/@/types/entity-ids'
 import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
 import { useChannelsStore } from '/@/store/entities/channels'
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
 import MessagesScrollerSeparator from '/@/components/Main/MainView/MessagesScroller/MessagesScrollerSeparator.vue'
 import { useMessagesStore } from '/@/store/entities/messages'
+import useDayDiffMessages from './composables/useDayDiffMessages'
+import { getFullDayString } from '/@/lib/basic/date'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -71,6 +77,16 @@ const firstUnreadMessageId = computed(() => {
     ) ?? ''
   )
 })
+
+const dayDiffMessages = useDayDiffMessages(messageIds)
+const createdDate = (id: MessageId) => {
+  const message = messagesMap.value.get(id)
+  if (!message) {
+    return ''
+  }
+
+  return getFullDayString(new Date(message.createdAt))
+}
 
 const { channelsMap } = useChannelsStore()
 const isArchived = computed(
@@ -101,6 +117,9 @@ const isArchived = computed(
   color: $theme-accent-notification-default;
 }
 
+.dateSeparator {
+  @include color-ui-secondary;
+}
 .element {
   margin: 4px 0;
   contain: content;
