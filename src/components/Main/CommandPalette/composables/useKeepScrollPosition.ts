@@ -1,5 +1,5 @@
 import { onBeforeUnmount, Ref } from 'vue'
-import useOnAllRendered from './useAllRendered'
+import useOnAllRendered from './useOnAllRendered'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { MessageId } from '/@/types/entity-ids'
 
