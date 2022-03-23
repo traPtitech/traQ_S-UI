@@ -1,14 +1,6 @@
 <template>
   <teleport to="#dropdown-suggester-popup">
-    <!--
-      iOSではうまく動かないので非表示
-      https://github.com/traPtitech/traQ_S-UI/issues/2088
-    -->
-    <div
-      v-if="!iOSFlag && isShown"
-      :class="$style.container"
-      :style="styledPosition"
-    >
+    <div v-if="isShown" :class="$style.container" :style="styledPosition">
       <!--
         mousedownイベントでやっているのはclickイベントだとフォーカスが外れるため
         preventをすることでclickイベントでフォーカスが外れるのを回避している
@@ -35,7 +27,6 @@
 import { computed } from 'vue'
 import { Word } from '../composables/useWordSuggestionList'
 import { WordOrConfirmedPart } from '../composables/useWordSuggester'
-import { isIOS } from '/@/lib/dom/browser'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 
 const props = withDefaults(
@@ -60,8 +51,6 @@ const emit = defineEmits<{
 
 const WIDTH = 240
 const MARGIN = 8
-
-const iOSFlag = isIOS()
 
 const styledPosition = computed(() => ({
   top: `${props.position.top}px`,
