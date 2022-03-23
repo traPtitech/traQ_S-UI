@@ -113,7 +113,7 @@ const suggesterPosition = computed(() => {
   if (!textareaRef.value) return
   const { top, left } = textareaRef.value.getBoundingClientRect()
   return {
-    top: top + position.value.top - textareaRef.value.scrollTop,
+    top: top + position.value.top,
     left: left + position.value.left
   }
 })
