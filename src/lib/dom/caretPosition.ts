@@ -34,6 +34,8 @@ const propertyNamesToCopy = [
   'word-spacing'
 ]
 
+const overrideProperties = ['width: 100%']
+
 const calcMirrorStyle = (textField: HTMLInputElement | HTMLTextAreaElement) => {
   const style = window.getComputedStyle(textField)
   const props: string[] = [
@@ -44,6 +46,7 @@ const calcMirrorStyle = (textField: HTMLInputElement | HTMLTextAreaElement) => {
     ...propertyNamesToCopy.map(
       name => `${name}:${style.getPropertyValue(name)};`
     ),
+    ...overrideProperties
   ]
   return props.join(' ')
 }
