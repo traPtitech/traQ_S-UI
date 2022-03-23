@@ -36,12 +36,14 @@ const propertyNamesToCopy = [
 
 const calcMirrorStyle = (textField: HTMLInputElement | HTMLTextAreaElement) => {
   const style = window.getComputedStyle(textField)
-  const props = [
+  const props: string[] = [
     ...properties,
     `white-space:${
       textField.nodeName.toLowerCase() === 'textarea' ? 'pre-wrap' : 'nowrap'
     };`,
-    propertyNamesToCopy.map(name => `${name}:${style.getPropertyValue(name)};`)
+    ...propertyNamesToCopy.map(
+      name => `${name}:${style.getPropertyValue(name)};`
+    ),
   ]
   return props.join(' ')
 }
