@@ -18,11 +18,7 @@
         :icon-name="subscriptionChangeInfo.iconName"
         :disabled="!subscriptionChangeInfo.canChange"
         :tooltip="subscriptionChangeInfo.tooltip"
-        @click="
-          subscriptionChangeInfo.canChange
-            ? changeToNextSubscriptionLevel
-            : undefined
-        "
+        @click="changeToNextSubscriptionLevel"
       />
     </template>
     <header-tools-item
