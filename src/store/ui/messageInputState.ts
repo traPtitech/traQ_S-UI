@@ -29,7 +29,7 @@ export type Attachment = {
 
 export type MessageInputStateKey = Ref<ChannelId> | ChannelId | VirtualChannelId
 
-const defaultValue = { text: '', attachments: [] }
+const createDefaultValue = () => ({ text: '', attachments: [] })
 
 const useMessageInputStatePinia = defineStore('ui/messageInputState', () => {
   const states = reactive(
@@ -65,7 +65,7 @@ const useMessageInputStateIndividual = (channelId: MessageInputStateKey) => {
   const { getStore, setStore } = useMessageInputStateBase()
 
   const state: MessageInputState = reactive(
-    getStore(channelId) ?? { ...defaultValue }
+    getStore(channelId) ?? createDefaultValue()
   )
   watch(
     () => getStore(channelId),
@@ -114,7 +114,7 @@ export const useMessageInputStateStatic = () => {
    */
   const getMessageInputState = (channelId: MessageInputStateKey) => {
     const cId = unref(channelId)
-    const state = getStore(cId) ?? { ...defaultValue }
+    const state = getStore(cId) ?? createDefaultValue()
 
     const isTextEmpty = computed(() => state.text === '')
     const isAttachmentEmpty = computed(() => state.attachments.length === 0)
