@@ -45,7 +45,7 @@ const resolveBrowserTheme = (
     original?.scrollbarThumb ??
     transparentizeWithFallback(basic.ui.secondary.fallback, 0.5),
   scrollbarThumbHover:
-    original?.scrollbarThumb ??
+    original?.scrollbarThumbHover ??
     transparentizeWithFallback(basic.ui.secondary.fallback, 0.8),
   scrollbarTrack: original?.scrollbarTrack ?? 'transparent'
 })
