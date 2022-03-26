@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import apis from '/@/lib/apis'
 import { ChannelId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -31,17 +31,20 @@ const { channelsMap } = useChannelsStore()
 const remoteTopic = computed(
   () => channelsMap.value.get(props.channelId)?.topic ?? ''
 )
-const { localValue: localTopic, isEditing } = useLocalInput(
-  remoteTopic,
-  async topic => {
-    try {
-      await apis.editChannelTopic(props.channelId, { topic })
-      return true
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e)
-      return false
-    }
+const {
+  localValue: localTopic,
+  isEditing,
+  sync
+} = useLocalInput(remoteTopic, async topic => {
+  try {
+    await apis.editChannelTopic(props.channelId, { topic })
+    return true
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e)
+    return false
   }
-)
+})
+
+watch(() => props.channelId, sync)
 </script>

@@ -28,7 +28,11 @@ const useLocalInput = <T>(
     }
   })
 
-  return { localValue, isEditing }
+  const sync = () => {
+    localValue.value = remoteValue.value
+  }
+
+  return { localValue, isEditing, sync }
 }
 
 export default useLocalInput

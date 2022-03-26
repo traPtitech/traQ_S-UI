@@ -54,7 +54,7 @@ describe('useLocalInput', () => {
     const f = vi.fn().mockReturnValue(true)
 
     const remoteValue = ref('1')
-    const { localValue, isEditing } = useLocalInput(remoteValue, f)
+    const { isEditing } = useLocalInput(remoteValue, f)
     isEditing.value = true
     await nextTick()
     expect(f).not.toHaveBeenCalled()
@@ -70,11 +70,22 @@ describe('useLocalInput', () => {
     const f = vi.fn().mockReturnValue(false)
 
     const remoteValue = ref('1')
-    const { localValue, isEditing } = useLocalInput(remoteValue, f)
+    const { isEditing } = useLocalInput(remoteValue, f)
     isEditing.value = true
     await nextTick()
     isEditing.value = false
     await nextTick()
     expect(isEditing.value).toBe(true)
+  })
+
+  it('sync function works', async () => {
+    const f = vi.fn().mockReturnValue(false)
+
+    const remoteValue = ref('1')
+    const { localValue, isEditing, sync } = useLocalInput(remoteValue, f)
+    isEditing.value = true
+    localValue.value = '2'
+    sync()
+    expect(localValue.value).toBe('1')
   })
 })

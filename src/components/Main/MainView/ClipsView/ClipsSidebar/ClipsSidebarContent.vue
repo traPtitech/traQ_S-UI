@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { ClipFolderId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import router, {
@@ -69,17 +69,21 @@ const { localValue: localName, isEditing: isNameEditing } = useLocalInput(
   }
 )
 
-const { localValue: localDescription, isEditing: isDescriptionEditing } =
-  useLocalInput(remoteDescription, async description => {
-    try {
-      await apis.editClipFolder(props.clipFolderId, { description })
-      return true
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e)
-      return false
-    }
-  })
+const {
+  localValue: localDescription,
+  isEditing: isDescriptionEditing,
+  sync
+} = useLocalInput(remoteDescription, async description => {
+  try {
+    await apis.editClipFolder(props.clipFolderId, { description })
+    return true
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e)
+    return false
+  }
+})
+watch(() => props.clipFolderId, sync)
 
 const { defaultChannelName } = useBrowserSettings()
 
