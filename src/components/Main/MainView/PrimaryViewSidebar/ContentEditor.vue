@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div v-if="isEditingValue && value">
+    <div v-if="isEditingValue && value !== undefined">
       <textarea-autosize v-model="value" :class="$style.editor" />
       <length-count :val="value" :max-length="maxLength" />
     </div>
