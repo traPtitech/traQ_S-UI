@@ -175,6 +175,7 @@ const useMessageFetcher = (
     if (!fetchNewMessages || !isReachedLatest.value) {
       return
     }
+    isReachedLatest.value = false
     isLoading.value = true
 
     await runWithIdentifierCheck(

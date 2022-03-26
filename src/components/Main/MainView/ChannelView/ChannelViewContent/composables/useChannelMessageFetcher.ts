@@ -33,6 +33,36 @@ const useChannelMessageFetcher = (
   const loadedMessageOldestDate = ref<Date>()
   const unreadSince = ref()
 
+  const updateDates = (messages: Message[]) => {
+    if (messages.length <= 0) return
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const firstMessage = messages[0]!
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const lastMessage = messages[messages.length - 1]!
+
+    const firstMessageDate = new Date(firstMessage.createdAt)
+    const lastMessageDate = new Date(lastMessage.createdAt)
+
+    const oldDate =
+      firstMessageDate < lastMessageDate ? firstMessageDate : lastMessageDate
+    const newDate =
+      firstMessageDate < lastMessageDate ? lastMessageDate : firstMessageDate
+
+    if (
+      !loadedMessageOldestDate.value ||
+      oldDate < loadedMessageOldestDate.value
+    ) {
+      loadedMessageOldestDate.value = oldDate
+    }
+    if (
+      !loadedMessageLatestDate.value ||
+      loadedMessageLatestDate.value < newDate
+    ) {
+      loadedMessageLatestDate.value = newDate
+    }
+  }
+
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
     await waitHeightResolved
     const { messages, hasMore } = await fetchMessagesByChannelId({
@@ -46,16 +76,7 @@ const useChannelMessageFetcher = (
       isReachedEnd.value = true
     }
 
-    const oldestMessage = messages[messages.length - 1]
-    if (oldestMessage) {
-      const oldestMessageDate = new Date(oldestMessage.createdAt)
-      if (
-        !loadedMessageOldestDate.value ||
-        oldestMessageDate < loadedMessageOldestDate.value
-      ) {
-        loadedMessageOldestDate.value = oldestMessageDate
-      }
-    }
+    updateDates(messages)
 
     return messages.map(message => message.id)
   }
@@ -75,16 +96,7 @@ const useChannelMessageFetcher = (
       isReachedLatest.value = true
     }
 
-    const latestMessage = messages[messages.length - 1]
-    if (latestMessage) {
-      const latestMessageDate = new Date(latestMessage.createdAt)
-      if (
-        !loadedMessageLatestDate.value ||
-        latestMessageDate > loadedMessageLatestDate.value
-      ) {
-        loadedMessageLatestDate.value = latestMessageDate
-      }
-    }
+    updateDates(messages)
 
     return messages.map(message => message.id)
   }
@@ -125,16 +137,7 @@ const useChannelMessageFetcher = (
       isReachedLatest.value = true
     }
 
-    const oldestMessage = messages[messages.length - 1]
-    if (oldestMessage) {
-      const oldestMessageDate = new Date(oldestMessage.createdAt)
-      if (
-        !loadedMessageOldestDate.value ||
-        oldestMessageDate < loadedMessageOldestDate.value
-      ) {
-        loadedMessageOldestDate.value = oldestMessageDate
-      }
-    }
+    updateDates(messages)
 
     return messages.map(message => message.id)
   }
