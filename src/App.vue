@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { computed, watchEffect, Ref } from 'vue'
-import useHtmlDatasetBoolean from '/@/composables/document/useHtmlDatasetBoolean'
+import useHtmlDataset from '/@/composables/document/useHtmlDataset'
 import { useThemeVariables } from '/@/composables/document/useThemeVariables'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
@@ -50,17 +50,17 @@ const useThemeObserver = () => {
   })
 
   const codeHighlight = computed(
-    () => currentTheme.value.markdown.codeHighlight === 'dark'
+    () => currentTheme.value.markdown.codeHighlight
   )
-  useHtmlDatasetBoolean('codeHighlight', codeHighlight)
+  useHtmlDataset('codeHighlight', codeHighlight)
 
   const stampEdge = computed(() => currentTheme.value.specific.stampEdgeEnable)
-  useHtmlDatasetBoolean('stampEdge', stampEdge)
+  useHtmlDataset('stampEdge', stampEdge)
 }
 
 const useEcoModeObserver = () => {
   const { ecoMode } = useBrowserSettings()
-  useHtmlDatasetBoolean('ecoMode', ecoMode)
+  useHtmlDataset('ecoMode', ecoMode)
 }
 
 const useThemeStyleTag = (style: Ref<Record<string, string>>) => {

@@ -1,5 +1,5 @@
 @import '@traptitech/traq-markdown-it/src/css/stamp';
 
-html:not([data-eco-mode]) {
+html[data-eco-mode='false'] {
   @import '@traptitech/traq-markdown-it/src/css/stampEffect';
 }
