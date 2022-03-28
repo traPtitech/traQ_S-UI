@@ -1,21 +1,20 @@
 import { Ref, watchEffect, watch, unref } from 'vue'
-import { ExternalUrl, FileId } from '/@/types/entity-ids'
-import { Message } from '@traptitech/traq'
+import { ExternalUrl, FileId, MessageId } from '/@/types/entity-ids'
 import { useRoute } from 'vue-router'
 
 export type ChangeHeightData = Readonly<{
+  id: MessageId
   heightDiff: number
   top: number
   bottom: number
   lastTop: number
   lastBottom: number
-  date?: string
 }>
 
 const useElementRenderObserver = (
   bodyRef: Ref<HTMLDivElement | null>,
   isEntryMessage: Ref<boolean> | boolean,
-  message: Ref<Message | undefined>,
+  messageId: Ref<string>,
   embeddingsState: Readonly<{
     fileIds: readonly FileId[]
     externalUrls: readonly ExternalUrl[]
@@ -46,12 +45,12 @@ const useElementRenderObserver = (
       }
     } else {
       emit('changeHeight', {
+        id: messageId.value,
         heightDiff: height - lastHeight,
         top,
         bottom,
         lastTop,
-        lastBottom,
-        date: message.value?.createdAt
+        lastBottom
       })
     }
     lastHeight = height

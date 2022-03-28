@@ -7,6 +7,7 @@
       :is-reached-end="isReachedEnd"
       :is-reached-latest="isReachedLatest"
       :is-loading="isLoading"
+      :entry-message-id="entryMessageId"
       :last-loading-direction="lastLoadingDirection"
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"

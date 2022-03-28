@@ -1,12 +1,12 @@
-import { Ref, computed } from 'vue'
+import { Ref } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import { LoadingDirection } from '/@/store/domain/messagesView'
 import { ChangeHeightData } from '/@/components/Main/MainView/MessageElement/composables/useElementRenderObserver'
-import { useMessagesStore } from '/@/store/entities/messages'
 
 const useMessageScrollerElementResizeObserver = (
   rootRef: Ref<HTMLElement | null>,
   scrollerProps: {
+    messageIds: MessageId[]
     lastLoadingDirection: LoadingDirection
     entryMessageId?: MessageId
   },
@@ -14,16 +14,6 @@ const useMessageScrollerElementResizeObserver = (
     height: number
   }
 ) => {
-  const { messagesMap } = useMessagesStore()
-
-  const entryMessageDate = computed(() => {
-    if (scrollerProps.entryMessageId) {
-      const message = messagesMap.value.get(scrollerProps.entryMessageId)
-      return message ? new Date(message.createdAt) : undefined
-    }
-    return undefined
-  })
-
   const onChangeHeight = (payload: ChangeHeightData) => {
     if (!rootRef.value) {
       return
@@ -31,13 +21,20 @@ const useMessageScrollerElementResizeObserver = (
 
     if (
       scrollerProps.lastLoadingDirection === 'around' &&
-      entryMessageDate.value &&
-      payload.date
+      scrollerProps.entryMessageId
     ) {
-      // エントリーメッセージがあり、かつ初回ロードの場合、メッセージの時刻を確認する
-      // エントリーより過去だった場合、エントリーより上にあるのでスクロール位置をずらす
-      const messageDate = new Date(payload.date)
-      if (messageDate < entryMessageDate.value) {
+      // エントリーメッセージがあり、かつ初回ロードの場合
+      // エントリーより上にあった場合はスクロール位置をずらす
+      let isBeforeEntryMessage = false
+      for (const messageId of scrollerProps.messageIds) {
+        if (messageId === scrollerProps.entryMessageId) break
+        if (messageId === payload.id) {
+          isBeforeEntryMessage = true
+          break
+        }
+      }
+
+      if (isBeforeEntryMessage) {
         rootRef.value.scrollTop += payload.heightDiff
         viewPortState.height = rootRef.value.scrollHeight
       }

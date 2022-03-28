@@ -77,7 +77,7 @@ const { embeddingsState } = useEmbeddings(props)
 useElementRenderObserver(
   bodyRef,
   toRef(props, 'isEntryMessage'),
-  message,
+  toRef(props, 'messageId'),
   embeddingsState,
   emit
 )

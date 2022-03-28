@@ -133,6 +133,7 @@ const props = withDefaults(
     isReachedEnd: boolean
     isReachedLatest: boolean
     isLoading?: boolean
+    entryMessageId?: MessageId
     lastLoadingDirection: LoadingDirection
   }>(),
   {

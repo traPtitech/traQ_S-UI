@@ -22,7 +22,7 @@
 import MessageContents from './MessageContents.vue'
 import MessageTools from './MessageTools.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
-import { computed, shallowRef } from 'vue'
+import { computed, shallowRef, toRef } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useElementRenderObserver, {
@@ -49,7 +49,13 @@ const message = computed(() => messagesMap.value.get(props.messageId))
 
 const { embeddingsState } = useEmbeddings(props)
 
-useElementRenderObserver(bodyRef, false, message, embeddingsState, emit)
+useElementRenderObserver(
+  bodyRef,
+  false,
+  toRef(props, 'messageId'),
+  embeddingsState,
+  emit
+)
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 </script>
