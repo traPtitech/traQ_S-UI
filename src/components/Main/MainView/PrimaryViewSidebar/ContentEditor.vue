@@ -9,7 +9,7 @@
     </div>
     <button
       :data-is-editing="$boolAttr(isEditingValue)"
-      :disabled="isExceeded"
+      :disabled="isEditingValue && isExceeded"
       :data-is-exceeded="$boolAttr(isExceeded)"
       :class="$style.button"
       @click="onButtonClick"
@@ -97,14 +97,15 @@ const isExceeded = computed(
     &:hover {
       @include color-accent-primary;
     }
-  }
-  cursor: pointer;
-  &[data-is-exceeded] {
-    color: $theme-accent-error-default;
-    cursor: default;
-    &:hover {
+
+    &[data-is-exceeded] {
       color: $theme-accent-error-default;
+      cursor: default;
+      &:hover {
+        color: $theme-accent-error-default;
+      }
     }
   }
+  cursor: pointer;
 }
 </style>
