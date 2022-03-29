@@ -47,8 +47,6 @@ const onDelete = async (id: string) => {
   if (!confirm('本当にこのグループ管理者を削除しますか？')) return
   try {
     await apis.removeUserGroupAdmin(props.groupId, id)
-
-    // TODO: wsがつながっていないことがある
   } catch {
     addErrorToast('グループ管理者の削除に失敗しました')
   }

@@ -3,6 +3,7 @@ import { isIOSApp } from '/@/lib/dom/browser'
 import router, { RouteName } from '/@/router'
 import { onActivated, onBeforeMount, ref } from 'vue'
 import { useMeStore } from '/@/store/domain/me'
+import { setupWebSocket } from '/@/lib/websocket'
 
 /**
  * ログイン状態かを確認し、ログインしていなかった場合はログイン画面へ遷移する
@@ -32,14 +33,16 @@ const useLoginCheck = (afterCheck?: () => void) => {
     try {
       await performLoginCheck(fetchMe)
     } catch {}
-    if (detail.value !== undefined) {
-      afterCheck?.()
-    }
 
     if (isIOSApp(window)) {
       await window.webkit.messageHandlers.setLoginStatusHandler.postMessage(
         detail.value !== undefined
       )
+    }
+    await setupWebSocket()
+
+    if (detail.value !== undefined) {
+      afterCheck?.()
     }
 
     isLoginCheckDone.value = true

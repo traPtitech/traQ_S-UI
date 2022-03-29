@@ -38,7 +38,7 @@ interface QRTCEventMap {
   connectionerror: QRTCConnectionErrorEvent
 }
 class traQRTCClientBase {
-  private eventTargetDeligator: EventTarget = document.createDocumentFragment()
+  private eventTargetDeligator = new EventTarget()
 
   public addEventListener<K extends keyof QRTCEventMap>(
     event: K,

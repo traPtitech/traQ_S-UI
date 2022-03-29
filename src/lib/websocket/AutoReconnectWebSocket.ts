@@ -21,8 +21,7 @@ type TypedEventListener<T extends keyof EventMap> = (ev: EventMap[T]) => void
 
 export default class AutoReconnectWebSocket {
   _ws?: WebSocket
-  // SafariでEventTargetのコンストラクタ使えないのでDocumentFragmentで代用
-  readonly eventTarget: EventTarget = document.createDocumentFragment()
+  readonly eventTarget = new EventTarget()
 
   readonly url: string
   readonly protocols: string | string[] | undefined
@@ -46,6 +45,12 @@ export default class AutoReconnectWebSocket {
 
   get isOpen() {
     return this._ws?.readyState === WebSocket.OPEN
+  }
+  get isOpenOrConnecting() {
+    return (
+      this._ws?.readyState === WebSocket.OPEN ||
+      this._ws?.readyState === WebSocket.CONNECTING
+    )
   }
 
   _sendCommand(commands: readonly [WebSocketCommand, ...string[]]) {
@@ -128,8 +133,10 @@ export default class AutoReconnectWebSocket {
     )
   }
 
-  connect() {
-    this._setupWs()
+  async connect() {
+    if (this.isOpenOrConnecting) return
+
+    return this._setupWs()
   }
 
   async reconnect() {
