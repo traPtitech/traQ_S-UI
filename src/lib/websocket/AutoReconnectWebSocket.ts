@@ -21,8 +21,7 @@ type TypedEventListener<T extends keyof EventMap> = (ev: EventMap[T]) => void
 
 export default class AutoReconnectWebSocket {
   _ws?: WebSocket
-  // SafariでEventTargetのコンストラクタ使えないのでDocumentFragmentで代用
-  readonly eventTarget: EventTarget = document.createDocumentFragment()
+  readonly eventTarget = new EventTarget()
 
   readonly url: string
   readonly protocols: string | string[] | undefined
