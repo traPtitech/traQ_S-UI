@@ -53,8 +53,6 @@ const { addErrorToast } = useToastStore()
 const update = async (key: keyof UserGroup, value: string) => {
   try {
     await apis.editUserGroup(props.group.id, { [key]: value })
-
-    // TODO: wsがつながっていないことがある
   } catch {
     addErrorToast('グループの変更に失敗しました')
   }
@@ -90,8 +88,6 @@ const onDelete = async () => {
 
   try {
     await apis.deleteUserGroup(props.group.id)
-
-    // TODO: wsがつながっていないことがある
   } catch {
     addErrorToast('グループの削除に失敗しました')
   }

@@ -46,6 +46,12 @@ export default class AutoReconnectWebSocket {
   get isOpen() {
     return this._ws?.readyState === WebSocket.OPEN
   }
+  get isOpenOrConnecting() {
+    return (
+      this._ws?.readyState === WebSocket.OPEN ||
+      this._ws?.readyState === WebSocket.CONNECTING
+    )
+  }
 
   _sendCommand(commands: readonly [WebSocketCommand, ...string[]]) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -127,8 +133,10 @@ export default class AutoReconnectWebSocket {
     )
   }
 
-  connect() {
-    this._setupWs()
+  async connect() {
+    if (this.isOpenOrConnecting) return
+
+    return this._setupWs()
   }
 
   async reconnect() {

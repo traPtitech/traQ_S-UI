@@ -66,8 +66,6 @@ const onClickDeleteAll = async () => {
           .map(m => apis.removeUserGroupMember(props.groupId, m.id))
       )
     }
-
-    // TODO: wsがつながっていないことがある
   } catch {
     addErrorToast('全メンバーの削除に失敗しました')
   }
@@ -85,8 +83,6 @@ const onDelete = async (id: string) => {
   if (!confirm('本当にこのメンバーを削除しますか？')) return
   try {
     await apis.removeUserGroupMember(props.groupId, id)
-
-    // TODO: wsがつながっていないことがある
   } catch {
     addErrorToast('メンバーの削除に失敗しました')
   }

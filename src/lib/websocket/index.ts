@@ -40,8 +40,8 @@ if (import.meta.env.MODE === 'development') {
 
 export const wsListener = createWebSocketListener(ws)
 
-export const setupWebSocket = () => {
-  ws.connect()
+export const setupWebSocket = async () => {
+  await ws.connect()
 }
 
 export * from './send'

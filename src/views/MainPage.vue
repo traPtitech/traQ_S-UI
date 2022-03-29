@@ -50,7 +50,6 @@ import {
   onMounted,
   onBeforeUnmount
 } from 'vue'
-import { setupWebSocket } from '/@/lib/websocket'
 import { connectFirebase } from '/@/lib/notification/notification'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useNavigationController from '/@/composables/mainView/useNavigationController'
@@ -167,7 +166,6 @@ useDraftConfirmer()
 
 const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
 useInitialFetch(() => {
-  setupWebSocket()
   connectFirebase(onClick => {
     addToast({
       type: 'success',
