@@ -1,8 +1,4 @@
-import {
-  MessageInputStateKey,
-  useMessageInputStateAttachment
-} from '/@/store/ui/messageInputState'
-import { useToastStore } from '/@/store/ui/toast'
+import { getTextFromHtml } from '/@/lib/dom/dataTransfer'
 
 const readDataFromClipboard = async () => {
   if (!navigator.permissions?.query) return []
@@ -36,16 +32,9 @@ const obtainFilesFromClipboardItems = async (items: ClipboardItems) => {
 }
 
 const usePaste = (
-  channelId: MessageInputStateKey,
   emit: (name: 'addAttachments', files: File[]) => void,
   insertText: (text: string) => void
 ) => {
-  const { addErrorToast } = useToastStore()
-  const { getTextFromHtml } = useMessageInputStateAttachment(
-    channelId,
-    addErrorToast
-  )
-
   const onPaste = async (event: ClipboardEvent) => {
     const dt = event?.clipboardData
     if (!dt) return
@@ -61,7 +50,8 @@ const usePaste = (
     }
 
     if (dt.types.includes('text/html')) {
-      const text = await getTextFromHtml(dt, event)
+      event.preventDefault()
+      const text = await getTextFromHtml(dt)
       insertText(text)
       return
     }

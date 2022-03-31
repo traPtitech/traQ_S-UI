@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, toRef } from 'vue'
+import { ref, computed } from 'vue'
 import useSendKeyWatcher from './composables/useSendKeyWatcher'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import { ChannelId } from '/@/types/entity-ids'
@@ -86,7 +86,7 @@ const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 defineExpose({ textareaAutosizeRef })
 
 const { insertText } = useInsertText(textareaRef)
-const { onPaste } = usePaste(toRef(props, 'channelId'), emit, insertText)
+const { onPaste } = usePaste(emit, insertText)
 
 const {
   onKeyUp: onKeyUpWordSuggester,

@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { reactive, computed, Ref, unref, watch } from 'vue'
 import { AttachmentType, mimeToFileType } from '/@/lib/basic/file'
-import { generateMarkdownFromHtml } from '/@/lib/markdown/fromHtml'
+import { getTextFromHtml } from '/@/lib/dom/dataTransfer'
 import { getResizedFile } from '/@/lib/resize'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId } from '/@/types/entity-ids'
@@ -137,8 +137,6 @@ export const useMessageInputStateStatic = () => {
   return { getMessageInputState }
 }
 
-const removeSpaces = (text: string) => text.replace(/\s|\\/g, '')
-
 export const useMessageInputStateAttachment = (
   channelId: MessageInputStateKey,
   onError: (message: string) => void
@@ -146,24 +144,6 @@ export const useMessageInputStateAttachment = (
   const { state } = useMessageInputStateIndividual(channelId)
 
   const attachments = computed(() => state.attachments)
-
-  const getTextFromHtml = async (dt: DataTransfer, eventToPrevent?: Event) => {
-    eventToPrevent?.preventDefault()
-
-    const html = dt.getData('text/html')
-    const plainText = dt.getData('text/plain')
-    const markdown = await generateMarkdownFromHtml(html)
-
-    const isSame = removeSpaces(markdown) === removeSpaces(plainText)
-    if (isSame) {
-      return plainText
-    }
-
-    if (confirm('HTMLをマークダウンに変換して貼り付けますか？')) {
-      return markdown
-    }
-    return plainText
-  }
 
   const addFromDataTransfer = async (dt: DataTransfer) => {
     const types = dt.types
@@ -236,7 +216,6 @@ export const useMessageInputStateAttachment = (
 
   return {
     attachments,
-    getTextFromHtml,
     addFromDataTransfer,
     addAttachment,
     removeAttachmentAt
