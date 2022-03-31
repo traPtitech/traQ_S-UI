@@ -76,7 +76,8 @@ export default defineConfig(({ command, mode }) => ({
         `,
         charset: false
       }
-    }
+    },
+    devSourcemap: true
   },
   // /@/lib/define.tsを参照
   define: {
