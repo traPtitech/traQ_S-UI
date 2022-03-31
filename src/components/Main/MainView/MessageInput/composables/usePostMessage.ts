@@ -9,9 +9,9 @@ import { countLength } from '/@/lib/basic/string'
 import { useToastStore } from '/@/store/ui/toast'
 import {
   Attachment,
-  useMessageInputStateStatic,
   MessageInputStateKey
 } from '/@/store/ui/messageInputStateStore'
+import useMessageInputStateStatic from '/@/composables/messageInputState/useMessageInputStateStatic'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
