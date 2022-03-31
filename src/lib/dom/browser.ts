@@ -16,8 +16,21 @@ export const isFirefox = () => {
 
 type iOSAppWindow = Window & {
   iOSToken: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  webkit: { messageHandlers: any }
+
+  webkit: {
+    messageHandlers: {
+      /**
+       * @see https://github.com/traPtitech/traQ-iOS/blob/d752f1dcc33ec878039605008f790c0452ba7873/traQ-R%20second/ViewController.swift#L14-L17
+       * @see https://github.com/traPtitech/traQ-iOS/blob/d752f1dcc33ec878039605008f790c0452ba7873/traQ-R%20second/ViewController.swift#L220-L250
+       */
+      scriptMessageHandler: {
+        postMessage: {
+          (event: 'RequestMicrophone'): Promise<boolean>
+          (event: 'RequestCamera'): Promise<boolean>
+        }
+      }
+    }
+  }
 }
 
 export const isIOSApp = (window: Window): window is iOSAppWindow => {

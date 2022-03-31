@@ -1,5 +1,4 @@
 import { createSingleflight } from '/@/lib/basic/async'
-import { isIOSApp } from '/@/lib/dom/browser'
 import router, { RouteName } from '/@/router'
 import { onActivated, onBeforeMount, ref } from 'vue'
 import { useMeStore } from '/@/store/domain/me'
@@ -34,11 +33,6 @@ const useLoginCheck = (afterCheck?: () => void) => {
       await performLoginCheck(fetchMe)
     } catch {}
 
-    if (isIOSApp(window)) {
-      await window.webkit.messageHandlers.setLoginStatusHandler.postMessage(
-        detail.value !== undefined
-      )
-    }
     await setupWebSocket()
 
     if (detail.value !== undefined) {
