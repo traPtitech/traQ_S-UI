@@ -32,16 +32,12 @@ type ComponentModule = {
 }
 
 const iconModules0 = import.meta.glob<ComponentModule>(
-  '/src/assets/icons/*.svg',
-  {
-    assert: { type: 'component' }
-  }
+  '/src/assets/icons/*.svg'
+  /* ?component や as: 'component'が効かないのでdefaultImportオプションで指定 */
 )
 const iconModules1 = import.meta.glob<ComponentModule>(
-  '/src/assets/icons/*/*.svg',
-  {
-    assert: { type: 'component' }
-  }
+  '/src/assets/icons/*/*.svg'
+  /* 上記同様 */
 )
 
 const iconModules = {
