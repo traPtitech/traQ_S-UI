@@ -1,16 +1,14 @@
 import { computed } from 'vue'
+import useMessageInputState from './useMessageInputState'
 import { mimeToFileType } from '/@/lib/basic/file'
 import { getResizedFile } from '/@/lib/resize'
-import {
-  MessageInputStateKey,
-  useMessageInputStateIndividual
-} from '/@/store/ui/messageInputStateStore'
+import { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
 
 const useMessageInputStateAttachment = (
   channelId: MessageInputStateKey,
   onError: (message: string) => void
 ) => {
-  const { state } = useMessageInputStateIndividual(channelId)
+  const { state } = useMessageInputState(channelId)
 
   const attachments = computed(() => state.attachments)
 

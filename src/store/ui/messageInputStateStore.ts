@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { reactive, computed, Ref, unref, watch } from 'vue'
+import { reactive, computed, Ref, unref } from 'vue'
 import { AttachmentType } from '/@/lib/basic/file'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId } from '/@/types/entity-ids'
@@ -63,53 +63,6 @@ const useMessageInputStateStorePinia = defineStore(
 export const useMessageInputStateStore = convertToRefsStore(
   useMessageInputStateStorePinia
 )
-
-export const useMessageInputStateIndividual = (
-  channelId: MessageInputStateKey
-) => {
-  const { getStore, setStore } = useMessageInputStateStore()
-
-  const state: MessageInputState = reactive(
-    getStore(channelId) ?? createDefaultValue()
-  )
-  watch(
-    () => getStore(channelId),
-    v => {
-      if (v) {
-        state.text = v.text
-        state.attachments = v.attachments
-      } else {
-        state.text = ''
-        state.attachments = []
-      }
-    },
-    { deep: true }
-  )
-  watch(
-    state,
-    v => {
-      setStore(channelId, v)
-    },
-    { deep: true }
-  )
-
-  return { state }
-}
-
-export const useMessageInputState = (channelId: MessageInputStateKey) => {
-  const { state } = useMessageInputStateIndividual(channelId)
-
-  const isTextEmpty = computed(() => state.text === '')
-  const isAttachmentEmpty = computed(() => state.attachments.length === 0)
-  const isEmpty = computed(() => isTextEmpty.value && isAttachmentEmpty.value)
-
-  return {
-    state,
-    isTextEmpty,
-    isAttachmentEmpty,
-    isEmpty
-  }
-}
 
 if (import.meta.hot) {
   import.meta.hot.accept(
