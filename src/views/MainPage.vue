@@ -57,7 +57,7 @@ import useMainViewLayout from './composables/useMainViewLayout'
 import useRouteWatcher from './composables/useRouteWatcher'
 import useInitialFetch from './composables/useInitialFetch'
 import { useToastStore } from '/@/store/ui/toast'
-import { useMessageInputStateBase } from '/@/store/ui/messageInputState'
+import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 
 const useStyles = (
@@ -74,7 +74,7 @@ const useStyles = (
   })
 
 const useDraftConfirmer = () => {
-  const { hasInputChannel } = useMessageInputStateBase()
+  const { hasInputChannel } = useMessageInputStateStore()
   window.addEventListener('beforeunload', event => {
     if (hasInputChannel.value) {
       const unloadMessage =

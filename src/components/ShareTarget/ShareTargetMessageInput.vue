@@ -41,7 +41,7 @@ import useAttachments from '../Main/MainView/MessageInput/composables/useAttachm
 import {
   useMessageInputState,
   useMessageInputStateAttachment
-} from '/@/store/ui/messageInputState'
+} from '/@/store/ui/messageInputStateStore'
 import { useToastStore } from '/@/store/ui/toast'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'

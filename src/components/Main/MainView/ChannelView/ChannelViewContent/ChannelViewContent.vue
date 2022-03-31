@@ -22,7 +22,7 @@
 import { computed, ref, Ref, toRef } from 'vue'
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import { debounce, throttle } from 'throttle-debounce'
-import { useMessageInputStateAttachment } from '/@/store/ui/messageInputState'
+import { useMessageInputStateAttachment } from '/@/store/ui/messageInputStateStore'
 import { useToastStore } from '/@/store/ui/toast'
 
 const useDragDrop = (channelId: Ref<ChannelId>) => {

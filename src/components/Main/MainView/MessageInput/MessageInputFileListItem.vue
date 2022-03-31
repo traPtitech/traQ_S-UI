@@ -20,7 +20,7 @@
 import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
-import { Attachment } from '/@/store/ui/messageInputState'
+import { Attachment } from '/@/store/ui/messageInputStateStore'
 import useObjectURL from '/@/composables/dom/useObjectURL'
 import { computed } from 'vue'
 

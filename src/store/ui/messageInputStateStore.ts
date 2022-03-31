@@ -29,38 +29,40 @@ export type MessageInputStateKey = Ref<ChannelId> | ChannelId | VirtualChannelId
 
 const createDefaultValue = () => ({ text: '', attachments: [] })
 
-const useMessageInputStatePinia = defineStore('ui/messageInputState', () => {
-  const states = reactive(
-    new Map<ChannelId | VirtualChannelId, MessageInputState>()
-  )
+const useMessageInputStateStorePinia = defineStore(
+  'ui/messageInputStateStore',
+  () => {
+    const states = reactive(
+      new Map<ChannelId | VirtualChannelId, MessageInputState>()
+    )
 
-  const inputChannels = computed(() =>
-    [...states].filter(([id]) => !virtualIds.has(id))
-  )
-  const hasInputChannel = computed(() => inputChannels.value.length > 0)
+    const inputChannels = computed(() =>
+      [...states].filter(([id]) => !virtualIds.has(id))
+    )
+    const hasInputChannel = computed(() => inputChannels.value.length > 0)
 
-  const getStore = (cId: MessageInputStateKey) => states.get(unref(cId))
-  const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
-    // 空のときは削除、空でないときはセット
-    if (v && (v.text !== '' || v.attachments.length > 0)) {
-      // コピーしないと参照が変わらないから上書きされる
-      // toRawしちゃうとreactiveで包めなくなるので、そうはしない
-      states.set(unref(cId), { ...v })
-    } else {
-      states.delete(unref(cId))
+    const getStore = (cId: MessageInputStateKey) => states.get(unref(cId))
+    const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
+      // 空のときは削除、空でないときはセット
+      if (v && (v.text !== '' || v.attachments.length > 0)) {
+        // コピーしないと参照が変わらないから上書きされる
+        // toRawしちゃうとreactiveで包めなくなるので、そうはしない
+        states.set(unref(cId), { ...v })
+      } else {
+        states.delete(unref(cId))
+      }
     }
+
+    return { inputChannels, hasInputChannel, getStore, setStore }
   }
+)
 
-  return { inputChannels, hasInputChannel, getStore, setStore }
-})
-
-// TODO: 命名規則から外れているのを直す
-export const useMessageInputStateBase = convertToRefsStore(
-  useMessageInputStatePinia
+export const useMessageInputStateStore = convertToRefsStore(
+  useMessageInputStateStorePinia
 )
 
 const useMessageInputStateIndividual = (channelId: MessageInputStateKey) => {
-  const { getStore, setStore } = useMessageInputStateBase()
+  const { getStore, setStore } = useMessageInputStateStore()
 
   const state: MessageInputState = reactive(
     getStore(channelId) ?? createDefaultValue()
@@ -105,7 +107,7 @@ export const useMessageInputState = (channelId: MessageInputStateKey) => {
 }
 
 export const useMessageInputStateStatic = () => {
-  const { getStore, setStore } = useMessageInputStateBase()
+  const { getStore, setStore } = useMessageInputStateStore()
 
   /**
    * リアクティブでない値を返す(channelIdや入力状態が変化しても返り値が変化しない)
@@ -179,6 +181,6 @@ export const useMessageInputStateAttachment = (
 
 if (import.meta.hot) {
   import.meta.hot.accept(
-    acceptHMRUpdate(useMessageInputStatePinia, import.meta.hot)
+    acceptHMRUpdate(useMessageInputStateStorePinia, import.meta.hot)
   )
 }

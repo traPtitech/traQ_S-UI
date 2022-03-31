@@ -71,7 +71,7 @@ import { useToastStore } from '/@/store/ui/toast'
 import {
   useMessageInputState,
   useMessageInputStateAttachment
-} from '/@/store/ui/messageInputState'
+} from '/@/store/ui/messageInputStateStore'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
 
