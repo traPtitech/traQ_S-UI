@@ -5,8 +5,9 @@
       @click="emit('itemRemove')"
     />
     <message-input-file-list-item-image
-      v-if="showThumbnail"
-      :attachment="attachment"
+      v-if="thumbnailDataUrl"
+      :name="attachment.file.name"
+      :src="thumbnailDataUrl"
     />
     <div v-else :class="$style.fileContainer">
       <file-type-icon :type="attachment.type" />
@@ -19,8 +20,9 @@
 import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
-import { computed } from 'vue'
 import { Attachment } from '/@/store/ui/messageInputState'
+import useObjectURL from '/@/composables/dom/useObjectURL'
+import { computed } from 'vue'
 
 const props = defineProps<{
   attachment: Attachment
@@ -30,10 +32,10 @@ const emit = defineEmits<{
   (e: 'itemRemove'): void
 }>()
 
-const showThumbnail = computed(() =>
-  props.attachment.type === 'image' && props.attachment.thumbnailDataUrl
-    ? props.attachment.thumbnailDataUrl.length > 0
-    : false
+const thumbnailDataUrl = useObjectURL(
+  computed(() =>
+    props.attachment.type === 'image' ? props.attachment.file : undefined
+  )
 )
 </script>
 

@@ -3,7 +3,6 @@ import { reactive, computed, Ref, unref, watch } from 'vue'
 import { AttachmentType, mimeToFileType } from '/@/lib/basic/file'
 import { generateMarkdownFromHtml } from '/@/lib/markdown/fromHtml'
 import { getResizedFile } from '/@/lib/resize'
-import { convertToDataUrl } from '/@/lib/resize/dataurl'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId } from '/@/types/entity-ids'
 
@@ -218,20 +217,9 @@ export const useMessageInputStateAttachment = (
     try {
       const fileType = mimeToFileType(file.type)
       const attachmentFile = await getResizedFile(file)
-      if (fileType !== 'image') {
-        state.attachments.push({
-          type: fileType,
-          file: attachmentFile
-        })
-        return
-      }
-      const thumbnailDataUrl = await convertToDataUrl(attachmentFile)
-      if (!thumbnailDataUrl) return
-
       state.attachments.push({
         type: fileType,
-        file: attachmentFile,
-        thumbnailDataUrl
+        file: attachmentFile
       })
     } catch (e) {
       if (typeof e === 'string') {
