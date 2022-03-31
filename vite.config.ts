@@ -99,6 +99,7 @@ export default defineConfig(({ command, mode }) => ({
     }),
     VuePlugin(),
     svgLoader({
+      defaultImport: 'component',
       svgoConfig: {
         plugins: [
           {
