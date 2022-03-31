@@ -1,4 +1,4 @@
-import { computed, unref } from 'vue'
+import { unref } from 'vue'
 import {
   createDefaultValue,
   MessageInputStateKey,
@@ -15,9 +15,7 @@ const useMessageInputStateStatic = () => {
     const cId = unref(channelId)
     const state = getStore(cId) ?? createDefaultValue()
 
-    const isTextEmpty = computed(() => state.text === '')
-    const isAttachmentEmpty = computed(() => state.attachments.length === 0)
-    const isEmpty = computed(() => isTextEmpty.value && isAttachmentEmpty.value)
+    const isEmpty = state.text === '' && state.attachments.length === 0
 
     const clearState = () => {
       state.text = ''
@@ -27,8 +25,6 @@ const useMessageInputStateStatic = () => {
 
     return {
       state,
-      isTextEmpty,
-      isAttachmentEmpty,
       isEmpty,
       clearState
     }

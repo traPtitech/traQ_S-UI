@@ -78,7 +78,7 @@ const usePostMessage = (
     // awaitの前でunrefしておかないと別のチャンネルに投稿されうる
     const cId = unref(channelId)
 
-    if (isPosting.value || isEmpty.value) return false
+    if (isPosting.value || isEmpty) return false
 
     if (isForce.value && !confirm(confirmString.value)) {
       // 強制通知チャンネルでconfirmをキャンセルしたときは何もしない
