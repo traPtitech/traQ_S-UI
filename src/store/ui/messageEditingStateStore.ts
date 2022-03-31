@@ -11,6 +11,15 @@ const useMessageEditingStateStorePinia = defineStore(
 
     const editingMessageId = ref<MessageId>()
 
+    // 遷移時に編集中状態を消す
+    // これは編集中状態が保持されていても、編集内容は保持されなく、わかりにくいため
+    watch(
+      () => route.path,
+      () => {
+        editingMessageId.value = undefined
+      }
+    )
+
     return { editingMessageId }
   }
 )
