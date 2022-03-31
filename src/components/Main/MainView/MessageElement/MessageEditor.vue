@@ -52,10 +52,12 @@ import { countLength } from '/@/lib/basic/string'
 import { useToastStore } from '/@/store/ui/toast'
 import { getResizedFile } from '/@/lib/resize'
 import useAttachments from '/@/components/Main/MainView/MessageInput/composables/useAttachments'
-import { useMessagesView } from '/@/store/domain/messagesView'
 
-const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
-  const { editingMessageId } = useMessagesView()
+const useEditMessage = (
+  props: { messageId: string },
+  text: Ref<string>,
+  emit: (e: 'finishEditing') => void
+) => {
   const { addErrorToast } = useToastStore()
   const editMessage = async () => {
     if (countLength(text.value) > MESSAGE_MAX_LENGTH) {
@@ -67,13 +69,13 @@ const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
       await apis.editMessage(props.messageId, {
         content: text.value
       })
-      editingMessageId.value = undefined
+      emit('finishEditing')
     } catch {
       addErrorToast('メッセージの編集に失敗しました')
     }
   }
   const cancel = () => {
-    editingMessageId.value = undefined
+    emit('finishEditing')
   }
   return { editMessage, cancel }
 }
@@ -144,9 +146,13 @@ const props = defineProps<{
   channelId: string
 }>()
 
+const emit = defineEmits<{
+  (e: 'finishEditing'): void
+}>()
+
 const text = ref(props.rawContent)
 
-const { editMessage, cancel } = useEditMessage(props, text)
+const { editMessage, cancel } = useEditMessage(props, text, emit)
 const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
   useModifierKey()
 

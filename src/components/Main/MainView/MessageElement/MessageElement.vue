@@ -44,8 +44,8 @@ import useElementRenderObserver, {
 } from './composables/useElementRenderObserver'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
 import useHover from '/@/composables/dom/useHover'
-import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 
 const props = withDefaults(
   defineProps<{
@@ -65,11 +65,12 @@ const emit = defineEmits<{
   (e: 'changeHeight', _data: ChangeHeightData): void
 }>()
 
-const { editingMessageId } = useMessagesView()
 const bodyRef = shallowRef<HTMLDivElement | null>(null)
 const { isMobile } = useResponsiveStore()
 const { messagesMap } = useMessagesStore()
 const message = computed(() => messagesMap.value.get(props.messageId))
+
+const { editingMessageId } = useMessageEditingStateStore()
 const isEditing = computed(() => props.messageId === editingMessageId.value)
 
 const { embeddingsState } = useEmbeddings(props)

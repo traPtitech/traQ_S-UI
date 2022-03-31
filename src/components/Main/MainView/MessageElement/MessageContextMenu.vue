@@ -58,14 +58,14 @@ import { Point } from '/@/lib/basic/point'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import usePinToggler from '/@/composables/contextMenu/usePinToggler'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
-import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMeStore } from '/@/store/domain/me'
 import { useModalStore } from '/@/store/ui/modal'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 
 const useMessageChanger = (messageId: Ref<MessageId>) => {
   const { execWithToast } = useExecWithToast()
-  const { editingMessageId } = useMessagesView()
+  const { editingMessageId } = useMessageEditingStateStore()
 
   const editMessage = () => {
     editingMessageId.value = messageId.value

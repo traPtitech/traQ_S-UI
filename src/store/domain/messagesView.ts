@@ -74,8 +74,6 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
   const receiveLatestMessages = ref(false)
   const renderedContentMap = ref(new Map<MessageId, string>())
   const embeddingsMap = ref(new Map<MessageId, EmbeddingOrUrl[]>())
-  /** 現在編集中のメッセージID */
-  const editingMessageId = ref<MessageId>()
 
   const resetViewState = () => {
     currentChannelId.value = undefined
@@ -211,7 +209,6 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
   return {
     currentChannelId,
     currentClipFolderId,
-    editingMessageId,
     renderedContentMap,
     embeddingsMap,
     receiveLatestMessages,
