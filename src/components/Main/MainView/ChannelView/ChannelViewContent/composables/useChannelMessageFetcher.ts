@@ -19,7 +19,7 @@ const useChannelMessageFetcher = (
     entryMessageId?: MessageId
   }
 ) => {
-  const { fetchMessagesByChannelId, syncViewState } = useMessagesView()
+  const { fetchMessagesByChannelId } = useMessagesView()
   const {
     unreadChannelsMap,
     unreadChannelsMapInitialFetchPromise,
@@ -175,7 +175,6 @@ const useChannelMessageFetcher = (
 
   const init = () => {
     messagesFetcher.init()
-    syncViewState()
   }
 
   onMounted(() => {
@@ -220,9 +219,6 @@ const useChannelMessageFetcher = (
 
   onActivated(() => {
     messagesFetcher.loadNewMessages()
-
-    // 設定画面から戻ってきたときの場合があるので同じチャンネルでも送りなおす
-    syncViewState()
   })
 
   return {

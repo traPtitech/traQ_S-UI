@@ -1,6 +1,6 @@
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import { MessageId, ClipFolderId } from '/@/types/entity-ids'
-import { reactive, Ref, watch, onMounted, onActivated } from 'vue'
+import { reactive, Ref, watch, onMounted } from 'vue'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
 import { wsListener } from '/@/lib/websocket'
 import { useMessagesView } from '/@/store/domain/messagesView'
@@ -17,7 +17,7 @@ const useClipsFetcher = (
     entryMessageId?: MessageId
   }
 ) => {
-  const { fetchMessagesInClipFolder, syncViewState } = useMessagesView()
+  const { fetchMessagesInClipFolder } = useMessagesView()
   const { fetchMessage } = useMessagesStore()
   const { fetchLimit, waitHeightResolved } = useFetchLimit(
     scrollerEle,
@@ -63,8 +63,6 @@ const useClipsFetcher = (
   onMounted(() => {
     reset()
     init()
-
-    syncViewState()
   })
   watch(
     () => props.clipFolderId,
@@ -76,11 +74,6 @@ const useClipsFetcher = (
       init()
     }
   )
-
-  onActivated(() => {
-    // 一応送りなおす
-    syncViewState()
-  })
 
   // クリップフォルダは、wsの再接続時にうまく取得ができないので、
   // 自動で再取得するのはあきらめる

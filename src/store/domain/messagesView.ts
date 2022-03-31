@@ -1,11 +1,10 @@
-import { ChannelViewState, Message } from '@traptitech/traq'
+import { Message } from '@traptitech/traq'
 import { EmbeddingOrUrl, ExternalUrl } from '@traptitech/traq-markdown-it'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import apis from '/@/lib/apis'
 import { isExternalUrl, isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
-import { changeViewState } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId, ClipFolderId, MessageId } from '/@/types/entity-ids'
 import { messageMitt, useMessagesStore } from '/@/store/entities/messages'
@@ -66,12 +65,6 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
   const currentChannelId = ref<ChannelId>()
   /** 現在のクリップフォルダID、オフセットベースのフェッチを行う */
   const currentClipFolderId = ref<ClipFolderId>()
-  /**
-   * 最新のメッセージを受信する状態かどうか
-   *
-   * `isReachedLatest`と同期する必要がある
-   */
-  const receiveLatestMessages = ref(false)
   const renderedContentMap = ref(new Map<MessageId, string>())
   const embeddingsMap = ref(new Map<MessageId, EmbeddingOrUrl[]>())
 
@@ -187,19 +180,6 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
     await renderMessageContent(message.id)
   }
 
-  const syncViewState = () => {
-    if (currentChannelId.value) {
-      changeViewState(
-        currentChannelId.value,
-        receiveLatestMessages.value
-          ? ChannelViewState.Monitoring
-          : ChannelViewState.None
-      )
-    } else {
-      changeViewState(null)
-    }
-  }
-
   // 再接続時の再取得はmessagesFetcherで行う
   messageMitt.on('updateMessage', async message => {
     if (currentChannelId.value !== message.channelId) return
@@ -211,11 +191,9 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
     currentClipFolderId,
     renderedContentMap,
     embeddingsMap,
-    receiveLatestMessages,
     fetchMessagesByChannelId,
     fetchMessagesInClipFolder,
     renderMessageContent,
-    syncViewState,
     changeCurrentChannel,
     changeCurrentClipFolder
   }

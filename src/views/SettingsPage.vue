@@ -12,16 +12,10 @@
 
 <script lang="ts">
 import { Ref, ref, watch, toRef } from 'vue'
-import {
-  onBeforeRouteLeave,
-  onBeforeRouteUpdate,
-  useRoute,
-  useRouter
-} from 'vue-router'
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import { RouteName } from '/@/router'
 import { defaultSettingsName } from '/@/router/settings'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import { changeViewState } from '/@/lib/websocket'
 import useLoginCheck from './composables/useLoginCheck'
 
 const useSettingsRootPathWatcher = (
@@ -58,11 +52,6 @@ onBeforeRouteLeave(() => {
 })
 
 useSettingsRootPathWatcher(isMobile, settingsRootShown)
-
-onBeforeRouteUpdate(() => {
-  // 設定画面を開いたときは閲覧チャンネルを消す
-  changeViewState(null)
-})
 
 // ログイン必要ルート
 const { isLoginCheckDone } = useLoginCheck()

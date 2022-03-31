@@ -3,6 +3,7 @@ import { MessageId } from '/@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
@@ -24,13 +25,9 @@ const useMessageFetcher = (
     | undefined,
   onReachedLatest?: () => void | Promise<void>
 ) => {
-  const {
-    currentChannelId,
-    currentClipFolderId,
-    receiveLatestMessages,
-    renderMessageContent,
-    syncViewState
-  } = useMessagesView()
+  const { currentChannelId, currentClipFolderId, renderMessageContent } =
+    useMessagesView()
+  const { shouldReceiveLatestMessages } = useViewStateSenderStore()
   const { fetchMessage } = useMessagesStore()
 
   const messageIds = ref<MessageId[]>([])
@@ -214,8 +211,7 @@ const useMessageFetcher = (
     if (isReachedLatest.value) {
       await onReachedLatest?.()
     }
-    receiveLatestMessages.value = isReachedLatest.value
-    syncViewState()
+    shouldReceiveLatestMessages.value = isReachedLatest.value
   })
 
   return {
