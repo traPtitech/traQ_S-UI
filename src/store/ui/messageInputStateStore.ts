@@ -1,9 +1,12 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { reactive, computed, Ref, unref, watch } from 'vue'
-import { AttachmentType, mimeToFileType } from '/@/lib/basic/file'
-import { getResizedFile } from '/@/lib/resize'
+import { AttachmentType } from '/@/lib/basic/file'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId } from '/@/types/entity-ids'
+
+/**
+ * 基本的に直接利用しないで`/@/composables/messageInputState`を利用する
+ */
 
 /**
  * ChannelIdの代わりに一意となるもの
@@ -61,7 +64,9 @@ export const useMessageInputStateStore = convertToRefsStore(
   useMessageInputStateStorePinia
 )
 
-const useMessageInputStateIndividual = (channelId: MessageInputStateKey) => {
+export const useMessageInputStateIndividual = (
+  channelId: MessageInputStateKey
+) => {
   const { getStore, setStore } = useMessageInputStateStore()
 
   const state: MessageInputState = reactive(
@@ -136,47 +141,6 @@ export const useMessageInputStateStatic = () => {
   }
 
   return { getMessageInputState }
-}
-
-export const useMessageInputStateAttachment = (
-  channelId: MessageInputStateKey,
-  onError: (message: string) => void
-) => {
-  const { state } = useMessageInputStateIndividual(channelId)
-
-  const attachments = computed(() => state.attachments)
-
-  const addTextToLast = (text: string) => {
-    state.text += state.text !== '' ? `\n${text}` : text
-  }
-
-  const addAttachment = async (file: File) => {
-    try {
-      const fileType = mimeToFileType(file.type)
-      const attachmentFile = await getResizedFile(file)
-      state.attachments.push({
-        type: fileType,
-        file: attachmentFile
-      })
-    } catch (e) {
-      if (typeof e === 'string') {
-        onError(e)
-      }
-    }
-  }
-
-  const removeAttachmentAt = (index: number) => {
-    if (0 <= index && index < state.attachments.length) {
-      state.attachments.splice(index, 1)
-    }
-  }
-
-  return {
-    attachments,
-    addTextToLast,
-    addAttachment,
-    removeAttachmentAt
-  }
 }
 
 if (import.meta.hot) {
