@@ -8,9 +8,9 @@
 <script lang="ts" setup>
 import DraftListTitlePanel from './DraftListTitlePanel.vue'
 import DraftListDetailsPanel from './DraftListDetailsPanel.vue'
-import { useMessageInputStateBase } from '/@/store/ui/messageInputState'
+import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 
-const { inputChannels } = useMessageInputStateBase()
+const { inputChannels } = useMessageInputStateStore()
 </script>
 
 <style lang="scss" module>

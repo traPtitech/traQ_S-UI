@@ -13,10 +13,8 @@
 <script lang="ts" setup>
 import MessageInputFileListItem from './MessageInputFileListItem.vue'
 import { toRef } from 'vue'
-import {
-  useMessageInputStateAttachment,
-  VirtualChannelId
-} from '/@/store/ui/messageInputState'
+import { VirtualChannelId } from '/@/store/ui/messageInputStateStore'
+import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { ChannelId } from '/@/types/entity-ids'
 import { useToastStore } from '/@/store/ui/toast'
 

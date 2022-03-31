@@ -68,10 +68,8 @@ import usePostMessage from './composables/usePostMessage'
 import useFocus from './composables/useFocus'
 import useEditingStatus from './composables/useEditingStatus'
 import { useToastStore } from '/@/store/ui/toast'
-import {
-  useMessageInputState,
-  useMessageInputStateAttachment
-} from '/@/store/ui/messageInputState'
+import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
+import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
 

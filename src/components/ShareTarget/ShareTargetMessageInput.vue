@@ -38,10 +38,8 @@ import { onBeforeUnmount, onMounted, shallowRef, ref, toRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
 import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
-import {
-  useMessageInputState,
-  useMessageInputStateAttachment
-} from '/@/store/ui/messageInputState'
+import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
+import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { useToastStore } from '/@/store/ui/toast'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'

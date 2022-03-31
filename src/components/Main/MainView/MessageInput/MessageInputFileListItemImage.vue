@@ -1,18 +1,13 @@
 <template>
   <div :class="$style.container">
-    <img
-      :class="$style.image"
-      :src="attachment.thumbnailDataUrl"
-      :alt="attachment.file.name"
-    />
+    <img :class="$style.image" :src="src" :alt="name" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Attachment } from '/@/store/ui/messageInputState'
-
-const props = defineProps<{
-  attachment: Attachment
+defineProps<{
+  name: string
+  src: string
 }>()
 </script>
 

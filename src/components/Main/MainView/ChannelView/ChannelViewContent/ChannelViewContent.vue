@@ -22,12 +22,12 @@
 import { computed, ref, Ref, toRef } from 'vue'
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import { debounce, throttle } from 'throttle-debounce'
-import { useMessageInputStateAttachment } from '/@/store/ui/messageInputState'
+import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { useToastStore } from '/@/store/ui/toast'
 
 const useDragDrop = (channelId: Ref<ChannelId>) => {
   const { addErrorToast } = useToastStore()
-  const { addFromDataTransfer } = useMessageInputStateAttachment(
+  const { addTextToLast, addAttachment } = useMessageInputStateAttachment(
     channelId,
     addErrorToast
   )
@@ -41,12 +41,22 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
   const isDragStartInside = ref(false)
   const canDrop = computed(() => isDragging.value && !isDragStartInside.value)
 
-  const onDrop = (event: DragEvent) => {
-    if (canDrop.value && event.dataTransfer) {
-      addFromDataTransfer(event.dataTransfer)
-    }
+  const onDrop = async (event: DragEvent) => {
     isDragging.value = false
     isDragStartInside.value = false
+
+    if (canDrop.value && event.dataTransfer) {
+      const result = await getTextOrFile(event.dataTransfer)
+      if (result) {
+        if (typeof result === 'string') {
+          addTextToLast(result)
+        } else {
+          for (const file of result) {
+            await addAttachment(file)
+          }
+        }
+      }
+    }
   }
   const onDragStart = (event: DragEvent) => {
     isDragStartInside.value = true
@@ -77,6 +87,7 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
 import ChannelViewContentMain from './ChannelViewContentMain.vue'
 import ChannelViewContentFileUploadOverlay from './ChannelViewContentFileUploadOverlay.vue'
 import { Pin } from '@traptitech/traq'
+import { getTextOrFile } from '/@/lib/dom/dataTransfer'
 
 const props = defineProps<{
   channelId: ChannelId

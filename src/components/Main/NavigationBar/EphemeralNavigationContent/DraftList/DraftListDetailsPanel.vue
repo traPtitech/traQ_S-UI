@@ -13,7 +13,7 @@
 <script lang="ts" setup>
 import CollapseContent from '../CollapseContent.vue'
 import DraftListDetailsPanelChannel from './DraftListDetailsPanelChannel.vue'
-import { MessageInputState } from '/@/store/ui/messageInputState'
+import { MessageInputState } from '/@/store/ui/messageInputStateStore'
 import { ChannelId } from '/@/types/entity-ids'
 
 defineProps<{

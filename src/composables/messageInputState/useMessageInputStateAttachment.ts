@@ -1,0 +1,48 @@
+import { computed } from 'vue'
+import useMessageInputState from './useMessageInputState'
+import { mimeToFileType } from '/@/lib/basic/file'
+import { getResizedFile } from '/@/lib/resize'
+import { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
+
+const useMessageInputStateAttachment = (
+  channelId: MessageInputStateKey,
+  onError: (message: string) => void
+) => {
+  const { state } = useMessageInputState(channelId)
+
+  const attachments = computed(() => state.attachments)
+
+  const addTextToLast = (text: string) => {
+    state.text += state.text !== '' ? `\n${text}` : text
+  }
+
+  const addAttachment = async (file: File) => {
+    try {
+      const fileType = mimeToFileType(file.type)
+      const attachmentFile = await getResizedFile(file)
+      state.attachments.push({
+        type: fileType,
+        file: attachmentFile
+      })
+    } catch (e) {
+      if (typeof e === 'string') {
+        onError(e)
+      }
+    }
+  }
+
+  const removeAttachmentAt = (index: number) => {
+    if (0 <= index && index < state.attachments.length) {
+      state.attachments.splice(index, 1)
+    }
+  }
+
+  return {
+    attachments,
+    addTextToLast,
+    addAttachment,
+    removeAttachmentAt
+  }
+}
+
+export default useMessageInputStateAttachment
