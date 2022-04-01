@@ -78,7 +78,8 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
   }
 
   const resetRenderedContent = () => {
-    renderedContentMap.value = new Map()
+    renderedContentMap.value.clear()
+    embeddingsMap.value.clear()
   }
 
   return {
