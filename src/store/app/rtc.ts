@@ -156,7 +156,8 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
     const localStreamManager = new LocalStreamManager(audioContext, {
       outputNode: mixer.masterVolumeGain,
       audioInputDeviceId: rtcSettings.audioInputDeviceId.value,
-      noiseSuppression: rtcSettings.noiseSuppression.value
+      noiseSuppression: rtcSettings.noiseSuppression.value,
+      noiseGateThreshold: rtcSettings.noiseGateThreshold.value
     })
 
     await Promise.all([
@@ -283,6 +284,9 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
   })
   watch(rtcSettings.noiseSuppression, newNoiseSuppression => {
     localStreamManager.value?.setNoiseSuppression(newNoiseSuppression)
+  })
+  watch(rtcSettings.noiseGateThreshold, newNoiseGateThreshold => {
+    localStreamManager.value?.setNoiseGateThreshold(newNoiseGateThreshold)
   })
 
   const mute = () => {

@@ -1,6 +1,7 @@
 import {
   loadRnnoise as loadRnnoiseLib,
   loadSpeex as loadSpeexLib,
+  NoiseGateWorkletNode,
   RnnoiseWorkletNode,
   SpeexWorkletNode
 } from '@sapphi-red/web-noise-suppressor'
@@ -11,6 +12,7 @@ import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.w
 import rnnoiseWorkletPath from '@sapphi-red/web-noise-suppressor/rnnoiseWorklet.js?url'
 import speexWasmPath from '@sapphi-red/web-noise-suppressor/speex.wasm?url'
 import speexWorkletPath from '@sapphi-red/web-noise-suppressor/speexWorklet.js?url'
+import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWorklet.js?url'
 
 let rnnoiseWasmBinary: ArrayBuffer | undefined
 const loadRnnoise = async (ctx: AudioContext) => {
@@ -33,6 +35,14 @@ const loadSpeex = async (ctx: AudioContext) => {
   return speexWasmBinary
 }
 
+let noiseGateLoaded = false
+const loadNoiseGate = async (ctx: AudioContext) => {
+  if (noiseGateLoaded) return
+
+  noiseGateLoaded = true
+  await ctx.audioWorklet.addModule(noiseGateWorkletPath)
+}
+
 export type NoiseSuppressionType = 'rnnoise' | 'speex' | 'none'
 
 type Options = {
@@ -42,6 +52,10 @@ type Options = {
   outputNode: AudioNode
   audioInputDeviceId: string
   noiseSuppression: NoiseSuppressionType
+  /**
+   * -100のときはノイズゲートを無効にする
+   */
+  noiseGateThreshold: number
 }
 
 /**
@@ -84,7 +98,11 @@ export default class LocalStreamManager {
     this.unsetInput()
   }
 
-  private async setInput({ audioInputDeviceId, noiseSuppression }: Options) {
+  private async setInput({
+    audioInputDeviceId,
+    noiseSuppression,
+    noiseGateThreshold
+  }: Options) {
     const newInputStream = await getUserAudio(audioInputDeviceId)
     this.unsetInput()
 
@@ -115,6 +133,18 @@ export default class LocalStreamManager {
       lastNode = speexNode
     }
 
+    if (noiseGateThreshold !== -100) {
+      await loadNoiseGate(this.context)
+      const noiseGateNode = new NoiseGateWorkletNode(this.context, {
+        openThreshold: noiseGateThreshold,
+        holdMs: 90,
+        maxChannels: 2
+      })
+
+      lastNode.connect(noiseGateNode)
+      lastNode = noiseGateNode
+    }
+
     lastNode.connect(this.analyser)
     lastNode.connect(this.destination)
   }
@@ -135,6 +165,12 @@ export default class LocalStreamManager {
 
   async setNoiseSuppression(noiseSuppression: NoiseSuppressionType) {
     this.options.noiseSuppression = noiseSuppression
+
+    await this.setInput(this.options)
+  }
+
+  async setNoiseGateThreshold(noiseGateThreshold: number) {
+    this.options.noiseGateThreshold = noiseGateThreshold
 
     await this.setInput(this.options)
   }

@@ -13,6 +13,7 @@ type State = {
   audioInputDeviceId: string
   audioOutputDeviceId: string
   noiseSuppression: NoiseSuppressionType
+  noiseGateThreshold: number
   isTtsEnabled: boolean
   voiceName: string
   voicePitch: number
@@ -27,6 +28,7 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
     audioInputDeviceId: '',
     audioOutputDeviceId: '',
     noiseSuppression: 'none',
+    noiseGateThreshold: -100,
     isTtsEnabled: false,
     voiceName: '',
     voicePitch: 1,

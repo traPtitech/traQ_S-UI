@@ -39,6 +39,22 @@
         :class="$style.element"
       />
       <div :class="$style.element">
+        <h3 :class="$style.header">ノイズゲート</h3>
+        <form-range-with-value
+          v-model="state.noiseGateThreshold"
+          :class="$style.content"
+          max-text="-100dB"
+          min="-100"
+          step="1"
+          max="0"
+          :format="formatNoiseGateThreshold"
+        />
+        <p :class="$style.content">
+          マイクに入力された音が指定した音量以下だった場合にミュートします<br />
+          -100dBにすると無効になります
+        </p>
+      </div>
+      <div :class="$style.element">
         <div :class="$style.enable">
           <h3 :class="$style.header">メッセージの読み上げ</h3>
           <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
@@ -173,6 +189,8 @@ const state = reactive(useRtcSettings())
 
 const formatMasterVolume = (v: number) =>
   `${Math.round(state.masterVolume * 200)}%`
+
+const formatNoiseGateThreshold = (v: number) => `${v}dB`
 
 const { fetchFailed, audioInputDevices } = useDevicesInfo()
 
