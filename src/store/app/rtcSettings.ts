@@ -5,12 +5,14 @@ import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue, { key } from '/@/composables/utils/useIndexedDbValue'
 import { promisifyRequest } from 'idb-keyval'
+import { NoiseSuppressionType } from '/@/lib/webrtc/LocalStreamManager'
 
 type State = {
   isEnabled: boolean
   masterVolume: number
   audioInputDeviceId: string
   audioOutputDeviceId: string
+  noiseSuppression: NoiseSuppressionType
   isTtsEnabled: boolean
   voiceName: string
   voicePitch: number
@@ -24,6 +26,7 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
     masterVolume: 0.5,
     audioInputDeviceId: '',
     audioOutputDeviceId: '',
+    noiseSuppression: 'none',
     isTtsEnabled: false,
     voiceName: '',
     voicePitch: 1,

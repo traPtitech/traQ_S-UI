@@ -1,5 +1,39 @@
+import {
+  loadRnnoise as loadRnnoiseLib,
+  loadSpeex as loadSpeexLib,
+  RnnoiseWorkletNode,
+  SpeexWorkletNode
+} from '@sapphi-red/web-noise-suppressor'
 import ExtendedAudioContext from './ExtendedAudioContext'
 import { getUserAudio } from './userMedia'
+import rnnoiseWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise.wasm?url'
+import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.wasm?url'
+import rnnoiseWorkletPath from '@sapphi-red/web-noise-suppressor/rnnoiseWorklet.js?url'
+import speexWasmPath from '@sapphi-red/web-noise-suppressor/speex.wasm?url'
+import speexWorkletPath from '@sapphi-red/web-noise-suppressor/speexWorklet.js?url'
+
+let rnnoiseWasmBinary: ArrayBuffer | undefined
+const loadRnnoise = async (ctx: AudioContext) => {
+  if (rnnoiseWasmBinary) return rnnoiseWasmBinary
+  rnnoiseWasmBinary = await loadRnnoiseLib({
+    url: rnnoiseWasmPath,
+    simdUrl: rnnoiseSimdWasmPath
+  })
+
+  await ctx.audioWorklet.addModule(rnnoiseWorkletPath)
+  return rnnoiseWasmBinary
+}
+
+let speexWasmBinary: ArrayBuffer | undefined
+const loadSpeex = async (ctx: AudioContext) => {
+  if (speexWasmBinary) return speexWasmBinary
+  speexWasmBinary = await loadSpeexLib({ url: speexWasmPath })
+
+  await ctx.audioWorklet.addModule(speexWorkletPath)
+  return speexWasmBinary
+}
+
+export type NoiseSuppressionType = 'rnnoise' | 'speex' | 'none'
 
 type Options = {
   /**
@@ -7,7 +41,7 @@ type Options = {
    */
   outputNode: AudioNode
   audioInputDeviceId: string
-  enableNoiseReduction: boolean
+  noiseSuppression: NoiseSuppressionType
 }
 
 /**
@@ -50,14 +84,7 @@ export default class LocalStreamManager {
     this.unsetInput()
   }
 
-  private async setInput({
-    audioInputDeviceId,
-    enableNoiseReduction
-  }: Options) {
-    if (enableNoiseReduction) {
-      // TODO
-    }
-
+  private async setInput({ audioInputDeviceId, noiseSuppression }: Options) {
     const newInputStream = await getUserAudio(audioInputDeviceId)
     this.unsetInput()
 
@@ -66,10 +93,26 @@ export default class LocalStreamManager {
     this.source = this.context.createMediaStreamSource(this.inputStream)
     this.analyser = this.context.createAnalyserNode()
 
-    const lastNode: AudioNode = this.source
+    let lastNode: AudioNode = this.source
 
-    if (enableNoiseReduction) {
-      // TODO
+    if (noiseSuppression === 'rnnoise') {
+      const rnnoiseBinary = await loadRnnoise(this.context)
+      const rnnoiseNode = new RnnoiseWorkletNode(this.context, {
+        wasmBinary: rnnoiseBinary,
+        maxChannels: 2
+      })
+
+      lastNode.connect(rnnoiseNode)
+      lastNode = rnnoiseNode
+    } else if (noiseSuppression === 'speex') {
+      const speexBinary = await loadSpeex(this.context)
+      const speexNode = new SpeexWorkletNode(this.context, {
+        wasmBinary: speexBinary,
+        maxChannels: 2
+      })
+
+      lastNode.connect(speexNode)
+      lastNode = speexNode
     }
 
     lastNode.connect(this.analyser)
@@ -90,8 +133,8 @@ export default class LocalStreamManager {
     await this.setInput(this.options)
   }
 
-  async setEnableNoiseReduction(enableNoiseReduction: boolean) {
-    this.options.enableNoiseReduction = enableNoiseReduction
+  async setNoiseSuppression(noiseSuppression: NoiseSuppressionType) {
+    this.options.noiseSuppression = noiseSuppression
 
     await this.setInput(this.options)
   }

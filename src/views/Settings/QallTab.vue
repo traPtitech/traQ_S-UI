@@ -38,20 +38,10 @@
           <p v-else>デバイスが取得できませんでした</p>
         </div>
       </div>
-      <div :class="$style.element">
-        <div :class="$style.enable">
-          <h3 :class="$style.header">ノイズ抑制を有効にする (β)</h3>
-          <a-toggle
-            v-model="todo"
-            :class="$style.toggle"
-            :disabled="!isAudioWorkletSupported"
-          />
-        </div>
-        <p :class="$style.content">
-          Qallでのノイズ抑制を有効にします<br />
-          スペックの低い端末では動作が不安定になる可能性があります
-        </p>
-      </div>
+      <noise-suppression
+        v-model="state.noiseSuppression"
+        :class="$style.element"
+      />
       <div :class="$style.element">
         <div :class="$style.enable">
           <h3 :class="$style.header">メッセージの読み上げ</h3>
@@ -97,9 +87,6 @@
 <script lang="ts">
 import { computed, ref, watchEffect, reactive } from 'vue'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
-import { checkAudioWorkletSupport } from '/@/lib/dom/browser'
-
-const isAudioWorkletSupported = checkAudioWorkletSupport()
 
 const useDevicesInfo = () => {
   const { isEnabled, ensureDeviceIds } = useRtcSettings()
@@ -183,6 +170,7 @@ const useVoices = () => {
 import AToggle from '/@/components/UI/AToggle.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
+import NoiseSuppression from '/@/components/Settings/QallTab/NoiseSuppression.vue'
 
 const state = reactive(useRtcSettings())
 
@@ -194,8 +182,6 @@ const audioInputDeviceOptions = computed(() =>
     value: d.deviceId
   }))
 )
-
-const todo = false
 
 const voiceOptions = useVoices()
 </script>
