@@ -1,4 +1,3 @@
-import { Message } from '@traptitech/traq'
 import { EmbeddingOrUrl, ExternalUrl } from '@traptitech/traq-markdown-it'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
@@ -6,8 +5,8 @@ import apis from '/@/lib/apis'
 import { isExternalUrl, isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { ChannelId, ClipFolderId, MessageId } from '/@/types/entity-ids'
-import { messageMitt, useMessagesStore } from '/@/store/entities/messages'
+import { MessageId } from '/@/types/entity-ids'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 interface BaseGetMessagesParams {
@@ -61,38 +60,11 @@ const isIncludedHost = (url: ExternalUrl) => {
 const useMessagesViewPinia = defineStore('domain/messagesView', () => {
   const messagesStore = useMessagesStore()
 
-  /** 現在のチャンネルID、日時ベースのフェッチを行う */
-  const currentChannelId = ref<ChannelId>()
-  /** 現在のクリップフォルダID、オフセットベースのフェッチを行う */
-  const currentClipFolderId = ref<ClipFolderId>()
   const renderedContentMap = ref(new Map<MessageId, string>())
   const embeddingsMap = ref(new Map<MessageId, EmbeddingOrUrl[]>())
 
   const resetViewState = () => {
-    currentChannelId.value = undefined
-    currentClipFolderId.value = undefined
     renderedContentMap.value = new Map()
-  }
-
-  const changeCurrentChannel = (payload: {
-    channelId: ChannelId
-    entryMessageId?: MessageId
-    isDM?: boolean
-  }) => {
-    if (currentChannelId.value === payload.channelId) return
-
-    // ここの二行は同時に実行されないとmessagesFetcherのrunWithIdentifierCheckに失敗する
-    resetViewState()
-    currentChannelId.value = payload.channelId
-  }
-
-  /** クリップフォルダに移行 */
-  const changeCurrentClipFolder = (clipFolderId: ClipFolderId) => {
-    if (currentClipFolderId.value === clipFolderId) return
-
-    // ここの二行は同時に実行されないとmessagesFetcherのrunWithIdentifierCheckに失敗する
-    resetViewState()
-    currentClipFolderId.value = clipFolderId
   }
 
   const fetchMessagesInClipFolder = async (params: GetClipsParam) => {
@@ -176,26 +148,13 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
     embeddingsMap.value.set(messageId, rendered.embeddings)
   }
 
-  const updateAndRenderMessageId = async (message: Message) => {
-    await renderMessageContent(message.id)
-  }
-
-  // 再接続時の再取得はmessagesFetcherで行う
-  messageMitt.on('updateMessage', async message => {
-    if (currentChannelId.value !== message.channelId) return
-    await updateAndRenderMessageId(message)
-  })
-
   return {
-    currentChannelId,
-    currentClipFolderId,
     renderedContentMap,
     embeddingsMap,
+    resetViewState,
     fetchMessagesByChannelId,
     fetchMessagesInClipFolder,
-    renderMessageContent,
-    changeCurrentChannel,
-    changeCurrentClipFolder
+    renderMessageContent
   }
 })
 

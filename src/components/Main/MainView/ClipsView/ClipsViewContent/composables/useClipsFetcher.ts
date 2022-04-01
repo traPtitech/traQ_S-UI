@@ -1,6 +1,6 @@
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import { MessageId, ClipFolderId } from '/@/types/entity-ids'
-import { reactive, Ref, watch, onMounted } from 'vue'
+import { reactive, Ref, watch, onMounted, computed } from 'vue'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
 import { wsListener } from '/@/lib/websocket'
 import { useMessagesView } from '/@/store/domain/messagesView'
@@ -54,6 +54,7 @@ const useClipsFetcher = (
 
   const messagesFetcher = useMessageFetcher(
     {},
+    computed(() => `cf:${props.clipFolderId}`),
     fetchFormerMessages,
     undefined,
     undefined,

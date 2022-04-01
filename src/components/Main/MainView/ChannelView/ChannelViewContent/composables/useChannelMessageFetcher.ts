@@ -1,6 +1,6 @@
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import { ChannelId, MessageId } from '/@/types/entity-ids'
-import { Ref, watch, onMounted, onActivated, ref } from 'vue'
+import { Ref, watch, onMounted, onActivated, ref, computed } from 'vue'
 import { Message } from '@traptitech/traq'
 import { wsListener } from '/@/lib/websocket'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
@@ -19,7 +19,7 @@ const useChannelMessageFetcher = (
     entryMessageId?: MessageId
   }
 ) => {
-  const { fetchMessagesByChannelId } = useMessagesView()
+  const { fetchMessagesByChannelId, renderMessageContent } = useMessagesView()
   const {
     unreadChannelsMap,
     unreadChannelsMapInitialFetchPromise,
@@ -159,6 +159,7 @@ const useChannelMessageFetcher = (
 
   const messagesFetcher = useMessageFetcher(
     props,
+    computed(() => `ch:${props.channelId}`),
     fetchFormerMessages,
     fetchLatterMessages,
     fetchAroundMessages,
@@ -207,6 +208,9 @@ const useChannelMessageFetcher = (
     if (!messagesFetcher.isReachedLatest.value) return
 
     messagesFetcher.addNewMessage(message.id)
+  })
+  useMittListener(messageMitt, 'updateMessage', async message => {
+    await renderMessageContent(message.id)
   })
   useMittListener(messageMitt, 'deleteMessage', messageId => {
     const index = messagesFetcher.messageIds.value.indexOf(messageId)
