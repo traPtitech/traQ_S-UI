@@ -20,7 +20,9 @@ const isIncludedHost = (url: ExternalUrl) => {
   }
 }
 
-// FIXME: 分離
+/**
+ * メッセージの表示に必要な情報を取得したりパースしたりする
+ */
 const useMessagesViewPinia = defineStore('domain/messagesView', () => {
   const messagesStore = useMessagesStore()
 
