@@ -48,7 +48,7 @@
     "zod": "^3.14.3"
   },
   "devDependencies": {
-    "@pinia/testing": "^0.0.10",
+    "@pinia/testing": "^0.0.11",
     "@types/autosize": "^4.0.1",
     "@types/dom-screen-wake-lock": "^1.0.0",
     "@types/katex": "^0.14.0",
