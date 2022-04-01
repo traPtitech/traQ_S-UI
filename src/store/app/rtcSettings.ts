@@ -3,7 +3,7 @@ import { toRefs } from 'vue'
 import { getVuexData } from '/@/store/utils/migrateFromVuex'
 import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import useIndexedDbValue, { key } from '/@/composables/utils/useIndexedDbValue'
 import { promisifyRequest } from 'idb-keyval'
 
 type State = {
@@ -11,8 +11,6 @@ type State = {
   masterVolume: number
   audioInputDeviceId: string
   audioOutputDeviceId: string
-  isNoiseReductionEnabled: boolean
-  isEchoCancellationEnabled: boolean
   isTtsEnabled: boolean
   voiceName: string
   voicePitch: number
@@ -26,8 +24,6 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
     masterVolume: 0.5,
     audioInputDeviceId: '',
     audioOutputDeviceId: '',
-    isNoiseReductionEnabled: false,
-    isEchoCancellationEnabled: false,
     isTtsEnabled: false,
     voiceName: '',
     voicePitch: 1,
@@ -37,7 +33,7 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
 
   const [state, restoring, restoringPromise] = useIndexedDbValue(
     'store/app/rtcSettings',
-    1,
+    2,
     {
       // migrate from vuex
       1: async getStore => {
@@ -45,8 +41,24 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
         if (!vuexStore) return
         if (!isObjectAndHasKey(vuexStore, 'app')) return
         if (!isObjectAndHasKey(vuexStore.app, 'rtcSettings')) return
-        const addReq = getStore().add(vuexStore.app.rtcSettings, 'key')
+        const addReq = getStore().add(vuexStore.app.rtcSettings, key)
         await promisifyRequest(addReq)
+      },
+      // delete `isEchoCancellationEnabled` & `isNoiseReductionEnabled`
+      2: async getStore => {
+        const store = getStore()
+        const getReq = store.get(key)
+        const state = await promisifyRequest<
+          | {
+              isEchoCancellationEnabled?: boolean
+              isNoiseReductionEnabled?: boolean
+            }
+          | undefined
+        >(getReq)
+        delete state?.isEchoCancellationEnabled
+        delete state?.isNoiseReductionEnabled
+        const setReq = store.put(state, key)
+        await promisifyRequest(setReq)
       }
     },
     initialValue

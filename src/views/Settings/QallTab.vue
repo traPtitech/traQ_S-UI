@@ -42,27 +42,13 @@
         <div :class="$style.enable">
           <h3 :class="$style.header">ノイズ抑制を有効にする (β)</h3>
           <a-toggle
-            v-model="state.isNoiseReductionEnabled"
+            v-model="todo"
             :class="$style.toggle"
-            :disabled="!isAudioContextDtlnSampleRateIsSupported"
+            :disabled="!isAudioWorkletSupported"
           />
         </div>
         <p :class="$style.content">
           Qallでのノイズ抑制を有効にします<br />
-          スペックの低い端末では動作が不安定になる可能性があります
-        </p>
-      </div>
-      <div :class="$style.element">
-        <div :class="$style.enable">
-          <h3 :class="$style.header">エコー除去を有効にする (β)</h3>
-          <a-toggle
-            v-model="state.isEchoCancellationEnabled"
-            :class="$style.toggle"
-            :disabled="!isAudioContextDtlnSampleRateIsSupported"
-          />
-        </div>
-        <p :class="$style.content">
-          Qallでのエコー除去を有効にします<br />
           スペックの低い端末では動作が不安定になる可能性があります
         </p>
       </div>
@@ -110,12 +96,10 @@
 
 <script lang="ts">
 import { computed, ref, watchEffect, reactive } from 'vue'
-import { checkAudioContextSampleRateSupport } from '/@/lib/dom/browser'
-import { dtlnSampleRate } from '/@/lib/webrtc/dtln-web'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
+import { checkAudioWorkletSupport } from '/@/lib/dom/browser'
 
-const isAudioContextDtlnSampleRateIsSupported =
-  checkAudioContextSampleRateSupport(dtlnSampleRate)
+const isAudioWorkletSupported = checkAudioWorkletSupport()
 
 const useDevicesInfo = () => {
   const { isEnabled, ensureDeviceIds } = useRtcSettings()
@@ -210,6 +194,8 @@ const audioInputDeviceOptions = computed(() =>
     value: d.deviceId
   }))
 )
+
+const todo = false
 
 const voiceOptions = useVoices()
 </script>

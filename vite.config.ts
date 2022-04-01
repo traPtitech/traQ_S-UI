@@ -7,7 +7,6 @@ import { VitePWA } from 'vite-plugin-pwa'
 import VuePlugin from '@vitejs/plugin-vue'
 import brotli from 'rollup-plugin-brotli'
 import svgLoader from 'vite-svg-loader'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
 import { Agent as HttpsAgent } from 'https'
 import webManifest from './webmanifest'
 import { DEV_SERVER_PROXY_HOST } from './dev.config'
@@ -117,14 +116,6 @@ export default defineConfig(({ command, mode }) => ({
           'removeDimensions'
         ]
       }
-    }),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'node_modules/@sapphi-red/dtln-web/dist/*',
-          dest: 'dtln-web'
-        }
-      ]
     }),
     brotli()
   ],

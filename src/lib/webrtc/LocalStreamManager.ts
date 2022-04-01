@@ -1,4 +1,3 @@
-import type * as DTLN from '@sapphi-red/dtln-web'
 import ExtendedAudioContext from './ExtendedAudioContext'
 import { getUserAudio } from './userMedia'
 
@@ -9,7 +8,6 @@ type Options = {
   outputNode: AudioNode
   audioInputDeviceId: string
   enableNoiseReduction: boolean
-  enableEchoCancellation: boolean
 }
 
 /**
@@ -25,7 +23,6 @@ export default class LocalStreamManager {
 
   private readonly context: ExtendedAudioContext
   private readonly options: Options
-  private dtln: typeof DTLN | undefined
 
   inputStream!: MediaStream
   get outputStream() {
@@ -33,9 +30,6 @@ export default class LocalStreamManager {
   }
 
   private source!: MediaStreamAudioSourceNode
-  private dtlnProcessor: ScriptProcessorNode | undefined
-  private dtlnAecChannelMerger: ChannelMergerNode | undefined
-  private dtlnAecProcessor: ScriptProcessorNode | undefined
   private analyser!: AnalyserNode
   private readonly destination: MediaStreamAudioDestinationNode
 
@@ -58,11 +52,10 @@ export default class LocalStreamManager {
 
   private async setInput({
     audioInputDeviceId,
-    enableNoiseReduction,
-    enableEchoCancellation
+    enableNoiseReduction
   }: Options) {
-    if (enableNoiseReduction || enableEchoCancellation) {
-      await this.setupDtln({ enableNoiseReduction, enableEchoCancellation })
+    if (enableNoiseReduction) {
+      // TODO
     }
 
     const newInputStream = await getUserAudio(audioInputDeviceId)
@@ -73,29 +66,10 @@ export default class LocalStreamManager {
     this.source = this.context.createMediaStreamSource(this.inputStream)
     this.analyser = this.context.createAnalyserNode()
 
-    let lastNode: AudioNode = this.source
+    const lastNode: AudioNode = this.source
 
     if (enableNoiseReduction) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.dtlnProcessor = this.dtln!.createDtlnProcessorNode(this.context, {
-        channelCount: 2
-      })
-      lastNode.connect(this.dtlnProcessor)
-      lastNode = this.dtlnProcessor
-    }
-
-    if (enableEchoCancellation) {
-      this.dtlnAecChannelMerger = this.context.createChannelMerger(2)
-      lastNode.connect(this.dtlnAecChannelMerger, 0, 0)
-      this.options.outputNode.connect(this.dtlnAecChannelMerger, 0, 1)
-      lastNode = this.dtlnAecChannelMerger
-
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.dtlnAecProcessor = this.dtln!.createDtlnAecProcessorNode(
-        this.context
-      )
-      lastNode.connect(this.dtlnAecProcessor)
-      lastNode = this.dtlnAecProcessor
+      // TODO
     }
 
     lastNode.connect(this.analyser)
@@ -105,9 +79,6 @@ export default class LocalStreamManager {
   private unsetInput() {
     this.inputStream?.getTracks().forEach(t => t.stop())
     this.source?.disconnect()
-    this.dtlnProcessor?.disconnect()
-    this.dtlnAecChannelMerger?.disconnect()
-    this.dtlnAecProcessor?.disconnect()
     this.analyser?.disconnect()
   }
 
@@ -125,12 +96,6 @@ export default class LocalStreamManager {
     await this.setInput(this.options)
   }
 
-  async setEnableEchoCancellation(enableEchoCancellation: boolean) {
-    this.options.enableEchoCancellation = enableEchoCancellation
-
-    await this.setInput(this.options)
-  }
-
   /* mute methods */
   mute() {
     this.inputStream.getAudioTracks().forEach(track => {
@@ -142,32 +107,6 @@ export default class LocalStreamManager {
     this.inputStream.getAudioTracks().forEach(track => {
       track.enabled = true
     })
-  }
-
-  /* dtln methods */
-
-  private async setupDtln({
-    enableNoiseReduction,
-    enableEchoCancellation
-  }: Pick<Options, 'enableNoiseReduction' | 'enableEchoCancellation'>) {
-    if (!this.dtln) {
-      const dtln = await import('@sapphi-red/dtln-web')
-      await dtln.setup('/dtln-web/')
-      this.dtln = dtln
-    }
-
-    const promises = []
-
-    if (enableNoiseReduction) {
-      promises.push(this.dtln.loadModel({ path: '/dtln-web/', quant: 'f16' }))
-    }
-    if (enableEchoCancellation) {
-      promises.push(
-        this.dtln.loadAecModel({ path: '/dtln-web/', units: 128, quant: 'f16' })
-      )
-    }
-
-    await Promise.all(promises)
   }
 
   /* analyze methods */
