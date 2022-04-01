@@ -32,7 +32,7 @@ const useMessageFetcher = (
     | undefined,
   onReachedLatest?: () => void | Promise<void>
 ) => {
-  const { renderMessageContent } = useMessagesView()
+  const { renderMessageContent, resetRenderedContent } = useMessagesView()
   const { shouldReceiveLatestMessages } = useViewStateSenderStore()
   const { fetchMessage } = useMessagesStore()
 
@@ -187,6 +187,7 @@ const useMessageFetcher = (
   }
 
   const init = () => {
+    resetRenderedContent()
     if (props.entryMessageId) {
       onLoadAroundMessagesRequest(props.entryMessageId)
     } else {

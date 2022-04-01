@@ -148,7 +148,6 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
       channelId,
       entryMessageId
     }
-    messagesView.resetRenderedContent()
 
     // 通常のチャンネルは最後に開いたチャンネルとして保持
     const channelPath = channelIdToPathString(
@@ -173,7 +172,6 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
       userName,
       entryMessageId
     }
-    messagesView.resetRenderedContent()
   }
 
   const changePrimaryViewToClip = ({
@@ -185,7 +183,6 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
       type: 'clips',
       clipFolderId
     }
-    messagesView.resetRenderedContent()
   }
 
   return {
