@@ -13,19 +13,15 @@
     <template v-if="state.isEnabled">
       <div :class="$style.element">
         <h3 :class="$style.header">マスターボリューム</h3>
-        <div :class="[$style.content, $style.masterVolume]">
-          <form-input
-            v-model.number="state.masterVolume"
-            :class="$style.masterVolumeRange"
-            type="range"
-            min="0"
-            step="0.005"
-            max="1"
-          />
-          <div :class="$style.masterVolumeValue">
-            {{ Math.round(state.masterVolume * 200) }}%
-          </div>
-        </div>
+        <form-range-with-value
+          v-model="state.masterVolume"
+          :class="$style.content"
+          max-text="100%"
+          min="0"
+          step="0.005"
+          max="1"
+          :format="formatMasterVolume"
+        />
       </div>
       <div :class="$style.element">
         <h3 :class="$style.header">入力デバイス</h3>
@@ -171,8 +167,12 @@ import AToggle from '/@/components/UI/AToggle.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import NoiseSuppression from '/@/components/Settings/QallTab/NoiseSuppression.vue'
+import FormRangeWithValue from '/@/components/UI/FormRangeWithValue.vue'
 
 const state = reactive(useRtcSettings())
+
+const formatMasterVolume = (v: number) =>
+  `${Math.round(state.masterVolume * 200)}%`
 
 const { fetchFailed, audioInputDevices } = useDevicesInfo()
 
@@ -206,16 +206,5 @@ const voiceOptions = useVoices()
   .toggle {
     margin-left: 12px;
   }
-}
-.masterVolume {
-  display: flex;
-  align-items: center;
-}
-.masterVolumeRange {
-  flex: 1 1;
-}
-.masterVolumeValue {
-  width: 5ch;
-  text-align: right;
 }
 </style>
