@@ -4,13 +4,24 @@ import { Ref, watch, onMounted, onActivated, ref, computed } from 'vue'
 import { Message } from '@traptitech/traq'
 import { wsListener } from '/@/lib/websocket'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
-import { messageMitt } from '/@/store/entities/messages'
+import { messageMitt, useMessagesStore } from '/@/store/entities/messages'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import useMittListener from '/@/composables/utils/useMittListener'
+import apis from '/@/lib/apis'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 60
+
+interface GetMessagesParams {
+  channelId: string
+  limit?: number
+  offset?: number
+  since?: Date
+  until?: Date
+  inclusive?: boolean
+  order?: 'asc' | 'desc'
+}
 
 const useChannelMessageFetcher = (
   scrollerEle: Ref<{ $el: HTMLDivElement } | undefined>,
@@ -19,7 +30,8 @@ const useChannelMessageFetcher = (
     entryMessageId?: MessageId
   }
 ) => {
-  const { fetchMessagesByChannelId, renderMessageContent } = useMessagesView()
+  const { extendMessagesMap } = useMessagesStore()
+  const { renderMessageContent } = useMessagesView()
   const {
     unreadChannelsMap,
     unreadChannelsMapInitialFetchPromise,
@@ -60,6 +72,23 @@ const useChannelMessageFetcher = (
       loadedMessageLatestDate.value < newDate
     ) {
       loadedMessageLatestDate.value = newDate
+    }
+  }
+
+  const fetchMessagesByChannelId = async (params: GetMessagesParams) => {
+    const res = await apis.getMessages(
+      params.channelId,
+      params.limit,
+      params.offset,
+      params.since?.toISOString(),
+      params.until?.toISOString(),
+      params.inclusive,
+      params.order
+    )
+    extendMessagesMap(res.data)
+    return {
+      messages: res.data,
+      hasMore: res.headers['x-traq-more'] === 'true'
     }
   }
 

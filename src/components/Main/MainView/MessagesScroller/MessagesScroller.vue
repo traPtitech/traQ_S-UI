@@ -38,7 +38,7 @@ import {
   shallowRef
 } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
-import { LoadingDirection } from '/@/store/domain/messagesView'
+import { LoadingDirection } from './composables/useMessagesFetcher'
 import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
 import { throttle } from 'throttle-debounce'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'

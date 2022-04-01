@@ -1,47 +1,11 @@
 import { EmbeddingOrUrl, ExternalUrl } from '@traptitech/traq-markdown-it'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
-import apis from '/@/lib/apis'
 import { isExternalUrl, isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { MessageId } from '/@/types/entity-ids'
 import { useMessagesStore } from '/@/store/entities/messages'
-
-export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
-interface BaseGetMessagesParams {
-  limit?: number
-  offset?: number
-  since?: Date
-  until?: Date
-  inclusive?: boolean
-  order?: 'asc' | 'desc'
-}
-interface GetMessagesParams extends BaseGetMessagesParams {
-  channelId: string
-}
-
-interface GetFilesChannelParams {
-  channelId: string
-  limit?: number
-  offset?: number
-  since?: Date
-  until?: Date
-  inclusive?: boolean
-  order?: 'asc' | 'desc'
-  mine?: boolean
-}
-
-interface GetClipsParam {
-  folderId: string
-  limit?: number
-  offset?: number
-  order?: 'asc' | 'desc'
-}
-
-interface GetDirectMessagesParams extends BaseGetMessagesParams {
-  userId: string
-}
 
 const ignoredHostNamesSet = new Set<string>(
   window.traQConfig.ogpIgnoreHostNames
@@ -62,41 +26,6 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
 
   const renderedContentMap = ref(new Map<MessageId, string>())
   const embeddingsMap = ref(new Map<MessageId, EmbeddingOrUrl[]>())
-
-  const resetViewState = () => {
-    renderedContentMap.value = new Map()
-  }
-
-  const fetchMessagesInClipFolder = async (params: GetClipsParam) => {
-    const { data, headers } = await apis.getClips(
-      params.folderId,
-      params.limit,
-      params.offset,
-      params.order
-    )
-    messagesStore.extendMessagesMap(data.map(c => c.message))
-    return {
-      clips: data,
-      hasMore: headers['x-traq-more'] === 'true'
-    }
-  }
-
-  const fetchMessagesByChannelId = async (params: GetMessagesParams) => {
-    const res = await apis.getMessages(
-      params.channelId,
-      params.limit,
-      params.offset,
-      params.since?.toISOString(),
-      params.until?.toISOString(),
-      params.inclusive,
-      params.order
-    )
-    messagesStore.extendMessagesMap(res.data)
-    return {
-      messages: res.data,
-      hasMore: res.headers['x-traq-more'] === 'true'
-    }
-  }
 
   const renderMessageContent = async (messageId: string) => {
     const content =
@@ -148,13 +77,15 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
     embeddingsMap.value.set(messageId, rendered.embeddings)
   }
 
+  const resetRenderedContent = () => {
+    renderedContentMap.value = new Map()
+  }
+
   return {
     renderedContentMap,
     embeddingsMap,
-    resetViewState,
-    fetchMessagesByChannelId,
-    fetchMessagesInClipFolder,
-    renderMessageContent
+    renderMessageContent,
+    resetRenderedContent
   }
 })
 

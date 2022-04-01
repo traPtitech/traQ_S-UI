@@ -3,12 +3,19 @@ import { MessageId, ClipFolderId } from '/@/types/entity-ids'
 import { reactive, Ref, watch, onMounted, computed } from 'vue'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
 import { wsListener } from '/@/lib/websocket'
-import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 import useMittListener from '/@/composables/utils/useMittListener'
+import apis from '/@/lib/apis'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 80
+
+interface GetClipsParam {
+  folderId: string
+  limit?: number
+  offset?: number
+  order?: 'asc' | 'desc'
+}
 
 const useClipsFetcher = (
   scrollerEle: Ref<{ $el: HTMLDivElement } | undefined>,
@@ -17,8 +24,7 @@ const useClipsFetcher = (
     entryMessageId?: MessageId
   }
 ) => {
-  const { fetchMessagesInClipFolder } = useMessagesView()
-  const { fetchMessage } = useMessagesStore()
+  const { fetchMessage, extendMessagesMap } = useMessagesStore()
   const { fetchLimit, waitHeightResolved } = useFetchLimit(
     scrollerEle,
     MESSAGE_HEIGHT
@@ -33,6 +39,20 @@ const useClipsFetcher = (
   }
   const init = () => {
     messagesFetcher.init()
+  }
+
+  const fetchMessagesInClipFolder = async (params: GetClipsParam) => {
+    const { data, headers } = await apis.getClips(
+      params.folderId,
+      params.limit,
+      params.offset,
+      params.order
+    )
+    extendMessagesMap(data.map(c => c.message))
+    return {
+      clips: data,
+      hasMore: headers['x-traq-more'] === 'true'
+    }
   }
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
