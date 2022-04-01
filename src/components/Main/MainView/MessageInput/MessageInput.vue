@@ -66,12 +66,12 @@ import useAttachments from './composables/useAttachments'
 import useModifierKey from './composables/useModifierKey'
 import usePostMessage from './composables/usePostMessage'
 import useFocus from './composables/useFocus'
-import useEditingStatus from './composables/useEditingStatus'
 import { useToastStore } from '/@/store/ui/toast'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
 
 const props = defineProps<{
   channelId: ChannelId | DMChannelId
@@ -103,11 +103,15 @@ const isArchived = computed(
 )
 
 const { isFocused, onFocus, onBlur } = useFocus()
-useEditingStatus(channelId, isTextEmpty, isFocused)
 watchEffect(() => {
   if (isFocused.value) {
     isLeftControlsExpanded.value = false
   }
+})
+
+const { isTyping } = useViewStateSenderStore()
+watchEffect(() => {
+  isTyping.value = !isTextEmpty.value && isFocused.value
 })
 
 const onAddAttachments = async (files: File[]) => {

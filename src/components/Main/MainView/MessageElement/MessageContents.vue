@@ -14,6 +14,7 @@
         :raw-content="message.content"
         :message-id="messageId"
         :channel-id="message.channelId"
+        @finish-editing="finishEditing"
       />
       <message-quote-list
         v-if="embeddingsState.quoteMessageIds.length > 0"
@@ -46,19 +47,22 @@ import MessageOgpList from './MessageOgpList.vue'
 import { computed } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
-import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 
 const props = defineProps<{
   messageId: MessageId
 }>()
 
-const { editingMessageId } = useMessagesView()
 const { messagesMap } = useMessagesStore()
-
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const message = computed(() => messagesMap.value.get(props.messageId)!)
+
+const { editingMessageId } = useMessageEditingStateStore()
 const isEditing = computed(() => props.messageId === editingMessageId.value)
+const finishEditing = () => {
+  editingMessageId.value = undefined
+}
 
 const { embeddingsState } = useEmbeddings(props)
 </script>

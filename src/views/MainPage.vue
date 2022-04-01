@@ -135,6 +135,7 @@ import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue'
 import NavigationBar from '/@/components/Main/NavigationBar/NavigationBar.vue'
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue'
+import useViewStateSender from './composables/useViewStateSender'
 
 const navWidth = 320
 const sidebarWidth = 256 + 64
@@ -186,6 +187,8 @@ const onClickMainViewFrame = (e: MouseEvent) => {
   e.stopPropagation()
   closeNav()
 }
+
+useViewStateSender()
 </script>
 
 <style lang="scss" module>

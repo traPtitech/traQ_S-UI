@@ -3,11 +3,19 @@ import { MessageId } from '/@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
 const useMessageFetcher = (
   props: { entryMessageId?: MessageId },
+  /**
+   * 表示チャンネル/クリップフォルダによって一意に定まるもの
+   *
+   * 非同期処理を行う際は表示しようとしてるものが変化しているかチェックする必要があるため、
+   * そのチェックの際に前後で変化していないかという形で利用する
+   */
+  id: Ref<string>,
   fetchFormerMessages: (isReachedEnd: Ref<boolean>) => Promise<MessageId[]>,
   fetchLatterMessages:
     | ((isReachedLatest: Ref<boolean>) => Promise<MessageId[]>)
@@ -24,13 +32,8 @@ const useMessageFetcher = (
     | undefined,
   onReachedLatest?: () => void | Promise<void>
 ) => {
-  const {
-    currentChannelId,
-    currentClipFolderId,
-    receiveLatestMessages,
-    renderMessageContent,
-    syncViewState
-  } = useMessagesView()
+  const { renderMessageContent } = useMessagesView()
+  const { shouldReceiveLatestMessages } = useViewStateSenderStore()
   const { fetchMessage } = useMessagesStore()
 
   const messageIds = ref<MessageId[]>([])
@@ -39,24 +42,6 @@ const useMessageFetcher = (
   const isLoading = ref(false)
   const isInitialLoad = ref(false)
   const lastLoadingDirection = ref<LoadingDirection>('latest')
-
-  /**
-   * 表示チャンネル/クリップフォルダによって一意に定まるもの
-   *
-   * 非同期処理を行う際は表示しようとしてるものが変化しているかチェックする必要があるため、
-   * そのチェックの際に前後で変化していないかという形で利用する
-   */
-  const getCurrentViewIdentifier = () => {
-    const channelId = currentChannelId.value
-    if (channelId) {
-      return `ch:${channelId}`
-    }
-    const clipFolderId = currentClipFolderId.value
-    if (clipFolderId) {
-      return `cf:${clipFolderId}`
-    }
-    return ''
-  }
 
   /**
    * 表示チャンネル/クリップフォルダが変化していないかチェックをして適用する
@@ -68,9 +53,9 @@ const useMessageFetcher = (
     fetch: () => Promise<T>,
     apply: (result: T) => void | Promise<void>
   ) => {
-    const id = getCurrentViewIdentifier()
+    const beforeId = id.value
     const result = await fetch()
-    if (id !== getCurrentViewIdentifier()) return
+    if (id.value !== beforeId) return
     await apply(result)
   }
 
@@ -214,8 +199,7 @@ const useMessageFetcher = (
     if (isReachedLatest.value) {
       await onReachedLatest?.()
     }
-    receiveLatestMessages.value = isReachedLatest.value
-    syncViewState()
+    shouldReceiveLatestMessages.value = isReachedLatest.value
   })
 
   return {

@@ -22,7 +22,7 @@ const useChannelSubscribers = (props: { channelId: ChannelId }) => {
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e)
-      subscribers.value = new Set()
+      subscribers.value.clear()
     }
   }
 
