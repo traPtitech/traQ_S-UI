@@ -17,21 +17,27 @@ import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWork
 let rnnoiseWasmBinary: ArrayBuffer | undefined
 const loadRnnoise = async (ctx: AudioContext) => {
   if (rnnoiseWasmBinary) return rnnoiseWasmBinary
+
+  // 先に代入すると取得中に取得完了した判定が発生しうるので、
+  // どっちも完了してからrnnoiseWasmBinaryに代入すること
+  await ctx.audioWorklet.addModule(rnnoiseWorkletPath)
   rnnoiseWasmBinary = await loadRnnoiseLib({
     url: rnnoiseWasmPath,
     simdUrl: rnnoiseSimdWasmPath
   })
 
-  await ctx.audioWorklet.addModule(rnnoiseWorkletPath)
   return rnnoiseWasmBinary
 }
 
 let speexWasmBinary: ArrayBuffer | undefined
 const loadSpeex = async (ctx: AudioContext) => {
   if (speexWasmBinary) return speexWasmBinary
+
+  // 先に代入すると取得中に取得完了した判定が発生しうるので、
+  // どっちも完了してからspeexWasmBinaryに代入すること
+  await ctx.audioWorklet.addModule(speexWorkletPath)
   speexWasmBinary = await loadSpeexLib({ url: speexWasmPath })
 
-  await ctx.audioWorklet.addModule(speexWorkletPath)
   return speexWasmBinary
 }
 
@@ -39,8 +45,10 @@ let noiseGateLoaded = false
 const loadNoiseGate = async (ctx: AudioContext) => {
   if (noiseGateLoaded) return
 
-  noiseGateLoaded = true
+  // 先に代入すると取得中に取得完了した判定が発生しうるので、
+  // 完了してからnoiseGateLoadedに代入すること
   await ctx.audioWorklet.addModule(noiseGateWorkletPath)
+  noiseGateLoaded = true
 }
 
 export type NoiseSuppressionType = 'rnnoise' | 'speex' | 'none'
