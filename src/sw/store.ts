@@ -1,6 +1,6 @@
 import { promisifyRequest } from 'idb-keyval'
 import { dbPrefix } from '/@/lib/dom/idb'
-import { IDBState } from '/@/store/domain/me'
+import type { IDBState } from '/@/store/domain/me'
 import { storeName, key } from '/@/composables/utils/useIndexedDbValue'
 
 export const getMeStore = async () => {

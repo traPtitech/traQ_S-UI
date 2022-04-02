@@ -2,7 +2,7 @@ import qallStartMp3 from '/@/assets/se/qall_start.mp3'
 import qallEndMp3 from '/@/assets/se/qall_end.mp3'
 import qallJoinedMp3 from '/@/assets/se/qall_joined.mp3'
 import qallLeftMp3 from '/@/assets/se/qall_left.mp3'
-import ExtendedAudioContext from './ExtendedAudioContext'
+import type ExtendedAudioContext from './ExtendedAudioContext'
 import NodeMerger from './NodeMerger'
 
 type StreamNodes = {

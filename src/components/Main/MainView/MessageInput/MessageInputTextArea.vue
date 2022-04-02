@@ -36,7 +36,7 @@
 import { ref, computed } from 'vue'
 import useSendKeyWatcher from './composables/useSendKeyWatcher'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import useWordSuggester from './composables/useWordSuggester'
 import useInsertText from '/@/composables/dom/useInsertText'
 import { getScrollbarWidth } from '/@/lib/dom/scrollbar'

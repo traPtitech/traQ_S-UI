@@ -2,7 +2,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { MessageId } from '/@/types/entity-ids'
+import type { MessageId } from '/@/types/entity-ids'
 
 const useMessageEditingStateStorePinia = defineStore(
   'ui/messageEditingStateStore',

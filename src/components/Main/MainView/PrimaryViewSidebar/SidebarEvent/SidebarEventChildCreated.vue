@@ -13,7 +13,7 @@
 <script lang="ts" setup>
 import SidebarEventFrame from './SidebarEventFrame.vue'
 import { computed } from 'vue'
-import { ChildCreatedEvent } from '@traptitech/traq'
+import type { ChildCreatedEvent } from '@traptitech/traq'
 import useChannelPath from '/@/composables/useChannelPath'
 
 const props = defineProps<{

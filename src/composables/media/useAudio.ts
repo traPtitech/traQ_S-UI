@@ -1,14 +1,7 @@
-import {
-  Ref,
-  ref,
-  computed,
-  watch,
-  readonly,
-  shallowRef,
-  onUnmounted
-} from 'vue'
+import type { Ref } from 'vue'
+import { ref, computed, watch, readonly, shallowRef, onUnmounted } from 'vue'
 import usePictureInPicture from './usePictureInPicture'
-import { FileInfo } from '@traptitech/traq'
+import type { FileInfo } from '@traptitech/traq'
 import { useAudioController } from '/@/store/ui/audioController'
 
 const toFinite = (n: number | undefined, def: number) =>

@@ -23,7 +23,7 @@ import UsersSelector from '../Common/UsersSelector.vue'
 import { computed, ref } from 'vue'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
-import { UserGroupId, UserId } from '/@/types/entity-ids'
+import type { UserGroupId, UserId } from '/@/types/entity-ids'
 import { useModalStore } from '/@/store/ui/modal'
 import { useGroupsStore } from '/@/store/entities/groups'
 

@@ -38,7 +38,8 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref, ref } from 'vue'
+import type { Ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 

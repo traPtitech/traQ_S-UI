@@ -9,7 +9,8 @@
 import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
 import { navigationRouteNameTitleMap } from './composables/useNavigation'
-import { constructSettingsPath, SettingsRouteName } from '/@/router/settings'
+import type { SettingsRouteName } from '/@/router/settings'
+import { constructSettingsPath } from '/@/router/settings'
 
 const props = defineProps<{
   routeName: SettingsRouteName

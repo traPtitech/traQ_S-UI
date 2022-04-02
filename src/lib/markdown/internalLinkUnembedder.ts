@@ -1,4 +1,5 @@
-import { forEachData, Position } from './detector'
+import type { Position } from './detector'
+import { forEachData } from './detector'
 
 export const replaceBack = (text: string) => {
   const internalLinks: Array<Position & { newText: string }> = []

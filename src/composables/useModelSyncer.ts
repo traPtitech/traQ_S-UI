@@ -1,4 +1,5 @@
-import { computed, WritableComputedRef } from 'vue'
+import type { WritableComputedRef } from 'vue'
+import { computed } from 'vue'
 
 export const useModelSyncer = <
   P,

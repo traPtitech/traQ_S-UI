@@ -1,7 +1,8 @@
-import { computed, reactive, Ref } from 'vue'
+import type { Ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { deepSome } from '/@/lib/basic/tree'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const useNotificationState = <T extends { id: ChannelId; children: T[] }>(
   channelTree: Ref<{ id: ChannelId; children?: T[] }>

@@ -1,6 +1,6 @@
 import { isDarkColor } from '/@/lib/basic/color'
-import { ResolvedBasicTheme } from './basic'
-import {
+import type { ResolvedBasicTheme } from './basic'
+import type {
   ExtendedOptionalMarkdownTheme,
   MarkdownDefaultTheme,
   MarkdownTheme

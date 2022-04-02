@@ -1,4 +1,4 @@
-import { StoreForParser } from '/@/lib/searchMessage/parserBase'
+import type { StoreForParser } from '/@/lib/searchMessage/parserBase'
 import {
   createQueryParser,
   toSearchMessageParam

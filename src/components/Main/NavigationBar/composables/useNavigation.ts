@@ -1,10 +1,10 @@
+import type { EphemeralNavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 import {
   useNavigation,
-  useEphemeralNavigation,
-  EphemeralNavigationItemType
+  useEphemeralNavigation
 } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 
-import { EphemeralNavigationSelectorEntry } from './useNavigationSelectorEntry'
+import type { EphemeralNavigationSelectorEntry } from './useNavigationSelectorEntry'
 
 const useNav = () => {
   const { navigationSelectorState, onNavigationChange } = useNavigation()

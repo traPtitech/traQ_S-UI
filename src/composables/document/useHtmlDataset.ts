@@ -1,4 +1,5 @@
-import { Ref, watchEffect } from 'vue'
+import type { Ref } from 'vue'
+import { watchEffect } from 'vue'
 
 const useHtmlDataset = (datasetName: string, value: Ref<string | boolean>) => {
   const $html = document.documentElement

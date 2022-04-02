@@ -13,10 +13,8 @@
 
 <script lang="ts" setup>
 import NavigationSelectorItem from '/@/components/Modal/UserModal/NavigationSelectorItem.vue'
-import {
-  NavigationItemType,
-  useNavigationSelectorItem
-} from './composables/useNavigation'
+import type { NavigationItemType } from './composables/useNavigation'
+import { useNavigationSelectorItem } from './composables/useNavigation'
 
 withDefaults(
   defineProps<{

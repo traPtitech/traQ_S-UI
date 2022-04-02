@@ -6,7 +6,7 @@
 <script lang="ts" setup>
 import DesktopFeatureContainer from './DesktopFeatureContainer.vue'
 import MobileFeatureContainer from './MobileFeatureContainer.vue'
-import { User, UserDetail } from '@traptitech/traq'
+import type { User, UserDetail } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 defineProps<{

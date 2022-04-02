@@ -1,5 +1,5 @@
-import { RouteName } from '/@/router'
-import {
+import type { RouteName } from '/@/router'
+import type {
   UserId,
   ChannelId,
   FileId,

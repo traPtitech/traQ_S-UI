@@ -29,7 +29,7 @@
 <script lang="ts" setup>
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormRadio from '/@/components/UI/FormRadio.vue'
-import { OpenMode } from '/@/store/app/browserSettings'
+import type { OpenMode } from '/@/store/app/browserSettings'
 import useChannelPath from '/@/composables/useChannelPath'
 import useChannelOptions from '/@/composables/useChannelOptions'
 import { useModelSyncer } from '/@/composables/useModelSyncer'

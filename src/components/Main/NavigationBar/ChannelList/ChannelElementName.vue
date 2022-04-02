@@ -23,8 +23,8 @@
 import { computed, reactive } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useQallSession } from '../../MainView/ChannelView/ChannelSidebar/composables/useChannelRTCSession'
-import { ChannelTreeNode } from '/@/lib/channelTree'
-import { Channel } from '@traptitech/traq'
+import type { ChannelTreeNode } from '/@/lib/channelTree'
+import type { Channel } from '@traptitech/traq'
 
 interface TreeProps {
   channel: ChannelTreeNode

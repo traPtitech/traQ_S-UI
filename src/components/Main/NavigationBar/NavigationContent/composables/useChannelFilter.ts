@@ -1,5 +1,6 @@
-import { Channel } from '@traptitech/traq'
-import { computed, Ref, ref } from 'vue'
+import type { Channel } from '@traptitech/traq'
+import type { Ref } from 'vue'
+import { computed, ref } from 'vue'
 import { channelDeepMatching } from '/@/lib/channel'
 import { useChannelsStore } from '/@/store/entities/channels'
 

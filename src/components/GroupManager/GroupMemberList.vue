@@ -33,10 +33,10 @@
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import GroupUser from './GroupUser.vue'
-import { UserGroupId } from '/@/types/entity-ids'
+import type { UserGroupId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
-import { UserGroupMember } from '@traptitech/traq'
+import type { UserGroupMember } from '@traptitech/traq'
 import { useModalStore } from '/@/store/ui/modal'
 
 const props = defineProps<{

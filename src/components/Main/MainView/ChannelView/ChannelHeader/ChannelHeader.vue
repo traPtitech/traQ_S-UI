@@ -17,7 +17,7 @@ import PrimaryViewHeader from '/@/components/Main/MainView/PrimaryViewHeader/Pri
 import ChannelHeaderChannelName from './ChannelHeaderChannelName.vue'
 import ChannelHeaderTopic from './ChannelHeaderTopic.vue'
 import ChannelHeaderTools from './ChannelHeaderTools.vue'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 
 defineProps<{
   channelId: ChannelId

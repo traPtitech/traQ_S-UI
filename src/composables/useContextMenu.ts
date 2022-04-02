@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { Point } from '/@/lib/basic/point'
+import type { Point } from '/@/lib/basic/point'
 
 const useContextMenu = () => {
   const position = ref<Point>()

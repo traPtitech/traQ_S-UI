@@ -11,7 +11,7 @@
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
 import { computed } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+import type { UserId } from '/@/types/entity-ids'
 import { isDefined } from '/@/lib/basic/array'
 import { useUsersStore } from '/@/store/entities/users'
 

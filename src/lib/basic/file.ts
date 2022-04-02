@@ -1,4 +1,5 @@
-import { FileInfo, ThumbnailType } from '@traptitech/traq'
+import type { FileInfo } from '@traptitech/traq'
+import { ThumbnailType } from '@traptitech/traq'
 
 export type AttachmentType =
   | 'image'

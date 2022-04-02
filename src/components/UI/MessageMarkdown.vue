@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { MessageId } from '/@/types/entity-ids'
+import type { MessageId } from '/@/types/entity-ids'
 import { computed } from 'vue'
 import { useMessagesView } from '/@/store/domain/messagesView'
 

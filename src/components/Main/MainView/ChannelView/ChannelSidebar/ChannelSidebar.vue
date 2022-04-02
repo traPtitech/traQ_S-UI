@@ -41,10 +41,10 @@ import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
 import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
 import SidebarEventsPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarEventsPage.vue'
 import { computed } from 'vue'
-import { ChannelId, UserId } from '/@/types/entity-ids'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
 import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
 import { useChannelsStore } from '/@/store/entities/channels'
-import { Pin } from '@traptitech/traq'
+import type { Pin } from '@traptitech/traq'
 
 const props = defineProps<{
   channelId: ChannelId

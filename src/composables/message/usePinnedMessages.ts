@@ -1,10 +1,11 @@
-import { Pin, Message } from '@traptitech/traq'
-import { Ref, ref, watch } from 'vue'
+import type { Pin, Message } from '@traptitech/traq'
+import type { Ref } from 'vue'
+import { ref, watch } from 'vue'
 import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
 import { messageMitt } from '/@/store/entities/messages'
-import { ChannelId, MessageId } from '/@/types/entity-ids'
+import type { ChannelId, MessageId } from '/@/types/entity-ids'
 
 const usePinnedMessages = (channelId: Ref<ChannelId>) => {
   const pinnedMessages = ref<Pin[]>([])

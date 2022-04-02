@@ -1,6 +1,7 @@
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import { computed } from 'vue'
-import { useDomainRtcStore, SessionType } from '/@/store/domain/rtc'
+import type { SessionType } from '/@/store/domain/rtc'
+import { useDomainRtcStore } from '/@/store/domain/rtc'
 
 const useRTCSession =
   (sessionType: SessionType) => (props: { channelId: ChannelId }) => {

@@ -11,7 +11,8 @@
 </template>
 
 <script lang="ts">
-import { Ref, ref, watch, toRef } from 'vue'
+import type { Ref } from 'vue'
+import { ref, watch, toRef } from 'vue'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import { RouteName } from '/@/router'
 import { defaultSettingsName } from '/@/router/settings'

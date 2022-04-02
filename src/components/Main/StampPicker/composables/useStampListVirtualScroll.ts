@@ -1,4 +1,5 @@
-import { ShallowRef, Ref, computed } from 'vue'
+import type { ShallowRef, Ref } from 'vue'
+import { computed } from 'vue'
 import useBoxSize from '/@/composables/dom/useBoxSize'
 import useScrollPosition from '/@/composables/dom/useScrollPosition'
 import useThrottled from '/@/composables/utils/useThrottled'

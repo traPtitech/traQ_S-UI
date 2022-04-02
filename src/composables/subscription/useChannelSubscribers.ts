@@ -1,7 +1,7 @@
 import apis from '/@/lib/apis'
 import { createSingleflight } from '/@/lib/basic/async'
 import { wsListener } from '/@/lib/websocket'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import { ref, watchEffect } from 'vue'
 import useMittListener from '/@/composables/utils/useMittListener'
 

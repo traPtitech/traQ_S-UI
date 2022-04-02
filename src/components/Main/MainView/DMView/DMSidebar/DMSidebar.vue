@@ -40,8 +40,8 @@ import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/Sideba
 import SidebarContent from './DMSidebarContent.vue'
 import SidebarEventsPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarEventsPage.vue'
 import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
-import { ChannelId, UserId } from '/@/types/entity-ids'
-import { Pin } from '@traptitech/traq'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
+import type { Pin } from '@traptitech/traq'
 
 defineProps<{
   channelId: ChannelId

@@ -1,4 +1,5 @@
-import { computed, Ref, ref } from 'vue'
+import type { Ref } from 'vue'
+import { computed, ref } from 'vue'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { getMatchedWithPriority } from '/@/lib/basic/array'
 

@@ -1,5 +1,5 @@
 import { computed, reactive } from 'vue'
-import { MessageId } from '/@/types/entity-ids'
+import type { MessageId } from '/@/types/entity-ids'
 import { isFile, isMessage, isExternalUrl } from '/@/lib/guard/embeddingOrUrl'
 import { useMessagesView } from '/@/store/domain/messagesView'
 

@@ -1,4 +1,5 @@
-import { reactive, UnwrapRef } from 'vue'
+import type { UnwrapRef } from 'vue'
+import { reactive } from 'vue'
 
 const createNavigation = <
   NavigationItemType extends string | undefined,

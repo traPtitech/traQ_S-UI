@@ -1,4 +1,5 @@
-import { nextTick, onMounted, Ref } from 'vue'
+import type { Ref } from 'vue'
+import { nextTick, onMounted } from 'vue'
 
 type Callback = () => void | Promise<void>
 

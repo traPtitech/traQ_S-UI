@@ -8,7 +8,7 @@
 import useFileThumbnail from '/@/composables/files/useFileThumbnail'
 import { computed } from 'vue'
 import PlayIcon from '/@/components/UI/PlayIcon.vue'
-import { FileId } from '/@/types/entity-ids'
+import type { FileId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   fileId: FileId

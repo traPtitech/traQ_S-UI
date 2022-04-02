@@ -1,4 +1,5 @@
-import { reactive, Ref } from 'vue'
+import type { Ref } from 'vue'
+import { reactive } from 'vue'
 
 type SwipeDirection = 'left' | 'right' | 'none'
 

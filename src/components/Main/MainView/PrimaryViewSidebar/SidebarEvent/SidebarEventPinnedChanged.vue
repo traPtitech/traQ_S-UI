@@ -22,13 +22,9 @@ import SidebarEventFrame from './SidebarEventFrame.vue'
 import UserName from '/@/components/UI/MessagePanel/UserName.vue'
 import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
 import { computed, ref, watch } from 'vue'
-import {
-  ChannelEventTypeEnum,
-  Message,
-  PinAddedEvent,
-  PinRemovedEvent
-} from '@traptitech/traq'
-import { AxiosError } from 'axios'
+import type { Message, PinAddedEvent, PinRemovedEvent } from '@traptitech/traq'
+import { ChannelEventTypeEnum } from '@traptitech/traq'
+import type { AxiosError } from 'axios'
 import { constructMessagesPath } from '/@/router'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useUsersStore } from '/@/store/entities/users'

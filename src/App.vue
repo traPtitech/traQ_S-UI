@@ -11,7 +11,8 @@
 </template>
 
 <script lang="ts">
-import { computed, watchEffect, Ref } from 'vue'
+import type { Ref } from 'vue'
+import { computed, watchEffect } from 'vue'
 import useHtmlDataset from '/@/composables/document/useHtmlDataset'
 import { useThemeVariables } from '/@/composables/document/useThemeVariables'
 import { useResponsiveStore } from '/@/store/ui/responsive'

@@ -1,4 +1,4 @@
-import {
+import type {
   UserId,
   ChannelId,
   UserGroupId,
@@ -8,7 +8,7 @@ import {
   StampPaletteId,
   TagId
 } from '/@/types/entity-ids'
-import {
+import type {
   ChannelViewer,
   MyChannelViewState,
   WebRTCUserStateSessions

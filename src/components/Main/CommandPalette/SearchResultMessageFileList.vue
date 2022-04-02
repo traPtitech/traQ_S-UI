@@ -22,7 +22,7 @@ import SearchResultMessageImage from './SearchResultMessageImage.vue'
 import SearchResultMessageFile from './SearchResultMessageFile.vue'
 import { computed } from 'vue'
 import useFileMetaList from '/@/composables/message/useFileMetaList'
-import { FileId } from '/@/types/entity-ids'
+import type { FileId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{

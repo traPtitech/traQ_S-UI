@@ -1,4 +1,5 @@
-import { Ref, ref } from 'vue'
+import type { Ref } from 'vue'
+import { ref } from 'vue'
 
 const useToggle = (initialValueOrRef: boolean | Ref<boolean> = false) => {
   // 既にrefだった場合は渡したrefが返される

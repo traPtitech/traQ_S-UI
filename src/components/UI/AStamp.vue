@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { StampId } from '/@/types/entity-ids'
+import type { StampId } from '/@/types/entity-ids'
 import { buildFilePath } from '/@/lib/apis'
 import { useStampsStore } from '/@/store/entities/stamps'
 

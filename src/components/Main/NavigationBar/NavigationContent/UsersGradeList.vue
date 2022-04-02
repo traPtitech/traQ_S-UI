@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { User } from '@traptitech/traq'
+import type { User } from '@traptitech/traq'
 import { isDefined } from '/@/lib/basic/array'
 import { useChannelsStore } from '/@/store/entities/channels'
 import UsersSeparator from './UsersSeparator.vue'

@@ -2,7 +2,7 @@ import { reactive, ref, watch, watchEffect } from 'vue'
 import apis from '/@/lib/apis'
 import useRedirectParam from './useRedirectParam'
 import useCredentialManager from './useCredentialManager'
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 import { useMeStore } from '/@/store/domain/me'
 
 const useLogin = () => {

@@ -5,7 +5,7 @@ import {
   RnnoiseWorkletNode,
   SpeexWorkletNode
 } from '@sapphi-red/web-noise-suppressor'
-import ExtendedAudioContext from './ExtendedAudioContext'
+import type ExtendedAudioContext from './ExtendedAudioContext'
 import { getUserAudio } from './userMedia'
 import rnnoiseWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise.wasm?url'
 import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.wasm?url'

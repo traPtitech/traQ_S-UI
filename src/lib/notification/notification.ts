@@ -1,15 +1,13 @@
-import { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
+import type { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
 import apis from '/@/lib/apis'
 import router from '/@/router'
 import { isIOSApp } from '/@/lib/dom/browser'
-import { ChannelId, DMChannelId } from '/@/types/entity-ids'
+import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { createNotificationArgumentsCreator } from './notificationArguments'
-import { OnCanUpdate, setupUpdateToast } from './updateToast'
-import {
-  setupFirebaseApp,
-  FirebasePayloadData,
-  getFirebaseApp
-} from './firebase'
+import type { OnCanUpdate } from './updateToast'
+import { setupUpdateToast } from './updateToast'
+import type { FirebasePayloadData } from './firebase'
+import { setupFirebaseApp, getFirebaseApp } from './firebase'
 import { requestNotificationPermission } from './requestPermission'
 import {
   getMessaging,

@@ -24,7 +24,7 @@
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import OnlineIndicatorWithTooltip from './OnlineIndicatorWithTooltip.vue'
 import LinkButtons from './LinkButtons.vue'
-import { User, UserDetail } from '@traptitech/traq'
+import type { User, UserDetail } from '@traptitech/traq'
 
 defineProps<{
   user: User

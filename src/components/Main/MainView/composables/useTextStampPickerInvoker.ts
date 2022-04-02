@@ -1,9 +1,9 @@
-import {
+import type {
   AlignmentPosition,
-  StampSelectHandler,
-  useStampPickerInvoker
+  StampSelectHandler
 } from '/@/store/ui/stampPicker'
-import { Ref } from 'vue'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+import type { Ref } from 'vue'
 import useInsertText from '/@/composables/dom/useInsertText'
 import { useStampsStore } from '/@/store/entities/stamps'
 

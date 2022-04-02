@@ -23,7 +23,7 @@
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import GroupUser from './GroupUser.vue'
-import { UserGroupId, UserId } from '/@/types/entity-ids'
+import type { UserGroupId, UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'

@@ -68,13 +68,13 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref, ref, toRef } from 'vue'
-import { UserDetail } from '@traptitech/traq'
+import type { Ref } from 'vue'
+import { computed, reactive, ref, toRef } from 'vue'
+import type { UserDetail } from '@traptitech/traq'
 import apis, { formatResizeError } from '/@/lib/apis'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
-import useImageUpload, {
-  ImageUploadState
-} from '/@/components/Settings/composables/useImageUpload'
+import type { ImageUploadState } from '/@/components/Settings/composables/useImageUpload'
+import useImageUpload from '/@/components/Settings/composables/useImageUpload'
 import { nullUuid } from '/@/lib/basic/uuid'
 import useChannelOptions from '/@/composables/useChannelOptions'
 import useMaxLength from '/@/composables/utils/useMaxLength'

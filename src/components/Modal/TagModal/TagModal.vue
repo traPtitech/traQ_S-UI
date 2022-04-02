@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { computed, ref, watchEffect } from 'vue'
-import { Tag } from '@traptitech/traq'
+import type { Tag } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
 import { useUsersStore } from '/@/store/entities/users'

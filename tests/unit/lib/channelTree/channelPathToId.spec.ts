@@ -1,4 +1,5 @@
-import { channelPathToId, ChannelTree } from '/@/lib/channelTree'
+import type { ChannelTree } from '/@/lib/channelTree'
+import { channelPathToId } from '/@/lib/channelTree'
 
 describe('channelPathToId', () => {
   it('can get id', () => {

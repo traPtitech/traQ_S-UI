@@ -1,6 +1,7 @@
-import { computed, reactive, Ref, onMounted, onBeforeUnmount } from 'vue'
+import type { Ref } from 'vue'
+import { computed, reactive, onMounted, onBeforeUnmount } from 'vue'
+import type { Point } from '/@/lib/basic/point'
 import {
-  Point,
   diff,
   getDistance,
   getMidpoint,

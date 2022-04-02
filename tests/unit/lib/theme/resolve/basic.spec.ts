@@ -1,8 +1,6 @@
-import {
-  ResolvedBasicTheme,
-  resolveBasicTheme
-} from '/@/lib/theme/resolve/basic'
-import { BasicTheme } from '/@/lib/theme/schema'
+import type { ResolvedBasicTheme } from '/@/lib/theme/resolve/basic'
+import { resolveBasicTheme } from '/@/lib/theme/resolve/basic'
+import type { BasicTheme } from '/@/lib/theme/schema'
 
 describe('resolveBasicTheme', () => {
   const tests: Array<{

@@ -22,7 +22,7 @@
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import MessageInputTypingAnimation from './MessageInputTypingAnimation.vue'
 import { computed } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   typingUsers: readonly UserId[]

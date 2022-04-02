@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { User } from '@traptitech/traq'
+import type { User } from '@traptitech/traq'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 
 type ViewState = User & {

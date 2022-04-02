@@ -28,17 +28,10 @@
 </template>
 
 <script lang="ts">
-import {
-  watch,
-  reactive,
-  computed,
-  onMounted,
-  Ref,
-  nextTick,
-  shallowRef
-} from 'vue'
-import { MessageId } from '/@/types/entity-ids'
-import { LoadingDirection } from './composables/useMessagesFetcher'
+import type { Ref } from 'vue'
+import { watch, reactive, computed, onMounted, nextTick, shallowRef } from 'vue'
+import type { MessageId } from '/@/types/entity-ids'
+import type { LoadingDirection } from './composables/useMessagesFetcher'
 import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
 import { throttle } from 'throttle-debounce'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'

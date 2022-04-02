@@ -1,4 +1,5 @@
-import { UserAccountState, User } from '@traptitech/traq'
+import type { User } from '@traptitech/traq'
+import { UserAccountState } from '@traptitech/traq'
 
 export interface ActiveUser extends User {
   state: typeof UserAccountState.active

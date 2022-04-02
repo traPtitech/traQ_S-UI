@@ -1,4 +1,5 @@
-import { ChannelViewState, MyChannelViewState } from '@traptitech/traq'
+import type { MyChannelViewState } from '@traptitech/traq'
+import { ChannelViewState } from '@traptitech/traq'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref } from 'vue'
 import { useTrueChangedPromise } from '/@/store/utils/promise'

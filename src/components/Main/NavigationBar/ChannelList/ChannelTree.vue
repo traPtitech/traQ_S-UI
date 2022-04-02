@@ -17,8 +17,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ChannelId } from '/@/types/entity-ids'
-import { ChannelTreeNode } from '/@/lib/channelTree'
+import type { ChannelId } from '/@/types/entity-ids'
+import type { ChannelTreeNode } from '/@/lib/channelTree'
 import ChannelElement from './ChannelElement.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
 import { ref } from 'vue'

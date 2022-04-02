@@ -1,4 +1,4 @@
-import { FileId } from '/@/types/entity-ids'
+import type { FileId } from '/@/types/entity-ids'
 import { computed } from 'vue'
 import { buildFilePath } from '/@/lib/apis'
 import { constructFilesPath } from '/@/router'

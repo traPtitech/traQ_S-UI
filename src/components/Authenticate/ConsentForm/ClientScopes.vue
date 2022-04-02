@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import ClientScope from './ClientScope.vue'
-import { OAuth2Scope } from '@traptitech/traq'
+import type { OAuth2Scope } from '@traptitech/traq'
 
 withDefaults(
   defineProps<{

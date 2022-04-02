@@ -1,5 +1,5 @@
-import { FileInfo, Message, MessageStamp, Ogp } from '@traptitech/traq'
-import { AxiosError } from 'axios'
+import type { FileInfo, Message, MessageStamp, Ogp } from '@traptitech/traq'
+import type { AxiosError } from 'axios'
 import mitt from 'mitt'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
@@ -7,7 +7,7 @@ import apis from '/@/lib/apis'
 import { createSingleflight } from '/@/lib/basic/async'
 import { wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { ExternalUrl, FileId, MessageId } from '/@/types/entity-ids'
+import type { ExternalUrl, FileId, MessageId } from '/@/types/entity-ids'
 
 type MessageEventMap = {
   reconnect: void

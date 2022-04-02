@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 import { reactive, onMounted, onUnmounted } from 'vue'
 import apis from '/@/lib/apis'
 import useScreenWakeLock from '/@/composables/dom/useScreenWakeLock'

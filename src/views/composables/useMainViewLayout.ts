@@ -1,4 +1,5 @@
-import { computed, watch, Ref } from 'vue'
+import type { Ref } from 'vue'
+import { computed, watch } from 'vue'
 import useSwipeDetector from '/@/composables/mainView/useSwipeDetector'
 import useSwipeDrawer from '/@/composables/mainView/useSwipeDrawer'
 import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'

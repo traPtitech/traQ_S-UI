@@ -1,5 +1,5 @@
 import { computed, reactive } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
 

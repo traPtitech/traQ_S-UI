@@ -30,7 +30,7 @@
 <script lang="ts" setup>
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
-import { NoiseSuppressionType } from '/@/lib/webrtc/LocalStreamManager'
+import type { NoiseSuppressionType } from '/@/lib/webrtc/LocalStreamManager'
 import { checkAudioWorkletSupport } from '/@/lib/dom/browser'
 
 const props = defineProps<{

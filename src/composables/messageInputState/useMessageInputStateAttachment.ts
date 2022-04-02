@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import useMessageInputState from './useMessageInputState'
 import { mimeToFileType } from '/@/lib/basic/file'
 import { getResizedFile } from '/@/lib/resize'
-import { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
+import type { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
 
 const useMessageInputStateAttachment = (
   channelId: MessageInputStateKey,

@@ -28,7 +28,7 @@ import ChannelsTab from './NavigationContent/ChannelsTab.vue'
 import ActivityTab from './NavigationContent/ActivityTab.vue'
 import UsersTab from './NavigationContent/UsersTab.vue'
 import ClipFoldersTab from './NavigationContent/ClipFoldersTab.vue'
-import { NavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
+import type { NavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 
 withDefaults(
   defineProps<{

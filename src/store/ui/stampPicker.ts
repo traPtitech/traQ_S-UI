@@ -1,11 +1,12 @@
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { throttle } from 'throttle-debounce'
-import { computed, Ref, ref, watch, watchEffect } from 'vue'
-import { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
-import { Point } from '/@/lib/basic/point'
+import type { Ref } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
+import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
+import type { Point } from '/@/lib/basic/point'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { StampId } from '/@/types/entity-ids'
+import type { StampId } from '/@/types/entity-ids'
 
 export type SelectedStampData = {
   id: StampId

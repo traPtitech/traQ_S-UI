@@ -43,7 +43,7 @@ import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/Messa
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import { computed, shallowRef } from 'vue'
-import { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
+import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
 import { useChannelsStore } from '/@/store/entities/channels'
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
@@ -51,7 +51,7 @@ import MessagesScrollerSeparator from '/@/components/Main/MainView/MessagesScrol
 import { useMessagesStore } from '/@/store/entities/messages'
 import useDayDiffMessages from './composables/useDayDiffMessages'
 import { getFullDayString } from '/@/lib/basic/date'
-import { Pin } from '@traptitech/traq'
+import type { Pin } from '@traptitech/traq'
 
 const props = defineProps<{
   channelId: ChannelId

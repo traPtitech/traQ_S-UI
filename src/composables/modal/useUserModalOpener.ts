@@ -1,5 +1,6 @@
-import { computed, Ref, unref } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+import type { Ref } from 'vue'
+import { computed, unref } from 'vue'
+import type { UserId } from '/@/types/entity-ids'
 import { useModalStore } from '/@/store/ui/modal'
 import { useUsersStore } from '/@/store/entities/users'
 

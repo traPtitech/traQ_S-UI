@@ -28,7 +28,7 @@ import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSideb
 import SidebarHeader from './SidebarHeader.vue'
 import SidebarEvent from './SidebarEvent/SidebarEvent.vue'
 import { computed, shallowRef } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import useChannelEvents from './composables/useChannelEvents'
 import { parseChannelEvent } from '/@/lib/apis'
 

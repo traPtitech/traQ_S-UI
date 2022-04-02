@@ -1,5 +1,5 @@
 import { get, set, del } from 'idb-keyval'
-import { Stamp } from '@traptitech/traq'
+import type { Stamp } from '@traptitech/traq'
 import { createStore } from '/@/lib/dom/idb'
 
 const store = createStore('cache', 'stamps')

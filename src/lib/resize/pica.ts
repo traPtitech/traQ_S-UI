@@ -1,4 +1,4 @@
-import { Pica } from 'pica'
+import type { Pica } from 'pica'
 
 let _pica: Pica | undefined
 

@@ -1,8 +1,9 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { reactive, computed, Ref, unref } from 'vue'
-import { AttachmentType } from '/@/lib/basic/file'
+import type { Ref } from 'vue'
+import { reactive, computed, unref } from 'vue'
+import type { AttachmentType } from '/@/lib/basic/file'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 
 /**
  * 基本的に直接利用しないで`/@/composables/messageInputState`を利用する

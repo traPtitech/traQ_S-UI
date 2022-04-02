@@ -1,14 +1,16 @@
-import { Ref } from 'vue'
-import { channelPathToId, ChannelTree } from '/@/lib/channelTree'
-import { StoreForParser } from '/@/lib/searchMessage/parserBase'
+import type { Ref } from 'vue'
+import type { ChannelTree } from '/@/lib/channelTree'
+import { channelPathToId } from '/@/lib/channelTree'
+import type { StoreForParser } from '/@/lib/searchMessage/parserBase'
 import {
   createQueryParser,
   toSearchMessageParam
 } from '/@/lib/searchMessage/queryParser'
-import { useMainViewStore, ViewInformation } from '/@/store/ui/mainView'
+import type { ViewInformation } from '/@/store/ui/mainView'
+import { useMainViewStore } from '/@/store/ui/mainView'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useUsersStore } from '/@/store/entities/users'
-import { User } from '@traptitech/traq'
+import type { User } from '@traptitech/traq'
 
 const getStoreForParser = ({
   primaryView,

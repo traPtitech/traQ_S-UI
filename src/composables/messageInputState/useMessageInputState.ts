@@ -1,8 +1,10 @@
 import { computed, reactive, watch } from 'vue'
+import type {
+  MessageInputState,
+  MessageInputStateKey
+} from '/@/store/ui/messageInputStateStore'
 import {
   createDefaultValue,
-  MessageInputState,
-  MessageInputStateKey,
   useMessageInputStateStore
 } from '/@/store/ui/messageInputStateStore'
 

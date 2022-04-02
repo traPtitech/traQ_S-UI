@@ -23,7 +23,7 @@
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
-import { TagId, UserId } from '/@/types/entity-ids'
+import type { TagId, UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 

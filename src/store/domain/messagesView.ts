@@ -1,10 +1,10 @@
-import { EmbeddingOrUrl, ExternalUrl } from '@traptitech/traq-markdown-it'
+import type { EmbeddingOrUrl, ExternalUrl } from '@traptitech/traq-markdown-it'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import { isExternalUrl, isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { MessageId } from '/@/types/entity-ids'
+import type { MessageId } from '/@/types/entity-ids'
 import { useMessagesStore } from '/@/store/entities/messages'
 
 const ignoredHostNamesSet = new Set<string>(

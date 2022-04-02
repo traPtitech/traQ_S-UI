@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
-import { ClipFolder } from '@traptitech/traq'
+import type { ClipFolder } from '@traptitech/traq'
 import { constructClipFoldersPath } from '/@/router'
 
 const props = defineProps<{

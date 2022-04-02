@@ -19,8 +19,8 @@
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import TagsTabEdit from '/@/components/Modal/UserModal/TagsTabEdit.vue'
-import { UserTag } from '@traptitech/traq'
-import { UserId } from '/@/types/entity-ids'
+import type { UserTag } from '@traptitech/traq'
+import type { UserId } from '/@/types/entity-ids'
 import { useModalStore } from '/@/store/ui/modal'
 
 const props = withDefaults(

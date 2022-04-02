@@ -82,14 +82,14 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { StampId, MessageId } from '/@/types/entity-ids'
+import type { StampId, MessageId } from '/@/types/entity-ids'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import useContextMenu from '/@/composables/useContextMenu'
 import { useStampsStore } from '/@/store/entities/stamps'
-import { Stamp } from '@traptitech/traq'
+import type { Stamp } from '@traptitech/traq'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import MessageContextMenu from './MessageContextMenu.vue'

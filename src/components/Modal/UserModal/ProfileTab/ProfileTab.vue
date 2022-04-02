@@ -22,7 +22,7 @@ import BioText from './BioText.vue'
 import HomeChannel from './HomeChannel.vue'
 import AccountList from './AccountList.vue'
 import LastOnline from './LastOnline.vue'
-import { User, UserDetail } from '@traptitech/traq'
+import type { User, UserDetail } from '@traptitech/traq'
 
 defineProps<{
   user: User

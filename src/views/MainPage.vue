@@ -42,10 +42,10 @@
 </template>
 
 <script lang="ts">
+import type { Ref } from 'vue'
 import {
   reactive,
   computed,
-  Ref,
   defineAsyncComponent,
   onMounted,
   onBeforeUnmount

@@ -40,7 +40,8 @@
 
 <script lang="ts">
 import { computed, ref, watchEffect } from 'vue'
-import { Theme, themeSchema } from '/@/lib/theme/schema'
+import type { Theme } from '/@/lib/theme/schema'
+import { themeSchema } from '/@/lib/theme/schema'
 import { dequal } from 'dequal'
 import { useToastStore } from '/@/store/ui/toast'
 

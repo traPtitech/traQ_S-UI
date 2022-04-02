@@ -15,8 +15,8 @@
 
 <script lang="ts" setup>
 import AStamp from '/@/components/UI/AStamp.vue'
-import { StampId } from '/@/types/entity-ids'
-import { Stamp } from '@traptitech/traq'
+import type { StampId } from '/@/types/entity-ids'
+import type { Stamp } from '@traptitech/traq'
 
 const props = defineProps<{
   stamp: Readonly<Stamp>

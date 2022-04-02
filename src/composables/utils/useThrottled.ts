@@ -1,4 +1,5 @@
-import { ref, watch, Ref } from 'vue'
+import type { Ref } from 'vue'
+import { ref, watch } from 'vue'
 import { throttle } from 'throttle-debounce'
 
 const useThrottled = <T>(r: Ref<T>) => {

@@ -1,4 +1,5 @@
-import { Ref, ref, watch } from 'vue'
+import type { Ref } from 'vue'
+import { ref, watch } from 'vue'
 
 /**
  * localValueの値がリモートの値(remoteValue)に同期される

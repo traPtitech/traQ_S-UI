@@ -23,7 +23,7 @@ import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSideb
 import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
 import ClipsSidebarContent from './ClipsSidebarContent.vue'
 import { computed } from 'vue'
-import { ClipFolderId } from '/@/types/entity-ids'
+import type { ClipFolderId } from '/@/types/entity-ids'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 
 const props = defineProps<{

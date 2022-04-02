@@ -44,10 +44,12 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref, ref } from 'vue'
+import type { Ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
-import useImageUpload, { ImageUploadState } from '../composables/useImageUpload'
-import { Stamp } from '@traptitech/traq'
+import type { ImageUploadState } from '../composables/useImageUpload'
+import useImageUpload from '../composables/useImageUpload'
+import type { Stamp } from '@traptitech/traq'
 import useStateDiff from '../composables/useStateDiff'
 import { isValidStampName } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'

@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts" setup>
-import { SendKey, SendKeys } from '/@/store/app/browserSettings'
+import type { SendKey, SendKeys } from '/@/store/app/browserSettings'
 import { isMac } from '/@/lib/dom/browser'
 import {
   useModelSyncer,

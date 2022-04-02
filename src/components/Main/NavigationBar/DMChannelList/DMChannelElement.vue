@@ -35,7 +35,7 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue'
 import useHover from '/@/composables/dom/useHover'
-import { DMChannel } from '@traptitech/traq'
+import type { DMChannel } from '@traptitech/traq'
 import { useUsersStore } from '/@/store/entities/users'
 import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'

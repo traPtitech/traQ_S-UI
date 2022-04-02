@@ -1,4 +1,5 @@
-import { onBeforeUnmount, ref, ShallowRef, watch } from 'vue'
+import type { ShallowRef } from 'vue'
+import { onBeforeUnmount, ref, watch } from 'vue'
 
 const useBoxSize = (
   targetRef: ShallowRef<HTMLElement | null>,

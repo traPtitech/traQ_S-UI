@@ -17,7 +17,7 @@
 <script lang="ts" setup>
 import StampItem from './StampItem.vue'
 import { computed, ref } from 'vue'
-import { StampId } from '/@/types/entity-ids'
+import type { StampId } from '/@/types/entity-ids'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
 

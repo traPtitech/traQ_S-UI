@@ -33,8 +33,8 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { Word } from '../composables/useWordSuggestionList'
-import { WordOrConfirmedPart } from '../composables/useWordSuggester'
+import type { Word } from '../composables/useWordSuggestionList'
+import type { WordOrConfirmedPart } from '../composables/useWordSuggester'
 import { isIOS } from '/@/lib/dom/browser'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 

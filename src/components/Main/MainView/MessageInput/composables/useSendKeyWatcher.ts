@@ -3,11 +3,8 @@ import {
   isMac,
   isTouchDevice
 } from '/@/lib/dom/browser'
-import {
-  SendKey,
-  SendKeys,
-  useBrowserSettings
-} from '/@/store/app/browserSettings'
+import type { SendKey, SendKeys } from '/@/store/app/browserSettings'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const isLevel2InputEventsSupported = checkLevel2InputEventsSupport()
 const macFlag = isMac()

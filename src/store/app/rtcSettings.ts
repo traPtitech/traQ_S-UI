@@ -5,7 +5,7 @@ import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue, { key } from '/@/composables/utils/useIndexedDbValue'
 import { promisifyRequest } from 'idb-keyval'
-import { NoiseSuppressionType } from '/@/lib/webrtc/LocalStreamManager'
+import type { NoiseSuppressionType } from '/@/lib/webrtc/LocalStreamManager'
 
 type State = {
   isEnabled: boolean

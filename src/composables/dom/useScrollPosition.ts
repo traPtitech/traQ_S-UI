@@ -1,5 +1,6 @@
 import { throttle } from 'throttle-debounce'
-import { ShallowRef, ref, watch } from 'vue'
+import type { ShallowRef } from 'vue'
+import { ref, watch } from 'vue'
 
 const useScrollPosition = (targetRef: ShallowRef<HTMLElement | null>) => {
   const scrollTop = ref(0)

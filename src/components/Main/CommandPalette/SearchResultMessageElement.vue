@@ -41,12 +41,13 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, DeepReadonly, ref, shallowRef, watchEffect } from 'vue'
+import type { DeepReadonly } from 'vue'
+import { computed, ref, shallowRef, watchEffect } from 'vue'
 import { getCreatedDate } from '/@/lib/basic/date'
-import { MessageId } from '/@/types/entity-ids'
+import type { MessageId } from '/@/types/entity-ids'
 import useChannelPath from '/@/composables/useChannelPath'
-import { Message } from '@traptitech/traq'
-import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
+import type { Message } from '@traptitech/traq'
+import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useUsersStore } from '/@/store/entities/users'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { render } from '/@/lib/markdown/markdown'

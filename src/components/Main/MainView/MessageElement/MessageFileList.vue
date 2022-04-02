@@ -38,7 +38,7 @@ import MessageFileListVideo from './MessageFileListVideo.vue'
 import MessageFileListAudio from './MessageFileListAudio.vue'
 import MessageFileListFile from './MessageFileListFile.vue'
 import { computed } from 'vue'
-import { ChannelId, DMChannelId, FileId } from '/@/types/entity-ids'
+import type { ChannelId, DMChannelId, FileId } from '/@/types/entity-ids'
 import useFileMetaList from '/@/composables/message/useFileMetaList'
 
 const props = withDefaults(

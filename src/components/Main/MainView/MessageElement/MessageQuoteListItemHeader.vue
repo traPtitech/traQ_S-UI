@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { useUsersStore } from '/@/store/entities/users'
-import { UserId } from '/@/types/entity-ids'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   userId: UserId

@@ -1,7 +1,8 @@
-import { onBeforeUnmount, Ref } from 'vue'
+import type { Ref } from 'vue'
+import { onBeforeUnmount } from 'vue'
 import useOnAllRendered from './useOnAllRendered'
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import { MessageId } from '/@/types/entity-ids'
+import type { MessageId } from '/@/types/entity-ids'
 
 const useKeepScrollPosition = (
   ele: Ref<HTMLElement | null>,

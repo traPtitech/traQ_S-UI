@@ -1,4 +1,5 @@
-import { onUnmounted, ref, Ref, watchEffect } from 'vue'
+import type { Ref } from 'vue'
+import { onUnmounted, ref, watchEffect } from 'vue'
 
 const useObjectURL = (blob: Ref<Blob | undefined>) => {
   const url = ref<string>()

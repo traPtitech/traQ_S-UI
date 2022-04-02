@@ -1,9 +1,9 @@
+import type { Target } from '/@/lib/suggestion'
 import {
   getCurrentWord,
   getDeterminedCharacters,
   getNextCandidateIndex,
-  getPrevCandidateIndex,
-  Target
+  getPrevCandidateIndex
 } from '/@/lib/suggestion'
 
 describe('suggestion', () => {

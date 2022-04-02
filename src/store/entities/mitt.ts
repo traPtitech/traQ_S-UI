@@ -1,6 +1,6 @@
 import mitt from 'mitt'
-import { StampId } from '/@/types/entity-ids'
-import { Channel, Stamp } from '@traptitech/traq'
+import type { StampId } from '/@/types/entity-ids'
+import type { Channel, Stamp } from '@traptitech/traq'
 
 export type EntityEventMap = {
   setUser: void

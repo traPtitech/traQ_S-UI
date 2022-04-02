@@ -1,5 +1,4 @@
-// eslint-disable-next-line unused-imports/no-unused-imports
-import { Plugin, ComponentCustomProperties } from 'vue'
+import type { Plugin } from 'vue'
 
 declare module '@vue/runtime-core' {
   // see https://github.com/vuejs/vue-next/pull/982

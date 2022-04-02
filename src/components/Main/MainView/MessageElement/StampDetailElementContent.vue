@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import SpinNumber from '/@/components/UI/SpinNumber.vue'
 import { computed, toRef } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+import type { UserId } from '/@/types/entity-ids'
 import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
 import { useUsersStore } from '/@/store/entities/users'
 

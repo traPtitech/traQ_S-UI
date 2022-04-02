@@ -11,7 +11,7 @@
 
 <script lang="ts" setup>
 import SidebarEventFrame from './SidebarEventFrame.vue'
-import { NameChangedEvent } from '@traptitech/traq'
+import type { NameChangedEvent } from '@traptitech/traq'
 
 defineProps<{
   datetime: string

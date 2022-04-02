@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue'
-import { StampSet } from './composables/useStampSetSelector'
+import type { StampSet } from './composables/useStampSetSelector'
 
 withDefaults(
   defineProps<{

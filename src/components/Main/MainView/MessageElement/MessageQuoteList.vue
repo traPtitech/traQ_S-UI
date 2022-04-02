@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import MessageQuoteListItem from './MessageQuoteListItem.vue'
-import { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
+import type { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 
 withDefaults(
   defineProps<{

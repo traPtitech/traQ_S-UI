@@ -1,5 +1,5 @@
-import { Channel } from '@traptitech/traq'
-import { ChannelId } from '/@/types/entity-ids'
+import type { Channel } from '@traptitech/traq'
+import type { ChannelId } from '/@/types/entity-ids'
 import { nullUuid } from '/@/lib/basic/uuid'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 

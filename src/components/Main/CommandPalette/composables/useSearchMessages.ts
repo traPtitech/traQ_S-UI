@@ -1,9 +1,10 @@
-import { ref, computed, Ref, DeepReadonly } from 'vue'
-import { Message } from '@traptitech/traq'
+import type { Ref, DeepReadonly } from 'vue'
+import { ref, computed } from 'vue'
+import type { Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
 import useQueryParer from '/@/composables/searchMessage/useQueryParser'
-import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
+import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useMessagesStore } from '/@/store/entities/messages'
 

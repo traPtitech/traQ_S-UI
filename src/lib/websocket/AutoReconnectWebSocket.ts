@@ -1,4 +1,4 @@
-import { WebSocketCommand } from '.'
+import type { WebSocketCommand } from '.'
 import { wait } from '/@/lib/basic/timer'
 
 export interface Options {

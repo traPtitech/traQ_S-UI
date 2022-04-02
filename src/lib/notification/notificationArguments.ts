@@ -1,5 +1,5 @@
-import { ExtendedNotificationOptions } from '/@/types/InlineNotificationReplies'
-import { FirebasePayloadData } from './firebase'
+import type { ExtendedNotificationOptions } from '/@/types/InlineNotificationReplies'
+import type { FirebasePayloadData } from './firebase'
 
 export const createNotificationArgumentsCreator = (
   appName: string,
