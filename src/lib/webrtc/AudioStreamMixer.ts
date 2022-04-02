@@ -14,7 +14,7 @@ type StreamNodes = {
 /**
  * スピーカーに出力する音に対しての処理を行う
  *
- * @see https://github.com/traPtitech/traQ_S-UI/pull/2936#issue-805186669
+ * @see https://github.com/traPtitech/traQ_S-UI/pull/3219
  */
 export default class AudioStreamMixer {
   private _initializePromise: Promise<void>
