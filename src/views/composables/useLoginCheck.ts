@@ -33,9 +33,9 @@ const useLoginCheck = (afterCheck?: () => void) => {
       await performLoginCheck(fetchMe)
     } catch {}
 
-    await setupWebSocket()
-
     if (detail.value !== undefined) {
+      await setupWebSocket()
+
       afterCheck?.()
     }
 
