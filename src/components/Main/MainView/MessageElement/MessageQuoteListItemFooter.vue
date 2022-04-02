@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { Message } from '@traptitech/traq'
+import type { Message } from '@traptitech/traq'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getCreatedDate } from '/@/lib/basic/date'
 import { constructMessagesPath } from '/@/router'

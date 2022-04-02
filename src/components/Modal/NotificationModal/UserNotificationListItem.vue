@@ -10,7 +10,7 @@
 import AToggle from '/@/components/UI/AToggle.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { computed } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+import type { UserId } from '/@/types/entity-ids'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{

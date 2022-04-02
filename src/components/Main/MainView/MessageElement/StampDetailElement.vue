@@ -17,7 +17,7 @@
 import StampDetailElementContent from './StampDetailElementContent.vue'
 import { computed } from 'vue'
 import { useStampsStore } from '/@/store/entities/stamps'
-import { MessageStampById } from '/@/lib/messageStampList'
+import type { MessageStampById } from '/@/lib/messageStampList'
 
 const props = defineProps<{
   stamp: MessageStampById

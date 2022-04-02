@@ -34,7 +34,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+import type { UserId } from '/@/types/entity-ids'
 import { useAppRtcStore } from '/@/store/app/rtc'
 import { useUsersStore } from '/@/store/entities/users'
 import ASlider from '/@/components/UI/ASlider.vue'

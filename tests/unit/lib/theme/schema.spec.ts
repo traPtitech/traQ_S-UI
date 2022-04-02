@@ -1,4 +1,5 @@
-import { Theme, themeSchema } from '/@/lib/theme/schema'
+import type { Theme } from '/@/lib/theme/schema'
+import { themeSchema } from '/@/lib/theme/schema'
 
 describe('themeSchema', () => {
   it('should parse basic', () => {

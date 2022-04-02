@@ -1,4 +1,4 @@
-import { ResolvedTheme } from '/@/lib/theme/resolve'
+import type { ResolvedTheme } from '/@/lib/theme/resolve'
 
 export type ThemeClaim<T> = (
   theme: Readonly<ResolvedTheme>,

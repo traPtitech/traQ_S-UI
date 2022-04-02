@@ -2,7 +2,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import { destroyAudio } from '/@/lib/dom/audio'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { FileId } from '/@/types/entity-ids'
+import type { FileId } from '/@/types/entity-ids'
 
 const useAudioControllerPinia = defineStore('ui/audioController', () => {
   const audio = ref<HTMLAudioElement>(new Audio())

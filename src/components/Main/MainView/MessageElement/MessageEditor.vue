@@ -43,7 +43,8 @@
 </template>
 
 <script lang="ts">
-import { computed, onBeforeUnmount, Ref, ref } from 'vue'
+import type { Ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'

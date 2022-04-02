@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import VueSlider from 'vue-slider-component'
+import type VueSlider from 'vue-slider-component'
 
 withDefaults(
   defineProps<{

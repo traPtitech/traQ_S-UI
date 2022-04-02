@@ -11,7 +11,7 @@
 
 <script lang="ts" setup>
 import DMChannelElement from './DMChannelElement.vue'
-import { DMChannel } from '@traptitech/traq'
+import type { DMChannel } from '@traptitech/traq'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'

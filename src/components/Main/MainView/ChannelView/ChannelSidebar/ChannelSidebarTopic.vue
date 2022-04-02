@@ -15,7 +15,7 @@
 <script lang="ts" setup>
 import { computed, watch } from 'vue'
 import apis from '/@/lib/apis'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
 import SidebarContentContainerFoldable from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerFoldable.vue'
 import ContentEditor from '/@/components/Main/MainView/PrimaryViewSidebar/ContentEditor.vue'

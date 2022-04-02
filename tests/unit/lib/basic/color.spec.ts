@@ -1,5 +1,5 @@
+import type { Color } from '/@/lib/basic/color'
 import {
-  Color,
   isDarkColor,
   parseColor,
   stringifyColor,

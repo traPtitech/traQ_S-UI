@@ -17,7 +17,7 @@
 <script lang="ts" setup>
 import SidebarEventFrame from './SidebarEventFrame.vue'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
-import { TopicChangedEvent } from '@traptitech/traq'
+import type { TopicChangedEvent } from '@traptitech/traq'
 
 defineProps<{
   datetime: string

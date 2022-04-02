@@ -1,13 +1,14 @@
-import { StampPalette } from '@traptitech/traq'
+import type { StampPalette } from '@traptitech/traq'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref } from 'vue'
 import { useTrueChangedPromise } from '/@/store/utils/promise'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { StampPaletteId } from '/@/types/entity-ids'
+import type { StampPaletteId } from '/@/types/entity-ids'
 import { createSingleflight } from '/@/lib/basic/async'
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
-import { CacheStrategy, fetchWithCacheStrategy } from './utils'
+import type { CacheStrategy } from './utils'
+import { fetchWithCacheStrategy } from './utils'
 import { arrayToMap } from '/@/lib/basic/map'
 
 const getStampPlalette = createSingleflight(apis.getStampPalette.bind(apis))

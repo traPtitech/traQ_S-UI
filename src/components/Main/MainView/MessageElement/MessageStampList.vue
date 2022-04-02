@@ -40,8 +40,8 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { MessageStamp } from '@traptitech/traq'
-import { StampId } from '/@/types/entity-ids'
+import type { MessageStamp } from '@traptitech/traq'
+import type { StampId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import { useToastStore } from '/@/store/ui/toast'

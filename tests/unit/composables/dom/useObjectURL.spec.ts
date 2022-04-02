@@ -3,7 +3,7 @@ import { withSetup } from '../../testUtils'
 import { nextTick, ref } from 'vue'
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import { SpyInstance } from 'vitest'
+import type { SpyInstance } from 'vitest'
 
 const useObjectURL = withSetup(useObjectURLWithoutSetup)
 

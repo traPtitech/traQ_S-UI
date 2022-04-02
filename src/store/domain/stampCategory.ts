@@ -1,10 +1,10 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref, toRaw } from 'vue'
 import { useStampsStore } from '/@/store/entities/stamps'
+import type { StampCategory } from '/@/lib/stampCategorizer'
 import {
   categorizeUnicodeStamps,
   constructStampNameIdMap,
-  StampCategory,
   traQStampsToStampCategory
 } from '/@/lib/stampCategorizer'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'

@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import IndicatorDot from './IndicatorDot.vue'
 import { computed } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+import type { UserId } from '/@/types/entity-ids'
 import { useOnlineUsers } from '/@/store/domain/onlineUsers'
 
 const props = withDefaults(

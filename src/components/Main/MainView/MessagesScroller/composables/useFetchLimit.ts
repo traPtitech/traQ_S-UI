@@ -1,4 +1,5 @@
-import { computed, Ref, watch } from 'vue'
+import type { Ref } from 'vue'
+import { computed, watch } from 'vue'
 import useBoxSize from '/@/composables/dom/useBoxSize'
 
 const MAX_COUNT = 20

@@ -1,6 +1,7 @@
 import { loadPica } from './pica'
 import { deleteCanvas, loadImage, resetCanvas } from './canvas'
-import { needResize, getThumbnailDimensions, Dimensions } from './size'
+import type { Dimensions } from './size'
+import { needResize, getThumbnailDimensions } from './size'
 import { isIOS } from '/@/lib/dom/browser'
 import { mimeToFileType } from '/@/lib/basic/file'
 import { createMutex } from '/@/lib/basic/async'

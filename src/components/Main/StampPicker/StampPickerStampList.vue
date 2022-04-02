@@ -17,8 +17,8 @@
 
 <script lang="ts" setup>
 import StampPickerStampListItem from './StampPickerStampListItem.vue'
-import { StampId } from '/@/types/entity-ids'
-import { Stamp } from '@traptitech/traq'
+import type { StampId } from '/@/types/entity-ids'
+import type { Stamp } from '@traptitech/traq'
 import { computed, shallowRef } from 'vue'
 import useStampListVirtualScroll from './composables/useStampListVirtualScroll'
 

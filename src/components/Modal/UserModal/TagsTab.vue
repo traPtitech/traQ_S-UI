@@ -21,7 +21,7 @@
 import TagsTabTag from '/@/components/Modal/UserModal/TagsTabTag.vue'
 import TagsTabAdd from '/@/components/Modal/UserModal/TagsTabAdd.vue'
 import { computed } from 'vue'
-import { UserDetail } from '@traptitech/traq'
+import type { UserDetail } from '@traptitech/traq'
 import { useMeStore } from '/@/store/domain/me'
 
 const props = defineProps<{

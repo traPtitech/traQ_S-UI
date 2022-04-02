@@ -1,6 +1,6 @@
 import { computed } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
-import { Channel } from '@traptitech/traq'
+import type { ChannelId } from '/@/types/entity-ids'
+import type { Channel } from '@traptitech/traq'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { isDefined } from '/@/lib/basic/array'
 import { useChannelTree } from '/@/store/domain/channelTree'

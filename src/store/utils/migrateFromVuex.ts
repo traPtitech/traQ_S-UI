@@ -1,4 +1,5 @@
-import { get, promisifyRequest, UseStore } from 'idb-keyval'
+import type { UseStore } from 'idb-keyval'
+import { get, promisifyRequest } from 'idb-keyval'
 
 const openDBIfExists = async (dbName: string): Promise<IDBDatabase | null> => {
   let exists = true

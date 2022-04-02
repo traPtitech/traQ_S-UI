@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import apis from '/@/lib/apis'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { StampId } from '/@/types/entity-ids'
+import type { StampId } from '/@/types/entity-ids'
 
 const useStampHistoryPinia = defineStore('domain/stampHistory', () => {
   const stampsStore = useStampsStore()

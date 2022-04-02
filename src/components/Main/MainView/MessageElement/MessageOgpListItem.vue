@@ -20,7 +20,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { Ogp } from '@traptitech/traq'
+import type { Ogp } from '@traptitech/traq'
 import MessageOgpContentVideo from './MessageOgpContentVideo.vue'
 import MessageOgpContentWebsite from './MessageOgpContentWebsite.vue'
 import { ifIsHttps } from '/@/lib/basic/url'

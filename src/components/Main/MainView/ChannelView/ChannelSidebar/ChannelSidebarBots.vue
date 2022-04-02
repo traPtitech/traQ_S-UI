@@ -8,7 +8,7 @@
 import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 import { computed } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import useChannelBots from './composables/useChannelBots'
 import { useUsersStore } from '/@/store/entities/users'
 import { isDefined } from '/@/lib/basic/array'

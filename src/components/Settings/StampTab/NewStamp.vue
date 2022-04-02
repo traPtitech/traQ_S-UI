@@ -28,8 +28,10 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, Ref, watchEffect } from 'vue'
-import useImageUpload, { ImageUploadState } from '../composables/useImageUpload'
+import type { Ref } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
+import type { ImageUploadState } from '../composables/useImageUpload'
+import useImageUpload from '../composables/useImageUpload'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { isValidStampName } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'

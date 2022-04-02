@@ -1,7 +1,10 @@
-import { ComputedRef, WritableComputedRef, ref, computed, watch } from 'vue'
+import type { ComputedRef, WritableComputedRef } from 'vue'
+import { ref, computed, watch } from 'vue'
 import getCaretPosition from '/@/lib/dom/caretPosition'
-import { getCurrentWord, Target } from '/@/lib/suggestion'
-import useWordSuggesterList, { Word } from './useWordSuggestionList'
+import type { Target } from '/@/lib/suggestion'
+import { getCurrentWord } from '/@/lib/suggestion'
+import type { Word } from './useWordSuggestionList'
+import useWordSuggesterList from './useWordSuggestionList'
 import useInsertText from '/@/composables/dom/useInsertText'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 

@@ -1,4 +1,4 @@
-export type Theme = import('/@/lib/theme/schema').Theme
+export type { Theme } from '/@/lib/theme/schema'
 
 declare global {
   interface Window {

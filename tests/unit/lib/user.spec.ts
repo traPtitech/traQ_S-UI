@@ -1,5 +1,6 @@
 import { isActive } from '/@/lib/user'
-import { UserAccountState, User } from '@traptitech/traq'
+import type { User } from '@traptitech/traq'
+import { UserAccountState } from '@traptitech/traq'
 
 const baseUser: Omit<User, 'state'> = {
   id: '',

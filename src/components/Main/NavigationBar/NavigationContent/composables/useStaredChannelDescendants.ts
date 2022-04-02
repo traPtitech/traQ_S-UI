@@ -1,5 +1,5 @@
-import { ChannelId } from '/@/types/entity-ids'
-import { Channel } from '@traptitech/traq'
+import type { ChannelId } from '/@/types/entity-ids'
+import type { Channel } from '@traptitech/traq'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { computed } from 'vue'
 import { isDefined, unique } from '/@/lib/basic/array'

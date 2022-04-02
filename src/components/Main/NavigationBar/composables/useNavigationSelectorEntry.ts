@@ -1,9 +1,9 @@
 import { computed, reactive } from 'vue'
-import {
+import type {
   NavigationItemType,
   EphemeralNavigationItemType
 } from './useNavigationConstructor'
-import { ThemeClaim } from '/@/lib/styles'
+import type { ThemeClaim } from '/@/lib/styles'
 import { isDefined } from '/@/lib/basic/array'
 import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 import { useAudioController } from '/@/store/ui/audioController'

@@ -24,8 +24,8 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { IconSize } from '/@/components/UI/UserIcon.vue'
-import { UserId } from '/@/types/entity-ids'
+import type { IconSize } from '/@/components/UI/UserIcon.vue'
+import type { UserId } from '/@/types/entity-ids'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 
 const props = withDefaults(

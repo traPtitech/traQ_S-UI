@@ -30,7 +30,7 @@
 
 <script lang="ts" setup>
 import { computed, watch } from 'vue'
-import { ClipFolderId } from '/@/types/entity-ids'
+import type { ClipFolderId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import router, {
   constructChannelPath,

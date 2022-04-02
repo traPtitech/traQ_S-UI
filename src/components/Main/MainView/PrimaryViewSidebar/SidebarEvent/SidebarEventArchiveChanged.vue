@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import SidebarEventFrame from './SidebarEventFrame.vue'
-import { VisibilityChangedEvent } from '@traptitech/traq'
+import type { VisibilityChangedEvent } from '@traptitech/traq'
 
 defineProps<{
   datetime: string

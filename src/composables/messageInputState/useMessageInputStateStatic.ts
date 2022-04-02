@@ -1,7 +1,7 @@
 import { unref } from 'vue'
+import type { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
 import {
   createDefaultValue,
-  MessageInputStateKey,
   useMessageInputStateStore
 } from '/@/store/ui/messageInputStateStore'
 

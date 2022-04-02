@@ -1,4 +1,4 @@
-import { UserGroupId, UserId } from '/@/types/entity-ids'
+import type { UserGroupId, UserId } from '/@/types/entity-ids'
 
 interface StructData {
   type: string

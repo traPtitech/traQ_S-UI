@@ -1,4 +1,4 @@
-import { UserId, UserGroupId } from '/@/types/entity-ids'
+import type { UserId, UserGroupId } from '/@/types/entity-ids'
 import { useModalStore } from '/@/store/ui/modal'
 import { useUsersStore } from '/@/store/entities/users'
 import { useGroupsStore } from '/@/store/entities/groups'

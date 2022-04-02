@@ -1,5 +1,6 @@
-import { Ref, watchEffect, watch, unref } from 'vue'
-import { ExternalUrl, FileId, MessageId } from '/@/types/entity-ids'
+import type { Ref } from 'vue'
+import { watchEffect, watch, unref } from 'vue'
+import type { ExternalUrl, FileId, MessageId } from '/@/types/entity-ids'
 import { useRoute } from 'vue-router'
 
 export type ChangeHeightData = Readonly<{

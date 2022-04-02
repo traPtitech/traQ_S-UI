@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import { User } from '@traptitech/traq'
+import type { User } from '@traptitech/traq'
 
 withDefaults(
   defineProps<{

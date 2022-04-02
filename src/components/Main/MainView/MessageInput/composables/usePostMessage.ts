@@ -1,4 +1,4 @@
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
 import useChannelPath from '/@/composables/useChannelPath'
@@ -7,7 +7,7 @@ import { nullUuid } from '/@/lib/basic/uuid'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
 import { countLength } from '/@/lib/basic/string'
 import { useToastStore } from '/@/store/ui/toast'
-import {
+import type {
   Attachment,
   MessageInputStateKey
 } from '/@/store/ui/messageInputStateStore'

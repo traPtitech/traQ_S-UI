@@ -1,4 +1,4 @@
-import { WebRTCUserState, WebRTCUserStateSessions } from '@traptitech/traq'
+import type { WebRTCUserState, WebRTCUserStateSessions } from '@traptitech/traq'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref } from 'vue'
 import apis from '/@/lib/apis'
@@ -6,7 +6,7 @@ import { createSingleflight } from '/@/lib/basic/async'
 import { formatSnakeKeysToCamelShallow } from '/@/lib/basic/record'
 import { changeRTCState, wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { ChannelId, UserId } from '/@/types/entity-ids'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
 import { useMeStore } from '/@/store/domain/me'
 
 export type SessionId = string

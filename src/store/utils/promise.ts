@@ -1,4 +1,5 @@
-import { Ref, watch } from 'vue'
+import type { Ref } from 'vue'
+import { watch } from 'vue'
 
 /**
  * 渡したrefがfalseからtrueになったときに

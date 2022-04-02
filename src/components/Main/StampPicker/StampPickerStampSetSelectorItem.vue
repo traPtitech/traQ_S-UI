@@ -28,8 +28,8 @@
 </template>
 
 <script lang="ts" setup>
-import { StampPaletteId } from '/@/types/entity-ids'
-import { StampSet } from './composables/useStampSetSelector'
+import type { StampPaletteId } from '/@/types/entity-ids'
+import type { StampSet } from './composables/useStampSetSelector'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'

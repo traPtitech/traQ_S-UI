@@ -31,7 +31,7 @@
 
 <script lang="ts" setup>
 import { computed, reactive, toRef } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+import type { UserId } from '/@/types/entity-ids'
 import { useNavigation } from './composables/useNavigation'
 import useUserDetail from './composables/useUserDetail'
 import { useModalStore } from '/@/store/ui/modal'

@@ -1,9 +1,10 @@
 import { UserAccountState } from '@traptitech/traq'
-import { computed, Ref, unref } from 'vue'
+import type { Ref } from 'vue'
+import { computed, unref } from 'vue'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { isWebhook } from '/@/lib/user'
 import { useUsersStore } from '/@/store/entities/users'
-import { UserId } from '/@/types/entity-ids'
+import type { UserId } from '/@/types/entity-ids'
 
 /**
  * 'inactive': 凍結されているユーザー

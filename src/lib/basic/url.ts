@@ -1,4 +1,4 @@
-import { LocationQueryValue, RouteParamValue } from 'vue-router'
+import type { LocationQueryValue, RouteParamValue } from 'vue-router'
 
 /**
  * 配列だった場合に先頭を受け取る

@@ -1,5 +1,5 @@
-import { StampId } from '/@/types/entity-ids'
-import { Stamp } from '@traptitech/traq'
+import type { StampId } from '/@/types/entity-ids'
+import type { Stamp } from '@traptitech/traq'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { isDefined } from '/@/lib/basic/array'
 

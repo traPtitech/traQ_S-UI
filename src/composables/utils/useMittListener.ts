@@ -1,4 +1,4 @@
-import { Emitter, EventType, Handler } from 'mitt'
+import type { Emitter, EventType, Handler } from 'mitt'
 import { onUnmounted } from 'vue'
 
 const useMittListener = <

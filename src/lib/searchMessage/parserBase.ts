@@ -1,5 +1,5 @@
 // 実際のフィルタに依存しない関数群
-import { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
+import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 
 /*
  * クエリは次のようにパースされる:

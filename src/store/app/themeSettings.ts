@@ -1,6 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref, toRefs } from 'vue'
-import { Theme } from '/@/lib/theme/schema'
+import type { Theme } from '/@/lib/theme/schema'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 import { resolveTheme } from '/@/lib/theme/resolve'

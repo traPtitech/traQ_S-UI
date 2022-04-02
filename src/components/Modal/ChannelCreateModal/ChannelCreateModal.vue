@@ -30,7 +30,7 @@
 import { computed, reactive, watch, toRef } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { rootChannelId } from '/@/lib/channelTree'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import useChannelOptions from '/@/composables/useChannelOptions'
 import { UserPermission } from '@traptitech/traq'
 import useCanCreateChildChannel from '/@/composables/modal/useCanCreateChildChannel'

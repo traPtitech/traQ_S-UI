@@ -18,8 +18,8 @@
 <script lang="ts" setup>
 import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
 import { toRef } from 'vue'
-import { MessageId } from '/@/types/entity-ids'
-import { Point } from '/@/lib/basic/point'
+import type { MessageId } from '/@/types/entity-ids'
+import type { Point } from '/@/lib/basic/point'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
 import usePinToggler from '/@/composables/contextMenu/usePinToggler'
 

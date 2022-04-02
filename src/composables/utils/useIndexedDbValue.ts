@@ -1,4 +1,5 @@
-import { createStoreWithMigrations, Migrations } from '/@/lib/dom/idb'
+import type { Migrations } from '/@/lib/dom/idb'
+import { createStoreWithMigrations } from '/@/lib/dom/idb'
 import { get, set } from 'idb-keyval'
 import { reactive, ref, watch } from 'vue'
 import { toRawDeep } from '/@/lib/basic/reactive'

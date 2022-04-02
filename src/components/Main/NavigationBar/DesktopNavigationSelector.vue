@@ -29,15 +29,16 @@
 import NavigationSelectorItem from '/@/components/Main/NavigationBar/NavigationSelectorItem.vue'
 import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
 import { computed, watch } from 'vue'
-import {
+import type {
   NavigationItemType,
-  useNavigationSelectorItem,
-  useEphemeralNavigationSelectorItem,
   EphemeralNavigationItemType
 } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
-import useNavigationSelectorEntry, {
-  EphemeralNavigationSelectorEntry
-} from './composables/useNavigationSelectorEntry'
+import {
+  useNavigationSelectorItem,
+  useEphemeralNavigationSelectorItem
+} from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
+import type { EphemeralNavigationSelectorEntry } from './composables/useNavigationSelectorEntry'
+import useNavigationSelectorEntry from './composables/useNavigationSelectorEntry'
 import { VERSION } from '/@/lib/define'
 
 withDefaults(

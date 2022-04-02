@@ -28,7 +28,7 @@
 <script lang="ts" setup>
 import PlayIcon from '/@/components/UI/PlayIcon.vue'
 import useFileThumbnail from '/@/composables/files/useFileThumbnail'
-import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
+import type { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{

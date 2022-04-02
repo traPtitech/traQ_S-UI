@@ -1,6 +1,7 @@
 import { transparentizeWithFallback } from '/@/lib/basic/color'
-import { OnlyDefault, resolveOnlyDefault, resolveWithFallback } from './util'
-import {
+import type { OnlyDefault } from './util'
+import { resolveOnlyDefault, resolveWithFallback } from './util'
+import type {
   BasicTheme,
   CSSColorType,
   CSSColorTypeSimple,

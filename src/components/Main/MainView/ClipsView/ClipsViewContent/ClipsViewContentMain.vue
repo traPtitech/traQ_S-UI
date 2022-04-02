@@ -26,7 +26,7 @@
 import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import { shallowRef } from 'vue'
-import { ClipFolderId } from '/@/types/entity-ids'
+import type { ClipFolderId } from '/@/types/entity-ids'
 import useClipsFetcher from './composables/useClipsFetcher'
 import ClipElement from '/@/components/Main/MainView/MessageElement/ClipElement.vue'
 

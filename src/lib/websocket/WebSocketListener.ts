@@ -1,6 +1,7 @@
-import AutoReconnectWebSocket from './AutoReconnectWebSocket'
-import mitt, { Emitter } from 'mitt'
-import { WebSocketEvent } from './events'
+import type AutoReconnectWebSocket from './AutoReconnectWebSocket'
+import type { Emitter } from 'mitt'
+import mitt from 'mitt'
+import type { WebSocketEvent } from './events'
 
 type WebSocketListenerEventMap = {
   [Type in keyof WebSocketEvent]: WebSocketEvent[Type]

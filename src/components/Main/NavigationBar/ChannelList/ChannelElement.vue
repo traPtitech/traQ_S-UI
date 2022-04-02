@@ -49,8 +49,8 @@
 
 <script lang="ts" setup>
 import { computed, toRef } from 'vue'
-import { ChannelTreeNode } from '/@/lib/channelTree'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelTreeNode } from '/@/lib/channelTree'
+import type { ChannelId } from '/@/types/entity-ids'
 import useHover from '/@/composables/dom/useHover'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
 import { useMainViewStore } from '/@/store/ui/mainView'

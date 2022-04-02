@@ -1,13 +1,12 @@
+import type { VNode, ComponentPublicInstance } from 'vue'
 import {
   defineComponent,
-  VNode,
   Text,
   Comment,
   cloneVNode,
   shallowRef,
   onMounted,
-  onBeforeUnmount,
-  ComponentPublicInstance
+  onBeforeUnmount
 } from 'vue'
 import { isIOS } from '/@/lib/dom/browser'
 

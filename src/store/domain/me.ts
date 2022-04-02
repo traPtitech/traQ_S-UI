@@ -1,5 +1,5 @@
-import { UserId } from '/@/types/entity-ids'
-import { MyUserDetail } from '@traptitech/traq'
+import type { UserId } from '/@/types/entity-ids'
+import type { MyUserDetail } from '@traptitech/traq'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, toRefs } from 'vue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'

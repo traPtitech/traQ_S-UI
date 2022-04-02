@@ -50,11 +50,12 @@
 </template>
 
 <script lang="ts">
-import { computed, Ref, toRef } from 'vue'
+import type { Ref } from 'vue'
+import { computed, toRef } from 'vue'
 import apis from '/@/lib/apis'
-import { MessageId } from '/@/types/entity-ids'
+import type { MessageId } from '/@/types/entity-ids'
 import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
-import { Point } from '/@/lib/basic/point'
+import type { Point } from '/@/lib/basic/point'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import usePinToggler from '/@/composables/contextMenu/usePinToggler'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'

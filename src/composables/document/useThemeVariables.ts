@@ -1,4 +1,5 @@
-import { computed, ComputedRef } from 'vue'
+import type { ComputedRef } from 'vue'
+import { computed } from 'vue'
 import { commonStyles } from '/@/lib/styles'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 

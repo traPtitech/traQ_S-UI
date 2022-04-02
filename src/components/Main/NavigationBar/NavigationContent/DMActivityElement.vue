@@ -14,7 +14,7 @@ import UserName from '/@/components/UI/MessagePanel/UserName.vue'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
 import { computed } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+import type { UserId } from '/@/types/entity-ids'
 import { constructUserPath } from '/@/router'
 import { useUsersStore } from '/@/store/entities/users'
 

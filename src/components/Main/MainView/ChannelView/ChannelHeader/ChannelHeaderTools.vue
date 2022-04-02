@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import useChannelState from './composables/useChannelState'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import ChannelHeaderToolsList from './ChannelHeaderToolsList.vue'

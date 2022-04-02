@@ -6,8 +6,8 @@
 <script lang="ts" setup>
 import GroupListGroupEdit from './GroupListGroupEdit.vue'
 import GroupListGroupView from './GroupListGroupView.vue'
-import { UserGroup } from '@traptitech/traq'
-import { UserGroupId } from '/@/types/entity-ids'
+import type { UserGroup } from '@traptitech/traq'
+import type { UserGroupId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{

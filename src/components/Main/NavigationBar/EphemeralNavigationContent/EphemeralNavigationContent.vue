@@ -15,7 +15,7 @@ import EphemeralNavigationContentContainer from './EphemeralNavigationContentCon
 import QallController from './QallController/QallController.vue'
 import DraftList from './DraftList/DraftList.vue'
 import AudioController from './AudioController/AudioController.vue'
-import { EphemeralNavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
+import type { EphemeralNavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 
 withDefaults(
   defineProps<{

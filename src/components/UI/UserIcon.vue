@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 import { reactive, computed, watch, toRef } from 'vue'
 import { buildUserIconPath } from '/@/lib/apis'
-import { UserId, FileId } from '/@/types/entity-ids'
+import type { UserId, FileId } from '/@/types/entity-ids'
 import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'

@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { EmbeddingMessage } from '@traptitech/traq-markdown-it'
+import type { EmbeddingMessage } from '@traptitech/traq-markdown-it'
 import { ref, watchEffect } from 'vue'
 import { isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'

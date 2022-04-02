@@ -1,10 +1,12 @@
 import TrieTree from '/@/lib/basic/trieTree'
 import { animeEffectSet, sizeEffectSet } from '/@/lib/markdown/effects'
-import { ref, onBeforeUnmount, computed, Ref, readonly, watchEffect } from 'vue'
-import { EntityEventMap, entityMitt } from '/@/store/entities/mitt'
+import type { Ref } from 'vue'
+import { ref, onBeforeUnmount, computed, readonly, watchEffect } from 'vue'
+import type { EntityEventMap } from '/@/store/entities/mitt'
+import { entityMitt } from '/@/store/entities/mitt'
+import type { Target } from '/@/lib/suggestion'
 import {
   getDeterminedCharacters,
-  Target,
   getPrevCandidateIndex,
   getNextCandidateIndex
 } from '/@/lib/suggestion'

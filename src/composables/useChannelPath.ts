@@ -1,9 +1,7 @@
-import { ChannelId, DMChannelId } from '/@/types/entity-ids'
+import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { constructUserPath, constructChannelPath } from '/@/router'
-import {
-  channelIdToSimpleChannelPath as libChannelIdToSimpleChannelPath,
-  SimpleChannel
-} from '/@/lib/channel'
+import type { SimpleChannel } from '/@/lib/channel'
+import { channelIdToSimpleChannelPath as libChannelIdToSimpleChannelPath } from '/@/lib/channel'
 import { channelPathToId } from '/@/lib/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '../store/entities/users'

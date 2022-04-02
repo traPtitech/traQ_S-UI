@@ -1,12 +1,12 @@
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
-import {
+import type {
   UserIconUpdatedEvent,
   UserTagsUpdatedEvent,
   UserUpdatedEvent
 } from '/@/lib/websocket/events'
-import { UserId } from '/@/types/entity-ids'
-import { UserDetail } from '@traptitech/traq'
+import type { UserId } from '/@/types/entity-ids'
+import type { UserDetail } from '@traptitech/traq'
 import { onMounted, ref } from 'vue'
 import useMittListener from '/@/composables/utils/useMittListener'
 

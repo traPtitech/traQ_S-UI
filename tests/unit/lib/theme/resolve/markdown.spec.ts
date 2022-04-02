@@ -1,11 +1,11 @@
-import { ResolvedBasicTheme } from '/@/lib/theme/resolve/basic'
+import type { ResolvedBasicTheme } from '/@/lib/theme/resolve/basic'
+import type { ResolvedMarkdownTheme } from '/@/lib/theme/resolve/markdown'
 import {
   defaultDarkTheme,
   defaultLightTheme,
-  ResolvedMarkdownTheme,
   resolveMarkdownTheme
 } from '/@/lib/theme/resolve/markdown'
-import {
+import type {
   MarkdownDefaultTheme,
   ExtendedOptionalMarkdownTheme
 } from '/@/lib/theme/schema'

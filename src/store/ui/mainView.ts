@@ -2,7 +2,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref } from 'vue'
 import { channelIdToPathString } from '/@/lib/channel'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import {
+import type {
   ChannelId,
   ClipFolderId,
   DMChannelId,

@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
-import { User } from '@traptitech/traq'
+import type { User } from '@traptitech/traq'
 
 defineProps<{
   user: User

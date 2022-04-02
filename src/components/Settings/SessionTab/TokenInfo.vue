@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { ActiveOAuth2Token, User } from '@traptitech/traq'
+import type { ActiveOAuth2Token, User } from '@traptitech/traq'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import { scopeInfoMap } from '/@/lib/clientScope'
 import AIcon from '/@/components/UI/AIcon.vue'

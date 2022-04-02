@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const useStaredChannelsPinia = defineStore('domain/staredChannels', () => {
   const staredChannelSet = ref(new Set<ChannelId>())

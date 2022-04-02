@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { UserGroupMember } from '@traptitech/traq'
+import type { UserGroupMember } from '@traptitech/traq'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
 import ModalFrame from '../Common/ModalFrame.vue'

@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios'
-import { Ref } from 'vue'
+import type { AxiosResponse } from 'axios'
+import type { Ref } from 'vue'
 
 // TODO: fetchのエラー処理
 

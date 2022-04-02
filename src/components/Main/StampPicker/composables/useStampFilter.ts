@@ -1,5 +1,5 @@
 import { reactive, computed, ref } from 'vue'
-import { Stamp } from '@traptitech/traq'
+import type { Stamp } from '@traptitech/traq'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { getMatchedWithPriority } from '/@/lib/basic/array'
 import { useStampsStore } from '/@/store/entities/stamps'

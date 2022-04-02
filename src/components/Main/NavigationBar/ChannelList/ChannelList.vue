@@ -17,8 +17,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ChannelTreeNode } from '/@/lib/channelTree'
-import { Channel } from '@traptitech/traq'
+import type { ChannelTreeNode } from '/@/lib/channelTree'
+import type { Channel } from '@traptitech/traq'
 import ChannelElementTopic from './ChannelElementTopic.vue'
 import ChannelElement from './ChannelElement.vue'
 import { computed } from 'vue'

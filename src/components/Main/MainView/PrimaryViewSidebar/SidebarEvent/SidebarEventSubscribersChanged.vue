@@ -19,7 +19,7 @@
 <script lang="ts" setup>
 import SidebarEventFrame from './SidebarEventFrame.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
-import { SubscribersChangedEvent } from '@traptitech/traq'
+import type { SubscribersChangedEvent } from '@traptitech/traq'
 
 defineProps<{
   datetime: string

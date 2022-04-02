@@ -31,10 +31,11 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref } from 'vue'
+import type { Ref } from 'vue'
+import { computed, reactive } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import apis from '/@/lib/apis'
-import { PatchChannelRequest } from '@traptitech/traq'
+import type { PatchChannelRequest } from '@traptitech/traq'
 import { nullUuid } from '/@/lib/basic/uuid'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import useChannelOptions from '/@/composables/useChannelOptions'

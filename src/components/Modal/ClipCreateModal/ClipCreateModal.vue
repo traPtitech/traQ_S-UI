@@ -16,11 +16,12 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, Ref } from 'vue'
+import type { Ref } from 'vue'
+import { computed, ref } from 'vue'
 import apis from '/@/lib/apis'
-import { MessageId, ClipFolderId } from '/@/types/entity-ids'
+import type { MessageId, ClipFolderId } from '/@/types/entity-ids'
 import { useToastStore } from '/@/store/ui/toast'
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 import { useMessagesStore } from '/@/store/entities/messages'
 import useSortedClipFolders from '/@/composables/clips/useSortedClipFolders'
 

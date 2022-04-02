@@ -1,4 +1,5 @@
-import { FirebaseApp, initializeApp } from 'firebase/app'
+import type { FirebaseApp } from 'firebase/app'
+import { initializeApp } from 'firebase/app'
 
 let _firebaseApp: FirebaseApp | undefined
 

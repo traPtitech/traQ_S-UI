@@ -23,7 +23,7 @@ import AStamp from '/@/components/UI/AStamp.vue'
 import { ref, computed, watch, onMounted } from 'vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
-import { MessageStampById } from '/@/lib/messageStampList'
+import type { MessageStampById } from '/@/lib/messageStampList'
 
 const props = defineProps<{
   stamp: MessageStampById

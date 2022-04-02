@@ -21,7 +21,7 @@ import LoginForm from './LoginForm.vue'
 import RegistrationForm from './RegistrationForm.vue'
 import ConsentForm from './ConsentForm/ConsentForm.vue'
 import { computed } from 'vue'
-import { PageType } from '/@/views/AuthPage.vue'
+import type { PageType } from '/@/views/AuthPage.vue'
 import useVersion from '/@/composables/useVersion'
 import { RouteName } from '/@/router'
 

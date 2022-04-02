@@ -1,8 +1,8 @@
-import { Ref } from 'vue'
+import type { Ref } from 'vue'
 import useCopyText from '/@/composables/toast/useCopyText'
 import { embeddingOrigin } from '/@/lib/apis'
 import { constructMessagesPath } from '/@/router'
-import { MessageId } from '/@/types/entity-ids'
+import type { MessageId } from '/@/types/entity-ids'
 
 const useCopyLink = (messageId: Ref<MessageId>) => {
   const { copyText } = useCopyText()

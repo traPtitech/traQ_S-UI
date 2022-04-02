@@ -3,7 +3,7 @@ import { compareStringInsensitive } from '/@/lib/basic/string'
 import { isDefined } from '/@/lib/basic/array'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
-import { User } from '@traptitech/traq'
+import type { User } from '@traptitech/traq'
 import useUserList from '/@/composables/users/useUserList'
 
 interface UsersGradeList {

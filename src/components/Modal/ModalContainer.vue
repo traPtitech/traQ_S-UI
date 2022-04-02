@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
-import { ModalState } from '/@/store/ui/modal/states'
+import type { ModalState } from '/@/store/ui/modal/states'
 import { useModalStore } from '/@/store/ui/modal'
 
 const modalComponentMap: Record<ModalState['type'], string> = {

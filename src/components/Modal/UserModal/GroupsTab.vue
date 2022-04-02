@@ -20,8 +20,8 @@
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
-import { UserDetail } from '@traptitech/traq'
-import { UserGroupId } from '/@/types/entity-ids'
+import type { UserDetail } from '@traptitech/traq'
+import type { UserGroupId } from '/@/types/entity-ids'
 import { isDefined } from '/@/lib/basic/array'
 import { useModalStore } from '/@/store/ui/modal'
 import { useGroupsStore } from '/@/store/entities/groups'

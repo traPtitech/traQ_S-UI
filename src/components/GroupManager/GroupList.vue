@@ -17,7 +17,7 @@
 <script lang="ts" setup>
 import GroupListGroup from './GroupListGroup.vue'
 import { computed, ref } from 'vue'
-import { UserGroupId } from '/@/types/entity-ids'
+import type { UserGroupId } from '/@/types/entity-ids'
 import { UserPermission } from '@traptitech/traq'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'

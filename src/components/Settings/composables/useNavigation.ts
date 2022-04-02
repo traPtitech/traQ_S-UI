@@ -1,4 +1,4 @@
-import { SettingsRouteName } from '/@/router/settings'
+import type { SettingsRouteName } from '/@/router/settings'
 import { useRouter } from 'vue-router'
 import { constructChannelPath, RouteName } from '/@/router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'

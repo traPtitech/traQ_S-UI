@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import { useToastStore } from '/@/store/ui/toast'
 import { useAppRtcStore } from '/@/store/app/rtc'
 import { useDomainRtcStore } from '/@/store/domain/rtc'

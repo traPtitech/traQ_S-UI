@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 import { computed } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const props = defineProps<{

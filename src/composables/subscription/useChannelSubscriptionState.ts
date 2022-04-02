@@ -1,6 +1,7 @@
-import { computed, Ref } from 'vue'
+import type { Ref } from 'vue'
+import { computed } from 'vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 
 const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {

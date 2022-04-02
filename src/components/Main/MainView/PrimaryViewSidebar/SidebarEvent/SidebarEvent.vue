@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { ParsedChannelEvent } from '/@/lib/apis'
+import type { ParsedChannelEvent } from '/@/lib/apis'
 import { ChannelEventTypeEnum } from '@traptitech/traq'
 import SidebarEventTopicChanged from './SidebarEventTopicChanged.vue'
 import SidebarEventSubscribersChanged from './SidebarEventSubscribersChanged.vue'

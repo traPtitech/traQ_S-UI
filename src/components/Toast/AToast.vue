@@ -12,7 +12,8 @@
 
 <script lang="ts">
 import { computed, onMounted, onUnmounted } from 'vue'
-import { useToastStore, Toast } from '/@/store/ui/toast'
+import type { Toast } from '/@/store/ui/toast'
+import { useToastStore } from '/@/store/ui/toast'
 
 const iconNameMap: Record<Toast['type'], string> = {
   success: 'info',

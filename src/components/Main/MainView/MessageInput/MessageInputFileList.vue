@@ -13,9 +13,9 @@
 <script lang="ts" setup>
 import MessageInputFileListItem from './MessageInputFileListItem.vue'
 import { toRef } from 'vue'
-import { VirtualChannelId } from '/@/store/ui/messageInputStateStore'
+import type { VirtualChannelId } from '/@/store/ui/messageInputStateStore'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
-import { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId } from '/@/types/entity-ids'
 import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{

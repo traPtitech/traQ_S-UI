@@ -1,4 +1,4 @@
-import { Dimensions } from './size'
+import type { Dimensions } from './size'
 
 export const loadImage = (url: string) =>
   new Promise<HTMLImageElement>(resolve => {

@@ -1,5 +1,4 @@
-import {
-  storeToRefs,
+import type {
   Pinia,
   Store,
   StoreGeneric,
@@ -7,7 +6,9 @@ import {
   StoreGetters,
   PiniaCustomStateProperties
 } from 'pinia'
-import { isReactive, isRef, toRaw, ToRefs } from 'vue'
+import { storeToRefs } from 'pinia'
+import type { ToRefs } from 'vue'
+import { isReactive, isRef, toRaw } from 'vue'
 
 /**
  * `storeToRefs`の返り値の型

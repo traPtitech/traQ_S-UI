@@ -1,9 +1,7 @@
-import {
-  Apis,
+import type {
   ChannelEvent,
   ChannelEventTypeEnum,
   ChildCreatedEvent,
-  Configuration,
   ForcedNotificationChangedEvent,
   NameChangedEvent,
   ParentChangedEvent,
@@ -13,9 +11,10 @@ import {
   TopicChangedEvent,
   VisibilityChangedEvent
 } from '@traptitech/traq'
-import { FileId } from '/@/types/entity-ids'
+import { Apis, Configuration } from '@traptitech/traq'
+import type { FileId } from '/@/types/entity-ids'
 import { DEV_SERVER } from '/@/lib/define'
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 import { constructFilesPath } from '/@/router'
 
 export const BASE_PATH = '/api/v3'

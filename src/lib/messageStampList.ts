@@ -1,5 +1,5 @@
-import { MessageStamp } from '@traptitech/traq'
-import { StampId, UserId } from '/@/types/entity-ids'
+import type { MessageStamp } from '@traptitech/traq'
+import type { StampId, UserId } from '/@/types/entity-ids'
 
 /**
  * StampIdで整理されたMessageStamp

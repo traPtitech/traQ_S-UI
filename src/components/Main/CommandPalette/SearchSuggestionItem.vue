@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChannelId, UserId } from '/@/types/entity-ids'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
 import { computed } from 'vue'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'

@@ -23,7 +23,7 @@ import PrimaryViewHeader from '/@/components/Main/MainView/PrimaryViewHeader/Pri
 import PrimaryViewHeaderTitle from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderTitle.vue'
 import PrimaryViewHeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
 import { computed } from 'vue'
-import { ClipFolderId } from '/@/types/entity-ids'
+import type { ClipFolderId } from '/@/types/entity-ids'
 import useSidebar from '/@/composables/mainView/useSidebar'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 

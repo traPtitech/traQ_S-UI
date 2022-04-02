@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
 import ClipsViewContentMain from './ClipsViewContentMain.vue'
-import { ClipFolderId } from '/@/types/entity-ids'
+import type { ClipFolderId } from '/@/types/entity-ids'
 
 defineProps<{
   clipFolderId: ClipFolderId

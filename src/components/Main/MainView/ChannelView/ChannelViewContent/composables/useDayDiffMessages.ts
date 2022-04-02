@@ -1,6 +1,7 @@
-import { computed, Ref } from 'vue'
+import type { Ref } from 'vue'
+import { computed } from 'vue'
 import { useMessagesStore } from '/@/store/entities/messages'
-import { MessageId } from '/@/types/entity-ids'
+import type { MessageId } from '/@/types/entity-ids'
 
 const useDayDiffMessages = (messageIds: Ref<MessageId[]>) => {
   const { messagesMap } = useMessagesStore()

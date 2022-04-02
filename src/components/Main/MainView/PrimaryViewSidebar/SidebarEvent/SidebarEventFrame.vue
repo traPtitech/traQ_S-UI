@@ -25,7 +25,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
 import { computed } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+import type { UserId } from '/@/types/entity-ids'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
 
 const props = withDefaults(

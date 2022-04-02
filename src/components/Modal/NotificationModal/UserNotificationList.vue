@@ -18,7 +18,7 @@
 <script lang="ts">
 import { computed, ref, watch } from 'vue'
 import apis from '/@/lib/apis'
-import { UserId, ChannelId } from '/@/types/entity-ids'
+import type { UserId, ChannelId } from '/@/types/entity-ids'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import useChannelSubscribers from '/@/composables/subscription/useChannelSubscribers'
 import { useToastStore } from '/@/store/ui/toast'
