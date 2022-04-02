@@ -8,7 +8,6 @@ import { ChannelId, UserId } from '/@/types/entity-ids'
 import { getTalkingLoudnessLevel } from '/@/lib/webrtc/loudness'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { isIOSApp } from '/@/lib/dom/browser'
-import { dtlnSampleRate } from '/@/lib/webrtc/dtln-web'
 import { client, destroyClient, initClient } from '/@/lib/webrtc/traQRTCClient'
 import { useDomainRtcStore, SessionId, SessionType } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
@@ -149,9 +148,7 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
   }
 
   const initializeContext = async () => {
-    const audioContext = new ExtendedAudioContext({
-      sampleRate: dtlnSampleRate
-    })
+    const audioContext = new ExtendedAudioContext()
     const mixer = new AudioStreamMixer(
       audioContext,
       rtcSettings.masterVolume.value
@@ -159,8 +156,8 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
     const localStreamManager = new LocalStreamManager(audioContext, {
       outputNode: mixer.masterVolumeGain,
       audioInputDeviceId: rtcSettings.audioInputDeviceId.value,
-      enableNoiseReduction: rtcSettings.isNoiseReductionEnabled.value,
-      enableEchoCancellation: rtcSettings.isEchoCancellationEnabled.value
+      noiseSuppression: rtcSettings.noiseSuppression.value,
+      noiseGateThreshold: rtcSettings.noiseGateThreshold.value
     })
 
     await Promise.all([
@@ -285,15 +282,11 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
   watch(rtcSettings.audioInputDeviceId, newAudioInputDeviceId => {
     localStreamManager.value?.setAudioInputDevice(newAudioInputDeviceId)
   })
-  watch(rtcSettings.isNoiseReductionEnabled, newIsNoiseReductionEnabled => {
-    localStreamManager.value?.setEnableNoiseReduction(
-      newIsNoiseReductionEnabled
-    )
+  watch(rtcSettings.noiseSuppression, newNoiseSuppression => {
+    localStreamManager.value?.setNoiseSuppression(newNoiseSuppression)
   })
-  watch(rtcSettings.isEchoCancellationEnabled, newIsEchoCancellationEnabled => {
-    localStreamManager.value?.setEnableEchoCancellation(
-      newIsEchoCancellationEnabled
-    )
+  watch(rtcSettings.noiseGateThreshold, newNoiseGateThreshold => {
+    localStreamManager.value?.setNoiseGateThreshold(newNoiseGateThreshold)
   })
 
   const mute = () => {

@@ -91,6 +91,7 @@ export function createStoreWithMigrations(
 
       try {
         // migrationに成功したらバージョンを上げる
+        db.close()
         const updateRequest = indexedDB.open(dbNameWithPrefix, v + 1)
         db = await promisifyRequest(updateRequest)
       } catch (e) {

@@ -13,19 +13,15 @@
     <template v-if="state.isEnabled">
       <div :class="$style.element">
         <h3 :class="$style.header">マスターボリューム</h3>
-        <div :class="[$style.content, $style.masterVolume]">
-          <form-input
-            v-model.number="state.masterVolume"
-            :class="$style.masterVolumeRange"
-            type="range"
-            min="0"
-            step="0.005"
-            max="1"
-          />
-          <div :class="$style.masterVolumeValue">
-            {{ Math.round(state.masterVolume * 200) }}%
-          </div>
-        </div>
+        <form-range-with-value
+          v-model="state.masterVolume"
+          :class="$style.content"
+          max-text="100%"
+          min="0"
+          step="0.005"
+          max="1"
+          :format="formatMasterVolume"
+        />
       </div>
       <div :class="$style.element">
         <h3 :class="$style.header">入力デバイス</h3>
@@ -38,32 +34,24 @@
           <p v-else>デバイスが取得できませんでした</p>
         </div>
       </div>
+      <noise-suppression
+        v-model="state.noiseSuppression"
+        :class="$style.element"
+      />
       <div :class="$style.element">
-        <div :class="$style.enable">
-          <h3 :class="$style.header">ノイズ抑制を有効にする (β)</h3>
-          <a-toggle
-            v-model="state.isNoiseReductionEnabled"
-            :class="$style.toggle"
-            :disabled="!isAudioContextDtlnSampleRateIsSupported"
-          />
-        </div>
+        <h3 :class="$style.header">ノイズゲート</h3>
+        <form-range-with-value
+          v-model="state.noiseGateThreshold"
+          :class="$style.content"
+          max-text="-100dB"
+          min="-100"
+          step="1"
+          max="0"
+          :format="formatNoiseGateThreshold"
+        />
         <p :class="$style.content">
-          Qallでのノイズ抑制を有効にします<br />
-          スペックの低い端末では動作が不安定になる可能性があります
-        </p>
-      </div>
-      <div :class="$style.element">
-        <div :class="$style.enable">
-          <h3 :class="$style.header">エコー除去を有効にする (β)</h3>
-          <a-toggle
-            v-model="state.isEchoCancellationEnabled"
-            :class="$style.toggle"
-            :disabled="!isAudioContextDtlnSampleRateIsSupported"
-          />
-        </div>
-        <p :class="$style.content">
-          Qallでのエコー除去を有効にします<br />
-          スペックの低い端末では動作が不安定になる可能性があります
+          マイクに入力された音が指定した音量以下だった場合にミュートします<br />
+          -100dBにすると無効になります
         </p>
       </div>
       <div :class="$style.element">
@@ -110,12 +98,7 @@
 
 <script lang="ts">
 import { computed, ref, watchEffect, reactive } from 'vue'
-import { checkAudioContextSampleRateSupport } from '/@/lib/dom/browser'
-import { dtlnSampleRate } from '/@/lib/webrtc/dtln-web'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
-
-const isAudioContextDtlnSampleRateIsSupported =
-  checkAudioContextSampleRateSupport(dtlnSampleRate)
 
 const useDevicesInfo = () => {
   const { isEnabled, ensureDeviceIds } = useRtcSettings()
@@ -199,8 +182,15 @@ const useVoices = () => {
 import AToggle from '/@/components/UI/AToggle.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
+import NoiseSuppression from '/@/components/Settings/QallTab/NoiseSuppression.vue'
+import FormRangeWithValue from '/@/components/UI/FormRangeWithValue.vue'
 
 const state = reactive(useRtcSettings())
+
+const formatMasterVolume = (v: number) =>
+  `${Math.round(state.masterVolume * 200)}%`
+
+const formatNoiseGateThreshold = (v: number) => `${v}dB`
 
 const { fetchFailed, audioInputDevices } = useDevicesInfo()
 
@@ -234,16 +224,5 @@ const voiceOptions = useVoices()
   .toggle {
     margin-left: 12px;
   }
-}
-.masterVolume {
-  display: flex;
-  align-items: center;
-}
-.masterVolumeRange {
-  flex: 1 1;
-}
-.masterVolumeValue {
-  width: 5ch;
-  text-align: right;
 }
 </style>

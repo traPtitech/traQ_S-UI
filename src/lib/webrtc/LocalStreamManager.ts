@@ -1,6 +1,57 @@
-import type * as DTLN from '@sapphi-red/dtln-web'
+import {
+  loadRnnoise as loadRnnoiseLib,
+  loadSpeex as loadSpeexLib,
+  NoiseGateWorkletNode,
+  RnnoiseWorkletNode,
+  SpeexWorkletNode
+} from '@sapphi-red/web-noise-suppressor'
 import ExtendedAudioContext from './ExtendedAudioContext'
 import { getUserAudio } from './userMedia'
+import rnnoiseWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise.wasm?url'
+import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.wasm?url'
+import rnnoiseWorkletPath from '@sapphi-red/web-noise-suppressor/rnnoiseWorklet.js?url'
+import speexWasmPath from '@sapphi-red/web-noise-suppressor/speex.wasm?url'
+import speexWorkletPath from '@sapphi-red/web-noise-suppressor/speexWorklet.js?url'
+import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWorklet.js?url'
+
+let rnnoiseWasmBinary: ArrayBuffer | undefined
+const loadRnnoise = async (ctx: AudioContext) => {
+  if (rnnoiseWasmBinary) return rnnoiseWasmBinary
+
+  // 先に代入すると取得中に取得完了した判定が発生しうるので、
+  // どっちも完了してからrnnoiseWasmBinaryに代入すること
+  await ctx.audioWorklet.addModule(rnnoiseWorkletPath)
+  rnnoiseWasmBinary = await loadRnnoiseLib({
+    url: rnnoiseWasmPath,
+    simdUrl: rnnoiseSimdWasmPath
+  })
+
+  return rnnoiseWasmBinary
+}
+
+let speexWasmBinary: ArrayBuffer | undefined
+const loadSpeex = async (ctx: AudioContext) => {
+  if (speexWasmBinary) return speexWasmBinary
+
+  // 先に代入すると取得中に取得完了した判定が発生しうるので、
+  // どっちも完了してからspeexWasmBinaryに代入すること
+  await ctx.audioWorklet.addModule(speexWorkletPath)
+  speexWasmBinary = await loadSpeexLib({ url: speexWasmPath })
+
+  return speexWasmBinary
+}
+
+let noiseGateLoaded = false
+const loadNoiseGate = async (ctx: AudioContext) => {
+  if (noiseGateLoaded) return
+
+  // 先に代入すると取得中に取得完了した判定が発生しうるので、
+  // 完了してからnoiseGateLoadedに代入すること
+  await ctx.audioWorklet.addModule(noiseGateWorkletPath)
+  noiseGateLoaded = true
+}
+
+export type NoiseSuppressionType = 'rnnoise' | 'speex' | 'none'
 
 type Options = {
   /**
@@ -8,8 +59,11 @@ type Options = {
    */
   outputNode: AudioNode
   audioInputDeviceId: string
-  enableNoiseReduction: boolean
-  enableEchoCancellation: boolean
+  noiseSuppression: NoiseSuppressionType
+  /**
+   * -100のときはノイズゲートを無効にする
+   */
+  noiseGateThreshold: number
 }
 
 /**
@@ -25,7 +79,6 @@ export default class LocalStreamManager {
 
   private readonly context: ExtendedAudioContext
   private readonly options: Options
-  private dtln: typeof DTLN | undefined
 
   inputStream!: MediaStream
   get outputStream() {
@@ -33,9 +86,6 @@ export default class LocalStreamManager {
   }
 
   private source!: MediaStreamAudioSourceNode
-  private dtlnProcessor: ScriptProcessorNode | undefined
-  private dtlnAecChannelMerger: ChannelMergerNode | undefined
-  private dtlnAecProcessor: ScriptProcessorNode | undefined
   private analyser!: AnalyserNode
   private readonly destination: MediaStreamAudioDestinationNode
 
@@ -58,13 +108,9 @@ export default class LocalStreamManager {
 
   private async setInput({
     audioInputDeviceId,
-    enableNoiseReduction,
-    enableEchoCancellation
+    noiseSuppression,
+    noiseGateThreshold
   }: Options) {
-    if (enableNoiseReduction || enableEchoCancellation) {
-      await this.setupDtln({ enableNoiseReduction, enableEchoCancellation })
-    }
-
     const newInputStream = await getUserAudio(audioInputDeviceId)
     this.unsetInput()
 
@@ -75,27 +121,36 @@ export default class LocalStreamManager {
 
     let lastNode: AudioNode = this.source
 
-    if (enableNoiseReduction) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.dtlnProcessor = this.dtln!.createDtlnProcessorNode(this.context, {
-        channelCount: 2
+    if (noiseSuppression === 'rnnoise') {
+      const rnnoiseBinary = await loadRnnoise(this.context)
+      const rnnoiseNode = new RnnoiseWorkletNode(this.context, {
+        wasmBinary: rnnoiseBinary,
+        maxChannels: 2
       })
-      lastNode.connect(this.dtlnProcessor)
-      lastNode = this.dtlnProcessor
+
+      lastNode.connect(rnnoiseNode)
+      lastNode = rnnoiseNode
+    } else if (noiseSuppression === 'speex') {
+      const speexBinary = await loadSpeex(this.context)
+      const speexNode = new SpeexWorkletNode(this.context, {
+        wasmBinary: speexBinary,
+        maxChannels: 2
+      })
+
+      lastNode.connect(speexNode)
+      lastNode = speexNode
     }
 
-    if (enableEchoCancellation) {
-      this.dtlnAecChannelMerger = this.context.createChannelMerger(2)
-      lastNode.connect(this.dtlnAecChannelMerger, 0, 0)
-      this.options.outputNode.connect(this.dtlnAecChannelMerger, 0, 1)
-      lastNode = this.dtlnAecChannelMerger
+    if (noiseGateThreshold !== -100) {
+      await loadNoiseGate(this.context)
+      const noiseGateNode = new NoiseGateWorkletNode(this.context, {
+        openThreshold: noiseGateThreshold,
+        holdMs: 90,
+        maxChannels: 2
+      })
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.dtlnAecProcessor = this.dtln!.createDtlnAecProcessorNode(
-        this.context
-      )
-      lastNode.connect(this.dtlnAecProcessor)
-      lastNode = this.dtlnAecProcessor
+      lastNode.connect(noiseGateNode)
+      lastNode = noiseGateNode
     }
 
     lastNode.connect(this.analyser)
@@ -105,9 +160,6 @@ export default class LocalStreamManager {
   private unsetInput() {
     this.inputStream?.getTracks().forEach(t => t.stop())
     this.source?.disconnect()
-    this.dtlnProcessor?.disconnect()
-    this.dtlnAecChannelMerger?.disconnect()
-    this.dtlnAecProcessor?.disconnect()
     this.analyser?.disconnect()
   }
 
@@ -119,14 +171,14 @@ export default class LocalStreamManager {
     await this.setInput(this.options)
   }
 
-  async setEnableNoiseReduction(enableNoiseReduction: boolean) {
-    this.options.enableNoiseReduction = enableNoiseReduction
+  async setNoiseSuppression(noiseSuppression: NoiseSuppressionType) {
+    this.options.noiseSuppression = noiseSuppression
 
     await this.setInput(this.options)
   }
 
-  async setEnableEchoCancellation(enableEchoCancellation: boolean) {
-    this.options.enableEchoCancellation = enableEchoCancellation
+  async setNoiseGateThreshold(noiseGateThreshold: number) {
+    this.options.noiseGateThreshold = noiseGateThreshold
 
     await this.setInput(this.options)
   }
@@ -142,32 +194,6 @@ export default class LocalStreamManager {
     this.inputStream.getAudioTracks().forEach(track => {
       track.enabled = true
     })
-  }
-
-  /* dtln methods */
-
-  private async setupDtln({
-    enableNoiseReduction,
-    enableEchoCancellation
-  }: Pick<Options, 'enableNoiseReduction' | 'enableEchoCancellation'>) {
-    if (!this.dtln) {
-      const dtln = await import('@sapphi-red/dtln-web')
-      await dtln.setup('/dtln-web/')
-      this.dtln = dtln
-    }
-
-    const promises = []
-
-    if (enableNoiseReduction) {
-      promises.push(this.dtln.loadModel({ path: '/dtln-web/', quant: 'f16' }))
-    }
-    if (enableEchoCancellation) {
-      promises.push(
-        this.dtln.loadAecModel({ path: '/dtln-web/', units: 128, quant: 'f16' })
-      )
-    }
-
-    await Promise.all(promises)
   }
 
   /* analyze methods */
