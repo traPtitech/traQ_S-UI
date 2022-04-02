@@ -85,7 +85,7 @@ export default class LocalStreamManager {
     return this.destination.stream
   }
 
-  private source!: MediaStreamAudioSourceNode
+  private nodes: AudioNode[] = []
   private analyser!: AnalyserNode
   private readonly destination: MediaStreamAudioDestinationNode
 
@@ -116,10 +116,13 @@ export default class LocalStreamManager {
 
     this.inputStream = newInputStream
 
-    this.source = this.context.createMediaStreamSource(this.inputStream)
     this.analyser = this.context.createAnalyserNode()
+    this.nodes.push(this.analyser)
 
-    let lastNode: AudioNode = this.source
+    const source = this.context.createMediaStreamSource(this.inputStream)
+    this.nodes.push(source)
+
+    let lastNode: AudioNode = source
 
     if (noiseSuppression === 'rnnoise') {
       const rnnoiseBinary = await loadRnnoise(this.context)
@@ -127,6 +130,7 @@ export default class LocalStreamManager {
         wasmBinary: rnnoiseBinary,
         maxChannels: 2
       })
+      this.nodes.push(rnnoiseNode)
 
       lastNode.connect(rnnoiseNode)
       lastNode = rnnoiseNode
@@ -136,6 +140,7 @@ export default class LocalStreamManager {
         wasmBinary: speexBinary,
         maxChannels: 2
       })
+      this.nodes.push(speexNode)
 
       lastNode.connect(speexNode)
       lastNode = speexNode
@@ -148,6 +153,7 @@ export default class LocalStreamManager {
         holdMs: 90,
         maxChannels: 2
       })
+      this.nodes.push(noiseGateNode)
 
       lastNode.connect(noiseGateNode)
       lastNode = noiseGateNode
@@ -159,8 +165,11 @@ export default class LocalStreamManager {
 
   private unsetInput() {
     this.inputStream?.getTracks().forEach(t => t.stop())
-    this.source?.disconnect()
-    this.analyser?.disconnect()
+
+    for (const node of this.nodes) {
+      node.disconnect()
+    }
+    this.nodes = []
   }
 
   /* set util methods */
