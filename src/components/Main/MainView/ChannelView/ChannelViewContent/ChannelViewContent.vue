@@ -43,10 +43,11 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
   const canDrop = computed(() => isDragging.value && !isDragStartInside.value)
 
   const onDrop = async (event: DragEvent) => {
+    const droppable = canDrop.value // isDraggingなどに依存しているので退避しておく
     isDragging.value = false
     isDragStartInside.value = false
 
-    if (canDrop.value && event.dataTransfer) {
+    if (droppable && event.dataTransfer) {
       const result = await getTextOrFile(event.dataTransfer)
       if (result) {
         if (typeof result === 'string') {
