@@ -75,6 +75,12 @@ const useLogin = () => {
         case 'password or id is wrong':
           state.error = 'IDまたはパスワードが誤っています'
           break
+        case 'You have already logged in. Please logout once.':
+          state.error = 'ログイン済みでした。リロードします'
+          // 起きないようにするのがよいが (https://github.com/traPtitech/traQ_S-UI/issues/2260)
+          // とりあえずリロードする
+          location.reload()
+          break
         default:
           state.error = `${status}: ${message}`
       }
