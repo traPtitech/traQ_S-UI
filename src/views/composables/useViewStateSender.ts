@@ -11,12 +11,19 @@ const useViewStateSender = () => {
   const { primaryView } = useMainViewStore()
   const { shouldReceiveLatestMessages, isTyping } = useViewStateSenderStore()
 
-  const currentChannelId = computed(() =>
+  const currentChannelId = computed(() => {
     // ルートがチャンネルでないときは閲覧チャンネルをnullにするため
-    route.name === RouteName.Channel && primaryView.value.type === 'channel'
-      ? primaryView.value.channelId
-      : undefined
-  )
+    if (route.name !== RouteName.Channel && route.name !== RouteName.User) {
+      return undefined
+    }
+    if (
+      primaryView.value.type === 'channel' ||
+      primaryView.value.type === 'dm'
+    ) {
+      return primaryView.value.channelId
+    }
+    return undefined
+  })
 
   const state = computed(() => {
     if (!shouldReceiveLatestMessages.value) return ChannelViewState.None
