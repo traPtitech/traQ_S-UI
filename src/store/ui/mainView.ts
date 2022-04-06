@@ -23,7 +23,6 @@ export type LayoutType = 'single' | 'split' | 'split-reverse'
 
 export interface ChannelView extends ViewInformationBase {
   type: 'channel'
-  /** まだ使われていない */
   channelId: ChannelId
   entryMessageId?: MessageId
 }
