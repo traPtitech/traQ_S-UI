@@ -7,7 +7,7 @@ import { useMeStore } from '/@/store/domain/me'
 
 const useLogin = () => {
   const { getPass, savePass } = useCredentialManager()
-  const { redirect } = useRedirectParam()
+  const { redirect, setRedirectSessionStorage } = useRedirectParam()
   const { fetchMe } = useMeStore()
 
   const state = reactive({
@@ -87,7 +87,7 @@ const useLogin = () => {
     }
   }
   const loginExternal = (provider: string) => {
-    // TODO: 内部リダイレクト対応
+    setRedirectSessionStorage()
     location.href = `/api/auth/${provider}`
   }
   return {

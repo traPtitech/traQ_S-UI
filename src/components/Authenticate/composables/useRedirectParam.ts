@@ -2,6 +2,7 @@ import { computed } from 'vue'
 import { getFirstQuery } from '/@/lib/basic/url'
 import router, { RouteName } from '/@/router'
 import { useRoute } from 'vue-router'
+import { sessionStorageRedirectKey } from '/@/lib/dom/storage'
 
 const useRedirectParam = () => {
   const route = useRoute()
@@ -17,7 +18,13 @@ const useRedirectParam = () => {
     router.replace(url.value)
   }
 
-  return { redirect }
+  const setRedirectSessionStorage = () => {
+    if (!url.value) return
+
+    sessionStorage.setItem(sessionStorageRedirectKey, url.value)
+  }
+
+  return { redirect, setRedirectSessionStorage }
 }
 
 export default useRedirectParam

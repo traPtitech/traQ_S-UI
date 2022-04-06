@@ -1,5 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
+import { sessionStorageRedirectKey } from '../lib/dom/storage'
 import { settingsRoutes } from './settings'
 
 export enum RouteName {
@@ -130,6 +131,21 @@ router.beforeEach((to, from) => {
     return to.path.slice(0, -1)
   }
   return true
+})
+
+// 外部認証を利用してログインして戻ってきたときに、
+// 見ようとしていたページにリダイレクトする
+let once = false
+router.beforeResolve(() => {
+  if (once) return
+
+  once = true
+  const redirectTo = sessionStorage.getItem(sessionStorageRedirectKey)
+  if (redirectTo) {
+    sessionStorage.removeItem(sessionStorageRedirectKey)
+    return redirectTo
+  }
+  return undefined
 })
 
 export default router
