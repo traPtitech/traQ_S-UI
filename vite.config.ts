@@ -95,7 +95,10 @@ export default defineConfig(({ command, mode }) => ({
       injectRegister: null,
       srcDir: 'src',
       filename: 'sw.ts',
-      includeAssets: ['fonts/*.woff2']
+      includeAssets: ['fonts/*.woff2'],
+      injectManifest: {
+        globPatterns: ['**/*.{js,css,html}' /* default */, '**/assets/**/*.svg']
+      }
     }),
     VuePlugin(),
     svgLoader({
