@@ -12,6 +12,7 @@
       :placeholder="placeholder"
       :autocapitalize="autocapitalize"
       :type="disableIme ? 'url' : 'text'"
+      :title="title"
       :data-disable-ime="$boolAttr(disableIme)"
       :enterkeyhint="enterkeyhint"
       @input="onInput"
@@ -34,6 +35,7 @@ const props = withDefaults(
     placeholder?: string
     autocapitalize?: string
     disableIme?: boolean
+    title?: string
     focusOnMount?: boolean
     enterkeyhint?: string
   }>(),
@@ -43,6 +45,7 @@ const props = withDefaults(
     placeholder: '',
     autocapitalize: 'off',
     disableIme: false,
+    title: '',
     focusOnMount: false,
     enterkeyhint: 'search'
   }
