@@ -17,7 +17,6 @@ import TabContentTitle from './TabContentTitle.vue'
   @include background-primary;
   flex: 1 1;
   padding: 40px;
-  padding-right: 160px;
   overflow: {
     x: hidden;
     y: auto;

@@ -28,7 +28,7 @@ const path = computed(() => constructSettingsPath(props.routeName))
   @include color-ui-secondary;
   display: block;
   width: 100%;
-  padding: 20px 60px 20px 80px;
+  padding: 20px 5% 20px 25%;
   font-weight: bold;
   text-align: left;
   cursor: pointer;

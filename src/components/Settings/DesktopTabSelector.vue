@@ -40,7 +40,7 @@ const currentRouteName = computed(() => route.name)
   scrollbar-gutter: stable;
 }
 .header {
-  margin: 40px 80px;
+  margin: 40px 25%;
 }
 .version {
   margin-bottom: 16px;

@@ -35,6 +35,7 @@
       </div>
       <form-button
         label="変更"
+        :class="$style.changeButton"
         :disabled="!stampChanged || !isNameValid"
         :loading="isEditing"
         @click="editStamp"
@@ -231,5 +232,8 @@ const { isEditing, editStamp } = useStampEdit(
 }
 .form {
   margin-right: 12px;
+}
+.changeButton {
+  word-break: keep-all;
 }
 </style>
