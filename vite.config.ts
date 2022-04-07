@@ -128,7 +128,7 @@ export default defineConfig(({ command, mode }) => ({
     setupFiles: ['tests/unit/setup.ts', 'tests/unit/expectExtends.ts'],
     environment: 'jsdom',
     reporters: process.env.CI
-      ? new GithubActionsReporter({ trimRepositoryPrefix: false })
+      ? new GithubActionsReporter({ trimRepositoryPrefix: true })
       : 'default',
     // デフォルトの設定でも動くが遅いので、より範囲を狭めて指定している
     coverage: {
