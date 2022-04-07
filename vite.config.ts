@@ -127,9 +127,7 @@ export default defineConfig(({ command, mode }) => ({
     globals: true,
     setupFiles: ['tests/unit/setup.ts', 'tests/unit/expectExtends.ts'],
     environment: 'jsdom',
-    reporters: process.env.CI
-      ? new GithubActionsReporter({ hideStackTrace: true })
-      : 'default',
+    reporters: process.env.CI ? new GithubActionsReporter() : 'default',
     // デフォルトの設定でも動くが遅いので、より範囲を狭めて指定している
     coverage: {
       include: ['src/**/*'],
