@@ -2,6 +2,7 @@
   "name": "traq_s-ui",
   "version": "3.15.3",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -19,8 +20,8 @@
     "type-check": "npm run type-check:src && npm run type-check:test",
     "type-check:src": "vue-tsc --noEmit",
     "type-check:test": "tsc --noEmit --project tests/unit/tsconfig.json && tsc --noEmit --project tests/e2e/tsconfig.json",
-    "gen-fonts": "node build/gen-mplus.mjs",
-    "gen-unicode_emojis": "node build/gen-unicode_emojis.mjs",
+    "gen-fonts": "node build/gen-mplus.js",
+    "gen-unicode_emojis": "node build/gen-unicode_emojis.js",
     "postinstall": "patch-package"
   },
   "dependencies": {

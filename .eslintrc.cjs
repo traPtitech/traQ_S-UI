@@ -5,7 +5,7 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    './eslint-vue-ts-recommended.js',
+    './eslint-vue-ts-recommended.cjs',
     'plugin:@typescript-eslint/recommended',
     'plugin:vue/vue3-recommended',
     'plugin:prettier/recommended'
@@ -54,8 +54,8 @@ module.exports = {
   overrides: [
     {
       // 直下のファイル
-      files: ['*.{js,mjs}'],
-      excludedFiles: ['*/**/*.{js,mjs}'],
+      files: ['*.cjs'],
+      excludedFiles: ['*/**/*.cjs'],
       env: {
         node: true
       },
@@ -64,7 +64,7 @@ module.exports = {
       }
     },
     {
-      files: ['**/tests/e2e/**/*.{js,mjs,jsx,ts,tsx}'],
+      files: ['**/tests/e2e/**/*.{js,cjs,jsx,ts,tsx}'],
       extends: ['plugin:cypress/recommended'],
       env: {
         node: true

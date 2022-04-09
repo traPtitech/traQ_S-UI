@@ -1,3 +1,4 @@
+/* eslint-env node */
 /* eslint-disable no-console */
 import axios from 'axios'
 import postcss from 'postcss'
