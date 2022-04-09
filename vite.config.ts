@@ -13,6 +13,7 @@ import { DEV_SERVER_PROXY_HOST } from './dev.config'
 import browserslist from 'browserslist'
 import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
 import GithubActionsReporter from 'vitest-github-actions-reporter'
+import autoprefixer from 'autoprefixer'
 
 const keepAliveAgent = new HttpsAgent({ keepAlive: true })
 
@@ -75,6 +76,9 @@ export default defineConfig(({ command, mode }) => ({
         `,
         charset: false
       }
+    },
+    postcss: {
+      plugins: mode === 'production' ? [autoprefixer()] : []
     },
     devSourcemap: true
   },
