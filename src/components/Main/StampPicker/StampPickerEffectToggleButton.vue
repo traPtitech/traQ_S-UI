@@ -2,7 +2,7 @@
   <button
     :class="$style.container"
     :aria-selected="isActive"
-    @click="emit('click')"
+    :data-has-effect="hasEffect"
   >
     <a-icon name="effect" />
   </button>
@@ -14,20 +14,18 @@ import AIcon from '/@/components/UI/AIcon.vue'
 withDefaults(
   defineProps<{
     isActive?: boolean
+    hasEffect?: boolean
   }>(),
   {
-    isActive: false
+    isActive: false,
+    hasEffect: false
   }
 )
-
-const emit = defineEmits<{
-  (e: 'click'): void
-}>()
 </script>
 
 <style lang="scss" module>
 .container {
-  @include color-ui-secondary;
+  @include color-ui-secondary-inactive;
   @include background-secondary;
   display: flex;
   align-items: center;
@@ -40,12 +38,14 @@ const emit = defineEmits<{
     style: solid;
     color: transparent;
   }
-  opacity: 0.5;
   cursor: pointer;
 
   &[aria-selected='true'] {
     @include color-accent-primary;
     border-color: $theme-accent-primary-default;
+  }
+  &[data-has-effect='true'] {
+    @include color-accent-primary;
   }
 }
 </style>

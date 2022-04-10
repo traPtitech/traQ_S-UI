@@ -4,7 +4,8 @@
       <div :class="$style.state">
         <a-icon v-if="hasAttachments" name="file" mdi :class="$style.icon" />
         <div
-          :class="[$style.text, 'markdown-inline-body']"
+          class="markdown-inline-body"
+          :class="$style.text"
           v-html="renderedContent"
         ></div>
       </div>

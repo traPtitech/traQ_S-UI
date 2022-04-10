@@ -4,31 +4,40 @@
       <div :class="$style.inputContainer">
         <filter-input
           v-model="filterState.query"
-          :placeholder="placeholder"
+          :class="$style.filterInput"
+          placeholder="スタンプを検索"
           disable-ime
           focus-on-mount
           @enter="onFilterEnter"
         />
-        <!--
-          <stamp-picker-effect-toggle-button
-            :isActive="effectSelectorState.shouldShowEffectSelector"
-            @click="toggleShowEffect"
-          />
-        -->
+        <stamp-picker-effect-toggle-button
+          v-if="isEffectEnabled"
+          :class="$style.effectButton"
+          :is-active="shouldShowEffectSelector"
+          :has-effect="hasEffect"
+          @click="toggleShowEffect"
+        />
       </div>
       <stamp-picker-stamp-list
+        v-show="!shouldShowEffectSelector"
         :class="$style.stampList"
         :stamps="stamps"
         :animation-keys="animationKeys"
         @input-stamp="onInputStamp"
         @hover-stamp="onHoverStamp"
       />
-      <!--
-        <stamp-picker-effect-selector
-          :class="$style.effectSelector"
-          v-if="effectSelectorState.shouldShowEffectSelector"
-        />
-      -->
+      <stamp-picker-effect-selector
+        v-if="shouldShowEffectSelector"
+        v-model:size-effect="selectedSizeEffect"
+        v-model:anime-effects="selectedAnimeEffects"
+        :class="$style.effectSelector"
+        :stamp-id="preselected"
+      />
+      <stamp-picker-preview
+        :stamp-id="preselected"
+        :size-effect="selectedSizeEffect"
+        :anime-effects="selectedAnimeEffects"
+      />
       <stamp-picker-stamp-set-selector
         v-model:current-stamp-set="currentStampSet"
         :class="$style.paletteSelector"
@@ -47,14 +56,16 @@ import type { StampId } from '/@/types/entity-ids'
 import useStampList from './composables/useStampList'
 import useStampSetSelector from './composables/useStampSetSelector'
 import useEffectSelector from './composables/useEffectSelector'
-import useStampFilterPlaceholder from './composables/useStampFilterPlaceholder'
-//import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
-//import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
+import useStampPreselector from './composables/useStampPreselector'
+import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
+import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
+import StampPickerPreview from './StampPickerPreview.vue'
 import { useStampPicker } from '/@/store/ui/stampPicker'
 import { ref } from 'vue'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 
-const { selectHandler, currentStampSet, closeStampPicker } = useStampPicker()
+const { selectHandler, isEffectEnabled, currentStampSet, closeStampPicker } =
+  useStampPicker()
 const { upsertLocalStampHistory } = useStampHistory()
 
 const animationKeys = ref(new Map<StampId, number>())
@@ -66,12 +77,22 @@ const incrementAnimationKey = (id: StampId) => {
 const { stamps, filterState } = useStampList(currentStampSet)
 const { stampSetState } = useStampSetSelector()
 
-const { shouldShowEffectSelector, toggleShowEffect } = useEffectSelector()
-const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
+const {
+  shouldShowEffectSelector,
+  selectedSizeEffect,
+  selectedAnimeEffects,
+  hasEffect,
+  toggleShowEffect
+} = useEffectSelector()
+const { preselected, onHoverStamp } = useStampPreselector()
 
 const onInputStamp = (id: StampId) => {
   upsertLocalStampHistory(id, new Date())
-  selectHandler.value({ id })
+  selectHandler.value({
+    id,
+    sizeEffect: selectedSizeEffect.value,
+    animeEffects: selectedAnimeEffects.value
+  })
   incrementAnimationKey(id)
 }
 const onFilterEnter = () => {
@@ -98,31 +119,24 @@ const onFilterEnter = () => {
   }
 }
 .inputContainer {
+  display: flex;
   margin: 8px;
   flex-shrink: 0;
-  display: grid;
-  grid-template-columns: 1fr /* 40px */;
-  gap: 8px;
 }
-.paletteSelector,
-.effectSelector {
-  flex-shrink: 0;
-}
-.stampList {
-  margin: 0 8px;
-  padding-bottom: 12px;
+.filterInput {
+  flex-grow: 1;
 }
 .effectButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 30px;
-  border: {
-    radius: 4px;
-    width: 2px;
-    style: solid;
-  }
-  cursor: pointer;
+  margin-left: 8px;
+}
+.stampList {
+  padding: 0 4px;
+  padding-bottom: 12px;
+}
+.effectSelector {
+  flex: 1 0;
+}
+.paletteSelector {
+  flex-shrink: 0;
 }
 </style>

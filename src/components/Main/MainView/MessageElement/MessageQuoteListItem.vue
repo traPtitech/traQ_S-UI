@@ -11,7 +11,7 @@
       :user-id="message.userId"
     />
     <div :class="$style.messageContents">
-      <div :class="['markdown-body', $style.content]" v-html="content" />
+      <markdown-content :content="content" />
     </div>
     <message-quote-list-item-footer :class="$style.footer" :message="message" />
   </div>
@@ -29,6 +29,7 @@ import type { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useChannelsStore } from '/@/store/entities/channels'
+import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 
 const props = defineProps<{
   parentMessageChannelId: ChannelId | DMChannelId
@@ -97,15 +98,8 @@ const content = computed(
   padding-top: 4px;
   padding-left: 8px;
   min-width: 0;
-}
 
-.content {
-  grid-area: message-contents;
-  word-break: break-word;
-  word-wrap: break-word;
-  line-break: loose;
-
-  & pre {
+  pre {
     white-space: pre-wrap;
   }
 }

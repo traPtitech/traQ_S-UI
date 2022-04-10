@@ -6,6 +6,7 @@ import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import type { Ref } from 'vue'
 import useInsertText from '/@/composables/dom/useInsertText'
 import { useStampsStore } from '/@/store/entities/stamps'
+import { constructStampString } from '/@/lib/markdown/constructStampString'
 
 const useTextStampPickerInvoker = (
   text: Ref<string>,
@@ -19,12 +20,12 @@ const useTextStampPickerInvoker = (
   const selecterHandler: StampSelectHandler = stampData => {
     const stampName = stampsMap.value.get(stampData.id)?.name
     if (!stampName) return
-    const size = stampData.size ? `.${stampData.size}` : ''
-    const effects =
-      stampData.effects && stampData.effects.length > 0
-        ? `.${stampData.effects.join('.')}`
-        : ''
-    const stampText = `:${stampName}${size}${effects}:`
+
+    const stampText = constructStampString(
+      stampName,
+      stampData.sizeEffect,
+      stampData.animeEffects
+    )
 
     if (!textareaRef.value) {
       text.value += stampText
@@ -34,7 +35,12 @@ const useTextStampPickerInvoker = (
     insertText(stampText)
   }
 
-  return useStampPickerInvoker(selecterHandler, positionElement, positionOf)
+  return useStampPickerInvoker(
+    selecterHandler,
+    positionElement,
+    true,
+    positionOf
+  )
 }
 
 export default useTextStampPickerInvoker
