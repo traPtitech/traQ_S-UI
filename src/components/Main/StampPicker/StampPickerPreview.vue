@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.wrapper">
-      <inline-markdown :content="previewText" />
+      <markdown-content :content="rendered" />
     </div>
     <div :class="$style.previewText">
       {{ previewText }}
@@ -13,10 +13,11 @@
 import type { StampId } from '/@/types/entity-ids'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
-import { computed } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import type { Stamp } from '@traptitech/traq'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 import { constructStampString } from '/@/lib/markdown/constructStampString'
+import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
+import { render } from '/@/lib/markdown/markdown'
 
 const props = defineProps<{
   stampId: StampId | undefined
@@ -39,6 +40,11 @@ const stampName = computed(() => {
 const previewText = computed(() =>
   constructStampString(stampName.value, props.sizeEffect, props.animeEffects)
 )
+
+const rendered = ref('')
+watchEffect(async () => {
+  rendered.value = (await render(previewText.value)).renderedText
+})
 </script>
 
 <style lang="scss" module>
@@ -56,6 +62,7 @@ const previewText = computed(() =>
   height: 32px;
   margin: 4px;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .previewText {
