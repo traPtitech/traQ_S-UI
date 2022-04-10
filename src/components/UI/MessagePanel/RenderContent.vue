@@ -16,7 +16,8 @@
       :size="20"
     />
     <span
-      :class="[$style.content, 'markdown-inline-body']"
+      class="markdown-inline-body"
+      :class="$style.content"
       v-html="renderedContent"
     />
   </div>
