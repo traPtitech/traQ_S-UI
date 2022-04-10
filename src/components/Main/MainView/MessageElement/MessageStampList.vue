@@ -103,6 +103,7 @@ const { toggleStampPicker } = useStampPickerInvoker(
     }
   },
   listEle,
+  false,
   'top-left'
 )
 </script>

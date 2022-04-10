@@ -11,6 +11,7 @@
           @enter="onFilterEnter"
         />
         <stamp-picker-effect-toggle-button
+          v-if="isEffectEnabled"
           :class="$style.effectButton"
           :is-active="shouldShowEffectSelector"
           :has-effect="hasEffect"
@@ -63,7 +64,8 @@ import { useStampPicker } from '/@/store/ui/stampPicker'
 import { ref } from 'vue'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 
-const { selectHandler, currentStampSet, closeStampPicker } = useStampPicker()
+const { selectHandler, isEffectEnabled, currentStampSet, closeStampPicker } =
+  useStampPicker()
 const { upsertLocalStampHistory } = useStampHistory()
 
 const animationKeys = ref(new Map<StampId, number>())
@@ -86,7 +88,11 @@ const { preselected, onHoverStamp } = useStampPreselector()
 
 const onInputStamp = (id: StampId) => {
   upsertLocalStampHistory(id, new Date())
-  selectHandler.value({ id })
+  selectHandler.value({
+    id,
+    sizeEffect: selectedSizeEffect.value,
+    animeEffects: selectedAnimeEffects.value
+  })
   incrementAnimationKey(id)
 }
 const onFilterEnter = () => {

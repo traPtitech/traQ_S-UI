@@ -144,13 +144,17 @@ const addStamp = async (stampId: StampId) => {
 
 const containerEle = ref<HTMLDivElement>()
 const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
-  useStampPickerInvoker(async stampData => {
-    try {
-      await apis.addMessageStamp(props.messageId, stampData.id)
-    } catch {
-      addErrorToast('メッセージにスタンプを追加できませんでした')
-    }
-  }, containerEle)
+  useStampPickerInvoker(
+    async stampData => {
+      try {
+        await apis.addMessageStamp(props.messageId, stampData.id)
+      } catch {
+        addErrorToast('メッセージにスタンプを追加できませんでした')
+      }
+    },
+    containerEle,
+    false
+  )
 
 const {
   position: contextMenuPosition,

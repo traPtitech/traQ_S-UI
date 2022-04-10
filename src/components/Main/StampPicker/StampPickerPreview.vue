@@ -16,6 +16,7 @@ import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
 import { computed } from 'vue'
 import type { Stamp } from '@traptitech/traq'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { constructStampString } from '/@/lib/markdown/constructStampString'
 
 const props = defineProps<{
   stampId: StampId | undefined
@@ -35,16 +36,8 @@ const stampName = computed(() => {
   return stampsMap.value.get(props.stampId)!.name
 })
 
-const sizeEffectString = computed(() =>
-  props.sizeEffect ? `.${props.sizeEffect}` : ''
-)
-const animeEffectString = computed(() =>
-  props.animeEffects.map(e => `.${e}`).join('')
-)
-
-const previewText = computed(
-  () =>
-    `:${stampName.value}${sizeEffectString.value}${animeEffectString.value}:`
+const previewText = computed(() =>
+  constructStampString(stampName.value, props.sizeEffect, props.animeEffects)
 )
 </script>
 

@@ -10,8 +10,8 @@ import type { StampId } from '/@/types/entity-ids'
 
 export type SelectedStampData = {
   id: StampId
-  size?: SizeEffect // TODO
-  effects?: AnimeEffect[] // TODO
+  sizeEffect?: SizeEffect
+  animeEffects?: AnimeEffect[]
 }
 export type StampSelectHandler = (stamp: SelectedStampData) => void
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -55,6 +55,7 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
     type: 'history',
     id: ''
   })
+  const isEffectEnabled = ref(false)
   const position = ref<Point>()
   const alignment = ref<AlignmentPosition>('top-right')
 
@@ -62,12 +63,14 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
 
   const closeStampPicker = () => {
     selectHandler.value = defaultSelectHandler
+    isEffectEnabled.value = false
     position.value = undefined
   }
 
   return {
     selectHandler,
     currentStampSet,
+    isEffectEnabled,
     position,
     alignment,
     isStampPickerShown,
@@ -86,10 +89,12 @@ export const useStampPicker = convertToRefsStore(useStampPickerPinia)
 export const useStampPickerInvoker = (
   newSelectHandler: StampSelectHandler,
   element: Ref<HTMLElement | undefined>,
+  argIsEffectEnabled: boolean,
   newAlignment: AlignmentPosition = 'top-right'
 ) => {
   const {
     selectHandler,
+    isEffectEnabled,
     position,
     alignment,
     isStampPickerShown,
@@ -121,6 +126,7 @@ export const useStampPickerInvoker = (
   const openStampPicker = () => {
     setPosition()
     selectHandler.value = newSelectHandler
+    isEffectEnabled.value = argIsEffectEnabled
     alignment.value = newAlignment
 
     isThisOpen.value = true
