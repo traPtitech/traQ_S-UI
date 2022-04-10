@@ -29,7 +29,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'inputStamp', id: StampId): void
-  (e: 'hoverStamp', name?: string): void
+  (e: 'hoverStamp', id: StampId): void
 }>()
 
 const targetRef = shallowRef<HTMLElement | null>(null)
@@ -49,8 +49,8 @@ const stampsWithAnimationKey = computed(() =>
 const onInputStamp = (id: StampId) => {
   emit('inputStamp', id)
 }
-const onHoverStamp = (name?: string) => {
-  emit('hoverStamp', name)
+const onHoverStamp = (id: StampId) => {
+  emit('hoverStamp', id)
 }
 </script>
 

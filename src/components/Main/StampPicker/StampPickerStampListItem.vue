@@ -8,7 +8,6 @@
       :class="$style.item"
       @click="onClickStamp"
       @mouseenter="onStampHover"
-      @mouseleave="onStampUnhover"
     />
   </transition>
 </template>
@@ -25,17 +24,14 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'inputStamp', id: StampId): void
-  (e: 'hoverStamp', name?: string): void
+  (e: 'hoverStamp', id: StampId): void
 }>()
 
 const onClickStamp = () => {
   emit('inputStamp', props.stamp.id)
 }
 const onStampHover = () => {
-  emit('hoverStamp', props.stamp.name)
-}
-const onStampUnhover = () => {
-  emit('hoverStamp')
+  emit('hoverStamp', props.stamp.id)
 }
 </script>
 
