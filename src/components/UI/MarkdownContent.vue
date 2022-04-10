@@ -1,5 +1,5 @@
 <template>
-  <div :class="['markdown-body', $style.content]" v-html="content" />
+  <span class="markdown-body" :class="$style.content" v-html="content" />
 </template>
 
 <script lang="ts" setup>
@@ -10,7 +10,6 @@ defineProps<{
 
 <style lang="scss" module>
 .content {
-  grid-area: message-contents;
   word-break: normal;
   overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;

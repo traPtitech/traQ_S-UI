@@ -15,7 +15,7 @@
     <div :class="$style.contentContainer">
       <div :class="$style.markdownWrapper">
         <div ref="contentRef" :class="$style.markdownContainer">
-          <search-result-message-element-content
+          <markdown-content
             :content="renderedContent"
             @click="toggleSpoilerHandler"
           />
@@ -55,7 +55,7 @@ import { isFile } from '/@/lib/guard/embeddingOrUrl'
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
-import SearchResultMessageElementContent from './SearchResultMessageElementContent.vue'
+import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import useToggle from '/@/composables/utils/useToggle'
 import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
 import useBoxSize from '/@/composables/dom/useBoxSize'

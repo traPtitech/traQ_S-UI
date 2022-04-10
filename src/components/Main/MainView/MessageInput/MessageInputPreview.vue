@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div
-      :class="['markdown-body', $style.preview]"
+    <markdown-content
+      :class="$style.preview"
       :data-is-mobile="isMobile"
-      v-html="previewRendered"
+      :content="previewRendered"
     />
     <div
       v-for="quoteMessage in quoteMessages"
@@ -21,6 +21,7 @@ import { ref, watchEffect } from 'vue'
 import { isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
 import { useResponsiveStore } from '/@/store/ui/responsive'
+import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 
 const props = defineProps<{
   text: string
@@ -43,11 +44,6 @@ watchEffect(async () => {
   max-height: 160px;
   overflow-y: auto;
   scrollbar-gutter: stable;
-
-  word-break: normal;
-  overflow-wrap: break-word; // for Safari
-  overflow-wrap: anywhere;
-  line-break: loose;
 
   &[data-is-mobile='true'] {
     max-height: 70px;

@@ -8,7 +8,7 @@
       :updated-at="message.updatedAt"
     />
     <div :class="$style.messageContents">
-      <message-markdown v-show="!isEditing" :message-id="messageId" />
+      <markdown-content v-show="!isEditing" :content="renderedContent" />
       <message-editor
         v-if="isEditing"
         :raw-content="message.content"
@@ -38,7 +38,6 @@
 
 <script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import MessageMarkdown from '/@/components/UI/MessageMarkdown.vue'
 import MessageHeader from './MessageHeader.vue'
 import MessageEditor from './MessageEditor.vue'
 import MessageFileList from './MessageFileList.vue'
@@ -49,6 +48,8 @@ import type { MessageId } from '/@/types/entity-ids'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
+import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 const props = defineProps<{
   messageId: MessageId
@@ -63,6 +64,11 @@ const isEditing = computed(() => props.messageId === editingMessageId.value)
 const finishEditing = () => {
   editingMessageId.value = undefined
 }
+
+const { renderedContentMap } = useMessagesView()
+const renderedContent = computed(
+  () => renderedContentMap.value.get(props.messageId) ?? ''
+)
 
 const { embeddingsState } = useEmbeddings(props)
 </script>
