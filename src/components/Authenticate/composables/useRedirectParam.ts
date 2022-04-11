@@ -15,11 +15,11 @@ const useRedirectParam = () => {
     }
 
     try {
-      const u = new URL(url.value)
+      const u = new URL(url.value, location.href)
       if (u.origin === location.origin) {
-        // /authorize はrouter.replaceではなくサーバーへのGETが必要
+        // /api/oauth/authorize はrouter.replaceではなくサーバーへのGETが必要
         // ref: https://github.com/traPtitech/traQ/pull/1413
-        if (u.pathname === '/authorize') {
+        if (u.pathname === '/api/oauth/authorize') {
           location.href = url.value
           return
         }
