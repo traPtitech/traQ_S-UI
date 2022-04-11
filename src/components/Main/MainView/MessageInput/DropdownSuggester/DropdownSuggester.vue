@@ -85,7 +85,7 @@ const select = (word: WordOrConfirmedPart) => {
 .container {
   @include color-ui-secondary;
   @include background-primary;
-  position: absolute;
+  position: fixed;
   transform: translateY(-100%);
   border: solid 2px $theme-background-secondary-border;
   border-radius: 4px;

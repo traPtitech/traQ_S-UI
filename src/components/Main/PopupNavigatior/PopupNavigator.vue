@@ -223,7 +223,7 @@ watch(isPopupNavigatorShown, newIsPopupNavigatorShown => {
   @include color-ui-primary;
   @include background-primary;
   @include drop-shadow-default;
-  position: absolute;
+  position: fixed;
   border-radius: 4px;
   user-select: none;
   white-space: nowrap;
