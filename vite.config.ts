@@ -14,6 +14,7 @@ import browserslist from 'browserslist'
 import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
 import GithubActionsReporter from 'vitest-github-actions-reporter'
 import autoprefixer from 'autoprefixer'
+import { PluginTrapAuth } from '@traptitech/vite-plugin-trap-auth'
 
 const keepAliveAgent = new HttpsAgent({ keepAlive: true })
 
@@ -124,7 +125,8 @@ export default defineConfig(({ command, mode }) => ({
         ]
       }
     }),
-    brotli()
+    brotli(),
+    PluginTrapAuth()
   ],
   test: {
     include: ['tests/unit/**/*.spec.ts'],
