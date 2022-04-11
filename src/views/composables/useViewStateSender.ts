@@ -13,7 +13,11 @@ const useViewStateSender = () => {
 
   const currentChannelId = computed(() => {
     // ルートがチャンネルでないときは閲覧チャンネルをnullにするため
-    if (route.name !== RouteName.Channel && route.name !== RouteName.User) {
+    if (
+      route.name !== RouteName.Channel &&
+      route.name !== RouteName.User &&
+      route.name !== RouteName.File
+    ) {
       return undefined
     }
     if (
