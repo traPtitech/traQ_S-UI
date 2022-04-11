@@ -51,7 +51,7 @@ const containerStyle = computed(() => ({
 }
 
 .img {
-  html[data-stamp-edge] & {
+  html[data-stamp-edge='true'] & {
     filter: drop-shadow(0.1px 0.1px 0 rgb(255, 255, 255, 0.1))
       drop-shadow(0.1px -0.1px 0 rgb(255, 255, 255, 0.1))
       drop-shadow(-0.1px 0.1px 0 rgb(255, 255, 255, 0.1))
