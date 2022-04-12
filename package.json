@@ -40,7 +40,7 @@
     "pica": "^9.0.1",
     "skyway-js": "^4.4.4",
     "text-field-edit": "^3.1.9001",
-    "throttle-debounce": "^3.0.1",
+    "throttle-debounce": "^4.0.0",
     "turndown": "^7.1.1",
     "turndown-plugin-gfm": "^1.0.2",
     "vue": "^3.2.32",
