@@ -96,7 +96,7 @@
     "vitest-github-actions-reporter": "^0.3.2",
     "vue-tsc": "^0.34.6",
     "workbox-cacheable-response": "^6.5.2",
-    "workbox-core": "^6.5.2",
+    "workbox-core": "^6.5.3",
     "workbox-expiration": "^6.5.2",
     "workbox-precaching": "^6.5.2",
     "workbox-routing": "^6.5.2",
