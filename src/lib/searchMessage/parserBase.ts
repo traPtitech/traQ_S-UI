@@ -95,7 +95,7 @@ type UsernameToId =
  * @typeParam F フィルターの型
  * @typeParam T フィルター種別の型
  * @param parser `extracted`をフィルター種別`type`とみなして変換するパーサー
- * @param filterExtractorMap フィルター種別とextractorのマップ
+ * @param extractor フィルター種別とextractorのマップ
  * @param skipCondition チェックを飛ばす条件 ':'が含まれていない など
  * @returns
  */

@@ -196,22 +196,20 @@ const filterOrStringToSearchMessageQuery = (
     case 'after':
     case 'before':
       return {
-        ...emptySearchMessageQueryObject,
         [f.type]: f.value.toISOString()
       }
     case 'in': {
       const channelId = f.value === InHereToken ? currentChannelId : f.value
-      return { ...emptySearchMessageQueryObject, in: channelId }
+      return { in: channelId }
     }
     case 'to':
     case 'from':
     case 'citation':
-      return { ...emptySearchMessageQueryObject, [f.type]: f.value }
+      return { [f.type]: f.value }
     case 'attrFlag':
-      return { ...emptySearchMessageQueryObject, [f.value]: !f.negate }
+      return { [f.value]: !f.negate }
     case 'mediaFlag':
       return {
-        ...emptySearchMessageQueryObject,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         [`has${f.value[0]!.toUpperCase() + f.value.slice(1)}`]: !f.negate
       }
