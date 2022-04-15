@@ -225,18 +225,37 @@ export const createQueryParser = (store: StoreForParser) => {
   const parseQueryFragmentToFilter =
     parseQueryFragmentToFilterWithoutStore(store)
 
-  return async (query: string): Promise<SearchMessageQueryObject> => {
+  return async (
+    query: string
+  ): Promise<{
+    normalizedQuery: string
+    queryObject: SearchMessageQueryObject
+  }> => {
     const parseds = await Promise.all(
       query
         .split(' ')
         .filter(q => q)
         .map(parseQueryFragmentToFilter)
     )
-    return parseds
-      .map(f =>
-        filterOrStringToSearchMessageQuery(store.getCurrentChannelId(), f)
-      )
+
+    const currentChannelPath = store.getCurrentChannelPath()
+    const currentChannelId = currentChannelPath
+      ? store.channelPathToId(currentChannelPath)
+      : undefined
+
+    const normalizedQuery = parseds
+      .map(q => {
+        if (typeof q === 'string') return q
+        return q.type === 'in' && q.value === InHereToken
+          ? `in:${currentChannelPath}`
+          : q.raw
+      })
+      .join(' ')
+    const queryObject = parseds
+      .map(f => filterOrStringToSearchMessageQuery(currentChannelId, f))
       .reduce(mergeSearchMessageQueryObject, emptySearchMessageQueryObject)
+
+    return { normalizedQuery, queryObject }
   }
 }
 

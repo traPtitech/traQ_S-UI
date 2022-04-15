@@ -82,7 +82,7 @@ export const makePrefixedFilterExtractor =
 export type StoreForParser = {
   channelPathToId: ChannelPathToId
   usernameToId: UsernameToId
-  getCurrentChannelId: () => ChannelId | undefined
+  getCurrentChannelPath: () => string | undefined
 }
 
 type ChannelPathToId = (path: string) => ChannelId | undefined

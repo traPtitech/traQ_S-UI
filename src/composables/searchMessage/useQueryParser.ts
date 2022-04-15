@@ -10,14 +10,19 @@ import type { ViewInformation } from '/@/store/ui/mainView'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useUsersStore } from '/@/store/entities/users'
-import type { User } from '@traptitech/traq'
+import type { Channel, User } from '@traptitech/traq'
+import { channelIdToPathString } from '/@/lib/channel'
+import type { ChannelId } from '/@/types/entity-ids'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const getStoreForParser = ({
   primaryView,
+  channelsMap,
   channelTree,
   fetchUserByName
 }: {
   primaryView: Ref<ViewInformation>
+  channelsMap: Ref<ReadonlyMap<ChannelId, Channel>>
   channelTree: Ref<ChannelTree>
   fetchUserByName: (param: { username: string }) => Promise<User | undefined>
 }): StoreForParser => ({
@@ -32,20 +37,29 @@ const getStoreForParser = ({
     const user = await fetchUserByName({ username })
     return user?.id
   },
-  getCurrentChannelId: () => {
-    return primaryView.value.type === 'channel' ||
-      primaryView.value.type === 'dm'
-      ? primaryView.value.channelId
+  getCurrentChannelPath: () => {
+    const channelId =
+      primaryView.value.type === 'channel' || primaryView.value.type === 'dm'
+        ? primaryView.value.channelId
+        : undefined
+    return channelId
+      ? channelIdToPathString(channelId, channelsMap.value)
       : undefined
   }
 })
 
 const useQueryParer = () => {
+  const { channelsMap } = useChannelsStore()
   const { channelTree } = useChannelTree()
   const { primaryView } = useMainViewStore()
   const { fetchUserByName } = useUsersStore()
   const parseQuery = createQueryParser(
-    getStoreForParser({ primaryView, channelTree, fetchUserByName })
+    getStoreForParser({
+      primaryView,
+      channelsMap,
+      channelTree,
+      fetchUserByName
+    })
   )
 
   return { parseQuery, toSearchMessageParam }
