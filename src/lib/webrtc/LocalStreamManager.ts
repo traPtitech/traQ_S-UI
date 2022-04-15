@@ -85,6 +85,7 @@ export default class LocalStreamManager {
     return this.destination.stream
   }
 
+  private isMuted = false
   private nodes: AudioNode[] = []
   private analyser!: AnalyserNode
   private readonly destination: MediaStreamAudioDestinationNode
@@ -115,6 +116,7 @@ export default class LocalStreamManager {
     this.unsetInput()
 
     this.inputStream = newInputStream
+    this.setInputStreamTrackEnabled(!this.isMuted)
 
     this.analyser = this.context.createAnalyserNode()
     this.nodes.push(this.analyser)
@@ -193,15 +195,20 @@ export default class LocalStreamManager {
   }
 
   /* mute methods */
+
   mute() {
-    this.inputStream.getAudioTracks().forEach(track => {
-      track.enabled = false
-    })
+    this.isMuted = true
+    this.setInputStreamTrackEnabled(false)
   }
 
   unmute() {
+    this.isMuted = false
+    this.setInputStreamTrackEnabled(true)
+  }
+
+  private setInputStreamTrackEnabled(v: boolean) {
     this.inputStream.getAudioTracks().forEach(track => {
-      track.enabled = true
+      track.enabled = v
     })
   }
 
