@@ -12,6 +12,8 @@ const mockUserId = 'user-id'
 const mockUserName = 'user'
 const mockCurrentChannelPath = 'current/channel'
 const mockCurrentChannelId = 'current-channel-id'
+const mockMyUserId = 'my-user-id'
+const mockMyUsername = 'myUsername'
 
 describe('parseQuery', () => {
   const store: StoreForParser = {
@@ -28,9 +30,13 @@ describe('parseQuery', () => {
       if (username === mockUserName) {
         return mockUserId
       }
+      if (username === mockMyUsername) {
+        return mockMyUserId
+      }
       return undefined
     },
-    getCurrentChannelPath: () => mockCurrentChannelPath
+    getCurrentChannelPath: () => mockCurrentChannelPath,
+    getMyUsername: () => mockMyUsername
   }
   const parseQuery = createQueryParser(store)
 
@@ -88,6 +94,13 @@ describe('parseQuery', () => {
     expect(normalizedQuery).toBe(query)
     expect(queryObject.word).toBe('lorem ipsum')
     expect(queryObject.from).toEqual(mockUserId)
+  })
+  it('can parse query with me', async () => {
+    const query = 'lorem ipsum to:me'
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(`lorem ipsum to:${mockMyUsername}`)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.to).toEqual(mockMyUserId)
   })
   it('can parse query with an invalid prefix', async () => {
     const query = 'invalid:'

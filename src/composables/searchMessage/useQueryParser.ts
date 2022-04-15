@@ -1,4 +1,5 @@
-import type { Ref } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
+import { computed } from 'vue'
 import type { ChannelTree } from '/@/lib/channelTree'
 import { channelPathToId } from '/@/lib/channelTree'
 import type { StoreForParser } from '/@/lib/searchMessage/parserBase'
@@ -14,16 +15,19 @@ import type { Channel, User } from '@traptitech/traq'
 import { channelIdToPathString } from '/@/lib/channel'
 import type { ChannelId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useMeStore } from '/@/store/domain/me'
 
 const getStoreForParser = ({
   primaryView,
   channelsMap,
   channelTree,
+  myUsername,
   fetchUserByName
 }: {
   primaryView: Ref<ViewInformation>
   channelsMap: Ref<ReadonlyMap<ChannelId, Channel>>
   channelTree: Ref<ChannelTree>
+  myUsername: ComputedRef<string | undefined>
   fetchUserByName: (param: { username: string }) => Promise<User | undefined>
 }): StoreForParser => ({
   channelPathToId: path => {
@@ -45,7 +49,8 @@ const getStoreForParser = ({
     return channelId
       ? channelIdToPathString(channelId, channelsMap.value)
       : undefined
-  }
+  },
+  getMyUsername: () => myUsername.value
 })
 
 const useQueryParer = () => {
@@ -53,11 +58,13 @@ const useQueryParer = () => {
   const { channelTree } = useChannelTree()
   const { primaryView } = useMainViewStore()
   const { fetchUserByName } = useUsersStore()
+  const { detail: me } = useMeStore()
   const parseQuery = createQueryParser(
     getStoreForParser({
       primaryView,
       channelsMap,
       channelTree,
+      myUsername: computed(() => me.value?.name),
       fetchUserByName
     })
   )

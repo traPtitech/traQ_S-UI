@@ -83,6 +83,7 @@ export type StoreForParser = {
   channelPathToId: ChannelPathToId
   usernameToId: UsernameToId
   getCurrentChannelPath: () => string | undefined
+  getMyUsername: () => string | undefined
 }
 
 type ChannelPathToId = (path: string) => ChannelId | undefined
@@ -144,6 +145,7 @@ export const dateParser = <T extends string>(
 }
 
 export const InHereToken = Symbol('in:here')
+export const FromToMeToken = Symbol('from:me / to:me')
 
 export const channelParser = <T extends string>(
   channelPathToId: ChannelPathToId,
@@ -162,10 +164,14 @@ export const channelParser = <T extends string>(
 export const userParser = async <T extends string>(
   usernameToId: UsernameToId,
   extracted: ExtractedFilter<T>
-): Promise<UserId | undefined> => {
+): Promise<UserId | typeof FromToMeToken | undefined> => {
   const username = extracted.body.startsWith('@')
     ? extracted.body.slice(1)
     : extracted.body
+
+  if (username === 'me') {
+    return FromToMeToken
+  }
 
   return usernameToId(username)
 }
