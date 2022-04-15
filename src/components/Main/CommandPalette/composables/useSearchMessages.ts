@@ -69,7 +69,7 @@ const usePaging = (
 const useSearchMessages = () => {
   const limit = 20
   const { parseQuery, toSearchMessageParam } = useQueryParer()
-  const { query, searchState, setSearchResult, resetPaging } =
+  const { query, searchState, setSearchResult, resetPaging, addSearchHistory } =
     useCommandPalette()
   const { extendMessagesMap } = useMessagesStore()
 
@@ -108,7 +108,9 @@ const useSearchMessages = () => {
     }
 
     fetchingSearchResult.value = true
-    const queryObject = await parseQuery(query)
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    addSearchHistory(normalizedQuery)
+
     const option = {
       limit,
       offset: currentOffset.value,

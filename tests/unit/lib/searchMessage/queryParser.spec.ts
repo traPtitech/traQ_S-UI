@@ -10,7 +10,10 @@ const mockChannelId = 'channel-id'
 const mockChannelName = 'general'
 const mockUserId = 'user-id'
 const mockUserName = 'user'
+const mockCurrentChannelPath = 'current/channel'
 const mockCurrentChannelId = 'current-channel-id'
+const mockMyUserId = 'my-user-id'
+const mockMyUsername = 'myUsername'
 
 describe('parseQuery', () => {
   const store: StoreForParser = {
@@ -18,137 +21,171 @@ describe('parseQuery', () => {
       if (channelPath === mockChannelName) {
         return mockChannelId
       }
+      if (channelPath === mockCurrentChannelPath) {
+        return mockCurrentChannelId
+      }
       return undefined
     },
     usernameToId: username => {
       if (username === mockUserName) {
         return mockUserId
       }
+      if (username === mockMyUsername) {
+        return mockMyUserId
+      }
       return undefined
     },
-    getCurrentChannelId: () => mockCurrentChannelId
+    getCurrentChannelPath: () => mockCurrentChannelPath,
+    getMyUsername: () => mockMyUsername
   }
   const parseQuery = createQueryParser(store)
 
   it('can parse query without filter', async () => {
     const query = 'lorem       ipsum'
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe('lorem ipsum')
+    expect(queryObject.word).toBe('lorem ipsum')
   })
   it('can parse query with date-filter', async () => {
     const query = 'lorem ipsum after:2021-01-23'
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
-    expect(parsed.after).toBe('2021-01-23T00:00:00.000Z')
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.after).toBe('2021-01-23T00:00:00.000Z')
   })
   it('can parse query with in-filter (prefix: `in:`)', async () => {
     const query = `lorem ipsum in:${mockChannelName}`
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
-    expect(parsed.in).toEqual(mockChannelId)
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.in).toEqual(mockChannelId)
   })
   it('can parse query with in-filter (prefix: `#`)', async () => {
     const query = `lorem ipsum #${mockChannelName}`
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
-    expect(parsed.in).toEqual(mockChannelId)
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.in).toEqual(mockChannelId)
   })
   it('can parse query with in-filter (prefix: `in:#`)', async () => {
     const query = `lorem ipsum in:#${mockChannelName}`
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
-    expect(parsed.in).toEqual(mockChannelId)
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.in).toEqual(mockChannelId)
   })
   it('can parse query with in:here', async () => {
     const query = 'lorem ipsum in:here'
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
-    expect(parsed.in).toEqual(mockCurrentChannelId)
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(`lorem ipsum in:${mockCurrentChannelPath}`)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.in).toEqual(mockCurrentChannelId)
   })
   it('can parse query with user-filter without @', async () => {
     const query = `lorem ipsum from:${mockUserName}`
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
-    expect(parsed.from).toEqual(mockUserId)
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.from).toEqual(mockUserId)
   })
   it('can parse query with user-filter with @', async () => {
     const query = `lorem ipsum from:@${mockUserName}`
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
-    expect(parsed.from).toEqual(mockUserId)
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.from).toEqual(mockUserId)
+  })
+  it('can parse query with me', async () => {
+    const query = 'lorem ipsum to:me'
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(`lorem ipsum to:${mockMyUsername}`)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.to).toEqual(mockMyUserId)
   })
   it('can parse query with an invalid prefix', async () => {
     const query = 'invalid:'
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('invalid:')
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('invalid:')
   })
   it('can parse query with empty prefixes (1)', async () => {
     const query = 'after: in: cite: from:'
-    const parsed = await parseQuery(query)
-    expect(parsed.after).toBeUndefined()
-    expect(parsed.in).toBeUndefined()
-    expect(parsed.from).toBeUndefined()
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.after).toBeUndefined()
+    expect(queryObject.in).toBeUndefined()
+    expect(queryObject.from).toBeUndefined()
   })
   it('can parse query with empty prefixes (2)', async () => {
     const query = '# @'
-    const parsed = await parseQuery(query)
-    expect(parsed.in).toBeUndefined()
-    expect(parsed.from).toBeUndefined()
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.in).toBeUndefined()
+    expect(queryObject.from).toBeUndefined()
   })
   it('can parse query with message-filter (url)', async () => {
     const query = `lorem ipsum cite:${mockMessageUrl}`
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
-    expect(parsed.citation).toEqual(mockMessageId)
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.citation).toEqual(mockMessageId)
   })
   it('can parse query with message-filter (not a message url)', async () => {
     const query = 'lorem ipsum cite:https://example.com/a'
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum cite:https://example.com/a')
-    expect(parsed.citation).toBeUndefined()
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum cite:https://example.com/a')
+    expect(queryObject.citation).toBeUndefined()
   })
   it('can parse query with message-filter (id)', async () => {
     const query = `lorem ipsum cite:${mockMessageId}`
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
-    expect(parsed.citation).toEqual(mockMessageId)
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.citation).toEqual(mockMessageId)
   })
   it('can parse query with media-flag-filter', async () => {
     const query = 'lorem has:image ipsum'
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
-    expect(parsed.hasImage).toBe(true)
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.hasImage).toBe(true)
   })
   it('can parse query with invalid media-flag-filter', async () => {
     const query = 'lorem has:ipsum'
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem has:ipsum')
-    expect(parsed.hasImage).toBeUndefined()
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem has:ipsum')
+    expect(queryObject.hasImage).toBeUndefined()
   })
   it('can parse query with invalid attr-flag-filter', async () => {
     const query = 'lorem ipsum is:bott'
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum is:bott')
-    expect(parsed.bot).toBeUndefined()
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum is:bott')
+    expect(queryObject.bot).toBeUndefined()
   })
   it('can parse query with negated flag-filter (not-style)', async () => {
     const query = 'lorem ipsum not:bot'
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
-    expect(parsed.bot).toBe(false)
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.bot).toBe(false)
   })
   it('can parse query with negated flag-filter (negation-style)', async () => {
     const query = 'lorem ipsum -is:bot'
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum')
-    expect(parsed.bot).toBe(false)
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.bot).toBe(false)
   })
   it('can parse query with wrong valued-filter', async () => {
     // @phantomさんは存在しないのでこのクエリはwordに入る
     const query = 'lorem ipsum from:@phantom'
-    const parsed = await parseQuery(query)
-    expect(parsed.word).toBe('lorem ipsum from:@phantom')
-    expect(parsed.from).toBeUndefined()
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum from:@phantom')
+    expect(queryObject.from).toBeUndefined()
   })
 })
 

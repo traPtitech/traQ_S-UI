@@ -103,9 +103,6 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
 
   const settleQuery = () => {
     query.value = currentInput.value
-    if (currentInput.value !== '') {
-      addSearchHistory(currentInput.value)
-    }
   }
 
   const addSearchHistory = (newHistory: string) => {
@@ -148,6 +145,7 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
     searchState,
     isCommandPaletteShown,
     settleQuery,
+    addSearchHistory,
     removeSearchHistory,
     openCommandPalette,
     closeCommandPalette,

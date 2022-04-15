@@ -82,7 +82,8 @@ export const makePrefixedFilterExtractor =
 export type StoreForParser = {
   channelPathToId: ChannelPathToId
   usernameToId: UsernameToId
-  getCurrentChannelId: () => ChannelId | undefined
+  getCurrentChannelPath: () => string | undefined
+  getMyUsername: () => string | undefined
 }
 
 type ChannelPathToId = (path: string) => ChannelId | undefined
@@ -95,7 +96,7 @@ type UsernameToId =
  * @typeParam F フィルターの型
  * @typeParam T フィルター種別の型
  * @param parser `extracted`をフィルター種別`type`とみなして変換するパーサー
- * @param filterExtractorMap フィルター種別とextractorのマップ
+ * @param extractor フィルター種別とextractorのマップ
  * @param skipCondition チェックを飛ばす条件 ':'が含まれていない など
  * @returns
  */
@@ -144,6 +145,7 @@ export const dateParser = <T extends string>(
 }
 
 export const InHereToken = Symbol('in:here')
+export const FromToMeToken = Symbol('from:me / to:me')
 
 export const channelParser = <T extends string>(
   channelPathToId: ChannelPathToId,
@@ -162,10 +164,14 @@ export const channelParser = <T extends string>(
 export const userParser = async <T extends string>(
   usernameToId: UsernameToId,
   extracted: ExtractedFilter<T>
-): Promise<UserId | undefined> => {
+): Promise<UserId | typeof FromToMeToken | undefined> => {
   const username = extracted.body.startsWith('@')
     ? extracted.body.slice(1)
     : extracted.body
+
+  if (username === 'me') {
+    return FromToMeToken
+  }
 
   return usernameToId(username)
 }

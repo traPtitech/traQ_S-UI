@@ -7,6 +7,7 @@ import type {
   FilterParser,
   StoreForParser
 } from './parserBase'
+import { FromToMeToken } from './parserBase'
 import {
   channelParser,
   InHereToken,
@@ -52,8 +53,8 @@ export type Filter =
   | { type: 'after'; raw: string; value: Date }
   | { type: 'before'; raw: string; value: Date }
   | { type: 'in'; raw: string; value: typeof InHereToken | ChannelId }
-  | { type: 'to'; raw: string; value: UserId }
-  | { type: 'from'; raw: string; value: UserId }
+  | { type: 'to'; raw: string; value: typeof FromToMeToken | UserId }
+  | { type: 'from'; raw: string; value: typeof FromToMeToken | UserId }
   | { type: 'citation'; raw: string; value: MessageId }
   | { type: 'attrFlag'; raw: string; value: AttrFlagFilterKey; negate: boolean }
   | {
@@ -186,6 +187,7 @@ const parseQueryFragmentToFilterWithoutStore = parseToFilterBase(
 /** 実際のクエリに対応するオブジェクトへの変換 */
 const filterOrStringToSearchMessageQuery = (
   currentChannelId: string | undefined,
+  myUserId: string | undefined,
   f: Filter | string
 ): SearchMessageQueryObject => {
   if (typeof f === 'string') {
@@ -196,22 +198,23 @@ const filterOrStringToSearchMessageQuery = (
     case 'after':
     case 'before':
       return {
-        ...emptySearchMessageQueryObject,
         [f.type]: f.value.toISOString()
       }
     case 'in': {
       const channelId = f.value === InHereToken ? currentChannelId : f.value
-      return { ...emptySearchMessageQueryObject, in: channelId }
+      return { in: channelId }
     }
     case 'to':
-    case 'from':
+    case 'from': {
+      const user = f.value === FromToMeToken ? myUserId : f.value
+      return { [f.type]: user }
+    }
     case 'citation':
-      return { ...emptySearchMessageQueryObject, [f.type]: f.value }
+      return { [f.type]: f.value }
     case 'attrFlag':
-      return { ...emptySearchMessageQueryObject, [f.value]: !f.negate }
+      return { [f.value]: !f.negate }
     case 'mediaFlag':
       return {
-        ...emptySearchMessageQueryObject,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         [`has${f.value[0]!.toUpperCase() + f.value.slice(1)}`]: !f.negate
       }
@@ -225,19 +228,58 @@ export const createQueryParser = (store: StoreForParser) => {
   const parseQueryFragmentToFilter =
     parseQueryFragmentToFilterWithoutStore(store)
 
-  return async (query: string): Promise<SearchMessageQueryObject> => {
+  return async (
+    query: string
+  ): Promise<{
+    normalizedQuery: string
+    queryObject: SearchMessageQueryObject
+  }> => {
     const parseds = await Promise.all(
       query
         .split(' ')
         .filter(q => q)
         .map(parseQueryFragmentToFilter)
     )
-    return parseds
+
+    const currentChannelPath = store.getCurrentChannelPath()
+    const currentChannelId = currentChannelPath
+      ? store.channelPathToId(currentChannelPath)
+      : undefined
+    const myUsername = store.getMyUsername()
+    const myUserId = myUsername
+      ? await store.usernameToId(myUsername)
+      : undefined
+
+    const normalizedQuery = parseds
+      .map(q =>
+        parsedFilterToNormalizedString(q, currentChannelPath, myUsername)
+      )
+      .join(' ')
+    const queryObject = parseds
       .map(f =>
-        filterOrStringToSearchMessageQuery(store.getCurrentChannelId(), f)
+        filterOrStringToSearchMessageQuery(currentChannelId, myUserId, f)
       )
       .reduce(mergeSearchMessageQueryObject, emptySearchMessageQueryObject)
+
+    return { normalizedQuery, queryObject }
   }
+}
+
+const parsedFilterToNormalizedString = (
+  f: string | Filter,
+  currentChannelPath: string | undefined,
+  myUsername: string | undefined
+) => {
+  if (typeof f === 'string') {
+    return f
+  }
+  if (f.type === 'in' && f.value === InHereToken) {
+    return `in:${currentChannelPath}`
+  }
+  if ((f.type === 'from' || f.type === 'to') && f.value === FromToMeToken) {
+    return `${f.type}:${myUsername}`
+  }
+  return f.raw
 }
 
 // util
