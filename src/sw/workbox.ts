@@ -77,10 +77,8 @@ export const setupWorkbox = () => {
           headers: {
             'X-TRAQ-FILE-CACHE': 'true'
           }
-        }),
-        new ExpirationPlugin({
-          maxEntries: 100
         })
+        // スタンプの画像もここに入るので最大数を制限しない
       ]
     })
   )
