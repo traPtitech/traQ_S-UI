@@ -141,12 +141,12 @@ const removeSessionStorageRedirect = router.beforeResolve(() => {
 
   const redirectTo = sessionStorage.getItem(sessionStorageRedirectKey)
   if (redirectTo) {
+    sessionStorage.removeItem(sessionStorageRedirectKey)
+
     if (isServerRequestUrl(redirectTo)) {
       location.href = redirectTo
       return undefined
     }
-
-    sessionStorage.removeItem(sessionStorageRedirectKey)
     return redirectTo
   }
   return undefined
