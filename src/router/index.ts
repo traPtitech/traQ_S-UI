@@ -135,11 +135,9 @@ router.beforeEach((to, from) => {
 
 // 外部認証を利用してログインして戻ってきたときに、
 // 見ようとしていたページにリダイレクトする
-let once = false
-router.beforeResolve(() => {
-  if (once) return
+const removeSessionStorageRedirect = router.beforeResolve(() => {
+  removeSessionStorageRedirect() // 一回確認すればよいため
 
-  once = true
   const redirectTo = sessionStorage.getItem(sessionStorageRedirectKey)
   if (redirectTo) {
     sessionStorage.removeItem(sessionStorageRedirectKey)
