@@ -26,6 +26,8 @@ const apis = new Apis(
   })
 )
 
+export default apis
+
 export const buildFilePath = (fileId: FileId, withDlParam = false) =>
   `${BASE_PATH}/files/${fileId}${withDlParam ? '?dl=1' : ''}`
 
@@ -55,6 +57,26 @@ export const buildUserIconPathPublic = (username: string) =>
   `${embeddingOrigin}${BASE_PATH}/public/icon/${username}`
 
 export const OAuthDecidePath = `${BASE_PATH}/oauth2/authorize/decide`
+
+/**
+ * サーバーでの処理が必要なURLかどうかを判定する
+ *
+ * 例えば、`/api/v3/oauth2/authorize`は`router.replace`ではなくサーバーへのGETが必要
+ * ([詳細](https://github.com/traPtitech/traQ/pull/1413))
+ *
+ * @param url 判定するURL (相対URLだった場合はlocation.hrefをbaseとして絶対URLに変換して判定する)
+ */
+export const isServerRequestUrl = (url: string) => {
+  try {
+    const u = new URL(url, location.href)
+    if (u.origin === location.origin) {
+      if (u.pathname === '/api/v3/oauth2/authorize') {
+        return true
+      }
+    }
+  } catch {}
+  return false
+}
 
 export const formatResizeError = (e: unknown, defaultMessage: string) => {
   if (typeof e === 'string') return e
@@ -112,5 +134,3 @@ export type ParsedChannelEvent =
 
 export const parseChannelEvent = (event: ChannelEvent): ParsedChannelEvent =>
   event as ParsedChannelEvent
-
-export default apis

@@ -3,6 +3,7 @@ import { getFirstQuery } from '/@/lib/basic/url'
 import router, { RouteName } from '/@/router'
 import { useRoute } from 'vue-router'
 import { sessionStorageRedirectKey } from '/@/lib/dom/storage'
+import { isServerRequestUrl } from '/@/lib/apis'
 
 const useRedirectParam = () => {
   const route = useRoute()
@@ -14,17 +15,10 @@ const useRedirectParam = () => {
       return
     }
 
-    try {
-      const u = new URL(url.value, location.href)
-      if (u.origin === location.origin) {
-        // /api/v3/oauth2/authorize はrouter.replaceではなくサーバーへのGETが必要
-        // ref: https://github.com/traPtitech/traQ/pull/1413
-        if (u.pathname === '/api/v3/oauth2/authorize') {
-          location.href = url.value
-          return
-        }
-      }
-    } catch {}
+    if (isServerRequestUrl(url.value)) {
+      location.href = url.value
+      return
+    }
 
     // routerでは同じドメイン内しか飛べないので特に検証していない
     router.replace(url.value)
