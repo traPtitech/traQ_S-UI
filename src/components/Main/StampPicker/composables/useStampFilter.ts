@@ -18,21 +18,26 @@ const useStampFilter = () => {
     Object.fromEntries(stamps.value.map(stamp => [stamp.name, stamp]))
   )
 
-  const altNameTable = ref<Record<AltName, string>>({})
-  const altNames = ref<AltName[]>([])
+  const emojiAltnameTableData = ref<{
+    altNameTable: Record<string, string>
+    unicodeTable: Record<string, string>
+  }>()
+  emojiAltnameTable.then(({ default: tables }) => {
+    emojiAltnameTableData.value = tables
+  })
+
+  const altNameTable = computed<Record<AltName, string>>(() =>
+    Object.fromEntries(
+      Object.entries({
+        ...emojiAltnameTableData.value?.altNameTable,
+        ...emojiAltnameTableData.value?.unicodeTable
+        // unicodeの対応バージョン違いで存在しないものが含まれている場合がある
+      }).filter(([k, v]) => stampNames.value.includes(v))
+    )
+  )
+  const altNames = computed(() => Object.keys(altNameTable.value) as AltName[])
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const altNameToName = (altName: AltName) => altNameTable.value[altName]!
-  emojiAltnameTable.then(({ default: tables }) => {
-    const {
-      altNameTable: strictAltNameTable,
-      unicodeTable: strictUnicodeTable
-    } = tables
-    altNameTable.value = {
-      ...strictAltNameTable,
-      ...strictUnicodeTable
-    }
-    altNames.value = [...(Object.keys(altNameTable.value) as AltName[])]
-  })
 
   const oneLetterNames = computed(() =>
     stampNames.value.filter(name => name.length === 1)
