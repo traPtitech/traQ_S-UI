@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, ref } from 'vue'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
@@ -110,7 +110,7 @@ const useAttachmentsEditor = (
     isPosting.value = false
   }
 
-  const { addAttachment, destroy } = useAttachments(postAttachment)
+  const { addAttachment } = useAttachments(postAttachment)
   const onAddAttachments = async (files: File[]) => {
     for (const file of files) {
       try {
@@ -127,8 +127,7 @@ const useAttachmentsEditor = (
     isPostingAttachment: isPosting,
     attachmentPostProgress: progress,
     onAddAttachments,
-    addAttachment,
-    destroy
+    addAttachment
   }
 }
 </script>
@@ -171,12 +170,8 @@ const {
   isPostingAttachment,
   attachmentPostProgress,
   addAttachment,
-  onAddAttachments,
-  destroy
+  onAddAttachments
 } = useAttachmentsEditor(props, text)
-onBeforeUnmount(() => {
-  destroy()
-})
 </script>
 
 <style lang="scss" module>

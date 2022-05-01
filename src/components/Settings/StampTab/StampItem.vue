@@ -27,11 +27,7 @@
           :options="creatorOptions"
           :class="$style.form"
         />
-        <image-upload
-          :destroy-flag="imageUploadState.destroyFlag"
-          @input="onNewImgSet"
-          @destroyed="onNewDestroyed"
-        />
+        <image-upload v-model="newImageData" />
       </div>
       <form-button
         label="変更"
@@ -48,13 +44,10 @@
 import type { Ref } from 'vue'
 import { computed, reactive, ref } from 'vue'
 import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
-import type { ImageUploadState } from '../composables/useImageUpload'
-import useImageUpload from '../composables/useImageUpload'
 import type { Stamp } from '@traptitech/traq'
 import useStateDiff from '../composables/useStateDiff'
 import { isValidStampName } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
-import { useUsersStore } from '/@/store/entities/users'
 
 type StampEditState = Pick<Stamp, 'name' | 'creatorId'>
 
@@ -77,7 +70,7 @@ const useState = (props: { stamp: Stamp }) => {
 const useStampEdit = (
   props: { stamp: Stamp },
   state: StampEditState,
-  imageUploadState: ImageUploadState,
+  newImageData: Ref<File | undefined>,
   isStateChanged: Ref<boolean>,
   diffKeys: Ref<Array<keyof StampEditState>>,
   afterSuccess: () => void
@@ -99,10 +92,8 @@ const useStampEdit = (
           })
         )
       }
-      if (imageUploadState.imgData !== undefined) {
-        promises.push(
-          apis.changeStampImage(props.stamp.id, imageUploadState.imgData)
-        )
+      if (newImageData.value !== undefined) {
+        promises.push(apis.changeStampImage(props.stamp.id, newImageData.value))
       }
       await Promise.all(promises)
       afterSuccess()
@@ -144,8 +135,6 @@ const emit = defineEmits<{
   (e: 'endEdit'): void
 }>()
 
-const { activeUsersMap } = useUsersStore()
-
 const url = computed(() => buildFilePath(props.stamp.fileId))
 
 const userList = useUserList(['inactive', 'bot'])
@@ -153,16 +142,11 @@ const creatorOptions = computed(() =>
   userList.value.map(u => ({ key: `@${u.name}`, value: u.id }))
 )
 
-const {
-  imageUploadState,
-  destroyImageUploadState,
-  onNewImgSet,
-  onNewDestroyed
-} = useImageUpload()
+const newImageData = ref<File | undefined>()
 
 const { state, isStateChanged, diffKeys } = useState(props)
 const stampChanged = computed(
-  () => isStateChanged.value || imageUploadState.imgData !== undefined
+  () => isStateChanged.value || newImageData.value !== undefined
 )
 const isNameValid = computed(() => isValidStampName(state.name))
 
@@ -176,11 +160,11 @@ const onEndEdit = () => {
 const { isEditing, editStamp } = useStampEdit(
   props,
   state,
-  imageUploadState,
+  newImageData,
   isStateChanged,
   diffKeys,
   () => {
-    destroyImageUploadState()
+    newImageData.value = undefined
     onEndEdit()
   }
 )
