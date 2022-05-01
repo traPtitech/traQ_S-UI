@@ -1,27 +1,29 @@
 <template>
   <div>
-    <form-button label="ファイルを選択" @click="addImage" />
-    <div v-if="image.url !== ''">
+    <form-button label="ファイルを選択" @click="selectImage" />
+    <div v-if="originalImgUrl">
       <div :class="$style.cropper" :data-is-rounded="$boolAttr(rounded)">
-        <img ref="imgEle" :src="image.url" />
+        <img ref="imgEle" :src="originalImgUrl" />
       </div>
       <p :class="$style.note">{{ cropperNote }}</p>
-      <form-button label="キャンセル" @click="destroy" />
+      <form-button label="キャンセル" @click="cancel" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, watchEffect, shallowRef } from 'vue'
+import { ref, watchEffect, shallowRef, onUnmounted } from 'vue'
 import Cropper from 'cropperjs'
 import { useImageUploadInternal } from './composables/useImageUpload'
 import FormButton from '/@/components/UI/FormButton.vue'
 import 'cropperjs/dist/cropper.css'
+import useObjectURL from '/@/composables/dom/useObjectURL'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
 const props = withDefaults(
   defineProps<{
+    modelValue: File | undefined
     rounded?: boolean
-    destroyFlag: boolean
   }>(),
   {
     rounded: false
@@ -29,8 +31,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'input', _file: File): void
-  (e: 'destroyed'): void
+  (e: 'update:modelValue', _file: File | undefined): void
 }>()
 
 // スタンプ編集用の設定
@@ -52,25 +53,26 @@ const cropperDefaultOptions = {
   dragMode: 'move' as const
 } as const
 
-const {
-  image,
-  addImage,
-  destroy: destroyImage
-} = useImageUploadInternal(() => {
-  if (!image.data) return
+const value = useModelValueSyncer(props, emit)
 
-  // 画像選択したあとcropperの操作をしなかった場合変更を検知しないため
-  emit('input', image.data)
-})
+const originalImg = ref<File | undefined>()
+const { selectImage } = useImageUploadInternal(originalImg)
+const originalImgUrl = useObjectURL(originalImg)
 
 let cropper: Cropper | undefined
 const imgEle = shallowRef<HTMLImageElement>()
 const cropperNote = ref('')
 
 watchEffect(() => {
-  if (!image.data || !imgEle.value) return
+  if (!originalImg.value) {
+    if (cropper) cropper.destroy()
+    return
+  }
+  emit('update:modelValue', originalImg.value)
 
-  const isGif = image.data.type === 'image/gif'
+  if (!imgEle.value) return
+
+  const isGif = originalImg.value.type === 'image/gif'
   const options = isGif
     ? cropperGifOptions
     : {
@@ -80,12 +82,12 @@ watchEffect(() => {
             if (!blob) return
 
             emit(
-              'input',
+              'update:modelValue',
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              new File([blob], image.data!.name, { type: blob.type })
+              new File([blob], originalImg.value!.name, { type: blob.type })
             )
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          }, image.data!.type)
+          }, originalImg.value!.type)
         }
       }
 
@@ -95,19 +97,21 @@ watchEffect(() => {
 
   if (cropper) cropper.destroy()
   cropper = new Cropper(imgEle.value, options)
-  cropper.replace(image.url)
+  cropper.replace(originalImgUrl.value ?? '')
 })
 
-const destroy = () => {
-  destroyImage()
-  if (cropper) cropper.destroy()
+watchEffect(() => {
+  if (!value.value) {
+    originalImg.value = undefined
+  }
+})
+
+const cancel = () => {
+  emit('update:modelValue', undefined)
 }
 
-watchEffect(() => {
-  if (props.destroyFlag) {
-    destroy()
-    emit('destroyed')
-  }
+onUnmounted(() => {
+  if (cropper) cropper.destroy()
 })
 </script>
 

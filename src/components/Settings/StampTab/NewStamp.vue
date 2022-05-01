@@ -2,12 +2,7 @@
   <div :class="$style.element">
     <h3 :class="$style.header">スタンプ新規登録</h3>
     <div :class="$style.content">
-      <image-upload
-        :destroy-flag="imageUploadState.destroyFlag"
-        :class="$style.form"
-        @input="onNewImgSet"
-        @destroyed="onNewDestroyed"
-      />
+      <image-upload v-model="stampImage" :class="$style.form" />
       <form-input
         v-model="newStampName"
         label="スタンプ名"
@@ -29,9 +24,8 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { ref, computed, watchEffect } from 'vue'
-import type { ImageUploadState } from '../composables/useImageUpload'
-import useImageUpload from '../composables/useImageUpload'
+import { watch } from 'vue'
+import { ref, computed } from 'vue'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { isValidStampName } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
@@ -43,8 +37,7 @@ const trimExt = (filename: string) => filename.replace(/\.[^.]+$/, '')
 
 const useStampCreate = (
   newStampName: Ref<string>,
-  imageUploadState: ImageUploadState,
-  destroyImageUploadState: () => void
+  stampImage: Ref<File | undefined>
 ) => {
   const { addSuccessToast, addErrorToast } = useToastStore()
   const isCreating = ref(false)
@@ -52,9 +45,9 @@ const useStampCreate = (
   const createStamp = async () => {
     try {
       isCreating.value = true
-      await apis.createStamp(newStampName.value, imageUploadState.imgData)
+      await apis.createStamp(newStampName.value, stampImage.value)
       newStampName.value = ''
-      destroyImageUploadState()
+      stampImage.value = undefined
 
       addSuccessToast('スタンプを登録しました')
     } catch (e) {
@@ -75,30 +68,21 @@ import ImageUpload from '../ImageUpload.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 
-const {
-  imageUploadState,
-  destroyImageUploadState,
-  onNewImgSet,
-  onNewDestroyed
-} = useImageUpload()
-
+const stampImage = ref<File | undefined>()
 const newStampName = ref('')
 const isCreateEnabled = computed(
-  () =>
-    isValidStampName(newStampName.value) &&
-    imageUploadState.imgData !== undefined
+  () => isValidStampName(newStampName.value) && stampImage.value !== undefined
 )
-watchEffect(() => {
-  if (imageUploadState.imgData) {
-    newStampName.value = trimExt(imageUploadState.imgData.name)
+watch(
+  () => stampImage.value,
+  imageData => {
+    if (imageData) {
+      newStampName.value = trimExt(imageData.name)
+    }
   }
-})
-
-const { isCreating, createStamp } = useStampCreate(
-  newStampName,
-  imageUploadState,
-  destroyImageUploadState
 )
+
+const { isCreating, createStamp } = useStampCreate(newStampName, stampImage)
 </script>
 
 <style lang="scss" module>

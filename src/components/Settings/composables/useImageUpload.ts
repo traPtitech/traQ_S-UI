@@ -1,80 +1,23 @@
-import { reactive } from 'vue'
+import type { Ref } from 'vue'
 
 const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
 
-export const useImageUploadInternal = (onImageSelect: () => void) => {
-  const image = reactive({
-    data: undefined as File | undefined,
-    url: ''
-  })
-
+export const useImageUploadInternal = (data: Ref<File | undefined>) => {
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = acceptImageType
 
   input.addEventListener('change', () => {
     if (input.files) {
-      image.data = input.files[0]
-
-      if (image.url !== '') {
-        URL.revokeObjectURL(image.url)
-      }
-      if (image.data) {
-        image.url = URL.createObjectURL(image.data)
-      }
+      data.value = input.files[0]
     }
     // `input.files = null`ではリセットできない
     input.value = ''
   })
-  input.addEventListener('change', onImageSelect, { once: true })
 
-  const addImage = () => {
+  const selectImage = () => {
     input.click()
   }
-  const destroy = () => {
-    if (image.data) {
-      image.data = undefined
-    }
-    if (image.url !== '') {
-      URL.revokeObjectURL(image.url)
-      image.url = ''
-    }
-    input.addEventListener('change', onImageSelect, { once: true })
-  }
 
-  return { image, addImage, destroy }
+  return { selectImage }
 }
-
-export interface ImageUploadState {
-  imgData: File | undefined
-  destroyFlag: boolean
-}
-
-const useImageUpload = () => {
-  const state: ImageUploadState = reactive({
-    imgData: undefined,
-    destroyFlag: false
-  })
-
-  const onNewImgSet = (file: File) => {
-    state.imgData = file
-  }
-
-  const onNewDestroyed = () => {
-    state.destroyFlag = false
-  }
-
-  const destroy = () => {
-    state.imgData = undefined
-    state.destroyFlag = true
-  }
-
-  return {
-    imageUploadState: state,
-    onNewImgSet,
-    onNewDestroyed,
-    destroyImageUploadState: destroy
-  }
-}
-
-export default useImageUpload
