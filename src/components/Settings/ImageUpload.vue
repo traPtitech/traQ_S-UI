@@ -14,11 +14,11 @@
 <script lang="ts" setup>
 import { ref, watchEffect, shallowRef, onUnmounted } from 'vue'
 import Cropper from 'cropperjs'
-import { useImageUploadInternal } from './composables/useImageUpload'
 import FormButton from '/@/components/UI/FormButton.vue'
 import 'cropperjs/dist/cropper.css'
 import useObjectURL from '/@/composables/dom/useObjectURL'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
+import { useFileSelect } from '/@/composables/dom/useFileSelect'
 
 const props = withDefaults(
   defineProps<{
@@ -44,19 +44,20 @@ const cropperGifOptions = {
   cropBoxResizable: false,
   toggleDragModeOnDblclick: false
 } as const
-
-// スタンプ編集用の設定
 const cropperDefaultOptions = {
   viewMode: 3,
   aspectRatio: 1,
   autoCropArea: 1,
   dragMode: 'move' as const
 } as const
+const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
 
 const value = useModelValueSyncer(props, emit)
 
 const originalImg = ref<File | undefined>()
-const { selectImage } = useImageUploadInternal(originalImg)
+const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
+  originalImg.value = files[0]
+})
 const originalImgUrl = useObjectURL(originalImg)
 
 let cropper: Cropper | undefined
