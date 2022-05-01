@@ -76,7 +76,9 @@ watch(
   () => props.name,
   async () => {
     if (props.mdi) return
-    const com = await getComponent(props.name)
+    const name = props.name
+    const com = await getComponent(name)
+    if (props.name !== name) return // 取得中にnameが変わったら何もしない
     svgComponent.value = com
   },
   { immediate: true }
