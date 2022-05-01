@@ -10,12 +10,19 @@ import apis from '/@/lib/apis'
 import { entityMitt } from './mitt'
 import type { CacheStrategy } from './utils'
 import { fetchWithCacheStrategy } from './utils'
-import { getUnicodeStamps, setUnicodeStamps } from '/@/lib/stampCache'
 import { arrayToMap } from '/@/lib/basic/map'
 import { wsListener } from '/@/lib/websocket'
 
 const getStamp = createSingleflight(apis.getStamp.bind(apis))
-const getStamps = createSingleflight(apis.getStamps.bind(apis))
+const getStamps = createSingleflight(async () => {
+  const [{ data: unicodeStamps }, { data: originalStamps }] = await Promise.all(
+    [
+      apis.getStamps(undefined, 'unicode'),
+      apis.getStamps(undefined, 'original')
+    ]
+  )
+  return [...unicodeStamps, ...originalStamps]
+})
 
 const initialRecentStampNames = ['ok_hand', 'thumbsup', 'eyes'] as const
 
@@ -77,22 +84,11 @@ const useStampsStorePinia = defineStore('entities/stamps', () => {
       return stampsMap.value
     }
 
-    const unicodeStamps = await getUnicodeStamps()
-    // unicodeスタンプがIndexedDBに存在しないときは含めて取得する
-    const [{ data: stamps }, shared] = await getStamps(!unicodeStamps)
-
-    const stampsWithUnicodeStamps = unicodeStamps
-      ? [...unicodeStamps, ...stamps]
-      : stamps
-    const newStampsMap = arrayToMap(stampsWithUnicodeStamps, 'id')
+    const [stamps, shared] = await getStamps()
+    const newStampsMap = arrayToMap(stamps, 'id')
     if (!shared) {
       stampsMap.value = newStampsMap
       stampsMapFetched.value = true
-      // 新しくunicodeスタンプが取得されたときはIndexedDBに保存する
-      if (!unicodeStamps) {
-        setUnicodeStamps(stamps.filter(stamp => stamp.isUnicode))
-      }
-
       entityMitt.emit('setStamps')
     }
     return stampsMap

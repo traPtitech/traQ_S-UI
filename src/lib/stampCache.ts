@@ -1,24 +1,15 @@
-import { get, set, del } from 'idb-keyval'
-import type { Stamp } from '@traptitech/traq'
-import { createStore } from '/@/lib/dom/idb'
+import { promisifyRequest } from 'idb-keyval'
 
-const store = createStore('cache', 'stamps')
+/**
+ * 過去にクライアント側でキャッシュしていたunicodeスタンプの情報
+ * 現在はHTTPキャッシュを利用するようになったので使われていない
+ *
+ * dbName: traQ_S-cache
+ * storeName: stamps
+ * key: unicode_stamps
+ */
 
-const UNICODE_STAMPS_KEY = 'unicode_stamps'
-
-export const getUnicodeStamps = async () => {
-  try {
-    const stamps = await get<Stamp[]>(UNICODE_STAMPS_KEY, store)
-    return stamps
-  } catch {
-    return undefined
-  }
-}
-
-export const setUnicodeStamps = async (stamps: Stamp[]) => {
-  await set(UNICODE_STAMPS_KEY, stamps, store)
-}
-
-export const deleteUnicodeStamps = async () => {
-  await del(UNICODE_STAMPS_KEY, store)
+export const deleteStampCacheIDB = async () => {
+  const req = indexedDB.deleteDatabase('traQ_S-cache')
+  await promisifyRequest(req)
 }
