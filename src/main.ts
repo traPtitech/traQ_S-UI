@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import boolAttr from './bool-attr'
 import { setupGlobalFuncs } from './markdown-bridge'
+import { deleteStampCacheIDB } from './lib/stampCache'
 import './styles/global.scss'
 
 import('katex/dist/katex.css')
@@ -21,3 +22,5 @@ app.mount('#app')
 if (import.meta.env.MODE === 'development') {
   app.config.performance = true
 }
+
+deleteStampCacheIDB()
