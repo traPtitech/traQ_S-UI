@@ -27,7 +27,7 @@
   "dependencies": {
     "@mdi/js": "^6.6.96",
     "@sapphi-red/web-noise-suppressor": "^0.3.1",
-    "@traptitech/traq": "^3.9.6-0",
+    "@traptitech/traq": "^3.10.0-0",
     "@traptitech/traq-markdown-it": "^6.1.6",
     "autosize": "^5.0.1",
     "cropperjs": "^1.5.12",
@@ -67,7 +67,7 @@
     "@vitejs/plugin-vue": "^2.3.1",
     "@vue/test-utils": "^2.0.0-rc.21",
     "autoprefixer": "^10.4.5",
-    "axios": "^0.26.1",
+    "axios": "^0.27.2",
     "browserslist": "^4.20.3",
     "c8": "^7.11.2",
     "cypress": "^9.6.0",
