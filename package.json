@@ -28,7 +28,7 @@
     "@mdi/js": "^6.6.96",
     "@sapphi-red/web-noise-suppressor": "^0.3.1",
     "@traptitech/traq": "^3.10.0-0",
-    "@traptitech/traq-markdown-it": "^6.1.7",
+    "@traptitech/traq-markdown-it": "^6.1.8",
     "autosize": "^5.0.1",
     "cropperjs": "^1.5.12",
     "deepmerge": "^4.2.2",
