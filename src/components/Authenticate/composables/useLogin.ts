@@ -53,7 +53,7 @@ const useLogin = () => {
 
       redirect()
     } catch (e) {
-      const err = e as AxiosError
+      const err = e as AxiosError<{ message: string }>
       if (!err.response) return
 
       // TODO 修正
