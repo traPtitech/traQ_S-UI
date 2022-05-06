@@ -46,7 +46,7 @@
     "vue": "^3.2.33",
     "vue-router": "^4.0.15",
     "vue-slider-component": "^4.0.0-beta.5",
-    "zod": "^3.14.4"
+    "zod": "^3.15.1"
   },
   "devDependencies": {
     "@pinia/testing": "^0.0.11",
