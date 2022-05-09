@@ -12,6 +12,7 @@ const useDayDiffMessages = (messageIds: Ref<MessageId[]>) => {
     const mCount = mIds.length
     if (mCount < 1) return result
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     result.add(mIds[0]!)
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
