@@ -12,6 +12,8 @@ const useDayDiffMessages = (messageIds: Ref<MessageId[]>) => {
     const mCount = mIds.length
     if (mCount < 1) return result
 
+    result.add(mIds[0]!)
+
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     let preDate = new Date(messagesMap.value.get(mIds[0]!)?.createdAt ?? '')
     for (let i = 1; i < mCount; i++) {
