@@ -71,7 +71,7 @@
     "browserslist": "^4.20.3",
     "c8": "^7.11.2",
     "cypress": "^9.6.1",
-    "esbuild": "^0.14.38",
+    "esbuild": "^0.14.39",
     "esbuild-plugin-browserslist": "^0.4.9",
     "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.5.0",
