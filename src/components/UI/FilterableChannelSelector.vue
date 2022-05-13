@@ -1,7 +1,11 @@
 <template>
   <div>
     <filter-input v-model="query" on-secondary disable-ime />
-    <form-selector :options="channelOptions" :class="$style.form" />
+    <form-selector
+      v-model="value"
+      :options="channelOptions"
+      :class="$style.form"
+    />
   </div>
 </template>
 
@@ -13,6 +17,7 @@ import FormSelector from '/@/components/UI/FormSelector.vue'
 import { computed } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { compareStringInsensitive } from '/@/lib/basic/string'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
 const props = withDefaults(
   defineProps<{
@@ -25,6 +30,8 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'update:modelValue', _val: string | null): void
 }>()
+
+const value = useModelValueSyncer(props, emit)
 
 const { channelsMap } = useChannelsStore()
 
