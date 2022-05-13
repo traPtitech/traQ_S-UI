@@ -42,13 +42,12 @@ const { query, filteredChannels } = useChannelFilter(channelListForFilter)
 const { channelIdToPathString } = useChannelPath()
 
 const channelOptions = computed(() => {
-  const channels = filteredChannels.value
+  return filteredChannels.value
     .map(channel => ({
       key: channelIdToPathString(channel.id, true),
       value: channel.id
     }))
     .sort((a, b) => compareStringInsensitive(a.key, b.key))
-  return channels
 })
 </script>
 
