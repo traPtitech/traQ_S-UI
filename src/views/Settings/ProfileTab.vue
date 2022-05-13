@@ -41,10 +41,10 @@
     </div>
     <div :class="$style.element">
       <h3 :class="$style.header">ホームチャンネル</h3>
-      <form-selector
+      <filterable-channel-selector
         v-model="state.homeChannel"
-        :options="channelOptions"
         :class="$style.form"
+        :options="channelOptions"
       />
     </div>
     <div :class="$style.element">
@@ -158,10 +158,10 @@ const useIsLengthValid = (state: Profile) => {
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import FilterableChannelSelector from '/@/components/UI/FilterableChannelSelector.vue'
 
 const { detail: detailMayBeUndefined } = useMeStore()
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
