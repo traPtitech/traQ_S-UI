@@ -1,6 +1,7 @@
 <template>
   <div>
     <channel-sidebar-viewers
+      v-model="isViewersDetailOpen"
       :viewer-ids="viewerIds"
       :class="$style.sidebarItem"
     />
@@ -49,12 +50,14 @@ import ChannelSidebarQall from './ChannelSidebarQall.vue'
 import ChannelSidebarBots from './ChannelSidebarBots.vue'
 import type { UserId, ChannelId } from '/@/types/entity-ids'
 import { useQallSession } from './composables/useChannelRTCSession'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
 const props = withDefaults(
   defineProps<{
     channelId: ChannelId
     viewerIds: readonly UserId[]
     pinnedMessagesCount?: number
+    modelValue: boolean
   }>(),
   {
     pinnedMessagesCount: 0
@@ -64,9 +67,12 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'moveToPinned'): void
   (e: 'moveToEvents'): void
+  (e: 'update:modelValue', value: boolean): void
 }>()
 
 const { sessionUserIds: qallUserIds } = useQallSession(props)
+
+const isViewersDetailOpen = useModelValueSyncer(props, emit)
 </script>
 
 <style lang="scss" module>

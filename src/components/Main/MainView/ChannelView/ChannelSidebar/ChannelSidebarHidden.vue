@@ -14,6 +14,12 @@
       show-count
       :user-ids="viewerIds"
       :class="$style.rest"
+      @click="
+        () => {
+          emit('open')
+          emit('openViewers')
+        }
+      "
     />
   </div>
 </template>
@@ -34,6 +40,7 @@ withDefaults(
 
 const emit = defineEmits<{
   (e: 'open'): void
+  (e: 'openViewers'): void
 }>()
 </script>
 

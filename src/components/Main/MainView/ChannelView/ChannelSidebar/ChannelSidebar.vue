@@ -7,6 +7,7 @@
         </template>
         <template #content>
           <channel-sidebar-content
+            v-model="isViewersDetailOpen"
             :channel-id="channelId"
             :viewer-ids="viewingUsers"
             :pinned-messages-count="pinnedMessages.length"
@@ -27,7 +28,11 @@
       />
     </template>
     <template #opener>
-      <channel-sidebar-hidden :viewer-ids="viewingUsers" @open="openSidebar" />
+      <channel-sidebar-hidden
+        :viewer-ids="viewingUsers"
+        @open="openSidebar"
+        @open-viewers="openViewers"
+      />
     </template>
   </primary-view-sidebar>
 </template>
@@ -44,6 +49,7 @@ import { computed } from 'vue'
 import type { ChannelId, UserId } from '/@/types/entity-ids'
 import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
 import { useChannelsStore } from '/@/store/entities/channels'
+import useToggle from '/@/composables/utils/useToggle'
 import type { Pin } from '@traptitech/traq'
 
 const props = defineProps<{
@@ -66,4 +72,6 @@ const {
 const channelName = computed(
   () => channelsMap.value.get(props.channelId)?.name ?? ''
 )
+
+const { value: isViewersDetailOpen, open: openViewers } = useToggle(false)
 </script>

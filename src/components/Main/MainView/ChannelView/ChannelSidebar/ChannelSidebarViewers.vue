@@ -20,20 +20,29 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, onUnmounted } from 'vue'
 import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'
 import type { UserId } from '/@/types/entity-ids'
-import useToggle from '/@/composables/utils/useToggle'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     viewerIds?: readonly UserId[]
+    modelValue: boolean
   }>(),
   {
     viewerIds: () => []
   }
 )
 
-const { value: isDetailOpen, toggle } = useToggle(false)
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: boolean): void
+}>()
+
+const isDetailOpen = computed(() => props.modelValue)
+
+const toggle = () => emit('update:modelValue', !props.modelValue)
+
+onUnmounted(() => emit('update:modelValue', false))
 </script>
