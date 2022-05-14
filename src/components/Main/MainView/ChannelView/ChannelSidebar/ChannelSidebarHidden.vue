@@ -67,5 +67,6 @@ const emit = defineEmits<{
 .rest {
   @include color-ui-secondary;
   pointer-events: all;
+  cursor: pointer;
 }
 </style>
