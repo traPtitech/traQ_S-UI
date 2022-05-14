@@ -4,8 +4,10 @@
       <span
         v-if="inVisibleCount > 0 && showCount"
         key="count"
+        :data-is-clickable="$boolAttr(clickable)"
         :class="$style.count"
         :style="styles.count"
+        @click="onCountClick"
       >
         +{{ inVisibleCount }}
       </span>
@@ -39,6 +41,7 @@ const props = withDefaults(
     overlap?: number
     transition?: string
     preventModal?: boolean
+    clickable?: boolean
   }>(),
   {
     max: 3,
@@ -47,9 +50,14 @@ const props = withDefaults(
     borderWidth: 4,
     iconSize: 40 as const,
     overlap: 12,
-    preventModal: false
+    preventModal: false,
+    clickable: false
   }
 )
+
+const emit = defineEmits<{
+  (e: 'countClick'): void
+}>()
 
 const styles = computed(() => {
   const isRow = props.direction === 'row'
@@ -79,6 +87,12 @@ const visibleIconIds = computed(() =>
   [...props.userIds].reverse().slice(0, props.max)
 )
 const inVisibleCount = computed(() => props.userIds.length - props.max)
+
+const onCountClick = () => {
+  if (props.clickable) {
+    emit('countClick')
+  }
+}
 </script>
 
 <style lang="scss" module>
@@ -98,5 +112,12 @@ $countSize: 1.15rem;
 .count {
   font-weight: bold;
   user-select: none;
+  &[data-is-clickable] {
+    cursor: pointer;
+    transition: transform 0.1s;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
 }
 </style>

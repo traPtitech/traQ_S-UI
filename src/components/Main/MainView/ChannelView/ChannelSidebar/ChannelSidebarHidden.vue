@@ -11,10 +11,11 @@
     <user-icon-ellipsis-list
       direction="col"
       transition="fade-bottom"
+      clickable
       show-count
       :user-ids="viewerIds"
       :class="$style.rest"
-      @click="
+      @count-click="
         () => {
           emit('open')
           emit('openViewers')
