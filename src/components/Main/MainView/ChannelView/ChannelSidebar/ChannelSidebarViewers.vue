@@ -29,7 +29,7 @@ import type { UserId } from '/@/types/entity-ids'
 const props = withDefaults(
   defineProps<{
     viewerIds?: readonly UserId[]
-    modelValue: boolean
+    modelValue?: boolean
   }>(),
   {
     viewerIds: () => []
