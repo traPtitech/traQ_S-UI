@@ -4,7 +4,7 @@
       <span
         v-if="inVisibleCount > 0 && showCount"
         key="count"
-        :data-is-clickable="$boolAttr(clickable)"
+        :data-is-clickable="$boolAttr(countClickable)"
         :class="$style.count"
         :style="styles.count"
         @click="onCountClick"
@@ -41,7 +41,7 @@ const props = withDefaults(
     overlap?: number
     transition?: string
     preventModal?: boolean
-    clickable?: boolean
+    countClickable?: boolean
   }>(),
   {
     max: 3,
@@ -51,7 +51,7 @@ const props = withDefaults(
     iconSize: 40 as const,
     overlap: 12,
     preventModal: false,
-    clickable: false
+    countClickable: false
   }
 )
 
@@ -89,7 +89,7 @@ const visibleIconIds = computed(() =>
 const inVisibleCount = computed(() => props.userIds.length - props.max)
 
 const onCountClick = () => {
-  if (props.clickable) {
+  if (props.countClickable) {
     emit('countClick')
   }
 }

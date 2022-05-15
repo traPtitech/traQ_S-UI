@@ -11,7 +11,7 @@
     <user-icon-ellipsis-list
       direction="col"
       transition="fade-bottom"
-      clickable
+      count-clickable
       show-count
       :user-ids="viewerIds"
       :class="$style.rest"
