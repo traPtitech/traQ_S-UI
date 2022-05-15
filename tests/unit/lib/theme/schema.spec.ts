@@ -32,4 +32,35 @@ describe('themeSchema', () => {
     const actual = themeSchema.parse(input)
     expect(actual).toStrictEqual(input)
   })
+
+  it('should reject empty string', () => {
+    const input: Theme = {
+      version: 2,
+      basic: {
+        accent: {
+          primary: '#005BAC',
+          notification: '#F2994A',
+          online: '#28F0E4',
+          error: '#F26451',
+          focus: '#005BACC0'
+        },
+        background: {
+          primary: '#FFFFFF',
+          secondary: '#F0F2F5',
+          tertiary: '#E2E5E9'
+        },
+        ui: {
+          primary: '#49535B',
+          secondary: '#6B7D8A',
+          tertiary: '#CED6DB'
+        },
+        text: {
+          primary: '#333333',
+          secondary: '' // empty string
+        }
+      }
+    }
+    const actual = themeSchema.safeParse(input)
+    expect(actual.success).toStrictEqual(false)
+  })
 })

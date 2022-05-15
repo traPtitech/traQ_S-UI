@@ -8,15 +8,16 @@ import { parseColor } from '/@/lib/basic/color'
 export type CSSColorTypeSimple = string
 const CSSColorTypeSimpleSchema = z
   .string()
+  .min(1)
   .refine(value => parseColor(value) !== null, {
     message: 'Invalid CSSColorTypeSimple'
   })
 
 export type CSSColorType = string
-const CSSColorTypeSchema = z.string()
+const CSSColorTypeSchema = z.string().min(1)
 
 export type CSSImageType = string
-const CSSImageTypeSchema = z.string()
+const CSSImageTypeSchema = z.string().min(1)
 
 export type CSSImageColorType = z.infer<typeof CSSImageColorTypeSchema>
 const CSSImageColorTypeSchema = z.union([
