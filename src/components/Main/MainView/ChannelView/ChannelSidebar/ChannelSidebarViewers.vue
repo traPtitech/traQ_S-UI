@@ -42,9 +42,9 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
 
-const { value: isDetailOpen, toggle } = useToggle(
+const { value: isDetailOpen, toggle, close } = useToggle(
   useModelValueSyncer(props, emit)
 )
 
-onUnmounted(() => emit('update:modelValue', false))
+onUnmounted(() => close())
 </script>
