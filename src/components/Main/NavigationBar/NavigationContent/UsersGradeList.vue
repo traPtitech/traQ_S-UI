@@ -1,7 +1,7 @@
 <template>
   <div>
     <users-separator
-      :name="name"
+      :name="nameWithCount"
       :is-open="!isFolding"
       :has-notification="hasNotification"
       :class="$style.separator"
@@ -28,6 +28,8 @@ const props = defineProps<{
   name: string
   users: User[]
 }>()
+
+const nameWithCount = computed(() => `${props.name} (${props.users.length})`)
 
 const { unreadChannelsMap } = useSubscriptionStore()
 const { userIdToDmChannelIdMap } = useChannelsStore()
