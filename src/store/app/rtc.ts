@@ -98,12 +98,27 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
 
   const isCurrentDevice = computed(() => mixer.value !== undefined)
 
-  const getUserVolume = (userId: UserId) => {
-    return mixer.value?.getStreamVolume(userId) ?? 0
-  }
   const setUserVolume = (userId: UserId, volume: number) => {
     mixer.value?.setStreamVolume(userId, volume)
   }
+  const streamVolumeMap = ref(new Map<string, number>())
+  const onStreamVolumeChange = (key: string) => {
+    if (!mixer.value) return
+    streamVolumeMap.value.set(key, mixer.value.getStreamVolume(key))
+  }
+  watch(
+    mixer,
+    (newMixer, oldMixer) => {
+      if (oldMixer) {
+        oldMixer.listener.off('streamVolumeChange', onStreamVolumeChange)
+      }
+      if (newMixer) {
+        streamVolumeMap.value = new Map()
+        newMixer.listener.on('streamVolumeChange', onStreamVolumeChange)
+      }
+    },
+    { immediate: true }
+  )
 
   const startOrJoinRTCSession = ({
     channelId,
@@ -341,7 +356,7 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
     endQall,
     mute,
     unmute,
-    getUserVolume,
+    streamVolumeMap,
     setUserVolume
   }
 })
