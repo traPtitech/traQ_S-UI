@@ -4,11 +4,16 @@ import qallJoinedMp3 from '/@/assets/se/qall_joined.mp3'
 import qallLeftMp3 from '/@/assets/se/qall_left.mp3'
 import type ExtendedAudioContext from './ExtendedAudioContext'
 import NodeMerger from './NodeMerger'
+import mitt from 'mitt'
 
 type StreamNodes = {
   source: MediaStreamAudioSourceNode
   volumeGain: GainNode
   analyser: AnalyserNode
+}
+
+type AudioStreamMixerEvents = {
+  streamVolumeChange: string
 }
 
 /**
@@ -36,6 +41,8 @@ export default class AudioStreamMixer {
   private readonly maxFileGain = 1
   private readonly maxStreamGain = 5
   private readonly maxMasterGain = 3
+
+  readonly listener = mitt<AudioStreamMixerEvents>()
 
   constructor(context: ExtendedAudioContext, masterVolume: number) {
     this._initializePromise = this.initialize()
@@ -209,12 +216,13 @@ export default class AudioStreamMixer {
 
   setStreamVolume(key: string, volume: number) {
     const v = Math.max(0, Math.min(1, volume))
-    this.streamVolumeMap.set(key, v)
 
     const nodes = this.streamNodesMap.get(key)
     if (!nodes) return
 
+    this.streamVolumeMap.set(key, v)
     this.context.setGainNodeVolume(nodes.volumeGain, v, this.maxStreamGain)
+    this.listener.emit('streamVolumeChange', key)
   }
 
   setMasterVolume(volume: number) {

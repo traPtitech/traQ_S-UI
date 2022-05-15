@@ -5,12 +5,11 @@
     :data-show-background-on-hover="showBackgroundOnHover"
   >
     <a-slider
-      :value="roundedCurrentTime"
+      v-model="roundedCurrentTime"
       :disabled="disabled"
       :min="0"
       :max="roundedDuration"
       tooltip="none"
-      @change-value="changeTime"
       @click.prevent
     />
   </div>
@@ -35,13 +34,17 @@ const emit = defineEmits<{
   (e: 'update:currentTime', _val: number): void
 }>()
 
-const roundedCurrentTime = computed(() => Math.floor(props.currentTime))
+const roundedCurrentTime = computed({
+  get() {
+    return Math.floor(props.currentTime)
+  },
+  set(v: number) {
+    emit('update:currentTime', v)
+  }
+})
+
 const roundedDuration = computed(() => Math.floor(props.duration))
 const disabled = computed(() => props.duration === 0)
-
-const changeTime = (time: number) => {
-  emit('update:currentTime', time)
-}
 </script>
 
 <style lang="scss" module>
