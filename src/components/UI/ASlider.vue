@@ -1,6 +1,6 @@
 <template>
   <vue-slider
-    :model-value="value"
+    :model-value="modelValue"
     :min="min"
     :max="max"
     :disabled="disabled"
@@ -18,7 +18,7 @@ import VueSlider from 'vue-slider-component'
 
 withDefaults(
   defineProps<{
-    value: number
+    modelValue: number
     disabled?: boolean
     min?: number
     max?: number
@@ -34,13 +34,13 @@ withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'changeValue', _val: number): void
+  (e: 'update:modelValue', _val: number): void
 }>()
 
 // vue sliderの型が変
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const onChange: any = (val: number) => {
-  emit('changeValue', val)
+  emit('update:modelValue', val)
 }
 </script>
 

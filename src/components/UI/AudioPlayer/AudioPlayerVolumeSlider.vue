@@ -6,10 +6,9 @@
   >
     <div :class="$style.volumeSlider">
       <a-slider
-        :value="roundedVolume"
+        v-model="roundedVolume"
         :disabled="disabled"
         tooltip="none"
-        @change-value="changeVolume"
         @click.prevent
       />
     </div>
@@ -18,7 +17,7 @@
       mdi
       :size="20"
       :name="volume > 0 ? 'volume-high' : 'volume-off'"
-      @click.prevent="changeVolume(volume > 0 ? 0 : 100)"
+      @click.prevent="toggleVolume"
     />
   </div>
 </template>
@@ -44,10 +43,16 @@ const emit = defineEmits<{
   (e: 'update:volume', _val: number): void
 }>()
 
-const roundedVolume = computed(() => Math.floor(props.volume * 100))
-
-const changeVolume = (vol: number) => {
-  emit('update:volume', vol)
+const roundedVolume = computed({
+  get() {
+    return Math.floor(props.volume * 100)
+  },
+  set(v: number) {
+    emit('update:volume', v)
+  }
+})
+const toggleVolume = () => {
+  roundedVolume.value = props.volume > 0 ? 0 : 100
 }
 </script>
 

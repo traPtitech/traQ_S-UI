@@ -6,13 +6,12 @@
     <div :class="$style.userDesc">
       <a-slider
         v-if="showVolumeControl"
-        :value="volume"
+        v-model="volume"
         :min="0"
         :max="200"
         tooltip-formatter="{value}%"
         :disabled="disabled || volume === undefined"
         :tooltip="disabled ? 'none' : 'active'"
-        @change-value="onChangeVolume"
       />
       <span v-else :class="$style.userName">{{ userName }}</span>
     </div>
@@ -78,9 +77,6 @@ const volume = computed({
     setUserVolume(props.userId, value / maxVolumeValue)
   }
 })
-const onChangeVolume = (v: number) => {
-  volume.value = v
-}
 const userName = computed(
   () => usersMap.value.get(props.userId)?.displayName ?? ''
 )
