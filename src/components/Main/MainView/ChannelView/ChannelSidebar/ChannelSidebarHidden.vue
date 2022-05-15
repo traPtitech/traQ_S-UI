@@ -15,12 +15,7 @@
       show-count
       :user-ids="viewerIds"
       :class="$style.rest"
-      @count-click="
-        () => {
-          emit('open')
-          emit('openViewers')
-        }
-      "
+      @count-click="emit('openViewers')"
     />
   </div>
 </template>

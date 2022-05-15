@@ -73,5 +73,10 @@ const channelName = computed(
   () => channelsMap.value.get(props.channelId)?.name ?? ''
 )
 
-const { value: isViewersDetailOpen, open: openViewers } = useToggle(false)
+const { value: isViewersDetailOpen, open: openViewersDetail } = useToggle(false)
+
+const openViewers = () => {
+  openSidebar()
+  openViewersDetail()
+}
 </script>
