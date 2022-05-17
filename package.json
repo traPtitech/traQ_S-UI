@@ -25,7 +25,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@mdi/js": "^6.6.96",
+    "@mdi/js": "^6.7.96",
     "@sapphi-red/web-noise-suppressor": "^0.3.1",
     "@traptitech/traq": "^3.10.0-0",
     "@traptitech/traq-markdown-it": "^6.1.9",
