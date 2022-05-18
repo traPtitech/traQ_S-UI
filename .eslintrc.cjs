@@ -44,12 +44,10 @@ module.exports = {
     ],
     'vue/component-api-style': ['error', ['script-setup']],
     'vue/component-name-in-template-casing': ['error', 'kebab-case'],
-    'vue/custom-event-name-casing': ['error', 'camelCase'],
     'vue/v-on-event-hyphenation': ['error', 'always', { autofix: true }],
     'vue/v-on-function-call': 'error',
     'vue/no-template-target-blank': 'error',
-    'vue/prefer-true-attribute-shorthand': 'error',
-    'vue/prefer-import-from-vue': 'error'
+    'vue/prefer-true-attribute-shorthand': 'error'
   },
   overrides: [
     {
