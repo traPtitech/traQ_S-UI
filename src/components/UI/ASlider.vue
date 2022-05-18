@@ -12,8 +12,6 @@
 </template>
 
 <script lang="ts" setup>
-// コンポーネントを利用しているが型としてしか利用されていない判定になる
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import VueSlider from 'vue-slider-component'
 
 withDefaults(
