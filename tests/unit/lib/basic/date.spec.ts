@@ -7,7 +7,8 @@ import {
   getDisplayDate,
   compareDate,
   compareDateString,
-  getCreatedDate
+  getCreatedDate,
+  getCurrentTimeString
 } from '/@/lib/basic/date'
 
 const defaultDate1 = new Date('1985-12-04T15:21:34')
@@ -46,6 +47,15 @@ describe('getFullDayWithTimeString', () => {
   })
   it('can get full day with time (2)', () => {
     expect(getFullDayWithTimeString(defaultDate2)).toBe('2001/04/04 05:20')
+  })
+})
+
+describe('getCurrentTimeString', () => {
+  it('should work', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime('2022/05/30 12:34:56')
+    expect(getCurrentTimeString()).toBe('12:34')
+    vi.useRealTimers()
   })
 })
 

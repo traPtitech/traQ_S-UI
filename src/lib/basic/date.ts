@@ -14,6 +14,8 @@ export const getFullDayString = (date: Readonly<Date>) =>
 export const getFullDayWithTimeString = (date: Readonly<Date>) =>
   getFullDayString(date) + ' ' + getTimeString(date)
 
+export const getCurrentTimeString = () => getTimeString(new Date())
+
 /**
  * 2つの日時を比べ、差異がない部分については省略したものを出力する
  * @param ofDate 出力する日時

@@ -1,5 +1,6 @@
 import type Peer from 'skyway-js'
 import type { SfuRoom, RoomData } from 'skyway-js'
+import { getCurrentTimeString } from '/@/lib/basic/date'
 import apis from '/@/lib/apis'
 
 const skywayApiKey = window.traQConfig.skyway?.apiKey
@@ -119,8 +120,7 @@ class traQRTCClient extends traQRTCClientBase {
   public closeConnection() {
     if (this.peer) {
       this.peer.destroy()
-      // eslint-disable-next-line no-console
-      console.log('[RTC_Client] Connection closed')
+      this.log('Connection closed')
     }
   }
 
@@ -185,8 +185,7 @@ class traQRTCClient extends traQRTCClientBase {
 
     return new Promise<Peer>(resolve => {
       peer.on('open', () => {
-        // eslint-disable-next-line no-console
-        console.log(`[RTC_Client] Connection established, ID: ${peer.id}`)
+        this.log(`Connection established, ID: ${peer.id}`)
         resolve(peer)
       })
     })
@@ -196,18 +195,15 @@ class traQRTCClient extends traQRTCClientBase {
     this.dispatchEvent(new Event('connectionclose'))
   }
   private handlePeerError(err: unknown) {
-    // eslint-disable-next-line no-console
-    console.error(`[RTC_Client] ${err}`)
+    this.log('' + err, 'error')
     this.dispatchEvent(new CustomEvent('connectionerror', { detail: { err } }))
   }
   private handleRoomOpen() {
-    // eslint-disable-next-line no-console
-    console.log(`[RTC_Client] Room opened, name: ${this.roomName}`)
+    this.log(`Room opened, name: ${this.roomName}`)
     this.dispatchEvent(new Event('roomopen'))
   }
   private handleRoomClose() {
-    // eslint-disable-next-line no-console
-    console.log('[RTC_Client] Room closed')
+    this.log('Room closed')
     this.dispatchEvent(new Event('roomclose'))
   }
   private handleRoomPeerJoin(peerId: string) {
@@ -225,6 +221,11 @@ class traQRTCClient extends traQRTCClientBase {
   }
   private handleRoomData(data: RoomData) {
     this.dispatchEvent(new CustomEvent('datarecieve', { detail: { data } }))
+  }
+
+  private log(message: string, level: 'log' | 'warn' | 'error' = 'log') {
+    // eslint-disable-next-line no-console
+    console[level](`[RTC_Client] (${getCurrentTimeString()}) ${message}`)
   }
 }
 
