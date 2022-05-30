@@ -4,6 +4,7 @@
 
 ## 設計
 - [アーキテクチャ](./architecture.md)
+- [ディレクトリ構造](./directories.md)
 - [ストア](./store.md)
 - [テスト](./test.md)
 

@@ -1,0 +1,42 @@
+# ディレクトリ構造
+- src: ソースコード
+  - lib: 汎用ロジック
+    - basic: DOMに依存しない(ECMAScriptで収まる)純粋なJSの関数
+    - dom: DOMに依存するtraQのロジックの含まれない関数
+    - その他はごちゃごちゃ
+  - composables
+    - utils: 汎用composable
+    - dom: DOMに大きく依存するcomposable
+    - その他はごちゃごちゃ
+  - components
+    - Authenticate: ログイン画面周り
+    - GroupManager: グループ管理画面周り
+    - Main
+      - CommandPalette: メッセージ検索やコマンドパレット周り
+      - MainView
+      - NavigationBar
+      - PopupNavigator
+      - StampPicker
+    - Modal: モーダル周り
+    - Settings: 設定画面周り
+    - ShareTarget: WebShareTargetAPIから開ける画面周り
+    - Toast: トースト周り
+    - UI: 汎用部品
+  - views: route直下のコンポーネント一覧
+  - router
+  - store: ストア。詳細は`docs/store.md`を参照。
+  - styles: SCSS変数やmixinなどの定義やグローバルに適用されるスタイルなど
+  - sw: サービスワーカー周り
+  - types: パッケージや`@types/web`に存在しないWebAPIの型定義
+  - assets: 画像など
+- public: 静的ファイル。基本はsrcを使う。URLが固定されていてほしい場合などに利用
+- build: ビルド関連スクリプト
+- dist: ビルド成果物
+- tests: テスト
+  - unit: ユニットテスト
+  - e2e: E2Eテスト
+- coverage: テストのカバレッジ出力
+- patches: dependencyのパッチ。詳細は`patches/README.md`を参照
+
+## 補足
+- components/views以下のcomposablesはそのフォルダ以下のコンポーネントからしか利用されないcomposablesが格納されている
