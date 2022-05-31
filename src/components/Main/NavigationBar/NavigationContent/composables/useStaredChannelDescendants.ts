@@ -26,6 +26,7 @@ const collectDescendants = (
   return result
 }
 
+// 関数名は Descendants だが、検索に自分自身も含ませるために、star しているチャンネル自身も含ませている
 const useStaredChannelDescendants = () => {
   const { staredChannelSet } = useStaredChannels()
   const { channelsMap } = useChannelsStore()
