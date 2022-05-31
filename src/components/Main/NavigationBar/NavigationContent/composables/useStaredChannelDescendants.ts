@@ -15,7 +15,7 @@ const collectDescendants = (
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const channel = channelsMap.get(id)!
 
-  const result = [...channel.children]
+  const result = [channel.id, ...channel.children]
   for (let i = 0; i < result.length; i++) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const c = channelsMap.get(result[i]!)
