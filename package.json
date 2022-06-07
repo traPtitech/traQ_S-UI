@@ -94,7 +94,7 @@
     "vite-svg-loader": "^3.3.0",
     "vitest": "^0.10.4",
     "vitest-github-actions-reporter": "^0.4.0",
-    "vue-tsc": "^0.34.16",
+    "vue-tsc": "^0.37.1",
     "workbox-cacheable-response": "^6.5.3",
     "workbox-core": "^6.5.3",
     "workbox-expiration": "^6.5.3",
