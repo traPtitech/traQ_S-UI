@@ -15,3 +15,5 @@ https://github.com/kekee000/fonteditor-core/pull/47 がマージされリリー�
 
 - `<div>`要素などが`any`になるのを回避
   - `vue-slider-component/typings/typings/global.d.ts`で`any`に上書きされている
+- `VueSlider.vue`への型の参照の削除
+  - `vue-tsc`がこける
