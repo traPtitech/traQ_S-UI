@@ -1,21 +1,21 @@
 <template>
   <vue-slider
-    :model-value="modelValue"
+    v-model="value"
     :min="min"
     :max="max"
     :disabled="disabled"
     :tooltip="tooltip"
     :tooltip-formatter="tooltipFormatter"
     :dot-size="12"
-    @change="onChange"
   />
 </template>
 
 <script lang="ts" setup>
 import type { TooltipFormatter, TooltipProp } from 'vue-slider-component'
 import VueSlider from 'vue-slider-component'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     modelValue: number
     disabled?: boolean
@@ -36,9 +36,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', _val: number): void
 }>()
 
-const onChange = (val: number) => {
-  emit('update:modelValue', val)
-}
+const value = useModelValueSyncer(props, emit)
 </script>
 
 <style lang="scss">
