@@ -12,6 +12,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { TooltipFormatter, TooltipProp } from 'vue-slider-component'
 import VueSlider from 'vue-slider-component'
 
 withDefaults(
@@ -20,8 +21,8 @@ withDefaults(
     disabled?: boolean
     min?: number
     max?: number
-    tooltipFormatter?: VueSlider['tooltipFormatter']
-    tooltip?: VueSlider['tooltip']
+    tooltipFormatter?: TooltipFormatter
+    tooltip?: TooltipProp
   }>(),
   {
     disabled: false,
@@ -35,9 +36,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', _val: number): void
 }>()
 
-// vue sliderの型が変
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const onChange: any = (val: number) => {
+const onChange = (val: number) => {
   emit('update:modelValue', val)
 }
 </script>
