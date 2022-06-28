@@ -51,7 +51,7 @@ const channelOptions = computed(() => {
 })
 
 watchEffect(() => {
-  value.value = filteredChannels.value[0]?.id ?? value.value
+  value.value = (query.value && filteredChannels.value[0]?.id) || value.value
 })
 </script>
 
