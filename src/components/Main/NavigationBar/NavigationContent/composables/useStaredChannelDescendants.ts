@@ -15,7 +15,7 @@ const collectDescendants = (
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const channel = channelsMap.get(id)!
 
-  const result = [...channel.children]
+  const result = [channel.id, ...channel.children]
   for (let i = 0; i < result.length; i++) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const c = channelsMap.get(result[i]!)
@@ -26,6 +26,7 @@ const collectDescendants = (
   return result
 }
 
+// 関数名は Descendants だが、検索に自分自身も含ませるために、star しているチャンネル自身も含ませている
 const useStaredChannelDescendants = () => {
   const { staredChannelSet } = useStaredChannels()
   const { channelsMap } = useChannelsStore()

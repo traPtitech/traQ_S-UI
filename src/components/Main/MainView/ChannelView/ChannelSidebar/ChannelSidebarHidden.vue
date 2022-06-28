@@ -11,9 +11,11 @@
     <user-icon-ellipsis-list
       direction="col"
       transition="fade-bottom"
+      count-clickable
       show-count
       :user-ids="viewerIds"
       :class="$style.rest"
+      @count-click="emit('openViewers')"
     />
   </div>
 </template>
@@ -34,6 +36,7 @@ withDefaults(
 
 const emit = defineEmits<{
   (e: 'open'): void
+  (e: 'openViewers'): void
 }>()
 </script>
 

@@ -34,7 +34,7 @@
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-import { onBeforeUnmount, onMounted, shallowRef, ref, toRef } from 'vue'
+import { onMounted, shallowRef, ref, toRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
 import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
@@ -54,11 +54,7 @@ const { addAttachment: addStateAttachment } = useMessageInputStateAttachment(
   'share-target',
   addErrorToast
 )
-const { addAttachment, destroy } = useAttachments(addStateAttachment)
-
-onBeforeUnmount(() => {
-  destroy()
-})
+const { addAttachment } = useAttachments(addStateAttachment)
 
 const textareaRef = shallowRef<HTMLTextAreaElement>()
 const focus = () => {

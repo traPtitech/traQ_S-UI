@@ -8,13 +8,7 @@
         prevent-modal
         :class="$style.icon"
       />
-      <image-upload
-        :destroy-flag="imageUploadState.destroyFlag"
-        rounded
-        :class="$style.uploder"
-        @input="onNewImgSet"
-        @destroyed="onNewDestroyed"
-      />
+      <image-upload v-model="newIcon" rounded :class="$style.uploder" />
     </div>
     <div :class="$style.element">
       <h3 :class="$style.header">表示名</h3>
@@ -73,8 +67,6 @@ import { computed, reactive, ref, toRef } from 'vue'
 import type { UserDetail } from '@traptitech/traq'
 import apis, { formatResizeError } from '/@/lib/apis'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
-import type { ImageUploadState } from '/@/components/Settings/composables/useImageUpload'
-import useImageUpload from '/@/components/Settings/composables/useImageUpload'
 import { nullUuid } from '/@/lib/basic/uuid'
 import useChannelOptions from '/@/composables/useChannelOptions'
 import useMaxLength from '/@/composables/utils/useMaxLength'
@@ -108,17 +100,16 @@ type Profile = Pick<
 
 const useProfileUpdate = (
   state: Profile,
-  imageUploadState: ImageUploadState,
-  isStateChanged: Ref<boolean>,
-  destroyImageUploadState: () => void
+  newIcon: Ref<File | undefined>,
+  isStateChanged: Ref<boolean>
 ) => {
   const { addSuccessToast, addErrorToast } = useToastStore()
   const isUpdating = ref(false)
 
   const onUpdateClick = async () => {
     const promises = []
-    if (imageUploadState.imgData !== undefined) {
-      promises.push(apis.changeMyIcon(imageUploadState.imgData))
+    if (newIcon.value !== undefined) {
+      promises.push(apis.changeMyIcon(newIcon.value))
     }
     if (isStateChanged.value) {
       promises.push(apis.editMe(state))
@@ -126,7 +117,7 @@ const useProfileUpdate = (
     try {
       isUpdating.value = true
       await Promise.all(promises)
-      destroyImageUploadState()
+      newIcon.value = undefined
 
       addSuccessToast('プロフィールを更新しました')
     } catch (e) {
@@ -180,22 +171,17 @@ fetchStamps()
 
 const { channelOptions } = useChannelOptions('--未設定--')
 
-const {
-  imageUploadState,
-  destroyImageUploadState,
-  onNewImgSet,
-  onNewDestroyed
-} = useImageUpload()
 const { state, isStateChanged } = useState(detail)
+
+const newIcon = ref<File | undefined>()
 const isChanged = computed(
-  () => isStateChanged.value || imageUploadState.imgData !== undefined
+  () => isStateChanged.value || newIcon.value !== undefined
 )
 
 const { isUpdating, onUpdateClick } = useProfileUpdate(
   state,
-  imageUploadState,
-  isChanged,
-  destroyImageUploadState
+  newIcon,
+  isChanged
 )
 const isLengthValid = useIsLengthValid(state)
 const isTwitterIdValid = computed(

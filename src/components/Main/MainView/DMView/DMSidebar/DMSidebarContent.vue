@@ -1,6 +1,10 @@
 <template>
   <div>
-    <channel-sidebar-viewers :viewer-ids="viewerIds" :class="$style.item" />
+    <channel-sidebar-viewers
+      v-model="isViewersDetailOpen"
+      :viewer-ids="viewerIds"
+      :class="$style.item"
+    />
     <channel-sidebar-pinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.item"
@@ -18,6 +22,7 @@ import ChannelSidebarPinned from '/@/components/Main/MainView/ChannelView/Channe
 import ChannelSidebarViewers from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelSidebarViewers.vue'
 import ChannelSidebarEvents from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelSidebarEvents.vue'
 import type { UserId } from '/@/types/entity-ids'
+import { ref } from 'vue'
 
 withDefaults(
   defineProps<{
@@ -33,6 +38,8 @@ const emit = defineEmits<{
   (e: 'moveToPinned'): void
   (e: 'moveToEvents'): void
 }>()
+
+const isViewersDetailOpen = ref(false)
 </script>
 
 <style lang="scss" module>

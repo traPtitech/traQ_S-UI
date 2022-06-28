@@ -28,11 +28,6 @@
         label="ファイルのサムネイル一覧"
         @click="clearThumbnailCache"
       />
-      <form-button
-        :class="$style.button"
-        label="ユニコードスタンプ"
-        @click="clearUnicodeStampCache"
-      />
     </div>
   </div>
 </template>
@@ -42,7 +37,6 @@ import { onMounted, ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import { wait } from '/@/lib/basic/timer'
 import { checkStorageManagerSupport } from '/@/lib/dom/browser'
-import { deleteUnicodeStamps } from '/@/lib/stampCache'
 import { prettifyFileSize } from '/@/lib/basic/file'
 import { useStampsStore } from '/@/store/entities/stamps'
 
@@ -110,11 +104,6 @@ const clearThumbnailCache = async () => {
   if (!confirmClear()) return
   await clearCacheStorage('thumbnail-cache')
   setCacheData()
-  showToast()
-}
-const clearUnicodeStampCache = async () => {
-  await deleteUnicodeStamps()
-  await fetchStamps({ ignoreCache: true })
   showToast()
 }
 </script>

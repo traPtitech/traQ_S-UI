@@ -15,40 +15,20 @@ import speexWorkletPath from '@sapphi-red/web-noise-suppressor/speexWorklet.js?u
 import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWorklet.js?url'
 
 let rnnoiseWasmBinary: ArrayBuffer | undefined
-const loadRnnoise = async (ctx: AudioContext) => {
+const loadRnnoiseWasmBinary = async () => {
   if (rnnoiseWasmBinary) return rnnoiseWasmBinary
-
-  // 先に代入すると取得中に取得完了した判定が発生しうるので、
-  // どっちも完了してからrnnoiseWasmBinaryに代入すること
-  await ctx.audioWorklet.addModule(rnnoiseWorkletPath)
   rnnoiseWasmBinary = await loadRnnoiseLib({
     url: rnnoiseWasmPath,
     simdUrl: rnnoiseSimdWasmPath
   })
-
   return rnnoiseWasmBinary
 }
 
 let speexWasmBinary: ArrayBuffer | undefined
-const loadSpeex = async (ctx: AudioContext) => {
+const loadSpeexWasmBinary = async () => {
   if (speexWasmBinary) return speexWasmBinary
-
-  // 先に代入すると取得中に取得完了した判定が発生しうるので、
-  // どっちも完了してからspeexWasmBinaryに代入すること
-  await ctx.audioWorklet.addModule(speexWorkletPath)
   speexWasmBinary = await loadSpeexLib({ url: speexWasmPath })
-
   return speexWasmBinary
-}
-
-let noiseGateLoaded = false
-const loadNoiseGate = async (ctx: AudioContext) => {
-  if (noiseGateLoaded) return
-
-  // 先に代入すると取得中に取得完了した判定が発生しうるので、
-  // 完了してからnoiseGateLoadedに代入すること
-  await ctx.audioWorklet.addModule(noiseGateWorkletPath)
-  noiseGateLoaded = true
 }
 
 export type NoiseSuppressionType = 'rnnoise' | 'speex' | 'none'
@@ -127,7 +107,10 @@ export default class LocalStreamManager {
     let lastNode: AudioNode = source
 
     if (noiseSuppression === 'rnnoise') {
-      const rnnoiseBinary = await loadRnnoise(this.context)
+      const [rnnoiseBinary] = await Promise.all([
+        loadRnnoiseWasmBinary(),
+        this.ensureWorkletModule(rnnoiseWorkletPath)
+      ])
       const rnnoiseNode = new RnnoiseWorkletNode(this.context, {
         wasmBinary: rnnoiseBinary,
         maxChannels: 2
@@ -137,7 +120,10 @@ export default class LocalStreamManager {
       lastNode.connect(rnnoiseNode)
       lastNode = rnnoiseNode
     } else if (noiseSuppression === 'speex') {
-      const speexBinary = await loadSpeex(this.context)
+      const [speexBinary] = await Promise.all([
+        loadSpeexWasmBinary(),
+        this.ensureWorkletModule(speexWorkletPath)
+      ])
       const speexNode = new SpeexWorkletNode(this.context, {
         wasmBinary: speexBinary,
         maxChannels: 2
@@ -149,7 +135,7 @@ export default class LocalStreamManager {
     }
 
     if (noiseGateThreshold !== -100) {
-      await loadNoiseGate(this.context)
+      await this.ensureWorkletModule(noiseGateWorkletPath)
       const noiseGateNode = new NoiseGateWorkletNode(this.context, {
         openThreshold: noiseGateThreshold,
         holdMs: 90,
@@ -220,5 +206,15 @@ export default class LocalStreamManager {
     }
 
     return this.context.getLevelFromNode(this.analyser)
+  }
+
+  /* @sapphi-red/web-noise-suppressor helper methods */
+
+  private loadedWorkletModules = new Set<string>()
+  private async ensureWorkletModule(path: string) {
+    if (this.loadedWorkletModules.has(path)) return
+
+    await this.context.audioWorklet.addModule(path)
+    this.loadedWorkletModules.add(path)
   }
 }

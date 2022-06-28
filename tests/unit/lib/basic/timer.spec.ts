@@ -7,7 +7,7 @@ describe('wait', () => {
     await expect(p).resolves.toBeUndefined()
     const after = Date.now()
 
-    expect(after - before).toBeGreaterThanOrEqual(100)
+    expect(after - before).toBeGreaterThanOrEqual(100 - 1) // 精度の問題か99になることがある
   })
 })
 

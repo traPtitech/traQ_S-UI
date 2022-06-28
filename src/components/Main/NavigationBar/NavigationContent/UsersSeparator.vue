@@ -40,6 +40,9 @@ withDefaults(
 }
 .name {
   position: relative;
+  word-break: normal;
+  overflow-wrap: break-word; // for Safari
+  overflow-wrap: anywhere;
 }
 .indicator {
   position: absolute;
@@ -47,8 +50,8 @@ withDefaults(
   right: -6px;
 }
 .line {
+  flex: 1;
   margin: 0 8px;
-  width: 100%;
   border-bottom: {
     style: solid;
     width: 2px;

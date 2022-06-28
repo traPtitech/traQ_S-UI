@@ -6,13 +6,12 @@
     <div :class="$style.userDesc">
       <a-slider
         v-if="showVolumeControl"
-        :value="volume"
+        v-model="volume"
         :min="0"
         :max="200"
         tooltip-formatter="{value}%"
         :disabled="disabled || volume === undefined"
         :tooltip="disabled ? 'none' : 'active'"
-        @change-value="onChange"
       />
       <span v-else :class="$style.userName">{{ userName }}</span>
     </div>
@@ -66,18 +65,22 @@ const emit = defineEmits<{
 
 const maxVolumeValue = 200
 
-const { talkingUsersState, getUserVolume, setUserVolume } = useAppRtcStore()
+const { talkingUsersState, streamVolumeMap, setUserVolume } = useAppRtcStore()
 const { usersMap } = useUsersStore()
-const volume = computed(() =>
-  Math.round(getUserVolume(props.userId) * maxVolumeValue)
-)
+const volume = computed({
+  get() {
+    return Math.round(
+      (streamVolumeMap.value.get(props.userId) ?? 1) * maxVolumeValue
+    )
+  },
+  set(value: number) {
+    setUserVolume(props.userId, value / maxVolumeValue)
+  }
+})
 const userName = computed(
   () => usersMap.value.get(props.userId)?.displayName ?? ''
 )
 const talkingLevel = computed(() => talkingUsersState.value.get(props.userId))
-const onChange = (value: number) => {
-  setUserVolume(props.userId, value / maxVolumeValue)
-}
 </script>
 
 <style lang="scss" module>

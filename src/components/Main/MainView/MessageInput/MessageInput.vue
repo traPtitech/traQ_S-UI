@@ -58,7 +58,7 @@ import MessageInputRightControls from './MessageInputRightControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { computed, onBeforeUnmount, ref, toRef, watchEffect } from 'vue'
+import { computed, ref, toRef, watchEffect } from 'vue'
 import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
@@ -86,17 +86,13 @@ const { addAttachment: addStateAttachment } = useMessageInputStateAttachment(
   channelId,
   addErrorToast
 )
-const { addAttachment, destroy } = useAttachments(addStateAttachment)
+const { addAttachment } = useAttachments(addStateAttachment)
 const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
   useModifierKey()
 const { sendWithModifierKey } = useBrowserSettings()
 const { channelsMap } = useChannelsStore()
 const isLeftControlsExpanded = ref(false)
 const isPreviewShown = ref(false)
-
-onBeforeUnmount(() => {
-  destroy()
-})
 
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false

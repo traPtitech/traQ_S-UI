@@ -12,6 +12,7 @@ import { client, destroyClient, initClient } from '/@/lib/webrtc/traQRTCClient'
 import type { SessionId, SessionType } from '/@/store/domain/rtc'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
+import { getCurrentTimeString } from '/@/lib/basic/date'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -98,12 +99,27 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
 
   const isCurrentDevice = computed(() => mixer.value !== undefined)
 
-  const getUserVolume = (userId: UserId) => {
-    return mixer.value?.getStreamVolume(userId) ?? 0
-  }
   const setUserVolume = (userId: UserId, volume: number) => {
     mixer.value?.setStreamVolume(userId, volume)
   }
+  const streamVolumeMap = ref(new Map<string, number>())
+  const onStreamVolumeChange = (key: string) => {
+    if (!mixer.value) return
+    streamVolumeMap.value.set(key, mixer.value.getStreamVolume(key))
+  }
+  watch(
+    mixer,
+    (newMixer, oldMixer) => {
+      if (oldMixer) {
+        oldMixer.listener.off('streamVolumeChange', onStreamVolumeChange)
+      }
+      if (newMixer) {
+        streamVolumeMap.value = new Map()
+        newMixer.listener.on('streamVolumeChange', onStreamVolumeChange)
+      }
+    },
+    { immediate: true }
+  )
 
   const startOrJoinRTCSession = ({
     channelId,
@@ -168,6 +184,11 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
     setContext({ audioContext, mixer, localStreamManager }) // initializeが終わってからセットすること
   }
 
+  const logRTC = (message: string) => {
+    // eslint-disable-next-line no-console
+    console.log(`[RTC] (${getCurrentTimeString()}) ${message}`)
+  }
+
   const establishConnection = async () => {
     const myId = meStore.myId.value
     if (!myId) {
@@ -197,8 +218,7 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
       }
     })
     client?.addEventListener('connectionclose', () => {
-      // eslint-disable-next-line no-console
-      console.log('[RTC] connection closed')
+      logRTC('connection closed')
     })
     await client?.establishConnection()
   }
@@ -240,15 +260,13 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
 
     client.addEventListener('userjoin', async e => {
       const userId = e.detail.userId
-      // eslint-disable-next-line no-console
-      console.log(`[RTC] User joined, ID: ${userId}`)
+      logRTC(`User joined, ID: ${userId}`)
       await mixer.value?.playFileSource('qall_joined')
     })
 
     client.addEventListener('userleave', async e => {
       const userId = e.detail.userId
-      // eslint-disable-next-line no-console
-      console.log(`[RTC] User left, ID: ${userId}`)
+      logRTC(`User left, ID: ${userId}`)
 
       if (mixer.value) {
         await mixer.value.stopAndRemoveStream(userId)
@@ -259,8 +277,7 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
     client.addEventListener('streamchange', async e => {
       const stream = e.detail.stream
       const userId = stream.peerId
-      // eslint-disable-next-line no-console
-      console.log(`[RTC] Recieved stream from ${userId}`)
+      logRTC(`Recieved stream from ${userId}`)
 
       await mixer.value?.addAndPlayStream(stream.peerId, stream)
       setUserVolume(userId, 0.5)
@@ -341,7 +358,7 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
     endQall,
     mute,
     unmute,
-    getUserVolume,
+    streamVolumeMap,
     setUserVolume
   }
 })
