@@ -14,7 +14,7 @@ import FilterInput from '/@/components/UI/FilterInput.vue'
 import { useChannelsStore } from '/@/store/entities/channels'
 import useChannelFilter from '/@/components/Main/NavigationBar/NavigationContent/composables/useChannelFilter'
 import FormSelector from '/@/components/UI/FormSelector.vue'
-import { computed } from 'vue'
+import { computed, watchEffect } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
@@ -48,6 +48,10 @@ const channelOptions = computed(() => {
       value: channel.id
     }))
     .sort((a, b) => compareStringInsensitive(a.key, b.key))
+})
+
+watchEffect(() => {
+  value.value = filteredChannels.value[0]?.id ?? value.value
 })
 </script>
 
