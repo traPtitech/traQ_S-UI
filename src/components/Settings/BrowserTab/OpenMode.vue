@@ -15,11 +15,11 @@
           label="特定のチャンネル"
           input-value="particular"
         />
-        <form-selector
+        <filterable-channel-selector
           v-if="openMode === 'particular'"
-          v-model="openChannelNameValue"
-          :options="channelOptions"
+          v-model="openChannelId"
           :class="$style.selector"
+          :options="channelOptions"
         />
       </div>
     </div>
@@ -27,13 +27,16 @@
 </template>
 
 <script lang="ts" setup>
-import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import type { OpenMode } from '/@/store/app/browserSettings'
 import useChannelPath from '/@/composables/useChannelPath'
 import useChannelOptions from '/@/composables/useChannelOptions'
 import { useModelSyncer } from '/@/composables/useModelSyncer'
 import { useChannelsStore } from '/@/store/entities/channels'
+import FilterableChannelSelector from '/@/components/UI/FilterableChannelSelector.vue'
+import { computed } from 'vue'
+import { channelPathToId } from '/@/lib/channelTree'
+import { useChannelTree } from '/@/store/domain/channelTree'
 
 const props = defineProps<{
   openMode: OpenMode
@@ -54,6 +57,18 @@ const { channelIdToPathString } = useChannelPath()
 const openModeValue = useModelSyncer(props, emit, 'openMode')
 const openChannelNameValue = useModelSyncer(props, emit, 'openChannelName')
 
+const openChannelId = computed({
+  get() {
+    const { channelTree } = useChannelTree()
+    return channelPathToId(
+      openChannelNameValue.value.split('/'),
+      channelTree.value
+    )
+  },
+  set(newValue: string) {
+    openChannelNameValue.value = channelIdToPathString(newValue)
+  }
+})
 const { channelOptions } = useChannelOptions(undefined, channel =>
   channel ? channelIdToPathString(channel.id) : '(unknown)'
 )
