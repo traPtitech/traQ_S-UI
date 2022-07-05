@@ -22,9 +22,8 @@ import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 const props = withDefaults(
   defineProps<{
     modelValue?: string | null
-    label?: string
   }>(),
-  { modelValue: '', onSecondary: false }
+  { modelValue: '' }
 )
 
 const emit = defineEmits<{
