@@ -35,10 +35,7 @@
     </div>
     <div :class="$style.element">
       <h3 :class="$style.header">ホームチャンネル</h3>
-      <filterable-channel-selector
-        v-model="state.homeChannel"
-        :options="channelOptions"
-      />
+      <filterable-channel-selector v-model="state.homeChannel" />
     </div>
     <div :class="$style.element">
       <h3 :class="$style.header">Twitter</h3>
@@ -167,8 +164,6 @@ const { fetchUserGroups } = useGroupsStore()
 fetchUserGroups()
 const { fetchStamps } = useStampsStore()
 fetchStamps()
-
-const { channelOptions } = useChannelOptions('--未設定--')
 
 const { state, isStateChanged } = useState(detail)
 
