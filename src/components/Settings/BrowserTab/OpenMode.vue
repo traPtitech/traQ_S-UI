@@ -53,13 +53,13 @@ const { fetchChannels } = useChannelsStore()
 fetchChannels()
 
 const { channelIdToPathString } = useChannelPath()
+const { channelTree } = useChannelTree()
 
 const openModeValue = useModelSyncer(props, emit, 'openMode')
 const openChannelNameValue = useModelSyncer(props, emit, 'openChannelName')
 
 const openChannelId = computed({
   get() {
-    const { channelTree } = useChannelTree()
     return channelPathToId(
       openChannelNameValue.value.split('/'),
       channelTree.value
