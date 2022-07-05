@@ -18,7 +18,6 @@
         <filterable-channel-selector
           v-if="openMode === 'particular'"
           v-model="openChannelId"
-          :class="$style.selector"
           :options="channelOptions"
         />
       </div>

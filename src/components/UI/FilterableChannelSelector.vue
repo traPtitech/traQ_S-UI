@@ -1,6 +1,6 @@
 <template>
   <div>
-    <filter-input v-model="query" on-secondary disable-ime />
+    <filter-input v-model="query" disable-ime :class="$style.form" />
     <form-selector
       v-model="value"
       :options="channelOptions"
@@ -58,5 +58,6 @@ watchEffect(() => {
 <style lang="scss" module>
 .form {
   margin-left: 12px;
+  margin-bottom: 4px;
 }
 </style>

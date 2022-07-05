@@ -37,7 +37,6 @@
       <h3 :class="$style.header">ホームチャンネル</h3>
       <filterable-channel-selector
         v-model="state.homeChannel"
-        :class="$style.form"
         :options="channelOptions"
       />
     </div>
