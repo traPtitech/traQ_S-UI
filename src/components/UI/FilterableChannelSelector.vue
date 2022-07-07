@@ -18,10 +18,12 @@ import { computed, watchEffect } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
+import { nullUuid } from '/@/lib/basic/uuid'
 
 const props = withDefaults(
   defineProps<{
     modelValue?: string | null
+    nullKeyName?: string
   }>(),
   { modelValue: '' }
 )
@@ -40,13 +42,21 @@ const channelListForFilter = computed(() =>
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
 const { channelIdToPathString } = useChannelPath()
 
+const nullVal = props.nullKeyName
+  ? {
+      key: props.nullKeyName,
+      value: nullUuid
+    }
+  : undefined
+
 const channelOptions = computed(() => {
-  return filteredChannels.value
+  const channels = filteredChannels.value
     .map(channel => ({
       key: channelIdToPathString(channel.id, true),
       value: channel.id
     }))
     .sort((a, b) => compareStringInsensitive(a.key, b.key))
+  return nullVal ? [nullVal, ...channels] : channels
 })
 
 watchEffect(() => {

@@ -35,7 +35,10 @@
     </div>
     <div :class="$style.element">
       <h3 :class="$style.header">ホームチャンネル</h3>
-      <filterable-channel-selector v-model="state.homeChannel" />
+      <filterable-channel-selector
+        v-model="state.homeChannel"
+        null-key-name="--未設定--"
+      />
     </div>
     <div :class="$style.element">
       <h3 :class="$style.header">Twitter</h3>
@@ -64,7 +67,6 @@ import type { UserDetail } from '@traptitech/traq'
 import apis, { formatResizeError } from '/@/lib/apis'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import { nullUuid } from '/@/lib/basic/uuid'
-import useChannelOptions from '/@/composables/useChannelOptions'
 import useMaxLength from '/@/composables/utils/useMaxLength'
 import { isValidTwitter } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
