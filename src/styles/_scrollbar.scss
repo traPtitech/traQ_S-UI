@@ -2,8 +2,9 @@ $scrollbar-width: 6px;
 
 * {
   scrollbar-color: var(--scrollbar-color) var(--scrollbar-track-color);
-  transition: scrollbar-color .3s;
-  &:hover, &:active {
+  transition: scrollbar-color 0.3s;
+  &:hover,
+  &:active {
     scrollbar-color: var(--scrollbar-hover-color) var(--scrollbar-track-color);
   }
 
@@ -22,7 +23,7 @@ $scrollbar-width: 6px;
 
   &::-webkit-scrollbar-thumb {
     background: var(--scrollbar-color);
-    transition: background .3s;
+    transition: background 0.3s;
     border-radius: $scrollbar-width;
     &:hover {
       background: var(--scrollbar-hover-color);

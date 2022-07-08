@@ -1,12 +1,13 @@
 # ディレクトリ構造
+
 - src: ソースコード
   - lib: 汎用ロジック
-    - basic: DOMに依存しない(ECMAScriptで収まる)純粋なJSの関数
-    - dom: DOMに依存するtraQのロジックの含まれない関数
+    - basic: DOM に依存しない(ECMAScript で収まる)純粋な JS の関数
+    - dom: DOM に依存する traQ のロジックの含まれない関数
     - その他はごちゃごちゃ
   - composables
-    - utils: 汎用composable
-    - dom: DOMに大きく依存するcomposable
+    - utils: 汎用 composable
+    - dom: DOM に大きく依存する composable
     - その他はごちゃごちゃ
   - components
     - Authenticate: ログイン画面周り
@@ -19,24 +20,25 @@
       - StampPicker
     - Modal: モーダル周り
     - Settings: 設定画面周り
-    - ShareTarget: WebShareTargetAPIから開ける画面周り
+    - ShareTarget: WebShareTargetAPI から開ける画面周り
     - Toast: トースト周り
     - UI: 汎用部品
-  - views: route直下のコンポーネント一覧
+  - views: route 直下のコンポーネント一覧
   - router
   - store: ストア。詳細は`docs/store.md`を参照。
-  - styles: SCSS変数やmixinなどの定義やグローバルに適用されるスタイルなど
+  - styles: SCSS 変数や mixin などの定義やグローバルに適用されるスタイルなど
   - sw: サービスワーカー周り
-  - types: パッケージや`@types/web`に存在しないWebAPIの型定義
+  - types: パッケージや`@types/web`に存在しない WebAPI の型定義
   - assets: 画像など
-- public: 静的ファイル。基本はsrcを使う。URLが固定されていてほしい場合などに利用
+- public: 静的ファイル。基本は src を使う。URL が固定されていてほしい場合などに利用
 - build: ビルド関連スクリプト
 - dist: ビルド成果物
 - tests: テスト
   - unit: ユニットテスト
-  - e2e: E2Eテスト
+  - e2e: E2E テスト
 - coverage: テストのカバレッジ出力
-- patches: dependencyのパッチ。詳細は`patches/README.md`を参照
+- patches: dependency のパッチ。詳細は`patches/README.md`を参照
 
 ## 補足
-- components/views以下のcomposablesはそのフォルダ以下のコンポーネントからしか利用されないcomposablesが格納されている
+
+- components/views 以下の composables はそのフォルダ以下のコンポーネントからしか利用されない composables が格納されている

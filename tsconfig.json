@@ -24,22 +24,10 @@
       "webappsec-credential-management"
     ],
     "paths": {
-      "/@/*": [
-        "src/*"
-      ]
+      "/@/*": ["src/*"]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable"
-    ]
+    "lib": ["esnext", "dom", "dom.iterable"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.vue",
-    "public/**/*.js"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.vue", "public/**/*.js"],
+  "exclude": ["node_modules"]
 }

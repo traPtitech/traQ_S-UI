@@ -1,13 +1,15 @@
 # アーキテクチャ
 
 ## コーディング
+
 基本は`ref`を利用する。
-ロジックは`useなんとか`という形でcomposablesとして抽出する。
-ほかのコンポーネントでも利用するcomposablesは別ファイルに切り出す。
+ロジックは`useなんとか`という形で composables として抽出する。
+ほかのコンポーネントでも利用する composables は別ファイルに切り出す。
 `computed`が複雑になるときは中の関数を純粋関数にして`lib`におく。
 純粋関数にすることでテストがしやすくなるため。
 
 ### コードの依存関係
+
 1. lib
 1. composables
 1. components
@@ -16,12 +18,14 @@
 の依存関係になるようにする。
 
 ## スタイル
-テーマで利用するものはCSS変数を利用する。`<body>`にCSS変数が注入される。
-SCSSからは`$theme-ui-primary`などのように利用可能である。頻出のものはmixinがあるので、`@include color-ui-primary`のように使う。
 
-ロジックによる出し分けが必要な場合は、WAI-ARIAの属性または`data-`属性を利用する。
-直接styleを設定するのは、複雑な処理を行う場合以外は避ける。
+テーマで利用するものは CSS 変数を利用する。`<body>`に CSS 変数が注入される。
+SCSS からは`$theme-ui-primary`などのように利用可能である。頻出のものは mixin があるので、`@include color-ui-primary`のように使う。
+
+ロジックによる出し分けが必要な場合は、WAI-ARIA の属性または`data-`属性を利用する。
+直接 style を設定するのは、複雑な処理を行う場合以外は避ける。
 例:
+
 ```vue
 <template>
   <div :class="$style.po" :disabled="bar">foo</div>
@@ -34,7 +38,7 @@ const bar = ref(false)
 <style lang="scss" module>
 .po {
   opacity: 1;
-  &[disabled]{
+  &[disabled] {
     opacity: 0.5;
   }
 }
@@ -42,24 +46,27 @@ const bar = ref(false)
 ```
 
 ### `font-size`に関して
-一貫性を保つため、特殊な事例を除いてmixinの`size-*`を利用すること。
+
+一貫性を保つため、特殊な事例を除いて mixin の`size-*`を利用すること。
 
 ### `font-weight`に関して
+
 `normal`と`bold`を利用すること。
 一貫性を保つため、またフォントがそれらしかロードされないため。
 
-## MainPageのコンポーネントの構造
-MainPageはチャンネル表示やクリップフォルダの表示があるページのこと。
+## MainPage のコンポーネントの構造
+
+MainPage はチャンネル表示やクリップフォルダの表示があるページのこと。
 
 - NavigationBar
 - MainView
   - MainViewHeader (!1)
   - PrimaryView
-    - PrimaryViewHeader: !1へteleport
+    - PrimaryViewHeader: !1 へ teleport
     - PrimaryViewContent
-    - PrimaryViewSidebar: モバイル時は!3へteleport
+    - PrimaryViewSidebar: モバイル時は!3 へ teleport
       - PrimaryViewSiderbarContent
-      - PrimaryViewSidebarOpener: !2へteleport
+      - PrimaryViewSidebarOpener: !2 へ teleport
   - PrimaryViewSidebarHidden (!2): 現在は未使用
   - SecondaryView
 - SidebarMobile (!3)
@@ -71,6 +78,7 @@ MainPageはチャンネル表示やクリップフォルダの表示があるペ
 参考: [#3172](https://github.com/traPtitech/traQ_S-UI/pull/3172)
 
 # ユーザーから見たデータの流れ
+
 1. NavigationSelector: 「ホーム」「アクティビティ」
 1. NavigationContent: 「チャンネル」「クリップフォルダ」
 1. MainView: 「メッセージ一覧」

@@ -2,7 +2,9 @@ $theme-accent-primary-default: var(--theme-accent-primary-default);
 $theme-accent-primary-background: var(--theme-accent-primary-background);
 $theme-accent-primary-inactive: var(--theme-accent-primary-inactive);
 $theme-accent-notification-default: var(--theme-accent-notification-default);
-$theme-accent-notification-background: var(--theme-accent-notification-background);
+$theme-accent-notification-background: var(
+  --theme-accent-notification-background
+);
 $theme-accent-online-default: var(--theme-accent-online-default);
 $theme-accent-error-default: var(--theme-accent-error-default);
 $theme-accent-focus-default: var(--theme-accent-focus-default);

@@ -3,6 +3,7 @@
 **[開発環境](./development.md)**
 
 ## 設計
+
 - [アーキテクチャ](./architecture.md)
 - [ディレクトリ構造](./directories.md)
 - [ストア](./store.md)
