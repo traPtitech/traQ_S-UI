@@ -4,7 +4,7 @@
       :preview-url="previewUrl"
       :embedded-url="embeddedUrl"
       show-play-icon
-      @click.prevent.stop
+      @click.prevent.stop=""
     />
     <a
       :href="url"
