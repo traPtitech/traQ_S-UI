@@ -13,7 +13,7 @@
     "test:unit:watch": "vitest -w",
     "test:e2e": "npm run build && npm run test:e2e:only-run",
     "test:e2e-headless": "npm run build:may-with-font && npm run test:e2e:only-run-headless",
-    "test:e2e:only-run": "start-server-and-test preview 4173 'cypress open'",
+    "test:e2e:only-run": "start-server-and-test preview 4173 'cypress open --e2e'",
     "test:e2e:only-run-headless": "start-server-and-test preview 4173 'cypress run --headless'",
     "lint": "eslint --fix --cache .",
     "lint:no-fix": "eslint --cache .",
