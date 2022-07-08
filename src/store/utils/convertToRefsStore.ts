@@ -17,7 +17,8 @@ type StoreToRefs<SS extends Store> = ToRefs<
   StoreState<SS> & StoreGetters<SS> & PiniaCustomStateProperties<StoreState<SS>>
 >
 
-type ToRefsedStore<SS extends Store> = Omit<SS, keyof StoreToRefs<SS>> & StoreToRefs<SS>
+type ToRefsedStore<SS extends Store> = Omit<SS, keyof StoreToRefs<SS>> &
+  StoreToRefs<SS>
 
 export const convertToRefsStore = <SS extends Store>(
   useStore: (pinia?: Pinia | null | undefined, hot?: StoreGeneric) => SS
