@@ -8,7 +8,7 @@ module.exports = {
     './eslint-vue-ts-recommended.cjs',
     'plugin:@typescript-eslint/recommended',
     'plugin:vue/vue3-recommended',
-    'plugin:prettier/recommended'
+    'prettier'
   ],
   plugins: ['unused-imports'],
   rules: {
