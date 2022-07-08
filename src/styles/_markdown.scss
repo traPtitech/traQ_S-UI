@@ -18,7 +18,9 @@ $spoiler-shown-background-color: var(--markdown-spoiler-shown-background);
 $link-text-color: var(--markdown-embed-link-text);
 $link-background-color: var(--markdown-embed-link-background);
 $link-highlight-text-color: var(--markdown-embed-link-highlight-text);
-$link-highlight-background-color: var(--markdown-embed-link-highlight-background);
+$link-highlight-background-color: var(
+  --markdown-embed-link-highlight-background
+);
 
 @import '@traptitech/traq-markdown-it/src/css/markdown';
 

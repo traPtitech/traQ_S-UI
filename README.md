@@ -1,4 +1,5 @@
 # traQ-S_UI - traP Internal Messenger Application
+
 [![GitHub release](https://img.shields.io/github/release/traPtitech/traQ_S-UI.svg)](https://GitHub.com/traPtitech/traQ_S-UI/releases/)
 ![CI](https://github.com/traPtitech/traQ_S-UI/workflows/CI/badge.svg)
 ![release](https://github.com/traPtitech/traQ_S-UI/workflows/release/badge.svg)
@@ -21,4 +22,5 @@ If you want to deploy your own instance of traQ, then follow the instructions in
 If you want to contribute to traQ (Frontend), then follow the instructions in [development.md](./docs/development.md).
 
 ## License
+
 Code licensed under [the MIT License](https://github.com/traPtitech/traQ_S-UI/blob/master/LICENSE).

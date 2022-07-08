@@ -1,0 +1,6 @@
+/coverage
+dist
+node_modules
+/patches
+/src/assets/emoji_altname_table.json
+/src/assets/unicode_emojis.json
