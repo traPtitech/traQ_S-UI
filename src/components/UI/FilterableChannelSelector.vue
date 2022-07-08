@@ -60,7 +60,12 @@ const channelOptions = computed(() => {
 })
 
 watchEffect(() => {
-  value.value = (query.value && filteredChannels.value[0]?.id) || value.value
+  if (query.value === '') return
+
+  const firstCandidate = filteredChannels.value[0]
+  if (firstCandidate) {
+    value.value = firstCandidate.id
+  }
 })
 </script>
 
