@@ -36,7 +36,7 @@
     "dequal": "^2.0.2",
     "firebase": "^9.8.4",
     "highlight.js": "^11.5.1",
-    "idb-keyval": "^6.1.0",
+    "idb-keyval": "^6.2.0",
     "mitt": "^3.0.0",
     "pica": "^9.0.1",
     "skyway-js": "^4.4.4",
@@ -46,7 +46,7 @@
     "turndown-plugin-gfm": "^1.0.2",
     "vue": "^3.2.36",
     "vue-router": "^4.0.15",
-    "vue-slider-component": "^4.0.0-beta.8",
+    "vue-slider-component": "^4.0.0-beta.9",
     "zod": "^3.17.3"
   },
   "devDependencies": {
@@ -55,7 +55,7 @@
     "@types/dom-screen-wake-lock": "^1.0.0",
     "@types/katex": "^0.14.0",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "^16.11.36",
+    "@types/node": "^16.11.43",
     "@types/pica": "^9.0.1",
     "@types/punycode": "^2.1.0",
     "@types/serviceworker": "^0.0.48",
