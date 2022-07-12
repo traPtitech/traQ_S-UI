@@ -28,7 +28,6 @@
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import type { OpenMode } from '/@/store/app/browserSettings'
 import useChannelPath from '/@/composables/useChannelPath'
-import useChannelOptions from '/@/composables/useChannelOptions'
 import { useModelSyncer } from '/@/composables/useModelSyncer'
 import { useChannelsStore } from '/@/store/entities/channels'
 import FilterableChannelSelector from '/@/components/UI/FilterableChannelSelector.vue'
@@ -67,9 +66,6 @@ const openChannelId = computed({
     openChannelNameValue.value = channelIdToPathString(newValue)
   }
 })
-const { channelOptions } = useChannelOptions(undefined, channel =>
-  channel ? channelIdToPathString(channel.id) : '(unknown)'
-)
 </script>
 
 <style lang="scss" module>
