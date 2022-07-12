@@ -38,6 +38,7 @@
       <filterable-channel-selector
         v-model="state.homeChannel"
         null-key-name="--未設定--"
+        :class="$style.form"
       />
     </div>
     <div :class="$style.element">
