@@ -42,12 +42,14 @@ const channelListForFilter = computed(() =>
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
 const { channelIdToPathString } = useChannelPath()
 
-const nullVal = props.nullKeyName
-  ? {
-      key: props.nullKeyName,
-      value: nullUuid
-    }
-  : undefined
+const nullVal = computed(() =>
+  props.nullKeyName
+    ? {
+        key: props.nullKeyName,
+        value: nullUuid
+      }
+    : undefined
+)
 
 const channelOptions = computed(() => {
   const channels = filteredChannels.value
@@ -56,7 +58,7 @@ const channelOptions = computed(() => {
       value: channel.id
     }))
     .sort((a, b) => compareStringInsensitive(a.key, b.key))
-  return nullVal ? [nullVal, ...channels] : channels
+  return nullVal.value ? [nullVal.value, ...channels] : channels
 })
 
 watchEffect(() => {
