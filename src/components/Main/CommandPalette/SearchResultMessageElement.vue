@@ -29,7 +29,7 @@
         </div>
       </div>
       <search-result-message-file-list
-        :v-if="fileIds.length > 0"
+        v-if="fileIds.length > 0"
         :file-ids="fileIds"
         :class="$style.fileList"
       />

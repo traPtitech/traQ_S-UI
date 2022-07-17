@@ -31,7 +31,6 @@
         v-model:size-effect="selectedSizeEffect"
         v-model:anime-effects="selectedAnimeEffects"
         :class="$style.effectSelector"
-        :stamp-id="preselected"
       />
       <stamp-picker-preview
         :stamp-id="preselected"

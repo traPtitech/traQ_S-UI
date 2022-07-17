@@ -2,7 +2,7 @@
   <div>
     <account-state :class="$style.section" :state="user.state" />
     <bio-text :class="$style.section" :bio="detail?.bio" />
-    <home-channel :id="detail?.homeChannel" :class="$style.section" />
+    <home-channel :channel-id="detail?.homeChannel" :class="$style.section" />
     <account-list
       :class="$style.section"
       :bot="user.bot"

@@ -15,7 +15,7 @@
         :name="name"
         :placeholder="placeholder"
         :style="style"
-        rows="1"
+        :rows="rows"
       />
       <length-count
         :class="$style.count"
@@ -42,11 +42,13 @@ const props = withDefaults(
     label?: string
     maxHeight?: number
     maxLength?: number
+    rows?: string
   }>(),
   {
     modelValue: '',
     onSecondary: false,
-    placeholder: ''
+    placeholder: '',
+    rows: '1'
   }
 )
 

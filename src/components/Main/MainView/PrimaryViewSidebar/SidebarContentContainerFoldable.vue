@@ -8,8 +8,7 @@
   >
     <template #header-control>
       <a-icon
-        width="20"
-        height="20"
+        :size="20"
         name="rounded-triangle"
         :class="$style.icon"
         :data-is-open="$boolAttr(isOpen)"

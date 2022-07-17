@@ -17,7 +17,6 @@
         <audio-player-volume-slider
           v-model:volume="volume"
           :class="$style.volumeSlider"
-          :duration="duration"
           :disabled="cantPlay"
           keep-expanded
         />
@@ -68,9 +67,11 @@ import useFileWaveform from '/@/composables/files/useFileWaveform'
 import useFileMeta from '/@/composables/files/useFileMeta'
 import useAudio from '/@/composables/media/useAudio'
 import { useUsersStore } from '/@/store/entities/users'
+import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{
+    channelId: ChannelId | DMChannelId
     fileId?: string
   }>(),
   {

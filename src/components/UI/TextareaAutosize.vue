@@ -3,6 +3,10 @@
     ref="textareaEle"
     :value="value"
     :class="$style.textarea"
+    :readonly="readonly"
+    :placeholder="placeholder"
+    :rows="rows"
+    :name="name"
     @input="onInput"
   />
 </template>
@@ -15,6 +19,10 @@ import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 const props = defineProps<{
   modelValue: string
   maxHeight?: number
+  readonly?: boolean
+  placeholder?: string
+  rows?: string
+  name?: string
 }>()
 
 const emit = defineEmits<{

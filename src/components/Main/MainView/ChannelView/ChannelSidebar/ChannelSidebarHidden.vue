@@ -4,8 +4,7 @@
       :class="$style.icon"
       mdi
       name="chevron-double"
-      width="28"
-      height="28"
+      :size="28"
       @click="emit('open')"
     />
     <user-icon-ellipsis-list

@@ -25,22 +25,22 @@ import { constructChannelPath } from '/@/router'
 import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
 
 const props = defineProps<{
-  id?: string | null
+  channelId?: string | null
 }>()
 
 const { openLinkAndClearModal } = useOpenLinkAndClearModal()
-const isLoading = computed(() => props.id === undefined)
+const isLoading = computed(() => props.channelId === undefined)
 const isEmpty = computed(() =>
-  props.id === undefined ? false : props.id === null
+  props.channelId === undefined ? false : props.channelId === null
 )
 
 const { channelIdToPathString } = useChannelPath()
 const channelPath = computed(() =>
-  props.id ? channelIdToPathString(props.id) : ''
+  props.channelId ? channelIdToPathString(props.channelId) : ''
 )
 
 const onClick = async (event: MouseEvent) => {
-  if (!props.id) return
+  if (!props.channelId) return
 
   openLinkAndClearModal(event, constructChannelPath(channelPath.value))
 }

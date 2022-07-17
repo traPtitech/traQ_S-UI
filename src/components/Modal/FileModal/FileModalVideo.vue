@@ -7,7 +7,6 @@
       <video
         controls
         draggable="false"
-        :alt="fileMeta.name"
         :src="fileRawPath"
       />
       <div :class="$style.footer">

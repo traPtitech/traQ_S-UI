@@ -5,10 +5,9 @@
     </div>
     <video
       controls
-      controlsList="nodownload"
+      controlslist="nodownload"
       preload="none"
       draggable="false"
-      :alt="fileMeta?.name"
       :src="fileRawPath"
     />
   </div>

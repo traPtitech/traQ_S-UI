@@ -8,7 +8,7 @@
       :aria-selected="isStared"
       @click="toggleStarFilter"
     >
-      <a-icon :class="$style.icon" name="star" :width="22" :height="22" mdi />
+      <a-icon :class="$style.icon" name="star" :size="22" mdi />
     </button>
   </div>
 </template>

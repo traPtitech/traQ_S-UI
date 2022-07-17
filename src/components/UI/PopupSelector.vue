@@ -5,7 +5,7 @@
       <a-icon
         :class="$style.trailingIcon"
         name="rounded-triangle"
-        :width="small ? 20 : 24"
+        :size="small ? 20 : 24"
       />
     </div>
     <click-outside @click-outside="close">

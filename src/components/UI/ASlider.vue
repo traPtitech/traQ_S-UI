@@ -12,8 +12,12 @@
 
 <script lang="ts" setup>
 import type { TooltipFormatter, TooltipProp } from 'vue-slider-component'
-import VueSlider from 'vue-slider-component'
+import _VueSlider from 'vue-slider-component'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
+
+// 厳密な型がついていないのでanyにする
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const VueSlider = _VueSlider as any
 
 const props = withDefaults(
   defineProps<{

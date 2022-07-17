@@ -8,8 +8,7 @@
       :class="$style.icon"
       :name="iconName"
       :mdi="iconMdi"
-      :width="24"
-      :height="24"
+      :size="24"
     />
     <span :class="$style.label">{{ label }}</span>
   </div>

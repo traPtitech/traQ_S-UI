@@ -3,6 +3,7 @@
     <div :class="$style.imgContainer" :style="styles.imgContainer">
       <img
         :src="src"
+        :alt="alt"
         :class="$style.img"
         :style="styles.img"
         draggable="false"
@@ -17,6 +18,7 @@ import useImageViewer from './composables/useImageViewer'
 
 defineProps<{
   src?: string
+  alt?: string
 }>()
 
 const containerEle = ref<HTMLDivElement>()

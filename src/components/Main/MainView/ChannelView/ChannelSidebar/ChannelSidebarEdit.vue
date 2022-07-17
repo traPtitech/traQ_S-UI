@@ -8,8 +8,7 @@
       <a-icon
         mdi
         :name="isEditing ? 'toggle-switch-on' : 'toggle-switch-off'"
-        height="20"
-        width="20"
+        :size="20"
       />
       <div>編集</div>
     </div>

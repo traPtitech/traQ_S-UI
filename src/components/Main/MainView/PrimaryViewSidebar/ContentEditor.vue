@@ -14,8 +14,8 @@
       :class="$style.button"
       @click="onButtonClick"
     >
-      <a-icon v-if="isEditingValue" width="20" height="20" name="check" mdi />
-      <a-icon v-else width="20" height="20" name="pencil-outline" mdi />
+      <a-icon v-if="isEditingValue" :size="20" name="check" mdi />
+      <a-icon v-else :size="20" name="pencil-outline" mdi />
     </button>
   </div>
 </template>

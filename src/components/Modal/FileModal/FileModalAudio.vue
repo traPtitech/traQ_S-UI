@@ -4,7 +4,6 @@
     <audio
       ref="audioEle"
       controls
-      :alt="fileMeta?.name"
       :src="fileRawPath"
       :class="$style.audio"
     />

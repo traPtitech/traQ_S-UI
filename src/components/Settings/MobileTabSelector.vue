@@ -11,7 +11,6 @@
         :route-name="navigation.routeName"
         :icon-name="navigation.iconName"
         :icon-mdi="navigation.iconMdi"
-        :is-selected="currentRouteName === navigation.routeName"
       />
       <safari-warning :class="$style.safariWarning" />
     </div>
