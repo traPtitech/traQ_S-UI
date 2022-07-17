@@ -4,11 +4,7 @@
       <div :class="$style.header">
         <file-modal-content-header :file-id="fileMeta.id" is-white />
       </div>
-      <video
-        controls
-        draggable="false"
-        :src="fileRawPath"
-      />
+      <video controls draggable="false" :src="fileRawPath" />
       <div :class="$style.footer">
         <file-modal-content-footer :file-id="fileMeta.id" is-white />
       </div>

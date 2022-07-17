@@ -1,12 +1,7 @@
 <template>
   <div :class="$style.container">
     <file-modal-content-header v-if="fileMeta" :file-id="fileMeta.id" />
-    <audio
-      ref="audioEle"
-      controls
-      :src="fileRawPath"
-      :class="$style.audio"
-    />
+    <audio ref="audioEle" controls :src="fileRawPath" :class="$style.audio" />
     <audio-player-waveform
       v-if="fileWaveformPath"
       v-model:current-time="currentTime"

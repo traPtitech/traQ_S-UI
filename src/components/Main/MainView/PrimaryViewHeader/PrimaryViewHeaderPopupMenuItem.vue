@@ -4,12 +4,7 @@
     :data-is-disabled="$boolAttr(disabled)"
     @click="onClick"
   >
-    <a-icon
-      :class="$style.icon"
-      :name="iconName"
-      :mdi="iconMdi"
-      :size="24"
-    />
+    <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
     <span :class="$style.label">{{ label }}</span>
   </div>
 </template>
