@@ -45,6 +45,7 @@
 </template>
 
 <script lang="ts">
+import type { DefineComponent } from 'vue'
 import { computed, defineAsyncComponent } from 'vue'
 import type { ModalState } from '/@/store/ui/modal/states'
 import { useModalStore } from '/@/store/ui/modal'
@@ -66,7 +67,9 @@ const modalComponentMap: Record<ModalState['type'], string> = {
   'group-member-add': 'GroupMemberAddModal/GroupMemberAddModal'
 }
 
-const modalModules = import.meta.glob('/src/components/Modal/*/*Modal.vue')
+const modalModules = import.meta.glob<DefineComponent>(
+  '/src/components/Modal/*/*Modal.vue'
+)
 </script>
 
 <script lang="ts" setup>
