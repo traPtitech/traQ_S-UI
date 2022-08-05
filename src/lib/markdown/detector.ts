@@ -39,7 +39,15 @@ const parse = (str: string): StructData | null => {
   }
 }
 
+type ForEachDataState =
+  | 'outside' // !{}の外
+  | 'inside' // !{}の中
+  | 'insideString' // !{}の中の文字列の中
+
 /**
+ * https://github.com/traPtitech/traQ/blob/master/utils/message/parser.go と検知できるものをあわせること
+ * https://github.com/traPtitech/traQ_S-UI/pull/3515 の図を参照
+ *
  * @param shortcut funcがtrueまたはfalseを返すときに即時に実行を終わるかどうか(nullのときは行わない)
  * @returns shortcutした場合はその値、そうでない場合はnull
  */
@@ -51,34 +59,42 @@ export const forEachData = (
   ) => boolean | void,
   shortcut: boolean | null = null
 ) => {
-  let isInside = false
+  let state: ForEachDataState = 'outside'
   let startIndex = -1
-  let isString = false
-  for (let i = 0; i < text.length; i++) {
-    if (isInside) {
-      if (text[i] === '"') {
-        isString = !isString
-      } else if (!isString && text[i] === '}') {
-        isInside = false
-        const jsonString = text.slice(startIndex + 1, i + 1) // `{`から`}`まで
-        const data = parse(jsonString)
-        const result = func(data, {
-          start: startIndex,
-          length: i - startIndex + 1
-        })
-        // funcはbooleanかundefinedなのでnullとは一致しない
-        if (result === shortcut) {
-          return result
-        }
 
-        i = startIndex + 1
+  for (let i = 0; i < text.length; i++) {
+    switch (state) {
+      case 'outside': {
+        if (i < text.length - 1 && text[i] === '!' && text[i + 1] === '{') {
+          state = 'inside'
+          startIndex = i
+          i++
+        }
+        break
       }
-    } else {
-      if (i < text.length - 1 && text[i] === '!' && text[i + 1] === '{') {
-        startIndex = i
-        i++
-        isInside = true
-        isString = false
+      case 'inside': {
+        if (text[i] === '"') {
+          state = 'insideString'
+        } else if (text[i] === '}') {
+          state = 'outside'
+          const jsonString = text.slice(startIndex + 1, i + 1) // `{`から`}`まで
+          const data = parse(jsonString)
+          const result = func(data, {
+            start: startIndex,
+            length: i - startIndex + 1
+          })
+          // funcはbooleanかundefinedなのでnullとは一致しない
+          if (result === shortcut) {
+            return result
+          }
+        }
+        break
+      }
+      case 'insideString': {
+        if (text[i] === '"') {
+          state = 'inside'
+        }
+        break
       }
     }
   }
