@@ -8,7 +8,7 @@
     <channel-sidebar-pinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.item"
-      @open="emit('moveToPinned')"
+      @click-link="emit('moveToPinned')"
     />
     <channel-sidebar-events
       :class="$style.item"
