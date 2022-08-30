@@ -1,10 +1,6 @@
 <template>
-  <div>
-    <markdown-content
-      :class="$style.preview"
-      :data-is-mobile="isMobile"
-      :content="previewRendered"
-    />
+  <div :class="$style.preview">
+    <markdown-content :data-is-mobile="isMobile" :content="previewRendered" />
     <div
       v-for="quoteMessage in quoteMessages"
       :key="quoteMessage.id"
