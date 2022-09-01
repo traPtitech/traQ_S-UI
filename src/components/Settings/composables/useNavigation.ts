@@ -8,6 +8,7 @@ import {
 } from '/@/router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useMainViewStore } from '/@/store/ui/mainView'
+import useChannelPath from '/@/composables/useChannelPath'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 const { primaryView } = useMainViewStore()
@@ -73,10 +74,16 @@ export const navigations: {
 const useSettingsNavigation = () => {
   const router = useRouter()
   const { lastOpenChannelName } = useBrowserSettings()
+  const { channelIdToShortPathString } = useChannelPath()
+
   const close = () => {
     switch (primaryView.value.type) {
       case 'channel':
-        router.push(constructChannelPath(primaryView.value.channelId))
+        router.push(
+          constructChannelPath(
+            channelIdToShortPathString(primaryView.value.channelId)
+          )
+        )
         break
       case 'clips':
         router.push(constructClipFoldersPath(primaryView.value.clipFolderId))
