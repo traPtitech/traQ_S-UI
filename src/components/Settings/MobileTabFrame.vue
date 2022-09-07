@@ -17,7 +17,7 @@ import ReturnButton from '/@/components/UI/ReturnButton.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import useSettingsNavigation from './composables/useNavigation'
 
-const { close, showRoot } = useSettingsNavigation()
+const { showRoot, close } = useSettingsNavigation()
 </script>
 
 <style lang="scss" module>
