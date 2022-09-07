@@ -1,11 +1,6 @@
 import type { SettingsRouteName } from '/@/router/settings'
 import { useRouter } from 'vue-router'
-import {
-  constructChannelPath,
-  constructClipFoldersPath,
-  constructUserPath,
-  RouteName
-} from '/@/router'
+import { RouteName } from '/@/router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import useChannelPath from '/@/composables/useChannelPath'
@@ -76,34 +71,9 @@ const useSettingsNavigation = () => {
   const { lastOpenChannelName } = useBrowserSettings()
   const { channelIdToPathString } = useChannelPath()
 
-  const close = () => {
-    switch (primaryView.value.type) {
-      case 'channel':
-        router.push(
-          constructChannelPath(
-            channelIdToPathString(primaryView.value.channelId)
-          )
-        )
-        break
-      case 'clips':
-        router.push(constructClipFoldersPath(primaryView.value.clipFolderId))
-        break
-      case 'dm':
-        router.push(constructUserPath(primaryView.value.userName))
-        break
-      case 'qall':
-        // TODO(sapphi-red): PrimaryViewにqallが来ることは想定していないが、とりあえず書く
-        router.push(constructChannelPath(lastOpenChannelName.value))
-        break
-      default: {
-        const check: never = primaryView.value
-        throw new Error(`Unknown view type:${check}`)
-      }
-    }
-  }
   const showRoot = () => {
     router.push({ name: RouteName.Settings })
   }
-  return { close, showRoot }
+  return { showRoot }
 }
 export default useSettingsNavigation
