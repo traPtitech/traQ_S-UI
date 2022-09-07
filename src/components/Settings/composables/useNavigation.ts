@@ -11,7 +11,6 @@ import { useMainViewStore } from '/@/store/ui/mainView'
 import useChannelPath from '/@/composables/useChannelPath'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
-const { primaryView } = useMainViewStore()
 
 export type NavigationItemType =
   | 'profile'
@@ -73,15 +72,16 @@ export const navigations: {
 
 const useSettingsNavigation = () => {
   const router = useRouter()
+  const { primaryView } = useMainViewStore()
   const { lastOpenChannelName } = useBrowserSettings()
-  const { channelIdToShortPathString } = useChannelPath()
+  const { channelIdToPathString } = useChannelPath()
 
   const close = () => {
     switch (primaryView.value.type) {
       case 'channel':
         router.push(
           constructChannelPath(
-            channelIdToShortPathString(primaryView.value.channelId)
+            channelIdToPathString(primaryView.value.channelId)
           )
         )
         break
@@ -91,8 +91,14 @@ const useSettingsNavigation = () => {
       case 'dm':
         router.push(constructUserPath(primaryView.value.userName))
         break
-      default:
+      case 'qall':
+        // TODO(sapphi-red): PrimaryViewにqallが来ることは想定していないが、とりあえず書く
         router.push(constructChannelPath(lastOpenChannelName.value))
+        break
+      default: {
+        const check: never = primaryView.value
+        throw new Error(`Unknown view type:${check}`)
+      }
     }
   }
   const showRoot = () => {
