@@ -1,9 +1,7 @@
 import type { SettingsRouteName } from '/@/router/settings'
 import { useRouter } from 'vue-router'
 import { RouteName } from '/@/router'
-import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useMainViewStore } from '/@/store/ui/mainView'
-import useChannelPath from '/@/composables/useChannelPath'
+import useClose from '/@/composables/useClose'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 
@@ -67,13 +65,12 @@ export const navigations: {
 
 const useSettingsNavigation = () => {
   const router = useRouter()
-  const { primaryView } = useMainViewStore()
-  const { lastOpenChannelName } = useBrowserSettings()
-  const { channelIdToPathString } = useChannelPath()
+
+  const { close } = useClose()
 
   const showRoot = () => {
     router.push({ name: RouteName.Settings })
   }
-  return { showRoot }
+  return { close, showRoot }
 }
 export default useSettingsNavigation

@@ -15,11 +15,9 @@
 import TabContentTitle from './TabContentTitle.vue'
 import ReturnButton from '/@/components/UI/ReturnButton.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
-import useClose from '/@/composables/useClose'
 import useSettingsNavigation from './composables/useNavigation'
 
-const { showRoot } = useSettingsNavigation()
-const { close } = useClose()
+const { showRoot, close } = useSettingsNavigation()
 </script>
 
 <style lang="scss" module>

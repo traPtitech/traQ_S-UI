@@ -11,10 +11,10 @@
 <script lang="ts" setup>
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import DesktopTabSelector from './DesktopTabSelector.vue'
-import useClose from '/@/composables/useClose'
 import DesktopTabFrame from './DesktopTabFrame.vue'
+import useSettingsNavigation from '/@/components/Settings/composables/useNavigation'
 
-const { close } = useClose()
+const { close } = useSettingsNavigation()
 </script>
 
 <style lang="scss" module>

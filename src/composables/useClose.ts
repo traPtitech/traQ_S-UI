@@ -10,6 +10,7 @@ import { useMainViewStore } from '/@/store/ui/mainView'
 
 const useClose = () => {
   const router = useRouter()
+
   const { primaryView } = useMainViewStore()
   const { lastOpenChannelName } = useBrowserSettings()
   const { channelIdToPathString } = useChannelPath()
