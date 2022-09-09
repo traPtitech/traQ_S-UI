@@ -30,10 +30,6 @@ const useClose = () => {
       case 'dm':
         router.push(constructUserPath(primaryView.value.userName))
         break
-      case 'qall':
-        // TODO(sapphi-red): PrimaryViewにqallが来ることは想定していないが、とりあえず書く
-        router.push(constructChannelPath(lastOpenChannelName.value))
-        break
       default: {
         const check: never = primaryView.value
         throw new Error(`Unknown view type:${check}`)

@@ -7,7 +7,7 @@ import {
   createQueryParser,
   toSearchMessageParam
 } from '/@/lib/searchMessage/queryParser'
-import type { ViewInformation } from '/@/store/ui/mainView'
+import type { PrimaryViewInformation } from '/@/store/ui/mainView'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useUsersStore } from '/@/store/entities/users'
@@ -24,7 +24,7 @@ const getStoreForParser = ({
   myUsername,
   fetchUserByName
 }: {
-  primaryView: Ref<ViewInformation>
+  primaryView: Ref<PrimaryViewInformation>
   channelsMap: Ref<ReadonlyMap<ChannelId, Channel>>
   channelTree: Ref<ChannelTree>
   myUsername: ComputedRef<string | undefined>
