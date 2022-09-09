@@ -13,10 +13,11 @@ import { useMessagesView } from '/@/store/domain/messagesView'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 
-export type ViewType = 'channel' | 'qall' | 'clips' | 'dm'
-export interface ViewInformationBase {
-  type: ViewType
+interface ViewInformationBase {
+  type: string
 }
+export type PrimaryViewInformation = ChannelView | ClipsView | DMView
+export type SecondaryViewInformation = QallView
 export type ViewInformation = ChannelView | QallView | ClipsView | DMView
 
 export type LayoutType = 'single' | 'split' | 'split-reverse'
@@ -88,12 +89,12 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
   )
 
   const lastScrollPosition = ref(0)
-  const primaryView = ref<ViewInformation>({
+  const primaryView = ref<PrimaryViewInformation>({
     type: 'channel',
     channelId: '',
     entryMessageId: undefined
   })
-  const secondaryView = ref<ViewInformation>()
+  const secondaryView = ref<SecondaryViewInformation>()
 
   const headerStyle = computed((): HeaderStyle => {
     if (

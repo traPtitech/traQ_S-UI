@@ -25,8 +25,6 @@ const useDocumentTitle = () => {
           clipFoldersMap.value.get(primaryView.value.clipFolderId)?.name ??
           'Unknown'
         )
-      case 'qall':
-        return ''
     }
     const check: never = primaryView.value
     throw new Error(`Unexpected primaryView: ${check}`)
