@@ -34,7 +34,7 @@
     "cropperjs": "^1.5.12",
     "deepmerge": "^4.2.2",
     "dequal": "^2.0.3",
-    "firebase": "^9.8.4",
+    "firebase": "^9.9.4",
     "highlight.js": "^11.6.0",
     "idb-keyval": "^6.2.0",
     "mitt": "^3.0.0",
