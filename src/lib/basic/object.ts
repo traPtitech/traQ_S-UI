@@ -7,7 +7,8 @@ type Entries<T> = Array<
   >
 >
 
-export const entries = <T>(o: T) => Object.entries(o) as Entries<T>
+export const entries = <T extends object>(o: T) =>
+  Object.entries(o) as Entries<T>
 export const setByTuple = <T, K extends keyof T>(s: T, [k, v]: [K, T[K]]) => {
   s[k] = v
 }
