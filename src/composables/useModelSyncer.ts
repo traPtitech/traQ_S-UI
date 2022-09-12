@@ -40,7 +40,7 @@ export const useModelObjectSyncer = <
   K extends keyof P & string,
   E extends (n: `update:${K}`, val: P[K]) => void
 >(
-  props: P,
+  props: P extends { [k in K]: object } ? P : never,
   emit: E,
   key = 'modelValue' as K
 ): ToSyncedRefs<P[K]> => {
