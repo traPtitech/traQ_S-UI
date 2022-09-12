@@ -43,6 +43,7 @@ const useStampCreate = (
   const isCreating = ref(false)
 
   const createStamp = async () => {
+    if (stampImage.value) return
     try {
       isCreating.value = true
       await apis.createStamp(newStampName.value, stampImage.value)

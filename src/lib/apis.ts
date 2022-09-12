@@ -1,4 +1,5 @@
 import type {
+  WebRTCUserStateSessionsInner,
   ChannelEvent,
   ChannelEventTypeEnum,
   ChildCreatedEvent,
@@ -16,6 +17,8 @@ import type { FileId } from '/@/types/entity-ids'
 import { DEV_SERVER } from '/@/lib/define'
 import type { AxiosError } from 'axios'
 import { constructFilesPath } from '/@/router'
+
+export type { WebRTCUserStateSessionsInner as WebRTCUserStateSessions }
 
 export const BASE_PATH = '/api/v3'
 export const WEBSOCKET_ENDPOINT = '/api/v3/ws'

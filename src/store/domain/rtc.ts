@@ -1,6 +1,7 @@
-import type { WebRTCUserState, WebRTCUserStateSessions } from '@traptitech/traq'
+import type { WebRTCUserState } from '@traptitech/traq'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref } from 'vue'
+import type { WebRTCUserStateSessions } from '/@/lib/apis'
 import apis from '/@/lib/apis'
 import { createSingleflight } from '/@/lib/basic/async'
 import { formatSnakeKeysToCamelShallow } from '/@/lib/basic/record'

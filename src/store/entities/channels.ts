@@ -52,7 +52,8 @@ const useChannelsStorePinia = defineStore('entities/channels', () => {
 
     const [{ data: channels }, shared] = await getChannels(true)
     const newChannelsMap = arrayToMap(channels.public, 'id')
-    const newDmChannelsMap = arrayToMap(channels.dm, 'id')
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- includeDM=trueなので
+    const newDmChannelsMap = arrayToMap(channels.dm!, 'id')
     if (!shared) {
       channelsMap.value = newChannelsMap
       dmChannelsMap.value = newDmChannelsMap

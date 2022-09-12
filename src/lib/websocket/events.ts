@@ -8,11 +8,8 @@ import type {
   StampPaletteId,
   TagId
 } from '/@/types/entity-ids'
-import type {
-  ChannelViewer,
-  MyChannelViewState,
-  WebRTCUserStateSessions
-} from '@traptitech/traq'
+import type { ChannelViewer, MyChannelViewState } from '@traptitech/traq'
+import type { WebRTCUserStateSessions } from '/@/lib/apis'
 
 export type WebSocketEvent = UserEvent &
   ChannelEvent &

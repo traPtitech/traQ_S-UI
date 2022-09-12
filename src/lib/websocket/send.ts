@@ -1,8 +1,6 @@
 import { ws } from './index'
-import type {
-  ChannelViewState,
-  WebRTCUserStateSessions
-} from '@traptitech/traq'
+import type { ChannelViewState } from '@traptitech/traq'
+import type { WebRTCUserStateSessions } from '/@/lib/apis'
 import type { ChannelId } from '/@/types/entity-ids'
 
 export type WebSocketCommand = 'viewstate' | 'rtcstate' | 'timeline_streaming'
