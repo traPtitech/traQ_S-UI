@@ -55,7 +55,7 @@
     "@types/dom-screen-wake-lock": "^1.0.0",
     "@types/katex": "^0.14.0",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "^16.11.49",
+    "@types/node": "^16.11.58",
     "@types/pica": "^9.0.1",
     "@types/punycode": "^2.1.0",
     "@types/serviceworker": "^0.0.51",
@@ -95,12 +95,12 @@
     "vitest": "^0.18.1",
     "vitest-github-actions-reporter": "^0.8.1",
     "vue-tsc": "^0.38.8",
-    "workbox-cacheable-response": "^6.5.3",
-    "workbox-core": "^6.5.3",
-    "workbox-expiration": "^6.5.3",
-    "workbox-precaching": "^6.5.3",
-    "workbox-routing": "^6.5.3",
-    "workbox-strategies": "^6.5.3"
+    "workbox-cacheable-response": "^6.5.4",
+    "workbox-core": "^6.5.4",
+    "workbox-expiration": "^6.5.4",
+    "workbox-precaching": "^6.5.4",
+    "workbox-routing": "^6.5.4",
+    "workbox-strategies": "^6.5.4"
   },
   "overrides": {
     "fonteditor-core": {
