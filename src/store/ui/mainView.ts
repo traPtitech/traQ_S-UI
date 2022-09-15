@@ -9,7 +9,6 @@ import type {
   MessageId
 } from '/@/types/entity-ids'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useMessagesView } from '/@/store/domain/messagesView'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 
@@ -68,7 +67,6 @@ export type HeaderStyle = 'default' | 'dark'
 
 const useMainViewStorePinia = defineStore('ui/mainView', () => {
   const { lastOpenChannelName } = useBrowserSettings()
-  const messagesView = useMessagesView()
   const channelsStore = useChannelsStore()
   const usersStore = useUsersStore()
 
@@ -91,8 +89,7 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
   const lastScrollPosition = ref(0)
   const primaryView = ref<PrimaryViewInformation>({
     type: 'channel',
-    channelId: '',
-    entryMessageId: undefined
+    channelId: ''
   })
   const secondaryView = ref<SecondaryViewInformation>()
 
