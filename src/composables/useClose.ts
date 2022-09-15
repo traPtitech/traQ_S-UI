@@ -12,18 +12,20 @@ const useClose = () => {
   const router = useRouter()
 
   const { primaryView } = useMainViewStore()
-  const { lastOpenChannelName } = useBrowserSettings()
+  const { defaultChannelName } = useBrowserSettings()
   const { channelIdToPathString } = useChannelPath()
 
   const close = () => {
     switch (primaryView.value.type) {
-      case 'channel':
-        router.push(
-          constructChannelPath(
-            channelIdToPathString(primaryView.value.channelId)
-          )
-        )
+      case 'channel': {
+        try {
+          const channelPath = channelIdToPathString(primaryView.value.channelId)
+          router.push(constructChannelPath(channelPath))
+        } catch {
+          router.push(constructChannelPath(defaultChannelName.value))
+        }
         break
+      }
       case 'clips':
         router.push(constructClipFoldersPath(primaryView.value.clipFolderId))
         break
