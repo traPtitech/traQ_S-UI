@@ -49,9 +49,6 @@ const useStampsStorePinia = defineStore('entities/stamps', () => {
     entityMitt.emit('deleteStamp', stampId)
   }
 
-  /**
-   * unicodeスタンプが更新されたときの考慮は存在しない
-   */
   const fetchStamp = async ({
     stampId,
     cacheStrategy = 'waitForAllFetch'
@@ -74,9 +71,6 @@ const useStampsStorePinia = defineStore('entities/stamps', () => {
     return stamp
   }
 
-  /**
-   * unicodeスタンプが更新されたときは手動で設定からキャッシュの削除をする必要がある
-   */
   const fetchStamps = async ({
     ignoreCache = false
   }: { ignoreCache?: boolean } = {}) => {
