@@ -3,6 +3,15 @@ import fs from 'fs/promises'
 
 const ZWJ = String.fromCodePoint(0x200d)
 
+// https://github.com/traPtitech/traQ/blob/31859a583f500463913031d924b1244f28e36a68/utils/twemoji/installer.go#L43-L49
+const replaceNameMap = {
+  // 英数字以外の文字が含まれているので置き換え
+  'pi\u00f1ata': 'pinata',
+  // 長すぎるので置き換え
+  face_with_open_eyes_and_hand_over_mouth: 'face_with_open_eyes_hand',
+  hand_with_index_finger_and_thumb_crossed: 'hand_index_finger_thumb_crossed'
+}
+
 const [{ data: emojis }, { data: categories }] = await Promise.all([
   axios.get(
     'https://raw.githubusercontent.com/joypixels/emoji-assets/v7.0.0/emoji.json'
@@ -38,7 +47,12 @@ Object.entries(emojis).forEach(([key, e]) => {
   if (e.category === 'modifier') return
   if (e.name.endsWith('skin tone')) return
 
-  const name = e.shortname.replaceAll(':', '')
+  let name = e.shortname.replaceAll(':', '')
+  const replacedName = replaceNameMap[name]
+  if (replacedName !== undefined) {
+    name = replacedName
+  }
+
   categoryMap[e.category].emojis.push({ name, order: e.order })
 
   const unicodeString = key
