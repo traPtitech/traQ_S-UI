@@ -5,10 +5,11 @@ const ZWJ = String.fromCodePoint(0x200d)
 
 const [{ data: emojis }, { data: categories }] = await Promise.all([
   axios.get(
-    'https://raw.githubusercontent.com/joypixels/emoji-toolkit/master/emoji.json'
+    'https://raw.githubusercontent.com/joypixels/emoji-assets/v7.0.0/emoji.json'
   ),
+  // バージョンが異なるが、カテゴリが増えていなければ問題ない
   axios.get(
-    'https://raw.githubusercontent.com/joypixels/emoji-toolkit/master/categories.json'
+    'https://raw.githubusercontent.com/joypixels/emoji-toolkit/6.6.0/categories.json'
   )
 ])
 
