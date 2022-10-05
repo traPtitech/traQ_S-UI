@@ -66,6 +66,14 @@ const staredChannels = computed(() => {
     [...staredChannelSet.value],
     channelsMap.value
   )
+  trees.sort((a, b) => {
+    if(a.name < b.name) {
+    return -1
+  } else if(a.name > b.name) {
+    return 1;
+  }
+  return 0;
+  })
   return filterTrees(trees, channel => !channel.archived)
 })
 
