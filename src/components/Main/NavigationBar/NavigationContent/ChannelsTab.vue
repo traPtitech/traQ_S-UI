@@ -72,10 +72,7 @@ const staredChannels = computed(() => {
 const { filterStarChannel } = useBrowserSettings()
 const staredChannelDescendantList = useStaredChannelDescendants()
 const channelListForFilter = computed(() =>
-  (filterStarChannel.value
-    ? staredChannelDescendantList.value
-    : [...channelsMap.value.values()]
-  ).filter(channel => !channel.archived)
+  [...channelsMap.value.values()].filter(channel => !channel.archived)
 )
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
 
