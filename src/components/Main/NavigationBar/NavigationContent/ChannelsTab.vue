@@ -88,7 +88,9 @@ const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
     return 0
   })
 
-  return mapped.map((v) => tree[v.index]).filter((v): v is ChannelTreeNode => v !== undefined);
+  return mapped
+    .map(v => tree[v.index])
+    .filter((v): v is ChannelTreeNode => v !== undefined)
 }
 
 const { filterStarChannel } = useBrowserSettings()
