@@ -3,6 +3,9 @@ import type { Ref } from 'vue'
 import { computed, ref } from 'vue'
 import { channelDeepMatching } from '/@/lib/channel'
 import { useChannelsStore } from '/@/store/entities/channels'
+import useChannelPath from '/@/composables/useChannelPath'
+
+const { channelIdToPathString } = useChannelPath()
 
 const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
   const { channelsMap } = useChannelsStore()
@@ -45,10 +48,33 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
       queryArr,
       targetChannelIds.value
     )
-    return [...fullMatched, ...matched]
+    return [...sortFilterdChannel(fullMatched), ...sortFilterdChannel(matched)]
   })
 
   return { query, filteredChannels }
+}
+
+const sortFilterdChannel = (tree: Channel[]): Channel[] => {
+  const mapped = tree.map((channel, index) => {
+    return {
+      index,
+      pathString: channelIdToPathString(channel.id).toUpperCase()
+    }
+  })
+
+  mapped.sort((a, b) => {
+    if (a.pathString > b.pathString) {
+      return 1
+    }
+    if (a.pathString < b.pathString) {
+      return -1
+    }
+    return 0
+  })
+
+  return mapped
+    .map(v => tree[v.index])
+    .filter((v): v is Channel => v !== undefined)
 }
 
 export default useChannelFilter
