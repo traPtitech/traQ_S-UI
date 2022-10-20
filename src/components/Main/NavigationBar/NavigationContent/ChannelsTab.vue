@@ -49,14 +49,17 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import { filterTrees } from '/@/lib/basic/tree'
 import { constructTreeFromIds } from '/@/lib/channelTree'
+import type { ChannelTreeNode } from '/@/lib/channelTree'
 import useStaredChannelDescendants from './composables/useStaredChannelDescendants'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
+import useChannelPath from '/@/composables/useChannelPath'
 
 const { pushModal } = useModalStore()
 
 const { channelTree } = useChannelTree()
 const { staredChannelSet } = useStaredChannels()
 const { channelsMap } = useChannelsStore()
+const { channelIdToPathString } = useChannelPath()
 const topLevelChannels = computed(() =>
   // filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
   filterTrees(toRaw(channelTree.value.children), channel => !channel.archived)
@@ -66,16 +69,27 @@ const staredChannels = computed(() => {
     [...staredChannelSet.value],
     channelsMap.value
   )
-  trees.sort((a, b) => {
-    if (a.name < b.name) {
-      return -1
-    } else if (a.name > b.name) {
+  const sortedTrees = sortChannelTree(trees)
+  return filterTrees(sortedTrees, channel => !channel.archived)
+})
+
+const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
+  const mapped = tree.map((node, index) => {
+    return { index, pathString: channelIdToPathString(node.id).toUpperCase() }
+  })
+
+  mapped.sort((a, b) => {
+    if (a.pathString > b.pathString) {
       return 1
+    }
+    if (a.pathString < b.pathString) {
+      return -1
     }
     return 0
   })
-  return filterTrees(trees, channel => !channel.archived)
-})
+
+  return mapped.map((v) => tree[v.index]).filter((v): v is ChannelTreeNode => v !== undefined);
+}
 
 const { filterStarChannel } = useBrowserSettings()
 const staredChannelDescendantList = useStaredChannelDescendants()
