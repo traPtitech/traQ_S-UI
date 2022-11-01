@@ -3,19 +3,11 @@
     <div :class="$style.input">
       <filter-input v-model="value" on-secondary disable-ime />
     </div>
-    <button
-      :class="$style.star"
-      :aria-selected="isStared"
-      @click="toggleStarFilter"
-    >
-      <a-icon :class="$style.icon" name="star" :size="22" mdi />
-    </button>
   </div>
 </template>
 
 <script lang="ts" setup>
 import FilterInput from '/@/components/UI/FilterInput.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
 const props = defineProps<{
