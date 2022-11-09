@@ -79,7 +79,7 @@
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-unused-imports": "^2.0.0",
     "eslint-plugin-vue": "^9.4.0",
-    "fonteditor-core": "^2.1.8",
+    "fonteditor-core": "^2.1.10",
     "jsdom": "^20.0.0",
     "patch-package": "^6.4.7",
     "pinia": "^2.0.18",
@@ -101,11 +101,6 @@
     "workbox-precaching": "^6.5.4",
     "workbox-routing": "^6.5.4",
     "workbox-strategies": "^6.5.4"
-  },
-  "overrides": {
-    "fonteditor-core": {
-      "xmldom": "npm:@xmldom/xmldom@^0.7.5"
-    }
   },
   "engines": {
     "node": "^16.17.0",
