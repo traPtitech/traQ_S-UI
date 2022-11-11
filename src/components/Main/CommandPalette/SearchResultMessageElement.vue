@@ -3,7 +3,7 @@
     :class="$style.container"
     :data-oversized="$boolAttr(oversized)"
     :data-expanded="$boolAttr(expanded)"
-    @mousedown="onClick"
+    @click="onClick"
   >
     <user-icon :class="$style.icon" :size="32" :user-id="message.userId" />
     <div :class="$style.header">
