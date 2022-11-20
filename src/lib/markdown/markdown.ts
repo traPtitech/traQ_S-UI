@@ -40,7 +40,9 @@ const storeProvider: Store = {
     return encodeURIComponent(`javascript:openUserModal(${JSON.stringify(id)})`)
   },
   generateUserGroupHref(id) {
-    return encodeURIComponent(`javascript:openGroupModal(${JSON.stringify(id)})`)
+    return encodeURIComponent(
+      `javascript:openGroupModal(${JSON.stringify(id)})`
+    )
   }
 }
 
