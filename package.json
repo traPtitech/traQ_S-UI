@@ -80,7 +80,7 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "eslint-plugin-vue": "^9.4.0",
     "fonteditor-core": "^2.1.10",
-    "jsdom": "^20.0.0",
+    "jsdom": "^20.0.3",
     "patch-package": "^6.4.7",
     "pinia": "^2.0.18",
     "postcss": "^8.4.14",
