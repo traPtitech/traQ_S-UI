@@ -92,7 +92,7 @@
     "vite": "^3.1.0",
     "vite-plugin-pwa": "^0.12.7",
     "vite-svg-loader": "^3.6.0",
-    "vitest": "^0.23.2",
+    "vitest": "^0.25.8",
     "vitest-github-actions-reporter": "^0.8.1",
     "vue-tsc": "^0.39.5",
     "workbox-cacheable-response": "^6.5.4",
