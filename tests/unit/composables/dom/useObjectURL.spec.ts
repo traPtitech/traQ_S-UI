@@ -26,6 +26,7 @@ describe('useObjectURL', () => {
     return () => {
       URL.createObjectURL = originalCreateObjectURL
       URL.revokeObjectURL = originalRevokeObjectURL
+      revokedSet.clear()
     }
   })
 
