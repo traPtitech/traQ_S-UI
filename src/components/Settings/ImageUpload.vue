@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watchEffect, shallowRef, onUnmounted, computed } from 'vue'
+import { ref, watchEffect, shallowRef, onUnmounted } from 'vue'
 import Cropper from 'cropperjs'
 import FormButton from '/@/components/UI/FormButton.vue'
 import 'cropperjs/dist/cropper.css'
