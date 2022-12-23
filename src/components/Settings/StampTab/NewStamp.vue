@@ -34,6 +34,32 @@ import { useToastStore } from '/@/store/ui/toast'
  * 拡張子を削る
  */
 const trimExt = (filename: string) => filename.replace(/\.[^.]+$/, '')
+type imgSize = {
+  width: number
+  height: number
+}
+
+const imageSize = async (file: File): Promise<imgSize> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+
+    img.onload = () => {
+      const size = {
+        width: img.naturalWidth,
+        height: img.naturalHeight
+      }
+
+      URL.revokeObjectURL(img.src)
+      resolve(size)
+    }
+
+    img.onerror = error => {
+      reject(error)
+    }
+
+    img.src = URL.createObjectURL(file)
+  })
+}
 
 const useStampCreate = (
   newStampName: Ref<string>,
@@ -44,6 +70,17 @@ const useStampCreate = (
 
   const createStamp = async () => {
     if (!stampImage.value) return
+    try {
+      const size = await imageSize(stampImage.value)
+      if (size.height !== size.width) {
+        addErrorToast('画像が正方形ではありません。編集してください')
+        return
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('スタンプの作成に失敗しました', e)
+      addErrorToast(formatResizeError(e, 'スタンプの作成に失敗しました'))
+    }
     try {
       isCreating.value = true
       await apis.createStamp(newStampName.value, stampImage.value)

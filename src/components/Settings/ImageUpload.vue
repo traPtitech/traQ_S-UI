@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watchEffect, shallowRef, onUnmounted } from 'vue'
+import { ref, watchEffect, shallowRef, onUnmounted, computed } from 'vue'
 import Cropper from 'cropperjs'
 import FormButton from '/@/components/UI/FormButton.vue'
 import 'cropperjs/dist/cropper.css'
@@ -64,7 +64,7 @@ let cropper: Cropper | undefined
 const imgEle = shallowRef<HTMLImageElement>()
 const cropperNote = ref('')
 
-watchEffect(() => {
+const updateImgView = () => {
   if (!originalImg.value) {
     if (cropper) cropper.destroy()
     return
@@ -99,7 +99,9 @@ watchEffect(() => {
   if (cropper) cropper.destroy()
   cropper = new Cropper(imgEle.value, options)
   cropper.replace(originalImgUrl.value ?? '')
-})
+}
+
+watchEffect(updateImgView)
 
 watchEffect(() => {
   if (!value.value) {
