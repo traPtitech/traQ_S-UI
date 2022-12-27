@@ -13,7 +13,7 @@
       :data-is-mobile="isMobile"
       :data-is-firefox="firefoxFlag"
       data-testid="message-input-textarea"
-      @before-input="onBeforeInput"
+      @beforeinput="onBeforeInput"
       @keydown="onKeyDown"
       @keyup="onKeyUp"
       @focus="onFocus"
