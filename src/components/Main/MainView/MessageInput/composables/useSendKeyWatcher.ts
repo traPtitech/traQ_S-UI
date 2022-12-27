@@ -109,7 +109,10 @@ const useSendKeyWatcher = (
    */
   const onBeforeInput = (event: Event) => {
     if (event instanceof InputEvent) {
-      if (!touchDeviceFlag && isSendKeyInput(event, sendWithModifierKey.value)) {
+      if (
+        !touchDeviceFlag &&
+        isSendKeyInput(event, sendWithModifierKey.value)
+      ) {
         event.preventDefault()
         emit('postMessage')
       }
