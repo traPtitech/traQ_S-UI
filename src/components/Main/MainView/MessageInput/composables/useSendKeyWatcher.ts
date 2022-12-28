@@ -107,10 +107,15 @@ const useSendKeyWatcher = (
    * 既にpreventされているため`beforeinput`イベントは発火しない
    * したがって、これが発火したときは修飾キーが押されていないことが保障されている
    */
-  const onBeforeInput = (event: InputEvent) => {
-    if (!touchDeviceFlag && isSendKeyInput(event, sendWithModifierKey.value)) {
-      event.preventDefault()
-      emit('postMessage')
+  const onBeforeInput = (event: Event) => {
+    if (event instanceof InputEvent) {
+      if (
+        !touchDeviceFlag &&
+        isSendKeyInput(event, sendWithModifierKey.value)
+      ) {
+        event.preventDefault()
+        emit('postMessage')
+      }
     }
   }
 
