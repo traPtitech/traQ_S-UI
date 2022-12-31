@@ -79,7 +79,7 @@ const fold = (e: MouseEvent) => {
     transition: all 0.15s ease-out;
   }
 
-  @media (hover: hover) {
+  @media (any-hover: hover) {
     .button {
       transform: translateY(-8px);
       opacity: 0;
