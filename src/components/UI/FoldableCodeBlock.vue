@@ -81,7 +81,7 @@ const fold = (e: MouseEvent) => {
 
   @media (hover: hover) {
     .button {
-      transform: translateY(calc(100% + 24px));
+      transform: translateY(-8px);
       opacity: 0;
     }
 
