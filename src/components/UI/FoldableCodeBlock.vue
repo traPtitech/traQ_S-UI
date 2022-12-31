@@ -10,7 +10,7 @@
       折りたたむ ↑
     </button>
     <button :class="[$style.button, $style['unfold-button']]" @click="unfold">
-      クリックして展開 ↓
+      クリックして展開 ({{ line_count }} 行) ↓
     </button>
   </div>
   <div v-else :class="wrapClass" v-html="preContent.outerHTML" />
