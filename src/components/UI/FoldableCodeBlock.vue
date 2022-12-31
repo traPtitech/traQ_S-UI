@@ -19,7 +19,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 
-const MAX_LINES = 6
+const MAX_LINES = 5
 
 const props = defineProps<{
   wrapClass?: string
@@ -28,11 +28,15 @@ const props = defineProps<{
 
 const isFold = ref(true)
 
-const isLong = computed(() => {
+const line_count = computed(() => {
   const content = props.preContent.textContent
-  if (content === null) return false
+  if (content === null) return 0
   const lines = content.split('\n')
-  return lines.length > MAX_LINES
+  return lines.length - (lines.at(-1) === '' ? 1 : 0) // 末尾の改行は行数に含めない
+})
+
+const isLong = computed(() => {
+  return line_count.value > MAX_LINES
 })
 
 const unfold = (e: MouseEvent) => {
