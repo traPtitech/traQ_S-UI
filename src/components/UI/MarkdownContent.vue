@@ -8,10 +8,10 @@
 </template>
 
 <script lang="ts" setup>
-import { createVNode, onMounted, onUpdated, ref, render } from 'vue'
+import { createVNode, onMounted, onUpdated, ref, render, watch } from 'vue'
 import FoldableCodeBlock from './FoldableCodeBlock.vue'
 
-defineProps<{
+const props = defineProps<{
   content: string
 }>()
 
@@ -39,11 +39,22 @@ const applyFoldCodeBlock = () => {
   })
 }
 
+const isUpdated = ref(false)
+
 onMounted(() => {
   applyFoldCodeBlock()
 })
+watch(
+  () => props.content,
+  () => {
+    isUpdated.value = true
+  }
+)
 onUpdated(() => {
-  applyFoldCodeBlock()
+  if (isUpdated.value) {
+    applyFoldCodeBlock()
+    isUpdated.value = false
+  }
 })
 </script>
 
