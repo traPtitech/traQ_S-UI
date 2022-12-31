@@ -19,13 +19,6 @@ const contentRef = ref<HTMLElement>()
 class FoldController {
   private static readonly maxLines = 6
 
-  private controlledDoms: Array<{
-    target: HTMLElement
-    targetHandler: (e: Event) => void
-    button: HTMLElement
-    buttonHandler: (e: Event) => void
-  }> = []
-
   /*
     convert from
 
@@ -58,20 +51,8 @@ class FoldController {
     }
   }
 
-  private release() {
-    this.controlledDoms.forEach(
-      ({ target, targetHandler, button, buttonHandler }) => {
-        target.removeEventListener('click', targetHandler)
-        button.removeEventListener('click', buttonHandler)
-      }
-    )
-    this.controlledDoms = []
-  }
-
   public update(target: HTMLElement | undefined) {
-    this.release()
-
-    const pre_list = target?.querySelectorAll('pre')
+    const pre_list = target?.querySelectorAll(':not(div.fold-wrap) > pre')
 
     if (pre_list === undefined || pre_list.length === 0) return
 
@@ -110,13 +91,6 @@ class FoldController {
       unfoldButton.classList.add('unfold-button')
       unfoldButton.textContent = 'クリックして展開 ↓'
       wrap.appendChild(unfoldButton)
-
-      this.controlledDoms.push({
-        target: wrap,
-        targetHandler: wrapHandler,
-        button: foldButton,
-        buttonHandler: foldButtonHandler
-      })
     })
   }
 }
