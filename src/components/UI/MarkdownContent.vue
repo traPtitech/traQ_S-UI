@@ -8,7 +8,8 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUpdated, ref } from 'vue'
+import { createVNode, onMounted, onUpdated, ref, render } from 'vue'
+import FoldableCodeBlock from './FoldableCodeBlock.vue'
 
 defineProps<{
   content: string
@@ -16,92 +17,33 @@ defineProps<{
 
 const contentRef = ref<HTMLElement>()
 
-class FoldController {
-  private static readonly maxLines = 6
+const foldWrapClass = 'fold-wrap'
 
-  /*
-    convert from
+const applyFoldCodeBlock = () => {
+  const content = contentRef.value
+  if (content === undefined) return
 
-    <pre> hoge </pre>
+  const pre_list = content.querySelectorAll(`:not(.${foldWrapClass}) > pre`)
 
-    to
+  pre_list.forEach(pre => {
+    const mountBase = document.createElement('div')
+    const parent = pre.parentElement
+    if (parent === null) return
 
-    <div class="fold-wrap" data-is-fold="true">
-      <pre> hoge </pre>
-      <button class="fold-button">折りたたむ ↑</button>
-      <button class="unfold-button">クリックして展開 ↓</button>
-    </div>
-  */
-
-  private unfoldHandler(target: HTMLElement): (e: Event) => void {
-    return e => {
-      if (target.dataset['isFold'] !== 'true') return
-
-      target.dataset['isFold'] = 'false'
-      e.stopPropagation()
-    }
-  }
-
-  private foldHandler(target: HTMLElement): (e: Event) => void {
-    return e => {
-      if (target.dataset['isFold'] !== 'false') return
-
-      target.dataset['isFold'] = 'true'
-      e.stopPropagation()
-    }
-  }
-
-  public update(target: HTMLElement | undefined) {
-    const pre_list = target?.querySelectorAll(':not(div.fold-wrap) > pre')
-
-    if (pre_list === undefined || pre_list.length === 0) return
-
-    pre_list.forEach(pre => {
-      {
-        const code = pre.querySelector('code')
-        if (code === null) return
-        const codeText = code.textContent
-        if (codeText === null) return
-
-        const lines = codeText.split('\n').length
-
-        if (lines <= FoldController.maxLines) return
-      }
-
-      const wrap = document.createElement('div')
-      wrap.classList.add('fold-wrap')
-      wrap.dataset['isFold'] = 'true'
-      pre.parentNode?.insertBefore(wrap, pre)
-      wrap.appendChild(pre)
-
-      const wrapHandler = this.unfoldHandler(wrap)
-      wrap.addEventListener('click', wrapHandler)
-
-      const foldButton = document.createElement('button')
-      foldButton.classList.add('fold-button')
-      foldButton.textContent = '折りたたむ ↑'
-
-      const foldButtonHandler = this.foldHandler(wrap)
-      foldButton.addEventListener('click', foldButtonHandler)
-
-      wrap.appendChild(foldButton)
-
-      // 見た目だけのダミー
-      const unfoldButton = document.createElement('button')
-      unfoldButton.classList.add('unfold-button')
-      unfoldButton.textContent = 'クリックして展開 ↓'
-      wrap.appendChild(unfoldButton)
+    const wrapper = createVNode(FoldableCodeBlock, {
+      wrapClass: foldWrapClass,
+      preContent: pre
     })
-  }
+    parent.replaceChild(mountBase, pre)
+    render(wrapper, mountBase)
+  })
 }
 
-const foldController = new FoldController()
-
 onMounted(() => {
-  foldController.update(contentRef.value)
+  applyFoldCodeBlock()
 })
 onUpdated(() => {
-  foldController.update(contentRef.value)
+  applyFoldCodeBlock()
 })
 </script>
 
@@ -111,65 +53,5 @@ onUpdated(() => {
   overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
   line-break: loose;
-}
-</style>
-
-<style lang="scss">
-.markdown-body {
-  div.fold-wrap {
-    position: relative;
-    overflow: hidden;
-    &[data-is-fold='true'] {
-      cursor: pointer;
-      pre {
-        max-height: calc(6em + 32px);
-        -webkit-mask-image: linear-gradient(black 0% 40%, transparent 100%);
-        mask-image: linear-gradient(black 0% 40%, transparent 100%);
-      }
-      box-shadow: 0 0 0 2px var(--markdown-code-background) inset;
-    }
-
-    button {
-      display: block;
-      cursor: pointer;
-      position: absolute;
-      bottom: 24px;
-      margin: auto;
-      left: 0;
-      right: 0;
-      background-color: $theme-ui-secondary-default;
-      color: $theme-background-primary-default;
-      border-radius: 9999999px;
-      padding: 4px 12px;
-      width: fit-content;
-
-      transition: all 0.15s ease-out;
-    }
-
-    @media (hover: hover) {
-      button {
-        transform: translateY(calc(100% + 24px));
-        opacity: 0;
-      }
-
-      &:hover {
-        button {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
-    }
-
-    &[data-is-fold='true'] {
-      button.fold-button {
-        display: none;
-      }
-    }
-    &[data-is-fold='false'] {
-      button.unfold-button {
-        display: none;
-      }
-    }
-  }
 }
 </style>
