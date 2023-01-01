@@ -87,16 +87,12 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
     initialValue
   )
 
-  const openCommandPalette = async (
+  const openCommandPalette = (
     newMode: CommandPaletteMode,
     initialInput = ''
   ) => {
     mode.value = newMode
-    if (initialInput !== '' && query.value !== '') {
-      const { parseQuery } = useQueryParser()
-      const { normalizedQuery } = await parseQuery(query.value)
-      currentInput.value = normalizedQuery
-    } else if (initialInput !== '') {
+    if (initialInput !== '') {
       currentInput.value = initialInput
     }
   }
@@ -106,8 +102,11 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
 
   const isCommandPaletteShown = computed(() => mode.value !== undefined)
 
-  const settleQuery = () => {
-    query.value = currentInput.value
+  const settleQuery = async () => {
+    const { parseQuery } = useQueryParser()
+    const { normalizedQuery } = await parseQuery(currentInput.value)
+    currentInput.value = normalizedQuery
+    query.value = normalizedQuery
   }
 
   const addSearchHistory = (newHistory: string) => {
