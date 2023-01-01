@@ -97,6 +97,7 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
   }
   const closeCommandPalette = () => {
     mode.value = undefined
+    currentInput.value = ''
   }
 
   const isCommandPaletteShown = computed(() => mode.value !== undefined)
