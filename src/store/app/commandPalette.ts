@@ -44,6 +44,8 @@ type IndexedDBState = {
 }
 
 const useCommandPalettePinia = defineStore('app/commandPalette', () => {
+  const { parseQuery } = useQueryParser()
+
   /** 表示モード */
   const mode = ref<CommandPaletteMode>()
 
@@ -103,7 +105,6 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
   const isCommandPaletteShown = computed(() => mode.value !== undefined)
 
   const settleQuery = async () => {
-    const { parseQuery } = useQueryParser()
     const { normalizedQuery } = await parseQuery(currentInput.value)
     currentInput.value = normalizedQuery
     query.value = normalizedQuery
