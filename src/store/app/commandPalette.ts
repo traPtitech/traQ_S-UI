@@ -7,6 +7,7 @@ import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { promisifyRequest } from 'idb-keyval'
+import useQueryParer from '/@/composables/searchMessage/useQueryParser'
 
 type CommandPaletteMode = 'command' | 'search'
 
@@ -86,18 +87,21 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
     initialValue
   )
 
-  const openCommandPalette = (
+  const openCommandPalette = async (
     newMode: CommandPaletteMode,
     initialInput = ''
   ) => {
     mode.value = newMode
-    if (initialInput !== '') {
+    if (initialInput !== '' && query.value !== '') {
+      const { parseQuery } = useQueryParer()
+      const { normalizedQuery } = await parseQuery(query.value)
+      currentInput.value = normalizedQuery
+    } else if (initialInput !== '') {
       currentInput.value = initialInput
     }
   }
   const closeCommandPalette = () => {
     mode.value = undefined
-    currentInput.value = ''
   }
 
   const isCommandPaletteShown = computed(() => mode.value !== undefined)
