@@ -106,13 +106,13 @@ watchEffect(() => {
 })
 
 const { isTyping } = useViewStateSenderStore()
-const timeoutId = ref<NodeJS.Timeout>()
+let timeoutId: NodeJS.Timeout
 watch(state, () => {
   isTyping.value = !isTextEmpty.value && isFocused.value
   if (isTyping.value) {
-    clearTimeout(timeoutId.value)
+    clearTimeout(timeoutId)
   }
-  timeoutId.value = setTimeout(() => {
+  timeoutId = setTimeout(() => {
     isTyping.value = false
   }, 2000)
 })
