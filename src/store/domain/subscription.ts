@@ -157,6 +157,9 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
     fetchUnreadChannels({ ignoreCache: true })
     fetchSubscriptions({ ignoreCache: true })
   })
+  wsListener.on('CHANNEL_SUBSCRIBERS_CHANGED', () => {
+    fetchSubscriptions({ ignoreCache: true })
+  })
 
   messageMitt.on('addMessage', async ({ message, isCiting }) => {
     // 他端末の閲覧状態の取得が完了するのを待つ
