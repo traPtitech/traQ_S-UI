@@ -21,6 +21,17 @@ const useSidebar = () => {
           state.value === MainViewComponentState.SidebarDisappearing ||
           state.value === MainViewComponentState.SidebarDisappearingAuto))
   )
+
+  /**
+   * 折り畳まれたサイドバーが表示されている必要があるか
+   *
+   * モバイルの場合、遷移状態で隠してしまうと、折り畳まれたサイドバー上でドラッグするとサイドバーが開かないので
+   * 遷移中は隠さないようにする
+   */
+  const shouldShowHiddenSidebar = computed(
+    () => state.value !== MainViewComponentState.SidebarShown
+  )
+
   const openSidebar = () => {
     state.value = isMobile.value
       ? MainViewComponentState.SidebarAppearingAuto
@@ -31,7 +42,13 @@ const useSidebar = () => {
       ? MainViewComponentState.SidebarDisappearingAuto
       : MainViewComponentState.Hidden
   }
-  return { isSidebarOpen, shouldShowSidebar, openSidebar, closeSidebar }
+  return {
+    isSidebarOpen,
+    shouldShowSidebar,
+    openSidebar,
+    closeSidebar,
+    shouldShowHiddenSidebar
+  }
 }
 
 export default useSidebar
