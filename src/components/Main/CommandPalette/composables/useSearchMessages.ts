@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import type { Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
-import useQueryParer from '/@/composables/searchMessage/useQueryParser'
+import useQueryParser from '/@/composables/searchMessage/useQueryParser'
 import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useMessagesStore } from '/@/store/entities/messages'
@@ -68,7 +68,7 @@ const usePaging = (
 
 const useSearchMessages = () => {
   const limit = 20
-  const { parseQuery, toSearchMessageParam } = useQueryParer()
+  const { parseQuery, toSearchMessageParam } = useQueryParser()
   const { query, searchState, setSearchResult, resetPaging, addSearchHistory } =
     useCommandPalette()
   const { extendMessagesMap } = useMessagesStore()

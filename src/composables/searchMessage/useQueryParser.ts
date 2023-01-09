@@ -53,7 +53,7 @@ const getStoreForParser = ({
   getMyUsername: () => myUsername.value
 })
 
-const useQueryParer = () => {
+const useQueryParser = () => {
   const { channelsMap } = useChannelsStore()
   const { channelTree } = useChannelTree()
   const { primaryView } = useMainViewStore()
@@ -72,4 +72,4 @@ const useQueryParer = () => {
   return { parseQuery, toSearchMessageParam }
 }
 
-export default useQueryParer
+export default useQueryParser
