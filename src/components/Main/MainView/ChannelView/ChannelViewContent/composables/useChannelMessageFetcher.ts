@@ -1,6 +1,7 @@
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import type { ChannelId, MessageId } from '/@/types/entity-ids'
 import type { Ref } from 'vue'
+import { onUnmounted } from 'vue'
 import { watch, onMounted, onActivated, ref, computed } from 'vue'
 import type { Message } from '@traptitech/traq'
 import { wsListener } from '/@/lib/websocket'
@@ -208,10 +209,20 @@ const useChannelMessageFetcher = (
     messagesFetcher.init()
   }
 
+  const visibilitychangeListener = () => {
+    if (document.visibilityState === 'visible') {
+      onReachedLatest()
+    }
+  }
   onMounted(() => {
     reset()
     init()
+    document.addEventListener('visibilitychange', visibilitychangeListener)
   })
+  onUnmounted(() => {
+    document.removeEventListener('visibilitychange', visibilitychangeListener)
+  })
+
   watch(
     () => props.entryMessageId,
     (newVal, oldVal) => {
