@@ -4,8 +4,14 @@ import { ref } from 'vue'
 import { isExternalUrl, isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import type { MessageId } from '/@/types/entity-ids'
+import type { ChannelId, MessageId } from '/@/types/entity-ids'
 import { useMessagesStore } from '/@/store/entities/messages'
+
+export interface messageIdWithSpecifiedDate {
+  lastWeek: string | null
+  lastMonth: string | null
+  first: string | null
+}
 
 const ignoredHostNamesSet = new Set<string>(
   window.traQConfig.ogpIgnoreHostNames
@@ -28,6 +34,10 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
 
   const renderedContentMap = ref(new Map<MessageId, string>())
   const embeddingsMap = ref(new Map<MessageId, EmbeddingOrUrl[]>())
+
+  const messageIdsWithSpecifiedDateMap = ref(
+    new Map<ChannelId, messageIdWithSpecifiedDate>()
+  )
 
   const renderMessageContent = async (messageId: string) => {
     const content =
@@ -87,6 +97,7 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
   return {
     renderedContentMap,
     embeddingsMap,
+    messageIdsWithSpecifiedDateMap,
     renderMessageContent,
     resetRenderedContent
   }
