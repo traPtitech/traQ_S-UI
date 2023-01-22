@@ -11,6 +11,7 @@
       :last-loading-direction="lastLoadingDirection"
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
+      @scroll="handleScroll"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
         <messages-scroller-separator
@@ -47,7 +48,7 @@
 import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
-import { computed, onMounted, ref, shallowRef } from 'vue'
+import { computed, ref, shallowRef } from 'vue'
 import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -113,14 +114,12 @@ const toNewMessage = () => {
     top: scrollerEle.value.$el.scrollHeight
   })
 }
-onMounted(() => {
+
+const handleScroll = () => {
   if (scrollerEle.value === undefined) return
-  scrollerEle.value.$el.onscroll = () => {
-    if (scrollerEle.value === undefined) return
-    const { scrollTop, scrollHeight, clientHeight } = scrollerEle.value.$el
-    showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop
-  }
-})
+  const { scrollTop, scrollHeight, clientHeight } = scrollerEle.value.$el
+  showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop
+}
 </script>
 
 <style lang="scss" module>
