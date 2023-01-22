@@ -4,6 +4,13 @@
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
   >
+    <button
+      v-if="showToNewMessageButton"
+      :class="$style.toNewMessageButton"
+      @click="onClickToNewMessageButton"
+    >
+      最新メッセージ<a-icon name="arrow-down" mdi />
+    </button>
     <message-input-typing-users :typing-users="typingUsers" />
     <message-input-key-guide :show="showKeyGuide" />
     <message-input-upload-progress v-if="isPosting" :progress="progress" />
@@ -72,10 +79,15 @@ import useMessageInputStateAttachment from '/@/composables/messageInputState/use
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
+import { $boolAttr } from '/@/bool-attr'
 
 const props = defineProps<{
   channelId: ChannelId | DMChannelId
   typingUsers: UserId[]
+  showToNewMessageButton: boolean
+}>()
+const emit = defineEmits<{
+  (e: 'clickToNewMessageButton'): void
 }>()
 
 const { isMobile } = useResponsiveStore()
@@ -141,6 +153,10 @@ const { toggleStampPicker } = useTextStampPickerInvoker(
   computed(() => textareaComponentRef.value?.textareaAutosizeRef.$el),
   containerEle
 )
+
+const onClickToNewMessageButton = () => {
+  emit('clickToNewMessageButton')
+}
 </script>
 
 <style lang="scss" module>
@@ -165,6 +181,9 @@ $radius: 4px;
     border: solid 2px transparent;
     &:focus-within {
       border-color: $theme-accent-focus-default;
+    }
+    &:has(.toNewMessageButton:focus) {
+      border-color: transparent;
     }
   }
 }
@@ -212,5 +231,27 @@ $radius: 4px;
   right: 8px;
   bottom: 0;
   margin: 8px 0;
+}
+
+.toNewMessageButton {
+  color: $theme-ui-secondary-default;
+  background-color: $theme-background-secondary-default;
+  width: 160px;
+  height: 40px;
+  position: absolute;
+  top: -52px;
+  right: 12px;
+  border-radius: 8px;
+  z-index: $z-index-to-new-message-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  gap: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: $theme-background-tertiary-default;
+  }
 }
 </style>

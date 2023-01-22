@@ -34,7 +34,12 @@
         />
       </template>
     </messages-scroller>
-    <message-input :channel-id="channelId" :typing-users="typingUsers" />
+    <message-input
+      :channel-id="channelId"
+      :typing-users="typingUsers"
+      :show-to-new-message-button="showToNewMessageButton"
+      @click-to-new-message-button="toNewMessage"
+    />
   </div>
 </template>
 
@@ -42,7 +47,7 @@
 import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
-import { computed, shallowRef } from 'vue'
+import { computed, onMounted, ref, shallowRef } from 'vue'
 import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -100,6 +105,22 @@ const isArchived = computed(
 const messagePinnedUserMap = computed(
   () => new Map(props.pinnedMessages.map(pin => [pin.message.id, pin.userId]))
 )
+
+const showToNewMessageButton = ref(false)
+const toNewMessage = () => {
+  if (scrollerEle.value === undefined) return
+  scrollerEle.value.$el.scrollTo({
+    top: scrollerEle.value.$el.scrollHeight
+  })
+}
+onMounted(() => {
+  if (scrollerEle.value === undefined) return
+  scrollerEle.value.$el.onscroll = () => {
+    if (scrollerEle.value === undefined) return
+    const { scrollTop, scrollHeight, clientHeight } = scrollerEle.value.$el
+    showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop
+  }
+})
 </script>
 
 <style lang="scss" module>
