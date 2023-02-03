@@ -67,7 +67,7 @@
     "@typescript/lib-dom": "npm:@types/web@^0.0.72",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitest/coverage-c8": "^0.25.8",
-    "@vue/test-utils": "^2.2.3",
+    "@vue/test-utils": "^2.2.10",
     "autoprefixer": "^10.4.9",
     "axios": "^0.27.2",
     "browserslist": "^4.21.3",
