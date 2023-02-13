@@ -30,7 +30,7 @@
     "@sapphi-red/web-noise-suppressor": "^0.3.1",
     "@traptitech/traq": "^3.11.0-3",
     "@traptitech/traq-markdown-it": "^6.2.1",
-    "autosize": "^5.0.1",
+    "autosize": "^6.0.0",
     "cropperjs": "^1.5.12",
     "deepmerge": "^4.2.2",
     "dequal": "^2.0.3",
