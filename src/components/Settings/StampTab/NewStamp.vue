@@ -29,37 +29,12 @@ import { ref, computed } from 'vue'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { isValidStampName } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
+import { imageSize } from './imageSize'
 
 /**
  * 拡張子を削る
  */
 const trimExt = (filename: string) => filename.replace(/\.[^.]+$/, '')
-type imgSize = {
-  width: number
-  height: number
-}
-
-const imageSize = async (file: File): Promise<imgSize> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-
-    img.onload = () => {
-      const size = {
-        width: img.naturalWidth,
-        height: img.naturalHeight
-      }
-
-      URL.revokeObjectURL(img.src)
-      resolve(size)
-    }
-
-    img.onerror = error => {
-      reject(error)
-    }
-
-    img.src = URL.createObjectURL(file)
-  })
-}
 
 const useStampCreate = (
   newStampName: Ref<string>,
