@@ -51,13 +51,12 @@ export default defineComponent({
   setup(props, { slots, emit }) {
     const element = shallowRef<Element | ComponentPublicInstance>()
 
-    const modalStore = computed(() => useModalStore())
+    const { shouldShowModal } = useModalStore()
 
     const onClick = (e: MouseEvent | TouchEvent) => {
       if (!element.value) return
 
-      if (props.unableWhileModalOpen && modalStore.value.shouldShowModal.value)
-        return
+      if (props.unableWhileModalOpen && shouldShowModal.value) return
 
       const ele =
         element.value instanceof Element ? element.value : element.value.$el
