@@ -6,8 +6,7 @@ import {
   cloneVNode,
   shallowRef,
   onMounted,
-  onBeforeUnmount,
-  computed
+  onBeforeUnmount
 } from 'vue'
 import { isIOS } from '/@/lib/dom/browser'
 import { useModalStore } from '/@/store/ui/modal'
