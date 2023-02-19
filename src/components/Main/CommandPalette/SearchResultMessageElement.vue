@@ -158,8 +158,6 @@ const { toggleSpoilerHandler } = useSpoilerToggler()
   gap: 4px 16px;
   padding: 0.5rem 1rem;
   cursor: pointer;
-  &:hover {
-  }
 }
 .MouseOver {
   @include background-secondary;
