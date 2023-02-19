@@ -1,14 +1,22 @@
 <template>
-  <div :class="$style.container">
-    <div :class="$style.buttonContainer" :aria-selected="!isStared">
-      <button :class="$style.button" @click="unselectStarFilter">すべて</button>
-      <div :class="$style.buttonBG"></div>
+  <div>
+    <div :class="$style.buttonContainer">
+      <button
+        :class="$style.button"
+        :aria-selected="!isStared"
+        @click="unselectStarFilter"
+      >
+        すべて
+      </button>
     </div>
-    <div :class="$style.buttonContainer" :aria-selected="isStared">
-      <button :class="$style.button" @click="selectStarFilter">
+    <div :class="$style.buttonContainer">
+      <button
+        :class="$style.button"
+        :aria-selected="isStared"
+        @click="selectStarFilter"
+      >
         お気に入り
       </button>
-      <div :class="$style.buttonBG"></div>
     </div>
   </div>
 </template>
@@ -31,36 +39,37 @@ const unselectStarFilter = () => {
 </script>
 
 <style lang="scss" module>
-.container {
-  align-items: center;
-}
-
 .buttonContainer {
   position: relative;
-  // width: calc(50% - 2rem);
   display: inline-block;
 }
 
 .button {
-  //position: absolute;
-  padding: 0 1rem;
-  height: 1.5rem;
-  .buttonContainer[aria-selected='true'] > & {
+  padding: 0.25rem 1rem;
+  height: 2rem;
+  cursor: pointer;
+  &[aria-selected='true'] {
     @include color-accent-primary;
   }
-}
-
-.buttonBG {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: -1;
-  opacity: 0.1;
-  border-radius: 100vw;
-  .buttonContainer[aria-selected='true'] > & {
+  &::after {
+    content: '';
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    opacity: 0;
+    border-radius: 100vw;
+  }
+  &[aria-selected='true']::after {
+    opacity: 0.1;
     @include background-accent-primary;
+  }
+  &[aria-selected='false']:hover::after {
+    opacity: 1;
+    @include background-tertiary;
   }
 }
 </style>
