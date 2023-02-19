@@ -21,9 +21,6 @@ const emit = defineEmits<{
 }>()
 
 const value = useModelValueSyncer(props, emit)
-const toggleStarFilter = () => {
-  emit('update:isStared', !props.isStared)
-}
 </script>
 
 <style lang="scss" module>
@@ -33,23 +30,5 @@ const toggleStarFilter = () => {
 }
 .input {
   margin-right: 16px;
-}
-.star {
-  @include background-primary;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-  border-radius: 4px;
-  margin-right: 16px;
-  cursor: pointer;
-}
-.icon {
-  @include color-ui-secondary-inactive;
-  .star[aria-selected='true'] & {
-    @include color-accent-primary;
-  }
 }
 </style>
