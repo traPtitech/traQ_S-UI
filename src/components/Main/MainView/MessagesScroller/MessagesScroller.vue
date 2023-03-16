@@ -29,6 +29,7 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
+import { onUnmounted } from 'vue'
 import { watch, reactive, computed, onMounted, nextTick, shallowRef } from 'vue'
 import type { MessageId } from '/@/types/entity-ids'
 import type { LoadingDirection } from './composables/useMessagesFetcher'
@@ -137,6 +138,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'requestLoadFormer'): void
   (e: 'requestLoadLatter'): void
+  (e: 'resetIsReachedLatest'): void
 }>()
 
 const { lastScrollPosition } = useMainViewStore()
@@ -211,7 +213,7 @@ watch(
   { deep: true, flush: 'post' }
 )
 
-const handleScroll = throttle(17, () => {
+const requestLoadMessages = () => {
   if (!rootRef.value) return
   const { clientHeight, scrollHeight, scrollTop } = rootRef.value
   state.scrollTop = scrollTop
@@ -226,6 +228,21 @@ const handleScroll = throttle(17, () => {
   ) {
     emit('requestLoadLatter')
   }
+}
+
+const handleScroll = throttle(17, requestLoadMessages)
+
+const visibilitychangeListener = () => {
+  if (document.visibilityState === 'visible') {
+    requestLoadMessages()
+  }
+  emit('resetIsReachedLatest')
+}
+onMounted(() => {
+  document.addEventListener('visibilitychange', visibilitychangeListener)
+})
+onUnmounted(() => {
+  document.removeEventListener('visibilitychange', visibilitychangeListener)
 })
 
 const { onClick } = useMarkdownInternalHandler()
