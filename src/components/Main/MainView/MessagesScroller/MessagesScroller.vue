@@ -29,8 +29,15 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { onUnmounted } from 'vue'
-import { watch, reactive, computed, onMounted, nextTick, shallowRef } from 'vue'
+import {
+  watch,
+  reactive,
+  computed,
+  onMounted,
+  onUnmounted,
+  nextTick,
+  shallowRef
+} from 'vue'
 import type { MessageId } from '/@/types/entity-ids'
 import type { LoadingDirection } from './composables/useMessagesFetcher'
 import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'

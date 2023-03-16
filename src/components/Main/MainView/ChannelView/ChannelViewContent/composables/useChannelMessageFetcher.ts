@@ -212,7 +212,6 @@ const useChannelMessageFetcher = (
     reset()
     init()
   })
-
   watch(
     () => props.entryMessageId,
     (newVal, oldVal) => {
