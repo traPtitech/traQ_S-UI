@@ -48,6 +48,7 @@ const cropperDefaultOptions = {
   viewMode: 3,
   aspectRatio: 1,
   autoCropArea: 1,
+  autoCrop: true,
   dragMode: 'move' as const
 } as const
 const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
@@ -79,6 +80,18 @@ const updateImgView = () => {
     : {
         ...cropperDefaultOptions,
         cropend: () => {
+          cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
+            if (!blob) return
+
+            emit(
+              'update:modelValue',
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              new File([blob], originalImg.value!.name, { type: blob.type })
+            )
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          }, originalImg.value!.type)
+        },
+        ready: () => {
           cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
             if (!blob) return
 
