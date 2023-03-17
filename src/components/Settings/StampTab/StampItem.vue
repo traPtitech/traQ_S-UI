@@ -19,13 +19,11 @@
           prefix=":"
           suffix=":"
           :max-length="32"
-          :class="$style.form"
         />
         <form-selector
           v-model="state.creatorId"
           label="所有者"
           :options="creatorOptions"
-          :class="$style.form"
         />
         <image-upload v-model="newImageData" />
       </div>
@@ -231,9 +229,7 @@ const { isEditing, editStamp } = useStampEdit(
   display: flex;
   flex-flow: row wrap;
   align-items: flex-end;
-}
-.form {
-  margin-right: 12px;
+  gap: 12px;
 }
 .changeButton {
   word-break: keep-all;
