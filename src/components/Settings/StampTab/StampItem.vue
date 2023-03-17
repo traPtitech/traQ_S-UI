@@ -121,8 +121,8 @@ const useStampEdit = (
       isEditing.value = false
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.error('スタンプの作成に失敗しました', e)
-      addErrorToast(formatResizeError(e, 'スタンプの作成に失敗しました'))
+      console.error('スタンプの編集に失敗しました', e)
+      addErrorToast(formatResizeError(e, 'スタンプの編集に失敗しました'))
     }
   }
 
