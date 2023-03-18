@@ -1,24 +1,24 @@
 import {
   getMatchedWithPriority,
-  pickSomeAroundIndex,
-  isDefined
+  isDefined,
+  pickSomeAroundIndex
 } from '/@/lib/basic/array'
 
 describe('getMatchedWithPriority', () => {
   it('can get fullMatched', () => {
     const expected = [{ value: 'aaaaa', priority: 0 }]
-    const actual = getMatchedWithPriority(arr, 'aaaaa', v => v)
+    const actual = getMatchedWithPriority(arr, 'aaaaa', v => [v])
     expect(actual).toStrictEqual(expected)
   })
   it('can get prefixMatched', () => {
     const expected = [{ value: 'aaaaa', priority: 1 }]
-    const actual = getMatchedWithPriority(arr, 'aaaa', v => v)
+    const actual = getMatchedWithPriority(arr, 'aaaa', v => [v])
     expect(actual).toStrictEqual(expected)
   })
 
   it('can get matched (1)', () => {
     const expected = [{ value: 'AAAbd', priority: 2 }]
-    const actual = getMatchedWithPriority(arr, 'abd', v => v)
+    const actual = getMatchedWithPriority(arr, 'abd', v => [v])
     expect(actual).toStrictEqual(expected)
   })
   it('can get matched (2)', () => {
@@ -27,7 +27,7 @@ describe('getMatchedWithPriority', () => {
       { value: 'cde', priority: 2 },
       { value: 'cdecd', priority: 2 }
     ]
-    const actual = getMatchedWithPriority(arr, 'de', v => v)
+    const actual = getMatchedWithPriority(arr, 'de', v => [v])
     expect(actual).toStrictEqual(expected)
   })
 
@@ -38,14 +38,14 @@ describe('getMatchedWithPriority', () => {
       { value: 'baaa', priority: 2 },
       { value: 'aaa', priority: 0 }
     ]
-    const actual = getMatchedWithPriority(arr, 'aaa', v => v)
+    const actual = getMatchedWithPriority(arr, 'aaa', v => [v])
     expect(actual).toStrictEqual(expected)
   })
 
   it('can use key', () => {
     const input = [{ name: 'abc' }, { name: 'def' }]
     const expected = [{ value: { name: 'abc' }, priority: 2 }]
-    const actual = getMatchedWithPriority(input, 'bc', v => v.name)
+    const actual = getMatchedWithPriority(input, 'bc', v => [v.name])
     expect(actual).toStrictEqual(expected)
   })
 })

@@ -70,8 +70,8 @@ const useStampFilter = () => {
         return getStamps(res)
       }
 
-      const altNameRes = getMatchedWithPriority(altNames.value, query, v => v)
-      const res = getMatchedWithPriority(stampNames.value, query, v => v)
+      const altNameRes = getMatchedWithPriority(altNames.value, query, v => [v])
+      const res = getMatchedWithPriority(stampNames.value, query, v => [v])
 
       const result = [
         ...altNameRes.map(r => ({

@@ -6,12 +6,13 @@
  *
  * @param arr 検索対象のキーの配列
  * @param query lowercaseになっているクエリ
+ * @param f キーから検索対象の文字列を取得する関数
  */
 export const getMatchedWithPriority = <T>(
   arr: readonly T[],
   query: string,
   f: (v: T) => string[]
-): Array<{ value: T; priority: number }> => {
+): { value: T; priority: number }[] => {
   const priorities = new Map<T, { value: T; priority: number }>()
 
   for (const val of arr) {
