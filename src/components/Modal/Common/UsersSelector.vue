@@ -33,7 +33,7 @@ const useUserFilter = (props: { excludeIds: UserId[] }) => {
     computed(() => ['inactive', 'webhook', ...props.excludeIds])
   )
 
-  const { query, filteredItems } = useTextFilter(userList, 'name')
+  const { query, filteredItems } = useTextFilter(userList, ['name'])
   const shouldUseMultipleFilter = computed(
     () => query.value.trim().split(' ').length >= 2
   )
