@@ -33,7 +33,7 @@ import useUserList from '/@/composables/users/useUserList'
 const userListsByGrade = useUserListByGrade()
 
 const userList = useUserList()
-const { query, filteredItems } = useTextFilter(userList, 'name')
+const { query, filteredItems } = useTextFilter(userList, ['name', 'displayName'])
 </script>
 
 <style lang="scss" module>
