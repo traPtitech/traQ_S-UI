@@ -5,20 +5,28 @@
     :data-is-fold="isFold"
     @click="unfold"
   >
-    <div :class="wrapClass" v-html="preContent.outerHTML" />
+    <div ref="preWrapRef" :class="wrapClass" v-html="preContent.outerHTML" />
     <fold-button
       show-icon
       :is-fold="isFold"
       :class="$style.button"
+      :aria-controls="foldBlockId"
+      :aria-expanded="!isFold"
       @click="toggle"
     />
   </div>
-  <div v-else :class="wrapClass" v-html="preContent.outerHTML" />
+  <div
+    v-else
+    ref="preWrapRef"
+    :class="wrapClass"
+    v-html="preContent.outerHTML"
+  />
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import FoldButton from '/@/components/UI/FoldButton.vue'
+import { randomString } from '/@/lib/basic/randomString'
 
 const MAX_LINES = 5
 
@@ -39,6 +47,18 @@ const line_count = computed(() => {
 const isLong = computed(() => {
   return line_count.value > MAX_LINES
 })
+
+const preWrapRef = ref<HTMLDivElement>()
+
+const foldBlockId = randomString()
+const applyId = () => {
+  if (!isLong.value) return
+  if (preWrapRef.value === undefined) return
+  const pre = preWrapRef.value.querySelector('pre')
+  if (pre === null) return
+  pre.id = foldBlockId
+}
+onMounted(applyId)
 
 const unfold = (e: MouseEvent) => {
   if (!isFold.value) return
