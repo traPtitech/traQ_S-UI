@@ -50,6 +50,11 @@ const toggle = (e: MouseEvent) => {
 .wrap {
   position: relative;
   overflow: hidden;
+  pre {
+    margin-bottom: 0;
+  }
+  margin-bottom: 16px;
+
   &[data-is-fold='true'] {
     cursor: pointer;
 
