@@ -6,7 +6,12 @@
     @click="unfold"
   >
     <div :class="wrapClass" v-html="preContent.outerHTML" />
-    <fold-button :is-fold="isFold" :class="$style.button" @click="toggle" />
+    <fold-button
+      show-icon
+      :is-fold="isFold"
+      :class="$style.button"
+      @click="toggle"
+    />
   </div>
   <div v-else :class="wrapClass" v-html="preContent.outerHTML" />
 </template>

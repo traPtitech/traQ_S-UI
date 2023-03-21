@@ -20,7 +20,7 @@ interface Props extends ButtonHTMLAttributes {
 }
 
 withDefaults(defineProps<Props>(), {
-  showIcon: true,
+  showIcon: false,
   background: 'tertiary'
 })
 </script>
