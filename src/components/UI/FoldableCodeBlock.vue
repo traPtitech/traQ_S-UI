@@ -10,7 +10,7 @@
       折りたたむ ↑
     </button>
     <button :class="[$style.button, $style['unfold-button']]" @click="unfold">
-      クリックして展開 ({{ line_count }} 行) ↓
+      さらに表示 ↓
     </button>
   </div>
   <div v-else :class="wrapClass" v-html="preContent.outerHTML" />
@@ -74,10 +74,11 @@ const fold = (e: MouseEvent) => {
     margin: auto;
     left: 0;
     right: 0;
-    background-color: $theme-ui-secondary-default;
-    color: $theme-background-primary-default;
-    border-radius: 9999999px;
-    padding: 4px 12px;
+    background-color: $theme-ui-tertiary-default;
+    color: $theme-text-primary-default;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 4px 24px;
     width: fit-content;
 
     transition: all 0.15s ease-out;
