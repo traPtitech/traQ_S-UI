@@ -7,10 +7,10 @@
   >
     <div :class="wrapClass" v-html="preContent.outerHTML" />
     <button :class="[$style.button, $style['fold-button']]" @click="fold">
-      折りたたむ ↑
+      <a-icon name="up" /> 折りたたむ
     </button>
     <button :class="[$style.button, $style['unfold-button']]" @click="unfold">
-      さらに表示 ↓
+      <a-icon name="down" />さらに表示
     </button>
   </div>
   <div v-else :class="wrapClass" v-html="preContent.outerHTML" />
@@ -18,6 +18,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const MAX_LINES = 5
 
@@ -67,7 +68,9 @@ const fold = (e: MouseEvent) => {
   }
 
   .button {
-    display: block;
+    display: flex;
+    gap: 4px;
+    align-items: center;
     cursor: pointer;
     position: absolute;
     bottom: 24px;
@@ -78,10 +81,17 @@ const fold = (e: MouseEvent) => {
     color: $theme-text-primary-default;
     font-weight: bold;
     border-radius: 4px;
-    padding: 4px 24px;
+    padding: 0 24px;
+    min-height: 24px;
+    font-size: 12px;
+    line-height: 1.5;
     width: fit-content;
 
     transition: all 0.15s ease-out;
+
+    & > svg {
+      margin-left: -12px;
+    }
   }
 
   @media (any-hover: hover) {
