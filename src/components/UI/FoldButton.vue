@@ -1,5 +1,8 @@
 <template>
-  <button :class="$style.button" :data-background="background">
+  <button
+    :class="$style.button"
+    :data-background="background"
+  >
     <a-icon
       v-if="showIcon"
       :name="isFold ? 'down' : 'up'"
