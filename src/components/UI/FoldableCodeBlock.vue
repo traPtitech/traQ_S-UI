@@ -55,10 +55,10 @@ const toggle = (e: MouseEvent) => {
 
     pre {
       max-height: calc(6em + 32px);
-      -webkit-mask-image: linear-gradient(black 0% 40%, transparent 100%);
-      mask-image: linear-gradient(black 0% 40%, transparent 100%);
+      -webkit-mask-image: linear-gradient(black 0% 60%, transparent 100%);
+      mask-image: linear-gradient(black 0% 60%, transparent 100%);
     }
-    box-shadow: 0 0 0 2px var(--markdown-code-background) inset;
+    background: var(--markdown-code-background);
   }
 
   .button {
