@@ -63,7 +63,7 @@ const toggle = (e: MouseEvent) => {
 
   .button {
     position: absolute;
-    bottom: 24px;
+    bottom: 8px;
     margin: auto;
     left: 0;
     right: 0;
