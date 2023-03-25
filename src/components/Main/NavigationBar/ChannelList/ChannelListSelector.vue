@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="$style.container">
     <div :class="$style.buttonContainer">
       <button
         :class="$style.button"
@@ -39,13 +39,21 @@ const unselectStarFilter = () => {
 </script>
 
 <style lang="scss" module>
+.container {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 .buttonContainer {
   position: relative;
-  display: inline-block;
+  max-width: 6rem;
+  text-align: center;
 }
 
 .button {
-  padding: 0.25rem 1rem;
+  padding: 0.125rem 0.5rem;
   height: 2rem;
   cursor: pointer;
   &[aria-selected='true'] {
