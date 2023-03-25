@@ -1,27 +1,12 @@
 <template>
   <div
-    :class="
-      isMouseOver ? [$style.container, $style.MouseOver] : $style.container
-    "
+    :class="$style.container"
     :data-oversized="$boolAttr(oversized)"
     :data-expanded="$boolAttr(expanded)"
     @click="onClick"
-    @mouseover="isMouseOver = true"
-    @mouseout="isMouseOver = false"
   >
-    <user-icon
-      :class="$style.icon"
-      :size="32"
-      :user-id="message.userId"
-      @mouseover.stop=""
-      @mouseout.stop=""
-    />
-    <div
-      :class="$style.header"
-      @click.stop=""
-      @mouseover.stop=""
-      @mouseout.stop=""
-    >
+    <user-icon :class="$style.icon" :size="32" :user-id="message.userId" />
+    <div :class="$style.header" @click.stop="">
       <span :class="$style.displayName">{{
         user?.displayName ?? 'Unknown'
       }}</span>
@@ -108,7 +93,6 @@ const date = computed(() => {
   }
   return getCreatedDate(_date)
 })
-const isMouseOver = ref(false)
 const { fetchFileMetaData } = useMessagesStore()
 
 const renderedResult = ref<MarkdownRenderResult>()
@@ -158,9 +142,9 @@ const { toggleSpoilerHandler } = useSpoilerToggler()
   gap: 4px 16px;
   padding: 0.5rem 1rem;
   cursor: pointer;
-}
-.MouseOver {
-  @include background-secondary;
+  &:hover:has(.icon:not(:hover)):has(.header:not(:hover)) {
+    @include background-secondary;
+  }
 }
 .icon {
   grid-area: icon;
