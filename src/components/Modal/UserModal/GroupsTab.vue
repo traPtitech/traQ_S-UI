@@ -25,6 +25,7 @@ import type { UserGroupId } from '/@/types/entity-ids'
 import { isDefined } from '/@/lib/basic/array'
 import { useModalStore } from '/@/store/ui/modal'
 import { useGroupsStore } from '/@/store/entities/groups'
+import { compareString } from '/@/lib/basic/string'
 
 const props = defineProps<{
   detail?: UserDetail
@@ -38,7 +39,8 @@ const groups = computed(
   () =>
     props.detail?.groups
       .map(groupId => userGroupsMap.value.get(groupId))
-      .filter(isDefined) ?? []
+      .filter(isDefined)
+      .sort((a, b) => compareString(a.name, b.name)) ?? []
 )
 
 const onGroupClick = (id: UserGroupId) => {
