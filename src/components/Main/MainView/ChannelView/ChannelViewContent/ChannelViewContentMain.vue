@@ -59,6 +59,8 @@ import useDayDiffMessages from './composables/useDayDiffMessages'
 import { getFullDayString } from '/@/lib/basic/date'
 import type { Pin } from '@traptitech/traq'
 import { useRouter } from 'vue-router'
+import { constructChannelPath } from '/@/router'
+import useChannelPath from '/@/composables/useChannelPath'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -111,8 +113,16 @@ const messagePinnedUserMap = computed(
 )
 
 const showToNewMessageButton = ref(false)
+const { channelIdToPathString } = useChannelPath()
 const toNewMessage = () => {
-  router.push('/channels/gps/times/mehm8128')
+  if (props.entryMessageId) {
+    const channelPath = channelIdToPathString(props.channelId)
+    router.push(constructChannelPath(channelPath))
+  }
+  if (scrollerEle.value === undefined) return
+  scrollerEle.value.$el.scrollTo({
+    top: scrollerEle.value.$el.scrollHeight
+  })
 }
 
 const handleScroll = () => {
