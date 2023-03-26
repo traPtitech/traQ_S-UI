@@ -58,6 +58,7 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import useDayDiffMessages from './composables/useDayDiffMessages'
 import { getFullDayString } from '/@/lib/basic/date'
 import type { Pin } from '@traptitech/traq'
+import { useRouter } from 'vue-router'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -65,6 +66,8 @@ const props = defineProps<{
   pinnedMessages: Pin[]
   typingUsers: UserId[]
 }>()
+
+const router = useRouter()
 
 const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
 const {
@@ -109,16 +112,16 @@ const messagePinnedUserMap = computed(
 
 const showToNewMessageButton = ref(false)
 const toNewMessage = () => {
-  if (scrollerEle.value === undefined) return
-  scrollerEle.value.$el.scrollTo({
-    top: scrollerEle.value.$el.scrollHeight
-  })
+  router.push('/channels/gps/times/mehm8128')
 }
 
 const handleScroll = () => {
   if (scrollerEle.value === undefined) return
   const { scrollTop, scrollHeight, clientHeight } = scrollerEle.value.$el
   showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop
+  if (!isReachedLatest.value) {
+    showToNewMessageButton.value = true
+  }
 }
 </script>
 
