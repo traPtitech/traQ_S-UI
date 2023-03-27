@@ -44,11 +44,9 @@ const unselectStarFilter = () => {
   gap: 0.5rem;
   margin-bottom: 0.75rem;
   flex-wrap: wrap;
-  justify-content: center;
 }
 .buttonContainer {
   position: relative;
-  max-width: 6rem;
   text-align: center;
 }
 
