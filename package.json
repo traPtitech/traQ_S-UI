@@ -53,7 +53,7 @@
     "@pinia/testing": "^0.0.14",
     "@types/autosize": "^4.0.1",
     "@types/dom-screen-wake-lock": "^1.0.0",
-    "@types/katex": "^0.14.0",
+    "@types/katex": "^0.16.0",
     "@types/markdown-it": "^12.2.3",
     "@types/node": "^16.18.19",
     "@types/pica": "^9.0.1",
