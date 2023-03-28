@@ -3,7 +3,6 @@ import { withSetup } from '../../testUtils'
 import { nextTick, ref } from 'vue'
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import type { SpyInstance } from 'vitest'
 
 const useObjectURL = withSetup(useObjectURLWithoutSetup)
 
@@ -14,20 +13,21 @@ const loadBlob = async (filename: string) => {
 }
 
 describe('useObjectURL', () => {
-  let mock1: SpyInstance, mock2: SpyInstance
   const revokedSet = new Set<string>()
   beforeEach(() => {
     let i = 0
-    mock1 = vi
-      .spyOn(URL, 'createObjectURL')
-      .mockImplementation(() => `blob:${i++}`)
-    mock2 = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(v => {
+    const originalCreateObjectURL = URL.createObjectURL
+    URL.createObjectURL = vi.fn(() => `blob:${i++}`)
+    const originalRevokeObjectURL = URL.revokeObjectURL
+    URL.revokeObjectURL = vi.fn(v => {
       revokedSet.add(v)
     })
-  })
-  afterEach(() => {
-    mock1.mockReset()
-    mock2.mockReset()
+
+    return () => {
+      URL.createObjectURL = originalCreateObjectURL
+      URL.revokeObjectURL = originalRevokeObjectURL
+      revokedSet.clear()
+    }
   })
 
   it('should work', async () => {

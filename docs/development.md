@@ -21,31 +21,33 @@ $ npm run dev
 
 ### ビルド
 
+#### フォント以外のビルド
+
 ```shell
 $ npm run build
 ```
 
-フォント以外のビルド
+#### フォントを含めたビルド
 
 ```shell
 $ npm run build:with-font
 ```
 
-フォントを含めたビルド
+#### 絵文字用データの生成
 
 ```shell
 $ npm run gen-unicode_emojis
 ```
 
-絵文字用データの生成
-リポジトリに生成物が含まれています
-このコマンドは更新用です
+- リポジトリに生成物が含まれています
+- このコマンドは更新用です
+
+#### フォントの生成
 
 ```shell
 $ npm run gen-fonts
 ```
 
-フォントの生成
 リポジトリに生成物が含まれていません
 
 ## ビルド成果物の確認
@@ -58,17 +60,18 @@ $ npm run preview
 
 ### テスト/lint
 
+#### ユニットテスト実行
+
 ```shell
 $ npm run test:unit
 ```
 
-ユニットテスト実行
+#### e2e テスト実行
 
 ```shell
 $ npm run test:e2e
 ```
 
-e2e テスト実行  
 `cypress.env.json`を以下の通りに作成する必要があります
 
 ```json
@@ -80,26 +83,26 @@ e2e テスト実行
 
 `npm run test:e2e-headless`ではヘッドレスで実行できます
 
+#### 再ビルドなしでの e2e テスト実行
+
 ```shell
 $ npm run test:e2e:without-build
 ```
 
-再ビルドなしでの e2e テスト実行
+#### lint の実行と auto-fix による修正
 
 ```shell
 $ npm run lint
 ```
 
-lint の実行と auto-fix による修正
+#### lint の実行(auto-fix なし)
 
 ```shell
 $ npm run lint:no-fix
 ```
 
-lint の実行(auto-fix なし)
+#### 型チェックの実行
 
 ```shell
 $ npm run type-check
 ```
-
-型チェックの実行

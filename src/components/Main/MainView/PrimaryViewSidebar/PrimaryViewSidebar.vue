@@ -5,7 +5,10 @@
     </teleport>
   </template>
   <!-- #sidebar-openerが存在する前にはマウントできないのでisSidebarOpenerReadyをチェック -->
-  <teleport v-else-if="isSidebarOpenerReady" to="#sidebar-opener">
+  <teleport
+    v-if="isSidebarOpenerReady && shouldShowHiddenSidebar"
+    to="#sidebar-opener"
+  >
     <slot name="opener" />
   </teleport>
 </template>
@@ -18,6 +21,6 @@ defineProps<{
   isSidebarOpenerReady: boolean
 }>()
 
-const { shouldShowSidebar } = useSidebar()
+const { shouldShowSidebar, shouldShowHiddenSidebar } = useSidebar()
 const { isMobile } = useResponsiveStore()
 </script>

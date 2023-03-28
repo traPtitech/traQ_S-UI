@@ -37,10 +37,12 @@ const storeProvider: Store = {
     return `${embeddingOrigin}${channelIdToLink(id)}`
   },
   generateUserHref(id) {
-    return `javascript:openUserModal(${JSON.stringify(id)})`
+    return `javascript:openUserModal(${encodeURIComponent(JSON.stringify(id))})`
   },
   generateUserGroupHref(id) {
-    return `javascript:openGroupModal(${JSON.stringify(id)})`
+    return `javascript:openGroupModal(${encodeURIComponent(
+      JSON.stringify(id)
+    )})`
   }
 }
 

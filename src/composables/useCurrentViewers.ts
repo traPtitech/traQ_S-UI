@@ -14,15 +14,9 @@ const useCurrentViewers = (channelId: Ref<ChannelId>) => {
   const currentViewers = ref<ChannelViewer[]>([])
 
   /**
-   * チャンネルを見ている人(入力中も含む)のIDの一覧(古い順)
+   * チャンネルを見ている人(入力中、バックグラウンド表示中も含む)のIDの一覧(古い順)
    */
-  const viewingUsers = computed(() =>
-    currentViewers.value
-      .filter(
-        v => v.state === ChannelViewState.Monitoring || ChannelViewState.Editing
-      )
-      .map(v => v.userId)
-  )
+  const viewingUsers = computed(() => currentViewers.value.map(v => v.userId))
 
   /**
    * チャンネルで入力中の人のIDの一覧(新しい順)

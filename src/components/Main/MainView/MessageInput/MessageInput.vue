@@ -58,7 +58,7 @@ import MessageInputRightControls from './MessageInputRightControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { computed, ref, toRef, watchEffect } from 'vue'
+import { computed, ref, toRef, watch, watchEffect } from 'vue'
 import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
@@ -106,8 +106,15 @@ watchEffect(() => {
 })
 
 const { isTyping } = useViewStateSenderStore()
-watchEffect(() => {
+let timeoutId: NodeJS.Timeout
+watch(state, () => {
   isTyping.value = !isTextEmpty.value && isFocused.value
+  if (isTyping.value) {
+    clearTimeout(timeoutId)
+  }
+  timeoutId = setTimeout(() => {
+    isTyping.value = false
+  }, 2000)
 })
 
 const onAddAttachments = async (files: File[]) => {

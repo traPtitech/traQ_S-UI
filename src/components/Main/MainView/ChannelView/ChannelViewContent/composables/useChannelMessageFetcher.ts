@@ -145,6 +145,16 @@ const useChannelMessageFetcher = (
       fetchFormerMessages(isReachedEnd),
       fetchLatterMessages(isReachedLatest)
     ])
+    // 未読を取得していないと未読を表示できないため
+    await unreadChannelsMapInitialFetchPromise.value
+
+    const unreadChannel = unreadChannelsMap.value.get(props.channelId)
+    if (unreadChannel) {
+      // 未読表示を**追加してから**未読を削除
+      // 未読の削除は最新メッセージ読み込み完了時
+      unreadSince.value = unreadChannel.since
+    }
+
     return [
       ...new Set([
         ...formerMessageIds.reverse(),

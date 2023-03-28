@@ -3,10 +3,10 @@
     :class="$style.container"
     :data-oversized="$boolAttr(oversized)"
     :data-expanded="$boolAttr(expanded)"
-    @mousedown="onClick"
+    @click="onClick"
   >
     <user-icon :class="$style.icon" :size="32" :user-id="message.userId" />
-    <div :class="$style.header">
+    <div :class="$style.header" @click.stop="">
       <span :class="$style.displayName">{{
         user?.displayName ?? 'Unknown'
       }}</span>
@@ -93,7 +93,6 @@ const date = computed(() => {
   }
   return getCreatedDate(_date)
 })
-
 const { fetchFileMetaData } = useMessagesStore()
 
 const renderedResult = ref<MarkdownRenderResult>()
@@ -143,7 +142,7 @@ const { toggleSpoilerHandler } = useSpoilerToggler()
   gap: 4px 16px;
   padding: 0.5rem 1rem;
   cursor: pointer;
-  &:hover {
+  &:hover:has(.icon:not(:hover)):has(.header:not(:hover)) {
     @include background-secondary;
   }
 }
