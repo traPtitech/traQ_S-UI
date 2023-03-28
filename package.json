@@ -61,7 +61,7 @@
     "@types/serviceworker": "^0.0.67",
     "@types/throttle-debounce": "^5.0.0",
     "@types/turndown": "^5.0.1",
-    "@types/webappsec-credential-management": "^0.6.2",
+    "@types/webappsec-credential-management": "^0.6.4",
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
     "@typescript/lib-dom": "npm:@types/web@^0.0.72",
