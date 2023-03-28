@@ -196,9 +196,14 @@ watch(
       state.height = newHeight
       return
     }
-    rootRef.value.scrollTo({
-      top: newHeight - state.height
-    })
+    if (
+      props.lastLoadingDirection === 'latest' ||
+      props.lastLoadingDirection === 'former'
+    ) {
+      rootRef.value.scrollTo({
+        top: newHeight - state.height
+      })
+    }
     state.height = newHeight
   },
   { deep: true, flush: 'post' }
