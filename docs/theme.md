@@ -6,18 +6,18 @@
 
 ### `CSSColorTypeSimple`
 
-[CSS の`<color>`](https://developer.mozilla.org/ja/docs/Web/CSS/color_value)のうち、RGB 色と HSL 色の 16 進表記と関数表記のみ利用可能である。
-キーワード(色キーワードのみならず`transparent`、`currentcolor`、システム色含む)は利用できない。
+- [CSS の`<color>`](https://developer.mozilla.org/ja/docs/Web/CSS/color_value)のうち、RGB 色と HSL 色の 16 進表記と関数表記のみ利用可能である。
+- キーワード(色キーワードのみならず`transparent`、`currentcolor`、システム色含む)は利用できない。
 
 ### `CSSColorType`
 
-[CSS の`<color>`](https://developer.mozilla.org/ja/docs/Web/CSS/color_value)。
-`CSSColorTypeSimple`と異なり制約がないため、`currentColor`などが利用できる。
+- [CSS の`<color>`](https://developer.mozilla.org/ja/docs/Web/CSS/color_value)。
+- `CSSColorTypeSimple`と異なり制約がないため、`currentColor`などが利用できる。
 
 ### `CSSImageType`
 
-[CSS の`<image>`](https://developer.mozilla.org/ja/docs/Web/CSS/image)。
-`linear-gradient`なども利用可能である。
+- [CSS の`<image>`](https://developer.mozilla.org/ja/docs/Web/CSS/image)。
+- `linear-gradient`なども利用可能である。
 
 ### `CSSImageColorType`
 
@@ -38,8 +38,8 @@ type Theme = {
 
 ### BasicTheme
 
-基本となるパレット。
-省略したプロパティは fallback プロパティから算出される。
+- 基本となるパレット。
+- 省略したプロパティは fallback プロパティから算出される。
 
 ```ts
 type BasicTheme = {
@@ -117,8 +117,8 @@ type BasicTheme = {
 
 ### SpecificTheme
 
-特定の部分を上書きする場合に利用する。
-指定しなかった場合は BasicTheme から算出される。
+- 特定の部分を上書きする場合に利用する。
+- 指定しなかった場合は BasicTheme から算出される。
 
 ```ts
 type SpecificTheme = {
@@ -162,8 +162,8 @@ type SpecificTheme = {
 
 ### BrowserTheme
 
-ブラウザの機能の色を変更する際に利用する。
-指定しなかった場合は BasicTheme から算出される。または、ブラウザのデフォルトに従う。
+- ブラウザの機能の色を変更する際に利用する。
+- 指定しなかった場合は BasicTheme から算出される。または、ブラウザのデフォルトに従う。
 
 ```ts
 type BrowserTheme = {
@@ -196,8 +196,8 @@ type BrowserTheme = {
 
 ### MarkdownTheme
 
-メッセージなどで利用されるマークダウンのテーマに利用する。
-指定しなかった場合は、用意されているライトテーマかダークテーマが利用される。
+- メッセージなどで利用されるマークダウンのテーマに利用する。
+- 指定しなかった場合は、用意されているライトテーマかダークテーマが利用される。
 
 ```ts
 /**
@@ -258,6 +258,6 @@ type MarkdownTheme = {
 
 ## マイグレーションについて
 
-現在のカスタムテーマはバージョン 2 である。
-バージョン 1 から自動でマイグレーションを行うようになっている。
-実装は`/@/store/app/themeSettings.ts`の`useIndexedDbValue`の`migrations`を参照。
+- 現在のカスタムテーマはバージョン 2 である。
+- バージョン 1 から自動でマイグレーションを行うようになっている。
+- 実装は`/@/store/app/themeSettings.ts`の`useIndexedDbValue`の`migrations`を参照。

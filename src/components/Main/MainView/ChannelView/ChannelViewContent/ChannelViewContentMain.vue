@@ -12,6 +12,7 @@
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
       @scroll.passive="handleScroll"
+      @reset-is-reached-latest="resetIsReachedLatest"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
         <messages-scroller-separator
@@ -111,6 +112,10 @@ const isArchived = computed(
 const messagePinnedUserMap = computed(
   () => new Map(props.pinnedMessages.map(pin => [pin.message.id, pin.userId]))
 )
+
+const resetIsReachedLatest = () => {
+  isReachedLatest.value = false
+}
 
 const showToNewMessageButton = ref(false)
 const { channelIdToPathString } = useChannelPath()

@@ -1,22 +1,8 @@
-import type {
-  Pinia,
-  Store,
-  StoreGeneric,
-  StoreState,
-  StoreGetters,
-  PiniaCustomStateProperties
-} from 'pinia'
+import type { Pinia, Store, StoreGeneric } from 'pinia'
 import { storeToRefs } from 'pinia'
-import type { ToRefs } from 'vue'
 import { isReactive, isRef, toRaw } from 'vue'
 
-/**
- * `storeToRefs`の返り値の型
- */
-type StoreToRefs<SS extends Store> = ToRefs<
-  StoreState<SS> & StoreGetters<SS> & PiniaCustomStateProperties<StoreState<SS>>
->
-
+type StoreToRefs<SS extends Store> = ReturnType<typeof storeToRefs<SS>>
 type ToRefsedStore<SS extends Store> = Omit<SS, keyof StoreToRefs<SS>> &
   StoreToRefs<SS>
 

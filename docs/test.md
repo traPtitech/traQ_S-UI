@@ -4,8 +4,8 @@
 
 ### 通常の関数 (`lib`以下)
 
-`tests/unit/lib`以下にファイル/関数ごとに分けて記述する
-`describe`で関数名を指定する
+- `tests/unit/lib`以下にファイル/関数ごとに分けて記述する
+- `describe`で関数名を指定する
 
 ### composable (`composables`以下など)
 

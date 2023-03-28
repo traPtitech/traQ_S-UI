@@ -48,6 +48,7 @@ const cropperDefaultOptions = {
   viewMode: 3,
   aspectRatio: 1,
   autoCropArea: 1,
+  autoCrop: true,
   dragMode: 'move' as const
 } as const
 const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
@@ -64,7 +65,7 @@ let cropper: Cropper | undefined
 const imgEle = shallowRef<HTMLImageElement>()
 const cropperNote = ref('')
 
-watchEffect(() => {
+const updateImgView = () => {
   if (!originalImg.value) {
     if (cropper) cropper.destroy()
     return
@@ -89,6 +90,18 @@ watchEffect(() => {
             )
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           }, originalImg.value!.type)
+        },
+        ready: () => {
+          cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
+            if (!blob) return
+
+            emit(
+              'update:modelValue',
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              new File([blob], originalImg.value!.name, { type: blob.type })
+            )
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          }, originalImg.value!.type)
         }
       }
 
@@ -99,7 +112,9 @@ watchEffect(() => {
   if (cropper) cropper.destroy()
   cropper = new Cropper(imgEle.value, options)
   cropper.replace(originalImgUrl.value ?? '')
-})
+}
+
+watchEffect(updateImgView)
 
 watchEffect(() => {
   if (!value.value) {

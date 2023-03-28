@@ -9,6 +9,7 @@ import {
   onBeforeUnmount
 } from 'vue'
 import { isIOS } from '/@/lib/dom/browser'
+import { useModalStore } from '/@/store/ui/modal'
 
 /**
  * コメントや文字列のVNodeを取り除く
@@ -32,7 +33,15 @@ export default defineComponent({
   props: {
     stop: {
       type: Boolean,
-      default: false
+      default(this: void) {
+        return false
+      }
+    },
+    unableWhileModalOpen: {
+      type: Boolean,
+      default(this: void) {
+        return false
+      }
     }
   },
   emits: {
@@ -41,8 +50,12 @@ export default defineComponent({
   setup(props, { slots, emit }) {
     const element = shallowRef<Element | ComponentPublicInstance>()
 
+    const { shouldShowModal } = useModalStore()
+
     const onClick = (e: MouseEvent | TouchEvent) => {
       if (!element.value) return
+
+      if (props.unableWhileModalOpen && shouldShowModal.value) return
 
       const ele =
         element.value instanceof Element ? element.value : element.value.$el

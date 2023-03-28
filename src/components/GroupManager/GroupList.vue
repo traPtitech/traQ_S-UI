@@ -22,6 +22,7 @@ import { UserPermission } from '@traptitech/traq'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
 import { useGroupsStore } from '/@/store/entities/groups'
+import { compareString } from '/@/lib/basic/string'
 
 const { detail, myId } = useMeStore()
 const { fetchUsers } = useUsersStore()
@@ -39,12 +40,15 @@ const isAllUserGroupsAdmin = computed(() =>
 )
 
 const groups = computed(() =>
-  [...userGroupsMap.value.values()].filter(group => {
-    const myIdVal = myId.value
-    return (
-      isAllUserGroupsAdmin.value || (myIdVal && group.admins.includes(myIdVal))
-    )
-  })
+  [...userGroupsMap.value.values()]
+    .filter(group => {
+      const myIdVal = myId.value
+      return (
+        isAllUserGroupsAdmin.value ||
+        (myIdVal && group.admins.includes(myIdVal))
+      )
+    })
+    .sort((a, b) => compareString(a.name, b.name))
 )
 </script>
 
