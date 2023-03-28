@@ -19,13 +19,11 @@
           prefix=":"
           suffix=":"
           :max-length="32"
-          :class="$style.form"
         />
         <form-selector
           v-model="state.creatorId"
           label="所有者"
           :options="creatorOptions"
-          :class="$style.form"
         />
         <image-upload v-model="newImageData" />
       </div>
@@ -48,6 +46,7 @@ import type { Stamp } from '@traptitech/traq'
 import useStateDiff from '../composables/useStateDiff'
 import { isValidStampName } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
+import { imageSize } from './imageSize'
 
 type StampEditState = Pick<Stamp, 'name' | 'creatorId'>
 
@@ -80,32 +79,49 @@ const useStampEdit = (
 
   const editStamp = async () => {
     try {
-      isEditing.value = true
-      const promises = []
-      if (isStateChanged.value) {
-        promises.push(
-          apis.editStamp(props.stamp.id, {
-            name: diffKeys.value.includes('name') ? state.name : undefined,
-            creatorId: diffKeys.value.includes('creatorId')
-              ? state.creatorId
-              : undefined
-          })
-        )
+      if (!newImageData.value) {
+        addErrorToast('画像を選択してください')
+        return
       }
-      if (newImageData.value !== undefined) {
-        promises.push(apis.changeStampImage(props.stamp.id, newImageData.value))
+      const size = await imageSize(newImageData.value)
+      if (size.height !== size.width) {
+        addErrorToast('画像が正方形ではありません。編集してください')
+        return
       }
-      await Promise.all(promises)
-      afterSuccess()
+      try {
+        isEditing.value = true
+        const promises = []
+        if (isStateChanged.value) {
+          promises.push(
+            apis.editStamp(props.stamp.id, {
+              name: diffKeys.value.includes('name') ? state.name : undefined,
+              creatorId: diffKeys.value.includes('creatorId')
+                ? state.creatorId
+                : undefined
+            })
+          )
+        }
+        if (newImageData.value !== undefined) {
+          promises.push(
+            apis.changeStampImage(props.stamp.id, newImageData.value)
+          )
+        }
+        await Promise.all(promises)
+        afterSuccess()
 
-      addSuccessToast('スタンプを更新しました')
+        addSuccessToast('スタンプを更新しました')
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('スタンプの編集に失敗しました', e)
+
+        addErrorToast(formatResizeError(e, 'スタンプの編集に失敗しました'))
+      }
+      isEditing.value = false
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('スタンプの編集に失敗しました', e)
-
       addErrorToast(formatResizeError(e, 'スタンプの編集に失敗しました'))
     }
-    isEditing.value = false
   }
 
   return { isEditing, editStamp }
@@ -213,9 +229,7 @@ const { isEditing, editStamp } = useStampEdit(
   display: flex;
   flex-flow: row wrap;
   align-items: flex-end;
-}
-.form {
-  margin-right: 12px;
+  gap: 12px;
 }
 .changeButton {
   word-break: keep-all;

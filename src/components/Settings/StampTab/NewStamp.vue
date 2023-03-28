@@ -29,6 +29,7 @@ import { ref, computed } from 'vue'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { isValidStampName } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
+import { imageSize } from './imageSize'
 
 /**
  * 拡張子を削る
@@ -44,6 +45,17 @@ const useStampCreate = (
 
   const createStamp = async () => {
     if (!stampImage.value) return
+    try {
+      const size = await imageSize(stampImage.value)
+      if (size.height !== size.width) {
+        addErrorToast('画像が正方形ではありません。編集してください')
+        return
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('スタンプの作成に失敗しました', e)
+      addErrorToast(formatResizeError(e, 'スタンプの作成に失敗しました'))
+    }
     try {
       isCreating.value = true
       await apis.createStamp(newStampName.value, stampImage.value)
