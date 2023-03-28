@@ -122,7 +122,7 @@ const { channelIdToPathString } = useChannelPath()
 const toNewMessage = () => {
   if (props.entryMessageId) {
     const channelPath = channelIdToPathString(props.channelId)
-    router.push(constructChannelPath(channelPath))
+    router.replace(constructChannelPath(channelPath))
   }
   if (scrollerEle.value === undefined) return
   scrollerEle.value.$el.scrollTo({
