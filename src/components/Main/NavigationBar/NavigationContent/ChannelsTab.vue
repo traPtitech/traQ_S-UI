@@ -12,6 +12,10 @@
           v-model:is-stared="filterStarChannel"
           :class="$style.filter"
         />
+        <channel-list-selector
+          v-if="query.length === 0"
+          v-model:is-stared="filterStarChannel"
+        />
         <template v-if="topLevelChannels.length > 0">
           <channel-list
             v-if="query.length > 0"
@@ -51,6 +55,7 @@ import { filterTrees } from '/@/lib/basic/tree'
 import { constructTreeFromIds } from '/@/lib/channelTree'
 import useStaredChannelDescendants from './composables/useStaredChannelDescendants'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
+import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
 
 const { pushModal } = useModalStore()
 
@@ -72,10 +77,7 @@ const staredChannels = computed(() => {
 const { filterStarChannel } = useBrowserSettings()
 const staredChannelDescendantList = useStaredChannelDescendants()
 const channelListForFilter = computed(() =>
-  (filterStarChannel.value
-    ? staredChannelDescendantList.value
-    : [...channelsMap.value.values()]
-  ).filter(channel => !channel.archived)
+  [...channelsMap.value.values()].filter(channel => !channel.archived)
 )
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
 
