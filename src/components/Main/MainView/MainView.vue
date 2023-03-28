@@ -1,5 +1,9 @@
 <template>
   <div :class="$style.container">
+    <div v-if="iosAppFlag" :class="$style.iosAppIsDeprecated">
+      現在お使いのiOSアプリ版traQは2024/04/01を以て廃止され、2024/06/01には動作しなくなります。引き続き利用するにはPWA版に移行してください。なお、PWA版は動作にiOS
+      16.4を要求します。
+    </div>
     <div id="header" :class="$style.headerContainer"></div>
     <div :class="$style.layoutContainer" :data-layout="layout">
       <primary-view-selector :is-ready="isMounted" />
@@ -14,6 +18,9 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import PrimaryViewSelector from './PrimaryViewSelector.vue'
 import SecondaryViewSelector from './SecondaryViewSelector.vue'
+import { isIOSApp } from '/@/lib/dom/browser'
+
+const iosAppFlag = isIOSApp(window)
 
 const { layout } = useMainViewStore()
 
@@ -30,6 +37,14 @@ onBeforeUnmount(() => {
 .container {
   display: flex;
   flex-direction: column;
+}
+
+.iosAppIsDeprecated {
+  @include color-common-text-white-primary;
+  width: 100%;
+  z-index: $z-index-header;
+  padding: 16px;
+  background-color: $theme-accent-error-default;
 }
 
 .headerContainer {

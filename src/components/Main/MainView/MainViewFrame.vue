@@ -34,7 +34,6 @@ $paddingSize: 16px;
   width: 100%;
   min-width: 0;
   padding: $paddingSize 0;
-  border-radius: 4px;
   transition: opacity 0.3s ease;
   contain: strict;
 }
