@@ -11,6 +11,7 @@
       :last-loading-direction="lastLoadingDirection"
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
+      @scroll.passive="handleScroll"
       @reset-is-reached-latest="resetIsReachedLatest"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
@@ -35,7 +36,12 @@
         />
       </template>
     </messages-scroller>
-    <message-input :channel-id="channelId" :typing-users="typingUsers" />
+    <message-input
+      :channel-id="channelId"
+      :typing-users="typingUsers"
+      :show-to-new-message-button="showToNewMessageButton"
+      @click-to-new-message-button="toNewMessage"
+    />
   </div>
 </template>
 
@@ -43,7 +49,7 @@
 import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
-import { computed, shallowRef } from 'vue'
+import { computed, ref, shallowRef } from 'vue'
 import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -53,6 +59,9 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import useDayDiffMessages from './composables/useDayDiffMessages'
 import { getFullDayString } from '/@/lib/basic/date'
 import type { Pin } from '@traptitech/traq'
+import { useRouter } from 'vue-router'
+import { constructChannelPath } from '/@/router'
+import useChannelPath from '/@/composables/useChannelPath'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -60,6 +69,8 @@ const props = defineProps<{
   pinnedMessages: Pin[]
   typingUsers: UserId[]
 }>()
+
+const router = useRouter()
 
 const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
 const {
@@ -104,6 +115,28 @@ const messagePinnedUserMap = computed(
 
 const resetIsReachedLatest = () => {
   isReachedLatest.value = false
+}
+
+const showToNewMessageButton = ref(false)
+const { channelIdToPathString } = useChannelPath()
+const toNewMessage = () => {
+  if (props.entryMessageId) {
+    const channelPath = channelIdToPathString(props.channelId)
+    router.replace(constructChannelPath(channelPath))
+  }
+  if (scrollerEle.value === undefined) return
+  scrollerEle.value.$el.scrollTo({
+    top: scrollerEle.value.$el.scrollHeight
+  })
+}
+
+const handleScroll = () => {
+  if (scrollerEle.value === undefined) return
+  const { scrollTop, scrollHeight, clientHeight } = scrollerEle.value.$el
+  showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop
+  if (!isReachedLatest.value) {
+    showToNewMessageButton.value = true
+  }
 }
 </script>
 
