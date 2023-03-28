@@ -3,7 +3,7 @@
     <content-editor
       v-model="localTopic"
       v-model:is-editing="isEditing"
-      :max-length="200"
+      :max-length="500"
     >
       <template #default="slotProps">
         <inline-markdown :content="slotProps.content" accept-action />
