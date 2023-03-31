@@ -32,7 +32,7 @@
     "@traptitech/traq-markdown-it": "^6.2.1",
     "autosize": "^6.0.1",
     "cropperjs": "^1.5.13",
-    "deepmerge": "^4.2.2",
+    "deepmerge": "^4.3.1",
     "dequal": "^2.0.3",
     "firebase": "^9.18.0",
     "highlight.js": "^11.7.0",
