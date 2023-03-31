@@ -35,7 +35,7 @@
     "deepmerge": "^4.2.2",
     "dequal": "^2.0.3",
     "firebase": "^9.18.0",
-    "highlight.js": "^11.6.0",
+    "highlight.js": "^11.7.0",
     "idb-keyval": "^6.2.0",
     "mitt": "^3.0.0",
     "pica": "^9.0.1",
