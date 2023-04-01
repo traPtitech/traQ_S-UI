@@ -31,10 +31,8 @@ const useTextFilter = <T, K extends keyof T>(
       )
     }
 
-    const res = getMatchedWithPriority(
-      items.value,
-      q,
-      v => searchTargetKeys.map(k => v[k] as unknown as string)
+    const res = getMatchedWithPriority(items.value, q, v =>
+      searchTargetKeys.map(k => v[k] as unknown as string)
     )
     const result = res
       .map(r => ({
