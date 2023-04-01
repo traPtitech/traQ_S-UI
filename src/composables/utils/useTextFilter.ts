@@ -5,7 +5,10 @@ import { compareStringInsensitive } from '/@/lib/basic/string'
 
 const useTextFilter = <T, K extends keyof T>(
   items: Ref<readonly T[]>,
-  searchTargetKeys: (T[K] extends string ? K : never)[]
+  searchTargetKeys: (T[K] extends string ? K : never)[],
+  options?: Partial<{
+    limit: number
+  }>
 ) => {
   // NOTE: stringでなければ呼び出しが通らないのでキャストできる
   const oneLetterItems = computed(() =>
@@ -43,6 +46,10 @@ const useTextFilter = <T, K extends keyof T>(
       }))
       .sort((a, b) => compareStringInsensitive(a.sortKey, b.sortKey))
       .map(r => r.value)
+
+    if (options?.limit !== null) {
+      return result.slice(0, options?.limit)
+    }
 
     return result
   })
