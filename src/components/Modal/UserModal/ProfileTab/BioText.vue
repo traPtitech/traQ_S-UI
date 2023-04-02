@@ -1,12 +1,12 @@
 <template>
   <section data-testid="usermodal-bio">
     <profile-header text="ひとこと" />
-    <span :aria-busy="isLoading" :class="$style.bio">
-      <inline-markdown
-        :data-is-empty="$boolAttr(isEmpty)"
-        :content="content"
-        accept-action
-      />
+    <span
+      :aria-busy="isLoading"
+      :class="$style.bio"
+      :data-is-empty="$boolAttr(isEmpty)"
+    >
+      <inline-markdown :content="content" accept-action />
     </span>
   </section>
 </template>
