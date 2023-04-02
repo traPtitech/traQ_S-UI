@@ -1,6 +1,6 @@
 <template>
   <span :aria-selected="isSelected" :class="$style.item">
-    <router-link :to="path">
+    <router-link :to="path" :class="$style.link">
       <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
       {{ title }}
     </router-link>
@@ -27,6 +27,13 @@ const path = computed(() => constructSettingsPath(props.routeName))
 
 <style lang="scss" module>
 .item {
+  &[aria-selected='true'] {
+    @include color-ui-primary;
+    @include background-tertiary;
+  }
+}
+
+.link {
   @include color-ui-secondary;
   display: block;
   width: 100%;
@@ -34,10 +41,6 @@ const path = computed(() => constructSettingsPath(props.routeName))
   font-weight: bold;
   text-align: left;
   cursor: pointer;
-  &[aria-selected='true'] {
-    @include color-ui-primary;
-    @include background-tertiary;
-  }
 }
 
 .icon {
