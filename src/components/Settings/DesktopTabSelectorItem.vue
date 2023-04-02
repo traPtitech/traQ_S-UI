@@ -1,10 +1,8 @@
 <template>
-  <span :aria-selected="isSelected">
-    <router-link :to="path" :class="$style.item">
-      <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
-      {{ title }}
-    </router-link>
-  </span>
+  <router-link :to="path" :class="$style.item" :aria-selected="isSelected">
+    <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
+    {{ title }}
+  </router-link>
 </template>
 
 <script lang="ts" setup>
