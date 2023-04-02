@@ -54,6 +54,8 @@ const unselectStarFilter = () => {
   padding: 0.25rem 1rem;
   height: 2rem;
   cursor: pointer;
+  @include color-ui-secondary;
+
   &[aria-selected='true'] {
     @include color-accent-primary;
   }
