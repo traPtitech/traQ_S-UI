@@ -1,9 +1,8 @@
 <template>
   <section data-testid="usermodal-bio">
     <profile-header text="ひとこと" />
-    <span :aria-busy="isLoading">
+    <span :aria-busy="isLoading" :class="$style.bio">
       <inline-markdown
-        :class="$style.bio"
         :data-is-empty="$boolAttr(isEmpty)"
         :content="content"
         accept-action
