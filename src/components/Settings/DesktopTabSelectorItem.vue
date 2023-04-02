@@ -27,6 +27,9 @@ const path = computed(() => constructSettingsPath(props.routeName))
 
 <style lang="scss" module>
 .item {
+  @include color-ui-secondary;
+  display: block;
+  cursor: pointer;
   &[aria-selected='true'] {
     @include color-ui-primary;
     @include background-tertiary;
@@ -34,13 +37,11 @@ const path = computed(() => constructSettingsPath(props.routeName))
 }
 
 .link {
-  @include color-ui-secondary;
   display: block;
   width: 100%;
   padding: 20px 5% 20px 25%;
   font-weight: bold;
   text-align: left;
-  cursor: pointer;
 }
 
 .icon {
