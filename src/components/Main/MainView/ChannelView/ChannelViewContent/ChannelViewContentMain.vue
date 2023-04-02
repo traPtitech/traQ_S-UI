@@ -131,7 +131,7 @@ const toNewMessage = () => {
 }
 
 const handleScroll = () => {
-  if (scrollerEle.value === undefined) return
+  if (scrollerEle.value === undefined || isLoading) return
   const { scrollTop, scrollHeight, clientHeight } = scrollerEle.value.$el
   showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop
   if (!isReachedLatest.value) {
