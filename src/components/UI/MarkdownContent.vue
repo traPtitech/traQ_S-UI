@@ -23,6 +23,11 @@ const applyFoldCodeBlock = () => {
   const content = contentRef.value
   if (content === undefined) return
 
+  const code_list = content.querySelectorAll('code')
+  code_list.forEach(code => {
+    code.style.paddingBottom = '40px'
+  })
+
   const pre_list = content.querySelectorAll(`:not(.${foldWrapClass}) > pre`)
 
   pre_list.forEach(pre => {
