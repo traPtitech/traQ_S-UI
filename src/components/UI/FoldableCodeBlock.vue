@@ -77,6 +77,7 @@ const toggle = (e: MouseEvent) => {
   overflow: hidden;
   pre {
     margin-bottom: 0;
+    padding-bottom: 16px;
   }
   margin-bottom: 16px;
 
