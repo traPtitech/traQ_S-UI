@@ -77,7 +77,6 @@ const toggle = (e: MouseEvent) => {
   overflow: hidden;
   pre {
     margin-bottom: 0;
-    padding-bottom: 16px;
   }
   margin-bottom: 16px;
 
@@ -90,6 +89,11 @@ const toggle = (e: MouseEvent) => {
       mask-image: linear-gradient(black 0% 60%, transparent 100%);
     }
     background: var(--markdown-code-background);
+  }
+  &[data-is-fold='false'] {
+    pre {
+      padding-bottom: 16px;
+    }
   }
 
   .button {
