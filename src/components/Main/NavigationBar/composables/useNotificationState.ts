@@ -20,7 +20,8 @@ const useNotificationState = <T extends { id: ChannelId; children: T[] }>(
       return deepSome(tree, channel => unreadChannelsMap.value.has(channel.id))
     }),
     unreadCount: computed(() => unreadChannel.value?.count),
-    isNoticeable: computed(() => unreadChannel.value?.noticeable)
+    isNoticeable: computed(() => unreadChannel.value?.noticeable),
+    oldestMessageId: computed(() => unreadChannel.value?.oldestMessageId)
   })
   return notificationState
 }

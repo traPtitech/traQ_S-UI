@@ -98,16 +98,11 @@ const onChannelHashClick = (e: MouseEvent) => {
 const { openLink } = useOpenLink()
 const { channelIdToLink } = useChannelPath()
 const openChannel = async (event: MouseEvent) => {
-  if (notificationState.unreadCount && notificationState.unreadCount > 0) {
-    const id = await getFirstUnreadMessage(
-      props.channel.id,
-      notificationState.unreadCount
-    )
-    if (id) {
-      openLink(event, `/messages/${id}`)
-      return
-    }
+  if (notificationState.oldestMessageId) {
+    openLink(event, `/messages/${notificationState.oldestMessageId}`)
+    return
   }
+
   openLink(event, channelIdToLink(props.channel.id))
 }
 
