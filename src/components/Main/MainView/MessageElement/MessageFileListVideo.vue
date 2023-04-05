@@ -49,6 +49,7 @@ const { fileMeta, fileRawPath, canShow } = useFileMeta(props)
     display: block;
     max-width: 100%;
     max-height: 450px;
+    min-width: min(300px, 100%);
   }
 }
 .overlay {
