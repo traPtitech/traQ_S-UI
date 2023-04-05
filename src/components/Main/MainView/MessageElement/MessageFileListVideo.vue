@@ -38,6 +38,7 @@ const { fileMeta, fileRawPath, canShow } = useFileMeta(props)
   overflow: hidden;
   max-width: min(600px, 100%);
   width: max-content;
+  min-width: min(300px, 100%);
   height: max-content;
   border: {
     width: 2px;
@@ -49,7 +50,7 @@ const { fileMeta, fileRawPath, canShow } = useFileMeta(props)
     display: block;
     max-width: 100%;
     max-height: 450px;
-    min-width: min(300px, 100%);
+    margin: auto;
   }
 }
 .overlay {
