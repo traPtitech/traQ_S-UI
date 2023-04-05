@@ -90,6 +90,11 @@ const toggle = (e: MouseEvent) => {
     }
     background: var(--markdown-code-background);
   }
+  &[data-is-fold='false'] {
+    pre {
+      padding-bottom: 16px;
+    }
+  }
 
   .button {
     position: absolute;
