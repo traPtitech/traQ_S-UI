@@ -62,6 +62,7 @@ import type { Pin } from '@traptitech/traq'
 import { useRouter } from 'vue-router'
 import { constructChannelPath } from '/@/router'
 import useChannelPath from '/@/composables/useChannelPath'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -113,7 +114,9 @@ const messagePinnedUserMap = computed(
   () => new Map(props.pinnedMessages.map(pin => [pin.message.id, pin.userId]))
 )
 
+const { unreadChannelsMap } = useSubscriptionStore()
 const resetIsReachedLatest = () => {
+  if (!unreadChannelsMap.value.get(props.channelId)) return
   isReachedLatest.value = false
 }
 
