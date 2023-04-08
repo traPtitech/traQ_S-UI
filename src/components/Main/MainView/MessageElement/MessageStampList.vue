@@ -136,13 +136,14 @@ const { toggleStampPicker } = useStampPickerInvoker(
   &[data-show-details] {
     flex-direction: column;
   }
+  contain: content;
 }
 .stamp {
   margin: {
     right: 4px;
     bottom: 4px;
   }
-
+  width: 100%;
   display: flex;
 }
 .detail {
