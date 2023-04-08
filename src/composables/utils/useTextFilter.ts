@@ -47,7 +47,7 @@ const useTextFilter = <T, K extends keyof T>(
       .sort((a, b) => compareStringInsensitive(a.sortKey, b.sortKey))
       .map(r => r.value)
 
-    if (options?.limit !== null) {
+    if (options?.limit !== undefined) {
       return result.slice(0, options?.limit)
     }
 
