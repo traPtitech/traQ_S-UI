@@ -36,7 +36,7 @@ const stampName = computed(
   display: flex;
   flex-wrap: wrap;
   max-width: 100%;
-  overflow: scroll;
+  overflow: hidden;
 }
 .content {
   &::before {
