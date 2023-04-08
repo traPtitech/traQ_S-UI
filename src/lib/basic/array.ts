@@ -13,24 +13,24 @@ export const getMatchedWithPriority = <T>(
   query: string,
   f: (v: T) => string[]
 ): { value: T; priority: number }[] => {
-  const priorities = new Map<T, { value: T; priority: number }>()
+  const matchedValuesMap = new Map<T, { value: T; priority: number }>()
 
   for (const val of arr) {
     f(val)
       .map(v => v.toLowerCase())
       .forEach(valLower => {
-        const p = priorities.get(val)?.priority ?? 100
+        const p = matchedValuesMap.get(val)?.priority ?? 100
         if (valLower === query && p > 0) {
-          priorities.set(val, { value: val, priority: 0 })
+          matchedValuesMap.set(val, { value: val, priority: 0 })
         } else if (valLower.startsWith(query) && p > 1) {
-          priorities.set(val, { value: val, priority: 1 })
+          matchedValuesMap.set(val, { value: val, priority: 1 })
         } else if (valLower.includes(query) && p > 2) {
-          priorities.set(val, { value: val, priority: 2 })
+          matchedValuesMap.set(val, { value: val, priority: 2 })
         }
       })
   }
 
-  return [...priorities.values()]
+  return [...matchedValuesMap.values()]
 }
 
 /**
