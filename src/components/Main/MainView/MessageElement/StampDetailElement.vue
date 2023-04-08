@@ -33,6 +33,7 @@ const stampName = computed(
 <style lang="scss" module>
 .container {
   display: flex;
+  flex-wrap: wrap;
 }
 .content {
   &::before {
