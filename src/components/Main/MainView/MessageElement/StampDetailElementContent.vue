@@ -28,7 +28,6 @@ const { openModal } = useUserModalOpener(toRef(props, 'userId'))
 <style lang="scss" module>
 .container {
   display: flex;
-  flex-wrap: wrap;
   cursor: pointer;
 }
 .numberWrap {

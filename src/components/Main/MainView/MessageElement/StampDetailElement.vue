@@ -1,8 +1,7 @@
 <template>
   <div :class="$style.container">
     <div>
-      <span :class="$style.stampName">{{ ':' + stampName + ':' }}</span>
-      {{ ' from' }}
+      {{ ':' + stampName + ': from' }}
     </div>
     <stamp-detail-element-content
       v-for="user in stamp.users"
@@ -34,18 +33,11 @@ const stampName = computed(
 <style lang="scss" module>
 .container {
   display: flex;
-  flex-wrap: wrap;
-  max-width: 100%;
-  overflow: hidden;
 }
 .content {
   &::before {
     white-space: pre;
     content: ' ';
   }
-}
-
-.stampName {
-  word-break: break-all;
 }
 </style>

@@ -143,7 +143,6 @@ const { toggleStampPicker } = useStampPickerInvoker(
     right: 4px;
     bottom: 4px;
   }
-  max-width: 100%;
   display: flex;
 }
 .detail {
