@@ -1,7 +1,8 @@
 <template>
   <div :class="$style.container">
     <div>
-      {{ ':' + stampName + ': from' }}
+      <span :class="$style.stampName">{{ ':' + stampName + ':' }}</span>
+      {{ ' from' }}
     </div>
     <stamp-detail-element-content
       v-for="user in stamp.users"
@@ -40,5 +41,9 @@ const stampName = computed(
     white-space: pre;
     content: ' ';
   }
+}
+
+.stampName {
+  word-break: break-all;
 }
 </style>
