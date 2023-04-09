@@ -60,7 +60,6 @@ import ChannelElementName from './ChannelElementName.vue'
 import useNotificationState from '../composables/useNotificationState'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useChannelPath from '/@/composables/useChannelPath'
-import apis from '/@/lib/apis'
 
 const props = withDefaults(
   defineProps<{
@@ -97,17 +96,7 @@ const onChannelHashClick = (e: MouseEvent) => {
 
 const { openLink } = useOpenLink()
 const { channelIdToLink } = useChannelPath()
-const openChannel = async (event: MouseEvent) => {
-  if (notificationState.unreadCount && notificationState.unreadCount > 0) {
-    const id = await getFirstUnreadMessage(
-      props.channel.id,
-      notificationState.unreadCount
-    )
-    if (id) {
-      openLink(event, `/messages/${id}`)
-      return
-    }
-  }
+const openChannel = (event: MouseEvent) => {
   openLink(event, channelIdToLink(props.channel.id))
 }
 
@@ -122,22 +111,6 @@ const {
 const isChannelBgHovered = computed(
   () => isHovered.value && !(hasChildren.value && isHashHovered.value)
 )
-
-const getFirstUnreadMessage = async (
-  channelId: string,
-  unreadCount: number
-) => {
-  const res = await apis.getMessages(
-    channelId,
-    1,
-    unreadCount - 1,
-    undefined,
-    undefined,
-    undefined,
-    'desc'
-  )
-  return res.data[0]?.id
-}
 </script>
 
 <style lang="scss" module>

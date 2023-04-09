@@ -185,30 +185,32 @@ watch(
   (ids, prevIds) => {
     if (!rootRef.value) return
     /* state.height の更新を忘れないようにすること */
-    const newHeight = rootRef.value.scrollHeight
-    if (ids.length - prevIds.length === -1) {
-      // 削除された場合は何もしない
-      state.height = newHeight
-      return
-    }
-    // XXX: 追加時にここは0になる
-    if (ids.length - prevIds.length === 0) {
-      const scrollBottom = rootRef.value.scrollTop + rootRef.value.clientHeight
 
-      // 一番下のメッセージあたりを見ているときに、
-      // 新規に一つ追加された場合は一番下までスクロール
-      if (state.height - 50 <= scrollBottom) {
-        rootRef.value.scrollTo({
-          top: newHeight
-        })
-      }
-      state.height = newHeight
-      return
-    }
+    const newHeight = rootRef.value.scrollHeight
     if (
       props.lastLoadingDirection === 'latest' ||
       props.lastLoadingDirection === 'former'
     ) {
+      if (ids.length - prevIds.length === -1) {
+        // 削除された場合は何もしない
+        state.height = newHeight
+        return
+      }
+      // XXX: 追加時にここは0になる
+      if (ids.length - prevIds.length === 0) {
+        const scrollBottom =
+          rootRef.value.scrollTop + rootRef.value.clientHeight
+
+        // 一番下のメッセージあたりを見ているときに、
+        // 新規に一つ追加された場合は一番下までスクロール
+        if (state.height - 50 <= scrollBottom) {
+          rootRef.value.scrollTo({
+            top: newHeight
+          })
+        }
+        state.height = newHeight
+        return
+      }
       rootRef.value.scrollTo({
         top: newHeight - state.height
       })
