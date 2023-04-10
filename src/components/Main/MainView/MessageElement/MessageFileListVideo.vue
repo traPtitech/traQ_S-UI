@@ -1,20 +1,27 @@
 <template>
-  <div v-if="canShow" :class="$style.container">
+  <div
+    v-if="canShow"
+    ref="container"
+    :class="[$style.container, isLoaded || $style.unload]"
+  >
     <div :class="$style.overlay">
       <message-file-list-item-content :file-id="fileId" is-white />
     </div>
     <video
+      ref="video"
       controls
       controlslist="nodownload"
       preload="none"
       draggable="false"
       :src="fileRawPath"
+      @canplay="onCanPlay"
     />
   </div>
   <div v-else :class="$style.error">表示できない動画です</div>
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import MessageFileListItemContent from './MessageFileListItemContent.vue'
 import useFileMeta from '/@/composables/files/useFileMeta'
 import type { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
@@ -29,7 +36,13 @@ const props = withDefaults(
   }
 )
 
-const { fileMeta, fileRawPath, canShow } = useFileMeta(props)
+const { fileRawPath, canShow } = useFileMeta(props)
+const container = ref<HTMLDivElement>()
+const isLoaded = ref(false)
+const onCanPlay = () => {
+  if (!container.value) return
+  isLoaded.value = true
+}
 </script>
 
 <style lang="scss" module>
@@ -38,7 +51,6 @@ const { fileMeta, fileRawPath, canShow } = useFileMeta(props)
   overflow: hidden;
   max-width: min(600px, 100%);
   width: max-content;
-  min-width: min(300px, 100%);
   height: max-content;
   border: {
     width: 2px;
@@ -52,6 +64,10 @@ const { fileMeta, fileRawPath, canShow } = useFileMeta(props)
     max-height: 450px;
     margin: auto;
   }
+}
+
+.unload {
+  min-width: min(300px, 100%);
 }
 .overlay {
   @include background-common-overlay;
