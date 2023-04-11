@@ -1,6 +1,6 @@
 <template>
   <click-outside stop @click-outside="clearModal">
-    <div v-if="fileMeta">
+    <div v-if="fileMeta" :class="$style.fileContainer">
       <file-modal-image v-if="fileType === 'image'" :file-id="fileMeta.id" />
       <file-modal-video
         v-else-if="fileType === 'video'"
@@ -35,3 +35,9 @@ const fileIdState = reactive({
 const { fileMeta, fileType } = useFileMeta(fileIdState)
 const { clearModal } = useModalStore()
 </script>
+
+<style module lang="scss">
+.fileContainer {
+  height: 100%;
+}
+</style>

@@ -32,7 +32,7 @@ const { fileMeta, fileRawPath } = useFileMeta(props)
   @include background-common-black;
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   max-height: 100%;
   max-width: 60rem;
 }
