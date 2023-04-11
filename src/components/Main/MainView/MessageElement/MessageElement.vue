@@ -23,7 +23,7 @@
     />
     <message-contents :class="$style.messageContents" :message-id="messageId" />
     <message-stamp-list
-      :show-detail-button="isHovered"
+      :show-detail-button="isHovered || isMobile"
       :message-id="messageId"
       :stamps="message.stamps"
       :is-archived="isArchived"
