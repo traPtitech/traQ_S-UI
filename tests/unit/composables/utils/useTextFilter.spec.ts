@@ -56,4 +56,57 @@ describe('useTextFilter', () => {
       { name: 'abbb' }
     ])
   })
+
+  const defaultItemsWithMultipleKeys = [
+    { name: 'a', displayName: 'a' },
+    { name: 'bb', displayName: 'b' },
+    { name: 'c', displayName: 'cc' },
+    { name: 'aa', displayName: 'aab' },
+    { name: 'aab', displayName: 'aab' },
+    { name: 'baa', displayName: 'ba' }
+  ]
+
+  it.concurrent('multiple keys: one letter items', () => {
+    const items = ref(defaultItemsWithMultipleKeys)
+    const { query, filteredItems } = useTextFilter(items, [
+      'name',
+      'displayName'
+    ])
+    query.value = 'a'
+    expect(filteredItems.value).toStrictEqual([{ name: 'a', displayName: 'a' }])
+    query.value = 'b'
+    expect(filteredItems.value).toStrictEqual([
+      { name: 'bb', displayName: 'b' }
+    ])
+  })
+
+  it.concurrent('multiple keys: priority', () => {
+    const items = ref(defaultItemsWithMultipleKeys)
+    const { query, filteredItems } = useTextFilter(items, [
+      'name',
+      'displayName'
+    ])
+    query.value = 'aa'
+    expect(filteredItems.value).toStrictEqual([
+      { name: 'aa', displayName: 'aab' }, // full match (and prefix match, but only the higest priority is used)
+      { name: 'aab', displayName: 'aab' }, // prefix match
+      { name: 'baa', displayName: 'ba' } // suffix match
+    ])
+  })
+
+  it.concurrent('multiple keys: sorted', () => {
+    const items = ref([
+      { name: 'a', displayName: 'cbc' },
+      { name: 'abc', displayName: 'b' }
+    ])
+    const { query, filteredItems } = useTextFilter(items, [
+      'name',
+      'displayName'
+    ])
+    query.value = 'bc'
+    expect(filteredItems.value).toStrictEqual([
+      { name: 'abc', displayName: 'b' }, // suffix match
+      { name: 'a', displayName: 'cbc' } // suffix match
+    ])
+  })
 })
