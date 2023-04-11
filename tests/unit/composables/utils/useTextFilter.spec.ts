@@ -88,9 +88,9 @@ describe('useTextFilter', () => {
     ])
     query.value = 'aa'
     expect(filteredItems.value).toStrictEqual([
-      { name: 'aa', displayName: 'aab' }, // full match (and prefix match, but only the higest priority is used)
+      { name: 'aa', displayName: 'aab' }, // full match (and prefix match, but only the highest priority is used)
       { name: 'aab', displayName: 'aab' }, // prefix match
-      { name: 'baa', displayName: 'ba' } // suffix match
+      { name: 'baa', displayName: 'ba' } // partial match
     ])
   })
 
@@ -105,8 +105,8 @@ describe('useTextFilter', () => {
     ])
     query.value = 'bc'
     expect(filteredItems.value).toStrictEqual([
-      { name: 'abc', displayName: 'b' }, // suffix match
-      { name: 'a', displayName: 'cbc' } // suffix match
+      { name: 'abc', displayName: 'b' }, // partial match
+      { name: 'a', displayName: 'cbc' } // partial match
     ])
   })
 })
