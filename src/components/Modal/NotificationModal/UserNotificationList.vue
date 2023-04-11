@@ -43,7 +43,10 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
     computed(() => ['inactive', 'bot', ...(myId.value ? [myId.value] : [])])
   )
 
-  const { query, filteredItems } = useTextFilter(allUsersWithoutMe, 'name')
+  const { query, filteredItems } = useTextFilter(allUsersWithoutMe, [
+    'name',
+    'displayName'
+  ])
 
   const subscriptionStateSorted = computed(() =>
     filteredItems.value

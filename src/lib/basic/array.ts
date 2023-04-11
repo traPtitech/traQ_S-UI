@@ -6,26 +6,31 @@
  *
  * @param arr 検索対象のキーの配列
  * @param query lowercaseになっているクエリ
+ * @param f キーから検索対象の文字列を取得する関数
  */
 export const getMatchedWithPriority = <T>(
   arr: readonly T[],
   query: string,
-  f: (v: T) => string
-) => {
-  const result: Array<{ value: T; priority: number }> = []
+  f: (v: T) => string[]
+): { value: T; priority: number }[] => {
+  const matchedValuesMap = new Map<T, { value: T; priority: number }>()
 
   for (const val of arr) {
-    const valLower = f(val).toLowerCase()
-    if (valLower === query) {
-      result.push({ value: val, priority: 0 })
-    } else if (valLower.startsWith(query)) {
-      result.push({ value: val, priority: 1 })
-    } else if (valLower.includes(query)) {
-      result.push({ value: val, priority: 2 })
-    }
+    f(val)
+      .map(v => v.toLowerCase())
+      .forEach(valLower => {
+        const p = matchedValuesMap.get(val)?.priority ?? 100
+        if (valLower === query && p > 0) {
+          matchedValuesMap.set(val, { value: val, priority: 0 })
+        } else if (valLower.startsWith(query) && p > 1) {
+          matchedValuesMap.set(val, { value: val, priority: 1 })
+        } else if (valLower.includes(query) && p > 2) {
+          matchedValuesMap.set(val, { value: val, priority: 2 })
+        }
+      })
   }
 
-  return result
+  return [...matchedValuesMap.values()]
 }
 
 /**
