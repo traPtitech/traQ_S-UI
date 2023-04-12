@@ -106,6 +106,12 @@ export type Config = Readonly<{
    * @example ['#general', '#random']
    */
   inlineReplyDisableChannels?: string[]
+
+  /**
+   * iOSアプリの廃止告知バーナーに載せるPWAについてのリンク
+   * 省略時はリンクへの誘導テキストが載らない
+   */
+  iosPwaInfoLink?: string
 }>
 
 declare global {
