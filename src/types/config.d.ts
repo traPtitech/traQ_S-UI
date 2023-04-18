@@ -108,7 +108,7 @@ export type Config = Readonly<{
   inlineReplyDisableChannels?: string[]
 
   /**
-   * iOSアプリの廃止告知バーナーに載せるPWAについてのリンク
+   * iOSアプリの廃止告知バナーに載せるPWAについてのリンク
    * 省略時はリンクへの誘導テキストが載らない
    */
   iosPwaInfoLink?: string
