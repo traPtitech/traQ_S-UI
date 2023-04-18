@@ -1,8 +1,13 @@
 <template>
   <div :class="$style.container">
     <div v-if="iosAppFlag" :class="$style.iosAppIsDeprecated">
-      現在お使いのiOSアプリ版traQは2024/04/01を以て廃止され、2024/06/01には動作しなくなります。引き続き利用するにはPWA版に移行してください。なお、PWA版は動作にiOS
-      16.4を要求します。
+      {{ iosAppDeprecatedMessage }}
+      <div v-if="iosPwaInfoLink">
+        PWA版について:
+        <a :href="iosPwaInfoLink" :class="$style.iosPwaInfoLink">{{
+          iosPwaInfoLink
+        }}</a>
+      </div>
     </div>
     <div id="header" :class="$style.headerContainer"></div>
     <div :class="$style.layoutContainer" :data-layout="layout">
@@ -21,6 +26,10 @@ import SecondaryViewSelector from './SecondaryViewSelector.vue'
 import { isIOSApp } from '/@/lib/dom/browser'
 
 const iosAppFlag = isIOSApp(window)
+const iosAppDeprecatedMessage =
+  '現在お使いのiOSアプリ版traQは2023/04/01を以て廃止され、2023/06/01には動作しなくなります。引き続き利用するにはPWA版に移行してください。なお、PWA版は動作にiOS 16.4を要求します。'
+
+const iosPwaInfoLink = window.traQConfig.iosPwaInfoLink
 
 const { layout } = useMainViewStore()
 
@@ -45,6 +54,10 @@ onBeforeUnmount(() => {
   z-index: $z-index-header;
   padding: 16px;
   background-color: $theme-accent-error-default;
+}
+
+.iosPwaInfoLink {
+  text-decoration: underline;
 }
 
 .headerContainer {
