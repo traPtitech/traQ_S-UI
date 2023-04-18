@@ -24,7 +24,7 @@ import { isIOSApp } from '/@/lib/dom/browser'
 
 const iosAppFlag = isIOSApp(window)
 const iosAppDeprecatedMessage =
-  '現在お使いのiOSアプリ版traQは2024/04/01を以て廃止され、2024/06/01には動作しなくなります。引き続き利用するにはPWA版に移行してください。なお、PWA版は動作にiOS 16.4を要求します。'
+  '現在お使いのiOSアプリ版traQは2023/04/01を以て廃止され、2023/06/01には動作しなくなります。引き続き利用するにはPWA版に移行してください。なお、PWA版は動作にiOS 16.4を要求します。'
 
 const iosPwaInfoLink = window.traQConfig.iosPwaInfoLink
 
