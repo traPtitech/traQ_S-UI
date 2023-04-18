@@ -3,7 +3,10 @@
     <div v-if="iosAppFlag" :class="$style.iosAppIsDeprecated">
       {{ iosAppDeprecatedMessage }}
       <div v-if="iosPwaInfoLink">
-        PWA版について: <a :href="iosPwaInfoLink">{{ iosPwaInfoLink }}</a>
+        PWA版について:
+        <a :href="iosPwaInfoLink" :class="$style.iosPwaInfoLink">{{
+          iosPwaInfoLink
+        }}</a>
       </div>
     </div>
     <div id="header" :class="$style.headerContainer"></div>
@@ -51,6 +54,10 @@ onBeforeUnmount(() => {
   z-index: $z-index-header;
   padding: 16px;
   background-color: $theme-accent-error-default;
+}
+
+.iosPwaInfoLink {
+  text-decoration: underline;
 }
 
 .headerContainer {
