@@ -32,7 +32,7 @@
         target="_blank"
         @click.stop=""
       >
-        {{ name }}
+        author/{{ name }}
       </a>
     </p>
     <p v-if="twitterId !== ''" :class="$style.p">
