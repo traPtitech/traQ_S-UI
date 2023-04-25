@@ -81,7 +81,7 @@
     "eslint-plugin-vue": "^9.10.0",
     "fonteditor-core": "^2.1.11",
     "jsdom": "^21.1.1",
-    "patch-package": "^6.5.1",
+    "patch-package": "^7.0.0",
     "pinia": "^2.0.33",
     "postcss": "^8.4.14",
     "prettier": "^2.7.1",
