@@ -14,9 +14,8 @@
         rel="noopener noreferrer"
         target="_blank"
         @click.stop=""
+        >{{ wikiPageName }}</a
       >
-        {{ wikiPageName }}
-      </a>
     </p>
     <p v-if="blogPageLink" :class="$style.p">
       <circle-icon
@@ -31,9 +30,8 @@
         rel="noopener noreferrer"
         target="_blank"
         @click.stop=""
+        >author/{{ name }}</a
       >
-        author/{{ name }}
-      </a>
     </p>
     <p v-if="twitterId !== ''" :class="$style.p">
       <circle-icon
@@ -50,9 +48,8 @@
           rel="noopener noreferrer"
           target="_blank"
           @click.stop=""
+          >@{{ twitterId }}</a
         >
-          @{{ twitterId }}
-        </a>
       </template>
     </p>
   </section>
@@ -105,7 +102,7 @@ const twitterLink = computed(
   margin: 8px 0;
 }
 .icon {
-  margin-right: 4px;
+  margin-right: 8px;
   vertical-align: bottom;
 }
 </style>
