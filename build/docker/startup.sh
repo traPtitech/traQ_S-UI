@@ -5,7 +5,7 @@
 ###
 echo "Startup: copy default files"
 
-cp -r /app/default/* /usr/share/caddy
+cp -r -L /app/default/* /usr/share/caddy
 
 ###
 # 上書き用ファイル
@@ -15,7 +15,7 @@ echo "Startup: check override files"
 ls /app/override/* >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   echo "Startup: copy override files"
-  cp -r /app/override/* /usr/share/caddy
+  cp -r -L /app/override/* /usr/share/caddy
 fi
 
 ###
