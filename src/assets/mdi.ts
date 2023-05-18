@@ -79,7 +79,8 @@ import {
   mdiStop,
   mdiCrown,
   mdiFormatTitle,
-  mdiCloseCircle
+  mdiCloseCircle,
+  mdiNotebook
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -111,6 +112,7 @@ const mdi: MdiIconsMapping = {
   'plus-circle-outline': mdiPlusCircleOutline,
   'dots-horizontal': mdiDotsHorizontal,
   book: mdiBook,
+  notebook: mdiNotebook,
   twitter: mdiTwitter,
   tag: mdiTag,
   tags: mdiTagMultiple,

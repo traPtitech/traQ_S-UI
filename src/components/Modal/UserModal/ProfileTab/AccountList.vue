@@ -14,9 +14,24 @@
         rel="noopener noreferrer"
         target="_blank"
         @click.stop=""
+        >{{ wikiPageName }}</a
       >
-        {{ wikiPageName }}
-      </a>
+    </p>
+    <p v-if="blogPageLink" :class="$style.p">
+      <circle-icon
+        name="notebook"
+        mdi
+        :color="iconColor"
+        :background="iconBackgroundColor"
+        :class="$style.icon"
+      />
+      <a
+        :href="blogPageLink"
+        rel="noopener noreferrer"
+        target="_blank"
+        @click.stop=""
+        >author/{{ name }}</a
+      >
     </p>
     <p v-if="twitterId !== ''" :class="$style.p">
       <circle-icon
@@ -33,9 +48,8 @@
           rel="noopener noreferrer"
           target="_blank"
           @click.stop=""
+          >@{{ twitterId }}</a
         >
-          @{{ twitterId }}
-        </a>
       </template>
     </p>
   </section>
@@ -62,7 +76,7 @@ const iconColor = computed(
   () => currentTheme.value.basic.background.primary.border
 )
 
-const { wikiPageOrigin } = window.traQConfig
+const { wikiPageOrigin, blogPagePrefix } = window.traQConfig
 const showWikiPageLink = wikiPageOrigin !== undefined
 const wikiPageName = computed(() => {
   if (props.bot) {
@@ -71,6 +85,13 @@ const wikiPageName = computed(() => {
   return `user/${props.name}`
 })
 const wikiPageLink = computed(() => `${wikiPageOrigin}/${wikiPageName.value}`)
+
+const blogPageLink = computed(() => {
+  if (blogPagePrefix === undefined) return null
+  if (props.bot) return null
+  return `${blogPagePrefix}${props.name}`
+})
+
 const twitterLink = computed(
   () => `https://twitter.com/${props.twitterId ?? ''}`
 )
@@ -81,7 +102,7 @@ const twitterLink = computed(
   margin: 8px 0;
 }
 .icon {
-  margin-right: 4px;
+  margin-right: 8px;
   vertical-align: bottom;
 }
 </style>
