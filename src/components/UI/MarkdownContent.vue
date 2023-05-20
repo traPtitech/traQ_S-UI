@@ -55,9 +55,11 @@ watch(
 
 <style lang="scss" module>
 .content {
+  display: block;
   word-break: normal;
   overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
   line-break: loose;
+  overflow-x: scroll;
 }
 </style>
