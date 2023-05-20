@@ -61,5 +61,6 @@ watch(
   overflow-wrap: anywhere;
   line-break: loose;
   overflow-x: scroll;
+  overflow-y: hidden;
 }
 </style>
