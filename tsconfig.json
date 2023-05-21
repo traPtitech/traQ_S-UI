@@ -14,7 +14,7 @@
     "noFallthroughCasesInSwitch": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
-    "importsNotUsedAsValues": "error",
+    "verbatimModuleSyntax": true,
     "sourceMap": true,
     "noEmit": true,
     "baseUrl": ".",
