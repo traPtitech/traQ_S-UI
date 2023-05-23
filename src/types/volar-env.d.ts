@@ -2,9 +2,7 @@
 
 interface DataAndAriaAttributes {
   [dataAttr: `data${UppercaseAlphabet}${string}`]: unknown
-  [dataAttr: `data-${string}`]: unknown
   [ariaAttr: `aria${UppercaseAlphabet}${string}`]: unknown
-  [ariaAttr: `aria-${string}`]: unknown
 }
 
 declare module '@vue/runtime-dom' {
