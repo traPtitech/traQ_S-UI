@@ -14,9 +14,6 @@ import browserslist from 'browserslist'
 import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
 import GithubActionsReporter from 'vitest-github-actions-reporter'
 import autoprefixer from 'autoprefixer'
-import dns from 'dns'
-
-dns.setDefaultResultOrder('verbatim')
 
 const keepAliveAgent = new HttpsAgent({ keepAlive: true })
 
