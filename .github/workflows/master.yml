@@ -15,7 +15,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16.17.0
+          node-version-file: ./.node-version
           cache: npm
       - name: npm ci
         run: npm ci

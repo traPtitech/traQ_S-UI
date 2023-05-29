@@ -8,7 +8,7 @@
     "build": "vite build",
     "build:with-font": "npm run gen-fonts && npm run build",
     "build:may-with-font": "MAY_SKIP_FONT_GEN=1 npm run gen-fonts && npm run build",
-    "preview": "vite preview --port 4173",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
     "test:unit": "vitest run --coverage",
     "test:unit:watch": "vitest -w",
     "test:e2e": "npm run build && npm run test:e2e:only-run",
@@ -21,7 +21,7 @@
     "type-check": "npm run type-check:src && npm run type-check:test",
     "type-check:src": "vue-tsc --noEmit",
     "type-check:test": "tsc --noEmit --project tests/unit/tsconfig.json && tsc --noEmit --project tests/e2e/tsconfig.json",
-    "gen-fonts": "node build/gen-mplus.js",
+    "gen-fonts": "node --no-experimental-fetch build/gen-mplus.js",
     "gen-unicode_emojis": "node build/gen-unicode_emojis.js",
     "postinstall": "patch-package"
   },
@@ -55,7 +55,7 @@
     "@types/dom-screen-wake-lock": "^1.0.1",
     "@types/katex": "^0.16.0",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "^16.18.19",
+    "@types/node": "^20.2.0",
     "@types/pica": "^9.0.1",
     "@types/punycode": "^2.1.0",
     "@types/serviceworker": "^0.0.67",
@@ -103,7 +103,7 @@
     "workbox-strategies": "^6.5.4"
   },
   "engines": {
-    "node": "^16.17.0",
-    "npm": "^8.5.0"
+    "node": "^20.2.0",
+    "npm": "^9.6.6"
   }
 }
