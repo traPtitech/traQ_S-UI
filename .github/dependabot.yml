@@ -3,10 +3,10 @@ updates:
   - package-ecosystem: npm
     directory: '/'
     schedule:
-      interval: daily
+      interval: monthly
     open-pull-requests-limit: 10
   - package-ecosystem: docker
     directory: '/'
     schedule:
-      interval: daily
+      interval: monthly
     open-pull-requests-limit: 10
