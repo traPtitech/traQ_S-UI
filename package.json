@@ -78,7 +78,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-cypress": "^2.13.2",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "eslint-plugin-vue": "^9.10.0",
+    "eslint-plugin-vue": "^9.14.1",
     "fonteditor-core": "^2.1.11",
     "jsdom": "^21.1.1",
     "patch-package": "^6.5.1",
