@@ -13,7 +13,7 @@
 import type { ButtonHTMLAttributes } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 
-interface Props extends ButtonHTMLAttributes {
+interface Props extends /* @vue-ignore */ ButtonHTMLAttributes {
   showIcon?: boolean
   background?: 'primary' | 'secondary' | 'tertiary'
   isFold: boolean
