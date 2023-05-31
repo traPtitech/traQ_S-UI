@@ -21,8 +21,14 @@ export const toRawDeep = (value: any, map = new WeakMap()) => {
   const newValue = toRaw(value)
   map.set(value, newValue)
 
-  for (const k of Object.keys(newValue)) {
-    newValue[k] = toRawDeep(newValue[k], map)
+  if (Array.isArray(newValue)) {
+    for (let i = 0; i < newValue.length; i++) {
+      newValue[i] = toRawDeep(newValue[i], map)
+    }
+  } else {
+    for (const k of Object.keys(newValue)) {
+      newValue[k] = toRawDeep(newValue[k], map)
+    }
   }
 
   return newValue
