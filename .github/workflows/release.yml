@@ -67,7 +67,7 @@ jobs:
         run: echo IMAGE_TAG=$(echo ${GITHUB_REF:11}) >> $GITHUB_ENV
       - uses: actions/checkout@v3
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
         with:
           platforms: all
       - name: Set up Docker Buildx
