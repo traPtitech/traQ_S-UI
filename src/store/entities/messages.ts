@@ -113,16 +113,19 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
 
     try {
       const [{ data: ogpData }, shared] = await getOgp(url)
+      // ページにOGPが存在しない場合、undefinedを返す
+      if (ogpData.type === 'empty') {
+        return undefined
+      }
       if (!shared) {
         ogpDataMap.value.set(url, ogpData)
       }
       return ogpData
     } catch (e: unknown) {
       const err = e as AxiosError
-      if (err.response?.status !== 404) {
-        // eslint-disable-next-line no-console
-        console.error(err)
-      }
+      // eslint-disable-next-line no-console
+      console.error(err)
+
       return undefined
     }
   }
