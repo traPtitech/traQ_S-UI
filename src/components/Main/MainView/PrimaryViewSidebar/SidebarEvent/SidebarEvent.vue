@@ -1,11 +1,5 @@
 <template>
-  <component
-    :is="comp"
-    v-if="comp"
-    :type="event.type"
-    :datetime="event.datetime"
-    :details="event.detail"
-  />
+  <component :is="comp" v-if="comp" v-bind="event" />
 </template>
 
 <script lang="ts" setup>
@@ -49,5 +43,13 @@ const comp = computed(() => {
   // eslint-disable-next-line no-console
   console.error('Unexpected event:', invalid)
   return undefined
+})
+
+const event = computed(() => {
+  const { datetime, detail: details, type } = props.event
+  return type === ChannelEventTypeEnum.PinAdded ||
+    type === ChannelEventTypeEnum.PinRemoved
+    ? { datetime, details, type }
+    : { datetime, details }
 })
 </script>
