@@ -24,7 +24,7 @@ const resize = async (
   // picaでは一つの画像を並列で処理するため、複数の画像を同時に処理しないようにする
   await mutex.lock()
 
-  const inputUrl = URL.createObjectURL(inputFile)
+  const inputUrl = URL.createObjectURL(inputFile as File)
 
   const pica = await loadPica()
   const $input = document.createElement('canvas')

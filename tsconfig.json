@@ -14,7 +14,8 @@
     "noFallthroughCasesInSwitch": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
-    "importsNotUsedAsValues": "error",
+    // TODO: TypeScriptをv5にしたら使う
+    // "verbatimModuleSyntax": true,
     "sourceMap": true,
     "noEmit": true,
     "baseUrl": ".",

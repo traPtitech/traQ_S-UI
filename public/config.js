@@ -99,6 +99,7 @@
       'jomon.trap.jp'
     ],
     wikiPageOrigin: 'https://wiki.trap.jp',
+    blogPagePrefix: 'https://trap.jp/author/',
     auth: {
       resetLink: 'https://portal.trap.jp/reset-password',
       changeLink: 'https://portal.trap.jp',
