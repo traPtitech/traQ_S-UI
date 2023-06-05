@@ -39,3 +39,10 @@ html[data-stamp-edge='true'] {
       drop-shadow(-0.1px -0.1px 0 rgb(255, 255, 255, 0.1));
   }
 }
+
+.markdown-body .katex {
+  display: inline-flex;
+  max-width: 100%;
+  overflow: auto hidden;
+  padding: 2px;
+}
