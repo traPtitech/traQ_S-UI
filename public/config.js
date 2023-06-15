@@ -81,6 +81,11 @@
         label: 'Jomon',
         iconPath: 'jomon.svg',
         appLink: 'https://jomon.trap.jp/'
+      },
+      {
+        label: 'NeoShowcase',
+        iconPath: 'neoshowcase.svg',
+        appLink: 'https://ns.trap.jp/'
       }
     ],
     ogpIgnoreHostNames: [
@@ -96,7 +101,8 @@
       'md.trapti.tech',
       'drive.trapti.tech',
       'showcase.trapti.tech',
-      'jomon.trap.jp'
+      'jomon.trap.jp',
+      'ns.trap.jp'
     ],
     wikiPageOrigin: 'https://wiki.trap.jp',
     blogPagePrefix: 'https://trap.jp/author/',
