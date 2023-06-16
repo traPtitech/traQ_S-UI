@@ -98,7 +98,7 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     return fileMetaData
   }
 
-  const ogpDataMap = ref(new Map<ExternalUrl, Ogp>())
+  const ogpDataMap = ref(new Map<ExternalUrl, Ogp | undefined>())
   const fetchOgpData = async ({
     url,
     ignoreCache = false
@@ -115,6 +115,7 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
       const [{ data: ogpData }, shared] = await getOgp(url)
       // ページにOGPが存在しない場合、undefinedを返す
       if (ogpData.type === 'empty') {
+        if (!shared) ogpDataMap.value.set(url, undefined)
         return undefined
       }
       if (!shared) {
