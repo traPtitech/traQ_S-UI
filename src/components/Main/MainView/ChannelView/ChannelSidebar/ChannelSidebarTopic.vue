@@ -46,5 +46,11 @@ const {
   }
 })
 
-watch(() => props.channelId, sync)
+watch(
+  () => props.channelId,
+  () => {
+    sync()
+    isEditing.value = false
+  }
+)
 </script>
