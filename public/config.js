@@ -95,7 +95,6 @@
       'git.trapti.tech',
       'md.trapti.tech',
       'drive.trapti.tech',
-      'showcase.trapti.tech',
       'jomon.trap.jp',
       'ns.trap.jp'
     ],
