@@ -48,9 +48,9 @@
         appLink: 'https://git.trap.jp/'
       },
       {
-        label: 'Showcase',
-        iconPath: 'showcase.svg',
-        appLink: 'https://showcase.trapti.tech/'
+        label: 'NeoShowcase',
+        iconPath: 'neoshowcase.svg',
+        appLink: 'https://ns.trap.jp/'
       },
       {
         label: 'HackMD',
@@ -81,11 +81,6 @@
         label: 'Jomon',
         iconPath: 'jomon.svg',
         appLink: 'https://jomon.trap.jp/'
-      },
-      {
-        label: 'NeoShowcase',
-        iconPath: 'neoshowcase.svg',
-        appLink: 'https://ns.trap.jp/'
       }
     ],
     ogpIgnoreHostNames: [
@@ -100,7 +95,6 @@
       'git.trapti.tech',
       'md.trapti.tech',
       'drive.trapti.tech',
-      'showcase.trapti.tech',
       'jomon.trap.jp',
       'ns.trap.jp'
     ],
