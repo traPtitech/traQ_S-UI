@@ -13,6 +13,7 @@ const MIN_ZOOM_LEVEL = -15
 const MAX_ZOOM_LEVEL = 30
 const MIN_PINCH_DISTANCE = 30
 const ROTATE_STEP = 5
+const ZOOM_LEVEL_UNIT = 0.1
 
 export interface State {
   /**
@@ -54,13 +55,9 @@ const getAngleBetweenLinesFromTouches = (
   touchesB: TwoTouch
 ) => getAngleBetweenLines(touchesToPoints(touchesA), touchesToPoints(touchesB))
 
-const getNewZoomLevel = (isZoomIn: boolean, oldZoomLevel: number) => {
+const getNewZoomLevel = (oldZoomLevel: number, deltaY: number) => {
   let r = oldZoomLevel
-  if (isZoomIn) {
-    r++
-  } else {
-    r--
-  }
+  r += deltaY * ZOOM_LEVEL_UNIT
   return Math.max(Math.min(r, MAX_ZOOM_LEVEL), MIN_ZOOM_LEVEL)
 }
 
@@ -276,11 +273,11 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
   /**
    * @see https://github.com/traPtitech/traQ_S-UI/pull/1603#discussion_r526882122
    */
-  const rewriteZoomLevel = (isZoomIn: boolean, point: Point) => {
+  const rewriteZoomLevel = (deltaY: number, point: Point) => {
     const oldZoomLevel = state.zoomLevel
     const oldZoomRatio = zoomRatio.value
 
-    const newZoomLevel = getNewZoomLevel(isZoomIn, oldZoomLevel)
+    const newZoomLevel = getNewZoomLevel(oldZoomLevel, deltaY)
     state.zoomLevel = newZoomLevel
     const newZoomRatio = zoomRatio.value
 
@@ -321,7 +318,7 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       }
       rewriteRotate(r)
     } else {
-      rewriteZoomLevel(e.deltaY < 0, point)
+      rewriteZoomLevel(-e.deltaY, point)
     }
   })
 
@@ -335,7 +332,7 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
 
       // 変化がないときは処理しない(oldDistanceを変更しないのはuseTouch内で実装)
       if (newDistance === oldDistance) return
-      rewriteZoomLevel(newDistance - oldDistance >= 0, centerPoint)
+      rewriteZoomLevel(newDistance - oldDistance, centerPoint)
     }
   )
 
