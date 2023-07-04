@@ -88,8 +88,8 @@ const isCreateEnabled = computed(
 )
 watch(
   () => stampImage.value,
-  (newImageData, oldImageData) => {
-    if (newImageData && newImageData.name !== oldImageData?.name) {
+  newImageData => {
+    if (!newStampName.value && newImageData && newImageData.name) {
       newStampName.value = trimExt(newImageData.name)
     }
   }
