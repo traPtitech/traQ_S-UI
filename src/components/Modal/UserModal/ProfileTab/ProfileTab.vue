@@ -11,7 +11,7 @@
     />
     <last-online
       :class="$style.section"
-      :last-online="detail?.lastOnline ?? undefined"
+      :last-online="isOnline ? Date() : detail?.lastOnline ?? undefined"
     />
   </div>
 </template>
@@ -23,11 +23,17 @@ import HomeChannel from './HomeChannel.vue'
 import AccountList from './AccountList.vue'
 import LastOnline from './LastOnline.vue'
 import type { User, UserDetail } from '@traptitech/traq'
+import { useOnlineUsers } from '/@/store/domain/onlineUsers'
+import { computed } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   user: User
   detail?: UserDetail
 }>()
+
+const { onlineUsers, fetchOnlineUsers } = useOnlineUsers()
+fetchOnlineUsers()
+const isOnline = computed(() => onlineUsers.value.has(props.user.id))
 </script>
 
 <style lang="scss" module>
