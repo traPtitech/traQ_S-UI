@@ -96,9 +96,7 @@ watch(
 
 onMounted(() => {
   // 初回マウント時に取得する
-  if (!executed.value) {
-    executeSearchForCurrentPage(query.value)
-  }
+  executeSearchForCurrentPage(query.value)
 })
 
 const resultListEle = ref<HTMLElement | null>(null)
