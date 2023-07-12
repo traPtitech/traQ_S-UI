@@ -1,15 +1,51 @@
 <template>
-  <component
-    :is="comp"
-    v-if="comp"
+  <sidebar-event-topic-changed
+    v-if="event.type === ChannelEventTypeEnum.TopicChanged"
+    :datetime="event.datetime"
+    :details="event.detail"
+  />
+  <sidebar-event-subscribers-changed
+    v-else-if="event.type === ChannelEventTypeEnum.SubscribersChanged"
+    :datetime="event.datetime"
+    :details="event.detail"
+  />
+  <sidebar-event-pinned-changed
+    v-else-if="
+      event.type === ChannelEventTypeEnum.PinAdded ||
+      event.type === ChannelEventTypeEnum.PinRemoved
+    "
+    :datetime="event.datetime"
+    :details="event.detail"
     :type="event.type"
+  />
+  <sidebar-event-name-changed
+    v-else-if="event.type === ChannelEventTypeEnum.NameChanged"
+    :datetime="event.datetime"
+    :details="event.detail"
+  />
+  <sidebar-event-parent-changed
+    v-else-if="event.type === ChannelEventTypeEnum.ParentChanged"
+    :datetime="event.datetime"
+    :details="event.detail"
+  />
+  <sidebar-event-archive-changed
+    v-else-if="event.type === ChannelEventTypeEnum.VisibilityChanged"
+    :datetime="event.datetime"
+    :details="event.detail"
+  />
+  <sidebar-event-forced-notification-changed
+    v-else-if="event.type === ChannelEventTypeEnum.ForcedNotificationChanged"
+    :datetime="event.datetime"
+    :details="event.detail"
+  />
+  <sidebar-event-child-created
+    v-else-if="event.type === ChannelEventTypeEnum.ChildCreated"
     :datetime="event.datetime"
     :details="event.detail"
   />
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import type { ParsedChannelEvent } from '/@/lib/apis'
 import { ChannelEventTypeEnum } from '@traptitech/traq'
 import SidebarEventTopicChanged from './SidebarEventTopicChanged.vue'
@@ -24,30 +60,4 @@ import SidebarEventChildCreated from './SidebarEventChildCreated.vue'
 const props = defineProps<{
   event: ParsedChannelEvent
 }>()
-
-const comp = computed(() => {
-  switch (props.event.type) {
-    case ChannelEventTypeEnum.TopicChanged:
-      return SidebarEventTopicChanged
-    case ChannelEventTypeEnum.SubscribersChanged:
-      return SidebarEventSubscribersChanged
-    case ChannelEventTypeEnum.PinAdded:
-    case ChannelEventTypeEnum.PinRemoved:
-      return SidebarEventPinnedChanged
-    case ChannelEventTypeEnum.NameChanged:
-      return SidebarEventNameChanged
-    case ChannelEventTypeEnum.ParentChanged:
-      return SidebarEventParentChanged
-    case ChannelEventTypeEnum.VisibilityChanged:
-      return SidebarEventArchiveChanged
-    case ChannelEventTypeEnum.ForcedNotificationChanged:
-      return SidebarEventForcedNotificationChanged
-    case ChannelEventTypeEnum.ChildCreated:
-      return SidebarEventChildCreated
-  }
-  const invalid: never = props.event
-  // eslint-disable-next-line no-console
-  console.error('Unexpected event:', invalid)
-  return undefined
-})
 </script>

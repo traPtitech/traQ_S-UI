@@ -48,9 +48,9 @@
         appLink: 'https://git.trap.jp/'
       },
       {
-        label: 'Showcase',
-        iconPath: 'showcase.svg',
-        appLink: 'https://showcase.trapti.tech/'
+        label: 'NeoShowcase',
+        iconPath: 'neoshowcase.svg',
+        appLink: 'https://ns.trap.jp/'
       },
       {
         label: 'HackMD',
@@ -95,8 +95,8 @@
       'git.trapti.tech',
       'md.trapti.tech',
       'drive.trapti.tech',
-      'showcase.trapti.tech',
-      'jomon.trap.jp'
+      'jomon.trap.jp',
+      'ns.trap.jp'
     ],
     wikiPageOrigin: 'https://wiki.trap.jp',
     blogPagePrefix: 'https://trap.jp/author/',

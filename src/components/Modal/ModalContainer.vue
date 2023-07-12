@@ -3,6 +3,7 @@
     <div v-if="shouldShowModal && currentState" :class="$style.container">
       <component
         :is="component"
+        v-if="component"
         :id="
           currentState.type === 'user' ||
           currentState.type === 'tag' ||
@@ -44,49 +45,61 @@
   </transition>
 </template>
 
-<script lang="ts">
-import type { DefineComponent } from 'vue'
-import { computed, defineAsyncComponent } from 'vue'
-import type { ModalState } from '/@/store/ui/modal/states'
-import { useModalStore } from '/@/store/ui/modal'
-
-const modalComponentMap: Record<ModalState['type'], string> = {
-  user: 'UserModal/UserModal',
-  notification: 'NotificationModal/NotificationModal',
-  tag: 'TagModal/TagModal',
-  group: 'GroupModal/GroupModal',
-  'channel-create': 'ChannelCreateModal/ChannelCreateModal',
-  file: 'FileModal/FileModal',
-  qrcode: 'QRCodeModal/QRCodeModal',
-  'clip-create': 'ClipCreateModal/ClipCreateModal',
-  'clip-folder-create': 'ClipFolderCreateModal/ClipFolderCreateModal',
-  'channel-manage': 'ChannelManageModal/ChannelManageModal',
-  'group-create': 'GroupCreateModal/GroupCreateModal',
-  'group-member-edit': 'GroupMemberEditModal/GroupMemberEditModal',
-  'group-admin-add': 'GroupAdminAddModal/GroupAdminAddModal',
-  'group-member-add': 'GroupMemberAddModal/GroupMemberAddModal'
-}
-
-const modalModules = import.meta.glob<DefineComponent>(
-  '/src/components/Modal/*/*Modal.vue'
-)
-</script>
-
 <script lang="ts" setup>
+import { computed } from 'vue'
+import { useModalStore } from '/@/store/ui/modal'
+import UserModal from './UserModal/UserModal.vue'
+import NotificationModal from './NotificationModal/NotificationModal.vue'
+import TagModal from './TagModal/TagModal.vue'
+import GroupModal from './GroupModal/GroupModal.vue'
+import ChannelCreateModal from './ChannelCreateModal/ChannelCreateModal.vue'
+import FileModal from './FileModal/FileModal.vue'
+import QRCodeModal from './QRCodeModal/QRCodeModal.vue'
+import ClipCreateModal from './ClipCreateModal/ClipCreateModal.vue'
+import ClipFolderCreateModal from './ClipFolderCreateModal/ClipFolderCreateModal.vue'
+import ChannelManageModal from './ChannelManageModal/ChannelManageModal.vue'
+import GroupCreateModal from './GroupCreateModal/GroupCreateModal.vue'
+import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vue'
+import GroupAdminAddModal from './GroupAdminAddModal/GroupAdminAddModal.vue'
+import GroupMemberAddModal from './GroupMemberAddModal/GroupMemberAddModal.vue'
+
 const { shouldShowModal, currentState } = useModalStore()
 
-// ここでpathを束縛することでcomputed内で戻り値の関数がpathに依存していることが伝わる？
-const getComponent = (path: string) =>
-  defineAsyncComponent(() =>
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    modalModules[`/src/components/Modal/${path}.vue`]!()
-  )
-
-const component = computed(() =>
-  currentState.value
-    ? getComponent(modalComponentMap[currentState.value.type])
-    : undefined
-)
+const component = computed(() => {
+  switch (currentState.value?.type) {
+    case 'user':
+      return UserModal
+    case 'notification':
+      return NotificationModal
+    case 'tag':
+      return TagModal
+    case 'group':
+      return GroupModal
+    case 'channel-create':
+      return ChannelCreateModal
+    case 'file':
+      return FileModal
+    case 'qrcode':
+      return QRCodeModal
+    case 'clip-create':
+      return ClipCreateModal
+    case 'clip-folder-create':
+      return ClipFolderCreateModal
+    case 'channel-manage':
+      return ChannelManageModal
+    case 'group-create':
+      return GroupCreateModal
+    case 'group-member-edit':
+      return GroupMemberEditModal
+    case 'group-admin-add':
+      return GroupAdminAddModal
+    case 'group-member-add':
+      return GroupMemberAddModal
+  }
+  // eslint-disable-next-line no-console
+  console.error('Unexpected modal type:', currentState.value)
+  return undefined
+})
 </script>
 
 <style lang="scss" module>
