@@ -2,18 +2,12 @@
   <div>
     <div :class="$style.header">
       <div :class="$style.label">メンバー</div>
-      <a-icon
-        name="plus-circle-outline"
-        mdi
-        :class="$style.controlIcon"
-        @click="onClickAdd"
-      />
-      <a-icon
-        name="close"
-        mdi
-        :class="$style.controlIcon"
-        @click="onClickDeleteAll"
-      />
+      <button :class="$style.controlIconButton" @click="onClickAdd">
+        <a-icon name="plus-circle-outline" mdi />
+      </button>
+      <button :class="$style.controlIconButton" @click="onClickDeleteAll">
+        <a-icon name="close" mdi />
+      </button>
     </div>
     <div :class="$style.list">
       <group-user
@@ -100,10 +94,11 @@ const onDelete = async (id: string) => {
   margin-bottom: 4px;
   font-weight: bold;
 }
-.controlIcon {
+.controlIconButton {
   @include color-ui-primary-inactive;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus {
     @include color-ui-primary;
   }
 }

@@ -8,25 +8,17 @@
         :max-length="maxLength"
         on-secondary
       />
-      <a-icon
-        name="check"
-        mdi
-        :class="$style.icon"
-        :size="20"
-        @click="endEditing"
-      />
+      <button :class="$style.iconButton" @click="endEditing">
+        <a-icon name="check" mdi :size="20" />
+      </button>
     </div>
     <div v-else :class="$style.valueWrapper">
       <div :class="$style.value" :data-is-empty="localValue === ''">
         {{ localValue || `${label}が設定されていません` }}
       </div>
-      <a-icon
-        name="pencil-outline"
-        mdi
-        :class="$style.icon"
-        :size="20"
-        @click="startEditing"
-      />
+      <button :class="$style.iconButton" @click="startEditing">
+        <a-icon name="pencil-outline" mdi :size="20" />
+      </button>
     </div>
   </div>
 </template>
@@ -65,11 +57,12 @@ const { open: startEditing, close: endEditing } = useToggle(isEditing)
   @include color-ui-primary;
   font-weight: bold;
 }
-.icon {
+.iconButton {
   @include color-ui-primary-inactive;
   margin-left: 4px;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus {
     @include color-ui-primary;
   }
 }

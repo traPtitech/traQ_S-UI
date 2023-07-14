@@ -6,19 +6,16 @@
       <slot />
     </div>
     <div :class="$style.controls">
-      <a-icon
+      <button
         v-if="showEditButton"
-        name="pencil-outline"
-        mdi
-        :class="$style.controlIcon"
+        :class="$style.controlIconButton"
         @click="emit('edit')"
-      />
-      <a-icon
-        name="close"
-        mdi
-        :class="$style.controlIcon"
-        @click="emit('delete')"
-      />
+      >
+        <a-icon name="pencil-outline" mdi />
+      </button>
+      <button :class="$style.controlIconButton" @click="emit('delete')">
+        <a-icon name="close" mdi />
+      </button>
     </div>
   </div>
 </template>
@@ -77,10 +74,11 @@ const user = computed(() => usersMap.value.get(props.id))
     opacity: 1;
   }
 }
-.controlIcon {
+.controlIconButton {
   @include color-ui-secondary-inactive;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus {
     @include color-ui-secondary;
   }
 }

@@ -10,12 +10,9 @@
       />
     </div>
     <div :class="$style.editIconWrapper">
-      <a-icon
-        name="pencil-outline"
-        mdi
-        :class="$style.editIcon"
-        @click="emit('clickEdit')"
-      />
+      <button :class="$style.editIconButton" @click="emit('clickEdit')">
+        <a-icon name="pencil-outline" mdi />
+      </button>
     </div>
   </div>
 </template>
@@ -57,7 +54,7 @@ const emit = defineEmits<{
   @include color-ui-primary;
   grid-area: edit;
 }
-.editIcon {
+.editIconButton {
   cursor: pointer;
 }
 </style>
