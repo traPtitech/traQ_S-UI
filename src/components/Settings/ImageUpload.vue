@@ -3,7 +3,7 @@
     <form-button label="ファイルを選択" @click="selectImage" />
     <div v-if="originalImgUrl">
       <div :class="$style.cropper" :data-is-rounded="$boolAttr(rounded)">
-        <img ref="imgEle" :src="originalImgUrl" />
+        <img ref="imgEle" :src="originalImgUrl" alt="アップロードする画像" />
       </div>
       <p :class="$style.note">{{ cropperNote }}</p>
       <form-button label="キャンセル" @click="cancel" />

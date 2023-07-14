@@ -3,7 +3,12 @@
     <navigation-content-container subtitle="クリップフォルダ">
       <template #control>
         <button :class="$style.button" @click="onClickButton">
-          <a-icon :size="20" mdi name="plus-circle-outline" />
+          <a-icon
+            :size="20"
+            mdi
+            name="plus-circle-outline"
+            title="クリップフォルダ作成"
+          />
         </button>
       </template>
       <template #default>

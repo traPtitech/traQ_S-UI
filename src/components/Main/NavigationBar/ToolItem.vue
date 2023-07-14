@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <a-icon :name="iconName" :mdi="iconMdi" :size="24" />
+    <a-icon :name="iconName" :mdi="iconMdi" :size="24" :title="toolName" />
   </div>
 </template>
 
@@ -9,6 +9,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 
 withDefaults(
   defineProps<{
+    toolName: string
     iconName: string
     iconMdi?: boolean
   }>(),

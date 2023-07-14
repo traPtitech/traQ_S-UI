@@ -13,6 +13,7 @@
       <a-icon
         name="pencil-outline"
         mdi
+        title="編集"
         :class="$style.editIcon"
         @click="emit('clickEdit')"
       />

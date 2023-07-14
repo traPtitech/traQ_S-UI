@@ -7,6 +7,7 @@
     v-bind="$attrs"
     role="img"
     :class="$style.icon"
+    :aria-label="title"
   >
     <path :d="path" fill="currentColor" />
   </svg>
@@ -19,6 +20,7 @@
     v-bind="$attrs"
     role="img"
     :class="$style.icon"
+    :aria-label="title"
   />
 </template>
 

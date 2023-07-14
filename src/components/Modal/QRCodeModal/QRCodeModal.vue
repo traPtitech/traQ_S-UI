@@ -5,7 +5,12 @@
     icon-name="qrcode"
     :class="$style.qrCodeModalFrame"
   >
-    <img v-if="!state.err" :src="state.url" :class="$style.qrCodeModalImage" />
+    <img
+      v-if="!state.err"
+      :src="state.url"
+      :class="$style.qrCodeModalImage"
+      alt="QRコード"
+    />
     <modal-section v-else title="エラー" :description="state.err" />
   </modal-frame>
 </template>

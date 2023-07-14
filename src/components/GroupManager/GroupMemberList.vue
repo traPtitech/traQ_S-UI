@@ -5,12 +5,14 @@
       <a-icon
         name="plus-circle-outline"
         mdi
+        title="追加"
         :class="$style.controlIcon"
         @click="onClickAdd"
       />
       <a-icon
         name="close"
         mdi
+        title="全員削除"
         :class="$style.controlIcon"
         @click="onClickDeleteAll"
       />

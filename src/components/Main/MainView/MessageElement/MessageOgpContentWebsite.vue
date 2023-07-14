@@ -10,6 +10,7 @@
       :src="imageUrl"
       draggable="false"
       :class="$style.image"
+      alt=""
     />
     <message-ogp-description
       :class="$style.description"

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :aria-selected="isSelected">
-    <img :src="url" :class="$style.stamp" />
+    <img :src="url" :class="$style.stamp" alt="スタンプ画像" />
     <div v-if="!isSelected" :class="$style.notSelected">
       <p>:{{ stamp.name }}:</p>
       <a-icon

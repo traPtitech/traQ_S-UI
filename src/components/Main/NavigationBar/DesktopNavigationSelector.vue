@@ -9,6 +9,7 @@
       :has-notification="item.hasNotification"
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
+      :title="item.entryName"
       @click="onNavigationItemClick(item.type)"
     />
     <div v-if="showSeparator" :class="$style.separator" />
@@ -20,6 +21,7 @@
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
       :color-claim="item.colorClaim"
+      :title="item.itemName"
       @click="onEphemeralNavigationItemClick(item.type)"
     />
   </div>

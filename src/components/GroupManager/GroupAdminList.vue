@@ -5,6 +5,7 @@
       <a-icon
         name="plus-circle-outline"
         mdi
+        title="追加"
         :class="$style.addIcon"
         @click="onClickAdd"
       />

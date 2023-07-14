@@ -5,6 +5,7 @@ import { useModalStore } from '/@/store/ui/modal'
 import useToggle from '/@/composables/utils/useToggle'
 
 interface Tool {
+  toolName: string
   iconName: string
   iconMdi: boolean
   /**
@@ -32,6 +33,7 @@ const useToolBox = () => {
     const tools: Tool[] = []
     if (window.traQConfig.enableSearch) {
       tools.push({
+        toolName: '検索',
         iconName: 'search',
         iconMdi: true,
         onClick: () => openCommandPalette('search')
@@ -39,6 +41,7 @@ const useToolBox = () => {
     }
     if (window.traQConfig.services && window.traQConfig.services.length > 0) {
       tools.push({
+        toolName: 'サービス',
         iconName: 'apps',
         iconMdi: true,
         onClick: toggleServices
@@ -46,12 +49,14 @@ const useToolBox = () => {
     }
     if (window.traQConfig.showQrCodeButton) {
       tools.push({
+        toolName: 'QRコード',
         iconName: 'qrcode',
         iconMdi: true,
         onClick: openQrCodeModal
       })
     }
     tools.push({
+      toolName: '設定',
       iconName: 'cog',
       iconMdi: true,
       onClick: openSettings

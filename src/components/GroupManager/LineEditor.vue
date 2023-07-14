@@ -11,6 +11,7 @@
       <a-icon
         name="check"
         mdi
+        title="保存"
         :class="$style.icon"
         :size="20"
         @click="endEditing"
@@ -23,6 +24,7 @@
       <a-icon
         name="pencil-outline"
         mdi
+        title="編集"
         :class="$style.icon"
         :size="20"
         @click="startEditing"

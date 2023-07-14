@@ -3,6 +3,7 @@
     :class="$style.container"
     :data-react-hover="$boolAttr(reactHover)"
     :data-is-white="$boolAttr(isWhite)"
+    aria-label="閉じる"
   >
     <div
       :class="$style.circle"

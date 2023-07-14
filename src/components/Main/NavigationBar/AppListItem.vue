@@ -6,7 +6,12 @@
     rel="noopener noreferrer"
   >
     <span v-if="isSvg" :class="$style.icon" v-html="svgHtml"></span>
-    <img v-else :class="$style.icon" :src="`/img/services/${iconPath}`" />
+    <img
+      v-else
+      :class="$style.icon"
+      :src="`/img/services/${iconPath}`"
+      alt=""
+    />
     <span :class="$style.label">{{ label }}</span>
   </a>
 </template>

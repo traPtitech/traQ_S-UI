@@ -2,6 +2,7 @@
   <div :class="$style.container">
     <a-icon
       :class="$style.icon"
+      title="サイドバーを開く"
       mdi
       name="chevron-double"
       :size="28"

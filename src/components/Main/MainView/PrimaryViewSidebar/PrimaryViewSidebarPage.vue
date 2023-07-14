@@ -5,6 +5,7 @@
         v-if="showBackButton"
         :size="28"
         mdi
+        title="戻る"
         name="chevron-left"
         :class="$style.backButton"
         @click="emit('back')"

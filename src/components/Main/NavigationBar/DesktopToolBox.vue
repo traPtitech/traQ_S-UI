@@ -4,6 +4,7 @@
       v-for="tool in tools"
       :key="tool.iconName"
       :class="$style.item"
+      :tool-name="tool.toolName"
       :icon-name="tool.iconName"
       :icon-mdi="tool.iconMdi"
       @mousedown.middle="tool.onClick"

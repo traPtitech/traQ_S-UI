@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.user">
-    <img :src="saved.iconURL ?? undefined" :class="$style.userIcon" />
+    <img :src="saved.iconURL ?? undefined" :class="$style.userIcon" alt="" />
     <p :class="$style.name">{{ saved.id }}</p>
   </div>
   <div :class="$style.buttons">

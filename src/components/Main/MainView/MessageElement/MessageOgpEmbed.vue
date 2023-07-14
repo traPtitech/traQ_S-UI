@@ -9,7 +9,7 @@
       referrerpolicy="no-referrer"
     />
     <template v-else>
-      <img :src="previewUrl" :class="$style.image" />
+      <img :src="previewUrl" :class="$style.image" alt="" />
       <div :class="$style.icon">
         <a-icon v-if="showPlayIcon" mdi name="play" :size="32" />
       </div>

@@ -13,6 +13,7 @@ import { useSubscriptionStore } from '/@/store/domain/subscription'
 
 export type NavigationSelectorEntry = {
   type: NavigationItemType
+  entryName: string
   iconName: string
   iconMdi?: boolean
   hasNotification?: boolean
@@ -20,6 +21,7 @@ export type NavigationSelectorEntry = {
 
 export type EphemeralNavigationSelectorEntry = {
   type: EphemeralNavigationItemType
+  itemName: string
   iconName: string
   iconMdi?: boolean
   colorClaim?: ThemeClaim<string> // 色
@@ -32,25 +34,30 @@ export const createItems = (notificationState: {
 }): NavigationSelectorEntry[] => [
   {
     type: 'home',
+    entryName: 'ホーム',
     iconName: 'home',
     iconMdi: true,
     hasNotification: notificationState.channel
   },
   {
     type: 'channels',
+    entryName: 'チャンネル一覧',
     iconName: 'hash'
   },
   {
     type: 'activity',
+    entryName: 'アクティビティ',
     iconName: 'activity'
   },
   {
     type: 'users',
+    entryName: 'ユーザー一覧',
     iconName: 'user',
     hasNotification: notificationState.dm
   },
   {
     type: 'clips',
+    entryName: 'クリップ一覧',
     iconName: 'bookmark',
     iconMdi: true
   }
@@ -61,6 +68,7 @@ export const ephemeralItems: Record<
 > = {
   qallController: {
     type: 'qallController',
+    itemName: 'Qall',
     iconName: 'phone',
     iconMdi: true,
     colorClaim: (_, common) => common.ui.qall,
@@ -68,11 +76,13 @@ export const ephemeralItems: Record<
   },
   draftList: {
     type: 'draftList',
+    itemName: '下書き一覧',
     iconName: 'pencil',
     iconMdi: true
   },
   audioController: {
     type: 'audioController',
+    itemName: 'サウンド',
     iconName: 'music-note',
     iconMdi: true
   }

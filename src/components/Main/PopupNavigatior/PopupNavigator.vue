@@ -4,7 +4,7 @@
     ref="buttonEle"
     :class="$style.navigationButton"
   >
-    <a-icon name="traQ" :size="28" />
+    <a-icon name="traQ" :size="28" title="ポップアップナビゲーター" />
     <teleport :to="`#${popupNavigatorId}`">
       <div
         v-show="isPopupNavigatorShown"

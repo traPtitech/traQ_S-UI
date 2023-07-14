@@ -3,6 +3,7 @@
     <span :class="$style.label">{{ label }}</span>
     <a-icon
       name="close"
+      title="削除"
       mdi
       :class="$style.icon"
       :size="24"
