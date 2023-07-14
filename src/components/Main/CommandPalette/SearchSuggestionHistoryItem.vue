@@ -1,14 +1,10 @@
 <template>
-  <div :class="$style.container" @click="onClick">
+  <button :class="$style.container" @click="onClick">
     <span :class="$style.label">{{ label }}</span>
-    <a-icon
-      name="close"
-      mdi
-      :class="$style.icon"
-      :size="24"
-      @click.stop="onClose"
-    />
-  </div>
+    <button :class="$style.iconButton" @click.stop="onRemove">
+      <a-icon name="close" mdi :size="24" />
+    </button>
+  </button>
 </template>
 
 <script lang="ts" setup>
@@ -26,7 +22,7 @@ const emit = defineEmits<{
 const onClick = () => {
   emit('select', props.label)
 }
-const onClose = () => {
+const onRemove = () => {
   emit('remove', props.label)
 }
 </script>
@@ -39,7 +35,8 @@ const onClose = () => {
   grid-template-columns: 1fr min-content;
   user-select: none;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus {
     @include background-secondary;
   }
 }
@@ -48,11 +45,12 @@ const onClose = () => {
   @include color-ui-primary;
   word-break: break-all;
 }
-.icon {
+.iconButton {
   @include color-ui-primary-inactive;
   margin-left: 0.5rem;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus {
     @include color-ui-primary;
   }
 }

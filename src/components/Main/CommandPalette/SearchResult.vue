@@ -24,25 +24,25 @@
       </div>
     </div>
     <div :class="$style.navigation">
-      <div
+      <button
         :class="$style.navigationButton"
         data-direction="previous"
         :aria-hidden="currentPage <= 0"
         @click="jumpToPage(currentPage - 1)"
       >
         <a-icon name="chevron-left" mdi /> 戻る
-      </div>
+      </button>
       <span :class="$style.page">
         {{ currentPage + 1 }} / {{ pageCount }} ページ
       </span>
-      <div
+      <button
         :class="$style.navigationButton"
         data-direction="next"
         :aria-hidden="currentPage >= pageCount - 1"
         @click="jumpToPage(currentPage + 1)"
       >
         次へ <a-icon name="chevron-right" mdi />
-      </div>
+      </button>
     </div>
   </div>
   <div v-else-if="queryEntered" :class="$style.empty">見つかりませんでした</div>
