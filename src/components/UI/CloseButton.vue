@@ -3,12 +3,9 @@
     :class="$style.container"
     :data-react-hover="$boolAttr(reactHover)"
     :data-is-white="$boolAttr(isWhite)"
+    @click="emit('close')"
   >
-    <div
-      :class="$style.circle"
-      :style="circleStyle"
-      @click="emit('close')"
-    ></div>
+    <div :class="$style.circle" :style="circleStyle"></div>
     <span v-if="withText" :class="$style.text">閉じる</span>
   </button>
 </template>
@@ -57,6 +54,7 @@ const circleStyle = computed(() => ({
   font-weight: bold;
   opacity: 0.5;
   &:hover,
+  &:focus,
   &:not([data-react-hover]) {
     opacity: 1;
   }

@@ -1,7 +1,7 @@
 <template>
-  <div :class="$style.container">
+  <button :class="$style.container">
     <a-icon :name="iconName" :mdi="iconMdi" :size="24" />
-  </div>
+  </button>
 </template>
 
 <script lang="ts" setup>
@@ -27,7 +27,8 @@ withDefaults(
   width: 32px;
   height: 32px;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus {
     @include color-ui-secondary;
   }
 }

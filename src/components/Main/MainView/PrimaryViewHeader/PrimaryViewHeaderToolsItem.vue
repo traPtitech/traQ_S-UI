@@ -1,5 +1,5 @@
 <template>
-  <div
+  <button
     :class="$style.container"
     :data-is-disabled="$boolAttr(disabled)"
     :data-header-style="headerStyle"
@@ -7,7 +7,7 @@
     @click="onClick"
   >
     <a-icon :mdi="iconMdi" :name="iconName" />
-  </div>
+  </button>
 </template>
 
 <script lang="ts" setup>
