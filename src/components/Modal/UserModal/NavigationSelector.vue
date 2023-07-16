@@ -5,6 +5,7 @@
       :key="item.type"
       :icon-name="item.iconName"
       :icon-mdi="item.iconMdi"
+      :title="item.itemName"
       :is-selected="currentNavigation === item.type"
       @click="onNavigationItemClick(item.type)"
     />
@@ -31,19 +32,24 @@ const emit = defineEmits<{
 
 const items: {
   type: NavigationItemType
+  itemName: string
   iconName: string
   iconMdi?: true
 }[] = [
   {
     type: 'profile',
+    itemName: 'プロフィール',
     iconName: 'user'
   },
   {
     type: 'groups',
+
+    itemName: 'グループ',
     iconName: 'group'
   },
   {
     type: 'tags',
+    itemName: 'タグ',
     iconName: 'tags',
     iconMdi: true
   }

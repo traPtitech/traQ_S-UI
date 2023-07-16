@@ -4,7 +4,13 @@
     :style="containerStyle"
     :aria-selected="isSelected"
   >
-    <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" :title="title"/>
+    <a-icon
+      :class="$style.icon"
+      :name="iconName"
+      :mdi="iconMdi"
+      :size="24"
+      :title="title"
+    />
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :size="6" />
     </div>
@@ -21,7 +27,7 @@ import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
 const props = withDefaults(
   defineProps<{
-    title:string
+    title: string
     iconName: string
     iconMdi?: boolean
     isSelected?: boolean
