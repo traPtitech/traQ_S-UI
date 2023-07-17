@@ -50,6 +50,7 @@ const onContainerClick = () => {
   @include color-ui-secondary;
   display: flex;
   flex-direction: column;
+  text-align: left;
   width: 100%;
   padding: 12px;
   border-radius: 4px;
@@ -67,6 +68,7 @@ const onContainerClick = () => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  width: 100%;
   &[data-is-clickable] {
     cursor: pointer;
   }

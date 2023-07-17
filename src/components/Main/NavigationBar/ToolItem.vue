@@ -1,11 +1,14 @@
 <template>
-  <button :class="$style.container">
-    <a-icon :name="iconName" :mdi="iconMdi" :size="24" />
-  </button>
+  <icon-button
+    :icon-name="iconName"
+    :icon-mdi="iconMdi"
+    :size="24"
+    :class="$style.container"
+  />
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
+import IconButton from '/@/components/UI/IconButton.vue'
 
 withDefaults(
   defineProps<{

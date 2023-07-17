@@ -25,7 +25,7 @@ withDefaults(
 <style lang="scss" module>
 .container {
   display: flex;
-  &:focus {
+  &:focus-visible {
     border: black 1px solid;
   }
 }

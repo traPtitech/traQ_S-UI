@@ -1,18 +1,18 @@
 <template>
-  <button
+  <icon-button
     :class="$style.container"
     :data-is-disabled="$boolAttr(disabled)"
     :data-header-style="headerStyle"
     :title="tooltip"
+    :icon-mdi="iconMdi"
+    :icon-name="iconName"
     @click="onClick"
-  >
-    <a-icon :mdi="iconMdi" :name="iconName" />
-  </button>
+  />
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
+import IconButton from '/@/components/UI/IconButton.vue'
 
 const props = withDefaults(
   defineProps<{

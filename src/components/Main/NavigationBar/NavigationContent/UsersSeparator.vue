@@ -34,6 +34,7 @@ withDefaults(
   @include color-ui-secondary;
   @include size-body2;
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   font-weight: bold;
