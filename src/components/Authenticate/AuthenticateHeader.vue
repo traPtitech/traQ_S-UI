@@ -6,13 +6,13 @@
     </span>
     <div v-else :class="$style.fullLogo">
       <img :src="logoUrl" alt="" />
-      <logo-text :class="$style.fullLogoText" />
+      <img :src="LogoText" :class="$style.fullLogoText" alt="traQ" role="img" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import LogoText from '/@/assets/traq-logo-text.svg?component'
+import LogoText from '/@/assets/traq-logo-text.svg?url'
 import logoUrl from '/@/assets/traq-logo.svg?url'
 
 defineProps<{

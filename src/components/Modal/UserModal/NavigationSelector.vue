@@ -43,7 +43,6 @@ const items: {
   },
   {
     type: 'groups',
-
     itemName: 'グループ',
     iconName: 'group'
   },
