@@ -79,14 +79,12 @@ const useStampEdit = (
 
   const editStamp = async () => {
     try {
-      if (!newImageData.value) {
-        addErrorToast('画像を選択してください')
-        return
-      }
-      const size = await imageSize(newImageData.value)
-      if (size.height !== size.width) {
-        addErrorToast('画像が正方形ではありません。編集してください')
-        return
+      if (newImageData.value) {
+        const size = await imageSize(newImageData.value)
+        if (size.height !== size.width) {
+          addErrorToast('画像が正方形ではありません。編集してください')
+          return
+        }
       }
       try {
         isEditing.value = true
