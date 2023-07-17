@@ -2,12 +2,18 @@
   <div>
     <div :class="$style.header">
       <div :class="$style.label">メンバー</div>
-      <button :class="$style.controlIconButton" @click="onClickAdd">
-        <a-icon name="plus-circle-outline" mdi />
-      </button>
-      <button :class="$style.controlIconButton" @click="onClickDeleteAll">
-        <a-icon name="close" mdi />
-      </button>
+      <icon-button
+        icon-name="plus-circle-outline"
+        icon-mdi
+        :class="$style.controlIconButton"
+        @click="onClickAdd"
+      />
+      <icon-button
+        icon-name="close"
+        icon-mdi
+        :class="$style.controlIconButton"
+        @click="onClickDeleteAll"
+      />
     </div>
     <div :class="$style.list">
       <group-user
@@ -25,13 +31,13 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
 import GroupUser from './GroupUser.vue'
 import type { UserGroupId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import type { UserGroupMember } from '@traptitech/traq'
 import { useModalStore } from '/@/store/ui/modal'
+import iconButton from '/@/components/UI/IconButton.vue'
 
 const props = defineProps<{
   groupId: UserGroupId

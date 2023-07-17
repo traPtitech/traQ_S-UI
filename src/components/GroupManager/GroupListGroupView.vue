@@ -10,9 +10,12 @@
       />
     </div>
     <div :class="$style.editIconWrapper">
-      <button :class="$style.editIconButton" @click="emit('clickEdit')">
-        <a-icon name="pencil-outline" mdi />
-      </button>
+      <icon-button
+        icon-name="pencil-outline"
+        icon-mdi
+        :class="$style.editIconButton"
+        @click="emit('clickEdit')"
+      />
     </div>
   </div>
 </template>
@@ -21,6 +24,7 @@
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import type { UserGroup } from '@traptitech/traq'
+import iconButton from '/@/components/UI/IconButton.vue'
 
 defineProps<{
   group: UserGroup

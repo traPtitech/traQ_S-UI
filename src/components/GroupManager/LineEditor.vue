@@ -8,27 +8,35 @@
         :max-length="maxLength"
         on-secondary
       />
-      <button :class="$style.iconButton" @click="endEditing">
-        <a-icon name="check" mdi :size="20" />
-      </button>
+      <icon-button
+        icon-name="check"
+        icon-mdi
+        :size="20"
+        :class="$style.iconButton"
+        @click="endEditing"
+      />
     </div>
     <div v-else :class="$style.valueWrapper">
       <div :class="$style.value" :data-is-empty="localValue === ''">
         {{ localValue || `${label}が設定されていません` }}
       </div>
-      <button :class="$style.iconButton" @click="startEditing">
-        <a-icon name="pencil-outline" mdi :size="20" />
-      </button>
+      <icon-button
+        icon-name="pencil-outline"
+        icon-mdi
+        :size="20"
+        :class="$style.iconButton"
+        @click="startEditing"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import FormInput from '/@/components/UI/FormInput.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import useLocalInput from '/@/composables/utils/useLocalInput'
 import useToggle from '/@/composables/utils/useToggle'
+import IconButton from '/@/components/UI/IconButton.vue'
 
 const props = defineProps<{
   label: string

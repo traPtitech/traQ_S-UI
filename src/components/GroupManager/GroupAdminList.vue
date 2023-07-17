@@ -2,9 +2,12 @@
   <div>
     <div :class="$style.header">
       <div :class="$style.label">管理者</div>
-      <button :class="$style.addIconButton" @click="onClickAdd">
-        <a-icon name="plus-circle-outline" mdi />
-      </button>
+      <icon-button
+        icon-name="plus-circle-outline"
+        icon-mdi
+        :class="$style.addIconButton"
+        @click="onClickAdd"
+      />
     </div>
     <div :class="$style.list">
       <group-user
@@ -18,12 +21,12 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
 import GroupUser from './GroupUser.vue'
 import type { UserGroupId, UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'
+import iconButton from '/@/components/UI/IconButton.vue'
 
 const props = defineProps<{
   groupId: UserGroupId

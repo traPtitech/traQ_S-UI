@@ -6,26 +6,29 @@
       <slot />
     </div>
     <div :class="$style.controls">
-      <button
+      <icon-button
         v-if="showEditButton"
+        icon-name="pencil-outline"
+        icon-mdi
         :class="$style.controlIconButton"
         @click="emit('edit')"
-      >
-        <a-icon name="pencil-outline" mdi />
-      </button>
-      <button :class="$style.controlIconButton" @click="emit('delete')">
-        <a-icon name="close" mdi />
-      </button>
+      />
+      <icon-button
+        icon-name="close"
+        icon-mdi
+        :class="$style.controlIconButton"
+        @click="emit('delete')"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
 import type { UserId } from '/@/types/entity-ids'
 import { useUsersStore } from '/@/store/entities/users'
+import IconButton from '/@/components/UI/IconButton.vue'
 
 const props = withDefaults(
   defineProps<{
