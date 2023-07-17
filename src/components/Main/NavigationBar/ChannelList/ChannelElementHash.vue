@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <button :class="$style.container" :tabindex="hasChild ? 0 : -1">
     <div
       :class="$style.hash"
       :data-container-type="hasChild ? 'parent' : 'leaf'"
@@ -13,7 +13,7 @@
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :border-width="2" />
     </div>
-  </div>
+  </button>
 </template>
 
 <script lang="ts" setup>
@@ -75,7 +75,8 @@ withDefaults(
     }
   }
   &[data-container-type='parent'] {
-    &:hover::before {
+    &:hover::before,
+    .container:focus &::before {
       content: '';
       border-radius: 4px;
       display: block;
@@ -88,19 +89,22 @@ withDefaults(
     &[data-is-opened] {
       color: var(--specific-channel-hash-opened);
       background: $theme-ui-primary-background;
-      &:hover::before {
+      &:hover::before,
+      .container:focus &::before {
         background: $theme-ui-primary-background;
         opacity: 0.5;
       }
       &[data-is-inactive] {
         background: $theme-ui-secondary-background;
-        &:hover::before {
+        &:hover::before,
+        .container:focus &::before {
           background: $theme-ui-secondary-background;
         }
       }
       &[aria-selected='true'] {
         @include background-accent-primary;
-        &:hover::before {
+        &:hover::before,
+        .container:focus &::before {
           @include background-accent-primary;
         }
       }
@@ -108,27 +112,31 @@ withDefaults(
     &:not([data-is-opened]) {
       @include color-ui-primary;
       border-color: $theme-ui-primary-default;
-      &:hover::before {
+      &:hover::before,
+      .container:focus &::before {
         background: $theme-ui-primary-background;
         opacity: 0.2;
       }
       &[data-is-inactive] {
         @include color-ui-secondary;
         border-color: $theme-ui-secondary-default;
-        &:hover::before {
+        &:hover::before,
+        .container:focus &::before {
           background: $theme-ui-secondary-background;
         }
       }
       &[data-has-notification-on-child] {
         border-color: $theme-accent-notification-default;
-        &:hover::before {
+        &:hover::before,
+        .container:focus &::before {
           background: $theme-accent-notification-background;
         }
       }
       &[aria-selected='true'] {
         @include color-accent-primary;
         border-color: $theme-accent-primary-default;
-        &:hover::before {
+        &:hover::before,
+        .container:focus &::before {
           @include background-accent-primary;
         }
       }

@@ -5,11 +5,16 @@
     :data-is-inactive="$boolAttr(!channel.active)"
   >
     <!-- チャンネル表示本体 -->
-    <div
+    <button
       :class="$style.channel"
+      :aria-selected="isSelected"
+      :data-is-inactive="$boolAttr(!channel.active)"
       @mousedown="openChannel"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
+      @click="openChannel"
+      @focus="onFocus"
+      @blur="onBlur"
     >
       <channel-element-hash
         :class="$style.channelHash"
@@ -19,7 +24,7 @@
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
-        @mousedown.stop="onChannelHashClick"
+        @click.stop="onChannelHashClick"
         @mouseenter="onHashMouseEnter"
         @mouseleave="onHashMouseLeave"
       />
@@ -32,7 +37,7 @@
         :is-noticeable="notificationState.isNoticeable"
         :unread-count="notificationState.unreadCount"
       />
-    </div>
+    </button>
 
     <div :class="$style.slot">
       <slot />
@@ -40,9 +45,10 @@
 
     <!-- チャンネルの背景 -->
     <div
-      v-if="isSelected || isChannelBgHovered"
+      v-if="isSelected || isChannelBgHovered || isFocused"
       :class="$style.selectedBg"
       :data-is-hovered="$boolAttr(isChannelBgHovered)"
+      :data-is-focused="$boolAttr(isFocused)"
     />
   </div>
 </template>
@@ -60,6 +66,7 @@ import ChannelElementName from './ChannelElementName.vue'
 import useNotificationState from '../composables/useNotificationState'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useChannelPath from '/@/composables/useChannelPath'
+import useFocus from '/@/components/Main/MainView/MessageInput/composables/useFocus'
 
 const props = withDefaults(
   defineProps<{
@@ -103,6 +110,7 @@ const openChannel = (event: MouseEvent) => {
 const notificationState = useNotificationState(toRef(props, 'channel'))
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isFocused, onFocus, onBlur } = useFocus()
 const {
   isHovered: isHashHovered,
   onMouseEnter: onHashMouseEnter,
@@ -139,6 +147,13 @@ $bgLeftShift: 8px;
   padding-right: 4px;
   margin-left: $bgLeftShift;
   z-index: 0;
+  width: 100%;
+  &[data-is-inactive] {
+    @include color-ui-secondary;
+  }
+  &[aria-selected='true'] {
+    @include color-accent-primary;
+  }
 }
 .channelHash {
   flex-shrink: 0;
@@ -161,7 +176,8 @@ $bgLeftShift: 8px;
     @include background-accent-primary;
     display: block;
   }
-  &[data-is-hovered] {
+  &[data-is-hovered],
+  &[data-is-focused] {
     display: block;
     background: $theme-ui-primary-background;
   }
