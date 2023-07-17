@@ -1,6 +1,7 @@
 <template>
-  <div
-    :role="isClickable ? 'button' : 'img'"
+  <component
+    :is="isClickable ? 'button' : 'img'"
+    :data-is-clickable="isClickable"
     :class="$style.container"
     :style="styles.container"
     @click.prevent.stop="openModal"
@@ -8,7 +9,7 @@
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :size="indicatorSize" />
     </div>
-  </div>
+  </component>
 </template>
 
 <script lang="ts" setup>
@@ -88,8 +89,12 @@ const { isClickable, openModal } = useUserModalOpener(
     repeat: no-repeat;
     size: cover;
   }
-  &[role='button'] {
+  &[data-is-clickable='true'] {
     cursor: pointer;
+  }
+  &:hover,
+  &:focus {
+    opacity: 0.7;
   }
 }
 .indicator {
