@@ -180,7 +180,8 @@ const { didRender } = useKeepScrollPosition(
   &[aria-hidden='true'] {
     visibility: hidden;
   }
-  &:hover {
+  &:hover,
+  &:focus {
     @include background-secondary;
   }
 }

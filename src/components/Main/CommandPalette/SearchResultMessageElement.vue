@@ -1,5 +1,5 @@
 <template>
-  <button
+  <div
     :class="$style.container"
     :data-oversized="$boolAttr(oversized)"
     :data-expanded="$boolAttr(expanded)"
@@ -37,7 +37,7 @@
     <div :class="$style.channelAndDate">
       {{ channelName }} - <time>{{ date }}</time>
     </div>
-  </button>
+  </div>
 </template>
 
 <script lang="ts" setup>

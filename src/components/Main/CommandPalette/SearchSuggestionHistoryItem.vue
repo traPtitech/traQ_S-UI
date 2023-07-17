@@ -1,14 +1,18 @@
 <template>
   <button :class="$style.container" @click="onClick">
     <span :class="$style.label">{{ label }}</span>
-    <button :class="$style.iconButton" @click.stop="onRemove">
-      <a-icon name="close" mdi :size="24" />
-    </button>
+    <icon-button
+      icon-name="close"
+      icon-mdi
+      :size="24"
+      :class="$style.iconButton"
+      @click.stop="onRemove"
+    />
   </button>
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
+import IconButton from '/@/components/UI/IconButton.vue'
 
 const props = defineProps<{
   label: string
@@ -44,6 +48,7 @@ const onRemove = () => {
   @include size-body1;
   @include color-ui-primary;
   word-break: break-all;
+  text-align: left;
 }
 .iconButton {
   @include color-ui-primary-inactive;
