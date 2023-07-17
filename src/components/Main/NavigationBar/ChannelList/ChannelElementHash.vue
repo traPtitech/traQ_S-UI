@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <button :class="$style.container" :tabindex="hasChild ? 0 : -1">
     <div
       :class="$style.hash"
       :data-container-type="hasChild ? 'parent' : 'leaf'"
@@ -13,7 +13,7 @@
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :border-width="2" />
     </div>
-  </div>
+  </button>
 </template>
 
 <script lang="ts" setup>

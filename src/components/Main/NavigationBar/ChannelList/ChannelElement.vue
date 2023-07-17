@@ -5,9 +5,9 @@
     :data-is-inactive="$boolAttr(!channel.active)"
   >
     <!-- チャンネル表示本体 -->
-    <div
+    <button
       :class="$style.channel"
-      @mousedown="openChannel"
+      @click="openChannel"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
     >
@@ -19,7 +19,8 @@
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
-        @mousedown.stop="onChannelHashClick"
+
+        @click.stop="onChannelHashClick"
         @mouseenter="onHashMouseEnter"
         @mouseleave="onHashMouseLeave"
       />
@@ -32,7 +33,7 @@
         :is-noticeable="notificationState.isNoticeable"
         :unread-count="notificationState.unreadCount"
       />
-    </div>
+    </button>
 
     <div :class="$style.slot">
       <slot />
