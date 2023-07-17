@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.container">
-    <a-icon
-      :class="$style.icon"
-      mdi
-      name="chevron-double"
+    <icon-button
+      :class="$style.iconButton"
       :size="28"
+      icon-mdi
+      icon-name="chevron-double"
       @click="emit('open')"
     />
     <user-icon-ellipsis-list
@@ -20,9 +20,9 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import type { UserId } from '/@/types/entity-ids'
+import iconButton from '/@/components/UI/IconButton.vue'
 
 withDefaults(
   defineProps<{
@@ -49,7 +49,8 @@ const emit = defineEmits<{
   align-items: center;
 }
 
-.icon {
+.iconButton {
+  display: flex;
   margin-bottom: 16px;
   margin-top: 16px;
   cursor: pointer;

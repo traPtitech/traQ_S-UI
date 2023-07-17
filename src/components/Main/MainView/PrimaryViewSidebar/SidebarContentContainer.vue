@@ -1,5 +1,5 @@
 <template>
-  <div
+  <button
     :data-is-large-padding="$boolAttr(largePadding)"
     :data-is-clickable="$boolAttr(clickable)"
     :class="$style.container"
@@ -15,7 +15,7 @@
       <slot name="header-control"></slot>
     </div>
     <slot />
-  </div>
+  </button>
 </template>
 
 <script lang="ts" setup>

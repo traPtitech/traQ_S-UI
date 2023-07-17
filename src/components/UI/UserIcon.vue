@@ -1,4 +1,5 @@
 <template>
+  <!--fixme: これだと@clickがキーボード操作に反応しない-->
   <div
     :role="isClickable ? 'button' : 'img'"
     :class="$style.container"
@@ -90,6 +91,9 @@ const { isClickable, openModal } = useUserModalOpener(
   }
   &[role='button'] {
     cursor: pointer;
+  }
+  &:focus {
+    border: 1px solid black;
   }
 }
 .indicator {

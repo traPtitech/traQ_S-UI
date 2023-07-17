@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.header">
-      <a-icon
+      <icon-button
         v-if="showBackButton"
         :size="28"
-        mdi
-        name="chevron-left"
+        icon-mdi
+        icon-name="chevron-left"
         :class="$style.backButton"
         @click="emit('back')"
       />
@@ -19,9 +19,9 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import useSidebar from '/@/composables/mainView/useSidebar'
+import iconButton from '/@/components/UI/IconButton.vue'
 
 withDefaults(
   defineProps<{
