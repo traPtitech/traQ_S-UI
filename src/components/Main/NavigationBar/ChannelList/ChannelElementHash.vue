@@ -1,5 +1,15 @@
 <template>
-  <component :is="hasChild ? 'button' : 'div'" :class="$style.container">
+  <component
+    :is="hasChild ? 'button' : 'div'"
+    :class="$style.container"
+    :aria-label="
+      hasChild && !isOpened
+        ? 'チャンネルツリーを展開'
+        : hasChild && isOpened
+        ? 'チャンネルツリーを閉じる'
+        : undefined
+    "
+  >
     <div
       :class="$style.hash"
       :data-container-type="hasChild ? 'parent' : 'leaf'"

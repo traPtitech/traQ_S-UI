@@ -8,8 +8,9 @@
     <button
       :class="$style.channel"
       :aria-current="isSelected && 'page'"
-      :aria-expanded="hasChildren && isOpened"
+      :aria-expanded="hasChildren && isOpened ? true : undefined"
       :data-is-inactive="$boolAttr(!channel.active)"
+      :aria-label="showShortenedPath ? pathTooltip : pathToShow"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
       @click="openChannel"
@@ -67,6 +68,10 @@ import useNotificationState from '../composables/useNotificationState'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useChannelPath from '/@/composables/useChannelPath'
 import useFocus from '/@/components/Main/MainView/MessageInput/composables/useFocus'
+import {
+  usePath,
+  type TypedProps
+} from '/@/components/Main/NavigationBar/ChannelList/composables/usePath'
 
 const props = withDefaults(
   defineProps<{
@@ -106,6 +111,8 @@ const { channelIdToLink } = useChannelPath()
 const openChannel = (event: MouseEvent) => {
   openLink(event, channelIdToLink(props.channel.id))
 }
+
+const { pathToShow, pathTooltip } = usePath(props as TypedProps)
 
 const notificationState = useNotificationState(toRef(props, 'channel'))
 
@@ -172,7 +179,7 @@ $bgLeftShift: 8px;
   pointer-events: none;
 
   display: none;
-  .container[aria-current='page'] > & {
+  .container[data-is-selected] > & {
     @include background-accent-primary;
     display: block;
   }
