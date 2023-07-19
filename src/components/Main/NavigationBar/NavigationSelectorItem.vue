@@ -3,6 +3,7 @@
     :class="$style.container"
     :style="containerStyle"
     :aria-selected="isSelected"
+    role="tab"
   >
     <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
     <div v-if="hasNotification" :class="$style.indicator">

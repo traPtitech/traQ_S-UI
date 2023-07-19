@@ -1,15 +1,15 @@
 <template>
   <div
     :class="$style.container"
-    :aria-selected="isSelected"
+    :data-is-selected="$boolAttr(isSelected)"
     :data-is-inactive="$boolAttr(!channel.active)"
   >
     <!-- チャンネル表示本体 -->
     <button
       :class="$style.channel"
-      :aria-selected="isSelected"
+      :aria-current="isSelected && 'page'"
+      :aria-expanded="hasChildren && isOpened"
       :data-is-inactive="$boolAttr(!channel.active)"
-      @mousedown="openChannel"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
       @click="openChannel"
@@ -135,7 +135,7 @@ $bgLeftShift: 8px;
   &[data-is-inactive] {
     @include color-ui-secondary;
   }
-  &[aria-selected='true'] {
+  &[data-is-selected] {
     @include color-accent-primary;
   }
 }
@@ -147,11 +147,11 @@ $bgLeftShift: 8px;
   padding-right: 4px;
   margin-left: $bgLeftShift;
   z-index: 0;
-  width: 100%;
+  width: calc(100% - $bgLeftShift);
   &[data-is-inactive] {
     @include color-ui-secondary;
   }
-  &[aria-selected='true'] {
+  &[aria-current='page'] {
     @include color-accent-primary;
   }
 }
@@ -172,7 +172,7 @@ $bgLeftShift: 8px;
   pointer-events: none;
 
   display: none;
-  .container[aria-selected='true'] > & {
+  .container[aria-current='page'] > & {
     @include background-accent-primary;
     display: block;
   }

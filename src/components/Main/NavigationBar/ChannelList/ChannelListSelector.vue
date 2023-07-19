@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div :class="$style.container" role="tablist">
     <a-tab
       label="すべて"
       :aria-selected="!isStared"

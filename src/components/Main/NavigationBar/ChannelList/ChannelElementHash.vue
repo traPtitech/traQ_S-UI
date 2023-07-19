@@ -4,7 +4,7 @@
       :class="$style.hash"
       :data-container-type="hasChild ? 'parent' : 'leaf'"
       :data-is-opened="$boolAttr(hasChild && isOpened)"
-      :aria-selected="isSelected"
+      :data-is-selected="$boolAttr(isSelected)"
       :data-has-notification-on-child="$boolAttr(hasNotificationOnChild)"
       :data-is-inactive="$boolAttr(isInactive)"
     >
@@ -70,7 +70,7 @@ withDefaults(
       @include color-ui-secondary;
       border-color: $theme-ui-secondary-default;
     }
-    &[aria-selected='true'] {
+    &[data-is-selected='true'] {
       @include color-accent-primary;
     }
   }
@@ -101,7 +101,7 @@ withDefaults(
           background: $theme-ui-secondary-background;
         }
       }
-      &[aria-selected='true'] {
+      &[data-is-selected='true'] {
         @include background-accent-primary;
         &:hover::before,
         .container:focus &::before {
@@ -132,7 +132,7 @@ withDefaults(
           background: $theme-accent-notification-background;
         }
       }
-      &[aria-selected='true'] {
+      &[data-is-selected='true'] {
         @include color-accent-primary;
         border-color: $theme-accent-primary-default;
         &:hover::before,
