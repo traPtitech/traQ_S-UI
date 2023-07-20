@@ -75,6 +75,19 @@ const useMessageFetcher = (
     lastLoadingDirection.value = 'latest'
   }
 
+  const sortMessages = async (messageIdsParam: ref<MessageId[]>) => {
+    Promise.all(messageIdsParam.value.map((id) => fetchMessage(id))).then(
+      (messages) => messages.map((m: Message) => {return { id:m.id, createdAt: new Date(m.createdAt)} })
+    ).then((messages) => {
+      messages.sort((a, b) => {
+        if (a.createdAt < b.createdAt) { return -1; }
+        if (a.createdAt > b.createdAt) { return 1; }
+        return 0;
+      })
+      return messages.map((m) => m.id)
+    })
+  }
+
   const onLoadFormerMessagesRequest = async () => {
     if (isReachedEnd.value) {
       return
@@ -185,6 +198,7 @@ const useMessageFetcher = (
     // https://github.com/traPtitech/traQ_S-UI/issues/1748
     if (messageIds.value.includes(messageId)) return
     messageIds.value.push(messageId)
+    messageIds.value = await sortMessages(messageIds.value)
   }
 
   const init = () => {
