@@ -159,7 +159,7 @@ const useChannelMessageFetcher = (
     const { messages, hasMore } = await fetchMessagesByChannelId({
       channelId: props.channelId,
       limit: fetchLimit.value,
-      order: 'desc',
+      order: 'asc',
       since: loadedMessageLatestDate.value
     })
 
