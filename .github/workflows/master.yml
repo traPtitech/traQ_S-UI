@@ -59,7 +59,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/traptitech/${{ env.IMAGE_NAME }}:master
-            ghcr.io/traptitech/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           cache-from: type=registry,ref=ghcr.io/traptitech/${{ env.IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=ghcr.io/traptitech/${{ env.IMAGE_NAME }}:buildcache,mode=max
 
