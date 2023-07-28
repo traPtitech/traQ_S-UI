@@ -78,8 +78,7 @@ const {
   resetPaging,
   pageCount,
   currentSortKey,
-  query,
-  executed
+  query
 } = useSearchMessages()
 
 watch(
@@ -95,10 +94,8 @@ watch(
 )
 
 onMounted(() => {
-  // 初回マウント時に取得する
-  if (!executed.value) {
-    executeSearchForCurrentPage(query.value)
-  }
+  resetPaging()
+  executeSearchForCurrentPage(query.value)
 })
 
 const resultListEle = ref<HTMLElement | null>(null)
