@@ -35,7 +35,8 @@
       />
     </div>
     <div :class="$style.channelAndDate">
-      {{ channelName }} - <time>{{ date }}</time>
+      <span :class="$style.channelName">{{ channelName }}</span> -
+      <time>{{ date }}</time>
     </div>
   </div>
 </template>
@@ -235,5 +236,8 @@ $expand-button-height: 32px;
   @include color-ui-secondary;
   @include size-body2;
   grid-area: channelAndDate;
+}
+.channelName {
+  word-break: break-all;
 }
 </style>
