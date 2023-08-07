@@ -38,6 +38,10 @@ withDefaults(
   align-items: center;
   justify-content: space-between;
   font-weight: bold;
+  &:hover .icon,
+  &:focus-visible .icon {
+    @include color-ui-secondary;
+  }
 }
 .name {
   position: relative;

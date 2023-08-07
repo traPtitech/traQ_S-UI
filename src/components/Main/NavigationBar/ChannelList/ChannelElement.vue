@@ -13,6 +13,7 @@
       :aria-label="showShortenedPath ? pathTooltip : pathToShow"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
+      @mousedown="openChannel"
       @click="openChannel"
       @focus="onFocus"
       @blur="onBlur"

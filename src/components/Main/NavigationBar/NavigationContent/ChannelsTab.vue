@@ -120,7 +120,8 @@ const onClickButton = () => {
   @include color-ui-secondary-inactive;
   padding-right: 16px;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus {
     @include color-ui-secondary;
   }
 }
