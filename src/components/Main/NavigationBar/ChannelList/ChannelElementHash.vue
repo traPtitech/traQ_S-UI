@@ -80,7 +80,7 @@ withDefaults(
       @include color-ui-secondary;
       border-color: $theme-ui-secondary-default;
     }
-    &[data-is-selected='true'] {
+    &[data-is-selected] {
       @include color-accent-primary;
     }
   }
@@ -111,7 +111,7 @@ withDefaults(
           background: $theme-ui-secondary-background;
         }
       }
-      &[data-is-selected='true'] {
+      &[data-is-selected] {
         @include background-accent-primary;
         &:hover::before,
         .container:focus &::before {
@@ -142,7 +142,7 @@ withDefaults(
           background: $theme-accent-notification-background;
         }
       }
-      &[data-is-selected='true'] {
+      &[data-is-selected] {
         @include color-accent-primary;
         border-color: $theme-accent-primary-default;
         &:hover::before,

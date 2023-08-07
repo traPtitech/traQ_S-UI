@@ -5,19 +5,29 @@
     :data-is-inactive="$boolAttr(!channel.active)"
   >
     <!-- チャンネル表示本体 -->
-    <button
-      :class="$style.channel"
-      :aria-current="isSelected && 'page'"
-      :aria-expanded="hasChildren && isOpened ? true : undefined"
-      :data-is-inactive="$boolAttr(!channel.active)"
-      :aria-label="showShortenedPath ? pathTooltip : pathToShow"
-      @mouseenter="onMouseEnter"
-      @mouseleave="onMouseLeave"
-      @mousedown="openChannel"
-      @click="openChannel"
-      @focus="onFocus"
-      @blur="onBlur"
-    >
+    <div :class="$style.channelContainer">
+      <router-link
+        :to="channelIdToLink(props.channel.id)"
+        :class="$style.channel"
+        :aria-current="isSelected && 'page'"
+        :aria-expanded="hasChildren && isOpened ? true : undefined"
+        :data-is-inactive="$boolAttr(!channel.active)"
+        :aria-label="showShortenedPath ? pathTooltip : pathToShow"
+        @mouseenter="onMouseEnter"
+        @mouseleave="onMouseLeave"
+        @focus="onFocus"
+        @blur="onBlur"
+      >
+        <channel-element-name
+          :channel="channel"
+          :show-shortened-path="showShortenedPath"
+          :is-selected="isSelected"
+        />
+        <channel-element-unread-badge
+          :is-noticeable="notificationState.isNoticeable"
+          :unread-count="notificationState.unreadCount"
+        />
+      </router-link>
       <channel-element-hash
         :class="$style.channelHash"
         :has-child="hasChildren"
@@ -26,20 +36,11 @@
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
-        @click.stop="onChannelHashClick"
+        @mousedown="onChannelHashClick"
         @mouseenter="onHashMouseEnter"
         @mouseleave="onHashMouseLeave"
       />
-      <channel-element-name
-        :channel="channel"
-        :show-shortened-path="showShortenedPath"
-        :is-selected="isSelected"
-      />
-      <channel-element-unread-badge
-        :is-noticeable="notificationState.isNoticeable"
-        :unread-count="notificationState.unreadCount"
-      />
-    </button>
+    </div>
 
     <div :class="$style.slot">
       <slot />
@@ -147,15 +148,14 @@ $bgLeftShift: 8px;
     @include color-accent-primary;
   }
 }
-.channel {
-  display: flex;
-  align-items: center;
+.channelContainer {
   position: relative;
+  display: flex;
   height: $elementHeight;
+  padding-left: 24px;
   padding-right: 4px;
   margin-left: $bgLeftShift;
   z-index: 0;
-  width: calc(100% - $bgLeftShift);
   &[data-is-inactive] {
     @include color-ui-secondary;
   }
@@ -163,9 +163,17 @@ $bgLeftShift: 8px;
     @include color-accent-primary;
   }
 }
+.channel {
+  display: flex;
+  align-items: center;
+  margin-left: $bgLeftShift;
+  width: calc(100% - $bgLeftShift);
+}
 .channelHash {
   flex-shrink: 0;
   cursor: pointer;
+  position: absolute;
+  left: 0;
 }
 .selectedBg {
   position: absolute;
