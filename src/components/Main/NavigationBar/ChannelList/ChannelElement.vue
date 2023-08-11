@@ -36,9 +36,10 @@
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
-        @mousedown="onChannelHashClick"
-        @mouseenter="onHashMouseEnter"
-        @mouseleave="onHashMouseLeave"
+        @mousedown.stop="onChannelHashClick"
+        @keydown.enter="onChannelHashKeydownEnter"
+        @mouseenter="onHashHovered"
+        @mouseleave="onHashHoveredLeave"
       />
     </div>
 
@@ -100,6 +101,11 @@ const isSelected = computed(
     props.channel.id === primaryView.value.channelId
 )
 
+const onChannelHashKeydownEnter = () => {
+  if (hasChildren.value) {
+    emit('clickHash', props.channel.id)
+  }
+}
 const onChannelHashClick = (e: MouseEvent) => {
   if (hasChildren.value && e.button === LEFT_CLICK_BUTTON) {
     emit('clickHash', props.channel.id)
@@ -125,6 +131,14 @@ const {
   onMouseEnter: onHashMouseEnter,
   onMouseLeave: onHashMouseLeave
 } = useHover()
+const onHashHovered = () => {
+  onHashMouseEnter()
+  onMouseEnter()
+}
+const onHashHoveredLeave = () => {
+  onHashMouseLeave()
+  onMouseLeave()
+}
 const isChannelBgHovered = computed(
   () => isHovered.value && !(hasChildren.value && isHashHovered.value)
 )
