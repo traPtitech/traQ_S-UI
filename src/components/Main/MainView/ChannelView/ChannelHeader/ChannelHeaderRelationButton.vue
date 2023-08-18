@@ -17,7 +17,7 @@
   </button>
   <channel-header-relation-popup
     v-if="isOpen"
-    :popupId="popupId"
+    :popup-id="popupId"
     :right-position="triggerBottomRightPosition"
     :channel-id="props.channelId"
     @outside-click="close"
