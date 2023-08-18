@@ -10,7 +10,7 @@
     </div>
     <link-buttons
       :class="$style.buttons"
-      :home-channel-id="detail?.homeChannel ?? undefined"
+      :home-channel-id="detail?.homeChannel"
       :user-name="user.name"
     />
   </section>
