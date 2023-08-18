@@ -92,10 +92,6 @@ const { isClickable, openModal } = useUserModalOpener(
   &[data-is-clickable='true'] {
     cursor: pointer;
   }
-  &:hover,
-  &:focus {
-    opacity: 0.7;
-  }
 }
 .indicator {
   position: absolute;
