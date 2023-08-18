@@ -1,16 +1,26 @@
 <template>
-  <button :class="$style.button">
+  <button ref="button" :class="$style.button">
     {{ props.label }}
   </button>
 </template>
 
 <script setup lang="ts">
-import type { ButtonHTMLAttributes } from 'vue'
+import { ref, type ButtonHTMLAttributes } from 'vue'
 
 interface Props extends /* @vue-ignore */ ButtonHTMLAttributes {
   label: string
 }
 const props = defineProps<Props>()
+
+const button = ref<HTMLButtonElement | null>(null)
+
+const focus = () => {
+  if (button.value !== null) {
+    button.value.focus()
+  }
+}
+
+defineExpose({ focus })
 </script>
 
 <style lang="scss" module>
