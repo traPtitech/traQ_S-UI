@@ -15,12 +15,20 @@
       :class="$style.icon"
     />
   </button>
+  <div
+    v-if="isOpen"
+    ref="focusTrap"
+    tabindex="0"
+    @focus="onFocusTrap"
+  />
   <channel-header-relation-popup
     v-if="isOpen"
+    ref="popup"
     :popup-id="popupId"
     :right-position="triggerBottomRightPosition"
     :channel-id="props.channelId"
     @outside-click="close"
+    @focus-return="focusTrigger"
   />
 </template>
 
@@ -37,6 +45,9 @@ const props = defineProps<{
 }>()
 
 const trigger = ref<HTMLElement | null>(null)
+const focusTrap = ref<HTMLElement | null>(null)
+const popup = ref<InstanceType<typeof ChannelHeaderRelationPopup> | null>(null)
+
 const popupId = randomString()
 
 const isOpen = ref(false)
@@ -72,6 +83,13 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', updateTriggerPosition)
 })
+
+const onFocusTrap = () => {
+  popup.value?.focus()
+}
+const focusTrigger = () => {
+  trigger.value?.focus()
+}
 </script>
 
 <style lang="scss" module>

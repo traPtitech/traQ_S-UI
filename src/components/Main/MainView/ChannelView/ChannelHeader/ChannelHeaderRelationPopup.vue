@@ -7,6 +7,7 @@
         :class="$style.popup"
         :style="positionStyle"
       >
+        <div tabindex="0" @focus="emit('focus-return')" />
         <div role="tablist" :class="$style.tablist">
           <a-tab
             :id="siblingTabId"
@@ -20,6 +21,7 @@
           />
           <a-tab
             :id="childrenTabId"
+            ref="childrenTab"
             role="tab"
             :aria-selected="currentTab === 'children'"
             :aria-controls="childrenPanelId"
@@ -67,6 +69,7 @@ interface Props {
 const props = defineProps<Props>()
 
 const siblingTab = ref<InstanceType<typeof ATab> | null>(null)
+const childrenTab = ref<InstanceType<typeof ATab> | null>(null)
 onMounted(() => {
   siblingTab.value?.focus()
 })
@@ -85,18 +88,11 @@ const formattedSiblings = computed(() =>
   siblings.value.filter(s => s.id !== props.channelId)
 )
 
-const isExpanded = ref(false)
-const expand = () => {
-  isExpanded.value = true
-}
-const collapse = () => {
-  isExpanded.value = false
-}
-
 const currentTab = ref<'siblings' | 'children'>('siblings')
 
 const emit = defineEmits<{
   (e: 'outside-click', event: Event): void
+  (e: 'focus-return'): void
 }>()
 
 const popupWrap = ref<HTMLDivElement | null>(null)
@@ -106,6 +102,15 @@ const positionStyle = computed(() => ({
   '--x': `${props.rightPosition.x - (width.value ?? 0)}px`,
   '--y': `${props.rightPosition.y}px`
 }))
+
+const focus = () => {
+  if (currentTab.value === 'siblings') {
+    siblingTab.value?.focus()
+  } else {
+    childrenTab.value?.focus()
+  }
+}
+defineExpose({ focus })
 </script>
 
 <style lang="scss" module>
