@@ -9,7 +9,12 @@
       >
         <!-- NOTE: Popup から Shift + Tab で戻った際にトリガーのボタンに戻れるように Focus を管理する -->
         <div tabindex="0" @focus="emit('focus-return')" />
-        <div role="tablist" :class="$style.tablist">
+        <div
+          role="tablist"
+          :class="$style.tablist"
+          @keydown.left="onKeydown"
+          @keydown.right="onKeydown"
+        >
           <a-tab
             :id="siblingTabId"
             ref="siblingTab"
@@ -87,7 +92,25 @@ const formattedSiblings = computed(() =>
   siblings.value.filter(s => s.id !== props.channelId)
 )
 
-const currentTab = ref<'siblings' | 'children'>('siblings')
+const tabNames = ['siblings', 'children'] as const
+const currentTab = ref<(typeof tabNames)[number]>('siblings')
+const onKeydown = (e: KeyboardEvent) => {
+  const index = tabNames.indexOf(currentTab.value)
+  if (index === -1) return
+
+  let nextIndex: number
+  if (e.key === 'ArrowLeft') {
+    nextIndex = index - 1
+  } else if (e.key === 'ArrowRight') {
+    nextIndex = index + 1
+  } else {
+    return
+  }
+
+  nextIndex = (nextIndex + tabNames.length) % tabNames.length
+
+  currentTab.value = tabNames[nextIndex] ?? currentTab.value
+}
 
 const emit = defineEmits<{
   (e: 'outside-click', event: Event): void
