@@ -158,7 +158,6 @@ const onMessageIntersected = (createdAt: string) => {
   shownMessageDateValue.value = getFullDayString(new Date(createdAt))
 }
 const onEndSeparatorIntersected = () => {
-  if (shownMessageDateValue.value === undefined) return
   shownMessageDateValue.value = undefined
 }
 </script>
