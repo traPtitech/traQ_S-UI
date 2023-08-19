@@ -121,9 +121,8 @@ defineExpose({ focus })
   border-radius: 4px;
 
   position: fixed;
-  top: var(--y);
+  top: calc(var(--y) + 8px);
   left: max(16px, var(--x));
-  margin-top: 8px;
   padding: 16px;
   // NOTE: 最大でも左右に 16px の余白を残す
   max-width: calc(100% - 16px * 2);
