@@ -12,7 +12,7 @@
     <a-icon :size="20" name="rounded-triangle" :class="$style.icon" />
   </button>
   <!-- NOTE: ボタンから Tab 移動した際に popup のはじめに飛べるように Focus を管理する -->
-  <div v-if="isOpen" ref="focusToPopupRef" tabindex="0" @focus="focusToPopup" />
+  <div v-if="isOpen" ref="focusPopupRef" tabindex="0" @focus="focusPopup" />
   <channel-header-relation-popup
     v-if="isOpen"
     ref="popup"
@@ -37,7 +37,7 @@ const props = defineProps<{
 }>()
 
 const trigger = ref<HTMLElement | null>(null)
-const focusToPopupRef = ref<HTMLElement | null>(null)
+const focusPopupRef = ref<HTMLElement | null>(null)
 const popup = ref<InstanceType<typeof ChannelHeaderRelationPopup> | null>(null)
 
 const popupId = randomString()
@@ -76,7 +76,7 @@ onUnmounted(() => {
   window.removeEventListener('resize', updateTriggerPosition)
 })
 
-const focusToPopup = () => {
+const focusPopup = () => {
   popup.value?.focus()
 }
 const focusTrigger = () => {
