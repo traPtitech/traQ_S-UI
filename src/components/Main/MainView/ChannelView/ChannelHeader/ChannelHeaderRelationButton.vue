@@ -5,15 +5,11 @@
     aria-haspopup="true"
     :aria-expanded="isOpen"
     :aria-controls="popupId"
+    title="関連チャンネルを表示"
     :class="$style.trigger"
     @click="toggle"
   >
-    <a-icon
-      :size="20"
-      aria-label="関連チャンネル"
-      name="rounded-triangle"
-      :class="$style.icon"
-    />
+    <a-icon :size="20" name="rounded-triangle" :class="$style.icon" />
   </button>
   <!-- NOTE: ボタンから Tab 移動した際に popup のはじめに飛べるように Focus を管理する -->
   <div v-if="isOpen" ref="focusToPopupRef" tabindex="0" @focus="focusToPopup" />
