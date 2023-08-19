@@ -30,7 +30,7 @@ const channelLink = computed(() => channelIdToLink(props.channel.id))
 
 const isTopicEmpty = computed(() => props.channel.topic.length === 0)
 const topic = computed(() =>
-  isTopicEmpty.value ? 'トピック未設定' : props.channel.topic
+  isTopicEmpty.value ? '[トピック未設定]' : props.channel.topic
 )
 
 defineExpose({ focus })
