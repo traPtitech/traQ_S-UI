@@ -15,12 +15,7 @@
       :class="$style.icon"
     />
   </button>
-  <div
-    v-if="isOpen"
-    ref="focusTrap"
-    tabindex="0"
-    @focus="onFocusTrap"
-  />
+  <div v-if="isOpen" ref="focusTrap" tabindex="0" @focus="onFocusTrap" />
   <channel-header-relation-popup
     v-if="isOpen"
     ref="popup"
