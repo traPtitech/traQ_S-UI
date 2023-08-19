@@ -61,7 +61,7 @@ import ClickOutside from '/@/components/UI/ClickOutside'
 import ChannelHeaderRelationPanel from './ChannelHeaderRelationPanel.vue'
 import type { Point } from '/@/lib/basic/point'
 import useBoxSize from '/@/composables/dom/useBoxSize'
-import useRelatedChannels from '../ChannelSidebar/composables/useRelatedChannels'
+import useRelatedChannels from '/@/composables/useRelatedChannels'
 import { randomString } from '/@/lib/basic/randomString'
 import ATab from '/@/components/UI/ATab.vue'
 
