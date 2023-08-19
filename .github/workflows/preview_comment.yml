@@ -15,8 +15,8 @@ jobs:
             const prod = `https://${context.payload.pull_request.number}-prod.traq-preview.trapti.tech/`
             const dev = `https://${context.payload.pull_request.number}-dev.traq-preview.trapti.tech/`
             const msg = `
-              Preview (prod) → ${prod}
-              Preview (dev) → ${dev}
+            Preview (prod) → ${prod}
+            Preview (dev) → ${dev}
             `
 
             await github.rest.issues.createComment({
