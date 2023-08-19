@@ -1,0 +1,27 @@
+name: Comment preview environment URL
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  comment:
+    name: Comment preview environment URL
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const prod = `https://${context.payload.pull_request.number}-prod.traq-preview.trapti.tech/`
+            const dev = `https://${context.payload.pull_request.number}-dev.traq-preview.trapti.tech/`
+            const msg = `
+              Preview (prod) → ${prod}
+              Preview (dev) → ${dev}
+            `
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: msg
+            });
