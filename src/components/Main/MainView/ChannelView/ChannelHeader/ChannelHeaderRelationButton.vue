@@ -15,7 +15,7 @@
       :class="$style.icon"
     />
   </button>
-  <div v-if="isOpen" ref="focusTrap" tabindex="0" @focus="onFocusTrap" />
+  <div v-if="isOpen" ref="focusToPopupRef" tabindex="0" @focus="focusToPopup" />
   <channel-header-relation-popup
     v-if="isOpen"
     ref="popup"
@@ -40,7 +40,7 @@ const props = defineProps<{
 }>()
 
 const trigger = ref<HTMLElement | null>(null)
-const focusTrap = ref<HTMLElement | null>(null)
+const focusToPopupRef = ref<HTMLElement | null>(null)
 const popup = ref<InstanceType<typeof ChannelHeaderRelationPopup> | null>(null)
 
 const popupId = randomString()
@@ -79,7 +79,7 @@ onUnmounted(() => {
   window.removeEventListener('resize', updateTriggerPosition)
 })
 
-const onFocusTrap = () => {
+const focusToPopup = () => {
   popup.value?.focus()
 }
 const focusTrigger = () => {
