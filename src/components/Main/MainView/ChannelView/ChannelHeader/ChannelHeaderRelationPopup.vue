@@ -13,7 +13,6 @@
           <a-tab
             :id="siblingTabId"
             ref="siblingTab"
-            role="tab"
             :aria-selected="currentTab === 'siblings'"
             :aria-controls="siblingPanelId"
             :tabindex="currentTab === 'siblings' ? 0 : -1"
@@ -23,7 +22,6 @@
           <a-tab
             :id="childrenTabId"
             ref="childrenTab"
-            role="tab"
             :aria-selected="currentTab === 'children'"
             :aria-controls="childrenPanelId"
             :tabindex="currentTab === 'children' ? 0 : -1"
