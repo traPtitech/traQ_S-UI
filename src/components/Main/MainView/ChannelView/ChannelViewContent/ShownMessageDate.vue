@@ -24,7 +24,7 @@ defineProps<{
   z-index: $z-index-shown-message-date;
 }
 .innerContainer {
-  background-color: white;
+  background-color: $theme-background-primary-default;
   border-radius: 24px;
   padding: 4px 16px;
   text-align: center;
