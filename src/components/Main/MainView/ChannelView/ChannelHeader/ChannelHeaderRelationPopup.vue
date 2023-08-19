@@ -131,9 +131,9 @@ defineExpose({ focus })
 }
 
 .tablist {
-  display: grid;
-  grid-template-columns: repeat(2, max-content);
-  grid-gap: 8px;
+  display: flex;
+  gap: 8px;
   margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 </style>
