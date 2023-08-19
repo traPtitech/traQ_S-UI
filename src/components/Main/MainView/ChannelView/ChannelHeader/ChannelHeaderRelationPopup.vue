@@ -118,7 +118,7 @@ defineExpose({ focus })
 .popup {
   @include background-primary;
   @include drop-shadow-default;
-  border-radius: 4px;
+  border-radius: 8px;
 
   position: fixed;
   top: calc(var(--y) + 8px);
