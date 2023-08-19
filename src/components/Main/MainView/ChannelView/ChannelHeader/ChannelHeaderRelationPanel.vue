@@ -67,6 +67,8 @@ const showExpandButton = computed(
   overflow: auto;
   // NOTE: スクロール可能な際に、一番下がちょっと見えるような高さに設定
   max-height: 21.75rem;
+  margin-bottom: -16px;
+  padding-bottom: 16px;
 }
 
 .empty {
