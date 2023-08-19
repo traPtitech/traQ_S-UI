@@ -15,6 +15,7 @@
       :class="$style.icon"
     />
   </button>
+  <!-- NOTE: ボタンから Tab 移動した際に popup のはじめに飛べるように Focus を管理する -->
   <div v-if="isOpen" ref="focusToPopupRef" tabindex="0" @focus="focusToPopup" />
   <channel-header-relation-popup
     v-if="isOpen"

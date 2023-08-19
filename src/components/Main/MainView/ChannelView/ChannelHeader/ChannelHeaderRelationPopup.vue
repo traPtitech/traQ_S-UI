@@ -7,6 +7,7 @@
         :class="$style.popup"
         :style="positionStyle"
       >
+        <!-- NOTE: Popup から Shift + Tab で戻った際にトリガーのボタンに戻れるように Focus を管理する -->
         <div tabindex="0" @focus="emit('focus-return')" />
         <div role="tablist" :class="$style.tablist">
           <a-tab
