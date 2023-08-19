@@ -1,24 +1,26 @@
 <template>
   <div :class="$style.wrap">
-    <div v-if="props.channels.length === 0" :class="$style.empty">
+    <div v-if="isEmpty" :class="$style.empty">
       {{ props.emptyMessage }}
     </div>
 
-    <ul :class="$style.list">
-      <li v-for="channel in displayedChannels" :key="channel.id">
-        <channel-header-relation-list-item
-          ref="listItemsRef"
-          :channel="channel"
-        />
-      </li>
-    </ul>
-    <form-button
-      v-if="showExpandButton"
-      :class="$style.expandButton"
-      color="secondary"
-      label="全て表示"
-      @click="expand"
-    />
+    <template v-else>
+      <ul :class="$style.list">
+        <li v-for="channel in displayedChannels" :key="channel.id">
+          <channel-header-relation-list-item
+            ref="listItemsRef"
+            :channel="channel"
+          />
+        </li>
+      </ul>
+      <form-button
+        v-if="showExpandButton"
+        :class="$style.expandButton"
+        color="secondary"
+        label="全て表示"
+        @click="expand"
+      />
+    </template>
   </div>
 </template>
 
@@ -50,6 +52,7 @@ const expand = () => {
   })
 }
 
+const isEmpty = computed(() => props.channels.length === 0)
 const displayedChannels = computed(() => {
   if (isExpanded.value) {
     return props.channels
