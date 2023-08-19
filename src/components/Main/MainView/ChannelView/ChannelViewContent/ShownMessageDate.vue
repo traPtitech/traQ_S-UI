@@ -20,7 +20,7 @@ defineProps<{
   position: absolute;
   inset: 12px 0 auto;
   margin: 0 auto;
-  width: 152px;
+  width: 140px;
   z-index: $z-index-shown-message-date;
 }
 .innerContainer {
@@ -30,6 +30,5 @@ defineProps<{
   text-align: center;
   font-weight: bold;
   border: 1px solid $theme-ui-tertiary-default;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 </style>

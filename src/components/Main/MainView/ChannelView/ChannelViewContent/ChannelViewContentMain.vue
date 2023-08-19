@@ -193,19 +193,4 @@ const onEndSeparatorIntersected = () => {
   margin: 4px 0;
   contain: content;
 }
-
-.shownMessageDate {
-  position: absolute;
-  inset: 12px 0 auto;
-  margin: 0 auto;
-  padding: 4px 8px;
-  width: 160px;
-  background-color: white;
-  border-radius: 24px;
-  text-align: center;
-  font-weight: bold;
-  border: 1px solid $theme-ui-tertiary-default;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  z-index: $z-index-shown-message-date;
-}
 </style>
