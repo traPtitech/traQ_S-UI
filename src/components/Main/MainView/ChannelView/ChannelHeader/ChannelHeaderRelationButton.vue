@@ -87,6 +87,7 @@ const focusTrigger = () => {
 <style lang="scss" module>
 .trigger {
   @include color-ui-secondary;
+  @include background-primary;
 
   cursor: pointer;
   overflow: hidden;
@@ -96,6 +97,8 @@ const focusTrigger = () => {
   display: grid;
   place-items: center;
   flex-shrink: 0;
+  position: sticky;
+  right: 0;
 
   transition: transform 0.1s;
 
