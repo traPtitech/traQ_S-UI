@@ -72,6 +72,10 @@ const showExpandButton = computed(
   max-height: 21.75rem;
   margin-bottom: -16px;
   padding-bottom: 16px;
+
+  &::-webkit-scrollbar-track {
+    margin-bottom: 16px;
+  }
 }
 
 .empty {
