@@ -95,8 +95,7 @@ export type Config = Readonly<{
   showQrCodeButton?: boolean
   /**
    * 大きなファイルサイズのファイルを送信した際に表示される補足メッセージ
-   * `%s`の部分には「画像」または「ファイル」が入る
-   * @default '大きい%sの共有には別のサービスを利用してください。'
+   * @default '大きいファイルの共有には別のサービスを利用してください。'
    */
   tooLargeFileMessage?: string
   /**

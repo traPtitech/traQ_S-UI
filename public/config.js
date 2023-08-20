@@ -107,7 +107,7 @@
     },
     isRootChannelSelectableAsParentChannel: false,
     showQrCodeButton: true,
-    tooLargeFileMessage: '大きい%sの共有にはDriveを使用してください',
+    tooLargeFileMessage: '大きいファイルの共有にはDriveを使用してください',
     showWidgetCopyButton: true,
     inlineReplyDisableChannels: ['#general', '#random'],
     iosPwaInfoLink: 'https://wiki.trap.jp/SysAd/docs/traQ-S/PWA'
