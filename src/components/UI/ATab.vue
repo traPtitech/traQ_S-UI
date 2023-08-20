@@ -49,7 +49,8 @@ defineExpose({ focus })
     opacity: 0.1;
     @include background-accent-primary;
   }
-  &[aria-selected='false']:hover::after {
+  &[aria-selected='false']:hover::after,
+  &[aria-selected='false']:focus::after {
     opacity: 1;
     @include background-tertiary;
   }
