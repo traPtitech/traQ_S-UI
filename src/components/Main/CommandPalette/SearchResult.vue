@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import type { MessageId } from '/@/types/entity-ids'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import type { PopupSelectorItem } from '/@/components/UI/PopupSelector.vue'
@@ -98,6 +98,12 @@ onMounted(() => {
   // 初回マウント時に取得する
   if (!executed.value) {
     executeSearchForCurrentPage(query.value)
+  }
+})
+onBeforeUnmount(() => {
+  // 検索クエリを空にして Enter を押したときにリセットされるようにする
+  if (query.value === '') {
+    resetPaging()
   }
 })
 
