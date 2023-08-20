@@ -2,7 +2,8 @@ name: Comment preview environment URL
 
 on:
   pull_request:
-    types: [opened]
+    types:
+      - opened
 
 jobs:
   comment:
