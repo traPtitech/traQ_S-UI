@@ -144,7 +144,7 @@ defineExpose({ focus })
   position: fixed;
   top: calc(var(--y) + 8px);
   left: max(16px, var(--x));
-  padding: 16px;
+  padding: 16px 12px;
   // NOTE: 最大でも左右に 16px の余白を残す
   max-width: calc(100% - 16px * 2);
   overflow: hidden;
