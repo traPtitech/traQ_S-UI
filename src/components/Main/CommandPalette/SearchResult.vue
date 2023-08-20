@@ -104,6 +104,7 @@ onBeforeUnmount(() => {
   // 検索クエリを空にして Enter を押したときにリセットされるようにする
   if (query.value === '') {
     resetPaging()
+    noRestore()
   }
 })
 
@@ -125,7 +126,7 @@ const jumpToPage = (page: number) => {
   }
 }
 
-const { didRender } = useKeepScrollPosition(
+const { didRender, noRestore } = useKeepScrollPosition(
   resultListEle,
   computed(() => searchResult.value.map(message => message.id))
 )
