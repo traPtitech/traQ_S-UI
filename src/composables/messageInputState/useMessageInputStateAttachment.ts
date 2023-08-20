@@ -25,8 +25,8 @@ const useMessageInputStateAttachment = (
         file: attachmentFile
       })
     } catch (e) {
-      if (typeof e === 'string') {
-        onError(e)
+      if (e instanceof Error) {
+        onError(e.message)
       }
     }
   }
