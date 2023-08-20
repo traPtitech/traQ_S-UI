@@ -74,7 +74,7 @@ const resize = async (
   }
 }
 
-const FILE_SIZE_LIMIT = 30 * 1000 * 1000 // 30MB
+const FILE_SIZE_LIMIT = 30 * 1024 * 1024 // 30MB
 
 const tooLargeFileMessage =
   window.traQConfig.tooLargeFileMessage ??
