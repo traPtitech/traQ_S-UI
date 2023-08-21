@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.wrap">
+  <div :class="$style.wrap" :data-show-expand-button="showExpandButton">
     <div v-if="isEmpty" :class="$style.empty">
       {{ props.emptyMessage }}
     </div>
@@ -73,8 +73,16 @@ const showExpandButton = computed(
   margin-bottom: -16px;
   padding-bottom: 16px;
 
+  &[data-show-expand-button='false'] {
+    overflow: scroll;
+    margin-right: -4px;
+  }
+
   &::-webkit-scrollbar-track {
     margin-bottom: 16px;
+  }
+  &::-webkit-scrollbar {
+    width: 4px;
   }
 }
 
