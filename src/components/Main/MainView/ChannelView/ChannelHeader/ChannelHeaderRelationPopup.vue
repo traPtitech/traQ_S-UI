@@ -64,6 +64,7 @@ import useBoxSize from '/@/composables/dom/useBoxSize'
 import useRelatedChannels from '/@/composables/useRelatedChannels'
 import { randomString } from '/@/lib/basic/randomString'
 import ATab from '/@/components/UI/ATab.vue'
+import type { Ref } from 'vue'
 
 interface Props {
   rightPosition: Point
@@ -93,6 +94,13 @@ const formattedSiblings = computed(() =>
 )
 
 const tabNames = ['siblings', 'children'] as const
+const tabNameRefs: Record<
+  (typeof tabNames)[number],
+  Ref<InstanceType<typeof ATab> | null>
+> = {
+  siblings: siblingTab,
+  children: childrenTab
+}
 const currentTab = ref<(typeof tabNames)[number]>('siblings')
 const onKeydown = (e: KeyboardEvent) => {
   const index = tabNames.indexOf(currentTab.value)
@@ -110,6 +118,7 @@ const onKeydown = (e: KeyboardEvent) => {
   nextIndex = (nextIndex + tabNames.length) % tabNames.length
 
   currentTab.value = tabNames[nextIndex] ?? currentTab.value
+  tabNameRefs[currentTab.value].value?.focus()
 }
 
 const emit = defineEmits<{
