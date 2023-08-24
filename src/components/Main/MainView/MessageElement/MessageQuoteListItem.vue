@@ -21,13 +21,13 @@
       </div>
       <fold-button
         v-if="oversized"
-        show-icon
-        small
         :is-fold="!isExpanded"
         :class="$style.expandButton"
         :aria-expanded="isExpanded"
         :aria-controls="markdownId"
         background="none"
+        show-icon
+        small
         @click="toggleExpanded"
       />
     </div>
