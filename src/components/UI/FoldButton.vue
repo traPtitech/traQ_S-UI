@@ -27,6 +27,8 @@ withDefaults(defineProps<Props>(), {
 
 <style lang="scss" module>
 .button {
+  @include color-text-primary;
+
   cursor: pointer;
 
   display: flex;
@@ -41,7 +43,6 @@ withDefaults(defineProps<Props>(), {
   line-height: 1.5;
   width: fit-content;
 
-  color: $theme-text-primary-default;
   &[data-background='primary'] {
     background-color: $theme-ui-primary-default;
   }
