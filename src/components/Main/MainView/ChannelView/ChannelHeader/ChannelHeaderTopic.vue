@@ -49,5 +49,8 @@ const topic = computed(() => channelsMap.value.get(props.channelId)?.topic)
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  [data-is-mobile] & {
+    overflow: visible;
+  }
 }
 </style>
