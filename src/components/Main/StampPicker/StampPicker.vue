@@ -63,10 +63,13 @@ import StampPickerPreview from './StampPickerPreview.vue'
 import { useStampPicker } from '/@/store/ui/stampPicker'
 import { ref } from 'vue'
 import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const { selectHandler, isEffectEnabled, currentStampSet, closeStampPicker } =
   useStampPicker()
 const { upsertLocalStampHistory } = useStampHistory()
+
+const { isMobile } = useResponsiveStore()
 
 const animationKeys = ref(new Map<StampId, number>())
 const incrementAnimationKey = (id: StampId) => {
@@ -96,7 +99,10 @@ const onInputStamp = (id: StampId) => {
     animeEffects: selectedAnimeEffects.value
   })
   incrementAnimationKey(id)
-  filterInputRef.value?.focus()
+
+  if (!isMobile.value) {
+    filterInputRef.value?.focus()
+  }
 }
 const onFilterEnter = () => {
   const firstStamp = stamps.value[0]
