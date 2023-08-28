@@ -3,6 +3,7 @@
     <div :class="$style.container">
       <div :class="$style.inputContainer">
         <filter-input
+          ref="filterInputRef"
           v-model="filterState.query"
           :class="$style.filterInput"
           placeholder="スタンプを検索"
@@ -85,6 +86,8 @@ const {
 } = useEffectSelector()
 const { preselected, onHoverStamp } = useStampPreselector()
 
+const filterInputRef = ref<InstanceType<typeof FilterInput> | null>(null)
+
 const onInputStamp = (id: StampId) => {
   upsertLocalStampHistory(id, new Date())
   selectHandler.value({
@@ -93,6 +96,7 @@ const onInputStamp = (id: StampId) => {
     animeEffects: selectedAnimeEffects.value
   })
   incrementAnimationKey(id)
+  filterInputRef.value?.focus()
 }
 const onFilterEnter = () => {
   const firstStamp = stamps.value[0]
