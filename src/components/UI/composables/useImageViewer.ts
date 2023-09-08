@@ -13,7 +13,7 @@ const MIN_ZOOM_LEVEL = -15
 const MAX_ZOOM_LEVEL = 30
 const MIN_PINCH_DISTANCE = 30
 const ROTATE_STEP = 5
-const ZOOM_LEVEL_UNIT = 0.001
+const ZOOM_LEVEL_UNIT = 0.005
 
 export interface State {
   /**
