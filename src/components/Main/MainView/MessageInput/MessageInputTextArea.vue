@@ -150,6 +150,10 @@ $vertical-padding: 8px;
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
+  border: solid 2px transparent;
+  &:focus-within {
+    border-color: $theme-accent-focus-default;
+  }
 }
 .textarea {
   @include color-text-primary;
