@@ -11,7 +11,7 @@
     />
     <last-online
       :class="$style.section"
-      :last-online="isOnline ? Date() : detail?.lastOnline ?? undefined"
+      :last-online="isOnline ? 'オンライン中' : detail?.lastOnline ?? undefined"
     />
   </div>
 </template>
