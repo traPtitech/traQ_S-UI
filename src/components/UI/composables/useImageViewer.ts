@@ -134,6 +134,7 @@ const useMouseWheel = (
       x: e.clientX - left,
       y: e.clientY - top
     })
+    e.preventDefault();
   }
 
   onMounted(() => {
