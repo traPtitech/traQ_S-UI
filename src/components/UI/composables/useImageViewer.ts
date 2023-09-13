@@ -134,7 +134,7 @@ const useMouseWheel = (
       x: e.clientX - left,
       y: e.clientY - top
     })
-    e.preventDefault();
+    e.preventDefault()
   }
 
   onMounted(() => {
@@ -215,10 +215,12 @@ const useTouch = (
     containerEle.value!.addEventListener(
       'touchend',
       _endEvent => {
-        handlingTouch = false
+        if (_endEvent.touches.length === 0) {
+          handlingTouch = false
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        containerEle.value!.removeEventListener('touchmove', onMove)
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          containerEle.value!.removeEventListener('touchmove', onMove)
+        }
       },
       { once: true }
     )
