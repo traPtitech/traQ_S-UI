@@ -15,20 +15,20 @@
         :id="markdownId"
         ref="contentRef"
         :class="[$style.markdownContainer, oversized && $style.oversized]"
-        :data-expanded="isExpanded"
+        :data-expanded="!isFold"
       >
         <markdown-content :content="content" />
       </div>
       <fold-button
         v-if="oversized"
-        :is-fold="!isExpanded"
-        :class="$style.expandButton"
-        :aria-expanded="isExpanded"
+        :is-fold="isFold"
+        :class="$style.foldButton"
+        :aria-expanded="!isFold"
         :aria-controls="markdownId"
         background="none"
         show-icon
         small
-        @click="toggleExpanded"
+        @click="toggleFold"
       />
     </div>
     <message-quote-list-item-footer :class="$style.footer" :message="message" />
@@ -84,7 +84,7 @@ const oversized = computed(
 )
 
 const markdownId = randomString()
-const { value: isExpanded, toggle: toggleExpanded } = useToggle(false)
+const { value: isFold, toggle: toggleFold } = useToggle(false)
 </script>
 
 <style lang="scss" module>
@@ -139,11 +139,11 @@ const { value: isExpanded, toggle: toggleExpanded } = useToggle(false)
 }
 
 $message-max-height: 200px;
-$expand-button-height: 28px;
+$fold-button-height: 28px;
 $mask-image: linear-gradient(
   black,
-  black calc(100% - $expand-button-height * 2),
-  rgba(0, 0, 0, 0.1) calc(100% - $expand-button-height),
+  black calc(100% - $fold-button-height * 2),
+  rgba(0, 0, 0, 0.1) calc(100% - $fold-button-height),
   transparent 100%
 );
 
@@ -159,12 +159,12 @@ $mask-image: linear-gradient(
 
     &[data-expanded='true'] {
       max-height: unset;
-      padding-bottom: $expand-button-height;
+      padding-bottom: $fold-button-height;
     }
   }
 }
 
-.expandButton {
+.foldButton {
   @include color-text-primary;
   cursor: pointer;
   position: absolute;
