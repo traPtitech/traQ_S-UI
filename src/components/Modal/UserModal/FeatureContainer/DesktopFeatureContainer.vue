@@ -8,7 +8,7 @@
       </div>
     </div>
     <link-buttons
-      :home-channel-id="detail?.homeChannel ?? undefined"
+      :home-channel-id="detail?.homeChannel"
       :user-name="user.name"
       show-title
     />
