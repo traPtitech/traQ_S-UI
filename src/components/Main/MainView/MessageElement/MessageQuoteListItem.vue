@@ -84,7 +84,7 @@ const oversized = computed(
 )
 
 const markdownId = randomString()
-const { value: isFold, toggle: toggleFold } = useToggle(false)
+const { value: isFold, toggle: toggleFold } = useToggle(true)
 </script>
 
 <style lang="scss" module>
