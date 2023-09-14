@@ -1,20 +1,13 @@
 <template>
-  <div v-if="hasText" :class="$style.container">
+  <div :class="$style.container">
     <indicator-dot
       :class="$style.dot"
       :data-is-online="$boolAttr(isOnline)"
       :size="size"
       :border-width="borderWidth"
     />
-    <span>{{ statusText }}</span>
+    <span v-if="hasText">{{ statusText }}</span>
   </div>
-  <indicator-dot
-    v-else
-    :class="$style.dot"
-    :data-is-online="$boolAttr(isOnline)"
-    :size="size"
-    :border-width="borderWidth"
-  />
 </template>
 
 <script lang="ts" setup>
