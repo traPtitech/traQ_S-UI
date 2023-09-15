@@ -160,7 +160,7 @@ const useTouch = (
     // タッチによるスクロールの無効化
     moveEvent.preventDefault()
 
-    const touches = moveEvent.targetTouches
+    const touches = moveEvent.touches
 
     if (firstPinchTouches && touches.length >= 2) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -176,7 +176,7 @@ const useTouch = (
   }
 
   const changeTouchMode = (e: TouchEvent) => {
-    const touches = e.targetTouches
+    const touches = e.touches
 
     if (touches.length >= 2) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
