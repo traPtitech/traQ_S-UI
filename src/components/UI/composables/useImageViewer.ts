@@ -300,15 +300,17 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       state.centerDiff.y = firstState!.centerDiff.y + newPoint.y - firstPoint.y
     },
     (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
+      const scaleDiff = newDistance / firstDistance
+
       state.centerDiff.x =
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        firstState!.centerDiff.x + (newMidPoint.x - firstMidPoint.x)
+        newMidPoint.x + (firstState!.centerDiff.x - firstMidPoint.x) * scaleDiff
       state.centerDiff.y =
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        firstState!.centerDiff.y + (newMidPoint.y - firstMidPoint.y)
+        newMidPoint.y + (firstState!.centerDiff.y - firstMidPoint.y) * scaleDiff
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      state.zoomRatio = (firstState!.zoomRatio * newDistance) / firstDistance
+      state.zoomRatio = firstState!.zoomRatio * scaleDiff
     },
     () => {
       firstState = {
