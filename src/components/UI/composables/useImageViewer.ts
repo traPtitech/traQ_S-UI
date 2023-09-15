@@ -11,6 +11,7 @@ import {
 const WHEEL_SCROLL_SCALE_X = 0.5
 const WHEEL_SCROLL_SCALE_Y = 0.5
 const WHEEL_ZOOM_SCALE = 0.1
+const ZOOM_RATIO_MIN = 0.1
 const ROTATE_STEP = 5
 
 export interface State {
@@ -292,7 +293,10 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
     } else if (e.ctrlKey) {
       // トラックパッドでズームジェスチャをする場合は e.ctrlKey == true になる
       const beforeScale = state.zoomRatio
-      const afterScale = state.zoomRatio - e.deltaY * WHEEL_ZOOM_SCALE
+      const afterScale = Math.max(
+        ZOOM_RATIO_MIN,
+        state.zoomRatio - e.deltaY * WHEEL_ZOOM_SCALE
+      )
 
       if (containerEle.value) {
         const cursorCenterDiff = {
@@ -325,7 +329,12 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
     },
     (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
       if (containerEle.value) {
-        const scaleDiff = newDistance / firstDistance
+        const beforeScale = state.zoomRatio
+        const afterScale = Math.max(
+          ZOOM_RATIO_MIN,
+          (state.zoomRatio * newDistance) / firstDistance
+        )
+        const scaleDiff = afterScale / beforeScale
 
         const newMidPointCenterDiff = {
           x: newMidPoint.x - containerEle.value.clientWidth / 2,
