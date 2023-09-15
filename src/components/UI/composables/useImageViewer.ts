@@ -304,10 +304,13 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
     (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
       state.centerDiff.x =
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        firstState!.centerDiff.x + newMidPoint.x - firstMidPoint.x
+        firstState!.centerDiff.x + (newMidPoint.x - firstMidPoint.x)
       state.centerDiff.y =
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        firstState!.centerDiff.y + newMidPoint.y - firstMidPoint.y
+        firstState!.centerDiff.y + (newMidPoint.y - firstMidPoint.y)
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      state.zoomRatio = (firstState!.zoomRatio * newDistance) / firstDistance
     },
     () => {
       firstState = {
