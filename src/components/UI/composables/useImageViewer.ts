@@ -8,6 +8,8 @@ import {
   getAngleBetweenLines
 } from '/@/lib/basic/point'
 
+const WHEEL_SCROLL_SCALE_X = 0.5
+const WHEEL_SCROLL_SCALE_Y = 0.5
 const ROTATE_STEP = 5
 
 export interface State {
@@ -291,7 +293,8 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       // TODO
     } else {
       // トラックパッドでスクロールジェスチャをする場合は e.ctrlKey == false になる
-      // TODO
+      state.centerDiff.x -= e.deltaX * WHEEL_SCROLL_SCALE_X
+      state.centerDiff.y -= e.deltaY * WHEEL_SCROLL_SCALE_Y
     }
   })
 
