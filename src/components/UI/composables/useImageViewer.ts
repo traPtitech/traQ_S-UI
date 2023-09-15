@@ -8,10 +8,6 @@ import {
   getAngleBetweenLines
 } from '/@/lib/basic/point'
 
-const ZOOM_STEP = 1.2
-const MIN_ZOOM_LEVEL = -15
-const MAX_ZOOM_LEVEL = 30
-const MIN_PINCH_DISTANCE = 30
 const ROTATE_STEP = 5
 
 export interface State {
@@ -20,9 +16,9 @@ export interface State {
    */
   centerDiff: Point
   /**
-   * 拡大レベル (0のとき等倍)
+   * 拡大倍率 (1.0のとき等倍)
    */
-  zoomLevel: number
+  zoomRatio: number
   /**
    * 回転 (deg、-180～180)
    */
@@ -53,16 +49,6 @@ const getAngleBetweenLinesFromTouches = (
   touchesA: TwoTouch,
   touchesB: TwoTouch
 ) => getAngleBetweenLines(touchesToPoints(touchesA), touchesToPoints(touchesB))
-
-const getNewZoomLevel = (isZoomIn: boolean, oldZoomLevel: number) => {
-  let r = oldZoomLevel
-  if (isZoomIn) {
-    r++
-  } else {
-    r--
-  }
-  return Math.max(Math.min(r, MAX_ZOOM_LEVEL), MIN_ZOOM_LEVEL)
-}
 
 /**
  * 座標軸は合わせていないので相対的な情報のみ使える
@@ -246,7 +232,7 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       x: 0,
       y: 0
     },
-    zoomLevel: 0,
+    zoomRatio: 1.0,
     rotate: 0
   })
 
@@ -254,11 +240,6 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
    * 基準となるタッチ開始時の状態情報
    */
   let firstState: State | null = null
-
-  /**
-   * 拡大率 (1.0で等倍)
-   */
-  const zoomRatio = computed(() => ZOOM_STEP ** state.zoomLevel)
 
   const styles = reactive({
     imgContainer: computed(() => ({
@@ -270,9 +251,9 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
        * - translate(x,y)のx,yがzoomRatioで割られているのはscale(ratio)のあとに持ってきているので、
        *   座標軸が拡大されているため
        */
-      transform: `translate(-50%, -50%) scale(${zoomRatio.value}) translate(${
-        state.centerDiff.x / zoomRatio.value
-      }px, ${state.centerDiff.y / zoomRatio.value}px)`
+      transform: `translate(-50%, -50%) scale(${state.zoomRatio}) translate(${
+        state.centerDiff.x / state.zoomRatio
+      }px, ${state.centerDiff.y / state.zoomRatio}px)`
     })),
     img: computed(() => ({
       /*
@@ -286,33 +267,6 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
     const d = diff(newPoint, oldPoint)
     state.centerDiff.x -= d.x
     state.centerDiff.y -= d.y
-  }
-  /**
-   * @see https://github.com/traPtitech/traQ_S-UI/pull/1603#discussion_r526882122
-   */
-  const rewriteZoomLevel = (isZoomIn: boolean, point: Point) => {
-    const oldZoomLevel = state.zoomLevel
-    const oldZoomRatio = zoomRatio.value
-
-    const newZoomLevel = getNewZoomLevel(isZoomIn, oldZoomLevel)
-    state.zoomLevel = newZoomLevel
-    const newZoomRatio = zoomRatio.value
-
-    // 左上を原点としたときのviewerの中心点
-    const viewerCenterPoint = {
-      x: (containerEle.value?.offsetWidth ?? 0) / 2,
-      y: (containerEle.value?.offsetHeight ?? 0) / 2
-    }
-
-    // 拡大縮小の中心点のviewerの中心点からのずれ
-    const zoomCenterDiff = diff(point, viewerCenterPoint)
-    // 拡大縮小の中心点の画像の中心点からのずれ
-    const zoomCenterDiffFromImg = diff(zoomCenterDiff, state.centerDiff)
-
-    state.centerDiff.x -=
-      (zoomCenterDiffFromImg.x * (newZoomRatio - oldZoomRatio)) / oldZoomRatio
-    state.centerDiff.y -=
-      (zoomCenterDiffFromImg.y * (newZoomRatio - oldZoomRatio)) / oldZoomRatio
   }
   const rewriteRotate = (newRotate: number) => {
     if (360 < newRotate) {
@@ -335,7 +289,7 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       }
       rewriteRotate(r)
     } else {
-      rewriteZoomLevel(e.deltaY < 0, point)
+      // TODO
     }
   })
 
@@ -349,9 +303,11 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
     },
     (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      state.centerDiff.x = firstState!.centerDiff.x + newMidPoint.x - firstMidPoint.x
+      state.centerDiff.x =
+        firstState!.centerDiff.x + newMidPoint.x - firstMidPoint.x
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      state.centerDiff.y = firstState!.centerDiff.y + newMidPoint.y - firstMidPoint.y
+      state.centerDiff.y =
+        firstState!.centerDiff.y + newMidPoint.y - firstMidPoint.y
     },
     () => {
       firstState = {
@@ -359,7 +315,7 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
           x: state.centerDiff.x,
           y: state.centerDiff.y
         },
-        zoomLevel: state.zoomLevel,
+        zoomRatio: state.zoomRatio,
         rotate: state.rotate
       }
     }
