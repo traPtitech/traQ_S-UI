@@ -253,7 +253,7 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
   /**
    * 基準となるタッチ開始時の状態情報
    */
-  let firstState: State = structuredClone(state)
+  let firstState: State | null = null
 
   /**
    * 拡大率 (1.0で等倍)
@@ -348,7 +348,14 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       // TODO
     },
     () => {
-      firstState = structuredClone(state)
+      firstState = {
+        centerDiff: {
+          x: state.centerDiff.x,
+          y: state.centerDiff.y
+        },
+        zoomLevel: state.zoomLevel,
+        rotate: state.rotate
+      }
     }
   )
 
