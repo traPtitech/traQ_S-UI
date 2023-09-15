@@ -300,17 +300,30 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       state.centerDiff.y = firstState!.centerDiff.y + newPoint.y - firstPoint.y
     },
     (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
-      const scaleDiff = newDistance / firstDistance
+      if (containerEle.value) {
+        const scaleDiff = newDistance / firstDistance
 
-      state.centerDiff.x =
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        newMidPoint.x + (firstState!.centerDiff.x - firstMidPoint.x) * scaleDiff
-      state.centerDiff.y =
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        newMidPoint.y + (firstState!.centerDiff.y - firstMidPoint.y) * scaleDiff
+        const newMidPointCenterDiff = {
+          x: newMidPoint.x - containerEle.value.clientWidth / 2,
+          y: newMidPoint.y - containerEle.value.clientHeight / 2
+        }
+        const firstMidPointCenterDiff = {
+          x: firstMidPoint.x - containerEle.value.clientWidth / 2,
+          y: firstMidPoint.y - containerEle.value.clientHeight / 2
+        }
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      state.zoomRatio = firstState!.zoomRatio * scaleDiff
+        state.centerDiff.x =
+          newMidPointCenterDiff.x +
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          (firstState!.centerDiff.x - firstMidPointCenterDiff.x) * scaleDiff
+        state.centerDiff.y =
+          newMidPointCenterDiff.y +
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          (firstState!.centerDiff.y - firstMidPointCenterDiff.y) * scaleDiff
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        state.zoomRatio = firstState!.zoomRatio * scaleDiff
+      }
     },
     () => {
       firstState = {
