@@ -170,10 +170,13 @@ $mask-image: linear-gradient(
   position: absolute;
   left: 8px;
   bottom: 0;
-  &:hover {
-    @include background-tertiary;
+
+  @media (any-hover: hover) {
+    &:hover {
+      @include background-tertiary;
+    }
   }
-  &:focus {
+  &:focus-visible {
     @include background-tertiary;
   }
 }
