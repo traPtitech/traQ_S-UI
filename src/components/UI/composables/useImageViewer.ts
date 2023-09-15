@@ -302,11 +302,11 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       state.centerDiff.y = firstState!.centerDiff.y + newPoint.y - firstPoint.y
     },
     (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       state.centerDiff.x =
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         firstState!.centerDiff.x + newMidPoint.x - firstMidPoint.x
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       state.centerDiff.y =
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         firstState!.centerDiff.y + newMidPoint.y - firstMidPoint.y
     },
     () => {
