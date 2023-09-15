@@ -11,7 +11,25 @@
       :user-id="message.userId"
     />
     <div :class="$style.messageContents">
-      <markdown-content :content="content" />
+      <div
+        :id="markdownId"
+        ref="contentRef"
+        :class="[$style.markdownContainer, oversized && $style.oversized]"
+        :data-expanded="!isFold"
+      >
+        <markdown-content :content="content" />
+      </div>
+      <fold-button
+        v-if="oversized"
+        :is-fold="isFold"
+        :class="$style.foldButton"
+        :aria-expanded="!isFold"
+        :aria-controls="markdownId"
+        background="none"
+        show-icon
+        small
+        @click="toggleFold"
+      />
     </div>
     <message-quote-list-item-footer :class="$style.footer" :message="message" />
   </div>
@@ -24,12 +42,16 @@
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useChannelsStore } from '/@/store/entities/channels'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
+import useToggle from '/@/composables/utils/useToggle'
+import FoldButton from '/@/components/UI/FoldButton.vue'
+import { randomString } from '/@/lib/basic/randomString'
+import useBoxSize from '/@/composables/dom/useBoxSize'
 
 const props = defineProps<{
   parentMessageChannelId: ChannelId | DMChannelId
@@ -52,6 +74,17 @@ const shouldShow = computed(
 const content = computed(
   () => renderedContentMap.value.get(props.messageId) ?? ''
 )
+
+const MAX_HEIGHT = 200
+
+const contentRef = ref<HTMLDivElement | null>(null)
+const { height } = useBoxSize(contentRef)
+const oversized = computed(
+  () => height.value !== undefined && height.value >= MAX_HEIGHT
+)
+
+const markdownId = randomString()
+const { value: isFold, toggle: toggleFold } = useToggle(true)
 </script>
 
 <style lang="scss" module>
@@ -98,9 +131,53 @@ const content = computed(
   padding-top: 4px;
   padding-left: 8px;
   min-width: 0;
+  position: relative;
 
   pre {
     white-space: pre-wrap;
+  }
+}
+
+$message-max-height: 200px;
+$fold-button-height: 28px;
+$mask-image: linear-gradient(
+  black,
+  black calc(100% - $fold-button-height * 2),
+  rgba(0, 0, 0, 0.1) calc(100% - $fold-button-height),
+  transparent 100%
+);
+
+.markdownContainer {
+  &.oversized {
+    &[data-expanded='false'] {
+      max-height: $message-max-height;
+      overflow: hidden;
+      overflow: clip;
+      -webkit-mask-image: $mask-image;
+      mask-image: $mask-image;
+    }
+
+    &[data-expanded='true'] {
+      max-height: unset;
+      padding-bottom: $fold-button-height;
+    }
+  }
+}
+
+.foldButton {
+  @include color-text-primary;
+  cursor: pointer;
+  position: absolute;
+  left: 8px;
+  bottom: 0;
+
+  @media (any-hover: hover) {
+    &:hover {
+      @include background-tertiary;
+    }
+  }
+  &:focus-visible {
+    @include background-tertiary;
   }
 }
 
