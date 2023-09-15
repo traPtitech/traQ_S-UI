@@ -10,7 +10,7 @@ import {
 
 const WHEEL_SCROLL_SCALE_X = 0.5
 const WHEEL_SCROLL_SCALE_Y = 0.5
-const WHEEL_ZOOM_SCALE = 0.1
+const WHEEL_ZOOM_SCALE = 0.05
 const ZOOM_RATIO_MIN = 0.1
 const ROTATE_STEP = 5
 
