@@ -342,10 +342,16 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
   useTouch(
     containerEle,
     (newPoint, firstPoint) => {
-      // TODO
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      state.centerDiff.x = firstState!.centerDiff.x + newPoint.x - firstPoint.x
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      state.centerDiff.y = firstState!.centerDiff.y + newPoint.y - firstPoint.y
     },
     (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
-      // TODO
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      state.centerDiff.x = firstState!.centerDiff.x + newMidPoint.x - firstMidPoint.x
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      state.centerDiff.y = firstState!.centerDiff.y + newMidPoint.y - firstMidPoint.y
     },
     () => {
       firstState = {
