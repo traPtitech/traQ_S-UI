@@ -299,9 +299,10 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       )
 
       if (containerEle.value) {
+        const containerRect = containerEle.value.getBoundingClientRect()
         const cursorCenterDiff = {
-          x: e.clientX - containerEle.value.clientWidth / 2,
-          y: e.clientY - containerEle.value.clientHeight / 2
+          x: e.clientX - containerRect.x - containerRect.width / 2,
+          y: e.clientY - containerRect.y - containerRect.height / 2
         }
 
         state.centerDiff.x =
@@ -336,13 +337,14 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
         )
         const scaleDiff = afterScale / beforeScale
 
+        const containerRect = containerEle.value.getBoundingClientRect()
         const newMidPointCenterDiff = {
-          x: newMidPoint.x - containerEle.value.clientWidth / 2,
-          y: newMidPoint.y - containerEle.value.clientHeight / 2
+          x: newMidPoint.x - containerRect.x - containerRect.width / 2,
+          y: newMidPoint.y - containerRect.y - containerRect.height / 2
         }
         const firstMidPointCenterDiff = {
-          x: firstMidPoint.x - containerEle.value.clientWidth / 2,
-          y: firstMidPoint.y - containerEle.value.clientHeight / 2
+          x: firstMidPoint.x - containerRect.x - containerRect.width / 2,
+          y: firstMidPoint.y - containerRect.y - containerRect.height / 2
         }
 
         state.centerDiff.x =
