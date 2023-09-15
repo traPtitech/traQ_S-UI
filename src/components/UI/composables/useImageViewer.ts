@@ -10,6 +10,7 @@ import {
 
 const WHEEL_SCROLL_SCALE_X = 0.5
 const WHEEL_SCROLL_SCALE_Y = 0.5
+const WHEEL_ZOOM_SCALE = 0.1
 const ROTATE_STEP = 5
 
 export interface State {
@@ -288,9 +289,25 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
         r -= ROTATE_STEP
       }
       rewriteRotate(r)
-    } else if(e.ctrlKey) {
+    } else if (e.ctrlKey) {
       // トラックパッドでズームジェスチャをする場合は e.ctrlKey == true になる
-      // TODO
+      const beforeScale = state.zoomRatio
+      const afterScale = state.zoomRatio - e.deltaY * WHEEL_ZOOM_SCALE
+
+      if (containerEle.value) {
+        const cursorCenterDiff = {
+          x: e.clientX - containerEle.value.clientWidth / 2,
+          y: e.clientY - containerEle.value.clientHeight / 2
+        }
+
+        state.centerDiff.x =
+          cursorCenterDiff.x +
+          ((state.centerDiff.x - cursorCenterDiff.x) * afterScale) / beforeScale
+        state.centerDiff.y =
+          cursorCenterDiff.y +
+          ((state.centerDiff.y - cursorCenterDiff.y) * afterScale) / beforeScale
+        state.zoomRatio = afterScale
+      }
     } else {
       // トラックパッドでスクロールジェスチャをする場合は e.ctrlKey == false になる
       state.centerDiff.x -= e.deltaX * WHEEL_SCROLL_SCALE_X
