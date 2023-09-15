@@ -208,7 +208,7 @@ const useTouch = (
       firstDistance,
       getTouchesMidpoint(...newPinchTouches),
       getTouchesMidpoint(...firstPinchTouches),
-      getAngleBetweenLinesFromTouches(newPinchTouches, firstPinchTouches)
+      getAngleBetweenLinesFromTouches(firstPinchTouches, newPinchTouches)
     )
 
     return newPinchTouches
@@ -286,7 +286,11 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
         r -= ROTATE_STEP
       }
       rewriteRotate(r)
+    } else if(e.ctrlKey) {
+      // トラックパッドでズームジェスチャをする場合は e.ctrlKey == true になる
+      // TODO
     } else {
+      // トラックパッドでスクロールジェスチャをする場合は e.ctrlKey == false になる
       // TODO
     }
   })
