@@ -248,12 +248,7 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
   const styles = reactive({
     imgContainer: computed(() => ({
       /*
-       * - translate(-50%, -50%)は中心にもってくるために必要
-       *   (`position: relative; top: 50%; left: 50%`)
-       * - translate(x, y)をscale(ratio)の前に持ってくると画像の位置のずれも拡大されてしまうので、
-       *   scale(ratio)のあとにおく
-       * - translate(x,y)のx,yがzoomRatioで割られているのはscale(ratio)のあとに持ってきているので、
-       *   座標軸が拡大されているため
+       * scale(ratio)による拡縮後にtranslate(x, y)による移動
        */
       transform: `translate(${state.centerDiff.x}px, ${state.centerDiff.y}px) scale(${state.zoomRatio})`
     })),
