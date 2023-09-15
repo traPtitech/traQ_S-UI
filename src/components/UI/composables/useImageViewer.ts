@@ -251,7 +251,7 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
        * - translate(x,y)のx,yがzoomRatioで割られているのはscale(ratio)のあとに持ってきているので、
        *   座標軸が拡大されているため
        */
-      transform: `translate(-50%, -50%) scale(${state.zoomRatio}) translate(${
+      transform: `scale(${state.zoomRatio}) translate(${
         state.centerDiff.x / state.zoomRatio
       }px, ${state.centerDiff.y / state.zoomRatio}px)`
     })),

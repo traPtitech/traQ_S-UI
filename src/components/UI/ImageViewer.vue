@@ -32,9 +32,6 @@ const { styles } = useImageViewer(containerEle)
   overflow: hidden;
 }
 .imgContainer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
   height: 100%;
   width: 100%;
   user-select: none;
