@@ -66,10 +66,10 @@ const getNewZoomLevel = (isZoomIn: boolean, oldZoomLevel: number) => {
 
 /**
  * 座標軸は合わせていないので相対的な情報のみ使える
- * @param newPoint 移動前の点
- * @param oldPoint 移動後の点
+ * @param newPoint 現在の点
+ * @param firstPoint タッチ開始時の点
  */
-type MoveHandler = (newPoint: Point, oldPoint: Point) => void
+type MoveHandler = (newPoint: Point, firstPoint: Point) => void
 
 /**
  * @param point スクロールをした点
@@ -78,16 +78,22 @@ type WheelHandler = (wheelEvent: WheelEvent, point: Point) => void
 
 /**
  * @param newDistance 新しい指二本の間の距離
- * @param oldDistance 元の指二本の間の距離
- * @param midpoint 元と新しい指四本の中点
- * @param rotateAngle 変化した角度
+ * @param firstDistance タッチ開始時の指二本の間の距離
+ * @param newMidpoint 新しい指二本の中点
+ * @param firstMidpoint タッチ開始時の指二本の中点
+ * @param rotateAngle タッチ開始時から変化した角度
  */
 type PinchHandler = (
   newDistance: number,
-  oldDistance: number,
-  midpoint: Point,
+  firstDistance: number,
+  newMidpoint: Point,
+  firstMidpoint: Point,
   rotateAngle: number
 ) => void
+
+/**
+ */
+type ChangeTouchModeHandler = () => void
 
 const useMouseMove = (
   containerEle: Ref<HTMLElement | undefined>,
@@ -148,89 +154,89 @@ const useMouseWheel = (
 const useTouch = (
   containerEle: Ref<HTMLElement | undefined>,
   moveHandler: MoveHandler,
-  pinchHandler: PinchHandler
+  pinchHandler: PinchHandler,
+  changeTouchModeHandler: ChangeTouchModeHandler
 ) => {
-  let handlingTouch = false
+  let firstMoveTouch: Touch | null = null
+  let firstPinchTouches: TwoTouch | null = null
+
   const onTouchStart = (_startEvent: TouchEvent) => {
-    if (handlingTouch) return
-    handlingTouch = true
+    changeTouchMode(_startEvent)
+  }
+  const onTouchEnd = (_endEvent: TouchEvent) => {
+    changeTouchMode(_endEvent)
+  }
+  const onMove = (moveEvent: TouchEvent) => {
+    // タッチによるスクロールの無効化
+    moveEvent.preventDefault()
 
-    let lastMoveTouch: Touch | null = null
-    let lastPinchTouches: TwoTouch | null = null
+    const touches = moveEvent.targetTouches
 
-    const onMove = (moveEvent: TouchEvent) => {
-      // タッチによるスクロールの無効化
-      moveEvent.preventDefault()
-
-      const touches = moveEvent.targetTouches
-
-      if (touches.length >= 2) {
-        lastMoveTouch = null
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        lastPinchTouches = pinch([touches[0]!, touches[1]!], lastPinchTouches)
-      } else if (touches.length > 0) {
-        lastMoveTouch = move(touches, lastMoveTouch)
-        lastPinchTouches = null
-      }
-    }
-
-    const move = (targetTouches: TouchList, lastMoveTouch: Touch | null) => {
+    if (firstPinchTouches && touches.length >= 2) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const newMoveTouch = targetTouches[0]!
-      if (lastMoveTouch === null) return newMoveTouch
+      const newPinchTouches: TwoTouch = [touches[0]!, touches[1]!]
 
-      moveHandler(clientXYToPoint(newMoveTouch), clientXYToPoint(lastMoveTouch))
+      pinch(newPinchTouches, firstPinchTouches)
+    } else if (firstMoveTouch && touches.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const newMoveTouch: Touch = touches[0]!
 
-      return newMoveTouch
+      move(newMoveTouch, firstMoveTouch)
     }
-    const pinch = (
-      newPinchTouches: TwoTouch,
-      lastPinchTouches: TwoTouch | null
-    ) => {
-      if (lastPinchTouches === null) return newPinchTouches
+  }
 
-      let newDistance = touchesToDistance(newPinchTouches)
-      const oldDistance = touchesToDistance(lastPinchTouches)
+  const changeTouchMode = (e: TouchEvent) => {
+    const touches = e.targetTouches
 
-      // 変化が一定距離以下の場合は拡大率の変化はなしにする
-      if (Math.abs(newDistance - oldDistance) < MIN_PINCH_DISTANCE) {
-        newDistance = oldDistance
-        newPinchTouches = lastPinchTouches
-      }
+    if (touches.length >= 2) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const newPinchTouches: TwoTouch = [touches[0]!, touches[1]!]
 
-      pinchHandler(
-        newDistance,
-        oldDistance,
-        getTouchesMidpoint(...newPinchTouches, ...lastPinchTouches),
-        getAngleBetweenLinesFromTouches(newPinchTouches, lastPinchTouches)
-      )
+      firstMoveTouch = null
+      firstPinchTouches = newPinchTouches
+    } else if (touches.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const newMoveTouch: Touch = touches[0]!
 
-      return newPinchTouches
+      firstMoveTouch = newMoveTouch
+      firstPinchTouches = null
+    } else {
+      firstMoveTouch = null
+      firstPinchTouches = null
     }
+    changeTouchModeHandler()
+  }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    containerEle.value!.addEventListener('touchmove', onMove)
+  const move = (newMoveTouch: Touch, firstMoveTouch: Touch) => {
+    moveHandler(clientXYToPoint(newMoveTouch), clientXYToPoint(firstMoveTouch))
+  }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    containerEle.value!.addEventListener(
-      'touchend',
-      _endEvent => {
-        if (_endEvent.touches.length === 0) {
-          handlingTouch = false
+  const pinch = (newPinchTouches: TwoTouch, firstPinchTouches: TwoTouch) => {
+    if (firstPinchTouches === null) return newPinchTouches
 
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          containerEle.value!.removeEventListener('touchmove', onMove)
-        }
-      },
-      { once: true }
+    const newDistance = touchesToDistance(newPinchTouches)
+    const firstDistance = touchesToDistance(firstPinchTouches)
+
+    pinchHandler(
+      newDistance,
+      firstDistance,
+      getTouchesMidpoint(...newPinchTouches),
+      getTouchesMidpoint(...firstPinchTouches),
+      getAngleBetweenLinesFromTouches(newPinchTouches, firstPinchTouches)
     )
+
+    return newPinchTouches
   }
 
   onMounted(() => {
     containerEle.value?.addEventListener('touchstart', onTouchStart)
+    containerEle.value?.addEventListener('touchmove', onMove)
+    containerEle.value?.addEventListener('touchend', onTouchEnd)
   })
   onBeforeUnmount(() => {
     containerEle.value?.removeEventListener('touchstart', onTouchStart)
+    containerEle.value?.removeEventListener('touchmove', onMove)
+    containerEle.value?.removeEventListener('touchend', onTouchEnd)
   })
 }
 
@@ -243,6 +249,11 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
     zoomLevel: 0,
     rotate: 0
   })
+
+  /**
+   * 基準となるタッチ開始時の状態情報
+   */
+  let firstState: State = structuredClone(state)
 
   /**
    * 拡大率 (1.0で等倍)
@@ -330,15 +341,14 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
 
   useTouch(
     containerEle,
-    (newPoint, oldPoint) => {
-      rewriteCenterDiff(newPoint, oldPoint)
+    (newPoint, firstPoint) => {
+      // TODO
     },
-    (newDistance, oldDistance, centerPoint, rotateAngle) => {
-      rewriteRotate(state.rotate - rotateAngle)
-
-      // 変化がないときは処理しない(oldDistanceを変更しないのはuseTouch内で実装)
-      if (newDistance === oldDistance) return
-      rewriteZoomLevel(newDistance - oldDistance >= 0, centerPoint)
+    (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
+      // TODO
+    },
+    () => {
+      firstState = structuredClone(state)
     }
   )
 
