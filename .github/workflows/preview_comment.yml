@@ -1,6 +1,7 @@
 name: Comment preview environment URL
 
 on:
+  # pull_request_target を使うにあたって https://securitylab.github.com/research/github-actions-preventing-pwn-requests/ の一読を推奨
   pull_request_target:
     types:
       - opened
