@@ -1,7 +1,8 @@
 name: preview
 
 on:
-  pull_request:
+  # pull_request_target を使うにあたって https://securitylab.github.com/research/github-actions-preventing-pwn-requests/ の一読を推奨
+  pull_request_target:
 
 permissions:
   packages: write
@@ -10,14 +11,17 @@ env:
   IMAGE_NAME: traq-ui
 
 jobs:
-  build-preview--image:
+  build-preview-image:
     name: Build Preview Image
     runs-on: ubuntu-latest
     steps:
       - name: Set PR_NUMBER env
-        run: echo "PR_NUMBER=$(echo $GITHUB_REF | sed -e 's/[^0-9]//g')" >> $GITHUB_ENV
+        run: echo "PR_NUMBER=${{ github.event.number }}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -36,6 +40,7 @@ jobs:
           username: traptitech
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # 隔離された環境でビルドを行い、write perm付きトークンをユーザーのコードに与えないよう注意すること
       - name: Build
         uses: docker/build-push-action@v4
         with:
