@@ -10,7 +10,7 @@ import {
 
 const WHEEL_SCROLL_SCALE_X = 0.5
 const WHEEL_SCROLL_SCALE_Y = 0.5
-const WHEEL_ZOOM_SCALE = 0.05
+const WHEEL_ZOOM_SCALE = 0.01
 const ZOOM_RATIO_MIN = 0.1
 const ROTATE_STEP = 5
 
@@ -290,7 +290,8 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       const beforeScale = state.zoomRatio
       const afterScale = Math.max(
         ZOOM_RATIO_MIN,
-        state.zoomRatio - e.deltaY * WHEEL_ZOOM_SCALE
+        // ratio * exp(a) * exp(b) == ratio * exp(a+b) より deltaYの総和に対応して一定の拡縮
+        state.zoomRatio * Math.exp(-e.deltaY * WHEEL_ZOOM_SCALE)
       )
 
       if (containerEle.value) {
