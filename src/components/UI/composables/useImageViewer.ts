@@ -8,6 +8,17 @@ import {
   getAngleBetweenLines
 } from '/@/lib/basic/point'
 
+const WHEEL_SCALE_DELTAX = new Map<number, number>([
+  [0x00, 1], // WheelEvent.DOM_DELTA_PIXEL
+  [0x01, 10], // WheelEvent.DOM_DELTA_LINE
+  [0x02, 20] // WheelEvent.DOM_DELTA_PAGE
+])
+const WHEEL_SCALE_DELTAY = new Map<number, number>([
+  [0x00, 1], // WheelEvent.DOM_DELTA_PIXEL
+  [0x01, 10], // WheelEvent.DOM_DELTA_LINE
+  [0x02, 20] // WheelEvent.DOM_DELTA_PAGE
+])
+
 const WHEEL_SCROLL_SCALE_X = 0.5
 const WHEEL_SCROLL_SCALE_Y = 0.5
 const WHEEL_ZOOM_SCALE = 0.01
@@ -277,9 +288,16 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
   })
 
   useMouseWheel(containerEle, (e, point) => {
+    const deltaXScale = WHEEL_SCALE_DELTAX.get(e.deltaMode)
+    const deltaYScale = WHEEL_SCALE_DELTAY.get(e.deltaMode)
+    if (deltaXScale === undefined || deltaYScale === undefined) return
+
+    const deltaX = e.deltaX * deltaXScale
+    const deltaY = e.deltaY * deltaYScale
+
     if (e.altKey || e.metaKey) {
       let r = state.rotate
-      if (e.deltaY > 0) {
+      if (deltaY > 0) {
         r += ROTATE_STEP
       } else {
         r -= ROTATE_STEP
@@ -291,7 +309,7 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       const afterScale = Math.max(
         ZOOM_RATIO_MIN,
         // ratio * exp(a) * exp(b) == ratio * exp(a+b) より deltaYの総和に対応して一定の拡縮
-        state.zoomRatio * Math.exp(-e.deltaY * WHEEL_ZOOM_SCALE)
+        state.zoomRatio * Math.exp(-deltaY * WHEEL_ZOOM_SCALE)
       )
 
       if (containerEle.value) {
@@ -311,8 +329,8 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       }
     } else {
       // トラックパッドでスクロールジェスチャをする場合は e.ctrlKey == false になる
-      state.centerDiff.x -= e.deltaX * WHEEL_SCROLL_SCALE_X
-      state.centerDiff.y -= e.deltaY * WHEEL_SCROLL_SCALE_Y
+      state.centerDiff.x -= deltaX * WHEEL_SCROLL_SCALE_X
+      state.centerDiff.y -= deltaY * WHEEL_SCROLL_SCALE_Y
     }
   })
 
