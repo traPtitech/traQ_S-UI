@@ -304,6 +304,26 @@ const useImageViewer = (
     return newCenterDiff
   }
 
+  /**
+   * centerDiffを移動範囲制限を適用して変更
+   * @return 移動範囲制限が適用されたかどうか
+   */
+  const rewriteCenterDiffWithClamp = (newCenterDiff: Point, scale: number) => {
+    state.centerDiff = clampCenterDiff(newCenterDiff, scale)
+    return (
+      state.centerDiff.x !== newCenterDiff.x ||
+      state.centerDiff.y !== newCenterDiff.y
+    )
+  }
+  /**
+   * zoomRatioを範囲制限を適用して変更
+   * @return 範囲制限が適用されたかどうか
+   */
+  const rewriteZoomRatioWithClamp = (scale: number) => {
+    state.zoomRatio = Math.max(ZOOM_RATIO_MIN, scale)
+    return state.zoomRatio !== scale
+  }
+
   useMouseMove(containerEle, (newPoint, oldPoint) => {
     rewriteCenterDiff(newPoint, oldPoint)
   })
@@ -358,24 +378,20 @@ const useImageViewer = (
   useTouch(
     containerEle,
     (newPoint, firstPoint) => {
-      state.centerDiff = clampCenterDiff(
-        {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          x: firstState!.centerDiff.x + newPoint.x - firstPoint.x,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          y: firstState!.centerDiff.y + newPoint.y - firstPoint.y
-        },
-        state.zoomRatio
-      )
+      const newCenterDiff = {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        x: firstState!.centerDiff.x + newPoint.x - firstPoint.x,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        y: firstState!.centerDiff.y + newPoint.y - firstPoint.y
+      }
+      rewriteCenterDiffWithClamp(newCenterDiff, state.zoomRatio)
     },
     (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
       if (containerEle.value) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const beforeScale = firstState!.zoomRatio
-        const afterScale = Math.max(
-          ZOOM_RATIO_MIN,
-          (beforeScale * newDistance) / firstDistance
-        )
+        rewriteZoomRatioWithClamp((beforeScale * newDistance) / firstDistance)
+        const afterScale = state.zoomRatio
         const scaleDiff = afterScale / beforeScale
 
         const containerRect = containerEle.value.getBoundingClientRect()
@@ -388,22 +404,18 @@ const useImageViewer = (
           y: firstMidPoint.y - containerRect.y - containerRect.height / 2
         }
 
-        state.centerDiff = clampCenterDiff(
-          {
-            x:
-              newMidPointCenterDiff.x +
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              (firstState!.centerDiff.x - firstMidPointCenterDiff.x) *
-                scaleDiff,
-            y:
-              newMidPointCenterDiff.y +
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              (firstState!.centerDiff.y - firstMidPointCenterDiff.y) * scaleDiff
-          },
-          afterScale
-        )
+        const newCenterDiff = {
+          x:
+            newMidPointCenterDiff.x +
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            (firstState!.centerDiff.x - firstMidPointCenterDiff.x) * scaleDiff,
+          y:
+            newMidPointCenterDiff.y +
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            (firstState!.centerDiff.y - firstMidPointCenterDiff.y) * scaleDiff
+        }
 
-        state.zoomRatio = afterScale
+        rewriteCenterDiffWithClamp(newCenterDiff, afterScale)
       }
     },
     () => {
