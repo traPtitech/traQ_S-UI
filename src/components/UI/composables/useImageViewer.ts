@@ -243,7 +243,7 @@ const useTouch = (
 
 const useImageViewer = (
   containerEle: Ref<HTMLElement | undefined>,
-  imgEle: Ref<HTMLElement | undefined>
+  imgEle: Ref<HTMLImageElement | undefined>
 ) => {
   const state: State = reactive({
     centerDiff: {
@@ -291,15 +291,12 @@ const useImageViewer = (
 
     const imgRect = imgEle.value.getBoundingClientRect()
 
+    const width = imgEle.value.width * state.zoomRatio
+    const height = imgEle.value.height * state.zoomRatio
+
     const newCenterDiff: Point = {
-      x: Math.max(
-        -imgRect.width / 2,
-        Math.min(imgRect.width / 2, centerDiff.x)
-      ),
-      y: Math.max(
-        -imgRect.height / 2,
-        Math.min(imgRect.height / 2, centerDiff.y)
-      )
+      x: Math.max(-width / 2, Math.min(width / 2, centerDiff.x)),
+      y: Math.max(-height / 2, Math.min(height / 2, centerDiff.y))
     }
     return newCenterDiff
   }
