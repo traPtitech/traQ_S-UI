@@ -344,10 +344,11 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
     },
     (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
       if (containerEle.value) {
-        const beforeScale = state.zoomRatio
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const beforeScale = firstState!.zoomRatio
         const afterScale = Math.max(
           ZOOM_RATIO_MIN,
-          (state.zoomRatio * newDistance) / firstDistance
+          (beforeScale * newDistance) / firstDistance
         )
         const scaleDiff = afterScale / beforeScale
 
@@ -370,8 +371,7 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           (firstState!.centerDiff.y - firstMidPointCenterDiff.y) * scaleDiff
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        state.zoomRatio = firstState!.zoomRatio * scaleDiff
+        state.zoomRatio = afterScale
       }
     },
     () => {
