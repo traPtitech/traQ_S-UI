@@ -286,7 +286,7 @@ const useImageViewer = (
     state.rotate = newRotate
   }
 
-  const clampCenterDiff = (centerDiff: Point, scale: number) => {
+  const clampCenterDiff = (centerDiff: Point) => {
     if (!imgEle.value) return centerDiff
 
     const imgRect = imgEle.value.getBoundingClientRect()
@@ -308,8 +308,8 @@ const useImageViewer = (
    * centerDiffを移動範囲制限を適用して変更
    * @return 移動範囲制限が適用されたかどうか
    */
-  const rewriteCenterDiffWithClamp = (newCenterDiff: Point, scale: number) => {
-    state.centerDiff = clampCenterDiff(newCenterDiff, scale)
+  const rewriteCenterDiffWithClamp = (newCenterDiff: Point) => {
+    state.centerDiff = clampCenterDiff(newCenterDiff)
     return (
       state.centerDiff.x !== newCenterDiff.x ||
       state.centerDiff.y !== newCenterDiff.y
@@ -384,7 +384,7 @@ const useImageViewer = (
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         y: firstState!.centerDiff.y + newPoint.y - firstPoint.y
       }
-      rewriteCenterDiffWithClamp(newCenterDiff, state.zoomRatio)
+      rewriteCenterDiffWithClamp(newCenterDiff)
     },
     (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
       if (containerEle.value) {
@@ -415,7 +415,7 @@ const useImageViewer = (
             (firstState!.centerDiff.y - firstMidPointCenterDiff.y) * scaleDiff
         }
 
-        rewriteCenterDiffWithClamp(newCenterDiff, afterScale)
+        rewriteCenterDiffWithClamp(newCenterDiff)
       }
     },
     () => {
