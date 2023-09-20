@@ -283,6 +283,24 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
     state.rotate = newRotate
   }
 
+  const clampCenterDiff = (
+    centerDiff: Point,
+    scale: number,
+    containerRect: DOMRect
+  ) => {
+    const newCenterDiff: Point = {
+      x: Math.max(
+        (-containerRect.width * scale) / 2,
+        Math.min((containerRect.width * scale) / 2, centerDiff.x)
+      ),
+      y: Math.max(
+        (-containerRect.height * scale) / 2,
+        Math.min((containerRect.height * scale) / 2, centerDiff.y)
+      )
+    }
+    return newCenterDiff
+  }
+
   useMouseMove(containerEle, (newPoint, oldPoint) => {
     rewriteCenterDiff(newPoint, oldPoint)
   })
@@ -337,10 +355,19 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
   useTouch(
     containerEle,
     (newPoint, firstPoint) => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      state.centerDiff.x = firstState!.centerDiff.x + newPoint.x - firstPoint.x
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      state.centerDiff.y = firstState!.centerDiff.y + newPoint.y - firstPoint.y
+      if (containerEle.value) {
+        const containerRect = containerEle.value.getBoundingClientRect()
+        state.centerDiff = clampCenterDiff(
+          {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            x: firstState!.centerDiff.x + newPoint.x - firstPoint.x,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            y: firstState!.centerDiff.y + newPoint.y - firstPoint.y
+          },
+          state.zoomRatio,
+          containerRect
+        )
+      }
     },
     (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
       if (containerEle.value) {
@@ -362,14 +389,21 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
           y: firstMidPoint.y - containerRect.y - containerRect.height / 2
         }
 
-        state.centerDiff.x =
-          newMidPointCenterDiff.x +
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          (firstState!.centerDiff.x - firstMidPointCenterDiff.x) * scaleDiff
-        state.centerDiff.y =
-          newMidPointCenterDiff.y +
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          (firstState!.centerDiff.y - firstMidPointCenterDiff.y) * scaleDiff
+        state.centerDiff = clampCenterDiff(
+          {
+            x:
+              newMidPointCenterDiff.x +
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              (firstState!.centerDiff.x - firstMidPointCenterDiff.x) *
+                scaleDiff,
+            y:
+              newMidPointCenterDiff.y +
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              (firstState!.centerDiff.y - firstMidPointCenterDiff.y) * scaleDiff
+          },
+          afterScale,
+          containerRect
+        )
 
         state.zoomRatio = afterScale
       }
