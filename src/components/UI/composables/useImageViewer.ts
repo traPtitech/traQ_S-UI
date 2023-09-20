@@ -325,7 +325,12 @@ const useImageViewer = (
   }
 
   useMouseMove(containerEle, (newPoint, oldPoint) => {
-    rewriteCenterDiff(newPoint, oldPoint)
+    const d = diff(newPoint, oldPoint)
+    const newCenterDiff = {
+      x: state.centerDiff.x + d.x,
+      y: state.centerDiff.y + d.y
+    }
+    rewriteCenterDiffWithClamp(newCenterDiff)
   })
 
   useMouseWheel(containerEle, (e, point) => {
@@ -347,11 +352,11 @@ const useImageViewer = (
     } else if (e.ctrlKey) {
       // トラックパッドでズームジェスチャをする場合は e.ctrlKey == true になる
       const beforeScale = state.zoomRatio
-      const afterScale = Math.max(
-        ZOOM_RATIO_MIN,
+      rewriteZoomRatioWithClamp(
         // ratio * exp(a) * exp(b) == ratio * exp(a+b) より deltaYの総和に対応して一定の拡縮
         state.zoomRatio * Math.exp(-deltaY * WHEEL_ZOOM_SCALE)
       )
+      const afterScale = state.zoomRatio
 
       if (containerEle.value) {
         const containerRect = containerEle.value.getBoundingClientRect()
@@ -360,18 +365,25 @@ const useImageViewer = (
           y: e.clientY - containerRect.y - containerRect.height / 2
         }
 
-        state.centerDiff.x =
-          cursorCenterDiff.x +
-          ((state.centerDiff.x - cursorCenterDiff.x) * afterScale) / beforeScale
-        state.centerDiff.y =
-          cursorCenterDiff.y +
-          ((state.centerDiff.y - cursorCenterDiff.y) * afterScale) / beforeScale
-        state.zoomRatio = afterScale
+        const newCenterDiff = {
+          x:
+            cursorCenterDiff.x +
+            ((state.centerDiff.x - cursorCenterDiff.x) * afterScale) /
+              beforeScale,
+          y:
+            cursorCenterDiff.y +
+            ((state.centerDiff.y - cursorCenterDiff.y) * afterScale) /
+              beforeScale
+        }
+        rewriteCenterDiffWithClamp(newCenterDiff)
       }
     } else {
       // トラックパッドでスクロールジェスチャをする場合は e.ctrlKey == false になる
-      state.centerDiff.x -= deltaX * WHEEL_SCROLL_SCALE_X
-      state.centerDiff.y -= deltaY * WHEEL_SCROLL_SCALE_Y
+      const newCenterDiff = {
+        x: state.centerDiff.x - deltaX * WHEEL_SCROLL_SCALE_X,
+        y: state.centerDiff.y - deltaY * WHEEL_SCROLL_SCALE_Y
+      }
+      rewriteCenterDiffWithClamp(newCenterDiff)
     }
   })
 
