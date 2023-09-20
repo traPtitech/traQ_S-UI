@@ -22,7 +22,7 @@ const WHEEL_SCALE_DELTAY = new Map<number, number>([
 const WHEEL_SCROLL_SCALE_X = 0.5
 const WHEEL_SCROLL_SCALE_Y = 0.5
 const WHEEL_ZOOM_SCALE = 0.01
-const ZOOM_RATIO_MIN = 0.1
+const ZOOM_RATIO_MIN = 1.0
 const ROTATE_STEP = 5
 
 export interface State {
