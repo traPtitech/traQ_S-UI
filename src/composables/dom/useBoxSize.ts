@@ -9,7 +9,6 @@ const useBoxSize = (
   const width = ref<number>()
 
   const observer = new ResizeObserver(entries => {
-    console.log(height.value)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const entry = entries[0]!
 
