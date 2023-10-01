@@ -14,7 +14,7 @@ jobs:
   make-dist:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
           node-version-file: ./.node-version
@@ -42,7 +42,7 @@ jobs:
       - name: Set IMAGE_TAG env
         run: echo IMAGE_TAG=$(echo ${GITHUB_REF:11}) >> $GITHUB_ENV
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
