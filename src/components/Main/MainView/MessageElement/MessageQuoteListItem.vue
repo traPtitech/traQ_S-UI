@@ -148,11 +148,14 @@ $mask-image: linear-gradient(
 );
 
 .markdownContainer {
+  &[data-expanded='false'] {
+    max-height: $message-max-height;
+    overflow: hidden;
+    overflow: clip;
+  }
+
   &.oversized {
     &[data-expanded='false'] {
-      max-height: $message-max-height;
-      overflow: hidden;
-      overflow: clip;
       -webkit-mask-image: $mask-image;
       mask-image: $mask-image;
     }
