@@ -15,6 +15,7 @@
             ? currentState.id
             : undefined
         "
+        :key="currentState.type === 'user' ? currentState.id : undefined"
         :channel-id="
           currentState.type === 'notification'
             ? currentState.channelId
