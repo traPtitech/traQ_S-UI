@@ -29,7 +29,7 @@
       },
       {
         label: 'Wiki',
-        iconPath: 'growi.svg',
+        iconPath: 'crowi.svg',
         appLink: 'https://wiki.trap.jp/'
       },
       {
