@@ -2,6 +2,7 @@
   <div ref="containerEle" :class="$style.container">
     <div :class="$style.imgContainer" :style="styles.imgContainer">
       <img
+        ref="imgEle"
         :src="src"
         :alt="alt"
         :class="$style.img"
@@ -22,8 +23,9 @@ defineProps<{
 }>()
 
 const containerEle = ref<HTMLDivElement>()
+const imgEle = ref<HTMLImageElement>()
 
-const { styles } = useImageViewer(containerEle)
+const { styles } = useImageViewer(containerEle, imgEle)
 </script>
 
 <style lang="scss" module>
@@ -32,9 +34,6 @@ const { styles } = useImageViewer(containerEle)
   overflow: hidden;
 }
 .imgContainer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
   height: 100%;
   width: 100%;
   user-select: none;
