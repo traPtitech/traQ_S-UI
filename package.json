@@ -89,7 +89,7 @@
     "sass": "^1.68.0",
     "start-server-and-test": "^2.0.0",
     "typescript": "^5.0.4",
-    "vite": "^4.2.1",
+    "vite": "^4.4.11",
     "vite-plugin-pwa": "^0.16.5",
     "vite-svg-loader": "^4.0.0",
     "vitest": "^0.25.8",
