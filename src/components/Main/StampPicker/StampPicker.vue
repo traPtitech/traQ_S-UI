@@ -68,7 +68,6 @@ import { useResponsiveStore } from '/@/store/ui/responsive'
 const { selectHandler, isEffectEnabled, currentStampSet, closeStampPicker } =
   useStampPicker()
 const { upsertLocalStampHistory } = useStampHistory()
-
 const { isMobile } = useResponsiveStore()
 
 const animationKeys = ref(new Map<StampId, number>())
