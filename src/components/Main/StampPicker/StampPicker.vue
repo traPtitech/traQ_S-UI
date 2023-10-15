@@ -3,6 +3,7 @@
     <div :class="$style.container">
       <div :class="$style.inputContainer">
         <filter-input
+          ref="filterInputRef"
           v-model="filterState.query"
           :class="$style.filterInput"
           placeholder="スタンプを検索"
@@ -62,10 +63,12 @@ import StampPickerPreview from './StampPickerPreview.vue'
 import { useStampPicker } from '/@/store/ui/stampPicker'
 import { ref } from 'vue'
 import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const { selectHandler, isEffectEnabled, currentStampSet, closeStampPicker } =
   useStampPicker()
 const { upsertLocalStampHistory } = useStampHistory()
+const { isMobile } = useResponsiveStore()
 
 const animationKeys = ref(new Map<StampId, number>())
 const incrementAnimationKey = (id: StampId) => {
@@ -85,6 +88,8 @@ const {
 } = useEffectSelector()
 const { preselected, onHoverStamp } = useStampPreselector()
 
+const filterInputRef = ref<InstanceType<typeof FilterInput> | null>(null)
+
 const onInputStamp = (id: StampId) => {
   upsertLocalStampHistory(id, new Date())
   selectHandler.value({
@@ -93,6 +98,10 @@ const onInputStamp = (id: StampId) => {
     animeEffects: selectedAnimeEffects.value
   })
   incrementAnimationKey(id)
+
+  if (!isMobile.value) {
+    filterInputRef.value?.focus()
+  }
 }
 const onFilterEnter = () => {
   const firstStamp = stamps.value[0]
