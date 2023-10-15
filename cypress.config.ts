@@ -9,6 +9,5 @@ export default defineConfig({
     videosFolder: 'tests/e2e/videos',
     supportFile: 'tests/e2e/support/index.ts',
     chromeWebSecurity: false,
-    video: false
   }
 })
