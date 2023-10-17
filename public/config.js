@@ -109,7 +109,12 @@
     showQrCodeButton: true,
     tooLargeFileMessage: '大きい%sの共有にはDriveを使用してください',
     showWidgetCopyButton: true,
-    inlineReplyDisableChannels: ['#general', '#random', '#random/wasure', '#services'],
+    inlineReplyDisableChannels: [
+      '#general',
+      '#random',
+      '#random/wasure',
+      '#services'
+    ],
     iosPwaInfoLink: 'https://wiki.trap.jp/SysAd/docs/traQ-S/PWA'
   }
 
