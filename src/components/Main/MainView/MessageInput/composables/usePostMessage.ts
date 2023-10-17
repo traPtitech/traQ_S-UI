@@ -66,7 +66,7 @@ const usePostMessage = (
     () =>
       `#${channelIdToShortPathString(
         unref(channelId)
-      )}に投稿されたメッセージは全員に通知されます。メッセージを投稿しますか？`
+      )}に投稿されたメッセージは全員に通知されます。メッセージを投稿しますか？\n注) このチャンネルは重要な連絡以外には使用しないでください。`
   )
 
   const isPosting = ref(false)
@@ -80,7 +80,7 @@ const usePostMessage = (
 
     if (isPosting.value || isEmpty) return false
 
-    if (isForce.value && !confirm(confirmString.value)) {
+    if (!isForce.value && !confirm(confirmString.value)) {
       // 強制通知チャンネルでconfirmをキャンセルしたときは何もしない
       return false
     }
