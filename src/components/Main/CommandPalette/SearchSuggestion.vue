@@ -36,11 +36,28 @@ import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
 import SearchSuggestionItem from './SearchSuggestionItem.vue'
 
 const querySuggestions = [
-  { insertQuery: 'in:', description: 'チャンネル名を指定して検索。例) in:general' },
-  { insertQuery: 'from:', description: '発言したユーザーで検索。例) from:traP' },
-  { insertQuery: 'to:', description: 'リプライ先のユーザーで検索。例) from:traP' },
-  { insertQuery: 'before:', description: '特定の日時より前のメッセージを検索。例) before:2020-01-23, before:2020-01-23T00:00' },
-  { insertQuery: 'after:', description: '特定の日時以降のメッセージを検索。例) after:2020-01-23, after:2020-01-23T00:00' }
+  {
+    insertQuery: 'in:',
+    description: 'チャンネル名を指定して検索。例) in:general'
+  },
+  {
+    insertQuery: 'from:',
+    description: '発言したユーザーで検索。例) from:traP'
+  },
+  {
+    insertQuery: 'to:',
+    description: 'リプライ先のユーザーで検索。例) from:traP'
+  },
+  {
+    insertQuery: 'before:',
+    description:
+      '特定の日時より前のメッセージを検索。例) before:2020-01-23, before:2020-01-23T00:00'
+  },
+  {
+    insertQuery: 'after:',
+    description:
+      '特定の日時以降のメッセージを検索。例) after:2020-01-23, after:2020-01-23T00:00'
+  }
 ]
 
 const emit = defineEmits<{
