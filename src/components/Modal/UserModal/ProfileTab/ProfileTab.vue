@@ -7,7 +7,7 @@
       :class="$style.section"
       :bot="user.bot"
       :name="user.name"
-      :twitter-id="detail?.twitterId"
+      :x-id="detail?.twitterId"
     />
     <last-online
       :class="$style.section"

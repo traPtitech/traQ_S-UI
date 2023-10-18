@@ -42,7 +42,7 @@
       />
     </div>
     <div :class="$style.element">
-      <h3 :class="$style.header">Twitter</h3>
+      <h3 :class="$style.header">𝕏</h3>
       <form-input
         v-model="state.twitterId"
         prefix="@"
@@ -70,7 +70,7 @@ import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import { nullUuid } from '/@/lib/basic/uuid'
 import useChannelOptions from '/@/composables/useChannelOptions'
 import useMaxLength from '/@/composables/utils/useMaxLength'
-import { isValidTwitter } from '/@/lib/validate'
+import { isValidX } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -184,12 +184,12 @@ const { isUpdating, onUpdateClick } = useProfileUpdate(
   isChanged
 )
 const isLengthValid = useIsLengthValid(state)
-const isTwitterIdValid = computed(
-  () => state.twitterId === '' || isValidTwitter(state.twitterId)
+const isXIdValid = computed(
+  () => state.twitterId === '' || isValidX(state.twitterId)
 )
 
 const canUpdate = computed(
-  () => isChanged.value && isLengthValid.value && isTwitterIdValid.value
+  () => isChanged.value && isLengthValid.value && isXIdValid.value
 )
 </script>
 
