@@ -3,8 +3,7 @@
     <profile-header text="アカウント" />
     <p v-if="showWikiPageLink" :class="$style.p">
       <circle-icon
-        name="book"
-        mdi
+        name="crowi"
         :color="iconColor"
         :background="iconBackgroundColor"
         :class="$style.icon"
@@ -19,8 +18,7 @@
     </p>
     <p v-if="blogPageLink" :class="$style.p">
       <circle-icon
-        name="notebook"
-        mdi
+        name="traP"
         :color="iconColor"
         :background="iconBackgroundColor"
         :class="$style.icon"
