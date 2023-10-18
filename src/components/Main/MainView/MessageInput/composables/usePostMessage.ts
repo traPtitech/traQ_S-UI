@@ -66,7 +66,7 @@ const usePostMessage = (
     () =>
       `#${channelIdToShortPathString(
         unref(channelId)
-      )}に投稿されたメッセージは全員に通知されます。メッセージを投稿しますか？`
+      )}に投稿されたメッセージは全員に通知されます。メッセージを投稿しますか？\n注) このチャンネルは重要な連絡以外には使用しないでください。`
   )
 
   const isPosting = ref(false)
