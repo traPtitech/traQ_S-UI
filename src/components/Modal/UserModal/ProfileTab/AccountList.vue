@@ -31,21 +31,21 @@
         >author/{{ name }}</a
       >
     </p>
-    <p v-if="xId !== ''" :class="$style.p">
+    <p v-if="twitterId !== ''" :class="$style.p">
       <circle-icon
         name="x"
         :color="iconColor"
         :background="iconBackgroundColor"
         :class="$style.icon"
       />
-      <template v-if="xId === undefined">Now Loading...</template>
+      <template v-if="twitterId === undefined">Now Loading...</template>
       <template v-else>
         <a
-          :href="xLink"
+          :href="twitterLink"
           rel="noopener noreferrer"
           target="_blank"
           @click.stop=""
-          >@{{ xId }}</a
+          >@{{ twitterId }}</a
         >
       </template>
     </p>
@@ -61,7 +61,7 @@ import { useThemeSettings } from '/@/store/app/themeSettings'
 const props = defineProps<{
   bot: boolean
   name: string
-  xId?: string
+  twitterId?: string
 }>()
 
 const { currentTheme } = useThemeSettings()
@@ -89,7 +89,7 @@ const blogPageLink = computed(() => {
   return `${blogPagePrefix}${props.name}`
 })
 
-const xLink = computed(() => `https://x.com/${props.xId ?? ''}`)
+const twitterLink = computed(() => `https://x.com/${props.twitterId ?? ''}`)
 </script>
 
 <style lang="scss" module>

@@ -1,17 +1,17 @@
-import { isValidX } from '/@/lib/validate'
+import { isValidTwitter } from '/@/lib/validate'
 
-describe('isValidX', () => {
+describe('isValidTwitter', () => {
   it('should return true', () => {
-    expect(isValidX('traPtitech')).toBe(true)
+    expect(isValidTwitter('traPtitech')).toBe(true)
   })
 
   it('should return false when containing invalid character', () => {
-    expect(isValidX('とらっぷ')).toBe(false)
+    expect(isValidTwitter('とらっぷ')).toBe(false)
   })
   it('should return false when it is too long', () => {
-    expect(isValidX('1111111111111111')).toBe(false)
+    expect(isValidTwitter('1111111111111111')).toBe(false)
   })
   it('should return false when it is empty', () => {
-    expect(isValidX('')).toBe(false)
+    expect(isValidTwitter('')).toBe(false)
   })
 })
