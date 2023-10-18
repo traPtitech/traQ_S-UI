@@ -12,6 +12,7 @@
       :key="suggestion.insertQuery"
       :insert-query="suggestion.insertQuery"
       :description="suggestion.description"
+      :example="suggestion.example"
       @select="onSelectQuerySuggestion(suggestion.insertQuery)"
     />
     <template v-if="searchHistories.length > 0">
@@ -38,25 +39,28 @@ import SearchSuggestionItem from './SearchSuggestionItem.vue'
 const querySuggestions = [
   {
     insertQuery: 'in:',
-    description: 'チャンネル名を指定して検索。例) in:general'
+    description: 'チャンネル名を指定して検索',
+    example: 'in:general'
   },
   {
     insertQuery: 'from:',
-    description: '発言したユーザーで検索。例) from:traP'
+    description: '発言したユーザーで検索',
+    example: 'from:traP'
   },
   {
     insertQuery: 'to:',
-    description: 'リプライ先のユーザーで検索。例) from:traP'
+    description: 'リプライ先のユーザーで検索',
+    example: 'to:traP'
   },
   {
     insertQuery: 'before:',
-    description:
-      '特定の日時より前のメッセージを検索。例) before:2020-01-23, before:2020-01-23T00:00'
+    description: '特定の日時より前のメッセージを検索',
+    example: 'before:2020-01-23, before:2020-01-23T00:00'
   },
   {
     insertQuery: 'after:',
-    description:
-      '特定の日時以降のメッセージを検索。例) after:2020-01-23, after:2020-01-23T00:00'
+    description: '特定の日時以降のメッセージを検索',
+    example: 'after:2020-01-23, after:2020-01-23T00:00'
   }
 ]
 

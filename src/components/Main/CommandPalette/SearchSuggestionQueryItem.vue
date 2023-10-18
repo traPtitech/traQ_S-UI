@@ -1,7 +1,10 @@
 <template>
   <div :class="$style.container" @click="onClick">
     <span :class="$style.query">{{ insertQuery }}</span>
-    <span :class="$style.description">{{ description }}</span>
+    <div :class="$style.descriptionContainer">
+      <span :class="$style.description">{{ description }}</span>
+      <span :class="$style.example">例: {{ example }}</span>
+    </div>
   </div>
 </template>
 
@@ -9,6 +12,7 @@
 const props = defineProps<{
   insertQuery: string
   description: string
+  example: string
 }>()
 
 const emit = defineEmits<{
@@ -36,8 +40,17 @@ const onClick = () => {
   @include size-body1;
   @include color-ui-primary;
 }
+.descriptionContainer{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 .description {
   @include size-body2;
+  @include color-ui-secondary;
+}
+.example {
+  @include size-caption;
   @include color-ui-secondary;
 }
 </style>
