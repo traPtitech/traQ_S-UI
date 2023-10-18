@@ -26,7 +26,7 @@
         編集
       </span>
       <span :class="$style.text" @click="withClose(copyLink)">
-        リンクをコピー
+        メッセージリンクをコピー
       </span>
       <span
         v-if="showWidgetCopyButton"
