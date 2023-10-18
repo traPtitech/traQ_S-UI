@@ -14,6 +14,14 @@
       />
     </template>
     <header-tools-item
+      :class="$style.notificationIcon"
+      :data-state="subscriptionChangeInfo.state"
+      :icon-name="subscriptionChangeInfo.iconName"
+      :disabled="!subscriptionChangeInfo.canChange"
+      :tooltip="subscriptionChangeInfo.tooltip"
+      @click="changeToNextSubscriptionLevel"
+    />
+    <header-tools-item
       v-if="isStared"
       :class="$style.starIcon"
       data-is-stared
@@ -27,14 +35,6 @@
       icon-name="star-outline"
       tooltip="お気に入りに追加する"
       @click="starChannel"
-    />
-    <header-tools-item
-      :class="$style.notificationIcon"
-      :data-state="subscriptionChangeInfo.state"
-      :icon-name="subscriptionChangeInfo.iconName"
-      :disabled="!subscriptionChangeInfo.canChange"
-      :tooltip="subscriptionChangeInfo.tooltip"
-      @click="changeToNextSubscriptionLevel"
     />
     <div :class="$style.moreButton">
       <slot />
