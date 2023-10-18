@@ -89,9 +89,7 @@ const blogPageLink = computed(() => {
   return `${blogPagePrefix}${props.name}`
 })
 
-const xLink = computed(
-  () => `https://x.com/${props.xId ?? ''}`
-)
+const xLink = computed(() => `https://x.com/${props.xId ?? ''}`)
 </script>
 
 <style lang="scss" module>
