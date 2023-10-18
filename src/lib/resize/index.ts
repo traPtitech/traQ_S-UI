@@ -96,7 +96,6 @@ export const getResizedFile = async (file: File) => {
   if (fileType === 'image' && file.size > IMAGE_SIZE_LIMIT) {
     throw new Error(IMAGE_MAX_SIZE_EXCEEDED_MESSAGE)
   }
-
   if (file.size > FILE_SIZE_LIMIT) {
     throw new Error(FILE_MAX_SIZE_EXCEEDED_MESSAGE)
   }
