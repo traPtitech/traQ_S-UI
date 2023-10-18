@@ -80,7 +80,7 @@ const usePostMessage = (
 
     if (isPosting.value || isEmpty) return false
 
-    if (!isForce.value && !confirm(confirmString.value)) {
+    if (isForce.value && !confirm(confirmString.value)) {
       // 強制通知チャンネルでconfirmをキャンセルしたときは何もしない
       return false
     }
