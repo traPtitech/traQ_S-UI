@@ -1,11 +1,13 @@
 <template>
   <div v-if="topic" :class="$style.container">
-    <inline-markdown
-      :class="$style.topic"
-      :content="topic"
-      :title="topic"
-      accept-action
-    />
+    <template v-if="!isMobile">
+      <inline-markdown
+        :class="$style.topic"
+        :content="topic"
+        :title="topic"
+        accept-action
+      />
+    </template>
   </div>
 </template>
 
@@ -14,6 +16,7 @@ import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 import { computed } from 'vue'
 import type { ChannelId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -21,6 +24,7 @@ const props = defineProps<{
 
 const { channelsMap } = useChannelsStore()
 const topic = computed(() => channelsMap.value.get(props.channelId)?.topic)
+const { isMobile } = useResponsiveStore()
 </script>
 
 <style lang="scss" module>
