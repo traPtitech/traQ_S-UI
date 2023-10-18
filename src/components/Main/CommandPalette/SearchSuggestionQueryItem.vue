@@ -40,7 +40,7 @@ const onClick = () => {
   @include size-body1;
   @include color-ui-primary;
 }
-.descriptionContainer{
+.descriptionContainer {
   display: flex;
   align-items: center;
   gap: 0.5rem;
