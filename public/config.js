@@ -111,6 +111,8 @@
     showWidgetCopyButton: true,
     inlineReplyDisableChannels: [
       '#general',
+      '#general/schedule',
+      '#general/meeting',
       '#random',
       '#random/wasure',
       '#services'
