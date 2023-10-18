@@ -42,7 +42,7 @@
       />
     </div>
     <div :class="$style.element">
-      <h3 :class="$style.header">Twitter</h3>
+      <h3 :class="$style.header">𝕏</h3>
       <form-input
         v-model="state.twitterId"
         prefix="@"

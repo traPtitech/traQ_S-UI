@@ -3,6 +3,7 @@
     <profile-header text="アカウント" />
     <p v-if="showWikiPageLink" :class="$style.p">
       <circle-icon
+        title="wiki"
         name="crowi"
         :color="iconColor"
         :background="iconBackgroundColor"
@@ -18,6 +19,7 @@
     </p>
     <p v-if="blogPageLink" :class="$style.p">
       <circle-icon
+        title="ブログ"
         name="traP"
         :color="iconColor"
         :background="iconBackgroundColor"
@@ -33,8 +35,8 @@
     </p>
     <p v-if="twitterId !== ''" :class="$style.p">
       <circle-icon
-        name="twitter"
-        mdi
+        title="𝕏"
+        name="x"
         :color="iconColor"
         :background="iconBackgroundColor"
         :class="$style.icon"
@@ -90,9 +92,7 @@ const blogPageLink = computed(() => {
   return `${blogPagePrefix}${props.name}`
 })
 
-const twitterLink = computed(
-  () => `https://twitter.com/${props.twitterId ?? ''}`
-)
+const twitterLink = computed(() => `https://x.com/${props.twitterId ?? ''}`)
 </script>
 
 <style lang="scss" module>
