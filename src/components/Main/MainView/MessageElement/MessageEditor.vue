@@ -94,24 +94,18 @@ const useAttachmentsEditor = (
     if (isPosting.value) return
 
     isPosting.value = true
-    try {
-      const attachmentFile = await getResizedFile(file)
-      const { data } = await apis.postFile(attachmentFile, props.channelId, {
-        /**
-         * https://github.com/axios/axios#request-config
-         */
-        onUploadProgress(e: ProgressEvent) {
-          progress.value = e.loaded / e.total
-        }
-      })
-
-      const fileUrl = buildFilePathForPost(data.id)
-      text.value = text.value !== '' ? `${text.value}\n${fileUrl}` : fileUrl
-    } catch (err) {
-      if (err instanceof Error) {
-        addErrorToast(err.message)
+    const attachmentFile = await getResizedFile(file)
+    const { data } = await apis.postFile(attachmentFile, props.channelId, {
+      /**
+       * https://github.com/axios/axios#request-config
+       */
+      onUploadProgress(e: ProgressEvent) {
+        progress.value = e.loaded / e.total
       }
-    }
+    })
+
+    const fileUrl = buildFilePathForPost(data.id)
+    text.value = text.value !== '' ? `${text.value}\n${fileUrl}` : fileUrl
     progress.value = 0
     isPosting.value = false
   }

@@ -27,6 +27,8 @@ const useMessageInputStateAttachment = (
     } catch (e) {
       if (e instanceof Error) {
         onError(e.message)
+      } else {
+        onError('ファイルのリサイズに失敗しました')
       }
     }
   }

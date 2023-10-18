@@ -74,16 +74,28 @@ const resize = async (
   }
 }
 
-const FILE_SIZE_LIMIT = 30 * 1024 * 1024 // 30MB
+const IMAGE_SIZE_LIMIT = 20 * 1000 * 1000 // 20MB
+const FILE_SIZE_LIMIT = 30 * 1000 * 1000 // 30MB
 
 const tooLargeFileMessage =
   window.traQConfig.tooLargeFileMessage ??
-  '大きいファイルの共有には別のサービスを利用してください。'
+  '大きい%sの共有には別のサービスを利用してください。'
 
-const FILE_MAX_SIZE_EXCEEDED_MESSAGE = `ファイルサイズは30MBまでです\n${tooLargeFileMessage}`
+const IMAGE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは20MBまでです\n${tooLargeFileMessage.replace(
+  '%s',
+  '画像'
+)}`
+const FILE_MAX_SIZE_EXCEEDED_MESSAGE = `ファイルサイズは30MBまでです\n${tooLargeFileMessage.replace(
+  '%s',
+  'ファイル'
+)}`
 
 export const getResizedFile = async (file: File) => {
   const fileType = mimeToFileType(file.type)
+
+  if (fileType === 'image' && file.size > IMAGE_SIZE_LIMIT) {
+    throw new Error(IMAGE_MAX_SIZE_EXCEEDED_MESSAGE)
+  }
 
   if (file.size > FILE_SIZE_LIMIT) {
     throw new Error(FILE_MAX_SIZE_EXCEEDED_MESSAGE)
