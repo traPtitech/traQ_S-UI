@@ -10,7 +10,6 @@
     <search-suggestion-query-item
       v-for="suggestion in querySuggestions"
       :key="suggestion.insertQuery"
-      :insert-query="suggestion.insertQuery"
       :description="suggestion.description"
       :example="suggestion.example"
       @select="onSelectQuerySuggestion(suggestion.insertQuery)"
@@ -39,27 +38,27 @@ import SearchSuggestionItem from './SearchSuggestionItem.vue'
 const querySuggestions = [
   {
     insertQuery: 'in:',
-    description: 'チャンネル名を指定して検索',
+    description: 'チャンネル名を指定',
     example: 'in:general'
   },
   {
     insertQuery: 'from:',
-    description: '発言したユーザーで検索',
+    description: '発言したユーザーを指定',
     example: 'from:traP'
   },
   {
     insertQuery: 'to:',
-    description: 'リプライ先のユーザーで検索',
+    description: 'メンション先のユーザーを指定',
     example: 'to:traP'
   },
   {
     insertQuery: 'before:',
-    description: '特定の日時より前のメッセージを検索',
+    description: '特定の日時より前のメッセージ',
     example: 'before:2020-01-23, before:2020-01-23T00:00'
   },
   {
     insertQuery: 'after:',
-    description: '特定の日時以降のメッセージを検索',
+    description: '特定の日時以降のメッセージ',
     example: 'after:2020-01-23, after:2020-01-23T00:00'
   }
 ]
@@ -100,7 +99,6 @@ const onSelectHistorySuggestion = (label: string) => {
   @include color-ui-primary;
   padding: 0.5rem 0;
   overflow-y: auto;
-  scrollbar-gutter: stable;
 }
 .header {
   @include color-ui-secondary;
