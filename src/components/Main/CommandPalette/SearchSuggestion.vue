@@ -43,17 +43,17 @@ const querySuggestions = [
   },
   {
     insertQuery: 'from:',
-    description: '発言したユーザーを指定',
+    description: '投稿したユーザーを指定',
     example: 'from:traP'
   },
   {
     insertQuery: 'to:',
-    description: 'メンション先のユーザーを指定',
+    description: 'メンションされたユーザーを指定',
     example: 'to:traP'
   },
   {
     insertQuery: 'before:',
-    description: '特定の日時より前のメッセージ',
+    description: '特定の日時以前のメッセージ',
     example: 'before:2020-01-23, before:2020-01-23T00:00'
   },
   {
