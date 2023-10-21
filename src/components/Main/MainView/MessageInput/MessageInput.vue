@@ -177,14 +177,6 @@ $radius: 4px;
     }
     border-radius: $radius;
     transform: translateY(-$radius);
-
-    border: solid 2px transparent;
-    &:focus-within {
-      border-color: $theme-accent-focus-default;
-    }
-    &:has(.toNewMessageButton:focus) {
-      border-color: transparent;
-    }
   }
 }
 .preview {
