@@ -1,9 +1,5 @@
 <template>
   <teleport to="#dropdown-suggester-popup">
-    <!--
-      iOSではうまく動かないので非表示
-      https://github.com/traPtitech/traQ_S-UI/issues/2088
-    -->
     <div v-if="isShown" :class="$style.container" :style="styledPosition">
       <!--
         mousedownイベントでやっているのはclickイベントだとフォーカスが外れるため
@@ -55,9 +51,8 @@ const emit = defineEmits<{
 
 const WIDTH = 240
 const MARGIN = 8
-
 const styledPosition = computed(() => ({
-  top: `${props.position.top}px`,
+  top: `${window.visualViewport.offsetTop + props.position.top}px`,
   left: `min(${props.position.left}px, calc(100vw - ${WIDTH + MARGIN}px))`,
   width: `${WIDTH}px`
 }))
