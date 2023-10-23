@@ -1,6 +1,10 @@
 <template>
   <teleport to="#dropdown-suggester-popup">
-    <div :class="$style.container" :style="styledPosition">
+    <!--
+      iOSではうまく動かないので非表示
+      https://github.com/traPtitech/traQ_S-UI/issues/2088
+    -->
+    <div v-if="isShown" :class="$style.container" :style="styledPosition">
       <!--
         mousedownイベントでやっているのはclickイベントだとフォーカスが外れるため
         preventをすることでclickイベントでフォーカスが外れるのを回避している
