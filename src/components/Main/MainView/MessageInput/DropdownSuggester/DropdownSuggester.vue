@@ -52,7 +52,7 @@ const emit = defineEmits<{
 const WIDTH = 240
 const MARGIN = 8
 const styledPosition = computed(() => ({
-  top: `${window.visualViewport.offsetTop + props.position.top}px`,
+  top: `${(window.visualViewport?.offsetTop ?? 0) + props.position.top}px`,
   left: `min(${props.position.left}px, calc(100vw - ${WIDTH + MARGIN}px))`,
   width: `${WIDTH}px`
 }))
