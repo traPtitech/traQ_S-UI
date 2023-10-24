@@ -10,8 +10,8 @@
     <search-suggestion-query-item
       v-for="suggestion in querySuggestions"
       :key="suggestion.insertQuery"
-      :insert-query="suggestion.insertQuery"
       :description="suggestion.description"
+      :example="suggestion.example"
       @select="onSelectQuerySuggestion(suggestion.insertQuery)"
     />
     <template v-if="searchHistories.length > 0">
@@ -36,11 +36,31 @@ import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
 import SearchSuggestionItem from './SearchSuggestionItem.vue'
 
 const querySuggestions = [
-  { insertQuery: 'in:', description: 'チャンネル名を指定して検索' },
-  { insertQuery: 'from:', description: '発言したユーザーで検索' },
-  { insertQuery: 'to:', description: 'リプライ先のユーザーで検索' },
-  { insertQuery: 'before:', description: '特定の日時より前のメッセージを検索' },
-  { insertQuery: 'after:', description: '特定の日時以降のメッセージを検索' }
+  {
+    insertQuery: 'in:',
+    description: 'チャンネル名を指定',
+    example: 'in:general'
+  },
+  {
+    insertQuery: 'from:',
+    description: '投稿したユーザーを指定',
+    example: 'from:traP'
+  },
+  {
+    insertQuery: 'to:',
+    description: 'メンションされたユーザーを指定',
+    example: 'to:traP'
+  },
+  {
+    insertQuery: 'before:',
+    description: '特定の日時以前のメッセージ',
+    example: 'before:2020-01-23, before:2020-01-23T00:00'
+  },
+  {
+    insertQuery: 'after:',
+    description: '特定の日時以降のメッセージ',
+    example: 'after:2020-01-23, after:2020-01-23T00:00'
+  }
 ]
 
 const emit = defineEmits<{
@@ -79,7 +99,6 @@ const onSelectHistorySuggestion = (label: string) => {
   @include color-ui-primary;
   padding: 0.5rem 0;
   overflow-y: auto;
-  scrollbar-gutter: stable;
 }
 .header {
   @include color-ui-secondary;
