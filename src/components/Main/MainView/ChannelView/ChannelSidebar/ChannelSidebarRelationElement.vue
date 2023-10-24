@@ -12,7 +12,12 @@
       </span>
     </div>
     <div v-if="topic" :class="$style.topic">
-      <inline-markdown :class="$style.topic" :content="topic" :title="topic" />
+      <inline-markdown
+        :class="$style.topic"
+        :content="topic"
+        :title="topic"
+        accept-action
+      />
     </div>
   </div>
 </template>
