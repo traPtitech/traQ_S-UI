@@ -11,7 +11,7 @@ export const isIOS = () => {
     ua.includes('iphone') ||
     ua.includes('ipod') ||
     ua.includes('ipad') ||
-    ua.includes('macintosh')
+    (ua.includes('macintosh') && 'ontouchend' in document)
   )
 }
 
