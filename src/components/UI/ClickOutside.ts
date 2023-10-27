@@ -76,6 +76,14 @@ export default defineComponent({
       if (!isMouseDown.value) return
       isMouseDown.value = false
 
+      if (!element.value) return
+      const ele =
+        element.value instanceof Element ? element.value : element.value.$el
+
+      if (ele === e.target || e.composedPath().includes(ele)) {
+        return
+      }
+
       emit('clickOutside', e)
       if (props.stop) {
         e.stopPropagation()
