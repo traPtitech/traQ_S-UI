@@ -7,7 +7,12 @@ export const isSafari = () => {
 }
 
 export const isIOS = () => {
-  return ua.includes('iphone') || ua.includes('ipod') || ua.includes('ipad')
+  return (
+    ua.includes('iphone') ||
+    ua.includes('ipod') ||
+    ua.includes('ipad') ||
+    ua.includes('macintosh')
+  )
 }
 
 export const isFirefox = () => {
