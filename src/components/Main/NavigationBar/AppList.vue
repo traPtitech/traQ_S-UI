@@ -1,5 +1,5 @@
 <template>
-  <click-outside @click-outside="close">
+  <click-outside @click-outside.stop="close">
     <div :class="$style.container">
       <div :class="$style.header">
         <span :class="$style.title">サービス</span>
@@ -24,8 +24,8 @@
 </template>
 
 <script lang="ts" setup>
-import ClickOutside from '/@/components/UI/ClickOutside'
 import AppListItem from '/@/components/Main/NavigationBar/AppListItem.vue'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 
 const emit = defineEmits<{
@@ -69,10 +69,12 @@ const close = () => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 16px;
+
   overflow: {
     x: hidden;
     y: auto;
   }
+
   scrollbar-gutter: stable;
 }
 </style>
