@@ -52,7 +52,7 @@
   "devDependencies": {
     "@pinia/testing": "^0.1.2",
     "@types/autosize": "^4.0.2",
-    "@types/dom-screen-wake-lock": "^1.0.1",
+    "@types/dom-screen-wake-lock": "^1.0.2",
     "@types/katex": "^0.16.0",
     "@types/markdown-it": "^12.2.3",
     "@types/node": "^20.2.4",
