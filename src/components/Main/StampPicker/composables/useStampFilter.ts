@@ -76,11 +76,15 @@ const useStampFilter = () => {
       const result = [
         ...altNameRes.map(r => ({
           value: altNameToName(r.value),
-          priority: r.priority
+          priority: r.priority,
+          isAltName: true
         })),
-        ...res
+        ...res.map(r => ({ ...r, isAltName: false }))
       ]
-        .map(r => ({ value: r.value, sortKey: `${r.priority}${r.value}` }))
+        .map(r => ({
+          value: r.value,
+          sortKey: `${r.priority}${r.isAltName ? 1 : 0}${r.value}` // 同じpriorityの場合、別名は別名でないものよりも優先度が低い
+        }))
         .sort((a, b) => compareStringInsensitive(a.sortKey, b.sortKey))
         .map(r => r.value)
 
