@@ -1,6 +1,6 @@
 <template>
   <teleport to="#message-menu-popup">
-    <click-outside @click-outside="emit('close')">
+    <click-outside @click-outside.stop="emit('close')">
       <div
         ref="menuContainerRef"
         :style="toolsMenuStyle"
@@ -14,9 +14,9 @@
 
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue'
-import type { Point } from '/@/lib/basic/point'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import useBoxSize from '/@/composables/dom/useBoxSize'
+import type { Point } from '/@/lib/basic/point'
 
 const props = defineProps<{
   position: Point
