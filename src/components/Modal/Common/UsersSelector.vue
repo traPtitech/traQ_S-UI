@@ -7,7 +7,7 @@
           @update:model-value="toggleAll"
         />
       </label>
-      <filter-input v-model="query" :class="$style.search" />
+      <filter-input v-model="query" :class="$style.search" focus-on-mount />
     </div>
     <div :class="$style.list">
       <label v-for="user in filteredUsers" :key="user.id" :class="$style.user">

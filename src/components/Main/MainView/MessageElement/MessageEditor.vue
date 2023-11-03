@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
@@ -172,6 +172,10 @@ const {
   addAttachment,
   onAddAttachments
 } = useAttachmentsEditor(props, text)
+
+onMounted(() => {
+  textareaComponentRef.value?.textareaAutosizeRef.$el?.focus()
+})
 </script>
 
 <style lang="scss" module>
