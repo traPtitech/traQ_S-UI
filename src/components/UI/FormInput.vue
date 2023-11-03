@@ -116,6 +116,8 @@ onMounted(() => {
   if (!props.focusOnMount || isTouchDevice()) return
   focus()
 })
+
+defineExpose({ focus })
 </script>
 
 <style lang="scss" module>
