@@ -5,9 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue';
+import type { HTMLAttributes } from 'vue'
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props extends /* @vue-ignore */ HTMLAttributes{}
+interface Props extends /* @vue-ignore */ HTMLAttributes {}
 
 defineProps<Props>()
 </script>

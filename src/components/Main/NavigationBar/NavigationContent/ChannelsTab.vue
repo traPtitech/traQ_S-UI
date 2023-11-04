@@ -32,11 +32,7 @@
               show-shortened-path
               role="tabpanel"
             />
-            <empty-state
-              v-else
-              :id="staredPanelId"
-              role="tabpanel"
-            >
+            <empty-state v-else :id="staredPanelId" role="tabpanel">
               お気に入りチャンネルはありません
             </empty-state>
           </template>
