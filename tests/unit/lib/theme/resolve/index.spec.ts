@@ -42,7 +42,6 @@ describe('resolveTheme', () => {
       channelHashOpened: '#F0F2F5',
       channelUnreadBadgeText: '#F0F2F5',
       loadingSpinnerGapUiSecondary: 'rgba(107, 125, 138, 0.5)',
-      loadingSpinnerGapAccentPrimary: 'rgba(0, 91, 172, 0.5)',
       messageHoverBackground: 'rgba(240, 242, 245, 0.5)',
       sliderBackground: 'rgba(107, 125, 138, 0.5)',
       stampCountText: 'rgba(73, 83, 91, 0.6)',

@@ -63,8 +63,6 @@ export const useThemeVariables = (): ComputedRef<
         theme.specific.stampPickerOpenerBorder,
       '--specific-loading-spinner-gap-ui-secondary':
         theme.specific.loadingSpinnerGapUiSecondary,
-      '--specific-loading-spinner-gap-accent-primary':
-        theme.specific.loadingSpinnerGapAccentPrimary,
       '--specific-slider-background': theme.specific.sliderBackground,
 
       '--color-scheme': theme.browser.colorScheme,
