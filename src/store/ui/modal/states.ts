@@ -24,6 +24,7 @@ type ModalStateType =
   | 'group-member-edit'
   | 'group-admin-add'
   | 'group-member-add'
+  | 'settings-stamp-create'
 
 export type ModalState =
   | UserModalState
@@ -40,6 +41,7 @@ export type ModalState =
   | GroupMemberEditModalState
   | GroupAdminAddModalState
   | GroupMemberAddModalState
+  | SettingsStampCreateModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -122,4 +124,9 @@ interface GroupAdminAddModalState extends BaseModalState {
 interface GroupMemberAddModalState extends BaseModalState {
   type: 'group-member-add'
   id: UserGroupId
+}
+
+interface SettingsStampCreateModalState extends BaseModalState {
+  type: 'settings-stamp-create'
+  file: File
 }

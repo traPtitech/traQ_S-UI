@@ -41,6 +41,11 @@
             ? currentState.userId
             : undefined
         "
+        :file="
+          currentState.type === 'settings-stamp-create'
+            ? currentState.file
+            : undefined
+        "
       />
     </div>
   </transition>
@@ -63,6 +68,7 @@ import GroupCreateModal from './GroupCreateModal/GroupCreateModal.vue'
 import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vue'
 import GroupAdminAddModal from './GroupAdminAddModal/GroupAdminAddModal.vue'
 import GroupMemberAddModal from './GroupMemberAddModal/GroupMemberAddModal.vue'
+import StampCreateModal from './StampCreateModal/StampCreateModal.vue'
 
 const { shouldShowModal, currentState } = useModalStore()
 
@@ -96,6 +102,8 @@ const component = computed(() => {
       return GroupAdminAddModal
     case 'group-member-add':
       return GroupMemberAddModal
+    case 'settings-stamp-create':
+      return StampCreateModal
   }
   // eslint-disable-next-line no-console
   console.error('Unexpected modal type:', currentState.value)

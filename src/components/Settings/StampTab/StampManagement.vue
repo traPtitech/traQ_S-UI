@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.element">
-    <h3 :class="$style.header">スタンプ編集</h3>
+    <h3 :class="$style.header">スタンプ管理</h3>
     <div :class="$style.content">
       <stamp-item
         v-for="stamp in myStamps"

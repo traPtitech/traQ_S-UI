@@ -1,24 +1,19 @@
 <template>
-  <div>
-    <form-button label="ファイルを選択" @click="selectImage" />
-    <div v-if="originalImgUrl">
-      <div :class="$style.cropper" :data-is-rounded="$boolAttr(rounded)">
-        <img ref="imgEle" :src="originalImgUrl" />
-      </div>
-      <p :class="$style.note">{{ cropperNote }}</p>
-      <form-button label="キャンセル" @click="cancel" />
-    </div>
+  <div
+    v-if="originalImgUrl"
+    :class="$style.cropper"
+    :data-is-rounded="$boolAttr(rounded)"
+  >
+    <img ref="imgEle" :src="originalImgUrl" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, watchEffect, shallowRef, onUnmounted } from 'vue'
 import Cropper from 'cropperjs'
-import FormButton from '/@/components/UI/FormButton.vue'
 import 'cropperjs/dist/cropper.css'
 import useObjectURL from '/@/composables/dom/useObjectURL'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
-import { useFileSelect } from '/@/composables/dom/useFileSelect'
 
 const props = withDefaults(
   defineProps<{
@@ -51,14 +46,10 @@ const cropperDefaultOptions = {
   autoCrop: true,
   dragMode: 'move' as const
 } as const
-const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
 
 const value = useModelValueSyncer(props, emit)
 
-const originalImg = ref<File | undefined>()
-const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
-  originalImg.value = files[0]
-})
+const originalImg = ref<File | undefined>(props.modelValue)
 const originalImgUrl = useObjectURL(originalImg)
 
 let cropper: Cropper | undefined
@@ -105,10 +96,6 @@ const updateImgView = () => {
         }
       }
 
-  cropperNote.value = isGif
-    ? 'GIFは切り抜きできません'
-    : '画像の位置・サイズを編集できます'
-
   if (cropper) cropper.destroy()
   cropper = new Cropper(imgEle.value, options)
   cropper.replace(originalImgUrl.value ?? '')
@@ -122,10 +109,6 @@ watchEffect(() => {
   }
 })
 
-const cancel = () => {
-  emit('update:modelValue', undefined)
-}
-
 onUnmounted(() => {
   if (cropper) cropper.destroy()
 })
@@ -133,8 +116,8 @@ onUnmounted(() => {
 
 <style lang="scss" module>
 .cropper {
-  width: 400px;
-  height: 400px;
+  width: 200px;
+  height: 200px;
   margin: 12px;
   &[data-is-rounded] {
     :global(.cropper-view-box),
@@ -142,8 +125,5 @@ onUnmounted(() => {
       border-radius: 50%;
     }
   }
-}
-.note {
-  margin: 12px;
 }
 </style>

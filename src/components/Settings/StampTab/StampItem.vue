@@ -6,7 +6,6 @@
       <a-icon
         name="pencil-outline"
         mdi
-        :size="20"
         :class="$style.editIcon"
         @click="onStartEdit"
       />
@@ -200,9 +199,7 @@ const { isEditing, editStamp } = useStampEdit(
 }
 
 .editIcon {
-  .container:not(:hover) & {
-    display: none;
-  }
+  @include color-ui-secondary;
 }
 
 .stamp {

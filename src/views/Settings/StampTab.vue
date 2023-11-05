@@ -1,17 +1,17 @@
 <template>
   <section>
     <new-stamp />
-    <edit-stamp />
+    <stamp-management />
     <div :class="$style.element">
       <h3 :class="$style.header">スタンプパレット</h3>
-      <p title="4/1には実装されるよ" :class="$style.content">実装予定</p>
+      <p :class="$style.content">実装予定</p>
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
 import NewStamp from '/@/components/Settings/StampTab/NewStamp.vue'
-import EditStamp from '/@/components/Settings/StampTab/EditStamp.vue'
+import StampManagement from '/@/components/Settings/StampTab/StampManagement.vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useUsersStore } from '/@/store/entities/users'
