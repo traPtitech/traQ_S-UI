@@ -6,19 +6,24 @@
     :data-color="color"
   >
     <div :class="$style.label">{{ label }}</div>
-    <loading-spinner v-if="loading" :class="$style.spinner" />
+    <loading-spinner
+      v-if="loading"
+      :class="$style.spinner"
+      :color="spinnerColor"
+    />
   </button>
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     label?: string
     loading?: boolean
     disabled?: boolean
-    color?: 'primary' | 'secondary' | 'error'
+    color?: 'primary' | 'secondary' | 'error' | 'tertiary'
   }>(),
   {
     label: '',
@@ -27,6 +32,15 @@ withDefaults(
     color: 'primary' as const
   }
 )
+
+const spinnerColor = computed(() => {
+  switch (props.color) {
+    case 'tertiary':
+      return 'accent-primary'
+    default:
+      return 'white'
+  }
+})
 </script>
 
 <style lang="scss" module>
@@ -51,6 +65,10 @@ withDefaults(
   &[data-color='secondary'] {
     @include color-ui-secondary;
     border-color: $theme-ui-secondary-default;
+  }
+  &[data-color='tertiary'] {
+    @include color-accent-primary;
+    border-color: $theme-accent-primary-default;
   }
   &[data-color='error'] {
     color: $theme-accent-error-default;
