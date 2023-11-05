@@ -25,6 +25,7 @@ type ResolvedSpecificTheme = SpecificTheme & {
   stampCountText: CSSColorType
   stampPickerOpenerBorder: CSSColorType
   loadingSpinnerGapUiSecondary: CSSColorType
+  loadingSpinnerGapAccentPrimary: CSSColorType
   sliderBackground: CSSColorType
 }
 
@@ -90,6 +91,10 @@ const resolveSpecificTheme = (
   ),
   loadingSpinnerGapUiSecondary: transparentizeWithFallback(
     basic.ui.secondary.fallback,
+    0.5
+  ),
+  loadingSpinnerGapAccentPrimary: transparentizeWithFallback(
+    basic.accent.primary.fallback,
     0.5
   ),
   sliderBackground: transparentizeWithFallback(basic.ui.secondary.fallback, 0.5)

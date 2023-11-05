@@ -35,7 +35,7 @@ $spinner-width: 0.35em;
   }
   &[data-color='accent-primary'] {
     --spinner-color: #{$theme-accent-primary-default};
-    --spinner-gap-color: rgba(255, 255, 255, 0.25);
+    --spinner-gap-color: var(--specific-loading-spinner-gap-accent-primary);
   }
 }
 .spinner {
