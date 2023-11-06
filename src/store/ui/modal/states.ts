@@ -5,7 +5,8 @@ import type {
   FileId,
   UserGroupId,
   TagId,
-  MessageId
+  MessageId,
+  StampId
 } from '/@/types/entity-ids'
 
 type ModalStateType =
@@ -25,6 +26,7 @@ type ModalStateType =
   | 'group-admin-add'
   | 'group-member-add'
   | 'settings-stamp-create'
+  | 'settings-stamp-edit'
 
 export type ModalState =
   | UserModalState
@@ -42,6 +44,7 @@ export type ModalState =
   | GroupAdminAddModalState
   | GroupMemberAddModalState
   | SettingsStampCreateModalState
+  | SettingsStampEditModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -129,4 +132,9 @@ interface GroupMemberAddModalState extends BaseModalState {
 interface SettingsStampCreateModalState extends BaseModalState {
   type: 'settings-stamp-create'
   file: File
+}
+
+interface SettingsStampEditModalState extends BaseModalState {
+  type: 'settings-stamp-edit'
+  id: StampId
 }

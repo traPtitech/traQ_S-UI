@@ -54,7 +54,6 @@ const originalImgUrl = useObjectURL(originalImg)
 
 let cropper: Cropper | undefined
 const imgEle = shallowRef<HTMLImageElement>()
-const cropperNote = ref('')
 
 const updateImgView = () => {
   if (!originalImg.value) {
@@ -100,6 +99,10 @@ const updateImgView = () => {
   cropper = new Cropper(imgEle.value, options)
   cropper.replace(originalImgUrl.value ?? '')
 }
+
+watchEffect(() => {
+  originalImg.value = props.modelValue
+})
 
 watchEffect(updateImgView)
 

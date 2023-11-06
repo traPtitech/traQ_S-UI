@@ -11,7 +11,8 @@
           currentState.type === 'file' ||
           currentState.type === 'channel-manage' ||
           currentState.type === 'group-admin-add' ||
-          currentState.type === 'group-member-add'
+          currentState.type === 'group-member-add' ||
+          currentState.type === 'settings-stamp-edit'
             ? currentState.id
             : undefined
         "
@@ -69,6 +70,7 @@ import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vu
 import GroupAdminAddModal from './GroupAdminAddModal/GroupAdminAddModal.vue'
 import GroupMemberAddModal from './GroupMemberAddModal/GroupMemberAddModal.vue'
 import StampCreateModal from './StampCreateModal/StampCreateModal.vue'
+import StampEditModal from './StampEditModal/StampEditModal.vue'
 
 const { shouldShowModal, currentState } = useModalStore()
 
@@ -104,6 +106,8 @@ const component = computed(() => {
       return GroupMemberAddModal
     case 'settings-stamp-create':
       return StampCreateModal
+    case 'settings-stamp-edit':
+      return StampEditModal
   }
   // eslint-disable-next-line no-console
   console.error('Unexpected modal type:', currentState.value)
