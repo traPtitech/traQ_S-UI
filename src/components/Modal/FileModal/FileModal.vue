@@ -21,7 +21,7 @@ import FileModalImage from '/@/components/Modal/FileModal/FileModalImage.vue'
 import FileModalFile from '/@/components/Modal/FileModal/FileModalFile.vue'
 import FileModalVideo from '/@/components/Modal/FileModal/FileModalVideo.vue'
 import FileModalAudio from '/@/components/Modal/FileModal/FileModalAudio.vue'
-import { computed, onMounted, onUnmounted, reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import useFileMeta from '/@/composables/files/useFileMeta'
 import { useModalStore } from '/@/store/ui/modal'
 
@@ -34,19 +34,6 @@ const fileIdState = reactive({
 })
 const { fileMeta, fileType } = useFileMeta(fileIdState)
 const { clearModal } = useModalStore()
-
-const onKeyDown = (e: KeyboardEvent) => {
-  if (e.key === 'Escape') {
-    clearModal()
-  }
-}
-
-onMounted(() => {
-  window.addEventListener('keydown', onKeyDown)
-})
-onUnmounted(() => {
-  window.removeEventListener('keydown', onKeyDown)
-})
 </script>
 
 <style module lang="scss">
