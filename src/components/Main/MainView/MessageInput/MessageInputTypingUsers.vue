@@ -1,6 +1,10 @@
 <template>
   <transition name="typing-users">
-    <div v-if="typingUsers.length > 0" :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
+    <div
+      v-if="typingUsers.length > 0"
+      :class="$style.container"
+      :data-is-mobile="$boolAttr(isMobile)"
+    >
       <message-input-typing-animation />
       <div :class="$style.text">
         {{ text }}
@@ -49,7 +53,7 @@ const text = computed(
   flex-direction: row-reverse;
   align-items: center;
 
-  &:not([data-is-mobile]){
+  &:not([data-is-mobile]) {
     left: 0px;
   }
 }
