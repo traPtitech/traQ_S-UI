@@ -47,14 +47,14 @@ const text = computed(
 .container {
   position: absolute;
   top: -4px;
-  left: 16px;
+  left: 0px;
   transform: translateY(-100%);
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
 
-  &:not([data-is-mobile]) {
-    left: 0px;
+  &[data-is-mobile] {
+    left: 16px;
   }
 }
 
