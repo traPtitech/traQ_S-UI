@@ -4,12 +4,18 @@
     <div :class="$style.notSelected">
       <p>:{{ stamp.name }}:</p>
       <icon-button
-        icon-name="pencil-outline"
+        icon-name="dots-horizontal"
         icon-mdi
         :class="$style.editIcon"
-        @click="onStartEdit"
+        @click="onDotsClick"
       />
     </div>
+    <stamp-context-menu
+      v-if="contextMenuPosition"
+      :position="contextMenuPosition"
+      :stamp-id="stamp.id"
+      @close="closeContextMenu"
+    />
   </div>
 </template>
 
@@ -18,20 +24,26 @@ import type { Stamp } from '@traptitech/traq'
 import { computed } from 'vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import { buildFilePath } from '/@/lib/apis'
+import useContextMenu from '/@/composables/useContextMenu'
+import StampContextMenu from './StampContextMenu.vue'
 
 const props = defineProps<{
   stamp: Stamp
 }>()
 
-const emit = defineEmits<{
-  (e: 'startEdit'): void
-  (e: 'endEdit'): void
-}>()
-
 const url = computed(() => buildFilePath(props.stamp.fileId))
 
-const onStartEdit = () => {
-  emit('startEdit')
+const {
+  position: contextMenuPosition,
+  open: openContextMenu,
+  close: closeContextMenu
+} = useContextMenu()
+
+const onDotsClick = (e: MouseEvent) => {
+  openContextMenu({
+    x: e.pageX,
+    y: e.pageY
+  })
 }
 </script>
 
