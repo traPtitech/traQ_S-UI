@@ -27,6 +27,7 @@ type ModalStateType =
   | 'group-member-add'
   | 'settings-stamp-create'
   | 'settings-stamp-edit'
+  | 'settings-stamp-image-edit'
 
 export type ModalState =
   | UserModalState
@@ -45,6 +46,7 @@ export type ModalState =
   | GroupMemberAddModalState
   | SettingsStampCreateModalState
   | SettingsStampEditModalState
+  | SettingsStampImageEditModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -131,10 +133,14 @@ interface GroupMemberAddModalState extends BaseModalState {
 
 interface SettingsStampCreateModalState extends BaseModalState {
   type: 'settings-stamp-create'
-  file: File
 }
 
 interface SettingsStampEditModalState extends BaseModalState {
   type: 'settings-stamp-edit'
   id: StampId
+}
+
+interface SettingsStampImageEditModalState extends BaseModalState {
+  type: 'settings-stamp-image-edit'
+  file: File
 }

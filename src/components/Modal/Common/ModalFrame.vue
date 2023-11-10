@@ -49,7 +49,7 @@ const { clearModal } = useModalStore()
   display: flex;
   flex-flow: column nowrap;
   max-height: 480px;
-  max-width: 600px;
+  max-width: 440px;
   width: #{calc(100% - 32px)};
   border-radius: 4px;
   overflow: hidden;

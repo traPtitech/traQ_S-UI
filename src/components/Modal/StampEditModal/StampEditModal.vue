@@ -1,8 +1,12 @@
 <template>
   <modal-frame title="スタンプ編集" icon-name="">
     <div :class="$style.container">
-      <image-upload v-model="newImageData" :class="$style.form" />
-      <div :class="$style.rightContainer">
+      <div :class="$style.leftContainer">
+        <button :class="$style.imgButton" @click="selectImage">
+          <img :src="imageUrl" width="136" height="136" />
+        </button>
+      </div>
+      <div>
         <form-input
           v-model="state.name"
           label="スタンプ名"
@@ -18,7 +22,7 @@
         />
       </div>
     </div>
-    <p v-if="newImageData" :class="$style.note">{{ cropperNote }}</p>
+    <p :class="$style.note">{{ note }}</p>
     <div :class="$style.buttonContainer">
       <form-button label="キャンセル" color="secondary" @click="cancel" />
       <form-button
@@ -35,13 +39,11 @@
 <script lang="ts" setup>
 import type { Ref } from 'vue'
 import { computed, reactive, ref } from 'vue'
-import apis, { formatResizeError } from '/@/lib/apis'
+import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
 import type { Stamp } from '@traptitech/traq'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import { isValidStampName } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
-import { imageSize } from '/@/components/Settings/StampTab/imageSize'
-import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
@@ -50,7 +52,7 @@ import { useStampsStore } from '/@/store/entities/stamps'
 import { useModalStore } from '/@/store/ui/modal'
 import type { StampId } from '/@/types/entity-ids'
 import ModalFrame from '../Common/ModalFrame.vue'
-import { onMounted } from 'vue'
+import { useFileSelect } from '/@/composables/dom/useFileSelect'
 
 type StampEditState = Pick<Stamp, 'name' | 'creatorId'>
 
@@ -58,7 +60,7 @@ const props = defineProps<{
   id: StampId
 }>()
 
-const { clearModal } = useModalStore()
+const { clearModal, pushModal } = useModalStore()
 const { stampsMap } = useStampsStore()
 const stamp = computed(() => stampsMap.value.get(props.id) ?? ({} as Stamp))
 
@@ -68,6 +70,11 @@ const creatorOptions = computed(() =>
 )
 
 const newImageData = ref<File | undefined>()
+const imageUrl = computed(() =>
+  stamp.value ? buildFilePath(stamp.value.fileId) : ''
+)
+
+const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
 
 const useState = (stamp: Stamp) => {
   const oldState = computed(
@@ -98,13 +105,6 @@ const useStampEdit = (
 
   const editStamp = async () => {
     try {
-      if (newImageData.value) {
-        const size = await imageSize(newImageData.value)
-        if (size.height !== size.width) {
-          addErrorToast('画像が正方形ではありません。編集してください')
-          return
-        }
-      }
       try {
         isEditing.value = true
         const promises = []
@@ -160,40 +160,22 @@ const { isEditing, editStamp } = useStampEdit(
   }
 )
 
-const isGif = newImageData.value?.type === 'image/gif'
-const cropperNote = computed(() =>
-  isGif ? 'GIFは切り抜きできません' : '画像の位置・サイズを編集できます'
-)
+const note = '画像をクリックしてアップロード'
 
 const cancel = () => {
   clearModal()
 }
 
-onMounted(async () => {
-  const stampImage = (await apis.getStampImage(props.id)).data
-  newImageData.value = new File([stampImage], 'stamp.png', {
-    type: 'image/png'
+const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
+  if (!files[0]) return
+  pushModal({
+    type: 'settings-stamp-image-edit',
+    file: files[0]
   })
 })
 </script>
 
 <style lang="scss" module>
-.subtitle {
-  a {
-    pointer-events: none;
-  }
-}
-.item {
-  margin: 16px 0;
-
-  &:first-child {
-    margin-top: 0;
-  }
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
 
 .form {
   margin: 8px 0;
@@ -202,20 +184,25 @@ onMounted(async () => {
 .container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   gap: 16px;
 }
-.rightContainer {
+.leftContainer {
+  width: 136px;
+  height: 136px;
+  margin: 8px 0;
+  flex-grow: 1;
+}
+.imgButton {
   width: 100%;
+  height: 100%;
+  border: 2px solid $theme-ui-secondary-default;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
-.label {
-  @include color-ui-secondary;
-  margin-bottom: 16px;
-}
-.creator {
-  @include color-ui-primary;
-}
 .note {
   @include color-ui-secondary;
   margin-left: 12px;

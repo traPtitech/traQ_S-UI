@@ -5,33 +5,23 @@
       :class="$style.form"
       icon="plus"
       mdi
-      type="secondary"
-      @click="selectImage"
+      color="secondary"
+      @click="handleOpenModal"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import { useFileSelect } from '/@/composables/dom/useFileSelect'
 import { useModalStore } from '/@/store/ui/modal'
 
 const { pushModal } = useModalStore()
 
-const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
-
-const originalImg = ref<File | undefined>()
-const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
-  originalImg.value = files[0]
-
-  if (!originalImg.value) return
+const handleOpenModal = () => {
   pushModal({
-    type: 'settings-stamp-create',
-    file: originalImg.value
+    type: 'settings-stamp-create'
   })
-  originalImg.value = undefined
-})
+}
 </script>
 
 <style lang="scss" module>

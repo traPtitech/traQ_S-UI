@@ -1,8 +1,13 @@
 <template>
   <modal-frame title="新規スタンプ登録" icon-name="">
     <div :class="$style.container">
-      <image-upload v-model="stampImage" :class="$style.form" />
-      <div :class="$style.rightContainer">
+      <div :class="$style.leftContainer">
+        <button :class="$style.imgButton" @click="selectImage">
+          <img v-if="imageUrl" :src="imageUrl" width="136" height="136" />
+          <a-icon v-else name="plus" mdi />
+        </button>
+      </div>
+      <div>
         <form-input
           v-model="newStampName"
           label="スタンプ名"
@@ -15,7 +20,7 @@
         <p :class="$style.creator">@ {{ detail?.name }}</p>
       </div>
     </div>
-    <p :class="$style.note">{{ cropperNote }}</p>
+    <p :class="$style.note">{{ note }}</p>
     <div :class="$style.buttonContainer">
       <form-button label="キャンセル" color="secondary" @click="cancel" />
       <form-button
@@ -34,23 +39,25 @@ import { ref, computed, watch, type Ref } from 'vue'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { isValidStampName } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
-import { imageSize } from '/@/components/Settings/StampTab/imageSize'
-import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useModalStore } from '/@/store/ui/modal'
-
-const props = defineProps<{
-  file: File
-}>()
+import AIcon from '/@/components/UI/AIcon.vue'
+import { useFileSelect } from '/@/composables/dom/useFileSelect'
 
 const { detail } = useMeStore()
-const { clearModal } = useModalStore()
+const { clearModal, pushModal } = useModalStore()
 
-const stampImage = ref(props.file)
+const stampImage = ref<File>()
+const imageUrl = computed(() =>
+  stampImage.value ? URL.createObjectURL(stampImage.value) : undefined
+)
 const newStampName = ref('')
+
+const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
+
 const isCreateEnabled = computed(() => isValidStampName(newStampName.value))
 watch(
   () => stampImage.value,
@@ -61,9 +68,10 @@ watch(
   }
 )
 
-const isGif = stampImage.value.type === 'image/gif'
-const cropperNote = computed(() =>
-  isGif ? 'GIFは切り抜きできません' : '画像の位置・サイズを編集できます'
+const note = computed(() =>
+  stampImage.value
+    ? '画像をクリックしてアップロード'
+    : '＋をクリックしてアップロード'
 )
 
 /**
@@ -80,17 +88,6 @@ const useStampCreate = (
 
   const createStamp = async () => {
     if (!stampImage.value) return
-    try {
-      const size = await imageSize(stampImage.value)
-      if (size.height !== size.width) {
-        addErrorToast('画像が正方形ではありません。編集してください')
-        return
-      }
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error('スタンプの作成に失敗しました', e)
-      addErrorToast(formatResizeError(e, 'スタンプの作成に失敗しました'))
-    }
     try {
       isCreating.value = true
       await apis.createStamp(newStampName.value, stampImage.value)
@@ -115,26 +112,17 @@ const { isCreating, createStamp } = useStampCreate(newStampName, stampImage)
 const cancel = () => {
   clearModal()
 }
+
+const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
+  if (!files[0]) return
+  pushModal({
+    type: 'settings-stamp-image-edit',
+    file: files[0]
+  })
+})
 </script>
 
 <style lang="scss" module>
-.subtitle {
-  a {
-    pointer-events: none;
-  }
-}
-.item {
-  margin: 16px 0;
-
-  &:first-child {
-    margin-top: 0;
-  }
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
 .form {
   margin: 8px 0;
 }
@@ -142,11 +130,23 @@ const cancel = () => {
 .container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   gap: 16px;
 }
-.rightContainer {
+.leftContainer {
+  width: 136px;
+  height: 136px;
+  margin: 8px 0;
+  flex-grow: 1;
+}
+.imgButton {
   width: 100%;
+  height: 100%;
+  border: 2px solid $theme-ui-secondary-default;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .label {
@@ -158,8 +158,8 @@ const cancel = () => {
 }
 .note {
   @include color-ui-secondary;
-  margin-left: 12px;
   margin-bottom: 12px;
+  font-size: 12px;
 }
 .buttonContainer {
   display: flex;

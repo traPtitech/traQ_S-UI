@@ -43,7 +43,7 @@
             : undefined
         "
         :file="
-          currentState.type === 'settings-stamp-create'
+          currentState.type === 'settings-stamp-image-edit'
             ? currentState.file
             : undefined
         "
@@ -71,6 +71,7 @@ import GroupAdminAddModal from './GroupAdminAddModal/GroupAdminAddModal.vue'
 import GroupMemberAddModal from './GroupMemberAddModal/GroupMemberAddModal.vue'
 import StampCreateModal from './StampCreateModal/StampCreateModal.vue'
 import StampEditModal from './StampEditModal/StampEditModal.vue'
+import StampImageEditModal from './StampImageEditModal/StampImageEditModal.vue'
 
 const { shouldShowModal, currentState } = useModalStore()
 
@@ -108,6 +109,8 @@ const component = computed(() => {
       return StampCreateModal
     case 'settings-stamp-edit':
       return StampEditModal
+    case 'settings-stamp-image-edit':
+      return StampImageEditModal
   }
   // eslint-disable-next-line no-console
   console.error('Unexpected modal type:', currentState.value)

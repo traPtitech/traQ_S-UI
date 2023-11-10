@@ -100,10 +100,6 @@ const updateImgView = () => {
   cropper.replace(originalImgUrl.value ?? '')
 }
 
-watchEffect(() => {
-  originalImg.value = props.modelValue
-})
-
 watchEffect(updateImgView)
 
 watchEffect(() => {
@@ -119,8 +115,8 @@ onUnmounted(() => {
 
 <style lang="scss" module>
 .cropper {
-  width: 200px;
-  height: 200px;
+  width: 280px;
+  height: 280px;
   margin: 12px;
   &[data-is-rounded] {
     :global(.cropper-view-box),
