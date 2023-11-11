@@ -1,12 +1,21 @@
 <template>
   <div :class="$style.container">
-    <img :src="url" :class="$style.stamp" />
-    <div :class="$style.notSelected">
-      <p>:{{ stamp.name }}:</p>
+    <img :src="url" :class="$style.stamp" loading="lazy" />
+    <div :class="$style.innerContainer">
+      <div :class="$style.textContainer">
+        <p>:{{ stamp.name }}:</p>
+        <p
+          v-if="showCreator"
+          :title="`@${stamp.creatorId}`"
+          :class="$style.creator"
+        >
+          @{{ stamp.creatorId }}
+        </p>
+      </div>
       <icon-button
         icon-name="dots-horizontal"
         icon-mdi
-        :class="$style.editIcon"
+        :class="$style.dotsButon"
         @click="onDotsClick"
       />
     </div>
@@ -27,9 +36,15 @@ import { buildFilePath } from '/@/lib/apis'
 import useContextMenu from '/@/composables/useContextMenu'
 import StampContextMenu from './StampContextMenu.vue'
 
-const props = defineProps<{
-  stamp: Stamp
-}>()
+const props = withDefaults(
+  defineProps<{
+    stamp: Stamp
+    showCreator?: boolean
+  }>(),
+  {
+    showCreator: false
+  }
+)
 
 const url = computed(() => buildFilePath(props.stamp.fileId))
 
@@ -57,24 +72,41 @@ const onDotsClick = (e: MouseEvent) => {
     top: 12px;
     bottom: 12px;
   }
-  &:hover {
-    @include background-tertiary;
-  }
 }
 
-.editIcon {
+.textContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.creator {
   @include color-ui-secondary;
+  max-width: 120px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.dotsButon {
+  @include color-ui-tertiary;
+  padding: 4px;
+  &:hover {
+    @include color-ui-secondary;
+    @include background-secondary;
+  }
 }
 
 .stamp {
   height: 40px;
   width: 40px;
 }
-.notSelected {
+.innerContainer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  gap: 8px;
   padding: 0 24px;
 }
 </style>

@@ -1,32 +1,123 @@
 <template>
-  <div :class="$style.element">
+  <section :class="$style.element">
     <h3 :class="$style.header">スタンプ管理</h3>
-    <div :class="$style.content">
+    <div
+      v-if="hasChannelEditPermission"
+      role="tablist"
+      :class="$style.tablist"
+      @keydown.left="onKeydown"
+      @keydown.right="onKeydown"
+    >
+      <a-tab
+        :id="myStampTabId"
+        ref="myStampTab"
+        :aria-selected="currentTab === 'myStamp'"
+        :aria-controls="myStampPanelId"
+        :tabindex="currentTab === 'myStamp' ? 0 : -1"
+        label="所有スタンプ"
+        @click="currentTab = 'myStamp'"
+      />
+      <a-tab
+        :id="otherStampTabId"
+        ref="otherStampTab"
+        :aria-selected="currentTab === 'otherStamp'"
+        :aria-controls="otherStampPanelId"
+        :tabindex="currentTab === 'otherStamp' ? 0 : -1"
+        label="その他のスタンプ"
+        @click="currentTab = 'otherStamp'"
+      />
+    </div>
+    <div
+      :id="myStampPanelId"
+      :class="$style.content"
+      role="tabpanel"
+      :hidden="currentTab !== 'myStamp'"
+    >
+      <p v-if="myStamps.length === 0">所有しているスタンプはありません</p>
       <stamp-item
         v-for="stamp in myStamps"
+        v-else
         :key="stamp.id"
         :stamp="stamp"
       />
     </div>
-  </div>
+    <div
+      v-if="hasChannelEditPermission"
+      :id="otherStampPanelId"
+      :class="$style.content"
+      role="tabpanel"
+      :hidden="currentTab !== 'otherStamp'"
+    >
+      <stamp-item
+        v-for="stamp in otherStamps"
+        :key="stamp.id"
+        :stamp="stamp"
+        show-creator
+      />
+    </div>
+  </section>
 </template>
 
 <script lang="ts" setup>
 import StampItem from './StampItem.vue'
-import { computed } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
+import { randomString } from '/@/lib/basic/randomString'
+import ATab from '/@/components/UI/ATab.vue'
+import { UserPermission } from '@traptitech/traq'
 
 const { myId } = useMeStore()
 const { stampsMap } = useStampsStore()
 
-// TODO: 管理者なら全部変えられるたぶん https://github.com/traPtitech/traQ_S-UI/issues/291
-
 const myStamps = computed(() =>
   [...stampsMap.value.values()].filter(stamp => stamp.creatorId === myId.value)
 )
+const otherStamps = computed(() =>
+  [...stampsMap.value.values()].filter(stamp => stamp.creatorId !== myId.value)
+)
 
+const { detail } = useMeStore()
+const hasChannelEditPermission = computed(() =>
+  detail.value?.permissions.includes(UserPermission.EditStampCreatedByOthers)
+)
 
+const myStampTab = ref<InstanceType<typeof ATab> | null>(null)
+const otherStampTab = ref<InstanceType<typeof ATab> | null>(null)
+
+const myStampTabId = randomString()
+const otherStampTabId = randomString()
+
+const myStampPanelId = randomString()
+const otherStampPanelId = randomString()
+
+const tabNames = ['myStamp', 'otherStamp'] as const
+const tabNameRefs: Record<
+  (typeof tabNames)[number],
+  Ref<InstanceType<typeof ATab> | null>
+> = {
+  myStamp: myStampTab,
+  otherStamp: otherStampTab
+}
+const currentTab = ref<(typeof tabNames)[number]>('myStamp')
+const onKeydown = (e: KeyboardEvent) => {
+  const index = tabNames.indexOf(currentTab.value)
+  if (index === -1) return
+
+  let nextIndex: number
+  if (e.key === 'ArrowLeft') {
+    nextIndex = index - 1
+  } else if (e.key === 'ArrowRight') {
+    nextIndex = index + 1
+  } else {
+    return
+  }
+
+  nextIndex = (nextIndex + tabNames.length) % tabNames.length
+
+  currentTab.value = tabNames[nextIndex] ?? currentTab.value
+  tabNameRefs[currentTab.value].value?.focus()
+}
 </script>
 
 <style lang="scss" module>
@@ -38,5 +129,11 @@ const myStamps = computed(() =>
 }
 .content {
   margin-left: 12px;
+}
+
+.tablist {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 </style>
