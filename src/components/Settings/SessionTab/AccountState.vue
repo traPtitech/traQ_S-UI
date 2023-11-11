@@ -5,9 +5,15 @@
       <form-button
         label="ログアウト"
         :class="$style.logout"
+        type="secondary"
+        is-danger
         @click="onLogoutClick"
       />
-      <form-button label="全セッション破棄" @click="onSessionDelete" />
+      <form-button
+        label="全セッション破棄"
+        is-danger
+        @click="onSessionDelete"
+      />
     </div>
   </div>
 </template>

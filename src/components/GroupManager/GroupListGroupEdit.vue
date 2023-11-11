@@ -31,7 +31,7 @@
     <div :class="[$style.item, $style.deleteButtonWrapper]">
       <form-button
         label="グループを削除"
-        variant="secondary"
+        type="secondary"
         is-danger
         @click="onDelete"
       />

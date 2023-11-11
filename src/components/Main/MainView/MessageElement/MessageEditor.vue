@@ -32,7 +32,7 @@
       </div>
     </div>
     <div :class="$style.controls">
-      <form-button label="キャンセル" variant="tertiary" @click="cancel" />
+      <form-button label="キャンセル" type="tertiary" @click="cancel" />
       <form-button
         label="OK"
         :disabled="isPostingAttachment"

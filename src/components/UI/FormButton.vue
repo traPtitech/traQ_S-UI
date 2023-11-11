@@ -3,7 +3,7 @@
     :class="$style.container"
     :disabled="loading || disabled"
     :data-is-loading="$boolAttr(loading)"
-    :data-variant="variant"
+    :data-type="type"
     :data-is-danger="$boolAttr(isDanger)"
   >
     <div :class="$style.label">{{ label }}</div>
@@ -20,17 +20,17 @@ import { computed } from 'vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import { match, P } from 'ts-pattern'
 
-interface Variant {
-  variant?: 'primary' | 'secondary' | 'tertiary'
+interface Type {
+  type?: 'primary' | 'secondary' | 'tertiary'
   isDanger?: boolean
 }
 
-interface NonDangerVariant extends Variant {
-  variant?: 'primary' | 'secondary' | 'tertiary'
+interface NonDangerType extends Type {
+  type?: 'primary' | 'secondary' | 'tertiary'
   isDanger?: false
 }
-interface DangerVariant extends Variant {
-  variant?: 'primary' | 'secondary'
+interface DangerType extends Type {
+  type?: 'primary' | 'secondary'
   isDanger: true
 }
 
@@ -38,18 +38,18 @@ type Props = {
   label?: string
   loading?: boolean
   disabled?: boolean
-} & (NonDangerVariant | DangerVariant)
+} & (NonDangerType | DangerType)
 
 const props = withDefaults(defineProps<Props>(), {
   label: '',
   loading: false,
   disabled: false,
-  variant: 'primary',
+  type: 'primary',
   isDanger: false
 })
 
 const spinnerColor = computed(() => {
-  return match([props.variant, props.isDanger] as const)
+  return match([props.type, props.isDanger] as const)
     .with(['primary', P._], () => 'white' as const)
     .with(['secondary', true], () => 'accent-error' as const)
     .with(['secondary', false], () => 'accent-primary' as const)
@@ -72,26 +72,26 @@ const spinnerColor = computed(() => {
   &[data-is-loading] {
     cursor: wait;
   }
-  &[data-variant='primary'] {
+  &[data-type='primary'] {
     @include color-common-text-white-primary;
     @include background-accent-primary;
     border-color: $theme-ui-primary-default;
   }
-  &[data-variant='secondary'] {
+  &[data-type='secondary'] {
     @include color-accent-primary;
     border-color: $theme-accent-primary-default;
   }
-  &[data-variant='tertiary'] {
+  &[data-type='tertiary'] {
     @include color-ui-secondary;
     border-color: $theme-ui-secondary-default;
   }
 
-  &[data-variant='primary'][data-is-danger] {
+  &[data-type='primary'][data-is-danger] {
     @include color-common-text-white-primary;
     @include background-accent-error;
     border-color: $theme-accent-error-default;
   }
-  &[data-variant='secondary'][data-is-danger] {
+  &[data-type='secondary'][data-is-danger] {
     color: $theme-accent-error-default;
     border-color: $theme-accent-error-default;
   }
