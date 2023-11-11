@@ -1,15 +1,16 @@
 <template>
-  <div>
+  <section>
     <h3 :class="$style.header">アクセスを許可しているアプリ</h3>
-    <div :class="$style.content">
+    <ul v-if="tokensWithClientData.length > 0" :class="$style.content">
       <token-info
         v-for="token in tokensWithClientData"
         :key="token.id"
         :token="token"
         @revoke="revokeToken(token.id)"
       />
-    </div>
-  </div>
+    </ul>
+    <p v-else>アクセスを許可しているアプリはありません。</p>
+  </section>
 </template>
 
 <script lang="ts" setup>
@@ -69,17 +70,14 @@ onMounted(() => {
 
 <style lang="scss" module>
 .header {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 .content {
-  @include color-ui-secondary;
-  @include background-secondary;
+  @include color-ui-primary;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   height: 400px;
-  padding: 8px;
-  margin-left: 12px;
-  gap: 16px;
+  padding: 0 4px;
+  gap: 4px;
   border-radius: 8px;
   overflow-y: scroll;
 }
