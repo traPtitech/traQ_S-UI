@@ -28,10 +28,10 @@
       />
     </div>
     <div
+      v-if="currentTab === 'myStamp'"
       :id="myStampPanelId"
       :class="$style.content"
       role="tabpanel"
-      :hidden="currentTab !== 'myStamp'"
     >
       <p v-if="myStamps.length === 0">所有しているスタンプはありません</p>
       <stamp-item
@@ -42,11 +42,10 @@
       />
     </div>
     <div
-      v-if="hasChannelEditPermission"
+      v-if="hasChannelEditPermission && currentTab === 'otherStamp'"
       :id="otherStampPanelId"
       :class="$style.content"
       role="tabpanel"
-      :hidden="currentTab !== 'otherStamp'"
     >
       <stamp-item
         v-for="stamp in otherStamps"

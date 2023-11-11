@@ -1,5 +1,5 @@
 <template>
-  <modal-frame title="新規スタンプ登録" icon-name="">
+  <modal-frame title="新規スタンプ登録">
     <div :class="$style.container">
       <div :class="$style.leftContainer">
         <button :class="$style.imgButton" @click="selectImage">

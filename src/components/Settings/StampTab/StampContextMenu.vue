@@ -1,7 +1,7 @@
 <template>
   <context-menu-container :position="position" @close="close">
     <div :class="$style.container">
-      <button :class="$style.button" @click="withClose(updateStampImage)">
+      <button :class="$style.button" @click="updateStampImage">
         <a-icon name="file-image" mdi />
         スタンプ画像を更新する
       </button>
@@ -53,12 +53,12 @@ const withClose = async (func: () => void | Promise<void>) => {
 }
 
 const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
-  //FIXME: 先にclose()してinput要素が消えちゃうから実行されない
   if (!files[0]) return
   pushModal({
     type: 'settings-stamp-image-edit',
     file: files[0]
   })
+  close()
 })
 
 const updateStampImage = () => {

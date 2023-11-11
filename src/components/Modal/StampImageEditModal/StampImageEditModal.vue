@@ -2,7 +2,6 @@
   <modal-frame
     title="スタンプ画像の編集"
     subtitle="画像の位置・サイズを編集できます"
-    icon-name=""
   >
     <div :class="$style.container">
       <image-upload v-model="stampImage" />

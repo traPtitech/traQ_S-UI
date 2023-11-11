@@ -106,7 +106,7 @@ const spinnerColor = computed(() => {
 .label {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   margin: 8px 32px;
   .container[data-is-loading] & {
     visibility: hidden;
