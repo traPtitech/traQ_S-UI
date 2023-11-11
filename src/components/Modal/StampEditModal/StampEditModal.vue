@@ -176,7 +176,6 @@ const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
 </script>
 
 <style lang="scss" module>
-
 .form {
   margin: 8px 0;
 }

@@ -13,6 +13,9 @@ declare module '@vue/runtime-dom' {
     enterkeyhint?: string
   }
   interface SVGAttributes extends DataAndAriaAttributes {}
+  interface ImgHTMLAttributes extends HTMLAttributes {
+    loading?: 'lazy' | 'eager' | 'auto'
+  }
 }
 
 declare module '@vue/runtime-core' {
