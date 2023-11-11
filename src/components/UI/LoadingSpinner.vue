@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-type SpinnerColor = 'white' | 'ui-secondary' | 'accent-primary'
+type SpinnerColor = 'white' | 'ui-secondary' | 'accent-primary' | 'accent-error'
 
 withDefaults(
   defineProps<{
@@ -35,6 +35,10 @@ $spinner-width: 0.35em;
   }
   &[data-color='accent-primary'] {
     --spinner-color: #{$theme-accent-primary-default};
+    --spinner-gap-color: transparent;
+  }
+  &[data-color='accent-error'] {
+    --spinner-color: #{$theme-accent-error-default};
     --spinner-gap-color: transparent;
   }
 }

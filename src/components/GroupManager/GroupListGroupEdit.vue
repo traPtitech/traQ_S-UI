@@ -29,7 +29,12 @@
       :members="group.members"
     />
     <div :class="[$style.item, $style.deleteButtonWrapper]">
-      <form-button label="グループを削除" color="error" @click="onDelete" />
+      <form-button
+        label="グループを削除"
+        variant="secondary"
+        is-danger
+        @click="onDelete"
+      />
     </div>
   </div>
 </template>
