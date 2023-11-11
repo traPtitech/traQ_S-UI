@@ -186,6 +186,7 @@ const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
   gap: 16px;
 }
 .leftContainer {
+  min-width: 136px;
   width: 136px;
   height: 136px;
   margin: 8px 0;
@@ -204,8 +205,8 @@ const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
 
 .note {
   @include color-ui-secondary;
-  margin-left: 12px;
   margin-bottom: 12px;
+  font-size: 12px;
 }
 .buttonContainer {
   display: flex;

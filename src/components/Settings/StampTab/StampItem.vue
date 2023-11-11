@@ -12,12 +12,9 @@
           @{{ stamp.creatorId }}
         </p>
       </div>
-      <icon-button
-        icon-name="dots-horizontal"
-        icon-mdi
-        :class="$style.dotsButon"
-        @click="onDotsClick"
-      />
+      <button :class="$style.dotsButton" @click="onDotsClick">
+        <a-icon name="dots-horizontal" mdi />
+      </button>
     </div>
     <stamp-context-menu
       v-if="contextMenuPosition"
@@ -31,10 +28,10 @@
 <script lang="ts" setup>
 import type { Stamp } from '@traptitech/traq'
 import { computed } from 'vue'
-import IconButton from '/@/components/UI/IconButton.vue'
 import { buildFilePath } from '/@/lib/apis'
 import useContextMenu from '/@/composables/useContextMenu'
 import StampContextMenu from './StampContextMenu.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -88,9 +85,13 @@ const onDotsClick = (e: MouseEvent) => {
   text-overflow: ellipsis;
 }
 
-.dotsButon {
+.dotsButton {
   @include color-ui-tertiary;
   padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+
   &:hover {
     @include color-ui-secondary;
     @include background-secondary;

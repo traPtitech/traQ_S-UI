@@ -133,6 +133,7 @@ const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
   gap: 16px;
 }
 .leftContainer {
+  min-width: 136px;
   width: 136px;
   height: 136px;
   margin: 8px 0;
