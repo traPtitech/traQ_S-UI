@@ -10,7 +10,7 @@
         target="_blank"
         >{{ changeName }}</a
       >
-      から可能です
+      から可能です。
     </p>
     <template v-else>
       <form-input
