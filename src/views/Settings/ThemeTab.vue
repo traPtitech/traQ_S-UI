@@ -5,34 +5,37 @@
       <div :class="$style.content">
         <form-radio
           v-model="state.type"
-          label="自動切替 (OSのテーマに合わせる)"
+          label="OS準拠"
           input-value="auto"
           :class="$style.form"
         />
         <form-radio
           v-model="state.type"
-          label="ライトテーマ"
+          label="ライト"
           input-value="light"
           :class="$style.form"
         />
         <form-radio
           v-model="state.type"
-          label="ダークテーマ"
+          label="ダーク"
           input-value="dark"
           :class="$style.form"
         />
         <form-radio
           v-model="state.type"
-          label="カスタムテーマ"
+          label="カスタム"
           input-value="custom"
           :class="$style.form"
         />
       </div>
     </div>
     <div :class="$style.element">
-      <h3 :class="$style.header">カスタムテーマ設定</h3>
+      <h3 :class="$style.header">カスタムテーマ</h3>
       <div :class="$style.content">
         <template v-if="state.type === 'custom'">
+          <div :class="$style.btn">
+            <edit-theme :custom="state.custom" @change-theme="changeTheme" />
+          </div>
           <div :class="$style.setting">
             <div
               v-for="(val, category) in state.custom.basic"
@@ -58,7 +61,6 @@
               </div>
             </div>
           </div>
-          <edit-theme :custom="state.custom" @change-theme="changeTheme" />
         </template>
         <p v-else>カスタムテーマが選択されていません</p>
       </div>
@@ -86,12 +88,14 @@ const changeTheme = (theme: Theme) => {
 }
 .element {
   margin: 24px 0;
+  position: relative;
 }
 .content {
-  margin-left: 12px;
+  margin-left: 0px;
 }
 .form {
   margin-right: 12px;
+  display:block;
 }
 .setting {
   @include background-secondary;
@@ -113,5 +117,11 @@ const changeTheme = (theme: Theme) => {
   .input {
     margin-left: auto;
   }
+}
+
+.btn{
+  position:absolute;
+  top:-10px;
+  right:10px;
 }
 </style>

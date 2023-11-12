@@ -10,7 +10,7 @@
     />
     -->
     <form-button
-      label="インポート/エクスポート"
+      label="import/export"
       :disabled="isImporterOpen"
       color="secondary"
       :class="$style.element"
