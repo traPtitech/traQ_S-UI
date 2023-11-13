@@ -53,6 +53,7 @@ import { countLength } from '/@/lib/basic/string'
 import { useToastStore } from '/@/store/ui/toast'
 import { getResizedFile } from '/@/lib/resize'
 import useAttachments from '/@/components/Main/MainView/MessageInput/composables/useAttachments'
+import type { AxiosProgressEvent } from 'axios'
 
 const useEditMessage = (
   props: { messageId: string },
@@ -99,7 +100,8 @@ const useAttachmentsEditor = (
       /**
        * https://github.com/axios/axios#request-config
        */
-      onUploadProgress(e: ProgressEvent) {
+      onUploadProgress(e: AxiosProgressEvent) {
+        if (e.total === undefined || e.total === 0) return
         progress.value = e.loaded / e.total
       }
     })
