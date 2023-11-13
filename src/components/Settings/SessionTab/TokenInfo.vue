@@ -138,7 +138,15 @@ const scopes = computed(() =>
   border-radius: 9999px;
 }
 .revokeButton {
+  @include color-ui-tertiary;
   cursor: pointer;
-  display: inline-block;
+  display: grid;
+  padding: 4px;
+  border-radius: 4px;
+
+  &:hover {
+    @include color-ui-secondary;
+    @include background-secondary;
+  }
 }
 </style>
