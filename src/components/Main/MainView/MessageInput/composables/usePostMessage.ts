@@ -16,6 +16,7 @@ import { useChannelTree } from '/@/store/domain/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 import { useGroupsStore } from '/@/store/entities/groups'
+import type { AxiosProgressEvent } from 'axios'
 
 /**
  * @param progress アップロード進行状況 0～1
@@ -34,7 +35,8 @@ const uploadAttachments = async (
         /**
          * https://github.com/axios/axios#request-config
          */
-        onUploadProgress(e: ProgressEvent) {
+        onUploadProgress(e: AxiosProgressEvent) {
+          if (e.total === undefined || e.total === 0) return
           onProgress((i + e.loaded / e.total) / attachments.length)
         }
       })
