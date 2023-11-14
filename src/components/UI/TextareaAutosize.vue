@@ -32,6 +32,11 @@ const emit = defineEmits<{
 const { value, onInput } = useTextModelSyncer(props, emit)
 
 const textareaEle = ref<HTMLTextAreaElement | null>(null)
+
+const focus = () => {
+  textareaEle.value?.focus()
+}
+
 onMounted(() => {
   if (textareaEle.value) {
     autosize(textareaEle.value)
@@ -47,6 +52,10 @@ onBeforeUnmount(() => {
   if (textareaEle.value) {
     autosize.destroy(textareaEle.value)
   }
+})
+
+defineExpose({
+  focus
 })
 </script>
 

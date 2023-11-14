@@ -4,6 +4,7 @@
       v-model="manageState.name"
       label="チャンネル名"
       :max-length="20"
+      focus-on-mount
     />
     <form-selector
       v-model="manageState.parent"

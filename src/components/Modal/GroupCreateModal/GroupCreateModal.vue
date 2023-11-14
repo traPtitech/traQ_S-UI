@@ -5,6 +5,7 @@
       :class="$style.item"
       label="グループ名"
       :max-length="30"
+      focus-on-mount
     />
     <form-input
       v-model="desc"
