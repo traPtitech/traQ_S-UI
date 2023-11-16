@@ -61,12 +61,16 @@ const querySuggestions = computed(() => [
   {
     insertQuery: 'before:',
     description: '特定の日時以前のメッセージ',
-    example: `before:2020-01-23${!isMobile.value ? ', before:2020-01-23T00:00' : ''}`
+    example: `before:2020-01-23${
+      !isMobile.value ? ', before:2020-01-23T00:00' : ''
+    }`
   },
   {
     insertQuery: 'after:',
     description: '特定の日時以降のメッセージ',
-    example: `after:2020-01-23${!isMobile.value ? ', after:2020-01-23T00:00' : ''}`
+    example: `after:2020-01-23${
+      !isMobile.value ? ', after:2020-01-23T00:00' : ''
+    }`
   }
 ])
 
