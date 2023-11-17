@@ -1,6 +1,8 @@
 <template>
   <section>
-    <h3 :class="$style.header">閲覧中チャンネル一覧</h3>
+    <h3 :class="$style.header">
+      他端末/ブラウザ/タブで最新のメッセージを開いているチャンネル
+    </h3>
     <ul v-if="monitoringChanelStrings.length > 0" :class="$style.list">
       <li v-for="channel in monitoringChanelStrings" :key="channel">
         {{ channel }}
