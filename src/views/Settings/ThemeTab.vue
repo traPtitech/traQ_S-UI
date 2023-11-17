@@ -93,7 +93,7 @@ const changeTheme = (theme: Theme) => {
 }
 .form {
   margin-right: 12px;
-  display:block;
+  display: block;
 }
 .setting {
   @include background-secondary;

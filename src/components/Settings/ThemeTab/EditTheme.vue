@@ -124,15 +124,15 @@ const { isImporterOpen, onImportClick } = useImporter()
 
 <style lang="scss" module>
 .content {
-  margin-top:-46px;
+  margin-top: -46px;
   margin-bottom: 12px;
   display: flex;
   flex-direction: column;
 }
 .element {
   align-self: flex-end;
-  @media screen and (max-width:650px){
-    font-size:12px;
+  @media screen and (max-width: 650px) {
+    font-size: 12px;
   }
 }
 .jsonField {
