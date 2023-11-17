@@ -24,8 +24,12 @@
       </div>
     </div>
     <div :class="$style.revoke">
-      <button :class="$style.revokeButton" @click="emit('revoke')">
-        <a-icon name="close" mdi aria-label="トークンを無効化" />
+      <button
+        :class="$style.revokeButton"
+        title="トークンを無効化"
+        @click="emit('revoke')"
+      >
+        <a-icon name="close" mdi />
       </button>
     </div>
   </li>
