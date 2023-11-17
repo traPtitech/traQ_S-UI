@@ -33,9 +33,7 @@
       <h3 :class="$style.header">カスタムテーマ</h3>
       <div :class="$style.content">
         <template v-if="state.type === 'custom'">
-          <div :class="$style.btn">
-            <edit-theme :custom="state.custom" @change-theme="changeTheme" />
-          </div>
+          <edit-theme :custom="state.custom" @change-theme="changeTheme" />
           <div :class="$style.setting">
             <div
               v-for="(val, category) in state.custom.basic"
@@ -117,11 +115,5 @@ const changeTheme = (theme: Theme) => {
   .input {
     margin-left: auto;
   }
-}
-
-.btn{
-  position:absolute;
-  top:-10px;
-  right:10px;
 }
 </style>
