@@ -1,11 +1,10 @@
 <template>
-  <section>
-    <h2 :class="$style.visuallyHidden">セッション</h2>
+  <div>
     <account-state :class="$style.element" />
     <view-states :class="$style.element" />
     <password-change :class="$style.element" />
     <token-manager :class="$style.element" />
-  </section>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -16,12 +15,6 @@ import TokenManager from '/@/components/Settings/SessionTab/TokenManager.vue'
 </script>
 
 <style lang="scss" module>
-.visuallyHidden {
-  position: fixed;
-  top: -9999px;
-  left: -9999px;
-}
-
 .element {
   margin: 24px 0;
 }
