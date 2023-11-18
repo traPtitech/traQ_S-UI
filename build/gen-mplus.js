@@ -78,7 +78,9 @@ const generateFilename = font => {
   const family = font['font-family'].replace(/[' ]/g, '')
   const weight = font['font-weight'].replace(/[' ]/g, '')
 
-  const fontSrcWithIndex = getUrlFromSrc(font.src).match(/\/v\d+\/[^.]+\.(\d+)\.woff2/)
+  const fontSrcWithIndex = getUrlFromSrc(font.src).match(
+    /\/v\d+\/[^.]+\.(\d+)\.woff2/
+  )
   if (!fontSrcWithIndex) {
     return `${family}.${weight}.woff2`
   }
