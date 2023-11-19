@@ -82,7 +82,10 @@ const generateFilename = font => {
     /\/v\d+\/[^.]+\.(\d+)\.woff2/
   )
   if (!fontSrcWithIndex) {
-    return `${family}.${weight}.woff2`
+    const fontSrcWithId = getUrlFromSrc(font.src).match(
+      /\/v\d+\/([^.]+)\.woff2/
+    )
+    return `${family}.${weight}.${fontSrcWithId[1]}.woff2`
   }
   return `${family}.${weight}.${fontSrcWithIndex[1]}.woff2`
 }
