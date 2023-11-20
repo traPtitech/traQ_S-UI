@@ -49,10 +49,10 @@ const addTag = async () => {
     })
     newTagName.value = ''
   } catch (e) {
-    if (!(e instanceof AxiosError) || e.response?.status !== 409) {
-      addErrorToast('タグの追加に失敗しました')
-    } else {
+    if (e instanceof AxiosError && e.response?.status === 409) {
       addErrorToast('既に同じ名前のタグがついています')
+    } else {
+      addErrorToast('タグの追加に失敗しました')
     }
   }
   adding.value = false

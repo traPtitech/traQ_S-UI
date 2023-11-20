@@ -66,10 +66,10 @@ const create = async () => {
     }
     await popModal()
   } catch (e) {
-    if (!(e instanceof AxiosError) || e.response?.status !== 409) {
-      addErrorToast('グループの作成に失敗しました')
-    } else {
+    if (e instanceof AxiosError && e.response?.status === 409) {
       addErrorToast('既に同じ名前のグループが存在しています')
+    } else {
+      addErrorToast('グループの作成に失敗しました')
     }
   }
 }
