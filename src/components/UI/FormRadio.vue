@@ -1,5 +1,5 @@
 <template>
-  <label :class="$style.label">
+  <label :class="$style.label" :aria-checked="isChecked">
     <input
       v-model="value"
       type="radio"
@@ -50,6 +50,9 @@ const isChecked = computed(() => props.inputValue === value.value)
   &:focus-within {
     border-color: $theme-accent-focus-default;
   }
+  &[aria-checked='false'] {
+    opacity: 0.5;
+  }
 }
 
 .radio {
@@ -67,9 +70,7 @@ const isChecked = computed(() => props.inputValue === value.value)
   width: 13px;
   border: solid 2px $theme-ui-primary-default;
   border-radius: 50%;
-  &[aria-checked='false'] {
-    opacity: 0.5;
-  }
+  margin-right:3px;
 }
 .pseudoRadioInner {
   display: inline-block;
