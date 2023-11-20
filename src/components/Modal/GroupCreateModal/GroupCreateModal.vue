@@ -63,11 +63,17 @@ const create = async () => {
     if (addMember.value) {
       await apis.addUserGroupMember(group.id, { id: myIdV, role: '' })
     }
-  } catch {
-    addErrorToast('グループの作成に失敗しました')
-  }
+    await popModal()
+  } catch (e) {
+    const err = e as AxiosError<{ status: number }>
+    if (!err.response) return
 
-  await popModal()
+    if (err.response.status === 409) {
+      addErrorToast('既に同じ名前のグループが存在しています')
+    } else {
+      addErrorToast('グループの作成に失敗しました')
+    }
+  }
 }
 </script>
 
