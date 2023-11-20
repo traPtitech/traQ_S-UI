@@ -30,10 +30,12 @@
       </div>
     </div>
     <div :class="$style.element">
-      <h3 :class="$style.header">カスタムテーマ</h3>
+      <div :class = "$style.container">
+        <h3 :class="$style.header">カスタムテーマ</h3>
+        <edit-theme v-if="state.type === 'custom'" :custom="state.custom" @change-theme="changeTheme" />
+      </div>
       <div :class="$style.content">
         <template v-if="state.type === 'custom'">
-          <edit-theme :custom="state.custom" @change-theme="changeTheme" />
           <div :class="$style.setting">
             <div
               v-for="(val, category) in state.custom.basic"
@@ -86,7 +88,11 @@ const changeTheme = (theme: Theme) => {
 }
 .element {
   margin: 24px 0;
-  position: relative;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
 }
 .content {
   margin-left: 0px;
