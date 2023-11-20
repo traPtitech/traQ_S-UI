@@ -27,6 +27,7 @@ import apis from '/@/lib/apis'
 import type { UserId } from '/@/types/entity-ids'
 import useMaxLength from '/@/composables/utils/useMaxLength'
 import { useToastStore } from '/@/store/ui/toast'
+import { AxiosError } from 'axios'
 
 const props = defineProps<{
   userId: UserId
@@ -48,13 +49,10 @@ const addTag = async () => {
     })
     newTagName.value = ''
   } catch (e) {
-    const err = e as AxiosError<{ status: number }>
-    if (!err.response) return
-
-    if (err.response.status === 409) {
-      addErrorToast('既に同じ名前のタグがついています')
-    } else {
+    if (!(e instanceof AxiosError) || e.response?.status !== 409) {
       addErrorToast('タグの追加に失敗しました')
+    } else {
+      addErrorToast('既に同じ名前のタグがついています')
     }
   }
   adding.value = false
