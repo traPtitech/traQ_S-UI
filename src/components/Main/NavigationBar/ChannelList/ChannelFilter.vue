@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.input">
-      <filter-input v-model="value" on-secondary disable-ime />
+      <filter-input v-model="value" on-secondary disable-ime focus-on-mount />
     </div>
   </div>
 </template>

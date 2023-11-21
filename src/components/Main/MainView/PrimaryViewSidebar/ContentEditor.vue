@@ -1,7 +1,11 @@
 <template>
   <div :class="$style.container">
     <div v-if="isEditingValue && value !== undefined">
-      <textarea-autosize v-model="value" :class="$style.editor" />
+      <textarea-autosize
+        ref="textareaRef"
+        v-model="value"
+        :class="$style.editor"
+      />
       <length-count :val="value" :max-length="maxLength" />
     </div>
     <div v-else :class="$style.content" :data-is-empty="$boolAttr(isEmpty)">
@@ -24,7 +28,7 @@
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
-import { computed } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { countLength } from '/@/lib/basic/string'
 import {
   useModelSyncer,
@@ -51,14 +55,20 @@ const emit = defineEmits<{
 const value = useModelValueSyncer(props, emit)
 const isEditingValue = useModelSyncer(props, emit, 'isEditing')
 
+const textareaRef = ref<InstanceType<typeof TextareaAutosize> | null>(null)
+
 const content = computed(() => {
   if (value.value === '') return props.fallbackValue
   if (value.value === undefined) return 'ロード中'
   return value.value
 })
 const isEmpty = computed(() => value.value === '' || value.value === undefined)
-const onButtonClick = () => {
+const onButtonClick = async () => {
   isEditingValue.value = !isEditingValue.value
+  await nextTick()
+  if (isEditingValue.value) {
+    textareaRef.value?.focus()
+  }
 }
 
 const isExceeded = computed(

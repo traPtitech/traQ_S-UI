@@ -71,7 +71,8 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
         count: 1,
         noticeable,
         since: message.createdAt,
-        updatedAt: message.createdAt
+        updatedAt: message.createdAt,
+        oldestMessageId: message.id
       })
     }
     updateBadge(unreadChannelsMap.value)

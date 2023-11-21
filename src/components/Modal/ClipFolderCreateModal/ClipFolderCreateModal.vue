@@ -10,6 +10,7 @@
       label="名前"
       :class="$style.input"
       :max-length="30"
+      focus-on-mount
     />
     <form-text-area
       v-model="description.val"

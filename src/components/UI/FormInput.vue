@@ -53,10 +53,11 @@
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
-import { shallowRef } from 'vue'
+import { onMounted, shallowRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useInput from '/@/composables/useInput'
 import useShowPassword from '/@/composables/dom/useShowPassword'
+import { isTouchDevice } from '/@/lib/dom/browser'
 
 const props = withDefaults(
   defineProps<{
@@ -74,13 +75,15 @@ const props = withDefaults(
     step?: string
     maxLength?: number
     useChangeEvent?: boolean
+    focusOnMount?: boolean
   }>(),
   {
     type: 'text',
     modelValue: '',
     onSecondary: false,
     placeholder: '',
-    useChangeEvent: false
+    useChangeEvent: false,
+    focusOnMount: false
   }
 )
 
@@ -108,6 +111,13 @@ const id = randomString()
 
 const { isPasswordShown, togglePassword, typeWithShown } =
   useShowPassword(props)
+
+onMounted(() => {
+  if (!props.focusOnMount || isTouchDevice()) return
+  focus()
+})
+
+defineExpose({ focus })
 </script>
 
 <style lang="scss" module>
