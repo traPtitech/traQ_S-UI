@@ -9,7 +9,7 @@
             ref="textareaRef"
             :class="$style.input"
             :value="defaultTextRef"
-            @input="event => state.text = (event.target as HTMLTextAreaElement)?.value"
+            @input="event => state.text = (event.target as HTMLTextAreaElement).value"
           />
         </div>
         <div :class="$style.controls">
