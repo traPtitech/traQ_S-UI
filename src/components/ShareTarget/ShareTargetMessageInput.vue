@@ -8,7 +8,7 @@
             :id="id"
             ref="textareaRef"
             :class="$style.input"
-            :value="defaultTextRef"
+            :value="defaultText"
             @input="event => state.text = (event.target as HTMLTextAreaElement).value"
           />
         </div>
@@ -35,7 +35,7 @@
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-import { onMounted, shallowRef, computed, ref, toRef } from 'vue'
+import { onMounted, shallowRef, ref, toRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
 import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
@@ -49,7 +49,6 @@ import { useStampHistory } from '/@/store/domain/stampHistory'
 const props = defineProps<{
   defaultText: string
 }>()
-const defaultTextRef = computed(() => props.defaultText)
 
 const { fetchStampHistory } = useStampHistory()
 const { fetchStamps } = useStampsStore()
