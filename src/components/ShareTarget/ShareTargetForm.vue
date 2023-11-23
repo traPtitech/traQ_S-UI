@@ -6,7 +6,10 @@
       label="投稿先チャンネル"
       :options="channelOptions"
     />
-    <share-target-message-input :class="[$style.item, $style.input]" />
+    <share-target-message-input
+      :class="[$style.item, $style.input]"
+      :default-text="defaultTextRef"
+    />
     <form-button
       :class="[$style.item, $style.button]"
       label="送信"
@@ -34,6 +37,7 @@ import { useUsersStore } from '/@/store/entities/users'
 const props = defineProps<{
   defaultText: string
 }>()
+const defaultTextRef = computed(() => props.defaultText)
 
 const emit = defineEmits<{
   (e: 'post'): void

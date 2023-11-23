@@ -7,8 +7,9 @@
           <textarea
             :id="id"
             ref="textareaRef"
-            v-model="state.text"
             :class="$style.input"
+            :value="defaultTextRef"
+            @input="event => state.text = (event.target as HTMLTextAreaElement)?.value"
           />
         </div>
         <div :class="$style.controls">
@@ -34,7 +35,7 @@
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-import { onMounted, shallowRef, ref, toRef } from 'vue'
+import { onMounted, shallowRef, computed, ref, toRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
 import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
@@ -44,6 +45,11 @@ import { useToastStore } from '/@/store/ui/toast'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampHistory } from '/@/store/domain/stampHistory'
+
+const props = defineProps<{
+  defaultText: string
+}>()
+const defaultTextRef = computed(() => props.defaultText)
 
 const { fetchStampHistory } = useStampHistory()
 const { fetchStamps } = useStampsStore()
