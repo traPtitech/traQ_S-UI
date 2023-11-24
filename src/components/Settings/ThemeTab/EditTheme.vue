@@ -45,10 +45,12 @@ import type { Theme } from '/@/lib/theme/schema'
 import { themeSchema } from '/@/lib/theme/schema'
 import { dequal } from 'dequal'
 import { useToastStore } from '/@/store/ui/toast'
+import { reactive } from 'vue'
+import { useThemeSettings } from '/@/store/app/themeSettings'
 
 const useEditedThemes = (
   props: { custom: Theme },
-  emit: (name: 'changeTheme', theme: Theme) => void
+  changeTheme: (theme: Theme) => void
 ) => {
   const { addErrorToast } = useToastStore()
 
@@ -77,7 +79,7 @@ const useEditedThemes = (
       const themeObj = JSON.parse(editedTheme.value)
       const res = themeSchema.safeParse(themeObj)
       if (res.success) {
-        emit('changeTheme', res.data)
+        changeTheme(res.data)
       } else {
         failedUpdateTheme(
           `構文エラー: ${res.error.issues
@@ -109,15 +111,15 @@ const useImporter = () => {
 import FormButton from '/@/components/UI/FormButton.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 
-const props = defineProps<{
-  custom: Theme
-}>()
+const state = reactive(useThemeSettings())
+const changeTheme = (theme: Theme) => {
+  state.custom = theme
+}
 
-const emit = defineEmits<{
-  (e: 'changeTheme', _theme: Theme): void
-}>()
-
-const { editedTheme, isChanged, applyTheme } = useEditedThemes(props, emit)
+const { editedTheme, isChanged, applyTheme } = useEditedThemes(
+  state,
+  changeTheme
+)
 
 const { isImporterOpen, onImportClick } = useImporter()
 </script>
