@@ -14,7 +14,7 @@
       :disabled="isImporterOpen"
       type="secondary"
       :class="$style.element"
-      @click="onImportClick"
+      @click="openEditThemeModal"
     />
     <!--
     <form-button
@@ -47,6 +47,7 @@ import { dequal } from 'dequal'
 import { useToastStore } from '/@/store/ui/toast'
 import { reactive } from 'vue'
 import { useThemeSettings } from '/@/store/app/themeSettings'
+import { useModalStore } from '/@/store/ui/modal'
 
 const useEditedThemes = (
   props: { custom: Theme },
@@ -122,6 +123,10 @@ const { editedTheme, isChanged, applyTheme } = useEditedThemes(
 )
 
 const { isImporterOpen, onImportClick } = useImporter()
+
+const { pushModal } = useModalStore() 
+
+const openEditThemeModal = () => pushModal({ type : 'edittheme'})
 </script>
 
 <style lang="scss" module>
