@@ -129,4 +129,3 @@ interface GroupMemberAddModalState extends BaseModalState {
 interface EditThemeModalState extends BaseModalState {
   type: 'edittheme'
 }
-

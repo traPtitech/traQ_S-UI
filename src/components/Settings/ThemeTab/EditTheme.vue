@@ -101,9 +101,9 @@ const { editedTheme, isChanged, applyTheme } = useEditedThemes(
   changeTheme
 )
 
-const { pushModal } = useModalStore() 
+const { pushModal } = useModalStore()
 
-const openEditThemeModal = () => pushModal({ type : 'edittheme'})
+const openEditThemeModal = () => pushModal({ type: 'edittheme' })
 </script>
 
 <style lang="scss" module>

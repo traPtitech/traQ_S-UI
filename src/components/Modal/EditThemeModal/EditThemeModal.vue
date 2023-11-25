@@ -1,25 +1,18 @@
 <template>
-    <modal-frame
-        title="カスタムテーマ"
-        icon-name="edittheme"
-    >
-      <div :class="$style.content">
-        <textarea-autosize v-model="editedTheme" :class="$style.jsonField" />
-        <div :class="$style.btn">
-            <form-button
-                label="キャンセル"
-                type="tertiary"
-                @click="clearModal"
-            />
-            <form-button
-                label="更新する"
-                :disabled="!isChanged"
-                type="primary"
-                @click="applyTheme"
-            />
-        </div>
+  <modal-frame title="カスタムテーマ" icon-name="edittheme">
+    <div :class="$style.content">
+      <textarea-autosize v-model="editedTheme" :class="$style.jsonField" />
+      <div :class="$style.btn">
+        <form-button label="キャンセル" type="tertiary" @click="clearModal" />
+        <form-button
+          label="更新する"
+          :disabled="!isChanged"
+          type="primary"
+          @click="applyTheme"
+        />
       </div>
-    </modal-frame>
+    </div>
+  </modal-frame>
 </template>
 
 <script lang="ts">
@@ -80,10 +73,9 @@ const useEditedThemes = (
 
   return { editedTheme, isChanged, applyTheme }
 }
-
 </script>
 
-<script lang = "ts" setup>
+<script lang="ts" setup>
 import FormButton from '/@/components/UI/FormButton.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import ModalFrame from '../Common/ModalFrame.vue'
@@ -100,7 +92,6 @@ const { editedTheme, isChanged, applyTheme } = useEditedThemes(
   state,
   changeTheme
 )
-
 </script>
 
 <style lang="scss" module>
@@ -126,9 +117,8 @@ const { editedTheme, isChanged, applyTheme } = useEditedThemes(
   &:focus-within {
     border-color: $theme-accent-focus-default;
   }
-
 }
-.btn{
+.btn {
   display: flex;
   justify-content: flex-end;
   align-items: center;
