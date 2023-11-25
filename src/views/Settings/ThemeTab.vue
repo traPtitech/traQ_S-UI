@@ -32,7 +32,7 @@
     <div :class="$style.element">
       <div :class = "$style.container">
         <h3 :class="$style.header">カスタムテーマ</h3>
-        <edit-theme v-if="state.type === 'custom'" :custom="state.custom" @change-theme="changeTheme" />
+        <edit-theme v-if="state.type === 'custom'" @change-theme="changeTheme" />
       </div>
       <div :class="$style.content">
         <template v-if="state.type === 'custom'">
@@ -84,7 +84,10 @@ const changeTheme = (theme: Theme) => {
 
 <style lang="scss" module>
 .header {
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
 }
 .element {
   margin: 24px 0;
@@ -92,7 +95,11 @@ const changeTheme = (theme: Theme) => {
 
 .container {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  gap: 4px;
+  align-self: stretch;
+  flex-wrap: wrap;
 }
 .content {
   margin-left: 0px;

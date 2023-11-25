@@ -43,6 +43,10 @@ const isChecked = computed(() => props.inputValue === value.value)
 
 <style lang="scss" module>
 .label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
   cursor: pointer;
 
   border: solid 2px transparent;
@@ -70,7 +74,6 @@ const isChecked = computed(() => props.inputValue === value.value)
   width: 13px;
   border: solid 2px $theme-ui-primary-default;
   border-radius: 50%;
-  margin-right:3px;
 }
 .pseudoRadioInner {
   display: inline-block;
