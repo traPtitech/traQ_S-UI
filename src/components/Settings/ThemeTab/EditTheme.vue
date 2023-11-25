@@ -11,7 +11,6 @@
     -->
     <form-button
       label="import/export"
-      :disabled="isImporterOpen"
       type="secondary"
       :class="$style.element"
       @click="openEditThemeModal"
@@ -26,17 +25,6 @@
     />
     -->
   </div>
-  <template v-if="isImporterOpen">
-    <textarea-autosize v-model="editedTheme" :class="$style.jsonField" />
-    <div :class="$style.import">
-      <form-button
-        label="保存"
-        :disabled="!isChanged"
-        type="primary"
-        @click="applyTheme"
-      />
-    </div>
-  </template>
 </template>
 
 <script lang="ts">
@@ -98,19 +86,10 @@ const useEditedThemes = (
 
   return { editedTheme, isChanged, applyTheme }
 }
-
-const useImporter = () => {
-  const isImporterOpen = ref(false)
-  const onImportClick = () => {
-    isImporterOpen.value = true
-  }
-  return { isImporterOpen, onImportClick }
-}
 </script>
 
 <script lang="ts" setup>
 import FormButton from '/@/components/UI/FormButton.vue'
-import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 
 const state = reactive(useThemeSettings())
 const changeTheme = (theme: Theme) => {
@@ -121,8 +100,6 @@ const { editedTheme, isChanged, applyTheme } = useEditedThemes(
   state,
   changeTheme
 )
-
-const { isImporterOpen, onImportClick } = useImporter()
 
 const { pushModal } = useModalStore() 
 
@@ -137,22 +114,5 @@ const openEditThemeModal = () => pushModal({ type : 'edittheme'})
 }
 .element {
   align-self: flex-end;
-}
-.jsonField {
-  @include color-ui-primary;
-  @include background-secondary;
-  width: 100%;
-  margin-top: 12px;
-  border-radius: 4px;
-  border: solid 2px transparent;
-  padding: 4px;
-  &:focus-within {
-    border-color: $theme-accent-focus-default;
-  }
-}
-.import {
-  display: flex;
-  justify-content: center;
-  margin: 12px;
 }
 </style>
