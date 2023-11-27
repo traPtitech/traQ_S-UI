@@ -6,10 +6,7 @@
       label="投稿先チャンネル"
       :options="channelOptions"
     />
-    <share-target-message-input
-      :class="[$style.item, $style.input]"
-      :default-text="defaultText"
-    />
+    <share-target-message-input :class="[$style.item, $style.input]" />
     <form-button
       :class="[$style.item, $style.button]"
       label="送信"

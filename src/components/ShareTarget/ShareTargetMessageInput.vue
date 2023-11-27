@@ -8,7 +8,7 @@
             :id="id"
             ref="textareaRef"
             :class="$style.input"
-            :value="defaultText"
+            :value="state.text"
             @input="event => state.text = (event.target as HTMLTextAreaElement).value"
           />
         </div>
@@ -45,10 +45,6 @@ import { useToastStore } from '/@/store/ui/toast'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampHistory } from '/@/store/domain/stampHistory'
-
-const props = defineProps<{
-  defaultText: string
-}>()
 
 const { fetchStampHistory } = useStampHistory()
 const { fetchStamps } = useStampsStore()
