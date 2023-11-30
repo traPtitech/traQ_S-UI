@@ -78,19 +78,11 @@ const generateFilename = font => {
   const family = font['font-family'].replace(/[' ]/g, '')
   const weight = font['font-weight'].replace(/[' ]/g, '')
 
-  const fontSrcWithIndex = getUrlFromSrc(font.src).match(
-    /\/v\d+\/[^.]+\.(\d+)\.woff2/
-  )
-  if (!fontSrcWithIndex) {
-    const fontSrcWithId = getUrlFromSrc(font.src).match(
-      /\/v\d+\/([^.]+)\.woff2/
-    )
-    if (!fontSrcWithId) {
-      throw new Error(`Unexpected URL: ${getUrlFromSrc(font.src)}`)
-    }
-    return `${family}.${weight}.${fontSrcWithId[1]}.woff2`
+  const fontSrcWithId = getUrlFromSrc(font.src).match(/\/v\d+\/(.+)\.woff2/)
+  if (!fontSrcWithId) {
+    throw new Error(`Unexpected URL: ${getUrlFromSrc(font.src)}`)
   }
-  return `${family}.${weight}.${fontSrcWithIndex[1]}.woff2`
+  return `${family}.${weight}.${fontSrcWithId[1]}.woff2`
 }
 
 const downloadAndtransform = async (url, filename) => {
