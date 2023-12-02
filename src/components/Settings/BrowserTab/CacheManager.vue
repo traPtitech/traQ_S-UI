@@ -1,9 +1,8 @@
 <template>
   <div>
-    <h3 :class="$style.header">キャッシュの削除</h3>
+    <h3 :class="$style.header">キャッシュ</h3>
     <div :class="$style.content">
       <p v-if="cacheData && cacheData.usage" :class="$style.usage">
-        使用量:
         <template v-if="cacheData.usageDetails">
           <span v-for="(usage, key) in cacheData.usageDetails" :key="key">
             {{ prettifyFileSize(usage) }} ({{ key }})
@@ -15,18 +14,8 @@
       </p>
       <form-button
         :class="$style.button"
-        label="traQ本体"
-        @click="clearMainCache"
-      />
-      <form-button
-        :class="$style.button"
-        label="ファイルの本体一覧"
-        @click="clearFileCache"
-      />
-      <form-button
-        :class="$style.button"
-        label="ファイルのサムネイル一覧"
-        @click="clearThumbnailCache"
+        label="削除する"
+        @click="clearCache"
       />
     </div>
   </div>
@@ -74,7 +63,7 @@ const setCacheData = async () => {
 }
 onMounted(setCacheData)
 
-const clearMainCache = async () => {
+const clearCache = async () => {
   if (!confirmClear()) return
 
   const names = await window.caches.keys()
@@ -83,6 +72,9 @@ const clearMainCache = async () => {
       .filter(name => name.startsWith('traQ_S-precache'))
       .map(name => clearCacheStorage(name))
   )
+  await clearCacheStorage('files-cache')
+  await clearCacheStorage('thumbnail-cache')
+
   const registration = await navigator.serviceWorker?.getRegistration()
   if (registration) {
     registration.unregister()
@@ -93,18 +85,6 @@ const clearMainCache = async () => {
   } else {
     showToast()
   }
-}
-const clearFileCache = async () => {
-  if (!confirmClear()) return
-  await clearCacheStorage('files-cache')
-  setCacheData()
-  showToast()
-}
-const clearThumbnailCache = async () => {
-  if (!confirmClear()) return
-  await clearCacheStorage('thumbnail-cache')
-  setCacheData()
-  showToast()
 }
 </script>
 
