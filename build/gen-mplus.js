@@ -78,7 +78,7 @@ const generateFilename = font => {
   const family = font['font-family'].replace(/[' ]/g, '')
   const weight = font['font-weight'].replace(/[' ]/g, '')
 
-  const fontSrcWithId = getUrlFromSrc(font.src).match(/\/v\d+\/(.+)\.woff2/)
+  const fontSrcWithId = getUrlFromSrc(font.src).match(/\/v\d+\/([^/]+)\.woff2/)
   if (!fontSrcWithId) {
     throw new Error(`Unexpected URL: ${getUrlFromSrc(font.src)}`)
   }
