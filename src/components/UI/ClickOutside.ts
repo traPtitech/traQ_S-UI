@@ -92,14 +92,10 @@ export default defineComponent({
 
     onMounted(() => {
       window.addEventListener(startEventName, onMouseDown, { capture: true })
-    })
-    onMounted(() => {
       window.addEventListener(endEventName, onMouseUp, { capture: true })
     })
     onBeforeUnmount(() => {
       window.removeEventListener(startEventName, onMouseDown, { capture: true })
-    })
-    onBeforeUnmount(() => {
       window.removeEventListener(endEventName, onMouseUp, { capture: true })
     })
 
