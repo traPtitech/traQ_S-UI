@@ -15,6 +15,8 @@
       <form-button
         :class="$style.button"
         label="削除する"
+        type="secondary"
+        is-danger
         @click="clearCache"
       />
     </div>
