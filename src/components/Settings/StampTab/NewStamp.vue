@@ -5,7 +5,7 @@
       :class="$style.form"
       icon="plus"
       mdi
-      color="secondary"
+      type="secondary"
       @click="handleOpenModal"
     />
   </div>

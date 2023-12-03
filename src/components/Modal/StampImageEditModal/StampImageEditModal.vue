@@ -7,7 +7,7 @@
       <image-upload v-model="stampImage" />
     </div>
     <div :class="$style.buttonContainer">
-      <form-button label="キャンセル" color="secondary" @click="cancel" />
+      <form-button label="キャンセル" type="tertiary" @click="cancel" />
       <form-button
         label="更新する"
         :loading="isCreating"
