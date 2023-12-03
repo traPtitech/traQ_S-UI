@@ -31,16 +31,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, type Ref } from 'vue'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useModalStore } from '/@/store/ui/modal'
+import type { AxiosError } from 'axios'
 
 const props = defineProps<{
-  stampName: string
   stampImage: File
 }>()
 const emit = defineEmits<{
@@ -51,26 +51,38 @@ const { detail } = useMeStore()
 const { clearModal } = useModalStore()
 
 const imageUrl = computed(() => URL.createObjectURL(props.stampImage))
-const newStampName = ref(props.stampName)
+const newStampName = ref('')
 
-const useStampCreate = (newStampName: string, stampImage: File) => {
+const useStampCreate = (newStampName: Ref<string>, stampImage: File) => {
   const { addSuccessToast, addErrorToast } = useToastStore()
   const isCreating = ref(false)
 
   const createStamp = async () => {
     try {
       isCreating.value = true
-      await apis.createStamp(newStampName, stampImage)
+      await apis.createStamp(newStampName.value, stampImage)
 
       addSuccessToast('スタンプを登録しました')
+      URL.revokeObjectURL(imageUrl.value)
+      clearModal()
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('スタンプの作成に失敗しました', e)
 
-      addErrorToast(formatResizeError(e, 'スタンプの作成に失敗しました'))
+      const err = e as AxiosError<{ message: string }>
+      if (!err.response) {
+        addErrorToast(formatResizeError(e, 'スタンプの作成に失敗しました'))
+        return
+      }
+      const message: string = err.response.data.message
+      switch (message) {
+        case 'this name has already been used':
+          addErrorToast('このスタンプ名は既に使われています')
+          break
+        default:
+          addErrorToast(formatResizeError(e, 'スタンプの作成に失敗しました'))
+      }
     }
-    URL.revokeObjectURL(imageUrl.value)
-    clearModal()
     isCreating.value = false
   }
 
@@ -78,7 +90,7 @@ const useStampCreate = (newStampName: string, stampImage: File) => {
 }
 
 const { isCreating, createStamp } = useStampCreate(
-  newStampName.value,
+  newStampName,
   props.stampImage
 )
 const back = () => {

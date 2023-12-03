@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 import FormButton from '/@/components/UI/FormButton.vue'
-import { useFileSelect } from '/@/composables/dom/useFileSelect';
+import { useFileSelect } from '/@/composables/dom/useFileSelect'
 import { useModalStore } from '/@/store/ui/modal'
 
 const { pushModal } = useModalStore()

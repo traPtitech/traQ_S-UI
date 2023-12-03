@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { imageSize } from '/@/components/Settings/StampTab/imageSize'
@@ -37,14 +37,15 @@ const { clearModal } = useModalStore()
 
 const stampImage = ref<File>(props.file)
 
-const useStampImageEdit = (stampImage: File) => {
+const useStampImageEdit = (stampImage: Ref<File>) => {
   const { addSuccessToast, addErrorToast } = useToastStore()
   const isEditing = ref(false)
 
   const editStampImage = async () => {
+    if (!stampImage.value) return
     isEditing.value = true
     try {
-      const size = await imageSize(stampImage)
+      const size = await imageSize(stampImage.value)
       if (size.height !== size.width) {
         addErrorToast('画像が正方形ではありません。編集してください')
         return
@@ -55,7 +56,7 @@ const useStampImageEdit = (stampImage: File) => {
       addErrorToast(formatResizeError(e, '画像の整形に失敗しました'))
     }
     try {
-      await apis.changeStampImage(props.id, stampImage)
+      await apis.changeStampImage(props.id, stampImage.value)
 
       addSuccessToast('スタンプ画像を変更しました')
     } catch (e) {
@@ -70,7 +71,7 @@ const useStampImageEdit = (stampImage: File) => {
   return { isEditing, editStampImage }
 }
 
-const { isEditing, editStampImage } = useStampImageEdit(stampImage.value)
+const { isEditing, editStampImage } = useStampImageEdit(stampImage)
 const cancel = () => {
   clearModal()
 }

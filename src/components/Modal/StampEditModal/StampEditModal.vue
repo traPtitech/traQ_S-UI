@@ -50,6 +50,7 @@ import { useStampsStore } from '/@/store/entities/stamps'
 import { useModalStore } from '/@/store/ui/modal'
 import type { StampId } from '/@/types/entity-ids'
 import ModalFrame from '../Common/ModalFrame.vue'
+import type { AxiosError } from 'axios'
 
 type StampEditState = Pick<Stamp, 'name' | 'creatorId'>
 
@@ -100,38 +101,44 @@ const useStampEdit = (
 
   const editStamp = async () => {
     try {
-      try {
-        isEditing.value = true
-        const promises = []
-        if (isStateChanged.value) {
-          promises.push(
-            apis.editStamp(stamp.id, {
-              name: diffKeys.value.includes('name') ? state.name : undefined,
-              creatorId: diffKeys.value.includes('creatorId')
-                ? state.creatorId
-                : undefined
-            })
-          )
-        }
-        if (newImageData.value !== undefined) {
-          promises.push(apis.changeStampImage(stamp.id, newImageData.value))
-        }
-        await Promise.all(promises)
-        afterSuccess()
-
-        addSuccessToast('スタンプを更新しました')
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('スタンプの編集に失敗しました', e)
-
-        addErrorToast(formatResizeError(e, 'スタンプの編集に失敗しました'))
+      isEditing.value = true
+      const promises = []
+      if (isStateChanged.value) {
+        promises.push(
+          apis.editStamp(stamp.id, {
+            name: diffKeys.value.includes('name') ? state.name : undefined,
+            creatorId: diffKeys.value.includes('creatorId')
+              ? state.creatorId
+              : undefined
+          })
+        )
       }
-      isEditing.value = false
+      if (newImageData.value !== undefined) {
+        promises.push(apis.changeStampImage(stamp.id, newImageData.value))
+      }
+      await Promise.all(promises)
+      afterSuccess()
+
+      addSuccessToast('スタンプを更新しました')
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('スタンプの編集に失敗しました', e)
-      addErrorToast(formatResizeError(e, 'スタンプの編集に失敗しました'))
+
+      const err = e as AxiosError<{ message: string }>
+      if (!err.response) {
+        addErrorToast(formatResizeError(e, 'スタンプの編集に失敗しました'))
+        return
+      }
+      const message: string = err.response.data.message
+      switch (message) {
+        case 'this name has already been used':
+          addErrorToast('このスタンプ名は既に使われています')
+          break
+        default:
+          addErrorToast(formatResizeError(e, 'スタンプの編集に失敗しました'))
+      }
     }
+    isEditing.value = false
   }
 
   return { isEditing, editStamp }

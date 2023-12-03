@@ -5,13 +5,17 @@
     </div>
     <div :class="$style.buttonContainer">
       <form-button label="キャンセル" type="tertiary" @click="cancel" />
-      <form-button label="次へ" :loading="isChecking" @click="checkStampImage" />
+      <form-button
+        label="次へ"
+        :loading="isChecking"
+        @click="checkStampImage"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { formatResizeError } from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { imageSize } from '/@/components/Settings/StampTab/imageSize'
@@ -30,14 +34,15 @@ const { popModal } = useModalStore()
 
 const stampImage = ref<File>(props.file)
 
-const useCheckStamp = (stampImage: File) => {
+const useCheckStamp = (stampImage: Ref<File>) => {
   const { addErrorToast } = useToastStore()
   const isChecking = ref(false)
 
   const checkStampImage = async () => {
+    if (!stampImage.value) return
     isChecking.value = true
     try {
-      const size = await imageSize(stampImage)
+      const size = await imageSize(stampImage.value)
       if (size.height !== size.width) {
         addErrorToast('画像が正方形ではありません。編集してください')
         return
@@ -47,14 +52,14 @@ const useCheckStamp = (stampImage: File) => {
       console.error('画像の整形に失敗しました', e)
       addErrorToast(formatResizeError(e, '画像の整形に失敗しました'))
     }
-    emit('updateFile', stampImage)
+    emit('updateFile', stampImage.value)
     isChecking.value = false
   }
 
   return { isChecking, checkStampImage }
 }
 
-const { isChecking, checkStampImage } = useCheckStamp(stampImage.value)
+const { isChecking, checkStampImage } = useCheckStamp(stampImage)
 const cancel = () => {
   popModal()
 }

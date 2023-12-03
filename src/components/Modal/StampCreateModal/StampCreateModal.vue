@@ -5,7 +5,7 @@
       :file="file"
       @update-file="updateFile"
     />
-    <stamp-info-edit v-else :stamp-image="stampImage" :stamp-name="stampName" @back="backToImageEdit" />
+    <stamp-info-edit v-else :stamp-image="stampImage" @back="backToImageEdit" />
   </modal-frame>
 </template>
 
@@ -20,7 +20,6 @@ const props = defineProps<{
 }>()
 
 const stampImage = ref<File>(props.file)
-const stampName = ref('')
 
 const step = ref<'image' | 'info'>('image')
 const subtitle = computed(() =>
