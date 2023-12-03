@@ -65,15 +65,20 @@ import { useStampsStore } from '/@/store/entities/stamps'
 import { randomString } from '/@/lib/basic/randomString'
 import ATab from '/@/components/UI/ATab.vue'
 import { UserPermission } from '@traptitech/traq'
+import { compareString } from '/@/lib/basic/string'
 
 const { myId } = useMeStore()
 const { stampsMap } = useStampsStore()
 
 const myStamps = computed(() =>
-  [...stampsMap.value.values()].filter(stamp => stamp.creatorId === myId.value)
+  [...stampsMap.value.values()]
+    .filter(stamp => stamp.creatorId === myId.value)
+    .sort((a, b) => compareString(a.name, b.name))
 )
 const otherStamps = computed(() =>
-  [...stampsMap.value.values()].filter(stamp => stamp.creatorId !== myId.value)
+  [...stampsMap.value.values()]
+    .filter(stamp => stamp.creatorId !== myId.value)
+    .sort((a, b) => compareString(a.name, b.name))
 )
 
 const { detail } = useMeStore()

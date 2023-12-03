@@ -22,7 +22,7 @@
 import { computed } from 'vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { match, P } from 'ts-pattern';
+import { match, P } from 'ts-pattern'
 
 interface Type {
   type?: 'primary' | 'secondary' | 'tertiary'
@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   type: 'primary',
   isDanger: false,
-  mdi: false,
+  mdi: false
 })
 
 const spinnerColor = computed(() => {
