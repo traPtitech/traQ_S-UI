@@ -12,6 +12,7 @@
           suffix=":"
           :max-length="32"
           :class="$style.form"
+          focus-on-mount
         />
         <form-selector
           v-model="state.creatorId"

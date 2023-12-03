@@ -56,6 +56,7 @@ const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
   if (!files[0]) return
   pushModal({
     type: 'settings-stamp-image-edit',
+    id: props.stampId,
     file: files[0]
   })
   close()

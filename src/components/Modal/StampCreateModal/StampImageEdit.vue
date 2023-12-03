@@ -1,48 +1,41 @@
 <template>
-  <modal-frame
-    title="スタンプ画像の編集"
-    subtitle="画像の位置・サイズを編集できます"
-  >
+  <div>
     <div :class="$style.container">
       <image-upload v-model="stampImage" />
     </div>
     <div :class="$style.buttonContainer">
       <form-button label="キャンセル" type="tertiary" @click="cancel" />
-      <form-button
-        label="更新する"
-        :loading="isEditing"
-        @click="editStampImage"
-      />
+      <form-button label="次へ" :loading="isChecking" @click="checkStampImage" />
     </div>
-  </modal-frame>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import apis, { formatResizeError } from '/@/lib/apis'
+import { formatResizeError } from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { imageSize } from '/@/components/Settings/StampTab/imageSize'
 import FormButton from '/@/components/UI/FormButton.vue'
-import ModalFrame from '../Common/ModalFrame.vue'
 import { useModalStore } from '/@/store/ui/modal'
 import ImageUpload from '/@/components/Settings/ImageUpload.vue'
-import type { StampId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   file: File
-  id: StampId
+}>()
+const emit = defineEmits<{
+  (e: 'updateFile', file: File): void
 }>()
 
-const { clearModal } = useModalStore()
+const { popModal } = useModalStore()
 
 const stampImage = ref<File>(props.file)
 
-const useStampImageEdit = (stampImage: File) => {
-  const { addSuccessToast, addErrorToast } = useToastStore()
-  const isEditing = ref(false)
+const useCheckStamp = (stampImage: File) => {
+  const { addErrorToast } = useToastStore()
+  const isChecking = ref(false)
 
-  const editStampImage = async () => {
-    isEditing.value = true
+  const checkStampImage = async () => {
+    isChecking.value = true
     try {
       const size = await imageSize(stampImage)
       if (size.height !== size.width) {
@@ -54,25 +47,16 @@ const useStampImageEdit = (stampImage: File) => {
       console.error('画像の整形に失敗しました', e)
       addErrorToast(formatResizeError(e, '画像の整形に失敗しました'))
     }
-    try {
-      await apis.changeStampImage(props.id, stampImage)
-
-      addSuccessToast('スタンプ画像を変更しました')
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error('スタンプ画像の変更に失敗しました', e)
-      addErrorToast(formatResizeError(e, 'スタンプ画像の変更に失敗しました'))
-    }
-    clearModal()
-    isEditing.value = false
+    emit('updateFile', stampImage)
+    isChecking.value = false
   }
 
-  return { isEditing, editStampImage }
+  return { isChecking, checkStampImage }
 }
 
-const { isEditing, editStampImage } = useStampImageEdit(stampImage.value)
+const { isChecking, checkStampImage } = useCheckStamp(stampImage.value)
 const cancel = () => {
-  clearModal()
+  popModal()
 }
 </script>
 

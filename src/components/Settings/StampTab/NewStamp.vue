@@ -13,14 +13,21 @@
 
 <script lang="ts" setup>
 import FormButton from '/@/components/UI/FormButton.vue'
+import { useFileSelect } from '/@/composables/dom/useFileSelect';
 import { useModalStore } from '/@/store/ui/modal'
 
 const { pushModal } = useModalStore()
 
-const handleOpenModal = () => {
+const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
+const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
+  if (!files[0]) return
   pushModal({
-    type: 'settings-stamp-create'
+    type: 'settings-stamp-create',
+    file: files[0]
   })
+})
+const handleOpenModal = () => {
+  selectImage()
 }
 </script>
 

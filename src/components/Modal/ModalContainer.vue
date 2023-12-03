@@ -12,7 +12,8 @@
           currentState.type === 'channel-manage' ||
           currentState.type === 'group-admin-add' ||
           currentState.type === 'group-member-add' ||
-          currentState.type === 'settings-stamp-edit'
+          currentState.type === 'settings-stamp-edit'||
+          currentState.type === 'settings-stamp-image-edit'
             ? currentState.id
             : undefined
         "
@@ -43,6 +44,7 @@
             : undefined
         "
         :file="
+          currentState.type === 'settings-stamp-create' ||
           currentState.type === 'settings-stamp-image-edit'
             ? currentState.file
             : undefined

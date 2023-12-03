@@ -133,6 +133,7 @@ interface GroupMemberAddModalState extends BaseModalState {
 
 interface SettingsStampCreateModalState extends BaseModalState {
   type: 'settings-stamp-create'
+  file: File
 }
 
 interface SettingsStampEditModalState extends BaseModalState {
@@ -142,5 +143,6 @@ interface SettingsStampEditModalState extends BaseModalState {
 
 interface SettingsStampImageEditModalState extends BaseModalState {
   type: 'settings-stamp-image-edit'
+  id: StampId
   file: File
 }
