@@ -2,9 +2,7 @@
   <modal-frame title="スタンプ編集">
     <div :class="$style.container">
       <div :class="$style.leftContainer">
-        <button :class="$style.imgButton" @click="selectImage">
-          <img :src="imageUrl" width="136" height="136" />
-        </button>
+        <img :src="imageUrl" :class="$style.img" width="136" height="136" />
       </div>
       <div>
         <form-input
@@ -22,7 +20,6 @@
         />
       </div>
     </div>
-    <p :class="$style.note">{{ note }}</p>
     <div :class="$style.buttonContainer">
       <form-button label="キャンセル" type="tertiary" @click="cancel" />
       <form-button
@@ -52,7 +49,6 @@ import { useStampsStore } from '/@/store/entities/stamps'
 import { useModalStore } from '/@/store/ui/modal'
 import type { StampId } from '/@/types/entity-ids'
 import ModalFrame from '../Common/ModalFrame.vue'
-import { useFileSelect } from '/@/composables/dom/useFileSelect'
 
 type StampEditState = Pick<Stamp, 'name' | 'creatorId'>
 
@@ -60,7 +56,7 @@ const props = defineProps<{
   id: StampId
 }>()
 
-const { clearModal, pushModal } = useModalStore()
+const { clearModal } = useModalStore()
 const { stampsMap } = useStampsStore()
 const stamp = computed(() => stampsMap.value.get(props.id) ?? ({} as Stamp))
 
@@ -73,8 +69,6 @@ const newImageData = ref<File | undefined>()
 const imageUrl = computed(() =>
   stamp.value ? buildFilePath(stamp.value.fileId) : ''
 )
-
-const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
 
 const useState = (stamp: Stamp) => {
   const oldState = computed(
@@ -160,19 +154,9 @@ const { isEditing, editStamp } = useStampEdit(
   }
 )
 
-const note = '画像をクリックしてアップロード'
-
 const cancel = () => {
   clearModal()
 }
-
-const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
-  if (!files[0]) return
-  pushModal({
-    type: 'settings-stamp-image-edit',
-    file: files[0]
-  })
-})
 </script>
 
 <style lang="scss" module>
@@ -184,6 +168,7 @@ const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
   display: flex;
   justify-content: space-between;
   gap: 16px;
+  margin-bottom: 12px;
 }
 .leftContainer {
   min-width: 136px;
@@ -192,22 +177,10 @@ const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
   margin: 8px 0;
   flex-grow: 1;
 }
-.imgButton {
-  width: 100%;
-  height: 100%;
-  border: 2px solid $theme-ui-secondary-default;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+.img {
+  border: 1px solid $theme-accent-primary-default;
 }
 
-.note {
-  @include color-ui-secondary;
-  margin-bottom: 12px;
-  font-size: 12px;
-}
 .buttonContainer {
   display: flex;
   align-items: center;
