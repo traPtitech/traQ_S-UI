@@ -33,7 +33,8 @@ import { useModalStore } from '/@/store/ui/modal'
 
 const { pushModal } = useModalStore()
 
-const openSettingsThemeEditModal = () => pushModal({ type: 'settings-theme-edit' })
+const openSettingsThemeEditModal = () =>
+  pushModal({ type: 'settings-theme-edit' })
 </script>
 
 <style lang="scss" module>
