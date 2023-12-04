@@ -63,7 +63,7 @@ import GroupCreateModal from './GroupCreateModal/GroupCreateModal.vue'
 import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vue'
 import GroupAdminAddModal from './GroupAdminAddModal/GroupAdminAddModal.vue'
 import GroupMemberAddModal from './GroupMemberAddModal/GroupMemberAddModal.vue'
-import EditThemeModal from './EditThemeModal/EditThemeModal.vue'
+import SettingsThemeEditModal from './SettingsThemeEdit/SettingsThemeEdit.vue'
 
 const { shouldShowModal, currentState } = useModalStore()
 
@@ -97,8 +97,8 @@ const component = computed(() => {
       return GroupAdminAddModal
     case 'group-member-add':
       return GroupMemberAddModal
-    case 'edittheme':
-      return EditThemeModal
+    case 'settings-theme-edit':
+      return SettingsThemeEditModal
   }
   // eslint-disable-next-line no-console
   console.error('Unexpected modal type:', currentState.value)

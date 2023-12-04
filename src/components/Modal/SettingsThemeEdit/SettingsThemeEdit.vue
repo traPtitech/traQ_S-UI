@@ -2,7 +2,7 @@
   <modal-frame title="カスタムテーマ" icon-name="edittheme">
     <div :class="$style.content">
       <textarea-autosize v-model="editedTheme" :class="$style.jsonField" />
-      <div :class="$style.btn">
+      <div :class="$style.buttonContainer">
         <form-button label="キャンセル" type="tertiary" @click="clearModal" />
         <form-button
           label="更新する"
@@ -118,7 +118,7 @@ const { editedTheme, isChanged, applyTheme } = useEditedThemes(
     border-color: $theme-accent-focus-default;
   }
 }
-.btn {
+.buttonContainer {
   display: flex;
   justify-content: flex-end;
   align-items: center;

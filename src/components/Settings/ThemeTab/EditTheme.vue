@@ -13,7 +13,7 @@
       label="import/export"
       type="secondary"
       :class="$style.element"
-      @click="openEditThemeModal"
+      @click="openSettingsThemeEditModal"
     />
     <!--
     <form-button
@@ -103,7 +103,7 @@ const { editedTheme, isChanged, applyTheme } = useEditedThemes(
 
 const { pushModal } = useModalStore()
 
-const openEditThemeModal = () => pushModal({ type: 'edittheme' })
+const openSettingsThemeEditModal = () => pushModal({ type: 'settings-theme-edit' })
 </script>
 
 <style lang="scss" module>

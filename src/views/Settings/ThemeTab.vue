@@ -101,7 +101,6 @@ const changeTheme = (theme: Theme) => {
   align-items: center;
   align-content: center;
   gap: 4px;
-  align-self: stretch;
   flex-wrap: wrap;
 }
 .content {
