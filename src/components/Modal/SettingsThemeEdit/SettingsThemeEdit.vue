@@ -26,7 +26,8 @@ import { useThemeSettings } from '/@/store/app/themeSettings'
 
 const useEditedThemes = (
   props: { custom: Theme },
-  changeTheme: (theme: Theme) => void
+  changeTheme: (theme: Theme) => void,
+  clearModal: () => void
 ) => {
   const { addErrorToast } = useToastStore()
 
@@ -56,6 +57,7 @@ const useEditedThemes = (
       const res = themeSchema.safeParse(themeObj)
       if (res.success) {
         changeTheme(res.data)
+        clearModal()
       } else {
         failedUpdateTheme(
           `構文エラー: ${res.error.issues
@@ -90,7 +92,8 @@ const changeTheme = (theme: Theme) => {
 
 const { editedTheme, isChanged, applyTheme } = useEditedThemes(
   state,
-  changeTheme
+  changeTheme,
+  clearModal
 )
 </script>
 
