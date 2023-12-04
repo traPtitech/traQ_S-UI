@@ -89,7 +89,6 @@ const changeTheme = (theme: Theme) => {
 .header {
   display: flex;
   align-items: center;
-  gap: 10px;
   flex: 1 0 0;
 }
 .element {
