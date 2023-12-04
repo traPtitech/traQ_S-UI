@@ -54,7 +54,7 @@ const isChecked = computed(() => props.inputValue === value.value)
   &:focus-within {
     border-color: $theme-accent-focus-default;
   }
-  &[aria-checked='false'] {
+  &:has(.radio:not(:checked)) {
     opacity: 0.5;
   }
 }
