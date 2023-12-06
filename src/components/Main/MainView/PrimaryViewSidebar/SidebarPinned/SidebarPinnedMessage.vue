@@ -1,15 +1,15 @@
 <template>
   <div>
-    <router-link :to="constructMessagesPath(message.id)">
-      <message-panel
-        title-type="user"
-        hide-subtitle
-        line-clamp-content
-        :message="message"
-        show-context-menu-button
-        @click-context-menu-button="toggle"
-      />
-    </router-link>
+    <message-panel
+      title-type="user"
+      hide-subtitle
+      line-clamp-content
+      :message="message"
+      :to="constructMessagesPath(message.id)"
+      show-context-menu-button
+      @click-context-menu-button="toggle"
+    />
+
     <sidebar-pinned-message-context-menu
       v-if="position"
       :position="position"
@@ -21,12 +21,12 @@
 </template>
 
 <script lang="ts" setup>
-import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
-import SidebarPinnedMessageContextMenu from './SidebarPinnedMessageContextMenu.vue'
-import { computed } from 'vue'
 import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
-import { constructMessagesPath } from '/@/router'
+import { computed } from 'vue'
+import SidebarPinnedMessageContextMenu from './SidebarPinnedMessageContextMenu.vue'
+import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
 import useContextMenu from '/@/composables/useContextMenu'
+import { constructMessagesPath } from '/@/router'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const props = defineProps<{

@@ -22,32 +22,37 @@
         @click.prevent="onClickContextMenuButton"
       />
     </div>
-    <div :class="$style.separator" />
-    <div v-if="!hideSubtitle" :class="[$style.subTitleContainer, $style.item]">
-      <user-name v-if="titleType === 'channel'" :user="userState" />
-      <channel-name v-if="titleType === 'user'" :path="path" />
-      <a-icon
-        v-if="message.createdAt !== message.updatedAt"
-        :class="$style.editIcon"
-        :size="16"
-        name="pencil-outline"
-        mdi
+    <router-link :to="to">
+      <div :class="$style.separator" />
+      <div
+        v-if="!hideSubtitle"
+        :class="[$style.subTitleContainer, $style.item]"
+      >
+        <user-name v-if="titleType === 'channel'" :user="userState" />
+        <channel-name v-if="titleType === 'user'" :path="path" />
+        <a-icon
+          v-if="message.createdAt !== message.updatedAt"
+          :class="$style.editIcon"
+          :size="16"
+          name="pencil-outline"
+          mdi
+        />
+      </div>
+      <render-content
+        :content="message.content"
+        :line-clamp-content="lineClampContent"
       />
-    </div>
-    <render-content
-      :content="message.content"
-      :line-clamp-content="lineClampContent"
-    />
+    </router-link>
   </div>
 </template>
 
 <script lang="ts" setup>
-import UserName from './UserName.vue'
+import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
+import { computed } from 'vue'
 import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
+import UserName from './UserName.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { computed } from 'vue'
-import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useUsersStore } from '/@/store/entities/users'
 
@@ -58,6 +63,7 @@ const props = withDefaults(
     message: Message | ActivityTimelineMessage
     lineClampContent?: boolean
     showContextMenuButton?: boolean
+    to: string
   }>(),
   {
     titleType: 'channel' as const,
