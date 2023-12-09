@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3 :class="$style.header">ノイズ抑制</h3>
-    <div :class="$style.content">
+    <div>
       <template v-if="isAudioWorkletSupported">
         <form-radio
           v-model="noiseSuppressionValue"
@@ -49,9 +49,6 @@ const isAudioWorkletSupported = checkAudioWorkletSupport()
 <style lang="scss" module>
 .header {
   margin-bottom: 8px;
-}
-.content {
-  margin-left: 12px;
 }
 .input {
   display:block;

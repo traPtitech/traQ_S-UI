@@ -4,7 +4,7 @@
       <div :class="$style.enable">
         <div :class="$style.header_and_content">
           <h3 :class="$style.header">RTC機能</h3>
-          <p :class="$style.content">
+          <p>
             通話などのRTC(リアルタイムコミュニケーション)機能を有効化します。
             マイクなどへのアクセス許可が必要です。
           </p>
@@ -17,7 +17,7 @@
         <div :class="$style.enable">
           <div :class="$style.header_and_content">
             <h3 :class="$style.header">メッセージの読み上げ</h3>
-            <p :class="$style.content">
+            <p>
               Qallしているチャンネルに投稿されたメッセージを読み上げます。
             </p>
           </div>
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div v-if="state.isTtsEnabled" :class="$style.element">
-        <div :class="$style.content">
+        <div>
           <form-selector
             v-if="voiceOptions.length > 0"
             v-model="state.voiceName"
@@ -55,7 +55,7 @@
       </div>
       <div :class="$style.element">
         <h3 :class="$style.header">入力デバイス</h3>
-        <div :class="$style.content">
+        <div>
           <form-selector
             v-if="!fetchFailed && audioInputDevices.length > 0"
             v-model="state.audioInputDeviceId"
@@ -68,7 +68,6 @@
         <h3 :class="$style.header">マスターボリューム</h3>
         <form-range-with-value
           v-model="state.masterVolume"
-          :class="$style.content"
           max-text="100%"
           min="0"
           step="0.005"
@@ -78,13 +77,12 @@
       </div>
       <div :class="$style.element">
         <h3 :class="$style.header">ノイズゲート</h3>
-        <p :class="$style.content">
+        <p>
           マイクに入力された音が指定した音量以下だった場合にミュートします。
           -100dBにすると無効になります。
         </p>
         <form-range-with-value
           v-model="state.noiseGateThreshold"
-          :class="$style.content"
           max-text="-100dB"
           min="-100"
           step="1"
@@ -214,9 +212,6 @@ const voiceOptions = useVoices()
 }
 .element {
   margin: 24px 0;
-}
-.content {
-  margin-left: 12px;
 }
 .enable {
   display: flex;
