@@ -55,6 +55,7 @@ const isAudioWorkletSupported = checkAudioWorkletSupport()
 }
 .input {
   display:block;
+  font-weight: bold;
   margin-right: 8px;
 }
 </style>
