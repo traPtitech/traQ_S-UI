@@ -179,19 +179,19 @@ const onDotsClick = (e: MouseEvent) => {
 }
 
 const DEFAULT_CLIP_FOLDER_ID = '201fcb38-3dbe-4a53-8c0c-37b47bed9985' // FIXME: あとで直す
-const clippedFolders = ref(new Set<ClipFolderId>())
+const clippingFolderIds = ref(new Set<ClipFolderId>())
 const isClipped = computed(() =>
-  clippedFolders.value.has(DEFAULT_CLIP_FOLDER_ID)
+  clippingFolderIds.value.has(DEFAULT_CLIP_FOLDER_ID)
 )
 
 apis.getMessageClips(props.messageId).then(res => {
-  clippedFolders.value = new Set(res.data.map(c => c.folderId))
+  clippingFolderIds.value = new Set(res.data.map(c => c.folderId))
 })
 const clipIconName = computed(() => {
   return isClipped.value ? 'bookmark-check' : 'bookmark'
 })
 
-const { toggleClip } = useCreateClip(props.messageId, clippedFolders)
+const { toggleClip } = useCreateClip(props.messageId, clippingFolderIds)
 const openClipCreateModal = () => {
   toggleClip(DEFAULT_CLIP_FOLDER_ID)
 }
