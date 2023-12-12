@@ -62,6 +62,14 @@
           @click="toggleStampPicker"
         />
         <a-icon
+          mdi
+          :name="clipIconName"
+          :size="28"
+          :class="$style.icon"
+          :data-clipped="$boolAttr(isClipped)"
+          @click="openClipCreateModal"
+        />
+        <a-icon
           :class="$style.icon"
           :size="28"
           mdi
@@ -82,7 +90,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import type { StampId, MessageId } from '/@/types/entity-ids'
+import type { StampId, MessageId, ClipFolderId } from '/@/types/entity-ids'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import apis from '/@/lib/apis'
@@ -95,6 +103,7 @@ import AStamp from '/@/components/UI/AStamp.vue'
 import MessageContextMenu from './MessageContextMenu.vue'
 import useToggle from '/@/composables/utils/useToggle'
 import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useCreateClip } from '/@/composables/clips/createClip'
 
 const props = withDefaults(
   defineProps<{
@@ -169,6 +178,24 @@ const onDotsClick = (e: MouseEvent) => {
   })
 }
 
+const DEFAULT_CLIP_FOLDER_ID = '201fcb38-3dbe-4a53-8c0c-37b47bed9985' // FIXME: あとで直す
+const clippedFolders = ref(new Set<ClipFolderId>())
+const isClipped = computed(() =>
+  clippedFolders.value.has(DEFAULT_CLIP_FOLDER_ID)
+)
+
+apis.getMessageClips(props.messageId).then(res => {
+  clippedFolders.value = new Set(res.data.map(c => c.folderId))
+})
+const clipIconName = computed(() => {
+  return isClipped.value ? 'bookmark-check' : 'bookmark'
+})
+
+const { toggleClip } = useCreateClip(props.messageId, clippedFolders)
+const openClipCreateModal = () => {
+  toggleClip(DEFAULT_CLIP_FOLDER_ID)
+}
+
 const { isMobile } = useResponsiveStore()
 
 const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
@@ -230,6 +257,9 @@ const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
   cursor: pointer;
   &:hover {
     @include background-secondary;
+  }
+  &[data-clipped] {
+    @include color-accent-primary;
   }
 }
 
