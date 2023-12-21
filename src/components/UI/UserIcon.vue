@@ -30,12 +30,14 @@ const props = withDefaults(
     indicatorSize?: number
     preventModal?: boolean
     hasNotification?: boolean
+    isUserModal?: boolean
   }>(),
   {
     size: 36,
     indicatorSize: 10,
     preventModal: false,
-    hasNotification: false
+    hasNotification: false,
+    isUserModal: false
   }
 )
 
@@ -63,7 +65,8 @@ const styles = reactive({
     height: `${props.size}px`,
     backgroundImage: userIconFileId.value
       ? `url(${buildUserIconPath(userIconFileId.value)})`
-      : undefined
+      : undefined,
+    pointerEvents: props.preventModal && !props.isUserModal ? ('none' as const) : undefined
   }))
 })
 
