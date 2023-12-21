@@ -66,7 +66,8 @@ const styles = reactive({
     backgroundImage: userIconFileId.value
       ? `url(${buildUserIconPath(userIconFileId.value)})`
       : undefined,
-    pointerEvents: props.preventModal && !props.isUserModal ? ('none' as const) : undefined
+    pointerEvents:
+      props.preventModal && !props.isUserModal ? ('none' as const) : undefined
   }))
 })
 
