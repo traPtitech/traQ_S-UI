@@ -3,14 +3,7 @@
     <h3 :class="$style.header">キャッシュ</h3>
     <div :class="$style.content">
       <p v-if="cacheData && cacheData.usage" :class="$style.usage">
-        <template v-if="cacheData.usageDetails">
-          <span v-for="(usage, key) in cacheData.usageDetails" :key="key">
-            {{ prettifyFileSize(usage) }} ({{ key }})
-          </span>
-        </template>
-        <template v-else>
-          {{ prettifyFileSize(cacheData.usage) }}
-        </template>
+        <span>{{ prettifyFileSize(cacheData.usage) }}</span>
       </p>
       <form-button
         :class="$style.button"
