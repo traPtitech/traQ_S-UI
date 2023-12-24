@@ -1,34 +1,35 @@
 <template>
-  <div>
-    <h3 :class="$style.header">キャッシュの削除</h3>
-    <div :class="$style.content">
-      <p v-if="cacheData && cacheData.usage" :class="$style.usage">
-        <template v-if="cacheData.usageDetails">
-          <label v-for="(usage, key) in cacheData.usageDetails" :key="key">
-            <input v-model="selectedCaches" type="checkbox" :value="key" />
-            {{ key }} {{ prettifyFileSize(usage) }}
-          </label>
-        </template>
-        <template v-else>
-          {{ prettifyFileSize(cacheData.usage) }}
-        </template>
-      </p>
-      <div v-for="(cache, index) in selectedCaches" :key="index">
-        {{ cache }}
+  <modal-frame
+    title="キャッシュの削除"
+    subtitle="キャッシュを削除する項目を選んで下さい。"
+  >
+    <div>
+      <div :class="$style.content">
+        <p v-if="cacheData && cacheData.usage" :class="$style.usage">
+          <template v-if="cacheData.usageDetails">
+            <label v-for="(usage, key) in cacheData.usageDetails" :key="key">
+              <input v-model="selectedCaches" type="checkbox" :value="key" />
+              {{ key }} {{ prettifyFileSize(usage) }}
+            </label>
+          </template>
+          <template v-else>
+            {{ prettifyFileSize(cacheData.usage) }}
+          </template>
+        </p>
+        <form-button
+          :class="$style.button"
+          label="キャンセル"
+          @click="clearModal"
+        />
+        <form-button
+          :class="$style.button"
+          label="削除する"
+          is-danger
+          @click="clearCache"
+        />
       </div>
-      <form-button
-        :class="$style.button"
-        label="キャンセル"
-        @click="closeModal"
-      />
-      <form-button
-        :class="$style.button"
-        label="削除する"
-        is-danger
-        @click="clearCache"
-      />
     </div>
-  </div>
+  </modal-frame>
 </template>
 
 <script lang="ts">
@@ -59,7 +60,9 @@ const clearCacheStorage = (cacheName: string) => window.caches.delete(cacheName)
 </script>
 
 <script lang="ts" setup>
+import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
+import { useModalStore } from '/@/store/ui/modal'
 
 const { fetchStamps } = useStampsStore()
 const { addSuccessToast } = useToastStore()
@@ -75,9 +78,7 @@ onMounted(setCacheData)
 
 const selectedCaches = ref<Array<string>>([])
 
-const closeModal = () => {
-  return
-}
+const { clearModal } = useModalStore()
 
 const clearCache = async () => {
   if (!confirmClear()) return

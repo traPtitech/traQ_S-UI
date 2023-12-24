@@ -13,7 +13,6 @@
         @click="openClearCacheModal"
       />
     </div>
-    <clear-cache />
   </div>
 </template>
 
@@ -38,7 +37,7 @@ const getStorageUsage = async () => {
 
 <script lang="ts" setup>
 import FormButton from '/@/components/UI/FormButton.vue'
-import ClearCache from './ClearCache.vue'
+import { useModalStore } from '/@/store/ui/modal'
 
 const cacheData = ref<StorageEstimate | null>(null)
 const setCacheData = async () => {
@@ -46,8 +45,11 @@ const setCacheData = async () => {
 }
 onMounted(setCacheData)
 
+const { pushModal } = useModalStore()
 const openClearCacheModal = async () => {
-  return
+  pushModal({
+    type: 'cache-clear'
+  })
 }
 </script>
 
