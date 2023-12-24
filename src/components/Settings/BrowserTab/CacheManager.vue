@@ -10,19 +10,17 @@
         label="削除する"
         type="secondary"
         is-danger
-        @click="clearCache"
+        @click="openClearCacheModal"
       />
     </div>
+    <clear-cache />
   </div>
 </template>
 
 <script lang="ts">
 import { onMounted, ref } from 'vue'
-import { useToastStore } from '/@/store/ui/toast'
-import { wait } from '/@/lib/basic/timer'
 import { checkStorageManagerSupport } from '/@/lib/dom/browser'
 import { prettifyFileSize } from '/@/lib/basic/file'
-import { useStampsStore } from '/@/store/entities/stamps'
 
 declare global {
   interface StorageEstimate {
@@ -36,21 +34,11 @@ const getStorageUsage = async () => {
 
   return navigator.storage.estimate()
 }
-
-const confirmClear = () => window.confirm('本当に削除しますか？')
-
-/* CacheStorageのnameはsw.jsを参照 */
-const clearCacheStorage = (cacheName: string) => window.caches.delete(cacheName)
 </script>
 
 <script lang="ts" setup>
 import FormButton from '/@/components/UI/FormButton.vue'
-
-const { fetchStamps } = useStampsStore()
-const { addSuccessToast } = useToastStore()
-const showToast = (extraMesage?: string) => {
-  addSuccessToast(`削除に成功しました${extraMesage ? `: ${extraMesage}` : ''}`)
-}
+import ClearCache from './ClearCache.vue'
 
 const cacheData = ref<StorageEstimate | null>(null)
 const setCacheData = async () => {
@@ -58,28 +46,8 @@ const setCacheData = async () => {
 }
 onMounted(setCacheData)
 
-const clearCache = async () => {
-  if (!confirmClear()) return
-
-  const names = await window.caches.keys()
-  await Promise.all(
-    names
-      .filter(name => name.startsWith('traQ_S-precache'))
-      .map(name => clearCacheStorage(name))
-  )
-  await clearCacheStorage('files-cache')
-  await clearCacheStorage('thumbnail-cache')
-
-  const registration = await navigator.serviceWorker?.getRegistration()
-  if (registration) {
-    registration.unregister()
-    showToast('1秒後にリロードします')
-    setCacheData()
-    await wait(1000)
-    window.location.reload()
-  } else {
-    showToast()
-  }
+const openClearCacheModal = async () => {
+  return
 }
 </script>
 
