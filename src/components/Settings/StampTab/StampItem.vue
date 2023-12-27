@@ -6,10 +6,10 @@
         <p>:{{ stamp.name }}:</p>
         <p
           v-if="showCreator"
-          :title="`@${stamp.creatorId}`"
+          :title="`@${creatorName}`"
           :class="$style.creator"
         >
-          @{{ stamp.creatorId }}
+          @{{ creatorName }}
         </p>
       </div>
       <button :class="$style.dotsButton" @click="onDotsClick">
@@ -32,6 +32,7 @@ import { buildFilePath } from '/@/lib/apis'
 import useContextMenu from '/@/composables/useContextMenu'
 import StampContextMenu from './StampContextMenu.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { useUsersStore } from '/@/store/entities/users'
 
 const props = withDefaults(
   defineProps<{
@@ -41,6 +42,11 @@ const props = withDefaults(
   {
     showCreator: false
   }
+)
+
+const { usersMap } = useUsersStore()
+const creatorName = computed(
+  () => usersMap.value.get(props.stamp.creatorId)?.name ?? 'unknown'
 )
 
 const url = computed(() => buildFilePath(props.stamp.fileId))
