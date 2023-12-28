@@ -7,8 +7,9 @@
           <textarea
             :id="id"
             ref="textareaRef"
-            v-model="state.text"
             :class="$style.input"
+            :value="state.text"
+            @input="event => state.text = (event.target as HTMLTextAreaElement).value"
           />
         </div>
         <div :class="$style.controls">

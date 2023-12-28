@@ -3,6 +3,7 @@
     <div :class="$style.label">{{ label }}</div>
     <div v-if="isEditing" :class="$style.inputWrapper">
       <form-input
+        ref="inputRef"
         v-model="localValue"
         :class="$style.input"
         :max-length="maxLength"
@@ -37,6 +38,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import useLocalInput from '/@/composables/utils/useLocalInput'
 import useToggle from '/@/composables/utils/useToggle'
+import { ref, nextTick } from 'vue'
 
 const props = defineProps<{
   label: string
@@ -48,6 +50,8 @@ const emit = defineEmits<{
   (e: 'update:modelValue', _value: string): void
 }>()
 
+const inputRef = ref<InstanceType<typeof FormInput> | null>(null)
+
 const remoteValue = useModelValueSyncer(props, emit)
 const { localValue, isEditing } = useLocalInput(
   remoteValue,
@@ -57,7 +61,15 @@ const { localValue, isEditing } = useLocalInput(
   },
   true // キャンセルするUIがないため
 )
-const { open: startEditing, close: endEditing } = useToggle(isEditing)
+const { open, close: endEditing } = useToggle(isEditing)
+
+const startEditing = async () => {
+  open()
+  await nextTick()
+  if (isEditing.value) {
+    inputRef.value?.focus()
+  }
+}
 </script>
 
 <style lang="scss" module>

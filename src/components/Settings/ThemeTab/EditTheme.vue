@@ -5,14 +5,14 @@
       label="エクスポート"
       @click="onImportClick"
       :disabled="isImporterOpen"
-      color="secondary"
+      type="tertiary"
       :class="$style.element"
     />
     -->
     <form-button
       label="インポート/エクスポート"
       :disabled="isImporterOpen"
-      color="secondary"
+      type="tertiary"
       :class="$style.element"
       @click="onImportClick"
     />
@@ -20,7 +20,8 @@
     <form-button
       label="選択中のテーマで上書き"
       @click="onUpdateClick"
-      color="error"
+      type="secondary"
+      is-danger
       :class="$style.element"
     />
     -->
@@ -31,7 +32,7 @@
       <form-button
         label="保存"
         :disabled="!isChanged"
-        color="primary"
+        type="primary"
         @click="applyTheme"
       />
     </div>

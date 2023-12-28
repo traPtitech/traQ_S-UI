@@ -16,7 +16,7 @@
       <form-button
         v-if="showExpandButton"
         :class="$style.expandButton"
-        color="secondary"
+        type="tertiary"
         label="全て表示"
         @click="expand"
       />

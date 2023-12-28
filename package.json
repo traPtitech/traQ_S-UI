@@ -1,6 +1,6 @@
 {
   "name": "traq_s-ui",
-  "version": "3.18.0",
+  "version": "3.18.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -28,7 +28,7 @@
   "dependencies": {
     "@mdi/js": "^7.2.96",
     "@sapphi-red/web-noise-suppressor": "^0.3.3",
-    "@traptitech/traq": "^3.11.0-3",
+    "@traptitech/traq": "^3.15.1-8",
     "@traptitech/traq-markdown-it": "^6.3.0",
     "autosize": "^6.0.1",
     "cropperjs": "^1.5.13",
@@ -42,6 +42,7 @@
     "skyway-js": "^4.4.5",
     "text-field-edit": "^3.2.0",
     "throttle-debounce": "^5.0.0",
+    "ts-pattern": "^5.0.5",
     "turndown": "^7.1.1",
     "turndown-plugin-gfm": "^1.0.2",
     "vue": "^3.3.4",
@@ -50,9 +51,9 @@
     "zod": "^3.22.3"
   },
   "devDependencies": {
-    "@pinia/testing": "^0.1.2",
-    "@types/autosize": "^4.0.1",
-    "@types/dom-screen-wake-lock": "^1.0.1",
+    "@pinia/testing": "^0.1.3",
+    "@types/autosize": "^4.0.2",
+    "@types/dom-screen-wake-lock": "^1.0.2",
     "@types/katex": "^0.16.0",
     "@types/markdown-it": "^12.2.3",
     "@types/node": "^20.2.4",
@@ -60,22 +61,22 @@
     "@types/punycode": "^2.1.0",
     "@types/serviceworker": "^0.0.67",
     "@types/throttle-debounce": "^5.0.0",
-    "@types/turndown": "^5.0.1",
+    "@types/turndown": "^5.0.3",
     "@types/webappsec-credential-management": "^0.6.4",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
     "@typescript/lib-dom": "npm:@types/web@^0.0.72",
-    "@vitejs/plugin-vue": "^4.1.0",
+    "@vitejs/plugin-vue": "^4.4.0",
     "@vitest/coverage-c8": "^0.25.8",
     "@vue/test-utils": "^2.4.1",
     "autoprefixer": "^10.4.14",
-    "axios": "^0.27.2",
+    "axios": "^1.6.0",
     "browserslist": "^4.21.10",
     "cypress": "^13.3.0",
     "esbuild": "^0.15.18",
     "esbuild-plugin-browserslist": "^0.5.2",
     "eslint": "^8.50.0",
-    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-cypress": "^2.13.2",
     "eslint-plugin-unused-imports": "^2.0.0",
     "eslint-plugin-vue": "^9.14.1",
@@ -86,10 +87,10 @@
     "postcss": "^8.4.31",
     "prettier": "^2.7.1",
     "rollup-plugin-brotli": "^3.1.0",
-    "sass": "^1.68.0",
+    "sass": "^1.69.5",
     "start-server-and-test": "^2.0.0",
     "typescript": "^5.0.4",
-    "vite": "^4.4.11",
+    "vite": "^4.5.0",
     "vite-plugin-pwa": "^0.16.5",
     "vite-svg-loader": "^4.0.0",
     "vitest": "^0.25.8",
@@ -103,7 +104,7 @@
     "workbox-strategies": "^6.5.4"
   },
   "engines": {
-    "node": "^20.2.0",
+    "node": "^21.1.0",
     "npm": "^9.6.6"
   }
 }

@@ -41,7 +41,7 @@ const { openGroupCreateModal } = useGroupCreateModalOpener()
   scrollbar-gutter: stable;
 }
 .close {
-  position: absolute;
+  position: fixed;
   top: 30px;
   right: 60px;
 }
