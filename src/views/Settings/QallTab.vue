@@ -30,7 +30,9 @@
           :options="voiceOptions"
           :class="$style.option"
         />
-        <p v-else :class="$style.content">読み上げ音声の声の種類が取得できませんでした。</p>
+        <p v-else :class="$style.content">
+          読み上げ音声の声の種類が取得できませんでした。
+        </p>
         <form-input
           v-model.number="state.voicePitch"
           label="ピッチ"
