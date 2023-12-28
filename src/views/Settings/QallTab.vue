@@ -2,57 +2,59 @@
   <section>
     <div :class="$style.element">
       <div :class="$style.enable">
-        <div :class="$style.header_and_content">
-          <h3 :class="$style.header">RTC機能</h3>
+        <section :class="$style.section">
+          <h3 :class="$style.heading">RTC機能</h3>
           <p>
             通話などのRTC(リアルタイムコミュニケーション)機能を有効化します。
             マイクなどへのアクセス許可が必要です。
           </p>
-        </div>
+        </section>
         <a-toggle v-model="state.isEnabled" :class="$style.toggle" />
       </div>
     </div>
     <template v-if="state.isEnabled">
       <div :class="$style.element">
         <div :class="$style.enable">
-          <div :class="$style.header_and_content">
-            <h3 :class="$style.header">メッセージの読み上げ</h3>
+          <section :class="$style.section">
+            <h3 :class="$style.heading">メッセージの読み上げ</h3>
             <p>Qallしているチャンネルに投稿されたメッセージを読み上げます。</p>
-          </div>
+          </section>
           <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
         </div>
       </div>
       <div v-if="state.isTtsEnabled" :class="$style.element">
-        <div>
-          <form-selector
-            v-if="voiceOptions.length > 0"
-            v-model="state.voiceName"
-            label="読み上げボイスの種類"
-            :options="voiceOptions"
-          />
-          <p v-else>読み上げ音声の声の種類が取得できませんでした。</p>
-          <form-input
-            v-model.number="state.voicePitch"
-            label="ピッチ"
-            type="number"
-            step="0.1"
-          />
-          <form-input
-            v-model.number="state.voiceRate"
-            label="速度"
-            type="number"
-            step="0.1"
-          />
-          <form-input
-            v-model.number="state.voiceVolume"
-            label="音量"
-            type="number"
-            step="0.1"
-          />
-        </div>
+        <form-selector
+          v-if="voiceOptions.length > 0"
+          v-model="state.voiceName"
+          label="読み上げボイスの種類"
+          :options="voiceOptions"
+          :class="$style.option"
+        />
+        <p v-else :class="$style.content">読み上げ音声の声の種類が取得できませんでした。</p>
+        <form-input
+          v-model.number="state.voicePitch"
+          label="ピッチ"
+          type="number"
+          step="0.1"
+          :class="$style.option"
+        />
+        <form-input
+          v-model.number="state.voiceRate"
+          label="速度"
+          type="number"
+          step="0.1"
+          :class="$style.option"
+        />
+        <form-input
+          v-model.number="state.voiceVolume"
+          label="音量"
+          type="number"
+          step="0.1"
+          :class="$style.option"
+        />
       </div>
       <div :class="$style.element">
-        <h3 :class="$style.header">入力デバイス</h3>
+        <h3 :class="$style.heading">入力デバイス</h3>
         <div>
           <form-selector
             v-if="!fetchFailed && audioInputDevices.length > 0"
@@ -63,7 +65,7 @@
         </div>
       </div>
       <div :class="$style.element">
-        <h3 :class="$style.header">マスターボリューム</h3>
+        <h3 :class="$style.heading">マスターボリューム</h3>
         <form-range-with-value
           v-model="state.masterVolume"
           max-text="100%"
@@ -74,7 +76,7 @@
         />
       </div>
       <div :class="$style.element">
-        <h3 :class="$style.header">ノイズゲート</h3>
+        <h3 :class="$style.heading">ノイズゲート</h3>
         <p>
           マイクに入力された音が指定した音量以下だった場合にミュートします。
           -100dBにすると無効になります。
@@ -86,6 +88,7 @@
           step="1"
           max="0"
           :format="formatNoiseGateThreshold"
+          :class="$style.content"
         />
       </div>
       <noise-suppression
@@ -205,7 +208,7 @@ const voiceOptions = useVoices()
 </script>
 
 <style lang="scss" module>
-.header {
+.heading {
   margin-bottom: 8px;
 }
 .element {
@@ -215,11 +218,19 @@ const voiceOptions = useVoices()
   display: flex;
   align-items: center;
   margin-bottom: 8px;
-  .header_and_content {
+  .section {
     flex: 1;
   }
   .toggle {
     margin-left: 12px;
   }
+}
+
+.option {
+  margin: 12px 0;
+  font-size: 12px;
+}
+.content {
+  margin: 12px 0;
 }
 </style>
