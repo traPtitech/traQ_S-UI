@@ -10,6 +10,7 @@
 <script lang="ts" setup>
 import type { ActivityTimelineMessage } from '@traptitech/traq'
 import { computed } from 'vue'
+import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 
 const props = defineProps<{
