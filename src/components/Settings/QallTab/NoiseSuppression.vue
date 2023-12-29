@@ -1,30 +1,28 @@
 <template>
-  <div>
+  <section>
     <h3 :class="$style.header">ノイズ抑制</h3>
-    <div>
-      <template v-if="isAudioWorkletSupported">
-        <form-radio
-          v-model="noiseSuppressionValue"
-          :class="$style.input"
-          label="Rnnoise"
-          input-value="rnnoise"
-        />
-        <form-radio
-          v-model="noiseSuppressionValue"
-          :class="$style.input"
-          label="Speex"
-          input-value="speex"
-        />
-        <form-radio
-          v-model="noiseSuppressionValue"
-          :class="$style.input"
-          label="無効"
-          input-value="none"
-        />
-      </template>
-      <p v-else>利用している端末が対応していません</p>
-    </div>
-  </div>
+    <template v-if="isAudioWorkletSupported">
+      <form-radio
+        v-model="noiseSuppressionValue"
+        :class="$style.input"
+        label="Rnnoise"
+        input-value="rnnoise"
+      />
+      <form-radio
+        v-model="noiseSuppressionValue"
+        :class="$style.input"
+        label="Speex"
+        input-value="speex"
+      />
+      <form-radio
+        v-model="noiseSuppressionValue"
+        :class="$style.input"
+        label="無効"
+        input-value="none"
+      />
+    </template>
+    <p v-else>利用している端末が対応していません</p>
+  </section>
 </template>
 
 <script lang="ts" setup>

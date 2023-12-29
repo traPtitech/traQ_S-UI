@@ -55,7 +55,7 @@
           :class="$style.option"
         />
       </div>
-      <div :class="$style.element">
+      <section :class="$style.element">
         <h3 :class="$style.heading">入力デバイス</h3>
         <div>
           <form-selector
@@ -65,8 +65,8 @@
           />
           <p v-else>デバイスが取得できませんでした。</p>
         </div>
-      </div>
-      <div :class="$style.element">
+      </section>
+      <section :class="$style.element">
         <h3 :class="$style.heading">マスターボリューム</h3>
         <form-range-with-value
           v-model="state.masterVolume"
@@ -76,8 +76,8 @@
           max="1"
           :format="formatMasterVolume"
         />
-      </div>
-      <div :class="$style.element">
+      </section>
+      <section :class="$style.element">
         <h3 :class="$style.heading">ノイズゲート</h3>
         <p>
           マイクに入力された音が指定した音量以下だった場合にミュートします。
@@ -92,7 +92,7 @@
           :format="formatNoiseGateThreshold"
           :class="$style.content"
         />
-      </div>
+      </section>
       <noise-suppression
         v-model="state.noiseSuppression"
         :class="$style.element"
