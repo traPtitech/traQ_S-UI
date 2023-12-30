@@ -51,7 +51,7 @@ const id = randomString()
 <style lang="scss" module>
 .label {
   @include color-ui-secondary;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   display: block;
 }
 .inputContainer {

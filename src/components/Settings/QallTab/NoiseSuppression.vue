@@ -1,27 +1,29 @@
 <template>
   <section>
-    <h3 :class="$style.header">ノイズ抑制</h3>
+    <h3 :class="$style.heading">ノイズ抑制</h3>
     <template v-if="isAudioWorkletSupported">
-      <form-radio
-        v-model="noiseSuppressionValue"
-        :class="$style.input"
-        label="Rnnoise"
-        input-value="rnnoise"
-      />
-      <form-radio
-        v-model="noiseSuppressionValue"
-        :class="$style.input"
-        label="Speex"
-        input-value="speex"
-      />
-      <form-radio
-        v-model="noiseSuppressionValue"
-        :class="$style.input"
-        label="無効"
-        input-value="none"
-      />
+      <div :class="$style.choices">
+        <form-radio
+          v-model="noiseSuppressionValue"
+          :class="$style.input"
+          label="Rnnoise"
+          input-value="rnnoise"
+        />
+        <form-radio
+          v-model="noiseSuppressionValue"
+          :class="$style.input"
+          label="Speex"
+          input-value="speex"
+        />
+        <form-radio
+          v-model="noiseSuppressionValue"
+          :class="$style.input"
+          label="無効"
+          input-value="none"
+        />
+      </div>
     </template>
-    <p v-else>利用している端末が対応していません</p>
+    <p v-else>利用している端末が対応していません。</p>
   </section>
 </template>
 
@@ -45,11 +47,15 @@ const isAudioWorkletSupported = checkAudioWorkletSupport()
 </script>
 
 <style lang="scss" module>
-.header {
-  margin-bottom: 8px;
+.heading {
+  margin-bottom: 4px;
+}
+.choices {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
 }
 .input {
-  display: block;
   font-weight: bold;
   margin-right: 8px;
 }

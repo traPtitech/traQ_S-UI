@@ -124,7 +124,7 @@ defineExpose({ focus })
 .label {
   @include color-ui-secondary;
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 .inputContainer {
   @include color-ui-primary;

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div :class="$style.element">
+    <section :class="$style.element">
       <div :class="$style.enable">
         <section :class="$style.section">
           <h3 :class="$style.heading">RTC機能</h3>
@@ -11,50 +11,50 @@
         </section>
         <a-toggle v-model="state.isEnabled" :class="$style.toggle" />
       </div>
-    </div>
+    </section>
     <template v-if="state.isEnabled">
-      <div :class="$style.element">
-        <div :class="$style.enable">
-          <section :class="$style.section">
-            <h3 :class="$style.heading">メッセージの読み上げ</h3>
-            <p>Qallしているチャンネルに投稿されたメッセージを読み上げます。</p>
-          </section>
-          <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
+      <section :class="$style.element">
+        <div :class="$style.contents">
+          <div :class="$style.enable">
+            <section :class="$style.section">
+              <h3 :class="$style.heading">メッセージの読み上げ</h3>
+              <p>Qallしているチャンネルに投稿されたメッセージを読み上げます。</p>
+            </section>
+            <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
+          </div>
+          <div v-if="state.isTtsEnabled" :class="$style.contents">
+            <form-selector
+              v-if="voiceOptions.length > 0"
+              v-model="state.voiceName"
+              label="読み上げボイスの種類"
+              :options="voiceOptions"
+              :class="$style.option"
+            />
+            <p v-else>読み上げ音声の声の種類が取得できませんでした。</p>
+            <form-input
+              v-model.number="state.voicePitch"
+              label="ピッチ"
+              type="number"
+              step="0.1"
+              :class="$style.option"
+            />
+            <form-input
+              v-model.number="state.voiceRate"
+              label="速度"
+              type="number"
+              step="0.1"
+              :class="$style.option"
+            />
+            <form-input
+              v-model.number="state.voiceVolume"
+              label="音量"
+              type="number"
+              step="0.1"
+              :class="$style.option"
+            />
+          </div>
         </div>
-      </div>
-      <div v-if="state.isTtsEnabled" :class="$style.element">
-        <form-selector
-          v-if="voiceOptions.length > 0"
-          v-model="state.voiceName"
-          label="読み上げボイスの種類"
-          :options="voiceOptions"
-          :class="$style.option"
-        />
-        <p v-else :class="$style.content">
-          読み上げ音声の声の種類が取得できませんでした。
-        </p>
-        <form-input
-          v-model.number="state.voicePitch"
-          label="ピッチ"
-          type="number"
-          step="0.1"
-          :class="$style.option"
-        />
-        <form-input
-          v-model.number="state.voiceRate"
-          label="速度"
-          type="number"
-          step="0.1"
-          :class="$style.option"
-        />
-        <form-input
-          v-model.number="state.voiceVolume"
-          label="音量"
-          type="number"
-          step="0.1"
-          :class="$style.option"
-        />
-      </div>
+      </section>
       <section :class="$style.element">
         <h3 :class="$style.heading">入力デバイス</h3>
         <div>
@@ -90,7 +90,7 @@
           step="1"
           max="0"
           :format="formatNoiseGateThreshold"
-          :class="$style.content"
+          :class="$style.noiseGate"
         />
       </section>
       <noise-suppression
@@ -211,7 +211,7 @@ const voiceOptions = useVoices()
 
 <style lang="scss" module>
 .heading {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 .element {
   margin: 24px 0;
@@ -219,20 +219,22 @@ const voiceOptions = useVoices()
 .enable {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
   .section {
     flex: 1;
   }
   .toggle {
-    margin-left: 12px;
+    margin-left: 24px;
   }
 }
-
 .option {
-  margin: 12px 0;
   font-size: 12px;
 }
-.content {
-  margin: 12px 0;
+.noiseGate {
+  margin-top: 4px;
+}
+.contents {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
 }
 </style>
