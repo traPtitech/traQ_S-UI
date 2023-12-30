@@ -18,7 +18,9 @@
           <div :class="$style.enable">
             <section :class="$style.section">
               <h3 :class="$style.heading">メッセージの読み上げ</h3>
-              <p>Qallしているチャンネルに投稿されたメッセージを読み上げます。</p>
+              <p>
+                Qallしているチャンネルに投稿されたメッセージを読み上げます。
+              </p>
             </section>
             <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
           </div>
