@@ -3,31 +3,34 @@
     title="キャッシュの削除"
     subtitle="キャッシュを削除する項目を選んで下さい。"
   >
-    <div>
-      <div :class="$style.content">
-        <p v-if="cacheData && cacheData.usage" :class="$style.usage">
-          <template v-if="cacheData.usageDetails">
-            <label v-for="(usage, key) in cacheData.usageDetails" :key="key">
-              <input v-model="selectedCaches" type="checkbox" :value="key" />
-              {{ key }} {{ prettifyFileSize(usage) }}
-            </label>
-          </template>
-          <template v-else>
-            {{ prettifyFileSize(cacheData.usage) }}
-          </template>
-        </p>
-        <form-button
-          :class="$style.button"
-          label="キャンセル"
-          @click="clearModal"
-        />
-        <form-button
-          :class="$style.button"
-          label="削除する"
-          is-danger
-          @click="clearCache"
-        />
-      </div>
+    <div :class="$style.content">
+      <p v-if="cacheData && cacheData.usage" :class="$style.usage">
+        <template v-if="cacheData.usageDetails">
+          <div v-for="(usage, key) in cacheData.usageDetails" :key="key">
+            <form-checkbox v-model="selectedCaches" :label="cacheLabel(key)" />
+            {{ prettifyFileSize(usage) }}
+            <div v-if="selectedCaches.includes(key)">a</div>
+            <div v-else>b</div>
+          </div>
+        </template>
+        <template v-else>
+          {{ prettifyFileSize(cacheData.usage) }}
+        </template>
+      </p>
+      <p v-else>キャッシュデータは存在しません</p>
+      <form-button
+        :class="$style.button"
+        label="キャンセル"
+        type="tertiary"
+        @click="clearModal"
+      />
+      <form-button
+        :class="$style.button"
+        label="削除する"
+        type="secondary"
+        is-danger
+        @click="clearCache"
+      />n
     </div>
   </modal-frame>
 </template>
@@ -38,7 +41,6 @@ import { useToastStore } from '/@/store/ui/toast'
 import { wait } from '/@/lib/basic/timer'
 import { checkStorageManagerSupport } from '/@/lib/dom/browser'
 import { prettifyFileSize } from '/@/lib/basic/file'
-import { useStampsStore } from '/@/store/entities/stamps'
 
 declare global {
   interface StorageEstimate {
@@ -63,8 +65,8 @@ const clearCacheStorage = (cacheName: string) => window.caches.delete(cacheName)
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useModalStore } from '/@/store/ui/modal'
+import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
 
-const { fetchStamps } = useStampsStore()
 const { addSuccessToast } = useToastStore()
 const showToast = (extraMesage?: string) => {
   addSuccessToast(`削除に成功しました${extraMesage ? `: ${extraMesage}` : ''}`)
@@ -77,6 +79,33 @@ const setCacheData = async () => {
 onMounted(setCacheData)
 
 const selectedCaches = ref<Array<string>>([])
+const [caches, indexedDB, serviceWorkerRegistrations] = [
+  ref<boolean>(),
+  ref<boolean>(),
+  ref<boolean>()
+]
+
+const cacheVariable = (cacheName: string) => {
+  switch (cacheName) {
+    case 'caches':
+      return caches
+    case 'indexedDB':
+      return indexedDB
+    case 'serviceWorkerRegistrations':
+      return serviceWorkerRegistrations
+  }
+}
+
+const cacheLabel = (cacheName: string) => {
+  switch (cacheName) {
+    case 'caches':
+      return 'traQ本体'
+    case 'indexedDB':
+      return 'ファイルの本体一覧'
+    case 'serviceWorkerRegistrations':
+      return 'ファイルのサムネイル一覧'
+  }
+}
 
 const { clearModal } = useModalStore()
 
