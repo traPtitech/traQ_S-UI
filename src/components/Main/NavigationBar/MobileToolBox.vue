@@ -6,7 +6,7 @@
       :icon-name="tool.iconName"
       :icon-mdi="tool.iconMdi"
       @mousedown.middle="tool.onClick"
-      @click="tool.onClick"
+      @mousedown="tool.onClick"
     />
     <app-list
       v-if="isServicesShown"
@@ -17,8 +17,8 @@
 </template>
 
 <script lang="ts" setup>
-import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
 import AppList from '/@/components/Main/NavigationBar/AppList.vue'
+import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
 import useToolBox from '/@/components/Main/NavigationBar/composables/useToolBox'
 
 const { tools, isServicesShown, closeServices } = useToolBox()

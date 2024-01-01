@@ -10,7 +10,8 @@
     >
       <click-outside
         v-if="isPopupMenuShown"
-        @click-outside.stop="closePopupMenu"
+        stop
+        @click-outside="closePopupMenu"
       >
         <channel-header-tools-menu
           :class="$style.toolsMenu"
