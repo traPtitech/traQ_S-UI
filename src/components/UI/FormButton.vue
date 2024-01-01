@@ -75,7 +75,7 @@ const spinnerColor = computed(() => {
   &[data-type='primary'] {
     @include color-common-text-white-primary;
     @include background-accent-primary;
-    border-color: $theme-ui-primary-default;
+    border-color: $theme-accent-primary-default;
   }
   &[data-type='secondary'] {
     @include color-accent-primary;

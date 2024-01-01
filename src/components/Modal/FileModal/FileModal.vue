@@ -1,6 +1,10 @@
 <template>
   <click-outside stop @click-outside="clearModal">
-    <div v-if="fileMeta" :class="$style.fileContainer">
+    <div
+      v-if="fileMeta"
+      :class="$style.fileContainer"
+      :data-fullsize="$boolAttr(isFullsizeModal)"
+    >
       <file-modal-image v-if="fileType === 'image'" :file-id="fileMeta.id" />
       <file-modal-video
         v-else-if="fileType === 'video'"
@@ -34,10 +38,20 @@ const fileIdState = reactive({
 })
 const { fileMeta, fileType } = useFileMeta(fileIdState)
 const { clearModal } = useModalStore()
+const isFullsizeModal = computed(
+  () => fileType.value === 'image' || fileType.value === 'video'
+)
 </script>
 
 <style module lang="scss">
 .fileContainer {
-  height: 100%;
+  height: auto;
+  &[data-fullsize] {
+    height: 100%;
+  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 </style>
