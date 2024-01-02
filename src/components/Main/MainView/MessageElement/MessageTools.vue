@@ -163,7 +163,6 @@ const {
 } = useContextMenu()
 
 const onDotsClick = (e: MouseEvent) => {
-  console.log('onDotsClick')
   openContextMenu({
     x: e.pageX,
     y: e.pageY
