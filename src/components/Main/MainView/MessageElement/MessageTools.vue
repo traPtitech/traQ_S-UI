@@ -81,20 +81,20 @@
 </template>
 
 <script lang="ts" setup>
-import type { Stamp } from '@traptitech/traq'
 import { computed, ref } from 'vue'
-import MessageContextMenu from './MessageContextMenu.vue'
+import type { StampId, MessageId } from '/@/types/entity-ids'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import apis from '/@/lib/apis'
+import { useToastStore } from '/@/store/ui/toast'
+import useContextMenu from '/@/composables/useContextMenu'
+import { useStampsStore } from '/@/store/entities/stamps'
+import type { Stamp } from '@traptitech/traq'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
-import useContextMenu from '/@/composables/useContextMenu'
+import MessageContextMenu from './MessageContextMenu.vue'
 import useToggle from '/@/composables/utils/useToggle'
-import apis from '/@/lib/apis'
 import { useStampHistory } from '/@/store/domain/stampHistory'
-import { useStampsStore } from '/@/store/entities/stamps'
-import { useResponsiveStore } from '/@/store/ui/responsive'
-import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
-import { useToastStore } from '/@/store/ui/toast'
-import type { MessageId, StampId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{

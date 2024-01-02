@@ -21,12 +21,12 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelHeaderToolsList from './ChannelHeaderToolsList.vue'
-import ChannelHeaderToolsMenu from './ChannelHeaderToolsMenu.vue'
+import type { ChannelId } from '/@/types/entity-ids'
 import useChannelState from './composables/useChannelState'
 import ClickOutside from '/@/components/UI/ClickOutside'
+import ChannelHeaderToolsList from './ChannelHeaderToolsList.vue'
+import ChannelHeaderToolsMenu from './ChannelHeaderToolsMenu.vue'
 import useToggle from '/@/composables/utils/useToggle'
-import type { ChannelId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId

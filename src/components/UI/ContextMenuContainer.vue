@@ -14,9 +14,9 @@
 
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue'
+import type { Point } from '/@/lib/basic/point'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import useBoxSize from '/@/composables/dom/useBoxSize'
-import type { Point } from '/@/lib/basic/point'
 
 const props = defineProps<{
   position: Point

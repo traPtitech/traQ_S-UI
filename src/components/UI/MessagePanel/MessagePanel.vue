@@ -47,12 +47,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
-import { computed } from 'vue'
+import UserName from './UserName.vue'
 import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
-import UserName from './UserName.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
+import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useUsersStore } from '/@/store/entities/users'
 

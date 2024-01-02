@@ -24,8 +24,8 @@
 </template>
 
 <script lang="ts" setup>
-import AppListItem from '/@/components/Main/NavigationBar/AppListItem.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
+import AppListItem from '/@/components/Main/NavigationBar/AppListItem.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 
 const emit = defineEmits<{
