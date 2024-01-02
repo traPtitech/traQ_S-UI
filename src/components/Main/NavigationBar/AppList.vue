@@ -69,12 +69,10 @@ const close = () => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 16px;
-
   overflow: {
     x: hidden;
     y: auto;
   }
-
   scrollbar-gutter: stable;
 }
 </style>
