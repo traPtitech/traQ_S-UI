@@ -1,6 +1,6 @@
 <template>
   <teleport to="#message-menu-popup">
-    <click-outside @click-outside.stop="emit('close')">
+    <click-outside @click-outside="emit('close')">
       <div
         ref="menuContainerRef"
         :style="toolsMenuStyle"

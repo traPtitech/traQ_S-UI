@@ -1,13 +1,13 @@
-import type { VNode, ComponentPublicInstance } from 'vue'
+import type { ComponentPublicInstance, VNode } from 'vue'
 import {
-  defineComponent,
-  Text,
   Comment,
+  Text,
   cloneVNode,
-  shallowRef,
-  onMounted,
+  defineComponent,
   onBeforeUnmount,
-  ref
+  onMounted,
+  ref,
+  shallowRef
 } from 'vue'
 import { isIOS } from '/@/lib/dom/browser'
 import { useModalStore } from '/@/store/ui/modal'
@@ -84,7 +84,10 @@ export default defineComponent({
         return
       }
 
-      emit('clickOutside', e)
+      setTimeout(() => {
+        emit('clickOutside', e)
+      }, 0)
+
       if (props.stop) {
         e.stopPropagation()
       }
