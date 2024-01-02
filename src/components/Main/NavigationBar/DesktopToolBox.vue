@@ -7,7 +7,7 @@
       :icon-name="tool.iconName"
       :icon-mdi="tool.iconMdi"
       @mousedown.middle="tool.onClick"
-      @mousedown="tool.onClick"
+      @click="tool.onClick"
     />
     <user-icon
       v-if="myId"
@@ -25,10 +25,10 @@
 </template>
 
 <script lang="ts" setup>
-import AppList from '/@/components/Main/NavigationBar/AppList.vue'
 import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
-import useToolBox from '/@/components/Main/NavigationBar/composables/useToolBox'
 import UserIcon from '/@/components/UI/UserIcon.vue'
+import AppList from '/@/components/Main/NavigationBar/AppList.vue'
+import useToolBox from '/@/components/Main/NavigationBar/composables/useToolBox'
 import { useMeStore } from '/@/store/domain/me'
 
 const { myId } = useMeStore()

@@ -42,21 +42,21 @@
         :class="$style.icon"
         icon-mdi
         icon-name="dots-horizontal"
-        @mousedown="emit('clickMore')"
+        @click="emit('clickMore')"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { computed, toRef } from 'vue'
-import useQall from './composables/useQall'
-import useStarChannel from './composables/useStarChannel'
-import HeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
 import useChannelSubscriptionState from '/@/composables/subscription/useChannelSubscriptionState'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { ChannelId } from '/@/types/entity-ids'
+import HeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
+import useQall from './composables/useQall'
+import useStarChannel from './composables/useStarChannel'
 
 const props = withDefaults(
   defineProps<{

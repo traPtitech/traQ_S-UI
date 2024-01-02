@@ -1,5 +1,5 @@
 <template>
-  <click-outside stop @click-outside="close">
+  <click-outside @click-outside.stop="close">
     <div :class="$style.container">
       <div :class="$style.header">
         <span :class="$style.title">サービス</span>
