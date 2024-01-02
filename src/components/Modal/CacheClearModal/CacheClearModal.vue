@@ -7,14 +7,18 @@
       <p v-if="cacheData && cacheData.usage" :class="$style.usage">
         <template v-if="cacheData.usageDetails">
           <div v-for="(usage, key) in cacheData.usageDetails" :key="key">
-            <form-checkbox v-model="selectedCaches" :label="cacheLabel(key)" />
-            {{ prettifyFileSize(usage) }}
-            <div v-if="selectedCaches.includes(key)">a</div>
-            <div v-else>b</div>
+            <label>
+              <input v-model="selectedCaches" type="checkbox" />
+              {{ cacheLabel(key) }}
+              {{ prettifyFileSize(usage) }}
+            </label>
           </div>
         </template>
         <template v-else>
-          {{ prettifyFileSize(cacheData.usage) }}
+          <form-checkbox
+            v-model="allCaches"
+            :label="prettifyFileSize(cacheData.usage)"
+          />
         </template>
       </p>
       <p v-else>キャッシュデータは存在しません</p>
@@ -68,8 +72,10 @@ import { useModalStore } from '/@/store/ui/modal'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
 
 const { addSuccessToast } = useToastStore()
-const showToast = (extraMesage?: string) => {
-  addSuccessToast(`削除に成功しました${extraMesage ? `: ${extraMesage}` : ''}`)
+const showToast = (extraMessage?: string) => {
+  addSuccessToast(
+    `削除に成功しました${extraMessage ? `: ${extraMessage}` : ''}`
+  )
 }
 
 const cacheData = ref<StorageEstimate | null>(null)
@@ -79,22 +85,7 @@ const setCacheData = async () => {
 onMounted(setCacheData)
 
 const selectedCaches = ref<Array<string>>([])
-const [caches, indexedDB, serviceWorkerRegistrations] = [
-  ref<boolean>(),
-  ref<boolean>(),
-  ref<boolean>()
-]
-
-const cacheVariable = (cacheName: string) => {
-  switch (cacheName) {
-    case 'caches':
-      return caches
-    case 'indexedDB':
-      return indexedDB
-    case 'serviceWorkerRegistrations':
-      return serviceWorkerRegistrations
-  }
-}
+const allCaches = ref<boolean>(false)
 
 const cacheLabel = (cacheName: string) => {
   switch (cacheName) {
@@ -104,6 +95,8 @@ const cacheLabel = (cacheName: string) => {
       return 'ファイルの本体一覧'
     case 'serviceWorkerRegistrations':
       return 'ファイルのサムネイル一覧'
+    default:
+      return cacheName
   }
 }
 
@@ -111,27 +104,25 @@ const { clearModal } = useModalStore()
 
 const clearCache = async () => {
   if (!confirmClear()) return
-  for (const key of selectedCaches.value) {
+  const promises = selectedCaches.value.map(async key => {
     switch (key) {
       case 'caches': {
         const names = await window.caches.keys()
-        await Promise.all(
+        return Promise.all(
           names
             .filter(name => name.startsWith('traQ_S-precache'))
             .map(name => clearCacheStorage(name))
         )
-        break
       }
       case 'indexedDB': {
-        await clearCacheStorage('files-cache')
-        break
+        return clearCacheStorage('files-cache')
       }
       case 'serviceWorkerRegistrations': {
-        await clearCacheStorage('thumbnail-cache')
-        break
+        return clearCacheStorage('thumbnail-cache')
       }
     }
-  }
+  })
+  await Promise.all(promises)
   const registration = await navigator.serviceWorker?.getRegistration()
   if (registration) {
     registration.unregister()
