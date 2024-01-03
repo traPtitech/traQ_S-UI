@@ -6,10 +6,11 @@
     <div :class="$style.content">
       <div v-if="cacheData && cacheData.usage" :class="$style.checkboxes">
         <div v-if="cacheData.usageDetails">
-          <div
+          <label
             v-for="(usage, key) in cacheData.usageDetails"
             :key="key"
-            :class="$style.checkboxContainer"
+            :for="key"
+            :class="$style.outerLabel"
           >
             <input
               :id="key"
@@ -17,21 +18,24 @@
               type="checkbox"
               :class="$style.checkbox"
             />
-            <label :for="key" :class="$style.label">
+            <label :for="key" :class="$style.innerLabel">
               {{ cacheLabel(key) }}
               <span>{{ prettifyFileSize(usage) }}</span>
             </label>
-          </div>
+          </label>
         </div>
         <div v-else>
-          <form-checkbox
-            v-model="allCaches"
-            :label="prettifyFileSize(cacheData.usage)"
-          />
-          <input v-model="allCaches" type="checkbox" :class="$style.checkbox" />
-          <label :class="$style.label">
-            全てのキャッシュ
-            <span>{{ prettifyFileSize(cacheData.usage) }}</span>
+          <label for="allCache" :class="$style.outerLabel">
+            <input
+              id="allCache"
+              v-model="allCaches"
+              type="checkbox"
+              :class="$style.checkbox"
+            />
+            <label for="allCache" :class="$style.innerLabel">
+              全てのキャッシュ
+              <span>{{ prettifyFileSize(cacheData.usage) }}</span>
+            </label>
           </label>
         </div>
       </div>
@@ -81,7 +85,6 @@ import { reactive } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useModalStore } from '/@/store/ui/modal'
-import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
 
 const { addSuccessToast } = useToastStore()
 const showToast = (extraMessage?: string) => {
@@ -165,23 +168,40 @@ const clearCache = async () => {
   flex-direction: column;
   gap: 8px;
 }
-.checkboxContainer {
+.outerLabel {
   display: flex;
-  gap: 25.5px;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 8px;
+  align-items: center;
 }
 .checkbox {
+  appearance: none;
+  height: 13px;
+  width: 13px;
+  margin: 5.5px;
+  border: 2px solid #8b98a5;
+  border-radius: 4px;
 }
-.label {
+.checkbox:checked {
+  border: 1px solid #8b98a5;
+  background-color: #1d9bf0;
+}
+.innerLabel {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 .buttonContainer {
   display: flex;
   justify-content: flex-end;
   gap: 16px;
-  cursor: pointer;
 
+  cursor: pointer;
   border: solid 2px transparent;
   border-radius: 4px;
   &:focus-within {
