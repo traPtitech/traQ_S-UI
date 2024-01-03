@@ -104,7 +104,6 @@ const onClickContextMenuButton = (e: MouseEvent) => {
   @include background-primary;
   border-radius: 4px;
   padding: 8px 16px;
-  cursor: pointer;
 }
 .header {
   display: flex;
@@ -130,6 +129,7 @@ const onClickContextMenuButton = (e: MouseEvent) => {
 .icon {
   display: block;
   padding: 4px;
+  cursor: pointer;
   margin-left: auto;
   border-radius: 4px;
   &:hover {
