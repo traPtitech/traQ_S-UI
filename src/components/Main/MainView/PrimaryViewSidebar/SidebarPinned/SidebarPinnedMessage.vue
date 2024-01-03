@@ -1,15 +1,15 @@
 <template>
   <div>
-    <router-link :to="constructMessagesPath(message.id)">
-      <message-panel
-        title-type="user"
-        hide-subtitle
-        line-clamp-content
-        :message="message"
-        show-context-menu-button
-        @click-context-menu-button="toggle"
-      />
-    </router-link>
+    <message-panel
+      title-type="user"
+      hide-subtitle
+      line-clamp-content
+      :message="message"
+      :to="constructMessagesPath(message.id)"
+      show-context-menu-button
+      @click-context-menu-button="toggle"
+    />
+
     <sidebar-pinned-message-context-menu
       v-if="position"
       :position="position"

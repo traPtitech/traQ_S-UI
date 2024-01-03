@@ -22,22 +22,27 @@
         @click.prevent="onClickContextMenuButton"
       />
     </div>
-    <div :class="$style.separator" />
-    <div v-if="!hideSubtitle" :class="[$style.subTitleContainer, $style.item]">
-      <user-name v-if="titleType === 'channel'" :user="userState" />
-      <channel-name v-if="titleType === 'user'" :path="path" />
-      <a-icon
-        v-if="message.createdAt !== message.updatedAt"
-        :class="$style.editIcon"
-        :size="16"
-        name="pencil-outline"
-        mdi
+    <router-link :to="to">
+      <div :class="$style.separator" />
+      <div
+        v-if="!hideSubtitle"
+        :class="[$style.subTitleContainer, $style.item]"
+      >
+        <user-name v-if="titleType === 'channel'" :user="userState" />
+        <channel-name v-if="titleType === 'user'" :path="path" />
+        <a-icon
+          v-if="message.createdAt !== message.updatedAt"
+          :class="$style.editIcon"
+          :size="16"
+          name="pencil-outline"
+          mdi
+        />
+      </div>
+      <render-content
+        :content="message.content"
+        :line-clamp-content="lineClampContent"
       />
-    </div>
-    <render-content
-      :content="message.content"
-      :line-clamp-content="lineClampContent"
-    />
+    </router-link>
   </div>
 </template>
 
@@ -58,6 +63,7 @@ const props = withDefaults(
     message: Message | ActivityTimelineMessage
     lineClampContent?: boolean
     showContextMenuButton?: boolean
+    to: string
   }>(),
   {
     titleType: 'channel' as const,
@@ -98,7 +104,6 @@ const onClickContextMenuButton = (e: MouseEvent) => {
   @include background-primary;
   border-radius: 4px;
   padding: 8px 16px;
-  cursor: pointer;
 }
 .header {
   display: flex;

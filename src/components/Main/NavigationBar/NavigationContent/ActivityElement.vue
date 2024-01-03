@@ -1,11 +1,10 @@
 <template>
-  <router-link :to="channelLink">
-    <message-panel
-      :message="message"
-      :title-type="titleType"
-      line-clamp-content
-    />
-  </router-link>
+  <message-panel
+    :message="message"
+    :title-type="titleType"
+    line-clamp-content
+    :to="channelLink"
+  />
 </template>
 
 <script lang="ts" setup>
