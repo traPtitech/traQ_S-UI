@@ -40,7 +40,6 @@
         </div>
       </div>
       <div v-else>キャッシュデータは存在しません</div>
-      {{ selectedCaches }}
       <div :class="$style.buttonContainer">
         <form-button label="キャンセル" type="tertiary" @click="clearModal" />
         <form-button
@@ -50,6 +49,7 @@
           @click="clearCache"
         />
       </div>
+      {{ selectedCaches }}
     </div>
   </modal-frame>
 </template>
