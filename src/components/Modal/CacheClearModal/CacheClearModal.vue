@@ -49,7 +49,6 @@
           @click="clearCache"
         />
       </div>
-      {{ selectedCaches }}
     </div>
   </modal-frame>
 </template>
@@ -160,7 +159,6 @@ const clearCache = async () => {
 .content {
   display: flex;
   flex-direction: column;
-  margin: 16px;
   gap: 32px;
 }
 .checkboxes {
@@ -180,12 +178,11 @@ const clearCache = async () => {
   height: 13px;
   width: 13px;
   margin: 5.5px;
-  border: 2px solid #8b98a5;
+  border: 2px solid $theme-ui-primary-default;
   border-radius: 4px;
 }
 .checkbox:checked {
-  border: 1px solid #8b98a5;
-  background-color: #1d9bf0;
+  background: $theme-ui-primary-background;
 }
 .innerLabel {
   display: flex;
