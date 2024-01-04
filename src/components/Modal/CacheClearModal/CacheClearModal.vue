@@ -12,12 +12,7 @@
             :for="key"
             :class="$style.outerLabel"
           >
-            <input
-              :id="key"
-              v-model="selectedCaches[key]"
-              type="checkbox"
-              :class="$style.checkbox"
-            />
+            <form-checkbox-inner :id="key" v-model="selectedCaches[key]" />
             <label :for="key" :class="$style.innerLabel">
               {{ cacheLabel(key) }}
               <span>{{ prettifyFileSize(usage) }}</span>
@@ -26,12 +21,7 @@
         </div>
         <div v-else>
           <label for="allCache" :class="$style.outerLabel">
-            <input
-              id="allCache"
-              v-model="allCaches"
-              type="checkbox"
-              :class="$style.checkbox"
-            />
+            <form-checkbox-inner id="allCache" v-model="allCaches" />
             <label for="allCache" :class="$style.innerLabel">
               全てのキャッシュ
               <span>{{ prettifyFileSize(cacheData.usage) }}</span>
@@ -84,6 +74,7 @@ import { reactive } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useModalStore } from '/@/store/ui/modal'
+import FormCheckboxInner from '/@/components/UI/FormCheckboxInner.vue'
 
 const { addSuccessToast } = useToastStore()
 const showToast = (extraMessage?: string) => {
@@ -173,17 +164,12 @@ const clearCache = async () => {
   gap: 4px;
   padding: 8px;
   align-items: center;
-}
-.checkbox {
-  appearance: none;
-  height: 13px;
-  width: 13px;
-  margin: 5.5px;
-  border: 2px solid $theme-ui-primary-default;
+  cursor: pointer;
+  border: solid 2px transparent;
   border-radius: 4px;
-}
-.checkbox:checked {
-  background: $theme-ui-primary-background;
+  &:focus-within {
+    border-color: $theme-accent-focus-default;
+  }
 }
 .innerLabel {
   display: flex;
@@ -195,12 +181,5 @@ const clearCache = async () => {
   display: flex;
   justify-content: flex-end;
   gap: 16px;
-
-  cursor: pointer;
-  border: solid 2px transparent;
-  border-radius: 4px;
-  &:focus-within {
-    border-color: $theme-accent-focus-default;
-  }
 }
 </style>
