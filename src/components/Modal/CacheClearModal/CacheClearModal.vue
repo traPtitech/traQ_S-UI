@@ -128,30 +128,45 @@ const cacheLabel = (cacheName: string) => {
 
 const { clearModal } = useModalStore()
 
+const clearMainCache = async () => {
+  const names = await window.caches.keys()
+  await Promise.all(
+    names
+      .filter(name => name.startsWith('traQ_S-precache'))
+      .map(name => clearCacheStorage(name))
+  )
+}
+
 const clearCache = async () => {
   if (!confirmClear()) return
-  if (allCachesSelected.value || selectedCaches[caches]) {
-    const names = await window.caches.keys()
-    await Promise.all(
-      names
-        .filter(name => name.startsWith('traQ_S-precache'))
-        .map(name => clearCacheStorage(name))
-    )
-  }
-  if (allCachesSelected.value || selectedCaches[indexedDB]) {
+  if (allCachesSelected.value) {
+    await clearMainCache()
     await clearCacheStorage('files-cache')
-  }
-  if (allCachesSelected.value || selectedCaches[serviceWorkerRegistrations]) {
     await clearCacheStorage('thumbnail-cache')
-  }
-  const registration = await navigator.serviceWorker?.getRegistration()
-  if (registration) {
-    registration.unregister()
-    showToast('1秒後にリロードします')
-    setCacheData()
-    await wait(1000)
-    window.location.reload()
   } else {
+    if (selectedCaches[caches]) {
+      clearMainCache()
+    }
+    if (selectedCaches[indexedDB]) {
+      await clearCacheStorage('files-cache')
+    }
+    if (selectedCaches[serviceWorkerRegistrations]) {
+      await clearCacheStorage('thumbnail-cache')
+    }
+  }
+  if (allCachesSelected.value || selectedCaches[caches]) {
+    const registration = await navigator.serviceWorker?.getRegistration()
+    if (registration) {
+      registration.unregister()
+      showToast('1秒後にリロードします')
+      setCacheData()
+      await wait(1000)
+      window.location.reload()
+    } else {
+      showToast()
+    }
+  } else {
+    setCacheData()
     showToast()
   }
 }
