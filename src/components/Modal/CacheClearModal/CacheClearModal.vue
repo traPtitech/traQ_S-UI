@@ -11,6 +11,7 @@
             :key="key"
             :for="key"
             :class="$style.outerLabel"
+            :aria-checked="selectedCaches[key]"
           >
             <form-checkbox-inner :id="key" v-model="selectedCaches[key]" />
             <label :for="key" :class="$style.innerLabel">
@@ -20,9 +21,13 @@
           </label>
         </div>
         <div v-else>
-          <label for="allCache" :class="$style.outerLabel">
-            <form-checkbox-inner id="allCache" v-model="allCaches" />
-            <label for="allCache" :class="$style.innerLabel">
+          <label
+            for="allCaches"
+            :class="$style.outerLabel"
+            :aria-checked="allCachesSelected"
+          >
+            <form-checkbox-inner id="allCaches" v-model="allCachesSelected" />
+            <label for="allCaches" :class="$style.innerLabel">
               全てのキャッシュ
               <span>{{ prettifyFileSize(cacheData.usage) }}</span>
             </label>
@@ -100,7 +105,7 @@ const selectedCaches = reactive<{
   indexedDB: false,
   serviceWorkerRegistrations: false
 })
-const allCaches = ref<boolean>(false)
+const allCachesSelected = ref<boolean>(false)
 
 const cacheLabel = (cacheName: string) => {
   switch (cacheName) {
@@ -119,7 +124,7 @@ const { clearModal } = useModalStore()
 
 const clearCache = async () => {
   if (!confirmClear()) return
-  if (allCaches.value || selectedCaches[caches]) {
+  if (allCachesSelected.value || selectedCaches[caches]) {
     const names = await window.caches.keys()
     await Promise.all(
       names
@@ -127,10 +132,10 @@ const clearCache = async () => {
         .map(name => clearCacheStorage(name))
     )
   }
-  if (allCaches.value || selectedCaches[indexedDB]) {
+  if (allCachesSelected.value || selectedCaches[indexedDB]) {
     await clearCacheStorage('files-cache')
   }
-  if (allCaches.value || selectedCaches[serviceWorkerRegistrations]) {
+  if (allCachesSelected.value || selectedCaches[serviceWorkerRegistrations]) {
     await clearCacheStorage('thumbnail-cache')
   }
   const registration = await navigator.serviceWorker?.getRegistration()
@@ -159,6 +164,10 @@ const clearCache = async () => {
   gap: 8px;
 }
 .outerLabel {
+  @include color-ui-secondary;
+  &[aria-checked='true'] {
+    @include color-ui-primary;
+  }
   display: flex;
   justify-content: space-between;
   gap: 4px;
