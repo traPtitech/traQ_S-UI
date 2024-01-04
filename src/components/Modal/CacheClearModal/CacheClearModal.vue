@@ -12,7 +12,9 @@
             :for="key"
             :class="$style.outerLabel"
             :aria-checked="selectedCaches[key]"
+            @keyup.enter="selectedCaches[key] = !selectedCaches[key]"
           >
+            <!-- TODO: @keyup.enterのところをもう少しスマートにしたい -->
             <form-checkbox-inner :id="key" v-model="selectedCaches[key]" />
             <label :for="key" :class="$style.innerLabel">
               {{ cacheLabel(key) }}
