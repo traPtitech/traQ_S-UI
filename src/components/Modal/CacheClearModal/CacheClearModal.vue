@@ -40,6 +40,7 @@
         <form-button
           label="削除する"
           type="secondary"
+          :disabled="!anyCacheSelected"
           is-danger
           @click="clearCache"
         />
@@ -75,7 +76,7 @@ const clearCacheStorage = (cacheName: string) => window.caches.delete(cacheName)
 </script>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useModalStore } from '/@/store/ui/modal'
@@ -106,6 +107,9 @@ const selectedCaches = reactive<{
   serviceWorkerRegistrations: false
 })
 const allCachesSelected = ref<boolean>(false)
+const anyCacheSelected = computed(() => {
+  return allCachesSelected.value || Object.values(selectedCaches).find(v => v)
+})
 
 const cacheLabel = (cacheName: string) => {
   switch (cacheName) {
