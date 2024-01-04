@@ -160,6 +160,7 @@ const clearCache = async () => {
   display: flex;
   flex-direction: column;
   gap: 32px;
+  margin: 0 -8px;
 }
 .checkboxes {
   display: flex;
@@ -188,10 +189,7 @@ const clearCache = async () => {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding: 8px 16px;
 }
 .buttonContainer {
   display: flex;
