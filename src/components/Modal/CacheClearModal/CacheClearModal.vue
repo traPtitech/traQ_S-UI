@@ -204,6 +204,7 @@ const clearCache = async () => {
 .label {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   padding: 8px 16px;
 }
