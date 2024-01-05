@@ -138,13 +138,14 @@ const clearMainCache = async () => {
 
 const clearCache = async () => {
   if (!confirmClear()) return
+  clearModal()
   if (allCachesSelected.value) {
     await clearMainCache()
     await clearCacheStorage('files-cache')
     await clearCacheStorage('thumbnail-cache')
   } else {
     if (selectedCaches[caches]) {
-      clearMainCache()
+      await clearMainCache()
     }
     if (selectedCaches[indexedDB]) {
       await clearCacheStorage('files-cache')
