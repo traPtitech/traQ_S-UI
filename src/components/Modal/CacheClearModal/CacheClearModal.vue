@@ -27,6 +27,7 @@
             for="allCaches"
             :class="$style.outerLabel"
             :aria-checked="allCachesSelected"
+            @keyup.enter="allCachesSelected = !allCachesSelected"
           >
             <form-checkbox-inner id="allCaches" v-model="allCachesSelected" />
             <label for="allCaches" :class="$style.innerLabel">
