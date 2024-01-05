@@ -4,37 +4,35 @@
     subtitle="キャッシュを削除する項目を選んで下さい。"
   >
     <div :class="$style.content">
-      <div v-if="cacheData && cacheData.usage" :class="$style.checkboxes">
+      <div
+        v-if="cacheData && cacheData.usage"
+        :class="$style.checkboxContainer"
+      >
         <div v-if="cacheData.usageDetails">
-          <label
+          <form-checkbox-with-label-slot
             v-for="(usage, key) in cacheData.usageDetails"
             :key="key"
-            :for="key"
-            :class="$style.outerLabel"
+            v-model="selectedCaches[key]"
             :aria-checked="selectedCaches[key]"
-            @keyup.enter="selectedCaches[key] = !selectedCaches[key]"
+            :class="$style.checkbox"
           >
-            <!-- TODO: @keyup.enterのところをもう少しスマートにしたい -->
-            <form-checkbox-inner :id="key" v-model="selectedCaches[key]" />
-            <label :for="key" :class="$style.innerLabel">
+            <div :class="$style.label">
               {{ cacheLabel(key) }}
               <span>{{ prettifyFileSize(usage) }}</span>
-            </label>
-          </label>
+            </div>
+          </form-checkbox-with-label-slot>
         </div>
         <div v-else>
-          <label
-            for="allCaches"
-            :class="$style.outerLabel"
+          <form-checkbox-with-label-slot
+            v-model="allCachesSelected"
             :aria-checked="allCachesSelected"
-            @keyup.enter="allCachesSelected = !allCachesSelected"
+            :class="$style.checkbox"
           >
-            <form-checkbox-inner id="allCaches" v-model="allCachesSelected" />
-            <label for="allCaches" :class="$style.innerLabel">
+            <div :class="$style.label">
               全てのキャッシュ
               <span>{{ prettifyFileSize(cacheData.usage) }}</span>
-            </label>
-          </label>
+            </div>
+          </form-checkbox-with-label-slot>
         </div>
       </div>
       <div v-else>キャッシュデータは存在しません</div>
@@ -83,7 +81,7 @@ import { reactive, computed } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useModalStore } from '/@/store/ui/modal'
-import FormCheckboxInner from '/@/components/UI/FormCheckboxInner.vue'
+import FormCheckboxWithLabelSlot from '/@/components/UI/FormCheckboxWithLabelSlot.vue'
 
 const { addSuccessToast } = useToastStore()
 const showToast = (extraMessage?: string) => {
@@ -180,12 +178,12 @@ const clearCache = async () => {
   gap: 32px;
   margin: 0 -8px;
 }
-.checkboxes {
+.checkboxContainer {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-.outerLabel {
+.checkbox {
   @include color-ui-secondary;
   &[aria-checked='true'] {
     @include color-ui-primary;
@@ -202,7 +200,7 @@ const clearCache = async () => {
     border-color: $theme-accent-focus-default;
   }
 }
-.innerLabel {
+.label {
   display: flex;
   justify-content: space-between;
   width: 100%;
