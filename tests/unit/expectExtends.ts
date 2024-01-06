@@ -8,6 +8,7 @@ interface CustomMatchers {
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Vi {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface JestAssertion extends CustomMatchers {}
   }
 }

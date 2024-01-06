@@ -50,7 +50,8 @@ module.exports = {
     'vue/prefer-true-attribute-shorthand': 'error',
     '@typescript-eslint/no-non-null-assertion': 'warn',
     'no-empty-function': 'off',
-    '@typescript-eslint/no-empty-function': 'error'
+    '@typescript-eslint/no-empty-function': 'error',
+    '@typescript-eslint/no-empty-interface': 'error'
   },
   overrides: [
     {
