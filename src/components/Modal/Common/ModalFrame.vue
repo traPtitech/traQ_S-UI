@@ -64,7 +64,7 @@ const { clearModal } = useModalStore()
 }
 .body {
   width: 100%;
-  padding: 16px 24px;
+  padding: 16px;
   overflow: {
     x: hidden;
     y: auto;
@@ -72,3 +72,4 @@ const { clearModal } = useModalStore()
   scrollbar-gutter: stable;
 }
 </style>
+<!-- TODO: 依存しているコンポーネントが未修正 -->

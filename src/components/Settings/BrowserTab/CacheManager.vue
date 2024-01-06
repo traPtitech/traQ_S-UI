@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3 :class="$style.header">キャッシュ</h3>
-    <div :class="$style.content">
+    <div>
       <p v-if="cacheData && cacheData.usage" :class="$style.usage">
         <span>{{ prettifyFileSize(cacheData.usage) }}</span>
       </p>
@@ -48,7 +48,7 @@ onMounted(setCacheData)
 const { pushModal } = useModalStore()
 const openClearCacheModal = async () => {
   pushModal({
-    type: 'cache-clear'
+    type: 'settings-cache-clear'
   })
 }
 </script>
@@ -56,9 +56,6 @@ const openClearCacheModal = async () => {
 <style lang="scss" module>
 .header {
   margin-bottom: 8px;
-}
-.content {
-  margin-left: 12px;
 }
 .usage {
   margin-bottom: 8px;

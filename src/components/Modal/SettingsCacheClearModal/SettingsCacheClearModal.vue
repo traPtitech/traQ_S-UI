@@ -9,7 +9,7 @@
         :class="$style.checkboxContainer"
       >
         <div v-if="cacheData.usageDetails">
-          <form-checkbox-with-label-slot
+          <form-checkbox
             v-for="(usage, key) in cacheData.usageDetails"
             :key="key"
             v-model="selectedCaches[key]"
@@ -20,10 +20,10 @@
               {{ cacheLabel(key) }}
               <span>{{ prettifyFileSize(usage) }}</span>
             </div>
-          </form-checkbox-with-label-slot>
+          </form-checkbox>
         </div>
         <div v-else>
-          <form-checkbox-with-label-slot
+          <form-checkbox
             v-model="allCachesSelected"
             :aria-checked="allCachesSelected"
             :class="$style.checkbox"
@@ -32,7 +32,7 @@
               全てのキャッシュ
               <span>{{ prettifyFileSize(cacheData.usage) }}</span>
             </div>
-          </form-checkbox-with-label-slot>
+          </form-checkbox>
         </div>
       </div>
       <div v-else>キャッシュデータは存在しません</div>
@@ -77,11 +77,11 @@ const clearCacheStorage = (cacheName: string) => window.caches.delete(cacheName)
 </script>
 
 <script lang="ts" setup>
-import { reactive, computed } from 'vue'
+import { computed } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useModalStore } from '/@/store/ui/modal'
-import FormCheckboxWithLabelSlot from '/@/components/UI/FormCheckboxWithLabelSlot.vue'
+import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
 
 const { addSuccessToast } = useToastStore()
 const showToast = (extraMessage?: string) => {
@@ -96,13 +96,12 @@ const setCacheData = async () => {
 }
 onMounted(setCacheData)
 
+type CacheName = 'caches' | 'indexedDB' | 'serviceWorkerRegistrations'
 const caches = 'caches'
 const indexedDB = 'indexedDB'
 const serviceWorkerRegistrations = 'serviceWorkerRegistrations'
 
-const selectedCaches = reactive<{
-  [key: string]: boolean
-}>({
+const selectedCaches = ref<Record<string, boolean>>({
   caches: false,
   indexedDB: false,
   serviceWorkerRegistrations: false
@@ -121,7 +120,7 @@ const cacheLabel = (cacheName: string) => {
     case serviceWorkerRegistrations:
       return 'ファイルのサムネイル一覧'
     default:
-      return cacheName
+      throw new Error(`Unknown cache name: ${cacheName}`)
   }
 }
 
@@ -139,36 +138,35 @@ const clearMainCache = async () => {
 const clearCache = async () => {
   if (!confirmClear()) return
   clearModal()
-  if (allCachesSelected.value) {
-    await clearMainCache()
-    await clearCacheStorage('files-cache')
-    await clearCacheStorage('thumbnail-cache')
-  } else {
-    if (selectedCaches[caches]) {
-      await clearMainCache()
-    }
-    if (selectedCaches[indexedDB]) {
-      await clearCacheStorage('files-cache')
-    }
-    if (selectedCaches[serviceWorkerRegistrations]) {
-      await clearCacheStorage('thumbnail-cache')
-    }
+  const promises = []
+  if (allCachesSelected.value || selectedCaches.value[caches]) {
+    promises.push(clearMainCache())
   }
-  if (allCachesSelected.value || selectedCaches[caches]) {
+  if (allCachesSelected.value || selectedCaches.value[indexedDB]) {
+    promises.push(clearCacheStorage('files-cache'))
+  }
+  if (
+    allCachesSelected.value ||
+    selectedCaches.value[serviceWorkerRegistrations]
+  ) {
+    promises.push(clearCacheStorage('thumbnail-cache'))
+  }
+  await Promise.all(promises)
+  if (allCachesSelected.value || selectedCaches.value[caches]) {
     const registration = await navigator.serviceWorker?.getRegistration()
-    if (registration) {
-      registration.unregister()
-      showToast('1秒後にリロードします')
-      setCacheData()
-      await wait(1000)
-      window.location.reload()
-    } else {
+    if (!registration) {
       showToast()
+      return
     }
-  } else {
+    registration.unregister()
+    showToast('1秒後にリロードします')
     setCacheData()
-    showToast()
+    await wait(1000)
+    window.location.reload()
+    return
   }
+  setCacheData()
+  showToast()
 }
 </script>
 
@@ -177,7 +175,6 @@ const clearCache = async () => {
   display: flex;
   flex-direction: column;
   gap: 32px;
-  margin: 0 -8px;
 }
 .checkboxContainer {
   display: flex;
@@ -186,7 +183,7 @@ const clearCache = async () => {
 }
 .checkbox {
   @include color-ui-secondary;
-  &[aria-checked='true'] {
+  &:has(:checked) {
     @include color-ui-primary;
   }
   display: flex;

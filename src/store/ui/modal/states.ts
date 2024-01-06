@@ -24,7 +24,7 @@ type ModalStateType =
   | 'group-member-edit'
   | 'group-admin-add'
   | 'group-member-add'
-  | 'cache-clear'
+  | 'settings-cache-clear'
 
 export type ModalState =
   | UserModalState
@@ -41,7 +41,7 @@ export type ModalState =
   | GroupMemberEditModalState
   | GroupAdminAddModalState
   | GroupMemberAddModalState
-  | CacheClearModalState
+  | SettingsCacheClearModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -126,6 +126,6 @@ interface GroupMemberAddModalState extends BaseModalState {
   id: UserGroupId
 }
 
-interface CacheClearModalState extends BaseModalState {
-  type: 'cache-clear'
+interface SettingsCacheClearModalState extends BaseModalState {
+  type: 'settings-cache-clear'
 }
