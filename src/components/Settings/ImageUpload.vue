@@ -117,7 +117,6 @@ onUnmounted(() => {
 .cropper {
   width: 280px;
   height: 280px;
-  margin: 12px;
   &[data-is-rounded] {
     :global(.cropper-view-box),
     :global(.cropper-face) {
