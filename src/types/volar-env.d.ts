@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
-
 interface DataAndAriaAttributes {
   [dataAttr: `data${UppercaseAlphabet}${string}`]: unknown
   [dataAttr: `data-${string}`]: unknown
