@@ -13,7 +13,6 @@
             v-for="(usage, key) in cacheData.usageDetails"
             :key="key"
             v-model="selectedCaches[key]"
-            :aria-checked="selectedCaches[key]"
             :class="$style.checkbox"
           >
             <div :class="$style.label">
@@ -23,11 +22,7 @@
           </form-checkbox>
         </div>
         <div v-else>
-          <form-checkbox
-            v-model="allCachesSelected"
-            :aria-checked="allCachesSelected"
-            :class="$style.checkbox"
-          >
+          <form-checkbox v-model="allCachesSelected" :class="$style.checkbox">
             <div :class="$style.label">
               全てのキャッシュ
               <span>{{ prettifyFileSize(cacheData.usage) }}</span>
@@ -108,7 +103,7 @@ const selectedCaches = ref<Record<string, boolean>>({
 })
 const allCachesSelected = ref<boolean>(false)
 const anyCacheSelected = computed(() => {
-  return allCachesSelected.value || Object.values(selectedCaches).find(v => v)
+  return allCachesSelected.value || Object.values(selectedCaches).includes(true)
 })
 
 const cacheLabel = (cacheName: string) => {
@@ -126,19 +121,19 @@ const cacheLabel = (cacheName: string) => {
 
 const { clearModal } = useModalStore()
 
+const isClearingCache = ref<boolean>(false)
+
 const clearMainCache = async () => {
   const names = await window.caches.keys()
-  await Promise.all(
-    names
-      .filter(name => name.startsWith('traQ_S-precache'))
-      .map(name => clearCacheStorage(name))
-  )
+  return names
+    .filter(name => name.startsWith('traQ_S-precache'))
+    .map(name => clearCacheStorage(name))
 }
 
 const clearCache = async () => {
   if (!confirmClear()) return
-  clearModal()
-  const promises = []
+  isClearingCache.value = true
+  let promises = []
   if (allCachesSelected.value || selectedCaches.value[caches]) {
     promises.push(clearMainCache())
   }
@@ -151,22 +146,30 @@ const clearCache = async () => {
   ) {
     promises.push(clearCacheStorage('thumbnail-cache'))
   }
+  promises = promises.flat()
   await Promise.all(promises)
-  if (allCachesSelected.value || selectedCaches.value[caches]) {
-    const registration = await navigator.serviceWorker?.getRegistration()
-    if (!registration) {
-      showToast()
-      return
-    }
-    registration.unregister()
-    showToast('1秒後にリロードします')
+  if (!(allCachesSelected.value || selectedCaches.value[caches])) {
     setCacheData()
-    await wait(1000)
-    window.location.reload()
+    isClearingCache.value = false
+    clearModal()
+    showToast()
     return
   }
+  const registration = await navigator.serviceWorker?.getRegistration()
+  if (!registration) {
+    isClearingCache.value = false
+    clearModal()
+    showToast()
+    return
+  }
+  registration.unregister()
+  isClearingCache.value = false
+  clearModal()
+  showToast('1秒後にリロードします')
   setCacheData()
-  showToast()
+  await wait(1000)
+  window.location.reload()
+  return
 }
 </script>
 
