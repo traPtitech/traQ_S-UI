@@ -21,12 +21,6 @@ import { onMounted, ref } from 'vue'
 import { checkStorageManagerSupport } from '/@/lib/dom/browser'
 import { prettifyFileSize } from '/@/lib/basic/file'
 
-declare global {
-  interface StorageEstimate {
-    usageDetails: Record<string, number>
-  }
-}
-
 const isStorageManagerSupported = checkStorageManagerSupport()
 const getStorageUsage = async () => {
   if (!isStorageManagerSupported) return null

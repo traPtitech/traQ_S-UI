@@ -12,7 +12,7 @@
           <form-checkbox
             v-for="(usage, key) in cacheData.usageDetails"
             :key="key"
-            v-model="selectedCaches[key]"
+            v-model="isCacheSelected[key]"
             :class="$style.checkbox"
           >
             <div :class="$style.label">
@@ -45,16 +45,20 @@
   </modal-frame>
 </template>
 
-<script lang="ts">
-import { onMounted, ref } from 'vue'
+<script lang="ts" setup>
+import { onMounted, ref, computed } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import { wait } from '/@/lib/basic/timer'
 import { checkStorageManagerSupport } from '/@/lib/dom/browser'
 import { prettifyFileSize } from '/@/lib/basic/file'
+import ModalFrame from '../Common/ModalFrame.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import { useModalStore } from '/@/store/ui/modal'
+import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
 
 declare global {
   interface StorageEstimate {
-    usageDetails: Record<string, number>
+    usageDetails: Record<CacheName, number>
   }
 }
 
@@ -69,14 +73,6 @@ const confirmClear = () => window.confirm('本当に削除しますか？')
 
 /* CacheStorageのnameはsw.jsを参照 */
 const clearCacheStorage = (cacheName: string) => window.caches.delete(cacheName)
-</script>
-
-<script lang="ts" setup>
-import { computed } from 'vue'
-import ModalFrame from '../Common/ModalFrame.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
-import { useModalStore } from '/@/store/ui/modal'
-import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
 
 const { addSuccessToast } = useToastStore()
 const showToast = (extraMessage?: string) => {
@@ -96,26 +92,28 @@ const caches = 'caches'
 const indexedDB = 'indexedDB'
 const serviceWorkerRegistrations = 'serviceWorkerRegistrations'
 
-const selectedCaches = ref<Record<string, boolean>>({
+const isCacheSelected = ref<Record<CacheName, boolean>>({
   caches: false,
   indexedDB: false,
   serviceWorkerRegistrations: false
 })
 const allCachesSelected = ref<boolean>(false)
 const anyCacheSelected = computed(() => {
-  return allCachesSelected.value || Object.values(selectedCaches).includes(true)
+  return (
+    allCachesSelected.value || Object.values(isCacheSelected).includes(true)
+  )
 })
 
-const cacheLabel = (cacheName: string) => {
+const cacheLabel = (cacheName: CacheName) => {
   switch (cacheName) {
-    case caches:
+    case 'caches':
       return 'traQ本体'
-    case indexedDB:
+    case 'indexedDB':
       return 'ファイルの本体一覧'
-    case serviceWorkerRegistrations:
+    case 'serviceWorkerRegistrations':
       return 'ファイルのサムネイル一覧'
     default:
-      throw new Error(`Unknown cache name: ${cacheName}`)
+      throw new Error(`Unknown cache name: ${cacheName satisfies CacheName}`)
   }
 }
 
@@ -134,21 +132,21 @@ const clearCache = async () => {
   if (!confirmClear()) return
   isClearingCache.value = true
   let promises = []
-  if (allCachesSelected.value || selectedCaches.value[caches]) {
+  if (allCachesSelected.value || isCacheSelected.value[caches]) {
     promises.push(clearMainCache())
   }
-  if (allCachesSelected.value || selectedCaches.value[indexedDB]) {
+  if (allCachesSelected.value || isCacheSelected.value[indexedDB]) {
     promises.push(clearCacheStorage('files-cache'))
   }
   if (
     allCachesSelected.value ||
-    selectedCaches.value[serviceWorkerRegistrations]
+    isCacheSelected.value[serviceWorkerRegistrations]
   ) {
     promises.push(clearCacheStorage('thumbnail-cache'))
   }
   promises = promises.flat()
   await Promise.all(promises)
-  if (!(allCachesSelected.value || selectedCaches.value[caches])) {
+  if (!(allCachesSelected.value || isCacheSelected.value[caches])) {
     setCacheData()
     isClearingCache.value = false
     clearModal()
