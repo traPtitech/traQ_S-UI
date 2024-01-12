@@ -128,7 +128,6 @@ defineExpose({ focus })
 }
 .inputContainer {
   @include color-ui-primary;
-  @include background-secondary;
   @include size-body1;
   height: 30px;
   display: flex;
@@ -137,10 +136,12 @@ defineExpose({ focus })
   &[data-on-secondary] {
     @include background-primary;
   }
-
   border: solid 2px transparent;
   &:focus-within {
     border-color: $theme-accent-focus-default;
+  }
+  &:has(.input:not([type='range'])) {
+    @include background-secondary;
   }
 }
 .prefix {
