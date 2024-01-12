@@ -47,7 +47,11 @@ module.exports = {
     'vue/v-on-event-hyphenation': ['error', 'always', { autofix: true }],
     'vue/v-on-function-call': 'error',
     'vue/no-template-target-blank': 'error',
-    'vue/prefer-true-attribute-shorthand': 'error'
+    'vue/prefer-true-attribute-shorthand': 'error',
+    '@typescript-eslint/no-non-null-assertion': 'warn',
+    'no-empty-function': 'off',
+    '@typescript-eslint/no-empty-function': 'error',
+    '@typescript-eslint/no-empty-interface': 'error'
   },
   overrides: [
     {
