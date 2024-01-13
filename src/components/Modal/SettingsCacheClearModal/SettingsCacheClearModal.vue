@@ -131,7 +131,7 @@ const clearMainCache = async () => {
 const clearCache = async () => {
   if (!confirmClear()) return
   isClearingCache.value = true
-  let promises = []
+  const promises = []
   if (allCachesSelected.value || isCacheSelected.value[caches]) {
     promises.push(clearMainCache())
   }
@@ -144,8 +144,7 @@ const clearCache = async () => {
   ) {
     promises.push(clearCacheStorage('thumbnail-cache'))
   }
-  promises = promises.flat()
-  await Promise.all(promises)
+  await Promise.all(promises.flat())
   if (!(allCachesSelected.value || isCacheSelected.value[caches])) {
     setCacheData()
     isClearingCache.value = false
