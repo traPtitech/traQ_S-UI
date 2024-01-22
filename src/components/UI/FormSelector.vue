@@ -50,7 +50,7 @@ const id = randomString()
 
 <style lang="scss" module>
 .label {
-  @include color-ui-secondary;
+  @include color-ui-primary;
   margin-bottom: 4px;
   display: block;
 }
