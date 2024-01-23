@@ -1,12 +1,13 @@
 <template>
   <div :class="$style.container">
-    <form-input
+    <a-slider
       v-model.number="value"
       :class="$style.range"
-      type="range"
       :min="min"
-      :step="step"
       :max="max"
+      :disabled="disabled"
+      :tooltip="'none'"
+      :interval="interval"
     />
     <semi-fixed-size-text
       align="right"
@@ -18,18 +19,23 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import FormInput from '/@/components/UI/FormInput.vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import SemiFixedSizeText from './SemiFixedSizeText.vue'
+import ASlider from '/@/components/UI/ASlider.vue'
 
-const props = defineProps<{
-  modelValue: number
-  maxText: string
-  min?: string
-  max?: string
-  step?: string
-  format: (v: number) => string
-}>()
+const props = withDefaults(
+  defineProps<{
+    modelValue: number
+    maxText: string
+    min?: string
+    max?: string
+    disabled?: boolean
+    interval?: number
+    format: (v: number) => string
+  }>(), 
+  {
+    disabled: false
+  })
 
 const emit = defineEmits<{
   (e: 'update:modelValue', v: number): void
@@ -47,6 +53,6 @@ const showValue = computed(() => props.format(value.value))
 }
 .range {
   flex: 1 1;
-  margin-right: 4px;
+  margin-right: 16px;
 }
 </style>

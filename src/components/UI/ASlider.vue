@@ -4,6 +4,7 @@
     :min="min"
     :max="max"
     :disabled="disabled"
+    :interval="interval"
     :tooltip="tooltip"
     :tooltip-formatter="tooltipFormatter"
     :dot-size="12"
@@ -27,6 +28,7 @@ const props = withDefaults(
     max?: number
     tooltipFormatter?: TooltipFormatter
     tooltip?: TooltipProp
+    interval?: number
   }>(),
   {
     disabled: false,

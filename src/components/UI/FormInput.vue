@@ -128,6 +128,7 @@ defineExpose({ focus })
 }
 .inputContainer {
   @include color-ui-primary;
+  @include background-secondary;
   @include size-body1;
   height: 30px;
   display: flex;
@@ -140,25 +141,6 @@ defineExpose({ focus })
   &:focus-within {
     border-color: $theme-accent-focus-default;
   }
-  &:has(.input:not([type='range'])) {
-    @include background-secondary;
-  }
-}
-
-.input[type='range'] {
-  appearance: none;
-}
-.input[type='range']::-webkit-slider-runnable-track {
-  background: $theme-ui-secondary-background;
-  height: 4px;
-  border-radius: 4px;
-}
-.input[type='range']::-webkit-slider-thumb {
-  appearance: none;
-  height: 12px;
-  width: 12px;
-  @include background-accent-primary;
-  border-radius: 50%;
 }
 .prefix {
   margin-left: 8px;
