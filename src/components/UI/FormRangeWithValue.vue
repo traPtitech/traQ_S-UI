@@ -27,8 +27,8 @@ const props = withDefaults(
   defineProps<{
     modelValue: number
     maxText: string
-    min?: string
-    max?: string
+    min?: number
+    max?: number
     disabled?: boolean
     interval?: number
     format: (v: number) => string

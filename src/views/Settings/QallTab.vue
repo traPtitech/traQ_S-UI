@@ -73,9 +73,9 @@
         <form-range-with-value
           v-model="state.masterVolume"
           max-text="100%"
-          min="0"
-          max="1"
-          interval="0.005"
+          min=0
+          max=1
+          interval=0.005
           :format="formatMasterVolume"
         />
       </section>
@@ -88,9 +88,9 @@
         <form-range-with-value
           v-model="state.noiseGateThreshold"
           max-text="-100dB"
-          min="-100"
-          max="0"
-          interval="1"
+          min=-100
+          max=0
+          interval=1
           :format="formatNoiseGateThreshold"
           :class="$style.noiseGate"
         />
