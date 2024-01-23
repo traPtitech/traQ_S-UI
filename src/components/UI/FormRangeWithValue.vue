@@ -32,10 +32,11 @@ const props = withDefaults(
     disabled?: boolean
     interval?: number
     format: (v: number) => string
-  }>(), 
+  }>(),
   {
     disabled: false
-  })
+  }
+)
 
 const emit = defineEmits<{
   (e: 'update:modelValue', v: number): void
