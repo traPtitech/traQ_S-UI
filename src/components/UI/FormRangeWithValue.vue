@@ -55,5 +55,14 @@ const showValue = computed(() => props.format(value.value))
 .range {
   flex: 1 1;
   margin-right: 16px;
+  :global {
+    $dotBgColor: $theme-accent-primary-background;
+    $dotShadow: none;
+
+    $bgColor: rgba(107, 125, 138, 0.5); // $theme-ui-secondary-default;
+    $themeColor: $theme-accent-primary-background;
+
+    @import 'vue-slider-component/lib/theme/default.scss';
+  }
 }
 </style>
