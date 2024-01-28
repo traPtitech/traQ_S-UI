@@ -33,6 +33,7 @@ withDefaults(defineProps<Props>(), {
 <style lang="scss" module>
 .button {
   @include color-text-primary;
+  @include size-caption;
 
   cursor: pointer;
 
@@ -48,7 +49,6 @@ withDefaults(defineProps<Props>(), {
   }
 
   min-height: 24px;
-  font-size: 12px;
   line-height: 1.5;
   width: fit-content;
 
