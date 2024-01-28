@@ -38,8 +38,8 @@ const imageUrl = computed(() => {
 })
 
 const containerStyle = computed(() => ({
-  width: `${props.size}px`,
-  height: `${props.size}px`
+  width: `${props.size / 16}rem`,
+  height: `${props.size / 16}rem`
 }))
 </script>
 
