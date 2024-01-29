@@ -8,6 +8,7 @@
       :disabled="disabled"
       :tooltip="'none'"
       :interval="interval"
+      :style="{ padding: '24px 0' }"
     />
     <semi-fixed-size-text
       align="right"
