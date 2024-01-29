@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div>
+    <div :class="$style.description">
       <h3>この端末/ブラウザでの通知</h3>
       <div>
         <form-button
@@ -48,5 +48,11 @@ const { permission, status, requestPermission } = useNotificationPermission()
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 </style>

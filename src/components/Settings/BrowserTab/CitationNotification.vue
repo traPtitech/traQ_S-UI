@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div>
+    <div :class="$style.description">
       <h3>引用通知</h3>
       <p>
         引用されたときに通知をするかの設定です。この設定はすべての端末で共有されます。
@@ -43,5 +43,11 @@ const toggleSetting = async () => {
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 </style>
