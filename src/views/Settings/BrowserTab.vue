@@ -1,19 +1,15 @@
 <template>
-  <section>
-    <notification-state :class="$style.element" />
-    <citation-notification :class="$style.element" />
+  <section :class="$style.browserTab">
+    <notification-state />
+    <citation-notification />
+    <eco-mode v-model="state.ecoMode" />
     <open-mode
       v-model:open-mode="state.openMode"
       v-model:open-channel-name="state.openChannelName"
-      :class="$style.element"
     />
-    <send-key
-      v-model:sendWithModifierKey="state.sendWithModifierKey"
-      v-model:modifierKey="state.modifierKey"
-      :class="$style.element"
-    />
-    <eco-mode v-model="state.ecoMode" :class="$style.element" />
-    <cache-manager :class="$style.element" />
+    <send-key v-model:sendWithModifierKey="state.sendWithModifierKey" />
+    <modifier-keys v-model:modifierKey="state.modifierKey" />
+    <cache-manager />
   </section>
 </template>
 
@@ -26,12 +22,15 @@ import SendKey from '/@/components/Settings/BrowserTab/SendKey.vue'
 import EcoMode from '/@/components/Settings/BrowserTab/EcoMode.vue'
 import { reactive } from 'vue'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
+import ModifierKeys from '/@/components/Settings/BrowserTab/ModifierKeys.vue'
 
 const state = reactive(useBrowserSettings())
 </script>
 
 <style lang="scss" module>
-.element {
-  margin: 24px 0;
+.browserTab {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 </style>
