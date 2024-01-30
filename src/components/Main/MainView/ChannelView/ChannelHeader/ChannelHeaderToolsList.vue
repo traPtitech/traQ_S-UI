@@ -12,15 +12,15 @@
         :tooltip="qallLabel"
         @click="toggleQall"
       />
-      <header-tools-item
-        :class="$style.notificationIcon"
-        :data-state="subscriptionChangeInfo.state"
-        :icon-name="subscriptionChangeInfo.iconName"
-        :disabled="!subscriptionChangeInfo.canChange"
-        :tooltip="subscriptionChangeInfo.tooltip"
-        @click="changeToNextSubscriptionLevel"
-      />
     </template>
+    <header-tools-item
+      :class="$style.notificationIcon"
+      :data-state="subscriptionChangeInfo.state"
+      :icon-name="subscriptionChangeInfo.iconName"
+      :disabled="!subscriptionChangeInfo.canChange"
+      :tooltip="subscriptionChangeInfo.tooltip"
+      @click="changeToNextSubscriptionLevel"
+    />
     <header-tools-item
       v-if="isStared"
       :class="$style.starIcon"
