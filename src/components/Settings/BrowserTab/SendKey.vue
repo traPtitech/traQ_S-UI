@@ -17,27 +17,22 @@
       <div :class="$style.key">
         <p>修飾キーとして利用するキー</p>
         <div>
-          <form-checkbox
-            v-model="shift"
-            :label="getModifierKeyName('shift')"
-            :class="$style.keyCheckbox"
-          />
-          <form-checkbox
-            v-model="alt"
-            :label="getModifierKeyName('alt')"
-            :class="$style.keyCheckbox"
-          />
-          <form-checkbox
-            v-model="ctrl"
-            :label="getModifierKeyName('ctrl')"
-            :class="$style.keyCheckbox"
-          />
+          <form-checkbox v-model="shift" :class="$style.keyCheckbox">
+            {{ getModifierKeyName('shift') }}
+          </form-checkbox>
+          <form-checkbox v-model="alt" :class="$style.keyCheckbox">
+            {{ getModifierKeyName('alt') }}
+          </form-checkbox>
+          <form-checkbox v-model="ctrl" :class="$style.keyCheckbox">
+            {{ getModifierKeyName('ctrl') }}
+          </form-checkbox>
           <form-checkbox
             v-if="macFlag"
             v-model="macCtrl"
-            :label="getModifierKeyName('macCtrl')"
             :class="$style.keyCheckbox"
-          />
+          >
+            {{ getModifierKeyName('macCtrl') }}
+          </form-checkbox>
         </div>
       </div>
     </div>
