@@ -84,7 +84,7 @@
     "jsdom": "^23.0.1",
     "patch-package": "^8.0.0",
     "pinia": "^2.1.7",
-    "postcss": "^8.4.31",
+    "postcss": "^8.4.33",
     "prettier": "^2.7.1",
     "rollup-plugin-brotli": "^3.1.0",
     "sass": "^1.69.5",
