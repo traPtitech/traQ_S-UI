@@ -79,10 +79,11 @@ onMounted(() => {
 .content {
   @include color-ui-primary;
   display: grid;
+  grid-auto-rows: max-content;
   height: 400px;
   padding: 0 4px;
   gap: 4px;
   border-radius: 8px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>
