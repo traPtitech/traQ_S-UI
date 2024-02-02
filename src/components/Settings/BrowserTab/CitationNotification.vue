@@ -1,17 +1,13 @@
 <template>
-  <div>
-    <div :class="$style.eco">
-      <h3 :class="$style.header">引用通知</h3>
-      <a-toggle
-        :model-value="value"
-        :class="$style.toggle"
-        @update:model-value="toggleSetting"
-      />
-    </div>
-    <div :class="$style.content">
+  <div :class="$style.container">
+    <div :class="$style.description">
+      <h3>引用通知</h3>
       <p>
         引用されたときに通知をするかの設定です。この設定はすべての端末で共有されます。
       </p>
+    </div>
+    <div>
+      <a-toggle :model-value="value" @update:model-value="toggleSetting" />
     </div>
   </div>
 </template>
@@ -42,21 +38,16 @@ const toggleSetting = async () => {
 </script>
 
 <style lang="scss" module>
-.header {
-  margin-bottom: 8px;
-}
-.content {
-  margin-left: 12px;
-}
-.eco {
+.container {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
-  h3 {
-    margin: 0;
-  }
-  .toggle {
-    margin-left: 12px;
-  }
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 </style>

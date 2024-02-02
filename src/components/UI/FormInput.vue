@@ -122,9 +122,9 @@ defineExpose({ focus })
 
 <style lang="scss" module>
 .label {
-  @include color-ui-secondary;
+  @include color-ui-primary;
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 .inputContainer {
   @include color-ui-primary;
@@ -137,7 +137,6 @@ defineExpose({ focus })
   &[data-on-secondary] {
     @include background-primary;
   }
-
   border: solid 2px transparent;
   &:focus-within {
     border-color: $theme-accent-focus-default;

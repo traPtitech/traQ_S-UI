@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <div :class="$style.eco">
-      <h3 :class="$style.header">省エネモード</h3>
-      <a-toggle v-model="value" :class="$style.toggle" />
-    </div>
-    <div :class="$style.content">
+  <div :class="$style.container">
+    <div :class="$style.description">
+      <h3>省エネモード</h3>
       <p>
         省エネモードがONの場合、スタンプエフェクトのアニメーションを表示しません
       </p>
+    </div>
+    <div>
+      <a-toggle v-model="value" />
     </div>
   </div>
 </template>
@@ -28,21 +28,16 @@ const value = useModelValueSyncer(props, emit)
 </script>
 
 <style lang="scss" module>
-.header {
-  margin-bottom: 8px;
-}
-.content {
-  margin-left: 12px;
-}
-.eco {
+.container {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
-  h3 {
-    margin: 0;
-  }
-  .toggle {
-    margin-left: 12px;
-  }
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 </style>

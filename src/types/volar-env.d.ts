@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
-
 interface DataAndAriaAttributes {
   [dataAttr: `data${UppercaseAlphabet}${string}`]: unknown
   [dataAttr: `data-${string}`]: unknown
@@ -12,6 +10,7 @@ declare module '@vue/runtime-dom' {
     // https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/enterkeyhint
     enterkeyhint?: string
   }
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface SVGAttributes extends DataAndAriaAttributes {}
 }
 
