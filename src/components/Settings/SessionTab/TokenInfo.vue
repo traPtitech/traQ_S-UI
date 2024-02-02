@@ -14,7 +14,7 @@
           />
           @{{ token.clientDeveloper.name }}
         </template>
-        <template v-else>---</template>
+        <template v-else>unknown</template>
       </div>
       <time :datetime="issuedAtISO">{{ issuedAt }}</time>
       <div :class="$style.scopes">
