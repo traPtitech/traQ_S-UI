@@ -10,6 +10,7 @@
       />
     </ul>
     <p v-else-if="!isLoading">アクセスを許可しているアプリはありません。</p>
+    <p v-else>Now loading...</p>
   </section>
 </template>
 
