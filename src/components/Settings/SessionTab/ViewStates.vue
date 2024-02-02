@@ -1,14 +1,14 @@
 <template>
   <section>
     <h3 :class="$style.header">
-      他端末/ブラウザ/タブで最新のメッセージを開いているチャンネル
+      他端末/ブラウザで最新のメッセージを開いているチャンネル
     </h3>
     <ul v-if="monitoringChanelStrings.length > 0" :class="$style.list">
       <li v-for="channel in monitoringChanelStrings" :key="channel">
         {{ channel }}
       </li>
     </ul>
-    <p v-else>他端末/ブラウザ/タブで開いているチャンネルはありません。</p>
+    <p v-else>他端末/ブラウザで開いているチャンネルはありません。</p>
   </section>
 </template>
 
