@@ -1,34 +1,28 @@
 <template>
-  <div>
-    <h3 :class="$style.header">起動時チャンネル設定</h3>
-    <div :class="$style.content">
-      <div :class="$style.channel">
-        <form-radio
-          v-model="openModeValue"
-          label="最後に開いたチャンネル"
-          input-value="lastOpen"
-        />
-      </div>
-      <div :class="$style.channel">
-        <form-radio
-          v-model="openModeValue"
-          label="特定のチャンネル"
-          input-value="particular"
-        />
-        <form-selector
-          v-if="openMode === 'particular'"
-          v-model="openChannelNameValue"
-          :options="channelOptions"
-          :class="$style.selector"
-        />
-      </div>
+  <div :class="$style.container">
+    <div :class="$style.description">
+      <h3>起動時チャンネル設定</h3>
+      <p>
+        特定のチャンネルを指定します。OFFの場合は最後に開いたチャンネルが設定されます。
+      </p>
+      <form-selector
+        v-if="openMode === 'particular'"
+        v-model="openChannelNameValue"
+        :options="channelOptions"
+      />
+    </div>
+    <div>
+      <a-toggle
+        :model-value="openModeValue === 'particular'"
+        @update:model-value="toggleOpenMode"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import AToggle from '/@/components/UI/AToggle.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
-import FormRadio from '/@/components/UI/FormRadio.vue'
 import type { OpenMode } from '/@/store/app/browserSettings'
 import useChannelPath from '/@/composables/useChannelPath'
 import useChannelOptions from '/@/composables/useChannelOptions'
@@ -54,25 +48,30 @@ const { channelIdToPathString } = useChannelPath()
 const openModeValue = useModelSyncer(props, emit, 'openMode')
 const openChannelNameValue = useModelSyncer(props, emit, 'openChannelName')
 
+const toggleOpenMode = () => {
+  if (openModeValue.value === 'lastOpen') {
+    openModeValue.value = 'particular'
+  } else {
+    openModeValue.value = 'lastOpen'
+  }
+}
+
 const { channelOptions } = useChannelOptions(undefined, channel =>
   channel ? channelIdToPathString(channel.id) : '(unknown)'
 )
 </script>
 
 <style lang="scss" module>
-.header {
-  margin-bottom: 8px;
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
 }
-.content {
-  margin-left: 12px;
-}
-.channel {
-  margin-bottom: 12px;
-}
-.selector {
-  margin: {
-    top: 4px;
-    left: 12px;
-  }
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 </style>

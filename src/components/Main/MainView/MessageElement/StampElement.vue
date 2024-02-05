@@ -95,10 +95,10 @@ watch(
   }
   display: inline-flex;
   flex-shrink: 0;
-  height: 24px;
+  height: 1.5rem;
   align-items: center;
-  padding: 2px 4px;
-  border-radius: 4px;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
   cursor: pointer;
   user-select: none;
   overflow: hidden;
