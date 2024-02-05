@@ -1,15 +1,17 @@
 <template>
-  <div>
+  <section>
     <h3 :class="$style.header">アクセスを許可しているアプリ</h3>
-    <div :class="$style.content">
+    <ul v-if="tokensWithClientData.length > 0" :class="$style.content">
       <token-info
         v-for="token in tokensWithClientData"
         :key="token.id"
         :token="token"
         @revoke="revokeToken(token.id)"
       />
-    </div>
-  </div>
+    </ul>
+    <p v-else-if="!isLoading">アクセスを許可しているアプリはありません。</p>
+    <p v-else>Now loading...</p>
+  </section>
 </template>
 
 <script lang="ts" setup>
@@ -27,6 +29,7 @@ fetchUsers()
 
 const tokens = ref<ActiveOAuth2Token[]>([])
 const clients = ref<Map<OAuthClientId, OAuth2Client>>(new Map())
+const isLoading = ref(true)
 const tokensWithClientData = computed(() =>
   [...tokens.value]
     .sort((a, b) => Date.parse(b.issuedAt) - Date.parse(a.issuedAt))
@@ -44,10 +47,12 @@ const tokensWithClientData = computed(() =>
 const fetchTokens = async () => {
   const res = await apis.getMyTokens()
   tokens.value = res.data
+  isLoading.value = false
 }
 const fetchClients = async () => {
   const res = await apis.getClients(true)
   clients.value = new Map(res.data.map(client => [client.id, client]))
+  isLoading.value = false
 }
 const revokeToken = async (tokenId: string) => {
   if (!window.confirm('本当にトークンを無効化しますか？')) return
@@ -69,18 +74,16 @@ onMounted(() => {
 
 <style lang="scss" module>
 .header {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 .content {
-  @include color-ui-secondary;
-  @include background-secondary;
+  @include color-ui-primary;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  grid-auto-rows: max-content;
   height: 400px;
-  padding: 8px;
-  margin-left: 12px;
-  gap: 16px;
+  padding: 0 4px;
+  gap: 4px;
   border-radius: 8px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>

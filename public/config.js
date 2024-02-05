@@ -102,7 +102,7 @@
     blogPagePrefix: 'https://trap.jp/author/',
     auth: {
       resetLink: 'https://portal.trap.jp/reset-password',
-      changeLink: 'https://portal.trap.jp',
+      changeLink: 'https://portal.trap.jp/me/change-password',
       changeName: 'traPortal'
     },
     isRootChannelSelectableAsParentChannel: false,

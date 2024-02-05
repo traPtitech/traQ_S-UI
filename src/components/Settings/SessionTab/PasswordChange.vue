@@ -1,12 +1,16 @@
 <template>
-  <div>
+  <section>
     <h3 :class="$style.header">パスワード変更</h3>
     <p v-if="showChangeLink">
       パスワードの変更は
-      <a :href="changeLink" rel="noopener noreferrer" target="_blank">{{
-        changeName
-      }}</a>
-      から可能です
+      <a
+        :class="$style.link"
+        :href="changeLink"
+        rel="noopener noreferrer"
+        target="_blank"
+        >{{ changeName }}</a
+      >
+      から可能です。
     </p>
     <template v-else>
       <form-input
@@ -34,7 +38,7 @@
         />
       </div>
     </template>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">
@@ -91,10 +95,18 @@ const { isChanging, onChangeClick } = usePasswordChange(state, isValid)
 
 <style lang="scss" module>
 .header {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 .form {
   margin-left: 12px;
+}
+.link {
+  color: var(--markdown-link-text);
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: none;
+  }
 }
 .changeButton {
   display: flex;
