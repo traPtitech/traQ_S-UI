@@ -5,7 +5,8 @@ import type {
   FileId,
   UserGroupId,
   TagId,
-  MessageId
+  MessageId,
+  StampId
 } from '/@/types/entity-ids'
 
 type ModalStateType =
@@ -24,6 +25,9 @@ type ModalStateType =
   | 'group-member-edit'
   | 'group-admin-add'
   | 'group-member-add'
+  | 'settings-stamp-create'
+  | 'settings-stamp-edit'
+  | 'settings-stamp-image-edit'
 
 export type ModalState =
   | UserModalState
@@ -40,6 +44,9 @@ export type ModalState =
   | GroupMemberEditModalState
   | GroupAdminAddModalState
   | GroupMemberAddModalState
+  | SettingsStampCreateModalState
+  | SettingsStampEditModalState
+  | SettingsStampImageEditModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -122,4 +129,20 @@ interface GroupAdminAddModalState extends BaseModalState {
 interface GroupMemberAddModalState extends BaseModalState {
   type: 'group-member-add'
   id: UserGroupId
+}
+
+interface SettingsStampCreateModalState extends BaseModalState {
+  type: 'settings-stamp-create'
+  file: File
+}
+
+interface SettingsStampEditModalState extends BaseModalState {
+  type: 'settings-stamp-edit'
+  id: StampId
+}
+
+interface SettingsStampImageEditModalState extends BaseModalState {
+  type: 'settings-stamp-image-edit'
+  id: StampId
+  file: File
 }
