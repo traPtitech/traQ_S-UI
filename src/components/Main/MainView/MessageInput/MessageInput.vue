@@ -126,7 +126,7 @@ watch(state, () => {
   }
   timeoutId = setTimeout(() => {
     isTyping.value = false
-  }, 2000)
+  }, 10000)
 })
 
 const onAddAttachments = async (files: File[]) => {
