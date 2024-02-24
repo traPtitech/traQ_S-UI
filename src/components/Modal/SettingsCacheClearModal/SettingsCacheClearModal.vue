@@ -12,7 +12,7 @@
           <form-checkbox
             v-for="(usage, key) in cacheData.usageDetails"
             :key="key"
-            v-model="cacheSelectedStateTable[key]"
+            v-model="cacheNameToIsSelected[key]"
             :class="$style.checkbox"
           >
             <div :class="$style.label">
@@ -92,7 +92,7 @@ const caches = 'caches'
 const indexedDB = 'indexedDB'
 const serviceWorkerRegistrations = 'serviceWorkerRegistrations'
 
-const cacheSelectedStateTable = ref<Record<CacheName, boolean>>({
+const cacheNameToIsSelected = ref<Record<CacheName, boolean>>({
   caches: false,
   indexedDB: false,
   serviceWorkerRegistrations: false
@@ -101,7 +101,7 @@ const allCachesSelected = ref<boolean>(false)
 const anyCacheSelected = computed(() => {
   return (
     allCachesSelected.value ||
-    Object.values(cacheSelectedStateTable).includes(true)
+    Object.values(cacheNameToIsSelected).includes(true)
   )
 })
 
@@ -133,20 +133,20 @@ const clearCache = async () => {
   if (!confirmClear()) return
   isClearingCache.value = true
   const promises = []
-  if (allCachesSelected.value || cacheSelectedStateTable.value[caches]) {
+  if (allCachesSelected.value || cacheNameToIsSelected.value[caches]) {
     promises.push(clearMainCache())
   }
-  if (allCachesSelected.value || cacheSelectedStateTable.value[indexedDB]) {
+  if (allCachesSelected.value || cacheNameToIsSelected.value[indexedDB]) {
     promises.push(clearCacheStorage('files-cache'))
   }
   if (
     allCachesSelected.value ||
-    cacheSelectedStateTable.value[serviceWorkerRegistrations]
+    cacheNameToIsSelected.value[serviceWorkerRegistrations]
   ) {
     promises.push(clearCacheStorage('thumbnail-cache'))
   }
   await Promise.all(promises.flat())
-  if (!(allCachesSelected.value || cacheSelectedStateTable.value[caches])) {
+  if (!(allCachesSelected.value || cacheNameToIsSelected.value[caches])) {
     setCacheData()
     isClearingCache.value = false
     clearModal()
