@@ -12,7 +12,7 @@
           <form-checkbox
             v-for="(usage, key) in cacheData.usageDetails"
             :key="key"
-            v-model="isCacheSelected[key]"
+            v-model="cacheSelectedStateTable[key]"
             :class="$style.checkbox"
           >
             <div :class="$style.label">
@@ -92,7 +92,7 @@ const caches = 'caches'
 const indexedDB = 'indexedDB'
 const serviceWorkerRegistrations = 'serviceWorkerRegistrations'
 
-const isCacheSelected = ref<Record<CacheName, boolean>>({
+const cacheSelectedStateTable = ref<Record<CacheName, boolean>>({
   caches: false,
   indexedDB: false,
   serviceWorkerRegistrations: false
@@ -100,7 +100,8 @@ const isCacheSelected = ref<Record<CacheName, boolean>>({
 const allCachesSelected = ref<boolean>(false)
 const anyCacheSelected = computed(() => {
   return (
-    allCachesSelected.value || Object.values(isCacheSelected).includes(true)
+    allCachesSelected.value ||
+    Object.values(cacheSelectedStateTable).includes(true)
   )
 })
 
@@ -132,20 +133,20 @@ const clearCache = async () => {
   if (!confirmClear()) return
   isClearingCache.value = true
   const promises = []
-  if (allCachesSelected.value || isCacheSelected.value[caches]) {
+  if (allCachesSelected.value || cacheSelectedStateTable.value[caches]) {
     promises.push(clearMainCache())
   }
-  if (allCachesSelected.value || isCacheSelected.value[indexedDB]) {
+  if (allCachesSelected.value || cacheSelectedStateTable.value[indexedDB]) {
     promises.push(clearCacheStorage('files-cache'))
   }
   if (
     allCachesSelected.value ||
-    isCacheSelected.value[serviceWorkerRegistrations]
+    cacheSelectedStateTable.value[serviceWorkerRegistrations]
   ) {
     promises.push(clearCacheStorage('thumbnail-cache'))
   }
   await Promise.all(promises.flat())
-  if (!(allCachesSelected.value || isCacheSelected.value[caches])) {
+  if (!(allCachesSelected.value || cacheSelectedStateTable.value[caches])) {
     setCacheData()
     isClearingCache.value = false
     clearModal()
@@ -166,7 +167,6 @@ const clearCache = async () => {
   setCacheData()
   await wait(1000)
   window.location.reload()
-  return
 }
 </script>
 
