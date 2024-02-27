@@ -41,6 +41,10 @@ const toggle = () => {
   border-radius: 4px;
   text-align: center;
   cursor: pointer;
+  &:hover .icon,
+  &:focus-visible .icon {
+    @include color-ui-secondary;
+  }
 }
 
 .icon {

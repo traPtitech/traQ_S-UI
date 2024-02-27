@@ -19,60 +19,13 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, reactive } from 'vue'
-import useChannelPath from '/@/composables/useChannelPath'
-import { useQallSession } from '../../MainView/ChannelView/ChannelSidebar/composables/useChannelRTCSession'
-import type { ChannelTreeNode } from '/@/lib/channelTree'
-import type { Channel } from '@traptitech/traq'
-
-interface TreeProps {
-  channel: ChannelTreeNode
-  showShortenedPath: false
-}
-
-interface ListProps {
-  channel: Channel
-  showShortenedPath: true
-}
-
-type TypedProps = TreeProps | ListProps
-
-const usePath = (typedProps: TypedProps) => {
-  const { channelIdToShortPathString, channelIdToPathString } = useChannelPath()
-
-  const getPathWithAncestor = (skippedAncestorNames?: string[]) =>
-    skippedAncestorNames
-      ? [...skippedAncestorNames].reverse().join('/').concat('/')
-      : ''
-
-  const pathToShow = computed(() =>
-    typedProps.showShortenedPath
-      ? channelIdToShortPathString(typedProps.channel.id)
-      : getPathWithAncestor(typedProps.channel.skippedAncestorNames) +
-        typedProps.channel.name
-  )
-  const pathTooltip = computed(() =>
-    typedProps.showShortenedPath
-      ? `#${channelIdToPathString(typedProps.channel.id)}`
-      : undefined
-  )
-
-  return { pathToShow, pathTooltip }
-}
-
-const useRTCState = (typedProps: TypedProps) => {
-  const { sessionUserIds } = useQallSession(
-    reactive({ channelId: computed(() => typedProps.channel.id) })
-  )
-
-  return { qallUserIds: sessionUserIds }
-}
-</script>
-
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
+import type { ChannelTreeNode } from '/@/lib/channelTree'
+import type { Channel } from '@traptitech/traq'
+import type { TypedProps } from './composables/usePath'
+import { usePath, useRTCState } from './composables/usePath'
 
 const props = withDefaults(
   defineProps<{

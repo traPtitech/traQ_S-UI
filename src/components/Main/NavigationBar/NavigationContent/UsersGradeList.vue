@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :aria-expanded="!isFolding">
     <users-separator
       :name="nameWithCount"
       :is-open="!isFolding"

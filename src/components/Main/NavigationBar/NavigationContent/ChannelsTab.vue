@@ -15,6 +15,8 @@
         <channel-list-selector
           v-if="query.length === 0"
           v-model:is-stared="filterStarChannel"
+          :all-panel-id="allPanelId"
+          :stared-panel-id="staredPanelId"
         />
         <template v-if="topLevelChannels.length > 0">
           <channel-list
@@ -25,12 +27,21 @@
           <template v-else-if="filterStarChannel">
             <channel-tree-component
               v-if="staredChannels.length > 0"
+              :id="staredPanelId"
               :channels="staredChannels"
               show-shortened-path
+              role="tabpanel"
             />
-            <empty-state v-else>お気に入りチャンネルはありません</empty-state>
+            <empty-state v-else :id="staredPanelId" role="tabpanel">
+              お気に入りチャンネルはありません
+            </empty-state>
           </template>
-          <channel-tree-component v-else :channels="topLevelChannels" />
+          <channel-tree-component
+            v-else
+            :id="allPanelId"
+            :channels="topLevelChannels"
+            role="tabpanel"
+          />
         </template>
         <empty-state v-else>チャンネルがありません</empty-state>
       </template>
@@ -58,6 +69,7 @@ import useStaredChannelDescendants from './composables/useStaredChannelDescendan
 import { useStaredChannels } from '/@/store/domain/staredChannels'
 import useChannelPath from '/@/composables/useChannelPath'
 import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
+import { randomString } from '/@/lib/basic/randomString'
 
 const { pushModal } = useModalStore()
 
@@ -110,6 +122,9 @@ const onClickButton = () => {
     type: 'channel-create'
   })
 }
+
+const allPanelId = randomString()
+const staredPanelId = randomString()
 </script>
 
 <style lang="scss" module>
@@ -120,7 +135,8 @@ const onClickButton = () => {
   @include color-ui-secondary-inactive;
   padding-right: 16px;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus {
     @include color-ui-secondary;
   }
 }

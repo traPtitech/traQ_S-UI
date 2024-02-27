@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div :class="$style.container" role="tablist">
     <popup-navigator :class="$style.logo" :title="`traQ ${VERSION}`" />
     <navigation-selector-item
       v-for="item in entries"
