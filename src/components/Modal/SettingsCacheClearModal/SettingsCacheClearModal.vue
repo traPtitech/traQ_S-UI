@@ -122,6 +122,7 @@ const { clearModal } = useModalStore()
 
 const isClearingCache = ref<boolean>(false)
 
+// TODO: 名前の改善
 const clearMainCache = async () => {
   const names = await window.caches.keys()
   return names
@@ -129,6 +130,9 @@ const clearMainCache = async () => {
     .map(name => clearCacheStorage(name))
 }
 
+// TODO: 処理を綺麗にできると嬉しい
+// TODO: promise周りの処理順の確認
+// TODO: キャッシュの対応関係の確認
 const clearCache = async () => {
   if (!confirmClear()) return
   isClearingCache.value = true
