@@ -12,7 +12,7 @@
       >
         <div :class="$style.label">
           {{ cacheLabel(name) }}
-          <span>{{ cacheSize(name) }}</span>
+          <span>{{ prettifyFileSize(cacheSize[name]) }}</span>
         </div>
       </form-checkbox>
       <div :class="$style.buttonContainer">
@@ -30,14 +30,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import { wait } from '/@/lib/basic/timer'
-import { checkStorageManagerSupport } from '/@/lib/dom/browser'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useModalStore } from '/@/store/ui/modal'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
+import { prettifyFileSize } from '/@/lib/basic/file'
 
 declare global {
   interface StorageEstimate {
@@ -71,7 +71,24 @@ const cacheNameToIsSelected = ref<Record<CacheName, boolean>>({
 const anyCacheSelected = computed(() => {
   return Object.values(cacheNameToIsSelected).includes(true)
 })
-const cacheSize = async (cacheName: CacheName) => {
+
+const cacheSize = ref<Record<CacheName, number>>({
+  'traQ_S-precache': 0,
+  'files-cache': 0,
+  'thumbnail-cache': 0
+})
+onMounted(() => {
+  updateCacheSize
+})
+const updateCacheSize = async () => {
+  Promise.all(
+    cacheNames.map(async name => {
+      cacheSize.value[name] = await calculateCacheSize(name)
+      return
+    })
+  )
+}
+const calculateCacheSize = async (cacheName: CacheName) => {
   const cache = await window.caches.open(cacheName)
   const responses = await cache.matchAll()
   const cacheSizes = await Promise.all(
@@ -112,7 +129,7 @@ const clearMainCache = async () => {
 // TODO: promise周りの処理順の確認
 // TODO: キャッシュの対応関係の確認
 const clearCache = async () => {
-  if (!confirmClear()) return
+  if (isClearingCache.value || !confirmClear()) return
   isClearingCache.value = true
   const promises = []
   if (cacheNameToIsSelected.value[traqSPrecache]) {
