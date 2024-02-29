@@ -4,33 +4,17 @@
     subtitle="キャッシュを削除する項目を選んで下さい。"
   >
     <div :class="$style.content">
-      <div
-        v-if="cacheData && cacheData.usage"
-        :class="$style.checkboxContainer"
+      <form-checkbox
+        v-for="name in cacheNames"
+        :key="name"
+        v-model="cacheNameToIsSelected[name]"
+        :class="$style.checkbox"
       >
-        <div v-if="cacheData.usageDetails">
-          <form-checkbox
-            v-for="(usage, key) in cacheData.usageDetails"
-            :key="key"
-            v-model="cacheNameToIsSelected[key]"
-            :class="$style.checkbox"
-          >
-            <div :class="$style.label">
-              {{ cacheLabel(key) }}
-              <span>{{ prettifyFileSize(usage) }}</span>
-            </div>
-          </form-checkbox>
+        <div :class="$style.label">
+          {{ cacheLabel(name) }}
+          <span>{{ cacheSize(name) }}</span>
         </div>
-        <div v-else>
-          <form-checkbox v-model="allCachesSelected" :class="$style.checkbox">
-            <div :class="$style.label">
-              全てのキャッシュ
-              <span>{{ prettifyFileSize(cacheData.usage) }}</span>
-            </div>
-          </form-checkbox>
-        </div>
-      </div>
-      <div v-else>キャッシュデータは存在しません</div>
+      </form-checkbox>
       <div :class="$style.buttonContainer">
         <form-button label="キャンセル" type="tertiary" @click="clearModal" />
         <form-button
@@ -46,11 +30,10 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import { wait } from '/@/lib/basic/timer'
 import { checkStorageManagerSupport } from '/@/lib/dom/browser'
-import { prettifyFileSize } from '/@/lib/basic/file'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useModalStore } from '/@/store/ui/modal'
@@ -60,13 +43,6 @@ declare global {
   interface StorageEstimate {
     usageDetails: Record<CacheName, number>
   }
-}
-
-const isStorageManagerSupported = checkStorageManagerSupport()
-const getStorageUsage = async () => {
-  if (!isStorageManagerSupported) return null
-
-  return navigator.storage.estimate()
 }
 
 const confirmClear = () => window.confirm('本当に削除しますか？')
@@ -81,37 +57,39 @@ const showToast = (extraMessage?: string) => {
   )
 }
 
-const cacheData = ref<StorageEstimate | null>(null)
-const setCacheData = async () => {
-  cacheData.value = await getStorageUsage()
-}
-onMounted(setCacheData)
-
-type CacheName = 'caches' | 'indexedDB' | 'serviceWorkerRegistrations'
-const caches = 'caches'
-const indexedDB = 'indexedDB'
-const serviceWorkerRegistrations = 'serviceWorkerRegistrations'
+type CacheName = 'traQ_S-precache' | 'files-cache' | 'thumbnail-cache'
+const traqSPrecache = 'traQ_S-precache'
+const filesCache = 'files-cache'
+const thumbnailCache = 'thumbnail-cache'
+const cacheNames: CacheName[] = [traqSPrecache, filesCache, thumbnailCache]
 
 const cacheNameToIsSelected = ref<Record<CacheName, boolean>>({
-  caches: false,
-  indexedDB: false,
-  serviceWorkerRegistrations: false
+  'traQ_S-precache': false,
+  'files-cache': false,
+  'thumbnail-cache': false
 })
-const allCachesSelected = ref<boolean>(false)
 const anyCacheSelected = computed(() => {
-  return (
-    allCachesSelected.value ||
-    Object.values(cacheNameToIsSelected).includes(true)
-  )
+  return Object.values(cacheNameToIsSelected).includes(true)
 })
+const cacheSize = async (cacheName: CacheName) => {
+  const cache = await window.caches.open(cacheName)
+  const responses = await cache.matchAll()
+  const cacheSizes = await Promise.all(
+    responses.map(async response => {
+      const arrayBuffer = await response.arrayBuffer()
+      return arrayBuffer.byteLength
+    })
+  )
+  return cacheSizes.reduce((sum, size) => sum + size)
+}
 
 const cacheLabel = (cacheName: CacheName) => {
   switch (cacheName) {
-    case 'caches':
+    case 'traQ_S-precache':
       return 'traQ本体'
-    case 'indexedDB':
+    case 'files-cache':
       return 'ファイルの本体一覧'
-    case 'serviceWorkerRegistrations':
+    case 'thumbnail-cache':
       return 'ファイルのサムネイル一覧'
     default:
       throw new Error(`Unknown cache name: ${cacheName satisfies CacheName}`)
@@ -137,21 +115,17 @@ const clearCache = async () => {
   if (!confirmClear()) return
   isClearingCache.value = true
   const promises = []
-  if (allCachesSelected.value || cacheNameToIsSelected.value[caches]) {
+  if (cacheNameToIsSelected.value[traqSPrecache]) {
     promises.push(clearMainCache())
   }
-  if (allCachesSelected.value || cacheNameToIsSelected.value[indexedDB]) {
-    promises.push(clearCacheStorage('files-cache'))
+  if (cacheNameToIsSelected.value[filesCache]) {
+    promises.push(clearCacheStorage(filesCache))
   }
-  if (
-    allCachesSelected.value ||
-    cacheNameToIsSelected.value[serviceWorkerRegistrations]
-  ) {
-    promises.push(clearCacheStorage('thumbnail-cache'))
+  if (cacheNameToIsSelected.value[thumbnailCache]) {
+    promises.push(clearCacheStorage(thumbnailCache))
   }
   await Promise.all(promises.flat())
-  if (!(allCachesSelected.value || cacheNameToIsSelected.value[caches])) {
-    setCacheData()
+  if (!cacheNameToIsSelected.value[traqSPrecache]) {
     isClearingCache.value = false
     clearModal()
     showToast()
@@ -168,7 +142,6 @@ const clearCache = async () => {
   isClearingCache.value = false
   clearModal()
   showToast('1秒後にリロードします')
-  setCacheData()
   await wait(1000)
   window.location.reload()
 }
