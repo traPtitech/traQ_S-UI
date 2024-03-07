@@ -3,6 +3,7 @@
     title="キャッシュの削除"
     subtitle="キャッシュを削除する項目を選んで下さい。"
   >
+    <form-button label="update" type="secondary" @click="updateCacheSize" />
     <div :class="$style.content">
       <form-checkbox
         v-for="name in cacheNames"
@@ -12,7 +13,7 @@
       >
         <div :class="$style.label">
           {{ cacheLabel(name) }}
-          <span>{{ prettifyFileSize(cacheSize[name]) }}</span>
+          <span>{{ cacheSize[name] }}</span>
         </div>
       </form-checkbox>
       <div :class="$style.buttonContainer">
@@ -77,27 +78,33 @@ const cacheSize = ref<Record<CacheName, number>>({
   'files-cache': 0,
   'thumbnail-cache': 0
 })
+
 onMounted(() => {
   updateCacheSize
 })
+
 const updateCacheSize = async () => {
-  Promise.all(
+  await Promise.all(
     cacheNames.map(async name => {
       cacheSize.value[name] = await calculateCacheSize(name)
       return
     })
   )
 }
+
 const calculateCacheSize = async (cacheName: CacheName) => {
-  const cache = await window.caches.open(cacheName)
-  const responses = await cache.matchAll()
-  const cacheSizes = await Promise.all(
-    responses.map(async response => {
-      const arrayBuffer = await response.arrayBuffer()
-      return arrayBuffer.byteLength
+  const cache = await caches.open(cacheName)
+  const keys = await cache.keys()
+  let size = 0
+  Promise.all(
+    keys.map(async key => {
+      const response = await cache.match(key)
+      if (!response) return
+      const blob = await response.blob()
+      size += blob.size
     })
   )
-  return cacheSizes.reduce((sum, size) => sum + size)
+  return size
 }
 
 const cacheLabel = (cacheName: CacheName) => {
