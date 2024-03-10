@@ -24,6 +24,7 @@ type ModalStateType =
   | 'group-member-edit'
   | 'group-admin-add'
   | 'group-member-add'
+  | 'settings-theme-edit'
 
 export type ModalState =
   | UserModalState
@@ -40,6 +41,7 @@ export type ModalState =
   | GroupMemberEditModalState
   | GroupAdminAddModalState
   | GroupMemberAddModalState
+  | SettingsThemeEditState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -122,4 +124,8 @@ interface GroupAdminAddModalState extends BaseModalState {
 interface GroupMemberAddModalState extends BaseModalState {
   type: 'group-member-add'
   id: UserGroupId
+}
+
+interface SettingsThemeEditState extends BaseModalState {
+  type: 'settings-theme-edit'
 }
