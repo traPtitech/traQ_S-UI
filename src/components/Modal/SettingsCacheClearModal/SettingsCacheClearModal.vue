@@ -58,11 +58,12 @@ const showToast = (extraMessage?: string) => {
   )
 }
 
-type CacheName = 'traQ_S-precache' | 'files-cache' | 'thumbnail-cache'
-const traqSPrecache = 'traQ_S-precache'
-const filesCache = 'files-cache'
-const thumbnailCache = 'thumbnail-cache'
-const cacheNames: CacheName[] = [traqSPrecache, filesCache, thumbnailCache]
+const cacheNames = [
+  'traQ_S-precache',
+  'files-cache',
+  'thumbnail-cache'
+] as const
+type CacheName = (typeof cacheNames)[number]
 
 const cacheNameToIsSelected = ref<Record<CacheName, boolean>>({
   'traQ_S-precache': false,
@@ -87,7 +88,6 @@ const updateCacheSize = async () => {
   await Promise.all(
     cacheNames.map(async name => {
       cacheSize.value[name] = await calculateCacheSize(name)
-      return
     })
   )
 }
@@ -139,17 +139,17 @@ const clearCache = async () => {
   if (isClearingCache.value || !confirmClear()) return
   isClearingCache.value = true
   const promises = []
-  if (cacheNameToIsSelected.value[traqSPrecache]) {
+  if (cacheNameToIsSelected.value['traQ_S-precache']) {
     promises.push(clearMainCache())
   }
-  if (cacheNameToIsSelected.value[filesCache]) {
-    promises.push(clearCacheStorage(filesCache))
+  if (cacheNameToIsSelected.value['files-cache']) {
+    promises.push(clearCacheStorage('files-cache'))
   }
-  if (cacheNameToIsSelected.value[thumbnailCache]) {
-    promises.push(clearCacheStorage(thumbnailCache))
+  if (cacheNameToIsSelected.value['thumbnail-cache']) {
+    promises.push(clearCacheStorage('thumbnail-cache'))
   }
   await Promise.all(promises.flat())
-  if (!cacheNameToIsSelected.value[traqSPrecache]) {
+  if (!cacheNameToIsSelected.value['traQ_S-precache']) {
     isClearingCache.value = false
     clearModal()
     showToast()
