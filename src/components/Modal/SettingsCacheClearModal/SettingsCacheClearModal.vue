@@ -74,13 +74,13 @@ const anyCacheSelected = computed(() => {
 })
 
 const cacheSize = ref<Record<CacheName, number>>({
-  'traQ_S-precache': 0,
-  'files-cache': 0,
-  'thumbnail-cache': 0
+  'traQ_S-precache': -1,
+  'files-cache': -1,
+  'thumbnail-cache': -1
 })
 
 onMounted(() => {
-  updateCacheSize
+  updateCacheSize()
 })
 
 const updateCacheSize = async () => {
