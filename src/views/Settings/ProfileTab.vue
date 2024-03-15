@@ -39,6 +39,7 @@
         v-model="state.homeChannel"
         :options="channelOptions"
         :class="$style.form"
+        activate-search
       />
     </div>
     <div :class="$style.element">

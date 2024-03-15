@@ -3,7 +3,7 @@
     <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
-    <label v-if="activateSearch">
+    <label v-if="activateSearch" :class="$style.search">
       <a-icon name="search" mdi />
       <input v-model="searchText" />
     </label>
@@ -87,5 +87,9 @@ const searchText = ref('')
   width: 100%;
   color: inherit;
   background: inherit;
+}
+.search {
+  display: flex;
+  align-items: center;
 }
 </style>
