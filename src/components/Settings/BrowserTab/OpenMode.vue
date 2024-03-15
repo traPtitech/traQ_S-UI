@@ -19,6 +19,7 @@
           v-if="openMode === 'particular'"
           v-model="openChannelNameValue"
           :options="channelOptions"
+          activate-search
           :class="$style.selector"
         />
       </div>

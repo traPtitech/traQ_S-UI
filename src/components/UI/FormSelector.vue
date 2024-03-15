@@ -3,19 +3,24 @@
     <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
+    <label v-if="activateSearch" class="$style.search">
+      <a-icon name="search" mdi="true" />
+      <input v-model="searchText" />
+    </label>
     <div
       :class="$style.inputContainer"
       :data-on-secondary="$boolAttr(onSecondary)"
     >
       <select :id="id" v-model="value" :class="$style.select">
-        <option
-          v-for="option in options"
-          :key="option.value ?? nullSymbol"
-          :value="option.value"
-          :disabled="option.value === null"
-        >
-          {{ option.key }}
-        </option>
+        <template v-for="option in options" :key="option.value ?? nullSymbol">
+          <option
+            v-if="option.key.match(searchText)"
+            :value="option.value"
+            :disabled="option.value === null"
+          >
+            {{ option.key }}
+          </option>
+        </template>
       </select>
     </div>
   </div>
@@ -24,6 +29,8 @@
 <script lang="ts" setup>
 import { randomString } from '/@/lib/basic/randomString'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
+import { ref } from 'vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -31,10 +38,12 @@ const props = withDefaults(
     onSecondary?: boolean
     options: Array<{ key: string; value: string | null }>
     label?: string
+    activateSearch?: boolean
   }>(),
   {
     modelValue: '',
-    onSecondary: false
+    onSecondary: false,
+    activateSearch: false
   }
 )
 
@@ -46,6 +55,8 @@ const nullSymbol = Symbol('null')
 
 const value = useModelValueSyncer(props, emit)
 const id = randomString()
+
+const searchText = ref('')
 </script>
 
 <style lang="scss" module>
@@ -76,5 +87,9 @@ const id = randomString()
   width: 100%;
   color: inherit;
   background: inherit;
+}
+.search {
+  display: flex;
+  align-items: center;
 }
 </style>
