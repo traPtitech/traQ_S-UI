@@ -4,17 +4,19 @@
     subtitle="キャッシュを削除する項目を選んで下さい。"
   >
     <div :class="$style.content">
-      <form-checkbox
-        v-for="name in cacheNames"
-        :key="name"
-        v-model="cacheNameToIsSelected[name]"
-        :class="$style.checkbox"
-      >
-        <div :class="$style.label">
-          {{ cacheLabel(name) }}
-          <span>{{ cacheSize[name] }}</span>
-        </div>
-      </form-checkbox>
+      <div :class="$style.checkboxContainer">
+        <form-checkbox
+          v-for="name in cacheNames"
+          :key="name"
+          v-model="cacheNameToIsSelected[name]"
+          :class="$style.checkbox"
+        >
+          <div :class="$style.label">
+            {{ cacheLabel(name) }}
+            <span>{{ cacheSize[name] }}</span>
+          </div>
+        </form-checkbox>
+      </div>
       <div :class="$style.buttonContainer">
         <form-button label="キャンセル" type="tertiary" @click="clearModal" />
         <form-button
@@ -129,8 +131,6 @@ const clearMainCache = async () => {
 }
 
 // TODO: 処理を綺麗にできると嬉しい
-// TODO: promise周りの処理順の確認
-// TODO: キャッシュの対応関係の確認
 const clearCache = async () => {
   if (isClearingCache.value || !confirmClear()) return
   isClearingCache.value = true
