@@ -59,7 +59,11 @@ const showToast = (extraMessage?: string) => {
   )
 }
 
-const cacheNames = ['traQ_S', 'files-cache', 'thumbnail-cache'] as const
+const cacheNames = [
+  'workbox-precache-v2-https://q.trap.jp/',
+  'files-cache',
+  'thumbnail-cache'
+] as const
 type CacheName = (typeof cacheNames)[number]
 
 const cacheNameToIsSelected = ref(
@@ -97,7 +101,7 @@ const calculateCacheSize = async (cacheName: CacheName) => {
 
 const cacheLabel = (cacheName: CacheName) => {
   switch (cacheName) {
-    case 'traQ_S':
+    case 'workbox-precache-v2-https://q.trap.jp/':
       return 'traQ本体'
     case 'files-cache':
       return 'ファイルの本体一覧'
@@ -110,14 +114,17 @@ const cacheLabel = (cacheName: CacheName) => {
 
 const { clearModal } = useModalStore()
 
-const isClearingCache = ref<boolean>(false)
+const isClearingCache = ref(false)
 
 // TODO: 名前の改善
 const clearMainCache = async () => {
   const names = await window.caches.keys()
   return names
-    .filter(name => name.startsWith('traQ_S'))
-    .map(name => clearCacheStorage(name))
+    .filter(name => name.startsWith('workbox-precache-v2-https://q.trap.jp/'))
+    .map(name => {
+      console.log(name)
+      clearCacheStorage(name)
+    })
 }
 
 // TODO: 処理を綺麗にできると嬉しい
@@ -125,7 +132,7 @@ const clearCache = async () => {
   if (isClearingCache.value || !confirmClear()) return
   isClearingCache.value = true
   const promises = []
-  if (cacheNameToIsSelected.value['traQ_S']) {
+  if (cacheNameToIsSelected.value['workbox-precache-v2-https://q.trap.jp/']) {
     promises.push(clearMainCache())
   }
   if (cacheNameToIsSelected.value['files-cache']) {
@@ -135,7 +142,7 @@ const clearCache = async () => {
     promises.push(clearCacheStorage('thumbnail-cache'))
   }
   await Promise.all(promises.flat())
-  if (!cacheNameToIsSelected.value['traQ_S']) {
+  if (!cacheNameToIsSelected.value['workbox-precache-v2-https://q.trap.jp/']) {
     isClearingCache.value = false
     clearModal()
     showToast()
@@ -150,9 +157,9 @@ const clearCache = async () => {
   }
   registration.unregister()
   isClearingCache.value = false
-  clearModal()
   showToast('1秒後にリロードします')
   await wait(1000)
+  clearModal()
   window.location.reload()
 }
 </script>
