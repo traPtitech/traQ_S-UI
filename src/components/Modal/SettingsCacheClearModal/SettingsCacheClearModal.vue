@@ -74,10 +74,10 @@ const anyCacheSelected = computed(() => {
   return Object.values(cacheNameToIsSelected).includes(true)
 })
 
-const cacheSize = ref<Record<CacheName, number>>({
-  'traQ_S-precache': -1,
-  'files-cache': -1,
-  'thumbnail-cache': -1
+const cacheSize = ref<Record<CacheName, string>>({
+  'traQ_S-precache': '',
+  'files-cache': '',
+  'thumbnail-cache': ''
 })
 
 onMounted(() => {
@@ -88,7 +88,7 @@ onMounted(() => {
 const updateCacheSize = async () => {
   await Promise.all(
     cacheNames.map(async name => {
-      cacheSize.value[name] = await calculateCacheSize(name)
+      cacheSize.value[name] = prettifyFileSize(await calculateCacheSize(name))
     })
   )
 }
@@ -96,7 +96,7 @@ const updateCacheSize = async () => {
 const calculateCacheSize = async (cacheName: CacheName) => {
   const cache = await caches.open(cacheName)
   const keys = await cache.keys()
-  console.log('keys', keys)
+  console.log(cacheName, keys)
   let size = 0
   Promise.all(
     keys.map(async key => {
