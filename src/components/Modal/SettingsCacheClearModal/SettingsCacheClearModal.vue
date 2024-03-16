@@ -6,9 +6,9 @@
     <div :class="$style.content">
       <div :class="$style.checkboxContainer">
         <form-checkbox
-          v-for="name in cacheNames"
+          v-for="name in cacheCategories"
           :key="name"
-          v-model="cacheNameToIsSelected[name]"
+          v-model="cacheCategoryToIsSelected[name]"
           :class="$style.checkbox"
         >
           <div :class="$style.label">
@@ -43,14 +43,15 @@ import { prettifyFileSize } from '/@/lib/basic/file'
 
 declare global {
   interface StorageEstimate {
-    usageDetails: Record<CacheName, number>
+    usageDetails: Record<CacheCategory, number>
   }
 }
 
 const confirmClear = () => window.confirm('本当に削除しますか？')
 
 /* CacheStorageのnameはsw.jsを参照 */
-const clearCacheStorage = (cacheName: string) => window.caches.delete(cacheName)
+const clearCacheStorage = (cacheCategory: string) =>
+  window.caches.delete(cacheCategory)
 
 const { addSuccessToast } = useToastStore()
 const showToast = (extraMessage?: string) => {
@@ -59,32 +60,54 @@ const showToast = (extraMessage?: string) => {
   )
 }
 
-const cacheNames = [
-  'workbox-precache-v2-https://q.trap.jp/',
+const cacheCategories = [
+  'traQ_S-precache',
   'files-cache',
   'thumbnail-cache'
 ] as const
-type CacheName = (typeof cacheNames)[number]
+type CacheCategory = (typeof cacheCategories)[number]
 
-const cacheNameToIsSelected = ref(
-  Object.fromEntries(cacheNames.map(name => [name, false]))
+const cacheCategoryToIsSelected = ref(
+  Object.fromEntries(cacheCategories.map(name => [name, false]))
 )
 const anyCacheSelected = computed(() => {
-  return Object.values(cacheNameToIsSelected).includes(true)
+  return Object.values(cacheCategoryToIsSelected).includes(true)
 })
 
-const cacheSize = ref(Object.fromEntries(cacheNames.map(name => [name, ''])))
+const cacheSize = ref(
+  Object.fromEntries(cacheCategories.map(name => [name, '']))
+)
+
+const cacheNames = async (cacheCategory: CacheCategory) => {
+  if (!(cacheCategory === 'traQ_S-precache')) {
+    return [cacheCategory]
+  }
+  const allKeys = await window.caches.keys()
+  return allKeys.filter(key => key.startsWith(cacheCategory))
+}
 
 const updateCacheSize = async () => {
   await Promise.all(
-    cacheNames.map(async name => {
-      cacheSize.value[name] = prettifyFileSize(await calculateCacheSize(name))
+    cacheCategories.map(async cacheCategory => {
+      cacheSize.value[cacheCategory] = prettifyFileSize(
+        await calculateCacheSizeSum(await cacheNames(cacheCategory))
+      )
     })
   )
 }
 onMounted(updateCacheSize)
 
-const calculateCacheSize = async (cacheName: CacheName) => {
+const calculateCacheSizeSum = async (cacheNames: string[]) => {
+  let size = 0
+  Promise.all(
+    cacheNames.map(async cacheName => {
+      size += await calculateEachCacheSize(cacheName)
+    })
+  )
+  return size
+}
+
+const calculateEachCacheSize = async (cacheName: string) => {
   const cache = await caches.open(cacheName)
   const keys = await cache.keys()
   let size = 0
@@ -99,16 +122,18 @@ const calculateCacheSize = async (cacheName: CacheName) => {
   return size
 }
 
-const cacheLabel = (cacheName: CacheName) => {
-  switch (cacheName) {
-    case 'workbox-precache-v2-https://q.trap.jp/':
+const cacheLabel = (cacheCategory: CacheCategory) => {
+  switch (cacheCategory) {
+    case 'traQ_S-precache':
       return 'traQ本体'
     case 'files-cache':
       return 'ファイルの本体一覧'
     case 'thumbnail-cache':
       return 'ファイルのサムネイル一覧'
     default:
-      throw new Error(`Unknown cache name: ${cacheName satisfies CacheName}`)
+      throw new Error(
+        `Unknown cache name: ${cacheCategory satisfies CacheCategory}`
+      )
   }
 }
 
@@ -120,7 +145,7 @@ const isClearingCache = ref(false)
 const clearMainCache = async () => {
   const names = await window.caches.keys()
   return names
-    .filter(name => name.startsWith('workbox-precache-v2-https://q.trap.jp/'))
+    .filter(name => name.startsWith('traQ_S-precache'))
     .map(name => {
       console.log(name)
       clearCacheStorage(name)
@@ -132,17 +157,17 @@ const clearCache = async () => {
   if (isClearingCache.value || !confirmClear()) return
   isClearingCache.value = true
   const promises = []
-  if (cacheNameToIsSelected.value['workbox-precache-v2-https://q.trap.jp/']) {
+  if (cacheCategoryToIsSelected.value['traQ_S-precache']) {
     promises.push(clearMainCache())
   }
-  if (cacheNameToIsSelected.value['files-cache']) {
+  if (cacheCategoryToIsSelected.value['files-cache']) {
     promises.push(clearCacheStorage('files-cache'))
   }
-  if (cacheNameToIsSelected.value['thumbnail-cache']) {
+  if (cacheCategoryToIsSelected.value['thumbnail-cache']) {
     promises.push(clearCacheStorage('thumbnail-cache'))
   }
   await Promise.all(promises.flat())
-  if (!cacheNameToIsSelected.value['workbox-precache-v2-https://q.trap.jp/']) {
+  if (!cacheCategoryToIsSelected.value['traQ_S-precache']) {
     isClearingCache.value = false
     clearModal()
     showToast()
