@@ -78,19 +78,19 @@ const cacheSize = ref(
   Object.fromEntries(cacheCategories.map(name => [name, '']))
 )
 
-const cacheNames = async (cacheCategory: CacheCategory) => {
-  if (!(cacheCategory === 'traQ_S-precache')) {
-    return [cacheCategory]
+const cacheNames = async (category: CacheCategory) => {
+  if (!(category === 'traQ_S-precache')) {
+    return [category]
   }
-  const allKeys = await window.caches.keys()
-  return allKeys.filter(key => key.startsWith(cacheCategory))
+  const allNames = await window.caches.keys()
+  return allNames.filter(name => name.startsWith(category))
 }
 
 const updateCacheSize = async () => {
   await Promise.all(
-    cacheCategories.map(async cacheCategory => {
-      cacheSize.value[cacheCategory] = prettifyFileSize(
-        await calculateCacheSizeSum(await cacheNames(cacheCategory))
+    cacheCategories.map(async category => {
+      cacheSize.value[category] = prettifyFileSize(
+        await calculateCacheSizeSum(await cacheNames(category))
       )
     })
   )
@@ -99,7 +99,7 @@ onMounted(updateCacheSize)
 
 const calculateCacheSizeSum = async (cacheNames: string[]) => {
   let size = 0
-  Promise.all(
+  await Promise.all(
     cacheNames.map(async cacheName => {
       size += await calculateEachCacheSize(cacheName)
     })
@@ -108,7 +108,7 @@ const calculateCacheSizeSum = async (cacheNames: string[]) => {
 }
 
 const calculateEachCacheSize = async (cacheName: string) => {
-  const cache = await caches.open(cacheName)
+  const cache = await window.caches.open(cacheName)
   const keys = await cache.keys()
   let size = 0
   await Promise.all(
@@ -143,13 +143,11 @@ const isClearingCache = ref(false)
 
 // TODO: 名前の改善
 const clearMainCache = async () => {
-  const names = await window.caches.keys()
-  return names
-    .filter(name => name.startsWith('traQ_S-precache'))
-    .map(name => {
-      console.log(name)
-      clearCacheStorage(name)
-    })
+  const names = await cacheNames('traQ_S-precache')
+  return names.map(name => {
+    console.log(name)
+    clearCacheStorage(name)
+  })
 }
 
 // TODO: 処理を綺麗にできると嬉しい
