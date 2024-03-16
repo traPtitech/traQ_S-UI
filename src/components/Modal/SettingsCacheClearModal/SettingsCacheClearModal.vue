@@ -98,7 +98,7 @@ const calculateCacheSize = async (cacheName: CacheName) => {
   const keys = await cache.keys()
   console.log(cacheName, keys)
   let size = 0
-  Promise.all(
+  await Promise.all(
     keys.map(async key => {
       const response = await cache.match(key)
       if (!response) return
