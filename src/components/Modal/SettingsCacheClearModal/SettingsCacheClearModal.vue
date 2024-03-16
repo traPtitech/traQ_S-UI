@@ -141,22 +141,19 @@ const { clearModal } = useModalStore()
 
 const isClearingCache = ref(false)
 
-// TODO: 名前の改善
-const clearMainCache = async () => {
+const clearMainCachePromises = async () => {
   const names = await cacheNames('traQ_S-precache')
   return names.map(name => {
-    console.log(name)
     clearCacheStorage(name)
   })
 }
 
-// TODO: 処理を綺麗にできると嬉しい
 const clearCache = async () => {
   if (isClearingCache.value || !confirmClear()) return
   isClearingCache.value = true
   const promises = []
   if (cacheCategoryToIsSelected.value['traQ_S-precache']) {
-    promises.push(clearMainCache())
+    promises.push(clearMainCachePromises())
   }
   if (cacheCategoryToIsSelected.value['files-cache']) {
     promises.push(clearCacheStorage('files-cache'))
