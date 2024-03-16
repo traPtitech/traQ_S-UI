@@ -3,7 +3,6 @@
     title="キャッシュの削除"
     subtitle="キャッシュを削除する項目を選んで下さい。"
   >
-    <form-button label="update" type="secondary" @click="updateCacheSize" />
     <div :class="$style.content">
       <form-checkbox
         v-for="name in cacheNames"
@@ -80,11 +79,6 @@ const cacheSize = ref<Record<CacheName, string>>({
   'thumbnail-cache': ''
 })
 
-onMounted(() => {
-  console.log('mounted')
-  updateCacheSize()
-})
-
 const updateCacheSize = async () => {
   await Promise.all(
     cacheNames.map(async name => {
@@ -92,18 +86,17 @@ const updateCacheSize = async () => {
     })
   )
 }
+onMounted(updateCacheSize)
 
 const calculateCacheSize = async (cacheName: CacheName) => {
   const cache = await caches.open(cacheName)
   const keys = await cache.keys()
-  console.log(cacheName, keys)
   let size = 0
   await Promise.all(
     keys.map(async key => {
       const response = await cache.match(key)
       if (!response) return
       const blob = await response.blob()
-      console.log(key, blob.size)
       size += blob.size
     })
   )
