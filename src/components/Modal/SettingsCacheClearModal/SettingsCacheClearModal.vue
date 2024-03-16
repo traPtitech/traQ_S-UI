@@ -103,7 +103,7 @@ const calculateCacheSize = async (cacheName: CacheName) => {
       const response = await cache.match(key)
       if (!response) return
       const blob = await response.blob()
-      console.log(key, blob)
+      console.log(key, blob.size)
       size += blob.size
     })
   )
