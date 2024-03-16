@@ -59,27 +59,17 @@ const showToast = (extraMessage?: string) => {
   )
 }
 
-const cacheNames = [
-  'traQ_S-precache',
-  'files-cache',
-  'thumbnail-cache'
-] as const
+const cacheNames = ['traQ_S', 'files-cache', 'thumbnail-cache'] as const
 type CacheName = (typeof cacheNames)[number]
 
-const cacheNameToIsSelected = ref<Record<CacheName, boolean>>({
-  'traQ_S-precache': false,
-  'files-cache': false,
-  'thumbnail-cache': false
-})
+const cacheNameToIsSelected = ref(
+  Object.fromEntries(cacheNames.map(name => [name, false]))
+)
 const anyCacheSelected = computed(() => {
   return Object.values(cacheNameToIsSelected).includes(true)
 })
 
-const cacheSize = ref<Record<CacheName, string>>({
-  'traQ_S-precache': '',
-  'files-cache': '',
-  'thumbnail-cache': ''
-})
+const cacheSize = ref(Object.fromEntries(cacheNames.map(name => [name, ''])))
 
 const updateCacheSize = async () => {
   await Promise.all(
@@ -107,7 +97,7 @@ const calculateCacheSize = async (cacheName: CacheName) => {
 
 const cacheLabel = (cacheName: CacheName) => {
   switch (cacheName) {
-    case 'traQ_S-precache':
+    case 'traQ_S':
       return 'traQ本体'
     case 'files-cache':
       return 'ファイルの本体一覧'
@@ -126,7 +116,7 @@ const isClearingCache = ref<boolean>(false)
 const clearMainCache = async () => {
   const names = await window.caches.keys()
   return names
-    .filter(name => name.startsWith('traQ_S-precache'))
+    .filter(name => name.startsWith('traQ_S'))
     .map(name => clearCacheStorage(name))
 }
 
@@ -135,7 +125,7 @@ const clearCache = async () => {
   if (isClearingCache.value || !confirmClear()) return
   isClearingCache.value = true
   const promises = []
-  if (cacheNameToIsSelected.value['traQ_S-precache']) {
+  if (cacheNameToIsSelected.value['traQ_S']) {
     promises.push(clearMainCache())
   }
   if (cacheNameToIsSelected.value['files-cache']) {
@@ -145,7 +135,7 @@ const clearCache = async () => {
     promises.push(clearCacheStorage('thumbnail-cache'))
   }
   await Promise.all(promises.flat())
-  if (!cacheNameToIsSelected.value['traQ_S-precache']) {
+  if (!cacheNameToIsSelected.value['traQ_S']) {
     isClearingCache.value = false
     clearModal()
     showToast()
