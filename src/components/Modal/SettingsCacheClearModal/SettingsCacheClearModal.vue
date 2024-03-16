@@ -81,6 +81,7 @@ const cacheSize = ref<Record<CacheName, number>>({
 })
 
 onMounted(() => {
+  console.log('mounted')
   updateCacheSize()
 })
 
@@ -95,12 +96,14 @@ const updateCacheSize = async () => {
 const calculateCacheSize = async (cacheName: CacheName) => {
   const cache = await caches.open(cacheName)
   const keys = await cache.keys()
+  console.log('keys', keys)
   let size = 0
   Promise.all(
     keys.map(async key => {
       const response = await cache.match(key)
       if (!response) return
       const blob = await response.blob()
+      console.log(key, blob)
       size += blob.size
     })
   )
