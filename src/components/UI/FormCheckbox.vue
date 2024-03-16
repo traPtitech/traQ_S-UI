@@ -36,4 +36,3 @@ const value = useModelValueSyncer(props, emit)
   }
 }
 </style>
-<!-- TODO: 依存しているコンポーネントが未修正 -->
