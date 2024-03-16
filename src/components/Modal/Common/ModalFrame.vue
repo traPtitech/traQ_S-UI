@@ -64,7 +64,7 @@ const { clearModal } = useModalStore()
 }
 .body {
   width: 100%;
-  padding: 16px;
+  padding: 16px 24px;
   overflow: {
     x: hidden;
     y: auto;
