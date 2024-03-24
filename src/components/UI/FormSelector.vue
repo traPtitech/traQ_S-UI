@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <label v-if="label" :for="id" :class="$style.label">
+    <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
     <label v-if="activateSearch" :class="$style.search">
@@ -23,14 +23,7 @@
         </option>
       </select>
     </div>
-    <span v-else :class="$style.errorText"> 候補が見つかりませんでした </span> -->
-    <v-autocomplete
-      v-model="selected"
-      :items="options"
-      item-title="key"
-      item-value="value"
-    ></v-autocomplete>
-    {{ selected }}
+    <span v-else :class="$style.errorText"> 候補が見つかりませんでした </span>
   </div>
 </template>
 
@@ -39,7 +32,6 @@ import { randomString } from '/@/lib/basic/randomString'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import { ref, computed } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { VAutocomplete } from 'vuetify/lib/components/index.mjs'
 
 type Option = { key: string; value: string | null }
 const props = withDefaults(
@@ -72,7 +64,6 @@ const filteredOptions = computed(() =>
     option.key.includes(filterText.value)
   )
 )
-const selected = ref<Option | null>(null)
 </script>
 
 <style lang="scss" module>
