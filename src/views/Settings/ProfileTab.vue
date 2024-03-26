@@ -35,11 +35,10 @@
     </div>
     <div :class="$style.element">
       <h3 :class="$style.header">ホームチャンネル</h3>
-      <form-selector
+      <form-selector-filterable
         v-model="state.homeChannel"
         :options="channelOptions"
         :class="$style.form"
-        activate-search
       />
     </div>
     <div :class="$style.element">
@@ -122,7 +121,6 @@ const useProfileUpdate = (
 
       addSuccessToast('プロフィールを更新しました')
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error('プロフィールの更新に失敗しました', e)
 
       addErrorToast(formatResizeError(e, 'プロフィールの更新に失敗しました'))
@@ -150,13 +148,13 @@ const useIsLengthValid = (state: Profile) => {
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const { detail: detailMayBeUndefined } = useMeStore()
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 const detail = computed(() => detailMayBeUndefined.value!)
 
 // ホームチャンネルの選択+ひとことのレンダリングに必要

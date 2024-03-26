@@ -3,14 +3,19 @@
     <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
-    <vue-multiselect v-model="value"></vue-multiselect>
+    <vue-multiselect
+      :id="id"
+      v-model="selectedOption"
+      :options="options"
+      track-by="key"
+      label="key"
+    ></vue-multiselect>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ref, watch } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
-import { ref, computed } from 'vue'
 import VueMultiselect from 'vue-multiselect'
 
 type Option = { key: string; value: string | null }
@@ -33,17 +38,11 @@ const emit = defineEmits<{
   (e: 'update:modelValue', _val: string | null): void
 }>()
 
-const nullSymbol = Symbol('null')
-
-const value = useModelValueSyncer(props, emit)
+const selectedOption = ref<Option | null>(null)
+watch(selectedOption, newSelected => {
+  emit('update:modelValue', newSelected?.value ?? null)
+})
 const id = randomString()
-
-const filterText = ref('')
-const filteredOptions = computed(() =>
-  props.options.filter((option: Option) =>
-    option.key.includes(filterText.value)
-  )
-)
 </script>
 
 <style lang="scss" module>
