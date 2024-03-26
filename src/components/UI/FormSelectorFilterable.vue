@@ -3,15 +3,18 @@
     <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
-    <vue-multiselect
+    <v-select
       :id="id"
       v-model="selectedOption"
       :options="options"
-      track-by="key"
       label="key"
-      :class="$style.inputContainer"
-      @select="updateModelValue"
-    ></vue-multiselect>
+      :class="$style.multiselect"
+      @option:selected="updateModelValue"
+    >
+      <template #option="p">
+        <div :class="$style.option">{{ p.option.key }}</div>
+      </template>
+    </v-select>
   </div>
 </template>
 
@@ -19,6 +22,8 @@
 import { ref } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import VueMultiselect from 'vue-multiselect'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 
 type Option = { key: string; value: string | null }
 const props = withDefaults(
@@ -40,7 +45,9 @@ const emit = defineEmits<{
   (e: 'update:modelValue', _val: string | null): void
 }>()
 
-const selectedOption = ref<Option | null>(null)
+const selectedOption = ref<Option | null>(
+  props.options.find(o => o.value === props.modelValue) ?? null
+)
 const updateModelValue = (selectedOption: Option) => {
   emit('update:modelValue', selectedOption?.value ?? null)
 }
@@ -53,25 +60,20 @@ const id = randomString()
   margin-bottom: 4px;
   display: block;
 }
-.inputContainer {
+.multiselect {
   @include color-ui-primary;
   @include background-secondary;
   @include size-body1;
   height: 30px;
   border-radius: 4px;
-  &[data-on-secondary] {
-    @include background-primary;
-  }
-
   border: solid 2px transparent;
   &:focus-within {
     border-color: $theme-accent-focus-default;
   }
 }
-.select {
-  margin: 0 8px;
+.option {
+  @include color-ui-primary;
+  @include background-secondary;
   width: 100%;
-  color: inherit;
-  background: inherit;
 }
 </style>
