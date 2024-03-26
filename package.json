@@ -46,7 +46,6 @@
     "turndown": "^7.1.1",
     "turndown-plugin-gfm": "^1.0.2",
     "vue": "^3.3.4",
-    "vue-multiselect": "^3.0.0-beta.3",
     "vue-router": "^4.1.5",
     "vue-select": "^4.0.0-beta.6",
     "vue-slider-component": "^4.0.0-beta.9",

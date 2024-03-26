@@ -8,7 +8,7 @@
       v-model="selectedOption"
       :options="options"
       label="key"
-      :class="$style.multiselect"
+      :class="$style.select"
       @option:selected="updateModelValue"
     >
       <template #option="p">
@@ -21,7 +21,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
-import VueMultiselect from 'vue-multiselect'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 
@@ -60,7 +59,7 @@ const id = randomString()
   margin-bottom: 4px;
   display: block;
 }
-.multiselect {
+.select {
   @include color-ui-primary;
   @include background-secondary;
   @include size-body1;
