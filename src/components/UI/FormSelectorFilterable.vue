@@ -9,12 +9,14 @@
       :options="options"
       track-by="key"
       label="key"
+      :class="$style.inputContainer"
+      @select="updateModelValue"
     ></vue-multiselect>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import VueMultiselect from 'vue-multiselect'
 
@@ -39,9 +41,9 @@ const emit = defineEmits<{
 }>()
 
 const selectedOption = ref<Option | null>(null)
-watch(selectedOption, newSelected => {
-  emit('update:modelValue', newSelected?.value ?? null)
-})
+const updateModelValue = (selectedOption: Option) => {
+  emit('update:modelValue', selectedOption?.value ?? null)
+}
 const id = randomString()
 </script>
 
@@ -56,8 +58,6 @@ const id = randomString()
   @include background-secondary;
   @include size-body1;
   height: 30px;
-  display: flex;
-  align-items: center;
   border-radius: 4px;
   &[data-on-secondary] {
     @include background-primary;
@@ -73,25 +73,5 @@ const id = randomString()
   width: 100%;
   color: inherit;
   background: inherit;
-}
-.search {
-  @include color-ui-primary;
-  @include background-secondary;
-  @include size-body1;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  border-radius: 4px;
-  border: solid 2px transparent;
-}
-.errorText {
-  @include color-ui-primary;
-  @include background-secondary;
-  @include size-body1;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  border-radius: 4px;
-  border: solid 2px transparent;
 }
 </style>
