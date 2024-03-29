@@ -12,6 +12,8 @@
         v-model="selectedOption"
         :options="options"
         label="key"
+        reduce="option => option.value"
+        selectable="option => option.value !== null"
         :class="$style.select"
         :clearable="false"
         @option:selected="updateModelValue"
@@ -21,7 +23,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import { randomString } from '/@/lib/basic/randomString'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
@@ -45,6 +48,10 @@ const emit = defineEmits<{
   (e: 'update:modelValue', _val: string | null): void
 }>()
 
+const value = computed({
+  get: () => props.modelValue,
+  set: v => emit('update:modelValue', v)
+})
 const selectedOption = ref<Option | null>(
   props.options.find(o => o.value === props.modelValue) ?? null
 )
