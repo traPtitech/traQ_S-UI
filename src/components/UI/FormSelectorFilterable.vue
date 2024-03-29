@@ -3,18 +3,19 @@
     <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
-    <v-select
-      :id="id"
-      v-model="selectedOption"
-      :options="options"
-      label="key"
-      :class="$style.select"
-      @option:selected="updateModelValue"
+    <div
+      :class="$style.selectContainer"
+      :data-on-secondary="$boolAttr(onSecondary)"
     >
-      <template #option="p">
-        <div :class="$style.option">{{ p.option.key }}</div>
-      </template>
-    </v-select>
+      <v-select
+        :id="id"
+        v-model="selectedOption"
+        :options="options"
+        label="key"
+        :class="$style.select"
+        @option:selected="updateModelValue"
+      ></v-select>
+    </div>
   </div>
 </template>
 
@@ -31,7 +32,6 @@ const props = withDefaults(
     onSecondary?: boolean
     options: Array<Option>
     label?: string
-    activateSearch?: boolean
   }>(),
   {
     modelValue: '',
@@ -59,20 +59,35 @@ const id = randomString()
   margin-bottom: 4px;
   display: block;
 }
-.select {
-  @include color-ui-primary;
+.selectContainer {
   @include background-secondary;
   @include size-body1;
   height: 30px;
-  border-radius: 4px;
+  display: flex;
+  align-items: center;
   border: solid 2px transparent;
-  &:focus-within {
-    border-color: $theme-accent-focus-default;
+  border-radius: 4px;
+  &[data-on-secondary] {
+    @include background-primary;
   }
 }
-.option {
-  @include color-ui-primary;
-  @include background-secondary;
+.select {
   width: 100%;
+  --vs-controls-color: var(--theme-ui-primary-default);
+  &:focus-within {
+    --vs-border-color: var(--theme-accent-focus-default);
+  }
+
+  --vs-dropdown-bg: var(--theme-background-secondary-default);
+  --vs-dropdown-color: var(--theme-ui-primary-default);
+  --vs-dropdown-option-color: var(--theme-ui-primary-default);
+
+  --vs-selected-bg: var(--theme-accent-focus-default);
+  --vs-selected-color: var(--theme-ui-primary-default);
+
+  --vs-search-input-color: var(--theme-ui-primary-default);
+
+  --vs-dropdown-option--active-bg: var(--theme-accent-focus-default);
+  --vs-dropdown-option--active-color: var(--theme-ui-primary-default);
 }
 </style>
