@@ -13,6 +13,7 @@
         :options="options"
         label="key"
         :class="$style.select"
+        :clearable="false"
         @option:selected="updateModelValue"
       ></v-select>
     </div>
