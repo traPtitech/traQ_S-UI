@@ -8,7 +8,7 @@
         prevent-modal
         :class="$style.icon"
       />
-      <image-upload v-model="newIcon" rounded :class="$style.uploder" />
+      <image-upload v-model="newIcon" rounded :class="$style.uploader" />
     </div>
     <div :class="$style.element">
       <h3 :class="$style.header">表示名</h3>
@@ -208,7 +208,7 @@ const canUpdate = computed(
     left: 36px;
   }
 }
-.uploder {
+.uploader {
   margin-left: 12px;
 }
 .bioContainer {
