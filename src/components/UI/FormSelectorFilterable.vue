@@ -9,21 +9,19 @@
     >
       <v-select
         :id="id"
-        v-model="selectedOption"
+        v-model="selectedOptionValue"
         :options="options"
         label="key"
-        reduce="option => option.value"
-        selectable="option => option.value !== null"
-        :class="$style.select"
+        :reduce="(option: Option) => option.value"
+        :selectable="(option: Option) => option.value !== null"
         :clearable="false"
-        @option:selected="updateModelValue"
+        :class="$style.select"
       ></v-select>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import { randomString } from '/@/lib/basic/randomString'
 import vSelect from 'vue-select'
@@ -48,16 +46,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', _val: string | null): void
 }>()
 
-const value = computed({
-  get: () => props.modelValue,
-  set: v => emit('update:modelValue', v)
-})
-const selectedOption = ref<Option | null>(
-  props.options.find(o => o.value === props.modelValue) ?? null
-)
-const updateModelValue = (selectedOption: Option) => {
-  emit('update:modelValue', selectedOption?.value ?? null)
-}
+const selectedOptionValue = useModelValueSyncer(props, emit)
 const id = randomString()
 </script>
 
