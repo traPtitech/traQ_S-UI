@@ -60,7 +60,6 @@ const id = randomString()
   &[data-on-secondary] {
     @include background-primary;
   }
-  --vs-dropdown-z-index: 1000;
 
   --vs-controls-color: var(--theme-ui-primary-default);
   --vs-border-width: 0px;
