@@ -7,6 +7,7 @@
       :class="$style.selectContainer"
       :data-on-secondary="$boolAttr(onSecondary)"
     >
+      <!-- https://vue-select.org/api/props.html -->
       <v-select
         :id="id"
         v-model="selectedOptionValue"
@@ -69,6 +70,7 @@ const id = randomString()
   }
 }
 .select {
+  // https://vue-select.org/guide/css.html
   width: 100%;
   --vs-controls-color: var(--theme-ui-primary-default);
   &:focus-within {
@@ -76,15 +78,24 @@ const id = randomString()
   }
 
   --vs-dropdown-bg: var(--theme-background-secondary-default);
+  &[data-on-secondary] {
+    --vs-dropdown-bg: var(--theme-background-primary-default);
+  }
   --vs-dropdown-color: var(--theme-ui-primary-default);
   --vs-dropdown-option-color: var(--theme-ui-primary-default);
 
-  --vs-selected-bg: var(--theme-accent-focus-default);
+  --vs-selected-bg: var(--theme-background-primary-default);
+  &[data-on-secondary] {
+    --vs-selected-bg: var(--theme-background-secondary-default);
+  }
   --vs-selected-color: var(--theme-ui-primary-default);
 
   --vs-search-input-color: var(--theme-ui-primary-default);
 
-  --vs-dropdown-option--active-bg: var(--theme-accent-focus-default);
+  --vs-dropdown-option--active-bg: var(--theme-background-primary-default);
+  &[data-on-secondary] {
+    --vs-dropdown-option--active-bg: var(--theme-background-secondary-default);
+  }
   --vs-dropdown-option--active-color: var(--theme-ui-primary-default);
 }
 </style>
