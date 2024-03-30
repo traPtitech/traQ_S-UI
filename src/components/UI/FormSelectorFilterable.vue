@@ -65,6 +65,9 @@ const id = randomString()
 
   // Search Input
   --vs-search-input-color: var(--theme-ui-primary-default);
+  :global(.vs__search) {
+    height: 1rem;
+  }
 
   // Font
   --vs-font-size: 1rem;
