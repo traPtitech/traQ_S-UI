@@ -56,11 +56,11 @@ const id = randomString()
 .select {
   // https://vue-select.org/guide/css.html
   height: 30px;
-  width: 100%;
   @include background-secondary;
   &[data-on-secondary] {
     @include background-primary;
   }
+  --vs-dropdown-z-index: 1000;
 
   --vs-controls-color: var(--theme-ui-primary-default);
   --vs-border-width: 0px;
