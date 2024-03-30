@@ -64,16 +64,6 @@ const id = randomString()
   border: solid 2px transparent;
 
   // Search Input
-  .vs__search {
-    @include background-secondary;
-    &[data-on-secondary] {
-      @include background-primary;
-    }
-  }
-  --vs-search-input-bg: var(--theme-background-secondary-default);
-  &[data-on-secondary] {
-    --vs-search-input-bg: var(--theme-background-primary-default);
-  }
   --vs-search-input-color: var(--theme-ui-primary-default);
 
   // Font
@@ -92,10 +82,6 @@ const id = randomString()
   --vs-controls-color: var(--theme-ui-primary-default);
 
   // Selected
-  --vs-selected-bg: var(--theme-background-secondary-default);
-  &[data-on-secondary] {
-    --vs-selected-bg: var(--theme-background-primary-default);
-  }
   --vs-selected-color: var(--theme-ui-primary-default);
 
   // Dropdown
@@ -103,21 +89,11 @@ const id = randomString()
   &[data-on-secondary] {
     --vs-dropdown-bg: var(--theme-background-primary-default);
   }
-  --vs-dropdown-color: var(--theme-ui-primary-default);
-  --vs-dropdown-option-color: var(--theme-ui-primary-default);
-
-  // Options
-  --vs-dropdown-option-bg: var(--theme-background-secondary-default);
-  &[data-on-secondary] {
-    --vs-dropdown-option-bg: var(--theme-background-primary-default);
-  }
-  --vs-dropdown-option-color: var(--theme-ui-primary-default);
 
   // Active State
   --vs-dropdown-option--active-bg: var(--theme-background-primary-default);
   &[data-on-secondary] {
     --vs-dropdown-option--active-bg: var(--theme-background-secondary-default);
   }
-  --vs-dropdown-option--active-color: var(--theme-ui-primary-default);
 }
 </style>
