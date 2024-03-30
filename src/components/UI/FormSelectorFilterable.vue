@@ -61,12 +61,14 @@ const id = randomString()
     @include background-primary;
   }
   border-radius: 4px;
+  height: 30px;
 
   // Search Input
   --vs-search-input-color: var(--theme-ui-primary-default);
 
   // Font
   --vs-font-size: 1rem;
+  --vs-line-height: 1;
 
   // Borders
   --vs-border-color: transparent;
