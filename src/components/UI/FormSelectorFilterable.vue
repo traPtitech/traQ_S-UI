@@ -55,21 +55,50 @@ const id = randomString()
 }
 .select {
   // https://vue-select.org/guide/css.html
-  height: 30px;
+  @include color-ui-primary;
   @include background-secondary;
   &[data-on-secondary] {
     @include background-primary;
   }
+  border-radius: 4px;
+  border: solid 2px transparent;
 
-  --vs-controls-color: var(--theme-ui-primary-default);
-  --vs-border-width: 0px;
+  // Search Input
+  .vs__search {
+    @include background-secondary;
+    &[data-on-secondary] {
+      @include background-primary;
+    }
+  }
+  --vs-search-input-bg: var(--theme-background-secondary-default);
+  &[data-on-secondary] {
+    --vs-search-input-bg: var(--theme-background-primary-default);
+  }
+  --vs-search-input-color: var(--theme-ui-primary-default);
+
+  // Font
+  --vs-font-size: 1rem;
+
+  // Borders
+  --vs-border-color: transparent;
+  --vs-border-width: 2px;
   --vs-border-style: solid;
   --vs-border-radius: 4px;
   &:focus-within {
-    --vs-border-width: 2px;
     --vs-border-color: var(--theme-accent-focus-default);
   }
 
+  // Controls
+  --vs-controls-color: var(--theme-ui-primary-default);
+
+  // Selected
+  --vs-selected-bg: var(--theme-background-secondary-default);
+  &[data-on-secondary] {
+    --vs-selected-bg: var(--theme-background-primary-default);
+  }
+  --vs-selected-color: var(--theme-ui-primary-default);
+
+  // Dropdown
   --vs-dropdown-bg: var(--theme-background-secondary-default);
   &[data-on-secondary] {
     --vs-dropdown-bg: var(--theme-background-primary-default);
@@ -77,14 +106,14 @@ const id = randomString()
   --vs-dropdown-color: var(--theme-ui-primary-default);
   --vs-dropdown-option-color: var(--theme-ui-primary-default);
 
-  --vs-selected-bg: var(--theme-background-primary-default);
+  // Options
+  --vs-dropdown-option-bg: var(--theme-background-secondary-default);
   &[data-on-secondary] {
-    --vs-selected-bg: var(--theme-background-secondary-default);
+    --vs-dropdown-option-bg: var(--theme-background-primary-default);
   }
-  --vs-selected-color: var(--theme-ui-primary-default);
+  --vs-dropdown-option-color: var(--theme-ui-primary-default);
 
-  --vs-search-input-color: var(--theme-ui-primary-default);
-
+  // Active State
   --vs-dropdown-option--active-bg: var(--theme-background-primary-default);
   &[data-on-secondary] {
     --vs-dropdown-option--active-bg: var(--theme-background-secondary-default);
