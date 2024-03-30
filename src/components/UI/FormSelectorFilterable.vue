@@ -3,22 +3,18 @@
     <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
-    <div
-      :class="$style.selectContainer"
+    <!-- https://vue-select.org/api/props.html -->
+    <v-select
+      :id="id"
+      v-model="selectedOptionValue"
+      :options="options"
+      label="key"
+      :reduce="(option: Option) => option.value"
+      :selectable="(option: Option) => option.value !== null"
+      :clearable="false"
       :data-on-secondary="$boolAttr(onSecondary)"
-    >
-      <!-- https://vue-select.org/api/props.html -->
-      <v-select
-        :id="id"
-        v-model="selectedOptionValue"
-        :options="options"
-        label="key"
-        :reduce="(option: Option) => option.value"
-        :selectable="(option: Option) => option.value !== null"
-        :clearable="false"
-        :class="$style.select"
-      ></v-select>
-    </div>
+      :class="$style.select"
+    ></v-select>
   </div>
 </template>
 
@@ -57,23 +53,21 @@ const id = randomString()
   margin-bottom: 4px;
   display: block;
 }
-.selectContainer {
-  @include background-secondary;
-  @include size-body1;
+.select {
+  // https://vue-select.org/guide/css.html
   height: 30px;
-  display: flex;
-  align-items: center;
-  border: solid 2px transparent;
-  border-radius: 4px;
+  width: 100%;
+  @include background-secondary;
   &[data-on-secondary] {
     @include background-primary;
   }
-}
-.select {
-  // https://vue-select.org/guide/css.html
-  width: 100%;
+
   --vs-controls-color: var(--theme-ui-primary-default);
+  --vs-border-width: 0px;
+  --vs-border-style: solid;
+  --vs-border-radius: 4px;
   &:focus-within {
+    --vs-border-width: 2px;
     --vs-border-color: var(--theme-accent-focus-default);
   }
 
