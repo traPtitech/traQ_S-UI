@@ -95,5 +95,6 @@ const id = randomString()
   &[data-on-secondary] {
     --vs-dropdown-option--active-bg: var(--theme-background-secondary-default);
   }
+  --vs-dropdown-option--active-color: var(--theme-ui-primary-default);
 }
 </style>
