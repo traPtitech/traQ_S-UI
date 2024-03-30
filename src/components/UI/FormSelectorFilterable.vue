@@ -80,7 +80,7 @@ const id = randomString()
   }
 
   // Controls
-  --vs-controls-color: var(--theme-ui-primary-default);
+  --vs-controls-color: var(--theme-ui-secondary-default);
 
   // Selected
   --vs-selected-color: var(--theme-ui-primary-default);
