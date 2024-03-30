@@ -61,7 +61,6 @@ const id = randomString()
     @include background-primary;
   }
   border-radius: 4px;
-  border: solid 2px transparent;
 
   // Search Input
   --vs-search-input-color: var(--theme-ui-primary-default);
