@@ -5,15 +5,21 @@ import useCredentialManager from './useCredentialManager'
 import type { AxiosError } from 'axios'
 import { useMeStore } from '/@/store/domain/me'
 
+export interface LoginState {
+  name: string
+  pass: string
+  error: string | undefined
+}
+
 const useLogin = () => {
   const { getPass, savePass } = useCredentialManager()
   const { redirect, setRedirectSessionStorage } = useRedirectParam()
   const { fetchMe } = useMeStore()
 
-  const state = reactive({
+  const state = reactive<LoginState>({
     name: '',
     pass: '',
-    error: undefined as string | undefined
+    error: undefined
   })
   watch(
     () => state.name + state.pass,
