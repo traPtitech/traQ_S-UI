@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import AuthenticateButton from './AuthenticateButton.vue'
-import type { LoginState } from './composables/useLogin';
+import type { LoginState } from './composables/useLogin'
 
 defineProps<{
   saved: PasswordCredential
