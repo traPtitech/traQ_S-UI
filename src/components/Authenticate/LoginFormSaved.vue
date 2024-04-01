@@ -69,5 +69,6 @@ const emit = defineEmits<{
   color: $theme-accent-error-default;
   font-weight: bold;
   margin-top: 16px;
+  white-space: pre-wrap;
 }
 </style>

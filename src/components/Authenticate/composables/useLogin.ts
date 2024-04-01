@@ -81,6 +81,10 @@ const useLogin = () => {
         case 'password or id is wrong':
           state.error = 'IDまたはパスワードが誤っています'
           break
+        case 'this account is currently suspended':
+          state.error =
+            'このユーザーは凍結されています\n復旧を希望する場合はX @traPtitechのDMまたはaccounts@trap.jpまでご連絡ください'
+          break
         case 'You have already logged in. Please logout once.':
           state.error = 'ログイン済みでした。リロードします'
           // 起きないようにするのがよいが (https://github.com/traPtitech/traQ_S-UI/issues/2260)
