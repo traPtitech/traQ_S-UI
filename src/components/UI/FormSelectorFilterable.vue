@@ -53,9 +53,8 @@ const id = randomString()
   margin-bottom: 4px;
   display: block;
 }
+// https://vue-select.org/guide/css.html
 .select {
-  // https://vue-select.org/guide/css.html
-  @include color-ui-primary;
   @include background-secondary;
   &[data-on-secondary] {
     @include background-primary;
@@ -63,15 +62,16 @@ const id = randomString()
   border-radius: 4px;
   height: 30px;
 
-  // Search Input
-  --vs-search-input-color: var(--theme-ui-primary-default);
+  :global(.vs__dropdown-toggle),
+  :global(.vs__selected-options),
+  :global(.vs__actions),
+  :global(.vs__selected),
   :global(.vs__search) {
-    height: 1rem;
+    height: 100%;
   }
 
-  // Font
-  --vs-font-size: 1rem;
-  --vs-line-height: 1;
+  // Search Input
+  --vs-search-input-color: var(--theme-ui-primary-default);
 
   // Borders
   --vs-border-color: transparent;
