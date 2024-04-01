@@ -70,7 +70,7 @@
     "@vitest/coverage-c8": "^0.25.8",
     "@vue/test-utils": "^2.4.1",
     "autoprefixer": "^10.4.16",
-    "axios": "^1.6.0",
+    "axios": "^1.6.8",
     "browserslist": "^4.21.10",
     "cypress": "^13.3.0",
     "esbuild": "^0.15.18",
