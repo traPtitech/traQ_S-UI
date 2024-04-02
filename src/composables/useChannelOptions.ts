@@ -15,7 +15,7 @@ const channelToChannelId = (channel?: Channel) => channel?.id ?? nullUuid
 const useChannelOptions = (
   nullKeyName: Ref<string | undefined> | string | undefined,
   channelToVal: (channel?: Channel) => string = channelToChannelId,
-  containsArchivedChannels = true
+  containsArchivedChannels = false
 ) => {
   const { channelsMap } = useChannelsStore()
   const { channelIdToPathString } = useChannelPath()
