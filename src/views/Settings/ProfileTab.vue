@@ -26,7 +26,7 @@
       <form-selector v-model="state.homeChannel" :options="channelOptions" />
     </section>
     <section :class="$style.section">
-      <h3 :class="$style.heading">X (旧:Twitter)</h3>
+      <h3 :class="$style.heading">X (旧Twitter)</h3>
       <form-input v-model="state.twitterId" prefix="@" :max-length="15" />
     </section>
     <div :class="$style.buttonContainer">
