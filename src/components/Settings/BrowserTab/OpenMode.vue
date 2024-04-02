@@ -59,7 +59,7 @@ const toggleOpenMode = () => {
 const { channelOptions } = useChannelOptions(
   undefined,
   channel => (channel ? channelIdToPathString(channel.id) : '(unknown)'),
-  true
+  false
 )
 </script>
 

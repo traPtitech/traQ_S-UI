@@ -169,7 +169,7 @@ fetchUserGroups()
 const { fetchStamps } = useStampsStore()
 fetchStamps()
 
-const { channelOptions } = useChannelOptions('--未設定--', undefined, true)
+const { channelOptions } = useChannelOptions('--未設定--', undefined, false)
 
 const { state, isStateChanged } = useState(detail)
 
