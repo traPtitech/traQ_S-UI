@@ -199,7 +199,7 @@ onBeforeRouteLeave(() => {
 .heading {
   margin-bottom: 4px;
 }
-.iconContainer{
+.iconContainer {
   display: flex;
   align-items: end;
   justify-content: space-between;
