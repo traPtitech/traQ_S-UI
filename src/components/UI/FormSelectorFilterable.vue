@@ -12,7 +12,7 @@
       :reduce="(option: Option) => option.value"
       :selectable="(option: Option) => option.value !== null"
       :clearable="false"
-      :data-on-secondary="$boolAttr(onSecondary)"
+      :background="background"
       :class="$style.select"
     ></v-select>
   </div>
@@ -25,17 +25,17 @@ import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 
 type Option = { key: string; value: string | null }
+type Background = 'primary' | 'secondary'
 const props = withDefaults(
   defineProps<{
     modelValue?: string | null
-    onSecondary?: boolean
+    background?: Background
     options: Array<Option>
     label?: string
   }>(),
   {
     modelValue: '',
-    onSecondary: false,
-    activateSearch: false
+    background: 'secondary',
   }
 )
 
@@ -56,7 +56,7 @@ const id = randomString()
 // https://vue-select.org/guide/css.html
 .select {
   @include background-secondary;
-  &[data-on-secondary] {
+  &[background=primary] {
     @include background-primary;
   }
   border-radius: 4px;
@@ -90,13 +90,13 @@ const id = randomString()
 
   // Dropdown
   --vs-dropdown-bg: var(--theme-background-secondary-default);
-  &[data-on-secondary] {
+  &[background=primary] {
     --vs-dropdown-bg: var(--theme-background-primary-default);
   }
 
   // Active State
   --vs-dropdown-option--active-bg: var(--theme-background-primary-default);
-  &[data-on-secondary] {
+  &[background=primary] {
     --vs-dropdown-option--active-bg: var(--theme-background-secondary-default);
   }
   --vs-dropdown-option--active-color: var(--theme-ui-primary-default);

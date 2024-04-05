@@ -121,6 +121,7 @@ const useProfileUpdate = (
 
       addSuccessToast('プロフィールを更新しました')
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error('プロフィールの更新に失敗しました', e)
 
       addErrorToast(formatResizeError(e, 'プロフィールの更新に失敗しました'))
@@ -155,6 +156,7 @@ import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const { detail: detailMayBeUndefined } = useMeStore()
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const detail = computed(() => detailMayBeUndefined.value!)
 
 // ホームチャンネルの選択+ひとことのレンダリングに必要
