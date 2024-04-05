@@ -20,7 +20,6 @@
         label="Enterで送信 / 修飾キー+Enterで改行"
         input-value="none"
       />
-=======
     </div>
   </div>
 </template>
