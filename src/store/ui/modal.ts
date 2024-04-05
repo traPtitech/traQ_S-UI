@@ -148,6 +148,12 @@ const useModalStorePinia = defineStore('ui/modal', () => {
     }
   }
 
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && shouldShowModal.value) {
+      popModal()
+    }
+  })
+
   return {
     isOnInitialModalRoute,
     isClearingModal,

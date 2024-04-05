@@ -16,7 +16,7 @@
       :data-disable-ime="$boolAttr(disableIme)"
       :enterkeyhint="enterkeyhint"
       @input="onInput"
-      @keydown.esc="reset"
+      @keydown.esc.stop="reset"
       @keydown.enter="emit('enter')"
     />
   </div>

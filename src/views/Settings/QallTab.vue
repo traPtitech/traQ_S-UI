@@ -1,97 +1,104 @@
 <template>
   <section>
-    <div :class="$style.element">
+    <section :class="$style.element">
       <div :class="$style.enable">
-        <h3 :class="$style.header">RTC機能を有効にする</h3>
+        <section :class="$style.section">
+          <h3 :class="$style.heading">RTC機能</h3>
+          <p>
+            通話などのRTC(リアルタイムコミュニケーション)機能を有効化します。
+            マイクなどへのアクセス許可が必要です。
+          </p>
+        </section>
         <a-toggle v-model="state.isEnabled" :class="$style.toggle" />
       </div>
-      <p :class="$style.content">
-        通話などのRTC(リアルタイムコミュニケーション)機能を有効化します<br />
-        マイクなどへのアクセス許可が必要です
-      </p>
-    </div>
+    </section>
     <template v-if="state.isEnabled">
-      <div :class="$style.element">
-        <h3 :class="$style.header">マスターボリューム</h3>
-        <form-range-with-value
-          v-model="state.masterVolume"
-          :class="$style.content"
-          max-text="100%"
-          min="0"
-          step="0.005"
-          max="1"
-          :format="formatMasterVolume"
-        />
-      </div>
-      <div :class="$style.element">
-        <h3 :class="$style.header">入力デバイス</h3>
-        <div :class="$style.content">
+      <section :class="$style.element">
+        <div :class="$style.contents">
+          <div :class="$style.enable">
+            <section :class="$style.section">
+              <h3 :class="$style.heading">メッセージの読み上げ</h3>
+              <p>
+                Qallしているチャンネルに投稿されたメッセージを読み上げます。
+              </p>
+            </section>
+            <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
+          </div>
+          <div v-if="state.isTtsEnabled" :class="$style.contents">
+            <form-selector
+              v-if="voiceOptions.length > 0"
+              v-model="state.voiceName"
+              label="読み上げボイスの種類"
+              :options="voiceOptions"
+              :class="$style.option"
+            />
+            <p v-else>読み上げ音声の声の種類が取得できませんでした。</p>
+            <form-input
+              v-model.number="state.voicePitch"
+              label="ピッチ"
+              type="number"
+              step="0.1"
+              :class="$style.option"
+            />
+            <form-input
+              v-model.number="state.voiceRate"
+              label="速度"
+              type="number"
+              step="0.1"
+              :class="$style.option"
+            />
+            <form-input
+              v-model.number="state.voiceVolume"
+              label="音量"
+              type="number"
+              step="0.1"
+              :class="$style.option"
+            />
+          </div>
+        </div>
+      </section>
+      <section :class="$style.element">
+        <h3 :class="$style.heading">入力デバイス</h3>
+        <div>
           <form-selector
             v-if="!fetchFailed && audioInputDevices.length > 0"
             v-model="state.audioInputDeviceId"
             :options="audioInputDeviceOptions"
           />
-          <p v-else>デバイスが取得できませんでした</p>
+          <p v-else>デバイスが取得できませんでした。</p>
         </div>
-      </div>
+      </section>
+      <section :class="$style.element">
+        <h3 :class="$style.heading">マスターボリューム</h3>
+        <form-range-with-value
+          v-model="state.masterVolume"
+          max-text="100%"
+          :min="0"
+          :max="1"
+          :interval="0.005"
+          :format="formatMasterVolume"
+        />
+      </section>
+      <section :class="$style.element">
+        <h3 :class="$style.heading">ノイズゲート</h3>
+        <p>
+          マイクに入力された音が指定した音量以下だった場合にミュートします。
+          -100dBにすると無効になります。
+        </p>
+        <form-range-with-value
+          v-model="state.noiseGateThreshold"
+          max-text="-100dB"
+          :min="-100"
+          :max="0"
+          :interval="1"
+          :format="formatNoiseGateThreshold"
+          :class="$style.noiseGate"
+        />
+      </section>
       <noise-suppression
         v-model="state.noiseSuppression"
         :class="$style.element"
       />
-      <div :class="$style.element">
-        <h3 :class="$style.header">ノイズゲート</h3>
-        <form-range-with-value
-          v-model="state.noiseGateThreshold"
-          :class="$style.content"
-          max-text="-100dB"
-          min="-100"
-          step="1"
-          max="0"
-          :format="formatNoiseGateThreshold"
-        />
-        <p :class="$style.content">
-          マイクに入力された音が指定した音量以下だった場合にミュートします<br />
-          -100dBにすると無効になります
-        </p>
-      </div>
-      <div :class="$style.element">
-        <div :class="$style.enable">
-          <h3 :class="$style.header">メッセージの読み上げ</h3>
-          <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
-        </div>
-        <p :class="$style.content">
-          Qallしているチャンネルに投稿されたメッセージを読み上げます
-        </p>
-      </div>
-      <div v-if="state.isTtsEnabled" :class="$style.element">
-        <h3 :class="$style.header">メッセージ読み上げの声</h3>
-        <div :class="$style.content">
-          <form-selector
-            v-if="voiceOptions.length > 0"
-            v-model="state.voiceName"
-            :options="voiceOptions"
-          />
-          <p v-else>読み上げ音声の声の種類が取得できませんでした</p>
-          <form-input
-            v-model.number="state.voicePitch"
-            label="ピッチ"
-            type="number"
-            step="0.1"
-          />
-          <form-input
-            v-model.number="state.voiceRate"
-            label="速度"
-            type="number"
-            step="0.1"
-          />
-          <form-input
-            v-model.number="state.voiceVolume"
-            label="音量"
-            type="number"
-            step="0.1"
-          />
-        </div>
-      </div>
     </template>
   </section>
 </template>
@@ -205,24 +212,31 @@ const voiceOptions = useVoices()
 </script>
 
 <style lang="scss" module>
-.header {
-  margin-bottom: 8px;
+.heading {
+  margin-bottom: 4px;
 }
 .element {
   margin: 24px 0;
 }
-.content {
-  margin-left: 12px;
-}
 .enable {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
-  h3 {
-    margin: 0;
+  .section {
+    flex: 1;
   }
   .toggle {
-    margin-left: 12px;
+    margin-left: 24px;
   }
+}
+.option {
+  font-size: 12px;
+}
+.noiseGate {
+  margin-top: 4px;
+}
+.contents {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
 }
 </style>
