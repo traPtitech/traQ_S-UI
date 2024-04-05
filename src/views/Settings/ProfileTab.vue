@@ -2,13 +2,15 @@
   <div>
     <section :class="$style.section">
       <h3 :class="$style.heading">アイコン</h3>
-      <user-icon :user-id="detail.id" :size="200" prevent-modal />
-      <form-button
-        label="アイコンを変更する"
-        type="secondary"
-        :class="$style.iconEditButton"
-        @click="handleOpenModal"
-      />
+      <div :class="$style.iconContainer">
+        <user-icon :user-id="detail.id" :size="200" prevent-modal />
+        <form-button
+          label="アイコンを変更する"
+          type="secondary"
+          :class="$style.iconEditButton"
+          @click="handleOpenModal"
+        />
+      </div>
     </section>
     <div :class="$style.section">
       <h3 :class="$style.heading">表示名</h3>
@@ -196,6 +198,11 @@ onBeforeRouteLeave(() => {
 }
 .heading {
   margin-bottom: 4px;
+}
+.iconContainer{
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
 }
 .iconEditButton {
   margin-top: 8px;
