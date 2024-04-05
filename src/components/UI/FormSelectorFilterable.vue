@@ -35,7 +35,7 @@ const props = withDefaults(
   }>(),
   {
     modelValue: '',
-    background: 'secondary',
+    background: 'secondary'
   }
 )
 
@@ -55,13 +55,13 @@ const id = randomString()
 }
 // https://vue-select.org/guide/css.html
 .select {
+  // background
   @include background-secondary;
-  &[background=primary] {
+  &[background='primary'] {
     @include background-primary;
   }
   border-radius: 4px;
   height: 30px;
-
   :global(.vs__dropdown-toggle),
   :global(.vs__selected-options),
   :global(.vs__actions),
@@ -90,13 +90,13 @@ const id = randomString()
 
   // Dropdown
   --vs-dropdown-bg: var(--theme-background-secondary-default);
-  &[background=primary] {
+  &[background='primary'] {
     --vs-dropdown-bg: var(--theme-background-primary-default);
   }
 
   // Active State
   --vs-dropdown-option--active-bg: var(--theme-background-primary-default);
-  &[background=primary] {
+  &[background='primary'] {
     --vs-dropdown-option--active-bg: var(--theme-background-secondary-default);
   }
   --vs-dropdown-option--active-color: var(--theme-ui-primary-default);
