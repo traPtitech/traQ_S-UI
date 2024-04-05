@@ -113,11 +113,7 @@ const useChannelOptionsForSelector = () => {
   )
 
   const { canCreateChildChannel } = useCanCreateChildChannel()
-  const { channelOptions: rawChannelOptions } = useChannelOptions(
-    rootChannel,
-    undefined,
-    true
-  )
+  const { channelOptions: rawChannelOptions } = useChannelOptions(rootChannel)
   const channelOptions = computed(() =>
     [{ key: '-----', value: null }, ...rawChannelOptions.value].filter(
       ({ value }) => value === null || canCreateChildChannel(value)

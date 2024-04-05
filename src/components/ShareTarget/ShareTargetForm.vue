@@ -45,7 +45,7 @@ const homeChannelId = computed(() => detail.value?.homeChannel ?? nullUuid)
 const { fetchChannels } = useChannelsStore()
 // 投稿先チャンネルとメッセージでの置換に必要
 fetchChannels()
-const { channelOptions } = useChannelOptions('-----', undefined, true)
+const { channelOptions } = useChannelOptions('-----')
 
 const channelId = ref<ChannelId>(nullUuid)
 watch(
