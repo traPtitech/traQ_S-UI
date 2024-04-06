@@ -115,7 +115,11 @@ const isManageEnabled = computed(
   () => isValidChannelName(manageState.name) && hasDiff(manageState, channel)
 )
 
-const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')
+const { channelOptions: rawChannelOptions } = useChannelOptions(
+  '(root)',
+  undefined,
+  true
+)
 const channelOptions = computed(() =>
   rawChannelOptions.value
     .filter(
