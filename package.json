@@ -47,6 +47,7 @@
     "turndown-plugin-gfm": "^1.0.2",
     "vue": "^3.3.4",
     "vue-router": "^4.1.5",
+    "vue-select": "^4.0.0-beta.6",
     "vue-slider-component": "^4.0.0-beta.9",
     "zod": "^3.22.4"
   },
@@ -62,6 +63,7 @@
     "@types/serviceworker": "^0.0.67",
     "@types/throttle-debounce": "^5.0.0",
     "@types/turndown": "^5.0.3",
+    "@types/vue-select": "^3.16.8",
     "@types/webappsec-credential-management": "^0.6.4",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
