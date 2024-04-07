@@ -57,7 +57,7 @@ const id = randomString()
 .select {
   // background
   @include background-secondary;
-  &[background='primary'] {
+  &[data-background='primary'] {
     @include background-primary;
   }
   border-radius: 4px;
@@ -90,13 +90,13 @@ const id = randomString()
 
   // Dropdown
   --vs-dropdown-bg: var(--theme-background-secondary-default);
-  &[background='primary'] {
+  &[data-background='primary'] {
     --vs-dropdown-bg: var(--theme-background-primary-default);
   }
 
   // Active State
   --vs-dropdown-option--active-bg: var(--theme-background-primary-default);
-  &[background='primary'] {
+  &[data-background='primary'] {
     --vs-dropdown-option--active-bg: var(--theme-background-secondary-default);
   }
   --vs-dropdown-option--active-color: var(--theme-ui-primary-default);
