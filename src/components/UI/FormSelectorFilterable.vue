@@ -12,7 +12,7 @@
       :reduce="(option: Option) => option.value"
       :selectable="(option: Option) => option.value !== null"
       :clearable="false"
-      :background="background"
+      :data-background="background"
       :class="$style.select"
     ></v-select>
   </div>
