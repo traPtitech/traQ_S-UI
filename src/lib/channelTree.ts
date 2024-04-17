@@ -71,14 +71,16 @@ export const constructTree = (
       return []
     })
     .sort(channelNameSortFunction)
-  if (children.length === 0 && !isSubscribed) {
-    // 子がいない非購読チャンネル
+  const unarchivedChildren = children.filter(child => !child.archived)
+
+  if (unarchivedChildren.length === 0 && !isSubscribed) {
+    // 購読しておらず子もいなければ表示しない
     return undefined
   }
-  if (children.length === 1 && !isSubscribed) {
-    // 子が1つの非購読チャンネル
+  if (unarchivedChildren.length === 1 && !isSubscribed) {
+    // 購読していないが1つだけ子を持つ場合は自身のチャンネル名をつなげて子のみを表示する
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const child = children[0]!
+    const child = unarchivedChildren[0]!
     const ancestorNames = child.skippedAncestorNames ?? []
     ancestorNames.push(channel.name)
     return {
@@ -86,7 +88,7 @@ export const constructTree = (
       skippedAncestorNames: ancestorNames
     }
   }
-  // 子が2つ以上か、購読チャンネル
+  // 購読しているか複数の子を持つ場合は自身を表示する
   return {
     id: channel.id,
     name: channel.name,
