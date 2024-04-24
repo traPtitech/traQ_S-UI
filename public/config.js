@@ -33,7 +33,7 @@
         appLink: 'https://wiki.trap.jp/'
       },
       {
-        label: 'Blog',
+        label: 'Blog Admin',
         iconPath: 'ghost.svg',
         appLink: 'https://blog-admin.trap.jp/'
       },
