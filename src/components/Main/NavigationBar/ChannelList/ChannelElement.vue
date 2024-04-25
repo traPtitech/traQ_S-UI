@@ -70,7 +70,7 @@ import ChannelElementName from './ChannelElementName.vue'
 import useNotificationState from '../composables/useNotificationState'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useChannelPath from '/@/composables/useChannelPath'
-import useFocus from '/@/components/Main/MainView/MessageInput/composables/useFocus'
+import useFocus from '/@/composables/dom/useFocus'
 import {
   usePath,
   type TypedProps
