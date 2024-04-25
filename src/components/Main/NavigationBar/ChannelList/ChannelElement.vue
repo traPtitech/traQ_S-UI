@@ -6,6 +6,19 @@
   >
     <!-- チャンネル表示本体 -->
     <div :class="$style.channelContainer">
+      <channel-element-hash
+        :class="$style.channelHash"
+        :has-child="hasChildren"
+        :is-selected="isSelected"
+        :is-opened="isOpened"
+        :has-notification="notificationState.hasNotification"
+        :has-notification-on-child="notificationState.hasNotificationOnChild"
+        :is-inactive="!channel.active"
+        @mousedown.stop="onChannelHashClick"
+        @keydown.enter="onChannelHashKeydownEnter"
+        @mouseenter="onHashHovered"
+        @mouseleave="onHashHoveredLeave"
+      />
       <router-link
         :to="channelIdToLink(props.channel.id)"
         :class="$style.channel"
@@ -28,19 +41,6 @@
           :unread-count="notificationState.unreadCount"
         />
       </router-link>
-      <channel-element-hash
-        :class="$style.channelHash"
-        :has-child="hasChildren"
-        :is-selected="isSelected"
-        :is-opened="isOpened"
-        :has-notification="notificationState.hasNotification"
-        :has-notification-on-child="notificationState.hasNotificationOnChild"
-        :is-inactive="!channel.active"
-        @mousedown.stop="onChannelHashClick"
-        @keydown.enter="onChannelHashKeydownEnter"
-        @mouseenter="onHashHovered"
-        @mouseleave="onHashHoveredLeave"
-      />
     </div>
 
     <div :class="$style.slot">
