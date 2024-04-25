@@ -181,7 +181,6 @@ const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
   @include color-ui-tertiary;
   @include background-primary;
   display: flex;
-  align-items: center;
   border-radius: 4px;
   contain: content;
   &:not([data-is-mobile]) {

@@ -16,7 +16,7 @@
       <form-button
         v-if="showExpandButton"
         :class="$style.expandButton"
-        color="secondary"
+        type="tertiary"
         label="全て表示"
         @click="expand"
       />
@@ -88,11 +88,11 @@ const showExpandButton = computed(
 
 .empty {
   @include color-ui-secondary;
+  @include size-caption;
 
   padding: 16px;
   place-items: center;
   text-align: center;
-  font-size: 0.75rem;
 }
 
 .list {

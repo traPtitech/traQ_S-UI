@@ -3,6 +3,7 @@ import {
   getDayString,
   getFullDayString,
   getFullDayWithTimeString,
+  getISOFullDayString,
   getDateRepresentationWithoutSameDate,
   getDisplayDate,
   compareDate,
@@ -47,6 +48,15 @@ describe('getFullDayWithTimeString', () => {
   })
   it('can get full day with time (2)', () => {
     expect(getFullDayWithTimeString(defaultDate2)).toBe('2001/04/04 05:20')
+  })
+})
+
+describe('getISOFullDayString', () => {
+  it('can get iso full day (1)', () => {
+    expect(getISOFullDayString(defaultDate1)).toBe('1985-12-04')
+  })
+  it('can get iso full day (2)', () => {
+    expect(getISOFullDayString(defaultDate2)).toBe('2001-04-04')
   })
 })
 

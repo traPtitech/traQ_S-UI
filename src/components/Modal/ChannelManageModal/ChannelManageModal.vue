@@ -4,6 +4,7 @@
       v-model="manageState.name"
       label="チャンネル名"
       :max-length="20"
+      focus-on-mount
     />
     <form-selector
       v-model="manageState.parent"
@@ -114,7 +115,11 @@ const isManageEnabled = computed(
   () => isValidChannelName(manageState.name) && hasDiff(manageState, channel)
 )
 
-const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')
+const { channelOptions: rawChannelOptions } = useChannelOptions(
+  '(root)',
+  undefined,
+  true
+)
 const channelOptions = computed(() =>
   rawChannelOptions.value
     .filter(

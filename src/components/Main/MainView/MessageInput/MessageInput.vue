@@ -226,6 +226,8 @@ $radius: 4px;
 }
 
 .toNewMessageButton {
+  @include size-body2;
+
   color: $theme-ui-secondary-default;
   background-color: $theme-background-secondary-default;
   width: 160px;
@@ -238,7 +240,6 @@ $radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
   font-weight: bold;
   gap: 10px;
   cursor: pointer;

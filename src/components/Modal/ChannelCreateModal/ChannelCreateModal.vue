@@ -11,6 +11,7 @@
       label="チャンネル名"
       :class="$style.input"
       :max-length="20"
+      focus-on-mount
     />
     <p :class="$style.desc">
       実行すると

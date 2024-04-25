@@ -8,7 +8,7 @@
         prevent-modal
         :class="$style.icon"
       />
-      <image-upload v-model="newIcon" rounded :class="$style.uploder" />
+      <image-upload v-model="newIcon" rounded :class="$style.uploader" />
     </div>
     <div :class="$style.element">
       <h3 :class="$style.header">表示名</h3>
@@ -35,7 +35,7 @@
     </div>
     <div :class="$style.element">
       <h3 :class="$style.header">ホームチャンネル</h3>
-      <form-selector
+      <form-selector-filterable
         v-model="state.homeChannel"
         :options="channelOptions"
         :class="$style.form"
@@ -149,12 +149,13 @@ const useIsLengthValid = (state: Profile) => {
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const { detail: detailMayBeUndefined } = useMeStore()
+
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const detail = computed(() => detailMayBeUndefined.value!)
 
@@ -209,7 +210,7 @@ const canUpdate = computed(
     left: 36px;
   }
 }
-.uploder {
+.uploader {
   margin-left: 12px;
 }
 .bioContainer {

@@ -23,7 +23,12 @@
       </content-editor>
     </sidebar-content-container-foldable>
     <div :class="$style.item">
-      <form-button label="削除" color="error" @click="deleteClip" />
+      <form-button
+        label="削除"
+        type="secondary"
+        is-danger
+        @click="deleteClip"
+      />
     </div>
   </div>
 </template>

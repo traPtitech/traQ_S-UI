@@ -14,6 +14,9 @@ export const getFullDayString = (date: Readonly<Date>) =>
 export const getFullDayWithTimeString = (date: Readonly<Date>) =>
   getFullDayString(date) + ' ' + getTimeString(date)
 
+export const getISOFullDayString = (date: Readonly<Date>) =>
+  date.toISOString().split('T')[0]
+
 export const getCurrentTimeString = () => getTimeString(new Date())
 
 /**

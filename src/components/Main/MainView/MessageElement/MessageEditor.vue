@@ -32,7 +32,7 @@
       </div>
     </div>
     <div :class="$style.controls">
-      <form-button label="キャンセル" color="secondary" @click="cancel" />
+      <form-button label="キャンセル" type="tertiary" @click="cancel" />
       <form-button
         label="OK"
         :disabled="isPostingAttachment"
@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
@@ -53,6 +53,7 @@ import { countLength } from '/@/lib/basic/string'
 import { useToastStore } from '/@/store/ui/toast'
 import { getResizedFile } from '/@/lib/resize'
 import useAttachments from '/@/components/Main/MainView/MessageInput/composables/useAttachments'
+import type { AxiosProgressEvent } from 'axios'
 
 const useEditMessage = (
   props: { messageId: string },
@@ -99,7 +100,8 @@ const useAttachmentsEditor = (
       /**
        * https://github.com/axios/axios#request-config
        */
-      onUploadProgress(e: ProgressEvent) {
+      onUploadProgress(e: AxiosProgressEvent) {
+        if (e.total === undefined || e.total === 0) return
         progress.value = e.loaded / e.total
       }
     })
@@ -172,6 +174,10 @@ const {
   addAttachment,
   onAddAttachments
 } = useAttachmentsEditor(props, text)
+
+onMounted(() => {
+  textareaComponentRef.value?.textareaAutosizeRef.$el?.focus()
+})
 </script>
 
 <style lang="scss" module>

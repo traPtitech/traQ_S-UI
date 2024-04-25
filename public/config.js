@@ -33,7 +33,7 @@
         appLink: 'https://wiki.trap.jp/'
       },
       {
-        label: 'Blog',
+        label: 'Blog Admin',
         iconPath: 'ghost.svg',
         appLink: 'https://blog-admin.trap.jp/'
       },
@@ -102,7 +102,7 @@
     blogPagePrefix: 'https://trap.jp/author/',
     auth: {
       resetLink: 'https://portal.trap.jp/reset-password',
-      changeLink: 'https://portal.trap.jp',
+      changeLink: 'https://portal.trap.jp/me/change-password',
       changeName: 'traPortal'
     },
     isRootChannelSelectableAsParentChannel: false,
