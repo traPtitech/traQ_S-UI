@@ -1,16 +1,11 @@
 <template>
   <div
     :class="$style.container"
-    :aria-selected="isSelected"
+    :data-is-selected="$boolAttr(isSelected)"
     :data-is-inactive="$boolAttr(!channel.active)"
   >
     <!-- チャンネル表示本体 -->
-    <div
-      :class="$style.channel"
-      @mousedown="openChannel"
-      @mouseenter="onMouseEnter"
-      @mouseleave="onMouseLeave"
-    >
+    <div :class="$style.channelContainer">
       <channel-element-hash
         :class="$style.channelHash"
         :has-child="hasChildren"
@@ -20,18 +15,32 @@
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
         @mousedown.stop="onChannelHashClick"
-        @mouseenter="onHashMouseEnter"
-        @mouseleave="onHashMouseLeave"
+        @keydown.enter="onChannelHashKeydownEnter"
+        @mouseenter="onHashHovered"
+        @mouseleave="onHashHoveredLeave"
       />
-      <channel-element-name
-        :channel="channel"
-        :show-shortened-path="showShortenedPath"
-        :is-selected="isSelected"
-      />
-      <channel-element-unread-badge
-        :is-noticeable="notificationState.isNoticeable"
-        :unread-count="notificationState.unreadCount"
-      />
+      <router-link
+        :to="channelIdToLink(props.channel.id)"
+        :class="$style.channel"
+        :aria-current="isSelected && 'page'"
+        :aria-expanded="hasChildren && isOpened ? true : undefined"
+        :data-is-inactive="$boolAttr(!channel.active)"
+        :aria-label="showShortenedPath ? pathTooltip : pathToShow"
+        @mouseenter="onMouseEnter"
+        @mouseleave="onMouseLeave"
+        @focus="onFocus"
+        @blur="onBlur"
+      >
+        <channel-element-name
+          :channel="channel"
+          :show-shortened-path="showShortenedPath"
+          :is-selected="isSelected"
+        />
+        <channel-element-unread-badge
+          :is-noticeable="notificationState.isNoticeable"
+          :unread-count="notificationState.unreadCount"
+        />
+      </router-link>
     </div>
 
     <div :class="$style.slot">
@@ -40,9 +49,10 @@
 
     <!-- チャンネルの背景 -->
     <div
-      v-if="isSelected || isChannelBgHovered"
+      v-if="isSelected || isChannelBgHovered || isFocused"
       :class="$style.selectedBg"
       :data-is-hovered="$boolAttr(isChannelBgHovered)"
+      :data-is-focused="$boolAttr(isFocused)"
     />
   </div>
 </template>
@@ -60,6 +70,11 @@ import ChannelElementName from './ChannelElementName.vue'
 import useNotificationState from '../composables/useNotificationState'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useChannelPath from '/@/composables/useChannelPath'
+import useFocus from '/@/composables/dom/useFocus'
+import {
+  usePath,
+  type TypedProps
+} from '/@/components/Main/NavigationBar/ChannelList/composables/usePath'
 
 const props = withDefaults(
   defineProps<{
@@ -86,6 +101,11 @@ const isSelected = computed(
     props.channel.id === primaryView.value.channelId
 )
 
+const onChannelHashKeydownEnter = () => {
+  if (hasChildren.value) {
+    emit('clickHash', props.channel.id)
+  }
+}
 const onChannelHashClick = (e: MouseEvent) => {
   if (hasChildren.value && e.button === LEFT_CLICK_BUTTON) {
     emit('clickHash', props.channel.id)
@@ -100,14 +120,25 @@ const openChannel = (event: MouseEvent) => {
   openLink(event, channelIdToLink(props.channel.id))
 }
 
+const { pathToShow, pathTooltip } = usePath(props as TypedProps)
+
 const notificationState = useNotificationState(toRef(props, 'channel'))
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isFocused, onFocus, onBlur } = useFocus()
 const {
   isHovered: isHashHovered,
   onMouseEnter: onHashMouseEnter,
   onMouseLeave: onHashMouseLeave
 } = useHover()
+const onHashHovered = () => {
+  onHashMouseEnter()
+  onMouseEnter()
+}
+const onHashHoveredLeave = () => {
+  onHashMouseLeave()
+  onMouseLeave()
+}
 const isChannelBgHovered = computed(
   () => isHovered.value && !(hasChildren.value && isHashHovered.value)
 )
@@ -127,22 +158,36 @@ $bgLeftShift: 8px;
   &[data-is-inactive] {
     @include color-ui-secondary;
   }
-  &[aria-selected='true'] {
+  &[data-is-selected] {
+    @include color-accent-primary;
+  }
+}
+.channelContainer {
+  position: relative;
+  display: flex;
+  height: $elementHeight;
+  padding-left: 24px;
+  padding-right: 4px;
+  margin-left: $bgLeftShift;
+  z-index: 0;
+  &[data-is-inactive] {
+    @include color-ui-secondary;
+  }
+  &[aria-current='page'] {
     @include color-accent-primary;
   }
 }
 .channel {
   display: flex;
   align-items: center;
-  position: relative;
-  height: $elementHeight;
-  padding-right: 4px;
   margin-left: $bgLeftShift;
-  z-index: 0;
+  width: calc(100% - $bgLeftShift);
 }
 .channelHash {
   flex-shrink: 0;
   cursor: pointer;
+  position: absolute;
+  left: 0;
 }
 .selectedBg {
   position: absolute;
@@ -157,11 +202,12 @@ $bgLeftShift: 8px;
   pointer-events: none;
 
   display: none;
-  .container[aria-selected='true'] > & {
+  .container[data-is-selected] > & {
     @include background-accent-primary;
     display: block;
   }
-  &[data-is-hovered] {
+  &[data-is-hovered],
+  &[data-is-focused] {
     display: block;
     background: $theme-ui-primary-background;
   }
