@@ -40,6 +40,7 @@ import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'
 import { useMeStore } from '/@/store/domain/me'
+import { AxiosError } from 'axios'
 
 const { myId } = useMeStore()
 const { addErrorToast } = useToastStore()
@@ -63,11 +64,14 @@ const create = async () => {
     if (addMember.value) {
       await apis.addUserGroupMember(group.id, { id: myIdV, role: '' })
     }
-  } catch {
-    addErrorToast('グループの作成に失敗しました')
+    await popModal()
+  } catch (e) {
+    if (e instanceof AxiosError && e.response?.status === 409) {
+      addErrorToast('既に同じ名前のグループが存在しています')
+    } else {
+      addErrorToast('グループの作成に失敗しました')
+    }
   }
-
-  await popModal()
 }
 </script>
 
