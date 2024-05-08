@@ -31,7 +31,7 @@
           :aria-expanded="hasChildren && isOpened ? true : undefined"
           :data-is-inactive="$boolAttr(!channel.active)"
           :aria-label="showShortenedPath ? pathTooltip : pathToShow"
-          draggable='false'
+          draggable="false"
           @click="navigate"
           @mouseenter="onMouseEnter"
           @mouseleave="onMouseLeave"
