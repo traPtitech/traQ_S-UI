@@ -140,8 +140,8 @@ const { toggleStampPicker } = useStampPickerInvoker(
 }
 .stamp {
   margin: {
-    right: 4px;
-    bottom: 4px;
+    right: 0.25rem;
+    bottom: 0.25rem;
   }
 
   display: flex;

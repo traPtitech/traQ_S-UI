@@ -72,7 +72,7 @@ import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
 import useAttachments from './composables/useAttachments'
 import useModifierKey from './composables/useModifierKey'
 import usePostMessage from './composables/usePostMessage'
-import useFocus from './composables/useFocus'
+import useFocus from '/@/composables/dom/useFocus'
 import { useToastStore } from '/@/store/ui/toast'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
@@ -126,7 +126,7 @@ watch(state, () => {
   }
   timeoutId = setTimeout(() => {
     isTyping.value = false
-  }, 2000)
+  }, 10000)
 })
 
 const onAddAttachments = async (files: File[]) => {
@@ -226,6 +226,8 @@ $radius: 4px;
 }
 
 .toNewMessageButton {
+  @include size-body2;
+
   color: $theme-ui-secondary-default;
   background-color: $theme-background-secondary-default;
   width: 160px;
@@ -238,7 +240,6 @@ $radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
   font-weight: bold;
   gap: 10px;
   cursor: pointer;

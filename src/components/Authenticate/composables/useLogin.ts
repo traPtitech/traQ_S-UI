@@ -5,15 +5,21 @@ import useCredentialManager from './useCredentialManager'
 import type { AxiosError } from 'axios'
 import { useMeStore } from '/@/store/domain/me'
 
+export interface LoginState {
+  name: string
+  pass: string
+  error: string | undefined
+}
+
 const useLogin = () => {
   const { getPass, savePass } = useCredentialManager()
   const { redirect, setRedirectSessionStorage } = useRedirectParam()
   const { fetchMe } = useMeStore()
 
-  const state = reactive({
+  const state = reactive<LoginState>({
     name: '',
     pass: '',
-    error: undefined as string | undefined
+    error: undefined
   })
   watch(
     () => state.name + state.pass,
@@ -74,6 +80,10 @@ const useLogin = () => {
           break
         case 'password or id is wrong':
           state.error = 'IDまたはパスワードが誤っています'
+          break
+        case 'this account is currently suspended':
+          state.error =
+            'このユーザーは凍結されています\n復旧を希望する場合はX @traPtitechのDMまたはaccounts@trap.jpまでご連絡ください'
           break
         case 'You have already logged in. Please logout once.':
           state.error = 'ログイン済みでした。リロードします'

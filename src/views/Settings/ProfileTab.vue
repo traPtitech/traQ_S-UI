@@ -25,7 +25,10 @@
     </section>
     <section :class="$style.section">
       <h3 :class="$style.heading">ホームチャンネル</h3>
-      <form-selector v-model="state.homeChannel" :options="channelOptions" />
+      <form-selector-filterable
+        v-model="state.homeChannel"
+        :options="channelOptions"
+      />
     </section>
     <section :class="$style.section">
       <h3 :class="$style.heading">X (旧Twitter)</h3>
@@ -132,11 +135,12 @@ const useIsLengthValid = (state: Profile) => {
 <script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const { detail: detailMayBeUndefined } = useMeStore()
+
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const detail = computed(() => detailMayBeUndefined.value!)
 
@@ -194,7 +198,7 @@ onBeforeRouteLeave(() => {
 
 <style lang="scss" module>
 .section {
-  margin: 24px 0;
+  margin: 32px 0;
 }
 .heading {
   margin-bottom: 4px;

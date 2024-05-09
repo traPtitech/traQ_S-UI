@@ -61,8 +61,7 @@ defineExpose({ focus })
 }
 .topic {
   @include color-ui-secondary;
-
-  font-size: 0.75rem;
+  @include size-caption;
 
   &.empty {
     opacity: 0.5;

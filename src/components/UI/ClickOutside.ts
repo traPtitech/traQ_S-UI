@@ -84,7 +84,10 @@ export default defineComponent({
         return
       }
 
-      emit('clickOutside', e)
+      setTimeout(() => {
+        emit('clickOutside', e)
+      }, 0)
+
       if (props.stop) {
         e.stopPropagation()
       }

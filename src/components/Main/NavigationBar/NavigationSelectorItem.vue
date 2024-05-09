@@ -1,14 +1,15 @@
 <template>
-  <div
+  <button
     :class="$style.container"
     :style="containerStyle"
     :aria-selected="isSelected"
+    role="tab"
   >
     <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :size="6" />
     </div>
-  </div>
+  </button>
 </template>
 
 <script lang="ts" setup>
@@ -64,7 +65,8 @@ const containerStyle = computed(() => ({
     opacity: 0;
   }
   &[aria-selected='true']::after,
-  &:hover::after {
+  &:hover::after,
+  &:focus::after {
     opacity: 0.1;
   }
 }

@@ -324,14 +324,6 @@ const homeChannelTree: ChannelTree = {
       archived: true,
       children: [
         {
-          id: '111',
-          name: '111',
-          active: true,
-          children: [],
-          skippedAncestorNames: ['11'],
-          archived: true
-        },
-        {
           id: '12',
           name: '12',
           active: false,
