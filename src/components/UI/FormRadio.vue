@@ -1,5 +1,5 @@
 <template>
-  <label :class="$style.label" :aria-checked="isChecked">
+  <label :class="$style.label">
     <input
       v-model="value"
       type="radio"
@@ -47,6 +47,7 @@ const isChecked = computed(() => props.inputValue === value.value)
   align-items: center;
   gap: 8px;
   align-self: stretch;
+  font-weight: bold;
   cursor: pointer;
 
   border: solid 2px transparent;

@@ -2,7 +2,7 @@
   <section>
     <div :class="$style.element">
       <h3 :class="$style.header">テーマ切り替え</h3>
-      <div :class="$style.content">
+      <div>
         <form-radio
           v-model="state.type"
           label="OS準拠"
@@ -37,7 +37,7 @@
           @change-theme="changeTheme"
         />
       </div>
-      <div :class="$style.content">
+      <div>
         <template v-if="state.type === 'custom'">
           <div :class="$style.setting">
             <div
@@ -102,14 +102,8 @@ const changeTheme = (theme: Theme) => {
   gap: 4px;
   flex-wrap: wrap;
 }
-.content {
-  margin-left: 0px;
-}
 .form {
   margin-right: 12px;
-  display: flex;
-  align-items: center;
-  font-weight: bold;
 }
 .setting {
   @include background-secondary;

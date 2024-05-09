@@ -63,7 +63,7 @@ import GroupCreateModal from './GroupCreateModal/GroupCreateModal.vue'
 import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vue'
 import GroupAdminAddModal from './GroupAdminAddModal/GroupAdminAddModal.vue'
 import GroupMemberAddModal from './GroupMemberAddModal/GroupMemberAddModal.vue'
-import SettingsThemeEditModal from './SettingsThemeEdit/SettingsThemeEdit.vue'
+import SettingsThemeEditModal from './SettingsThemeEditModal/SettingsThemeEditModal.vue'
 
 const { shouldShowModal, currentState } = useModalStore()
 
