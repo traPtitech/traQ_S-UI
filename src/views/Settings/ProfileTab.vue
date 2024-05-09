@@ -12,10 +12,10 @@
         />
       </div>
     </section>
-    <div :class="$style.section">
+    <section :class="$style.section">
       <h3 :class="$style.heading">表示名</h3>
       <form-input v-model="state.displayName" :max-length="32" />
-    </div>
+    </section>
     <section :class="$style.section">
       <h3 :class="$style.heading">ひとこと</h3>
       <div :class="$style.bioContainer">
@@ -201,7 +201,7 @@ onBeforeRouteLeave(() => {
 }
 .iconContainer {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
 }
 .iconEditButton {
@@ -214,7 +214,7 @@ onBeforeRouteLeave(() => {
 }
 .buttonContainer {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 16px;
 }
 </style>
