@@ -28,6 +28,7 @@ type ModalStateType =
   | 'settings-stamp-create'
   | 'settings-stamp-edit'
   | 'settings-stamp-image-edit'
+  | 'settings-profile-icon-edit'
 
 export type ModalState =
   | UserModalState
@@ -47,6 +48,7 @@ export type ModalState =
   | SettingsStampCreateModalState
   | SettingsStampEditModalState
   | SettingsStampImageEditModalState
+  | SettingsProfileIconEdit
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -144,5 +146,10 @@ interface SettingsStampEditModalState extends BaseModalState {
 interface SettingsStampImageEditModalState extends BaseModalState {
   type: 'settings-stamp-image-edit'
   id: StampId
+  file: File
+}
+
+interface SettingsProfileIconEdit extends BaseModalState {
+  type: 'settings-profile-icon-edit'
   file: File
 }
