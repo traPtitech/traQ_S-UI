@@ -20,26 +20,34 @@
         @mouseleave="onHashHoveredLeave"
       />
       <router-link
+        v-slot="{ href, navigate }"
+        custom
         :to="channelIdToLink(props.channel.id)"
-        :class="$style.channel"
-        :aria-current="isSelected && 'page'"
-        :aria-expanded="hasChildren && isOpened ? true : undefined"
-        :data-is-inactive="$boolAttr(!channel.active)"
-        :aria-label="showShortenedPath ? pathTooltip : pathToShow"
-        @mouseenter="onMouseEnter"
-        @mouseleave="onMouseLeave"
-        @focus="onFocus"
-        @blur="onBlur"
       >
-        <channel-element-name
-          :channel="channel"
-          :show-shortened-path="showShortenedPath"
-          :is-selected="isSelected"
-        />
-        <channel-element-unread-badge
-          :is-noticeable="notificationState.isNoticeable"
-          :unread-count="notificationState.unreadCount"
-        />
+        <a
+          :class="$style.channel"
+          :href="href"
+          :aria-current="isSelected && 'page'"
+          :aria-expanded="hasChildren && isOpened ? true : undefined"
+          :data-is-inactive="$boolAttr(!channel.active)"
+          :aria-label="showShortenedPath ? pathTooltip : pathToShow"
+          draggable="false"
+          @click="navigate"
+          @mouseenter="onMouseEnter"
+          @mouseleave="onMouseLeave"
+          @focus="onFocus"
+          @blur="onBlur"
+        >
+          <channel-element-name
+            :channel="channel"
+            :show-shortened-path="showShortenedPath"
+            :is-selected="isSelected"
+          />
+          <channel-element-unread-badge
+            :is-noticeable="notificationState.isNoticeable"
+            :unread-count="notificationState.unreadCount"
+          />
+        </a>
       </router-link>
     </div>
 
