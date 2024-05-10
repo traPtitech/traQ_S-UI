@@ -3,11 +3,17 @@
     <modal-return-button v-if="returnButton" :class="$style.returnButton" />
     <div :class="$style.content">
       <h1 :class="$style.title">
-        <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" />{{
-          title
-        }}
+        <a-icon
+          v-if="iconName"
+          :class="$style.icon"
+          :name="iconName"
+          :mdi="iconMdi"
+        />
+        {{ title }}
       </h1>
-      <h2 :class="$style.subtitle"><slot name="subtitle" /></h2>
+      <h2 :class="$style.subtitle" :data-has-icon="$boolAttr(!iconName)">
+        <slot name="subtitle" />
+      </h2>
     </div>
   </div>
 </template>
@@ -19,7 +25,7 @@ import ModalReturnButton from './ModalReturnButton.vue'
 withDefaults(
   defineProps<{
     iconMdi?: boolean
-    iconName: string
+    iconName?: string
     title: string
     subtitle?: string
     returnButton?: boolean
@@ -68,6 +74,9 @@ withDefaults(
   font: {
     weight: 500;
     size: 0.875rem;
+  }
+  &[data-has-icon] {
+    padding-left: 0;
   }
 }
 .icon {
