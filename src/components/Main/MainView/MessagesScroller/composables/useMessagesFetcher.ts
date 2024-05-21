@@ -92,7 +92,7 @@ const useMessageFetcher = (
         isInitialLoad.value = false
         lastLoadingDirection.value = 'former'
         messageIds.value = [
-          ...new Set([...newMessageIds.reverse(), ...messageIds.value])
+          ...new Set([...newMessageIds, ...messageIds.value])
         ]
       }
     )
