@@ -81,6 +81,16 @@
         label: 'Jomon',
         iconPath: 'jomon.svg',
         appLink: 'https://jomon.trap.jp/'
+      },
+      {
+        label: 'tpf',
+        iconPath: 'tpf.svg',
+        appLink: 'tpf' // TODO
+      },
+      {
+        label: 'tpf-admin',
+        iconPath: 'tpf-admin.svg',
+        appLink: 'tpf-admin' // TODO
       }
     ],
     ogpIgnoreHostNames: [
@@ -97,6 +107,8 @@
       'drive.trapti.tech',
       'jomon.trap.jp',
       'ns.trap.jp'
+      // tpf
+      // tpf-admin
     ],
     wikiPageOrigin: 'https://wiki.trap.jp',
     blogPagePrefix: 'https://trap.jp/author/',
