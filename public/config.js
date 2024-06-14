@@ -81,6 +81,16 @@
         label: 'Jomon',
         iconPath: 'jomon.svg',
         appLink: 'https://jomon.trap.jp/'
+      },
+      {
+        label: 'traPortfolio',
+        iconPath: 'traP.svg',
+        appLink: 'https://portfolio.trap.jp/'
+      },
+      {
+        label: 'tpf-admin',
+        iconPath: 'traP.svg',
+        appLink: 'https://portfolio-admin.trap.jp/'
       }
     ],
     ogpIgnoreHostNames: [
@@ -96,7 +106,8 @@
       'md.trapti.tech',
       'drive.trapti.tech',
       'jomon.trap.jp',
-      'ns.trap.jp'
+      'ns.trap.jp',
+      'portfolio-admin.trap.jp'
     ],
     wikiPageOrigin: 'https://wiki.trap.jp',
     blogPagePrefix: 'https://trap.jp/author/',
