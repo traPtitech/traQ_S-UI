@@ -88,7 +88,7 @@
         appLink: 'https://portfolio.trap.jp/'
       },
       {
-        label: 'traPortfolio-admin',
+        label: 'tpf-admin',
         iconPath: 'traP.svg',
         appLink: 'https://portfolio-admin.trap.jp/'
       }
