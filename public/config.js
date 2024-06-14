@@ -83,14 +83,14 @@
         appLink: 'https://jomon.trap.jp/'
       },
       {
-        label: 'tpf',
-        iconPath: 'tpf.svg',
-        appLink: 'tpf' // TODO
+        label: 'traPortfolio',
+        iconPath: 'traP.svg',
+        appLink: 'https://portfolio.trap.jp/'
       },
       {
-        label: 'tpf-admin',
-        iconPath: 'tpf-admin.svg',
-        appLink: 'tpf-admin' // TODO
+        label: 'traPortfolio-admin',
+        iconPath: 'traP.svg',
+        appLink: 'https://portfolio-admin.trap.jp/'
       }
     ],
     ogpIgnoreHostNames: [
@@ -106,9 +106,8 @@
       'md.trapti.tech',
       'drive.trapti.tech',
       'jomon.trap.jp',
-      'ns.trap.jp'
-      // tpf
-      // tpf-admin
+      'ns.trap.jp',
+      'portfolio-admin.trap.jp'
     ],
     wikiPageOrigin: 'https://wiki.trap.jp',
     blogPagePrefix: 'https://trap.jp/author/',
