@@ -77,7 +77,6 @@ import StampEditModal from './StampEditModal/StampEditModal.vue'
 import StampImageEditModal from './StampImageEditModal/StampImageEditModal.vue'
 import ProfileIconEditModal from './ProfileIconEditModal/ProfileIconEditModal.vue'
 import SettingsThemeEditModal from './SettingsThemeEditModal/SettingsThemeEditModal.vue'
-import { error } from 'console'
 
 const { shouldShowModal, currentState } = useModalStore()
 
