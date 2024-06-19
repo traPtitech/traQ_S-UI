@@ -2,36 +2,42 @@
   <section>
     <div :class="$style.element">
       <h3 :class="$style.header">テーマ切り替え</h3>
-      <div :class="$style.content">
+      <div>
         <form-radio
           v-model="state.type"
-          label="自動切替 (OSのテーマに合わせる)"
+          label="OS準拠"
           input-value="auto"
           :class="$style.form"
         />
         <form-radio
           v-model="state.type"
-          label="ライトテーマ"
+          label="ライト"
           input-value="light"
           :class="$style.form"
         />
         <form-radio
           v-model="state.type"
-          label="ダークテーマ"
+          label="ダーク"
           input-value="dark"
           :class="$style.form"
         />
         <form-radio
           v-model="state.type"
-          label="カスタムテーマ"
+          label="カスタム"
           input-value="custom"
           :class="$style.form"
         />
       </div>
     </div>
     <div :class="$style.element">
-      <h3 :class="$style.header">カスタムテーマ設定</h3>
-      <div :class="$style.content">
+      <div :class="$style.container">
+        <h3 :class="$style.header">カスタムテーマ</h3>
+        <edit-theme
+          v-if="state.type === 'custom'"
+          @change-theme="changeTheme"
+        />
+      </div>
+      <div>
         <template v-if="state.type === 'custom'">
           <div :class="$style.setting">
             <div
@@ -58,7 +64,6 @@
               </div>
             </div>
           </div>
-          <edit-theme :custom="state.custom" @change-theme="changeTheme" />
         </template>
         <p v-else>カスタムテーマが選択されていません</p>
       </div>
@@ -82,13 +87,20 @@ const changeTheme = (theme: Theme) => {
 
 <style lang="scss" module>
 .header {
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  flex: 1 0 0;
 }
 .element {
   margin: 24px 0;
 }
-.content {
-  margin-left: 12px;
+
+.container {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  gap: 4px;
+  flex-wrap: wrap;
 }
 .form {
   margin-right: 12px;

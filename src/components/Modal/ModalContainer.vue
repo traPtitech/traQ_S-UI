@@ -76,6 +76,8 @@ import StampCreateModal from './StampCreateModal/StampCreateModal.vue'
 import StampEditModal from './StampEditModal/StampEditModal.vue'
 import StampImageEditModal from './StampImageEditModal/StampImageEditModal.vue'
 import ProfileIconEditModal from './ProfileIconEditModal/ProfileIconEditModal.vue'
+import SettingsThemeEditModal from './SettingsThemeEditModal/SettingsThemeEditModal.vue'
+import { error } from 'console'
 
 const { shouldShowModal, currentState } = useModalStore()
 
@@ -117,6 +119,8 @@ const component = computed(() => {
       return StampImageEditModal
     case 'settings-profile-icon-edit':
       return ProfileIconEditModal
+    case 'settings-theme-edit':
+      return SettingsThemeEditModal
   }
   // eslint-disable-next-line no-console
   console.error('Unexpected modal type:', currentState.value)
