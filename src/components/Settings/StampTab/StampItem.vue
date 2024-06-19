@@ -3,7 +3,7 @@
     <img :src="url" :class="$style.stamp" loading="lazy" />
     <div :class="$style.innerContainer">
       <div :class="$style.textContainer">
-        <p>:{{ stamp.name }}:</p>
+        <p :class="$style.stampName">:{{ stamp.name }}:</p>
         <p
           v-if="showCreator"
           :title="`@${creatorName}`"
@@ -82,13 +82,15 @@ const onDotsClick = (e: MouseEvent) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
+}
+.stampName {
+  word-break: break-all;
 }
 .creator {
   @include color-ui-secondary;
   max-width: 120px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  word-break: break-all;
 }
 
 .dotsButton {
