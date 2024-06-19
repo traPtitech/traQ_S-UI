@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.container" @click="openModal">
-    {{ user?.displayName ?? 'unknown' }}
+    <div :class="$style.displayName">
+      {{ user?.displayName ?? 'unknown' }}
+    </div>
     <span v-if="count > 1" :class="$style.numberWrap">
       <spin-number :value="count" />
     </span>
@@ -31,6 +33,9 @@ const { openModal } = useUserModalOpener(toRef(props, 'userId'))
 .container {
   display: flex;
   cursor: pointer;
+}
+.displayName {
+  font-weight: bolder;
 }
 .numberWrap {
   display: flex;
