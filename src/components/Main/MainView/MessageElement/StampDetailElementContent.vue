@@ -1,9 +1,10 @@
 <template>
   <div :class="$style.container" @click="openModal">
     {{ user?.displayName ?? 'unknown' }}
-    <span :class="$style.numberWrap">
+    <span v-if="count > 1" :class="$style.numberWrap">
       <spin-number :value="count" />
     </span>
+    <span v-if="!isLast" :class="$style.delimiter">, </span>
   </div>
 </template>
 
@@ -17,6 +18,7 @@ import { useUsersStore } from '/@/store/entities/users'
 const props = defineProps<{
   userId: UserId
   count: number
+  isLast: boolean
 }>()
 
 const { usersMap } = useUsersStore()
@@ -42,5 +44,10 @@ const { openModal } = useUserModalOpener(toRef(props, 'userId'))
     content: ')';
     display: block;
   }
+}
+.delimiter {
+  display: flex;
+  height: 1.5rem;
+  overflow: hidden;
 }
 </style>

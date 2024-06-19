@@ -8,6 +8,7 @@
       :key="user.id"
       :user-id="user.id"
       :count="user.count"
+      :is-last="user === stamp.users[stamp.users.length - 1]"
       :class="$style.content"
     />
   </div>
