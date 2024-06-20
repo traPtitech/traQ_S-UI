@@ -3,13 +3,13 @@
     <div>
       {{ ':' + stampName + ': from' }}
     </div>
+    <div>&nbsp;</div>
     <stamp-detail-element-content
       v-for="user in stamp.users"
       :key="user.id"
       :user-id="user.id"
       :count="user.count"
       :is-last="user === stamp.users[stamp.users.length - 1]"
-      :class="$style.content"
     />
   </div>
 </template>
@@ -35,11 +35,5 @@ const stampName = computed(
 .container {
   display: flex;
   flex-wrap: wrap;
-}
-.content {
-  &::before {
-    white-space: pre;
-    content: ' ';
-  }
 }
 </style>

@@ -8,7 +8,7 @@
         <spin-number :value="count" />
       </span>
     </div>
-    <span v-if="!isLast" :class="$style.delimiter">&nbsp;/&nbsp;</span>
+    <span v-if="!isLast" :class="$style.delimiter">&thinsp;/&thinsp;</span>
   </div>
 </template>
 
