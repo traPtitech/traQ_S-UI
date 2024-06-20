@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.container" @click="openModal">
-    <div>@{{ user?.name ?? 'unknown' }}</div>
+    <div>
+      {{ user?.displayName ?? 'unknown' }}
+    </div>
     <span v-if="count > 1" :class="$style.numberWrap">
       <spin-number :value="count" />
     </span>
