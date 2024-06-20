@@ -1,12 +1,18 @@
 <template>
   <div :class="$style.container" @click="openModal">
-    <div :class="$style.displayName">
+    <user-icon
+      :user-id="userId"
+      prevent-modal
+      :size="20"
+      class="$style.userIcon"
+    />
+    <div>
       {{ user?.displayName ?? 'unknown' }}
     </div>
     <span v-if="count > 1" :class="$style.numberWrap">
       <spin-number :value="count" />
     </span>
-    <span v-if="!isLast" :class="$style.delimiter">, </span>
+    <span v-if="!isLast" :class="$style.delimiter"> </span>
   </div>
 </template>
 
@@ -16,6 +22,7 @@ import { computed, toRef } from 'vue'
 import type { UserId } from '/@/types/entity-ids'
 import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
 import { useUsersStore } from '/@/store/entities/users'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 const props = defineProps<{
   userId: UserId
@@ -33,9 +40,7 @@ const { openModal } = useUserModalOpener(toRef(props, 'userId'))
 .container {
   display: flex;
   cursor: pointer;
-}
-.displayName {
-  font-weight: bolder;
+  align-items: center;
 }
 .numberWrap {
   display: flex;
