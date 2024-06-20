@@ -1,13 +1,15 @@
 <template>
-  <div :class="$style.container" @click="openModal">
-    <div>
-      {{ user?.displayName ?? 'unknown' }}
+  <div :class="$style.container">
+    <div :class="$style.clickable" @click="openModal">
+      <div>
+        {{ user?.displayName ?? 'unknown' }}
+      </div>
+      <span v-if="count > 1" :class="$style.numberWrap">
+        <spin-number :value="count" />
+      </span>
     </div>
-    <span v-if="count > 1" :class="$style.numberWrap">
-      <spin-number :value="count" />
-    </span>
+    <span v-if="!isLast" :class="$style.delimiter">&nbsp;/&nbsp;</span>
   </div>
-  <span v-if="!isLast" :class="$style.delimiter">&nbsp;/&nbsp;</span>
 </template>
 
 <script lang="ts" setup>
@@ -32,8 +34,10 @@ const { openModal } = useUserModalOpener(toRef(props, 'userId'))
 <style lang="scss" module>
 .container {
   display: flex;
+}
+.clickable {
+  display: flex;
   cursor: pointer;
-  align-items: center;
 }
 .numberWrap {
   display: flex;
