@@ -4,13 +4,12 @@
       {{ ':' + stampName + ': from' }}
     </div>
     <div>&nbsp;</div>
-    <stamp-detail-element-content
-      v-for="user in stamp.users"
-      :key="user.id"
-      :user-id="user.id"
-      :count="user.count"
-      :is-last="user === stamp.users[stamp.users.length - 1]"
-    />
+    <div v-for="user in stamp.users" :key="user.id" :class="$style.users">
+      <stamp-detail-element-content :user-id="user.id" :count="user.count" />
+      <span v-if="!isLastUser(user)" :class="$style.delimiter">
+        &thinsp;/&thinsp;
+      </span>
+    </div>
   </div>
 </template>
 
@@ -29,11 +28,20 @@ const { stampsMap } = useStampsStore()
 const stampName = computed(
   () => stampsMap.value.get(props.stamp.id)?.name ?? ''
 )
+
+const isLastUser = (user: (typeof props.stamp.users)[0]) =>
+  user === props.stamp.users[props.stamp.users.length - 1]
 </script>
 
 <style lang="scss" module>
 .container {
   display: flex;
   flex-wrap: wrap;
+}
+.users {
+  display: flex;
+}
+.delimiter {
+  @include color-ui-secondary-inactive;
 }
 </style>

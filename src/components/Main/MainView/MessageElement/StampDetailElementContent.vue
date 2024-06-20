@@ -1,14 +1,11 @@
 <template>
-  <div :class="$style.container">
-    <div :class="$style.clickable" @click="openModal">
-      <div>
-        {{ user?.displayName ?? 'unknown' }}
-      </div>
-      <span v-if="count > 1" :class="$style.numberWrap">
-        <spin-number :value="count" />
-      </span>
+  <div :class="$style.clickable" @click="openModal">
+    <div>
+      {{ user?.displayName ?? 'unknown' }}
     </div>
-    <span v-if="!isLast" :class="$style.delimiter">&thinsp;/&thinsp;</span>
+    <span v-if="count > 1" :class="$style.numberWrap">
+      <spin-number :value="count" />
+    </span>
   </div>
 </template>
 
@@ -22,7 +19,6 @@ import { useUsersStore } from '/@/store/entities/users'
 const props = defineProps<{
   userId: UserId
   count: number
-  isLast: boolean
 }>()
 
 const { usersMap } = useUsersStore()
@@ -32,9 +28,6 @@ const { openModal } = useUserModalOpener(toRef(props, 'userId'))
 </script>
 
 <style lang="scss" module>
-.container {
-  display: flex;
-}
 .clickable {
   display: flex;
   cursor: pointer;
@@ -51,8 +44,5 @@ const { openModal } = useUserModalOpener(toRef(props, 'userId'))
     content: ')';
     display: block;
   }
-}
-.delimiter {
-  @include color-ui-secondary-inactive;
 }
 </style>
