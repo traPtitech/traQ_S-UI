@@ -6,8 +6,8 @@
     <span v-if="count > 1" :class="$style.numberWrap">
       <spin-number :value="count" />
     </span>
-    <span v-if="!isLast"> </span>
   </div>
+  <span v-if="!isLast" :class="$style.delimiter">&nbsp;/&nbsp;</span>
 </template>
 
 <script lang="ts" setup>
@@ -47,5 +47,8 @@ const { openModal } = useUserModalOpener(toRef(props, 'userId'))
     content: ')';
     display: block;
   }
+}
+.delimiter {
+  @include color-ui-secondary-inactive;
 }
 </style>
