@@ -25,17 +25,15 @@ const useChannelsWithNotification = () => {
   )
 
   const notStarredChannelsWithNotification = computed(() =>
-    channelsWithNotification.value
-      .filter(
-        channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
-      )
+    channelsWithNotification.value.filter(
+      channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
+    )
   )
 
   const starredChannelsWithNotification = computed(() =>
-    channelsWithNotification.value
-      .filter(channel =>
-        starredChannelStore.staredChannelSet.value.has(channel.id)
-      )
+    channelsWithNotification.value.filter(channel =>
+      starredChannelStore.staredChannelSet.value.has(channel.id)
+    )
   )
 
   const dmChannelsWithNotification = computed(() =>
