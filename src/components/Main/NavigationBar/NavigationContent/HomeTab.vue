@@ -8,18 +8,16 @@
       <channel-tree :channels="homeChannelWithTree" show-shortened-path />
     </navigation-content-container>
     <navigation-content-container
-        v-if="
-        starredChannelsWithNotification.length !==
-        0
-      "
-        subtitle="お気に入り"
-        :class="$style.item"
+      v-if="starredChannelsWithNotification.length !== 0"
+      subtitle="お気に入り"
+      :class="$style.item"
     >
       <channel-list :channels="starredChannelsWithNotification" />
     </navigation-content-container>
     <navigation-content-container
       v-if="
-        dmChannelsWithNotification.length + notStarredChannelsWithNotification.length !==
+        dmChannelsWithNotification.length +
+          notStarredChannelsWithNotification.length !==
         0
       "
       subtitle="未読"
@@ -76,8 +74,11 @@ const homeChannelWithTree = computed(() => {
   return filterTrees(trees, channel => !channel.archived)
 })
 
-const { notStarredChannelsWithNotification, starredChannelsWithNotification, dmChannelsWithNotification } =
-  useChannelsWithNotification()
+const {
+  notStarredChannelsWithNotification,
+  starredChannelsWithNotification,
+  dmChannelsWithNotification
+} = useChannelsWithNotification()
 
 const topLevelChannels = computed(() =>
   // filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
