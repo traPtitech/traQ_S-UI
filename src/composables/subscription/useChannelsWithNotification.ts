@@ -18,19 +18,21 @@ const useChannelsWithNotification = () => {
     })
   )
 
-  const notStarredChannelsWithNotification = computed(() =>
+  const channelsWithNotification = computed(() =>
     sortedUnreadChannels.value
       .map(unread => channelsMap.value.get(unread.channelId))
       .filter(isDefined)
+  )
+
+  const notStarredChannelsWithNotification = computed(() =>
+    channelsWithNotification.value
       .filter(
         channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
       )
   )
 
   const starredChannelsWithNotification = computed(() =>
-    sortedUnreadChannels.value
-      .map(unread => channelsMap.value.get(unread.channelId))
-      .filter(isDefined)
+    channelsWithNotification.value
       .filter(channel =>
         starredChannelStore.staredChannelSet.value.has(channel.id)
       )
