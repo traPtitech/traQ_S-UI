@@ -1,8 +1,6 @@
 <template>
   <div :class="$style.clickable" @click="openModal">
-    <div>
-      {{ user?.displayName ?? 'unknown' }}
-    </div>
+    {{ user?.displayName ?? 'unknown' }}
     <span v-if="count > 1" :class="$style.numberWrap">
       <spin-number :value="count" />
     </span>
