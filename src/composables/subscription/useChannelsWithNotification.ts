@@ -7,18 +7,12 @@ import { useStaredChannels } from '/@/store/domain/staredChannels'
 const useChannelsWithNotification = () => {
   const { unreadChannelsMap } = useSubscriptionStore()
   const { channelsMap, dmChannelsMap } = useChannelsStore()
-  const { staredChannelSet } = useStaredChannels()
+  const starredChannelStore = useStaredChannels()
 
   const sortedUnreadChannels = computed(() =>
     [...unreadChannelsMap.value.values()].sort((a, b) => {
       if (a.noticeable !== b.noticeable) {
         return b.noticeable ? 1 : -1
-      }
-      if (
-        staredChannelSet.value.has(a.channelId) !==
-        staredChannelSet.value.has(b.channelId)
-      ) {
-        return staredChannelSet.value.has(a.channelId) ? -1 : 1
       }
       return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
     })
@@ -30,6 +24,18 @@ const useChannelsWithNotification = () => {
       .filter(isDefined)
   )
 
+  const notStarredChannelsWithNotification = computed(() =>
+    channelsWithNotification.value.filter(
+      channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
+    )
+  )
+
+  const starredChannelsWithNotification = computed(() =>
+    channelsWithNotification.value.filter(channel =>
+      starredChannelStore.staredChannelSet.value.has(channel.id)
+    )
+  )
+
   const dmChannelsWithNotification = computed(() =>
     sortedUnreadChannels.value
       .map(unread => dmChannelsMap.value.get(unread.channelId ?? ''))
@@ -37,7 +43,8 @@ const useChannelsWithNotification = () => {
   )
 
   return {
-    channelsWithNotification,
+    starredChannelsWithNotification,
+    notStarredChannelsWithNotification,
     dmChannelsWithNotification
   }
 }
