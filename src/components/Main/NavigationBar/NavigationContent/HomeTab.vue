@@ -10,6 +10,20 @@
     <navigation-content-container
       v-if="
         dmChannelsWithNotification.length +
+          starredChannelsWithNoticeable.length +
+          notStarredChannelsWithNoticeable.length !==
+        0
+      "
+      subtitle="通知"
+      :class="$style.item"
+    >
+      <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
+      <channel-list :channels="starredChannelsWithNoticeable" show-star />
+      <channel-list :channels="notStarredChannelsWithNoticeable" />
+    </navigation-content-container>
+    <navigation-content-container
+      v-if="
+        dmChannelsWithNotification.length +
           starredChannelsWithNotification.length +
           notStarredChannelsWithNotification.length !==
         0
@@ -17,7 +31,6 @@
       subtitle="未読"
       :class="$style.item"
     >
-      <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
       <channel-list :channels="starredChannelsWithNotification" show-star />
       <channel-list :channels="notStarredChannelsWithNotification" />
     </navigation-content-container>
@@ -70,6 +83,8 @@ const homeChannelWithTree = computed(() => {
 })
 
 const {
+  starredChannelsWithNoticeable,
+  notStarredChannelsWithNoticeable,
   starredChannelsWithNotification,
   notStarredChannelsWithNotification,
   dmChannelsWithNotification

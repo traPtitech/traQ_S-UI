@@ -11,21 +11,32 @@ const useChannelsWithNotification = () => {
 
   const sortedUnreadChannels = computed(() =>
     [...unreadChannelsMap.value.values()].sort((a, b) => {
-      if (a.noticeable !== b.noticeable) {
-        return b.noticeable ? 1 : -1
-      }
       return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
     })
   )
 
-  const channelsWithNotification = computed(() =>
+  const channelsWithNoticeable = computed(() =>
     sortedUnreadChannels.value
+      .filter(unread => unread.noticeable)
       .map(unread => channelsMap.value.get(unread.channelId))
       .filter(isDefined)
   )
 
-  const notStarredChannelsWithNotification = computed(() =>
-    channelsWithNotification.value.filter(
+  const channelsWithNotification = computed(() =>
+    sortedUnreadChannels.value
+      .filter(unread => !unread.noticeable)
+      .map(unread => channelsMap.value.get(unread.channelId))
+      .filter(isDefined)
+  )
+
+  const starredChannelsWithNoticeable = computed(() =>
+    channelsWithNoticeable.value.filter(channel =>
+      starredChannelStore.staredChannelSet.value.has(channel.id)
+    )
+  )
+
+  const notStarredChannelsWithNoticeable = computed(() =>
+    channelsWithNoticeable.value.filter(
       channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
     )
   )
@@ -36,6 +47,12 @@ const useChannelsWithNotification = () => {
     )
   )
 
+  const notStarredChannelsWithNotification = computed(() =>
+    channelsWithNotification.value.filter(
+      channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
+    )
+  )
+
   const dmChannelsWithNotification = computed(() =>
     sortedUnreadChannels.value
       .map(unread => dmChannelsMap.value.get(unread.channelId ?? ''))
@@ -43,6 +60,8 @@ const useChannelsWithNotification = () => {
   )
 
   return {
+    starredChannelsWithNoticeable,
+    notStarredChannelsWithNoticeable,
     starredChannelsWithNotification,
     notStarredChannelsWithNotification,
     dmChannelsWithNotification
