@@ -15,14 +15,14 @@ const useChannelsWithNotification = () => {
     })
   )
 
-  const channelsWithNoticeable = computed(() =>
+  const channelsWithNotification = computed(() =>
     sortedUnreadChannels.value
       .filter(unread => unread.noticeable)
       .map(unread => channelsMap.value.get(unread.channelId))
       .filter(isDefined)
   )
 
-  const channelsWithNotification = computed(() =>
+  const channelsWithUnreadMessage = computed(() =>
     sortedUnreadChannels.value
       .filter(unread => !unread.noticeable)
       .map(unread => channelsMap.value.get(unread.channelId))
@@ -30,25 +30,25 @@ const useChannelsWithNotification = () => {
   )
 
   const starredChannelsWithNoticeable = computed(() =>
-    channelsWithNoticeable.value.filter(channel =>
-      starredChannelStore.staredChannelSet.value.has(channel.id)
-    )
-  )
-
-  const notStarredChannelsWithNoticeable = computed(() =>
-    channelsWithNoticeable.value.filter(
-      channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
-    )
-  )
-
-  const starredChannelsWithNotification = computed(() =>
     channelsWithNotification.value.filter(channel =>
       starredChannelStore.staredChannelSet.value.has(channel.id)
     )
   )
 
-  const notStarredChannelsWithNotification = computed(() =>
+  const notStarredChannelsWithNoticeable = computed(() =>
     channelsWithNotification.value.filter(
+      channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
+    )
+  )
+
+  const starredChannelsWithUnreadMessage = computed(() =>
+    channelsWithUnreadMessage.value.filter(channel =>
+      starredChannelStore.staredChannelSet.value.has(channel.id)
+    )
+  )
+
+  const notStarredChannelsWithUnreadMessage = computed(() =>
+    channelsWithUnreadMessage.value.filter(
       channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
     )
   )
@@ -62,8 +62,8 @@ const useChannelsWithNotification = () => {
   return {
     starredChannelsWithNoticeable,
     notStarredChannelsWithNoticeable,
-    starredChannelsWithNotification,
-    notStarredChannelsWithNotification,
+    starredChannelsWithUnreadMessage,
+    notStarredChannelsWithUnreadMessage,
     dmChannelsWithNotification
   }
 }

@@ -24,15 +24,15 @@
     <navigation-content-container
       v-if="
         dmChannelsWithNotification.length +
-          starredChannelsWithNotification.length +
-          notStarredChannelsWithNotification.length !==
+          starredChannelsWithUnreadMessage.length +
+          notStarredChannelsWithUnreadMessage.length !==
         0
       "
       subtitle="未読"
       :class="$style.item"
     >
-      <channel-list :channels="starredChannelsWithNotification" show-star />
-      <channel-list :channels="notStarredChannelsWithNotification" />
+      <channel-list :channels="starredChannelsWithUnreadMessage" show-star />
+      <channel-list :channels="notStarredChannelsWithUnreadMessage" />
     </navigation-content-container>
     <navigation-content-container subtitle="チャンネル" :class="$style.item">
       <channel-tree
@@ -85,8 +85,8 @@ const homeChannelWithTree = computed(() => {
 const {
   starredChannelsWithNoticeable,
   notStarredChannelsWithNoticeable,
-  starredChannelsWithNotification,
-  notStarredChannelsWithNotification,
+  starredChannelsWithUnreadMessage,
+  notStarredChannelsWithUnreadMessage,
   dmChannelsWithNotification
 } = useChannelsWithNotification()
 
