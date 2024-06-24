@@ -31,6 +31,7 @@ const { openModal } = useUserModalOpener(toRef(props, 'userId'))
 .clickable {
   display: flex;
   cursor: pointer;
+  gap: 2px;
 }
 .numberWrap {
   display: flex;
