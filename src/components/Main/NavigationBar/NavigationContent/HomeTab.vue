@@ -14,7 +14,7 @@
           notStarredChannelsWithNoticeable.length !==
         0
       "
-      subtitle="通知"
+      subtitle="メンション"
       :class="$style.item"
     >
       <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
