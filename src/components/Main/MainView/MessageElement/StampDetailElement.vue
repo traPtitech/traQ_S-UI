@@ -3,11 +3,11 @@
     <div>
       {{ ':' + stampName + ': from ' }}
     </div>
-    <div v-for="user in stamp.users" :key="user.id" :class="$style.details">
+    <div v-for="user in stamp.users" :key="user.id" :class="$style.contents">
       <stamp-detail-element-content
         :user-id="user.id"
         :count="user.count"
-        :class="$style.detail"
+        :class="$style.content"
       />
       <span v-if="!isLastUser(user)" :class="$style.delimiter"> / </span>
     </div>
@@ -39,10 +39,10 @@ const isLastUser = (user: (typeof props.stamp.users)[0]) =>
   display: flex;
   flex-wrap: wrap;
 }
-.details {
+.contents {
   display: flex;
 }
-.detail {
+.content {
   padding: 0 0.2rem;
 }
 .delimiter {
