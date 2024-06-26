@@ -5,9 +5,7 @@
       :data-is-current="$boolAttr(isCurrent)"
     >
       <router-link :to="isCurrent ? '' : link">
-        <span :class="$style.channelHash">
-          #
-        </span>
+        <span :class="$style.channelHash"> # </span>
         <span>
           {{ name }}
         </span>
