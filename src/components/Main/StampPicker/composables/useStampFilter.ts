@@ -42,7 +42,9 @@ const useStampFilter = () => {
   const oneLetterNames = computed(() =>
     stampNames.value.filter(name => name.length === 1)
   )
-  const oneLetterAltNames = altNames.value.filter(name => name.length === 1)
+  const oneLetterAltNames = computed(() =>
+    altNames.value.filter(name => name.length === 1)
+  )
 
   const getStamps = (stampNames: Iterable<string>) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -58,7 +60,7 @@ const useStampFilter = () => {
 
       const query = state.query.toLowerCase()
       if (state.query.length === 1) {
-        const altNameMatched = oneLetterAltNames
+        const altNameMatched = oneLetterAltNames.value
           .filter(altName => altName.toLowerCase() === query)
           .map(altNameToName)
         const matched = oneLetterNames.value.filter(
