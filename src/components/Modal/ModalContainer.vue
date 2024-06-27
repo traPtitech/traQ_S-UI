@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { type Component, computed } from 'vue'
 import { useModalStore } from '/@/store/ui/modal'
 import UserModal from './UserModal/UserModal.vue'
 import NotificationModal from './NotificationModal/NotificationModal.vue'
@@ -64,11 +64,11 @@ import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vu
 import GroupAdminAddModal from './GroupAdminAddModal/GroupAdminAddModal.vue'
 import GroupMemberAddModal from './GroupMemberAddModal/GroupMemberAddModal.vue'
 import SettingsThemeEditModal from './SettingsThemeEditModal/SettingsThemeEditModal.vue'
-import type { ModalState, ModalStateType } from '/@/store/ui/modal/states'
+import type { ModalStateType } from '/@/store/ui/modal/states'
 
 const { shouldShowModal, currentState } = useModalStore()
 
-const components: Record<ModalStateType, ModalState> = {
+const components: Record<ModalStateType, Component> = {
   user: UserModal,
   notification: NotificationModal,
   tag: TagModal,
