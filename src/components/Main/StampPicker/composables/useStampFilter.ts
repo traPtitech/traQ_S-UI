@@ -29,8 +29,8 @@ const useStampFilter = () => {
   const altNameTable = computed<Record<AltName, string>>(() =>
     Object.fromEntries(
       Object.entries({
-        ...emojiAltnameTableData.value?.altNameTable,
-        ...emojiAltnameTableData.value?.unicodeTable
+        ...emojiAltnameTableData.value?.unicodeTable,
+        ...emojiAltnameTableData.value?.altNameTable
         // unicodeの対応バージョン違いで存在しないものが含まれている場合がある
       }).filter(([k, v]) => stampNames.value.includes(v))
     )
