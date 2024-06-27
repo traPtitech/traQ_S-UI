@@ -14,7 +14,6 @@ type ModalStateType =
   | 'notification'
   | 'file'
   | 'tag'
-  | 'group'
   | 'channel-create'
   | 'qrcode'
   | 'clip-create'
