@@ -18,7 +18,10 @@
 import StampDetailElementContent from './StampDetailElementContent.vue'
 import { computed } from 'vue'
 import { useStampsStore } from '/@/store/entities/stamps'
-import type { MessageStampById } from '/@/lib/messageStampList'
+import type {
+  StampRecordPerUser,
+  MessageStampById
+} from '/@/lib/messageStampList'
 
 const props = defineProps<{
   stamp: MessageStampById
@@ -30,7 +33,7 @@ const stampName = computed(
   () => stampsMap.value.get(props.stamp.id)?.name ?? ''
 )
 
-const isLastUser = (user: (typeof props.stamp.users)[0]) =>
+const isLastUser = (user: StampRecordPerUser) =>
   user === props.stamp.users[props.stamp.users.length - 1]
 </script>
 
