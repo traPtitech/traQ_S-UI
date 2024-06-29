@@ -4,7 +4,7 @@ import type { StampId, UserId } from '/@/types/entity-ids'
 /**
  * ユーザー、そのユーザーの押した数と最初に押した時間
  */
-export interface StampRecordPerUser {
+export interface StampUser {
   id: UserId
   count: number
   createdAt: Date
@@ -29,7 +29,7 @@ export interface MessageStampById {
   /**
    * ユーザー、そのユーザーの押した数と最初に押した時間
    */
-  users: Array<StampRecordPerUser>
+  users: Array<StampUser>
   /**
    * 一番最初に押された時間
    */
