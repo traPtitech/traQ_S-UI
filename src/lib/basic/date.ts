@@ -43,7 +43,7 @@ export const getDateRepresentationWithoutSameDate = (
 
 export const getDisplayDate = (createdAt: string, updatedAt: string) => {
   let displayDate = new Date(createdAt)
-  if (createdAt === updatedAt) {
+  if (createdAt !== updatedAt) {
     displayDate = new Date(updatedAt)
   }
   const today = new Date()
