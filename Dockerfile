@@ -10,7 +10,7 @@ COPY . .
 RUN NODE_ENV=production npm run build:with-font
 
 
-FROM caddy:2.7.6-alpine
+FROM caddy:2.8.4-alpine
 EXPOSE 80
 
 COPY build/docker/Caddyfile /etc/caddy/Caddyfile
