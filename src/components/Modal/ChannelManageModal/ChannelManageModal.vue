@@ -2,32 +2,35 @@
   <modal-frame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
     <div :class="$style.container">
       <form-input
-      v-model="manageState.name"
-      label="チャンネル名"
-      :max-length="20"
-      focus-on-mount
+        v-model="manageState.name"
+        label="チャンネル名"
+        :max-length="20"
+        focus-on-mount
       />
       <form-selector
-      v-model="manageState.parent"
-      label="親チャンネル"
-      :options="channelOptions"
+        v-model="manageState.parent"
+        label="親チャンネル"
+        :options="channelOptions"
       />
       <label :class="$style.toggle">
-      アーカイブ
-      <a-toggle v-model="manageState.archived" :disabled="!canToggleArchive" />
+        アーカイブ
+        <a-toggle
+          v-model="manageState.archived"
+          :disabled="!canToggleArchive"
+        />
       </label>
       <p v-if="!canToggleArchive" :class="$style.cantToggleArchiveMessage">
-      このチャンネルはアーカイブチャンネルの子チャンネルなので、アーカイブ状態を解除できません。
+        このチャンネルはアーカイブチャンネルの子チャンネルなので、アーカイブ状態を解除できません。
       </p>
       <label :class="$style.toggle">
-      強制通知
-      <a-toggle v-model="manageState.force" />
-     </label>
+        強制通知
+        <a-toggle v-model="manageState.force" />
+      </label>
       <form-button
-      label="変更"
-      :disabled="!isManageEnabled"
-      :class="$style.button"
-      @click="manageChannel"
+        label="変更"
+        :disabled="!isManageEnabled"
+        :class="$style.button"
+        @click="manageChannel"
       />
     </div>
   </modal-frame>
@@ -153,8 +156,8 @@ const canToggleArchive = computed(
 
 <style lang="scss" module>
 .container {
-display: grid;
-gap: 16px;
+  display: grid;
+  gap: 16px;
 }
 .input {
   margin-bottom: 16px;
