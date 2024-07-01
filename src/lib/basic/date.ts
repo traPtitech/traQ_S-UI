@@ -42,12 +42,25 @@ export const getDateRepresentationWithoutSameDate = (
 }
 
 export const getDisplayDate = (createdAt: string, updatedAt: string) => {
-  const createdDate = new Date(createdAt)
+  let displayDate = new Date(createdAt)
   if (createdAt === updatedAt) {
-    return getTimeString(createdDate)
+    displayDate = new Date(updatedAt)
+  }
+  const today = new Date()
+  const timeString = getTimeString(displayDate)
+  const yesterday = new Date(today)
+  yesterday.setDate(today.getDate() - 1)
+
+  if (getFullDayString(displayDate) === getFullDayString(today)) {
+    return '今日' + ' ' + timeString
+  }
+  if (getFullDayString(displayDate) === getFullDayString(yesterday)) {
+    return '昨日' + ' ' + timeString
+  }
+  if (displayDate.getFullYear() === today.getFullYear()) {
+    return getDayString(displayDate) + ' ' + timeString
   } else {
-    const updatedDate = new Date(updatedAt)
-    return getDateRepresentationWithoutSameDate(updatedDate, createdDate)
+    return getFullDayString(displayDate) + ' ' + timeString
   }
 }
 
