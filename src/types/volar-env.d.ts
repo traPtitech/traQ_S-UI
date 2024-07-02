@@ -12,6 +12,9 @@ declare module '@vue/runtime-dom' {
   }
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface SVGAttributes extends DataAndAriaAttributes {}
+  interface ImgHTMLAttributes extends HTMLAttributes {
+    loading?: 'lazy' | 'eager' | 'auto'
+  }
 }
 
 declare module '@vue/runtime-core' {

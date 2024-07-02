@@ -11,7 +11,9 @@
           currentState.type === 'file' ||
           currentState.type === 'channel-manage' ||
           currentState.type === 'group-admin-add' ||
-          currentState.type === 'group-member-add'
+          currentState.type === 'group-member-add' ||
+          currentState.type === 'settings-stamp-edit' ||
+          currentState.type === 'settings-stamp-image-edit'
             ? currentState.id
             : undefined
         "
@@ -41,6 +43,13 @@
             ? currentState.userId
             : undefined
         "
+        :file="
+          currentState.type === 'settings-stamp-create' ||
+          currentState.type === 'settings-stamp-image-edit' ||
+          currentState.type === 'settings-profile-icon-edit'
+            ? currentState.file
+            : undefined
+        "
       />
     </div>
   </transition>
@@ -63,6 +72,10 @@ import GroupCreateModal from './GroupCreateModal/GroupCreateModal.vue'
 import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vue'
 import GroupAdminAddModal from './GroupAdminAddModal/GroupAdminAddModal.vue'
 import GroupMemberAddModal from './GroupMemberAddModal/GroupMemberAddModal.vue'
+import StampCreateModal from './StampCreateModal/StampCreateModal.vue'
+import StampEditModal from './StampEditModal/StampEditModal.vue'
+import StampImageEditModal from './StampImageEditModal/StampImageEditModal.vue'
+import ProfileIconEditModal from './ProfileIconEditModal/ProfileIconEditModal.vue'
 import SettingsThemeEditModal from './SettingsThemeEditModal/SettingsThemeEditModal.vue'
 
 const { shouldShowModal, currentState } = useModalStore()
@@ -97,6 +110,14 @@ const component = computed(() => {
       return GroupAdminAddModal
     case 'group-member-add':
       return GroupMemberAddModal
+    case 'settings-stamp-create':
+      return StampCreateModal
+    case 'settings-stamp-edit':
+      return StampEditModal
+    case 'settings-stamp-image-edit':
+      return StampImageEditModal
+    case 'settings-profile-icon-edit':
+      return ProfileIconEditModal
     case 'settings-theme-edit':
       return SettingsThemeEditModal
   }
