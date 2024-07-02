@@ -1,6 +1,11 @@
 <template>
-  <div :class="$style.container">
+  <div ref="containerRef" :class="$style.container">
     <scroll-loading-bar :class="$style.loadingBar" :show="isLoading" />
+    <shown-message-date
+      v-if="shownMessageDateValue"
+      :shown-message-date="shownMessageDateValue"
+      :channel-id="channelId"
+    />
     <messages-scroller
       ref="scrollerEle"
       :message-ids="messageIds"
@@ -9,10 +14,12 @@
       :is-loading="isLoading"
       :entry-message-id="entryMessageId"
       :last-loading-direction="lastLoadingDirection"
+      :container-ref="containerRef"
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
       @scroll.passive="handleScroll"
       @reset-is-reached-latest="resetIsReachedLatest"
+      @end-separator-intersected="onEndSeparatorIntersected"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
         <messages-scroller-separator
@@ -31,8 +38,10 @@
           :is-archived="isArchived"
           :is-entry-message="messageId === entryMessageId"
           :pinned-user-id="messagePinnedUserMap.get(messageId)"
+          :container-ref="containerRef"
           @change-height="onChangeHeight"
           @entry-message-loaded="onEntryMessageLoaded"
+          @intersected="onMessageIntersected"
         />
       </template>
     </messages-scroller>
@@ -63,6 +72,7 @@ import { useRouter } from 'vue-router'
 import { constructChannelPath } from '/@/router'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import ShownMessageDate from './ShownMessageDate.vue'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -140,6 +150,15 @@ const handleScroll = () => {
   if (!isReachedLatest.value) {
     showToNewMessageButton.value = true
   }
+}
+
+const containerRef = ref<HTMLDivElement | null>(null)
+const shownMessageDateValue = ref<string | undefined>()
+const onMessageIntersected = (createdAt: string) => {
+  shownMessageDateValue.value = getFullDayString(new Date(createdAt))
+}
+const onEndSeparatorIntersected = () => {
+  shownMessageDateValue.value = undefined
 }
 </script>
 
