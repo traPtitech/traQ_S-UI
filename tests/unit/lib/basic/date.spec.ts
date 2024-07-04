@@ -94,18 +94,38 @@ describe('getDateRepresentationWithoutSameDate', () => {
 })
 
 describe('getDisplayDate', () => {
-  const dateISO = '2001-04-04T05:20:34'
+  const today = new Date()
+  const year = today.getFullYear().toString()
+  const month = (today.getMonth() + 1).toString().padStart(2, '0')
+  const day = today.getDate().toString().padStart(2, '0')
 
-  it('should get time string when not modified', () => {
-    expect(getDisplayDate(dateISO, dateISO)).toBe('05:20')
+  const createdDateISO = '2014-04-01T10:20:30'
+  const updatedDate = today
+  updatedDate.setHours(12)
+  updatedDate.setMinutes(34)
+
+  it('should say 今日 when updated today', () => {
+    const updatedDateISO = updatedDate.toISOString()
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('今日 12:34')
   })
-  it('should get time string when same date', () => {
-    const dateISO2 = '2001-04-04T08:25:34'
-    expect(getDisplayDate(dateISO, dateISO2)).toBe('08:25')
+  it('should say 昨日 when updated yesterday', () => {
+    updatedDate.setDate(today.getDate() - 1)
+    const updatedDateISO = updatedDate.toISOString()
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('昨日 12:34')
   })
-  it('should get date string when not same date', () => {
-    const dateISO2 = '2001-06-04T08:25:34'
-    expect(getDisplayDate(dateISO, dateISO2)).toBe('06/04 08:25')
+  it('should get date string when updated in the same year', () => {
+    updatedDate.setDate(today.getDate() - 2)
+    updatedDate.setFullYear(today.getFullYear())
+    const updatedDateISO = updatedDate.toISOString()
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe(
+      month + '/' + day + ' 12:34'
+    )
+  })
+  it('should get FULL date string when updated before last year', () => {
+    const updatedDateISO = '2014-05-01T10:20:30'
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe(
+      '2014/05/01 10:20'
+    )
   })
 })
 
