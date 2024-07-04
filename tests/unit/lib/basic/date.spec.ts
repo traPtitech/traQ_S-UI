@@ -95,9 +95,6 @@ describe('getDateRepresentationWithoutSameDate', () => {
 
 describe('getDisplayDate', () => {
   const today = new Date()
-  const year = today.getFullYear().toString()
-  const month = (today.getMonth() + 1).toString().padStart(2, '0')
-  const day = today.getDate().toString().padStart(2, '0')
 
   const createdDateISO = '2014-04-01T10:20:30'
   const updatedDate = today
@@ -116,6 +113,8 @@ describe('getDisplayDate', () => {
   it('should get date string when updated in the same year', () => {
     updatedDate.setDate(today.getDate() - 2)
     updatedDate.setFullYear(today.getFullYear())
+    const month = (updatedDate.getMonth() + 1).toString().padStart(2, '0')
+    const day = updatedDate.getDate().toString().padStart(2, '0')
     const updatedDateISO = updatedDate.toISOString()
     expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe(
       month + '/' + day + ' 12:34'
