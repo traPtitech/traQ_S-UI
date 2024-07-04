@@ -94,8 +94,12 @@ describe('getDateRepresentationWithoutSameDate', () => {
 })
 
 describe('getDisplayDate', () => {
-  beforeEach(() => {vi.useFakeTimers()})
-  afterEach(() => {vi.useRealTimers()})
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
 
   const createdDateISO = '2010-04-01T12:34:56'
   const updatedDateISO = '2010-05-02T14:28:57'
@@ -114,7 +118,9 @@ describe('getDisplayDate', () => {
   })
   it('should get YYYY/MM/DD when updated before last year', () => {
     vi.setSystemTime('2015-10-10T15:00:00')
-    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('2010/05/02 14:28')
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe(
+      '2010/05/02 14:28'
+    )
   })
 })
 
