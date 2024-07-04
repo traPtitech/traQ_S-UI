@@ -94,37 +94,27 @@ describe('getDateRepresentationWithoutSameDate', () => {
 })
 
 describe('getDisplayDate', () => {
-  const today = new Date()
+  beforeEach(() => {vi.useFakeTimers()})
+  afterEach(() => {vi.useRealTimers()})
 
-  const createdDateISO = '2014-04-01T10:20:30'
-  const updatedDate = today
-  updatedDate.setHours(12)
-  updatedDate.setMinutes(34)
+  const createdDateISO = '2010-04-01T12:34:56'
+  const updatedDateISO = '2010-05-02T14:28:57'
 
   it('should say 今日 when updated today', () => {
-    const updatedDateISO = updatedDate.toISOString()
-    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('今日 12:34')
+    vi.setSystemTime('2010-05-02T15:00:00')
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('今日 14:28')
   })
   it('should say 昨日 when updated yesterday', () => {
-    updatedDate.setDate(today.getDate() - 1)
-    const updatedDateISO = updatedDate.toISOString()
-    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('昨日 12:34')
+    vi.setSystemTime('2010-05-03T15:00:00')
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('昨日 14:28')
   })
-  it('should get date string when updated in the same year', () => {
-    updatedDate.setDate(today.getDate() - 2)
-    updatedDate.setFullYear(today.getFullYear())
-    const month = (updatedDate.getMonth() + 1).toString().padStart(2, '0')
-    const day = updatedDate.getDate().toString().padStart(2, '0')
-    const updatedDateISO = updatedDate.toISOString()
-    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe(
-      month + '/' + day + ' 12:34'
-    )
+  it('should get MM/DD when updated in the same year', () => {
+    vi.setSystemTime('2010-07-07T15:00:00')
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('05/02 14:28')
   })
-  it('should get FULL date string when updated before last year', () => {
-    const updatedDateISO = '2014-05-01T10:20:30'
-    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe(
-      '2014/05/01 10:20'
-    )
+  it('should get YYYY/MM/DD when updated before last year', () => {
+    vi.setSystemTime('2015-10-10T15:00:00')
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('2010/05/02 14:28')
   })
 })
 
