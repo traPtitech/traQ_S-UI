@@ -37,6 +37,16 @@
           @change-theme="changeTheme"
         />
       </div>
+      <button
+        v-if="state.type === 'custom'"
+        :class="$style.form"
+        @click="resetToLight"
+      >
+        ライトにリセット
+      </button>
+      <button v-if="state.type === 'custom'" @click="resetToDark">
+        ダークにリセット
+      </button>
       <div>
         <template v-if="state.type === 'custom'">
           <div :class="$style.setting">
@@ -82,6 +92,13 @@ import { useThemeSettings } from '/@/store/app/themeSettings'
 const state = reactive(useThemeSettings())
 const changeTheme = (theme: Theme) => {
   state.custom = theme
+}
+
+const resetToLight = () => {
+  changeTheme(structuredClone(window.defaultLightTheme))
+}
+const resetToDark = () => {
+  changeTheme(structuredClone(window.defaultDarkTheme))
 }
 </script>
 
