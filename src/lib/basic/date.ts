@@ -47,10 +47,18 @@ export const getDisplayDate = (createdAt: string, updatedAt: string) => {
   const timeString = getTimeString(displayDate)
   const yesterday = new Date(today.getTime() - 1000 * 60 * 60 * 24)
 
-  if (getFullDayString(displayDate) === getFullDayString(today)) {
+  if (
+    displayDate.getFullYear() === today.getFullYear() &&
+    displayDate.getMonth() === today.getMonth() &&
+    displayDate.getDate() === today.getDate()
+  ) {
     return '今日' + ' ' + timeString
   }
-  if (getFullDayString(displayDate) === getFullDayString(yesterday)) {
+  if (
+    displayDate.getFullYear() === yesterday.getFullYear() &&
+    displayDate.getMonth() === yesterday.getMonth() &&
+    displayDate.getDate() === yesterday.getDate()
+  ) {
     return '昨日' + ' ' + timeString
   }
   if (displayDate.getFullYear() === today.getFullYear()) {
