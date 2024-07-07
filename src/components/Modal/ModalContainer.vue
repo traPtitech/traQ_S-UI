@@ -86,7 +86,7 @@ const components: Record<ModalStateType, Component> = {
   'settings-theme-edit': SettingsThemeEditModal
 }
 const component = computed(() => {
-  if (currentState.value && currentState.value.type in components) {
+  if (currentState.value) {
     return components[currentState.value.type]
   } else {
     // eslint-disable-next-line no-console
