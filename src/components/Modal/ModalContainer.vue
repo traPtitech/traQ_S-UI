@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { type Component, computed } from 'vue'
 import { useModalStore } from '/@/store/ui/modal'
 import UserModal from './UserModal/UserModal.vue'
 import NotificationModal from './NotificationModal/NotificationModal.vue'
@@ -64,45 +64,35 @@ import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vu
 import GroupAdminAddModal from './GroupAdminAddModal/GroupAdminAddModal.vue'
 import GroupMemberAddModal from './GroupMemberAddModal/GroupMemberAddModal.vue'
 import SettingsThemeEditModal from './SettingsThemeEditModal/SettingsThemeEditModal.vue'
+import type { ModalStateType } from '/@/store/ui/modal/states'
 
 const { shouldShowModal, currentState } = useModalStore()
 
+const components: Record<ModalStateType, Component> = {
+  user: UserModal,
+  notification: NotificationModal,
+  tag: TagModal,
+  group: GroupModal,
+  'channel-create': ChannelCreateModal,
+  file: FileModal,
+  qrcode: QRCodeModal,
+  'clip-create': ClipCreateModal,
+  'clip-folder-create': ClipFolderCreateModal,
+  'channel-manage': ChannelManageModal,
+  'group-create': GroupCreateModal,
+  'group-member-edit': GroupMemberEditModal,
+  'group-admin-add': GroupAdminAddModal,
+  'group-member-add': GroupMemberAddModal,
+  'settings-theme-edit': SettingsThemeEditModal
+}
 const component = computed(() => {
-  switch (currentState.value?.type) {
-    case 'user':
-      return UserModal
-    case 'notification':
-      return NotificationModal
-    case 'tag':
-      return TagModal
-    case 'group':
-      return GroupModal
-    case 'channel-create':
-      return ChannelCreateModal
-    case 'file':
-      return FileModal
-    case 'qrcode':
-      return QRCodeModal
-    case 'clip-create':
-      return ClipCreateModal
-    case 'clip-folder-create':
-      return ClipFolderCreateModal
-    case 'channel-manage':
-      return ChannelManageModal
-    case 'group-create':
-      return GroupCreateModal
-    case 'group-member-edit':
-      return GroupMemberEditModal
-    case 'group-admin-add':
-      return GroupAdminAddModal
-    case 'group-member-add':
-      return GroupMemberAddModal
-    case 'settings-theme-edit':
-      return SettingsThemeEditModal
+  if (currentState.value) {
+    return components[currentState.value.type]
+  } else {
+    // eslint-disable-next-line no-console
+    console.error('Unexpected modal type:', currentState.value)
+    return undefined
   }
-  // eslint-disable-next-line no-console
-  console.error('Unexpected modal type:', currentState.value)
-  return undefined
 })
 </script>
 
