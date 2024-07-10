@@ -37,46 +37,47 @@
           @change-theme="changeTheme"
         />
       </div>
-      <button
-        v-if="state.type === 'custom'"
-        :class="$style.form"
-        @click="resetToLight"
-      >
-        ライトにリセット
-      </button>
-      <button v-if="state.type === 'custom'" @click="resetToDark">
-        ダークにリセット
-      </button>
-      <div>
-        <template v-if="state.type === 'custom'">
-          <div :class="$style.setting">
-            <div
-              v-for="(val, category) in state.custom.basic"
-              :key="category"
-              :class="$style.category"
-            >
-              <h4 class>{{ category }}</h4>
-              <div
-                v-for="(color, name) in val"
-                :key="name"
-                :class="$style.color"
-              >
-                <p :class="$style.name">{{ name }}</p>
-                <!-- eslint-disable vue/valid-v-model -->
-                <!-- TODO: 自動適用じゃなくてバリデーションしてから適用するようにする -->
-                <form-input
-                  v-model="(val[name as keyof typeof val] as string)"
-                  use-change-event
-                  on-secondary
-                  :class="$style.input"
-                />
-                <!-- eslint-enable vue/valid-v-model -->
-              </div>
+    </div>
+
+    <div>
+      <template v-if="state.type === 'custom'">
+        <div :class="$style.setting">
+          <div
+            v-for="(val, category) in state.custom.basic"
+            :key="category"
+            :class="$style.category"
+          >
+            <h4 class>{{ category }}</h4>
+            <div v-for="(color, name) in val" :key="name" :class="$style.color">
+              <p :class="$style.name">{{ name }}</p>
+              <!-- eslint-disable vue/valid-v-model -->
+              <!-- TODO: 自動適用じゃなくてバリデーションしてから適用するようにする -->
+              <form-input
+                v-model="(val[name as keyof typeof val] as string)"
+                use-change-event
+                on-secondary
+                :class="$style.input"
+              />
+              <!-- eslint-enable vue/valid-v-model -->
             </div>
           </div>
-        </template>
-        <p v-else>カスタムテーマが選択されていません</p>
-      </div>
+        </div>
+      </template>
+      <p v-else>カスタムテーマが選択されていません</p>
+    </div>
+    <div :class="$style.resetButtonContainer">
+      <form-button
+        v-if="state.type === 'custom'"
+        type="tartiary"
+        label="ライトにリセット"
+        @click="resetToLight"
+      />
+      <form-button
+        v-if="state.type === 'custom'"
+        type="tartiary"
+        label="ダークにリセット"
+        @click="resetToDark"
+      />
     </div>
   </section>
 </template>
@@ -88,6 +89,7 @@ import FormInput from '/@/components/UI/FormInput.vue'
 import { reactive } from 'vue'
 import type { Theme } from '/@/lib/theme/schema'
 import { useThemeSettings } from '/@/store/app/themeSettings'
+import FormButton from '/@/components/UI/FormButton.vue'
 
 const state = reactive(useThemeSettings())
 const changeTheme = (theme: Theme) => {
@@ -142,5 +144,9 @@ const resetToDark = () => {
   .input {
     margin-left: auto;
   }
+}
+.resetButtonContainer {
+  display: flex;
+  gap: 1rem;
 }
 </style>
