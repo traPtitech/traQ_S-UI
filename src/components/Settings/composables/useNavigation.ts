@@ -20,7 +20,8 @@ export const navigationRouteNameTitleMap: Record<SettingsRouteName, string> = {
   settingsBrowser: 'ブラウザ',
   settingsQall: '通話 (Qall)',
   settingsStamp: 'スタンプ',
-  settingsTheme: 'テーマ'
+  settingsTheme: 'テーマ',
+  settingsFeatureFlag: '実験的機能'
 }
 
 export const navigations: {
@@ -59,6 +60,11 @@ export const navigations: {
   {
     routeName: 'settingsTheme',
     iconName: 'brightness-6',
+    iconMdi: true
+  },
+  {
+    routeName: 'settingsFeatureFlag',
+    iconName: 'code-braces',
     iconMdi: true
   }
 ]
