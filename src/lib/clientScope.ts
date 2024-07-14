@@ -4,6 +4,14 @@ export const scopeInfoMap: Record<
   OAuth2Scope,
   { name: string; permissions: string[] }
 > = {
+  [OAuth2Scope.Openid]: {
+    name: 'ユーザーID取得',
+    permissions: ['traQ IDの取得']
+  },
+  [OAuth2Scope.Profile]: {
+    name: 'プロフィール取得',
+    permissions: ['自ユーザー情報の取得']
+  },
   [OAuth2Scope.Read]: {
     name: 'データの読み取り',
     permissions: [

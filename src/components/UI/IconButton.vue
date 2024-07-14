@@ -1,7 +1,7 @@
 <template>
-  <div :class="$style.container" :title="title" :aria-disabled="disabled">
+  <button :class="$style.container" :title="title" :aria-disabled="disabled">
     <a-icon :class="$style.icon" :mdi="iconMdi" :name="iconName" />
-  </div>
+  </button>
 </template>
 
 <script lang="ts" setup>

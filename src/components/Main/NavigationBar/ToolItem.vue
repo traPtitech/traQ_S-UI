@@ -1,11 +1,13 @@
 <template>
-  <div :class="$style.container">
-    <a-icon :name="iconName" :mdi="iconMdi" :size="24" />
-  </div>
+  <icon-button
+    :icon-name="iconName"
+    :icon-mdi="iconMdi"
+    :class="$style.container"
+  />
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
+import IconButton from '/@/components/UI/IconButton.vue'
 
 withDefaults(
   defineProps<{
@@ -27,7 +29,8 @@ withDefaults(
   width: 32px;
   height: 32px;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus {
     @include color-ui-secondary;
   }
 }

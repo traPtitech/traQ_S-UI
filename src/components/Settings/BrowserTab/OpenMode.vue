@@ -5,7 +5,7 @@
       <p>
         特定のチャンネルを指定します。OFFの場合は最後に開いたチャンネルが設定されます。
       </p>
-      <form-selector
+      <form-selector-filterable
         v-if="openMode === 'particular'"
         v-model="openChannelNameValue"
         :options="channelOptions"
@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import AToggle from '/@/components/UI/AToggle.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 import type { OpenMode } from '/@/store/app/browserSettings'
 import useChannelPath from '/@/composables/useChannelPath'
 import useChannelOptions from '/@/composables/useChannelOptions'

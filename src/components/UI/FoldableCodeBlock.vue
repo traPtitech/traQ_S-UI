@@ -89,6 +89,8 @@ const toggle = (e: MouseEvent) => {
       mask-image: linear-gradient(black 0% 60%, transparent 100%);
     }
     background: var(--markdown-code-background);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
   }
   &[data-is-fold='false'] {
     pre {

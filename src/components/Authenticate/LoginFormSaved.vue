@@ -17,13 +17,18 @@
       @click="emit('useOther')"
     />
   </div>
+  <div :class="$style.error">
+    <span v-if="loginState.error">{{ loginState.error }}</span>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import AuthenticateButton from './AuthenticateButton.vue'
+import type { LoginState } from './composables/useLogin'
 
 defineProps<{
   saved: PasswordCredential
+  loginState: LoginState
 }>()
 
 const emit = defineEmits<{
@@ -59,5 +64,11 @@ const emit = defineEmits<{
   &:last-child {
     margin-bottom: 0;
   }
+}
+.error {
+  color: $theme-accent-error-default;
+  font-weight: bold;
+  margin-top: 16px;
+  white-space: pre-wrap;
 }
 </style>

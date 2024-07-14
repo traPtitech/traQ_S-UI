@@ -43,12 +43,20 @@ const isChecked = computed(() => props.inputValue === value.value)
 
 <style lang="scss" module>
 .label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  font-weight: bold;
   cursor: pointer;
 
   border: solid 2px transparent;
   border-radius: 4px;
   &:focus-within {
     border-color: $theme-accent-focus-default;
+  }
+  &:has(.radio:not(:checked)) {
+    opacity: 0.5;
   }
 }
 
@@ -67,9 +75,6 @@ const isChecked = computed(() => props.inputValue === value.value)
   width: 13px;
   border: solid 2px $theme-ui-primary-default;
   border-radius: 50%;
-  &[aria-checked='false'] {
-    opacity: 0.5;
-  }
 }
 .pseudoRadioInner {
   display: inline-block;

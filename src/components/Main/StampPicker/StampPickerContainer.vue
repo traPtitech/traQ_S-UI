@@ -20,7 +20,7 @@ const style = computed(() => {
   if (alignment.value === 'top-left') {
     return {
       top: `min(calc(100% - ${height + margin}px), ${position.value.y}px)`,
-      left: `${position.value.x}px`
+      left: `min(calc(100% - ${width}px), ${position.value.x}px)`
     }
   }
 

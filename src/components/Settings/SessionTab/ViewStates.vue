@@ -1,18 +1,15 @@
 <template>
-  <div>
-    <h3 :class="$style.header">閲覧中チャンネル一覧</h3>
-    <div :class="$style.content">
-      <template v-if="monitoringChanelStrings.length > 0">
-        <p>他端末/ブラウザ/タブで開いているチャンネルは以下の通りです</p>
-        <ul>
-          <li v-for="channel in monitoringChanelStrings" :key="channel">
-            {{ channel }}
-          </li>
-        </ul>
-      </template>
-      <p v-else>他端末/ブラウザ/タブで開いているチャンネルはありません</p>
-    </div>
-  </div>
+  <section>
+    <h3 :class="$style.header">
+      他端末/ブラウザで最新のメッセージを開いているチャンネル
+    </h3>
+    <ul v-if="monitoringChanelStrings.length > 0" :class="$style.list">
+      <li v-for="channel in monitoringChanelStrings" :key="channel">
+        {{ channel }}
+      </li>
+    </ul>
+    <p v-else>他端末/ブラウザで開いているチャンネルはありません。</p>
+  </section>
 </template>
 
 <script lang="ts" setup>
@@ -42,9 +39,12 @@ const monitoringChanelStrings = computed(() =>
 
 <style lang="scss" module>
 .header {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
-.content {
-  margin-left: 12px;
+
+ul.list {
+  list-style: disc;
+  margin-left: 0;
+  padding-left: 24px;
 }
 </style>
