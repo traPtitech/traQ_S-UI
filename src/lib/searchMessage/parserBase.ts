@@ -1,7 +1,7 @@
 // 実際のフィルタに依存しない関数群
 import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 
-const dateOnlyFormRegex = /^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$/g
+const dateOnlyFormRegex = /^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$/
 
 /*
  * クエリは次のようにパースされる:
