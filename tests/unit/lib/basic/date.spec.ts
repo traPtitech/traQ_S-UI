@@ -94,18 +94,33 @@ describe('getDateRepresentationWithoutSameDate', () => {
 })
 
 describe('getDisplayDate', () => {
-  const dateISO = '2001-04-04T05:20:34'
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
 
-  it('should get time string when not modified', () => {
-    expect(getDisplayDate(dateISO, dateISO)).toBe('05:20')
+  const createdDateISO = '2010-04-01T12:34:56'
+  const updatedDateISO = '2010-05-02T14:28:57'
+
+  it('should say 今日 when updated today', () => {
+    vi.setSystemTime('2010-05-02T15:00:00')
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('今日 14:28')
   })
-  it('should get time string when same date', () => {
-    const dateISO2 = '2001-04-04T08:25:34'
-    expect(getDisplayDate(dateISO, dateISO2)).toBe('08:25')
+  it('should say 昨日 when updated yesterday', () => {
+    vi.setSystemTime('2010-05-03T15:00:00')
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('昨日 14:28')
   })
-  it('should get date string when not same date', () => {
-    const dateISO2 = '2001-06-04T08:25:34'
-    expect(getDisplayDate(dateISO, dateISO2)).toBe('06/04 08:25')
+  it('should get MM/DD when updated in the same year', () => {
+    vi.setSystemTime('2010-07-07T15:00:00')
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('05/02 14:28')
+  })
+  it('should get YYYY/MM/DD when updated before last year', () => {
+    vi.setSystemTime('2015-10-10T15:00:00')
+    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe(
+      '2010/05/02 14:28'
+    )
   })
 })
 
