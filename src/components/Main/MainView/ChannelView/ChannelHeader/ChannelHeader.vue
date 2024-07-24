@@ -41,7 +41,7 @@ defineProps<{
 .header {
   display: flex;
   align-items: center;
-  overflow-x: scroll;
+  overflow-x: auto;
   margin-bottom: -6px;
 }
 .topic {

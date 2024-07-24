@@ -2,6 +2,15 @@ import type { MessageStamp } from '@traptitech/traq'
 import type { StampId, UserId } from '/@/types/entity-ids'
 
 /**
+ * ユーザー、そのユーザーの押した数と最初に押した時間
+ */
+export interface StampUser {
+  id: UserId
+  count: number
+  createdAt: Date
+}
+
+/**
  * StampIdで整理されたMessageStamp
  */
 export interface MessageStampById {
@@ -20,7 +29,7 @@ export interface MessageStampById {
   /**
    * ユーザー、そのユーザーの押した数と最初に押した時間
    */
-  users: Array<{ id: UserId; count: number; createdAt: Date }>
+  users: Array<StampUser>
   /**
    * 一番最初に押された時間
    */

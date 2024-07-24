@@ -43,7 +43,7 @@
         appLink: 'https://drive.trap.jp/'
       },
       {
-        label: 'Git',
+        label: 'Gitea',
         iconPath: 'gitea.svg',
         appLink: 'https://git.trap.jp/'
       },

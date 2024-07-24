@@ -9,18 +9,21 @@
       :disabled="!canToggleQall"
       :data-is-active="$boolAttr(isQallSessionOpened)"
       @click="toggleQall"
+      @click-item="emit('clickItem')"
     />
     <header-tools-menu-item
       v-if="isChildChannelCreatable"
       icon-name="hash"
       label="子チャンネルを作成"
       @click="openChannelCreateModal"
+      @click-item="emit('clickItem')"
     />
     <header-tools-menu-item
       v-if="showNotificationSettingBtn"
       icon-name="notified-or-subscribed"
       label="通知設定"
       @click="openNotificationModal"
+      @click-item="emit('clickItem')"
     />
     <header-tools-menu-item
       v-if="isSearchEnabled"
@@ -28,12 +31,14 @@
       icon-mdi
       label="チャンネル内検索"
       @click="openCommandPalette('search', 'in:here ')"
+      @click-item="emit('clickItem')"
     />
     <header-tools-menu-item
       icon-name="link"
       icon-mdi
       label="チャンネルリンクをコピー"
       @click="copyLink"
+      @click-item="emit('clickItem')"
     />
     <header-tools-menu-item
       v-if="hasChannelEditPermission"
@@ -41,6 +46,7 @@
       :class="$style.manageChannel"
       label="チャンネル管理"
       @click="openChannelManageModal"
+      @click-item="emit('clickItem')"
     />
   </primary-view-header-popup-frame>
 </template>
@@ -59,6 +65,10 @@ import useNotificationModal from './composables/useNotificationModal'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import useChannelManageModal from './composables/useChannelManageModal'
 import useCopyChannelLink from './composables/useCopyChannelLink'
+
+const emit = defineEmits<{
+  (e: 'clickItem'): void
+}>()
 
 const props = withDefaults(
   defineProps<{

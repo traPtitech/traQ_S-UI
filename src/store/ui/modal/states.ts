@@ -9,13 +9,12 @@ import type {
   StampId
 } from '/@/types/entity-ids'
 
-type ModalStateType =
+export type ModalStateType =
   | 'user'
   | 'group'
   | 'notification'
   | 'file'
   | 'tag'
-  | 'group'
   | 'channel-create'
   | 'qrcode'
   | 'clip-create'
