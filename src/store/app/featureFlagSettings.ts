@@ -7,7 +7,7 @@ import { channelTreeMitt } from '/@/store/domain/channelTree'
 import { getVuexData } from '/@/store/utils/migrateFromVuex'
 import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { promisifyRequest } from 'idb-keyval'
-import type {Union} from "ts-pattern/dist/types/helpers";
+import type { Union } from 'ts-pattern/dist/types/helpers'
 
 type FeatureFlagKey = 'test1' | 'test2'
 
@@ -25,7 +25,10 @@ type FeatureFlagDescription = {
 
 export type FeatureFlag = FeatureFlagDescription & { enabled: boolean }
 
-const featureFlagDescriptions: Record<FeatureFlagKey, FeatureFlagDescription> = {
+export const featureFlagDescriptions: Record<
+  FeatureFlagKey,
+  FeatureFlagDescription
+> = {
   test1: {
     title: 'フラグテスト 1',
     description: 'test1',
@@ -39,7 +42,6 @@ const featureFlagDescriptions: Record<FeatureFlagKey, FeatureFlagDescription> = 
     endAt: new Date('2020-01-31')
   }
 }
-
 
 const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
   const initialValue: State = {
@@ -95,7 +97,6 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
   }
 
   return {
-    ...toRefs(state),
     updateFeatureFlagStatus,
     FeatureFlags,
     restoring
@@ -105,7 +106,5 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
 export const useFeatureFlagSettings = convertToRefsStore(useFlagSettingsPinia)
 
 if (import.meta.hot) {
-  import.meta.hot.accept(
-    acceptHMRUpdate(useFlagSettingsPinia, import.meta.hot)
-  )
+  import.meta.hot.accept(acceptHMRUpdate(useFlagSettingsPinia, import.meta.hot))
 }

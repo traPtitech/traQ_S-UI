@@ -22,7 +22,6 @@ import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import FeatureFlag from '/@/components/Settings/FeatureFlagTab/FeatureFlag.vue'
 
 const state = useFeatureFlagSettings()
-
 </script>
 
 <style lang="scss" module>

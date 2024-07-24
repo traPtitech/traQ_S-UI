@@ -9,7 +9,7 @@
       </p>
     </div>
     <div>
-      <a-toggle v-model="value" :disabled="props.endAt < new Date()"/>
+      <a-toggle v-model="value" :disabled="props.endAt < new Date()" />
     </div>
   </div>
 </template>
