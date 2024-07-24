@@ -98,6 +98,7 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
     ...toRefs(state),
     updateFeatureFlagStatus,
     FeatureFlags,
+    restoring
   }
 })
 

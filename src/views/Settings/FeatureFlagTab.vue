@@ -1,6 +1,7 @@
 <template>
   <section :class="$style.featureFlagTab">
-    <feature-flag
+    <div v-if="!state.restoring.value">
+      <feature-flag
         v-for="[key, item] in state.FeatureFlags.value"
         :key="key"
         :title="item.title"
@@ -8,7 +9,11 @@
         :model-value="item.enabled"
         :end-at="item.endAt"
         @update:model-value="(v: boolean) => state.updateFeatureFlagStatus(key, v)"
-    />
+      />
+    </div>
+    <div v-else>
+      <p>Now loading...</p>
+    </div>
   </section>
 </template>
 
