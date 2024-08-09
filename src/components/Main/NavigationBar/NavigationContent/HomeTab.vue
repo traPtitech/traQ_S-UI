@@ -1,12 +1,23 @@
 <template>
   <div>
-    <navigation-content-container
-      v-if="homeChannelWithTree.length > 0"
-      subtitle="ホームチャンネル"
-      :class="$style.item"
-    >
-      <channel-tree :channels="homeChannelWithTree" show-shortened-path />
-    </navigation-content-container>
+    <div v-if="FlagStatus['flag_test']">
+      <navigation-content-container
+          v-if="homeChannelWithTree.length > 0"
+          subtitle="testチャンネル"
+          :class="$style.item"
+      >
+        <channel-tree :channels="homeChannelWithTree" show-shortened-path />
+      </navigation-content-container>
+    </div>
+    <div v-else>
+      <navigation-content-container
+          v-if="homeChannelWithTree.length > 0"
+          subtitle="ホームチャンネル"
+          :class="$style.item"
+      >
+        <channel-tree :channels="homeChannelWithTree" show-shortened-path />
+      </navigation-content-container>
+    </div>
     <navigation-content-container
       v-if="
         dmChannelsWithNotification.length + channelsWithNotification.length !==
@@ -50,6 +61,9 @@ import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 import useChannelsWithNotification from '/@/composables/subscription/useChannelsWithNotification'
 import { filterTrees } from '/@/lib/basic/tree'
+import {useFeatureFlagSettings} from "/@/store/app/featureFlagSettings";
+
+const { FlagStatus } = useFeatureFlagSettings();
 
 const { homeChannelTree } = useChannelTree()
 const { channelSessionsMap } = useDomainRtcStore()

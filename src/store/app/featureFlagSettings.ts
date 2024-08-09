@@ -9,7 +9,7 @@ import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { promisifyRequest } from 'idb-keyval'
 import type { Union } from 'ts-pattern/dist/types/helpers'
 
-type FeatureFlagKey = 'test1' | 'test2'
+type FeatureFlagKey = 'flag_test'
 
 type State = {
   status: Map<FeatureFlagKey, boolean | undefined>
@@ -24,22 +24,23 @@ type FeatureFlagDescription = {
 
 export type FeatureFlag = FeatureFlagDescription & { enabled: boolean }
 
+/*
+  *** FeatureFlag の利用仮ルール ***
+  - 日時の指定は最大一ヶ月先まで （FeatureFlag の利用を前提とした・FeatureFlag を乱用した運用を避けるため。期間後に本実装するかを検討する）
+  - 利用しなくなった FeatureFlag は削除する
+  - 仮ルールなので必要に応じて変えてほしいです
+*/
+
 export const featureFlagDescriptions: Record<
   FeatureFlagKey,
   FeatureFlagDescription
 > = {
-  test1: {
-    title: 'フラグテスト 1',
-    description: 'test1',
+  flag_test: {
+    title: 'フラグテスト・サンプル用',
+    description: '「提供終了日」の表記がひらがなになります。',
     defaultValue: true,
-    endAt: new Date('2024-07-31')
+    endAt: new Date('2024-08-31')
   },
-  test2: {
-    title: 'フラグテスト 2',
-    description: 'test2',
-    defaultValue: false,
-    endAt: new Date('2020-01-31')
-  }
 }
 
 const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
