@@ -1,13 +1,10 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { computed, toRefs } from 'vue'
-import { replacePrefix } from '/@/lib/basic/string'
+import { computed } from 'vue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
-import { channelTreeMitt } from '/@/store/domain/channelTree'
 import { getVuexData } from '/@/store/utils/migrateFromVuex'
 import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { promisifyRequest } from 'idb-keyval'
-import type { Union } from 'ts-pattern/dist/types/helpers'
 
 type FeatureFlagKey = 'flag_test'
 
