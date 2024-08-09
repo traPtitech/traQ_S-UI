@@ -18,9 +18,9 @@
 <script lang="ts" setup>
 import AToggle from '/@/components/UI/AToggle.vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
-import {useFeatureFlagSettings} from "/@/store/app/featureFlagSettings";
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
-const { FlagStatus } = useFeatureFlagSettings();
+const { FlagStatus } = useFeatureFlagSettings()
 
 const props = defineProps<{
   title: string

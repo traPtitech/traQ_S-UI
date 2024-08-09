@@ -40,7 +40,7 @@ export const featureFlagDescriptions: Record<
     description: '「提供終了日」の表記がひらがなになります。',
     defaultValue: true,
     endAt: new Date('2024-08-31')
-  },
+  }
 }
 
 const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
@@ -88,7 +88,10 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
   })
 
   const FlagStatus = computed(() => {
-    const res: Record<FeatureFlagKey, boolean> = {} as Record<FeatureFlagKey, boolean>
+    const res: Record<FeatureFlagKey, boolean> = {} as Record<
+      FeatureFlagKey,
+      boolean
+    >
     Object.entries(featureFlagDescriptions).forEach(([flag, featureFlag]) => {
       res[flag as FeatureFlagKey] = isFlagEnabled(flag as FeatureFlagKey)
     })

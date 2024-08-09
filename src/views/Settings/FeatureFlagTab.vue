@@ -21,7 +21,8 @@
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import FeatureFlag from '/@/components/Settings/FeatureFlagTab/FeatureFlag.vue'
 
-const { updateFeatureFlagStatus, FeatureFlags, FlagStatus, restoring } = useFeatureFlagSettings()
+const { updateFeatureFlagStatus, FeatureFlags, FlagStatus, restoring } =
+  useFeatureFlagSettings()
 </script>
 
 <style lang="scss" module>
