@@ -13,7 +13,6 @@ type FeatureFlagKey = 'test1' | 'test2'
 
 type State = {
   status: Map<FeatureFlagKey, boolean | undefined>
-  enabled: true
 }
 
 type FeatureFlagDescription = {
@@ -45,8 +44,7 @@ export const featureFlagDescriptions: Record<
 
 const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
   const initialValue: State = {
-    status: new Map<FeatureFlagKey, boolean | undefined>(),
-    enabled: true,
+    status: new Map<FeatureFlagKey, boolean | undefined>()
   }
 
   const [state, restoring, restoringPromise] = useIndexedDbValue(
@@ -88,6 +86,14 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
     return res
   })
 
+  const FlagStatus = computed(() => {
+    const res: Record<FeatureFlagKey, boolean> = {} as Record<FeatureFlagKey, boolean>
+    Object.entries(featureFlagDescriptions).forEach(([flag, featureFlag]) => {
+      res[flag as FeatureFlagKey] = isFlagEnabled(flag as FeatureFlagKey)
+    })
+    return res
+  })
+
   const updateFeatureFlagStatus = async (
     flag: FeatureFlagKey,
     enabled: boolean
@@ -99,6 +105,7 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
   return {
     updateFeatureFlagStatus,
     FeatureFlags,
+    FlagStatus,
     restoring
   }
 })
