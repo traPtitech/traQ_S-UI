@@ -129,6 +129,7 @@ interface GroupMemberAddModalState extends BaseModalState {
 
 interface SettingsCacheClearModalState extends BaseModalState {
   type: 'settings-cache-clear'
+}
 
 interface SettingsThemeEditState extends BaseModalState {
   type: 'settings-theme-edit'
