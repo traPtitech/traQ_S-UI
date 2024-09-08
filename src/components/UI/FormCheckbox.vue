@@ -28,6 +28,9 @@ const value = useModelValueSyncer(props, emit)
 <style lang="scss" module>
 .checkbox {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 
   border: solid 2px transparent;
   border-radius: 4px;
