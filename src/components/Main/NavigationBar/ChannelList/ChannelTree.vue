@@ -21,17 +21,16 @@ import type { ChannelId } from '/@/types/entity-ids'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 import ChannelElement from './ChannelElement.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
-import { ref } from 'vue'
+import { ref, type HTMLAttributes } from 'vue'
 
-withDefaults(
-  defineProps<{
-    channels: ReadonlyArray<ChannelTreeNode>
-    showShortenedPath?: boolean
-  }>(),
-  {
-    showShortenedPath: false
-  }
-)
+interface Props extends /* @vue-ignore */ HTMLAttributes {
+  channels: ReadonlyArray<ChannelTreeNode>
+  showShortenedPath?: boolean
+}
+
+withDefaults(defineProps<Props>(), {
+  showShortenedPath: false
+})
 
 const childrenShownChannels = ref(new Set<ChannelId>())
 const toggleChildren = (channelId: ChannelId) => {

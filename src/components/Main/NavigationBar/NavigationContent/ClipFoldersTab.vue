@@ -49,7 +49,8 @@ const onClickButton = () => {
 .button {
   @include color-ui-secondary-inactive;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus {
     @include color-ui-secondary;
   }
 }

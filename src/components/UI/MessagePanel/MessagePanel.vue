@@ -1,28 +1,28 @@
 <template>
-  <div :class="$style.container">
-    <div :class="$style.header">
-      <user-name
-        v-if="titleType === 'user'"
-        :class="$style.item"
-        :user="userState"
-        is-title
-      />
-      <channel-name
-        v-if="titleType === 'channel'"
-        :class="$style.item"
-        :path="path"
-        is-title
-      />
-      <a-icon
-        v-if="showContextMenuButton"
-        :class="$style.icon"
-        :size="28"
-        mdi
-        name="dots-horizontal"
-        @click.prevent="onClickContextMenuButton"
-      />
-    </div>
-    <router-link :to="to">
+  <router-link :to="to">
+    <div :class="$style.container">
+      <div :class="$style.header">
+        <user-name
+          v-if="titleType === 'user'"
+          :class="$style.item"
+          :user="userState"
+          is-title
+        />
+        <channel-name
+          v-if="titleType === 'channel'"
+          :class="$style.item"
+          :path="path"
+          is-title
+        />
+        <a-icon
+          v-if="showContextMenuButton"
+          :class="$style.icon"
+          :size="28"
+          mdi
+          name="dots-horizontal"
+          @click.prevent="onClickContextMenuButton"
+        />
+      </div>
       <div :class="$style.separator" />
       <div
         v-if="!hideSubtitle"
@@ -42,8 +42,8 @@
         :content="message.content"
         :line-clamp-content="lineClampContent"
       />
-    </router-link>
-  </div>
+    </div>
+  </router-link>
 </template>
 
 <script lang="ts" setup>
