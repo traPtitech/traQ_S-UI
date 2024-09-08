@@ -75,7 +75,7 @@ const anyCacheSelected = computed(() => {
 })
 
 const cacheSize = ref(
-  Object.fromEntries(cacheCategories.map(name => [name, '']))
+  Object.fromEntries(cacheCategories.map(name => [name, '計算中...']))
 )
 
 const cacheNames = async (category: CacheCategory) => {
