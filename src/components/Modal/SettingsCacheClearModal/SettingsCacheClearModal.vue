@@ -13,7 +13,7 @@
         >
           <div :class="$style.label">
             {{ cacheLabel(name) }}
-            <!-- TODO: キャッシュサイズを表示する -->
+            <!-- TODO: キャッシュサイズの計算ロジックを修正し、キャッシュサイズを表示する -->
           </div>
         </form-checkbox>
       </div>
@@ -80,6 +80,8 @@ const cacheNames = async (category: CacheCategory) => {
   const allNames = await window.caches.keys()
   return allNames.filter(name => name.startsWith(category))
 }
+
+// TODO: キャッシュサイズの計算ロジックを修正する。現在の状態ではキャッシュサイズの合計値がnavigator.storage.estimate().usageと一致しない。
 // const cacheSize = ref(
 //   Object.fromEntries(cacheCategories.map(name => [name, '計算中...']))
 // )
