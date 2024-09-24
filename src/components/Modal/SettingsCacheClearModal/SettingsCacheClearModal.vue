@@ -13,7 +13,7 @@
         >
           <div :class="$style.label">
             {{ cacheLabel(name) }}
-            <span>{{ cacheSize[name] }}</span>
+            <!-- TODO: キャッシュサイズを表示する -->
           </div>
         </form-checkbox>
       </div>
@@ -32,14 +32,13 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import { wait } from '/@/lib/basic/timer'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useModalStore } from '/@/store/ui/modal'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
-import { prettifyFileSize } from '/@/lib/basic/file'
 
 declare global {
   interface StorageEstimate {
@@ -74,52 +73,12 @@ const anyCacheSelected = computed(() => {
   return Object.values(cacheCategoryToIsSelected).includes(true)
 })
 
-const cacheSize = ref(
-  Object.fromEntries(cacheCategories.map(name => [name, '計算中...']))
-)
-
 const cacheNames = async (category: CacheCategory) => {
   if (!(category === 'traQ_S-precache')) {
     return [category]
   }
   const allNames = await window.caches.keys()
   return allNames.filter(name => name.startsWith(category))
-}
-
-const updateCacheSize = async () => {
-  await Promise.all(
-    cacheCategories.map(async category => {
-      cacheSize.value[category] = prettifyFileSize(
-        await calculateCacheSizeSum(await cacheNames(category))
-      )
-    })
-  )
-}
-onMounted(updateCacheSize)
-
-const calculateCacheSizeSum = async (cacheNames: string[]) => {
-  let size = 0
-  await Promise.all(
-    cacheNames.map(async cacheName => {
-      size += await calculateEachCacheSize(cacheName)
-    })
-  )
-  return size
-}
-
-const calculateEachCacheSize = async (cacheName: string) => {
-  const cache = await window.caches.open(cacheName)
-  const keys = await cache.keys()
-  let size = 0
-  await Promise.all(
-    keys.map(async key => {
-      const response = await cache.match(key)
-      if (!response) return
-      const blob = await response.blob()
-      size += blob.size
-    })
-  )
-  return size
 }
 
 const cacheLabel = (cacheCategory: CacheCategory) => {
