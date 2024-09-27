@@ -10,6 +10,8 @@
       rows="1"
       :data-simple-padding="simplePadding"
       :data-shrink-to-one-line="shrinkToOneLine"
+      :data-is-stretchable="isStretchable"
+      :data-is-stretchable-on-focus="isStretchableOnFocus"
       :data-is-mobile="isMobile"
       :data-is-firefox="firefoxFlag"
       data-testid="message-input-textarea"
@@ -53,13 +55,17 @@ const props = withDefaults(
     isPosting?: boolean
     simplePadding?: boolean
     shrinkToOneLine?: boolean
+    isStretchable?: boolean
+    isStretchableOnFocus?: boolean
   }>(),
   {
     modelValue: '',
     channelId: '',
     isPosting: false,
     simplePadding: false,
-    shrinkToOneLine: false
+    shrinkToOneLine: false,
+    isStretchable: false,
+    isStretchableOnFocus: false
   }
 )
 
@@ -162,13 +168,27 @@ $vertical-padding: 8px;
   padding: $vertical-padding 16px;
   // 左から、余白、スタンプパレットボタン、余白、送信ボタン、スクロールバー
   padding-right: calc(8px + 24px + 8px + 24px + var(--input-scrollbar-width));
-  max-height: 160px;
-  &[readonly] {
-    @include color-ui-secondary-inactive;
-    cursor: wait;
+  &[data-is-mobile='false'] {
+    max-height: 160px;
+    &[data-is-stretchable='true'] {
+      max-height: 320px;
+    }
+    &[data-is-stretchable-on-focus='true']:focus {
+      max-height: 320px;
+    }
   }
   &[data-is-mobile='true'] {
     max-height: 70px;
+    &[data-is-stretchable='true'] {
+      max-height: 140px;
+    }
+    &[data-is-stretchable-on-focus='true']:focus {
+      max-height: 140px;
+    }
+  }
+  &[readonly] {
+    @include color-ui-secondary-inactive;
+    cursor: wait;
   }
   &[data-simple-padding='true'] {
     padding-right: 16px;
