@@ -10,8 +10,7 @@
       rows="1"
       :data-simple-padding="simplePadding"
       :data-shrink-to-one-line="shrinkToOneLine"
-      :data-exists-height-limit="existsHeightLimit"
-      :data-is-stretchable="isStretchable"
+      :data-disable-height-limit="disableHeightLimit"
       :data-is-stretchable-on-focus="isStretchableOnFocus"
       :data-is-mobile="isMobile"
       :data-is-firefox="firefoxFlag"
@@ -56,7 +55,7 @@ const props = withDefaults(
     isPosting?: boolean
     simplePadding?: boolean
     shrinkToOneLine?: boolean
-    existsHeightLimit?: boolean
+    disableHeightLimit?: boolean
     isStretchableOnFocus?: boolean
   }>(),
   {
@@ -65,7 +64,7 @@ const props = withDefaults(
     isPosting: false,
     simplePadding: false,
     shrinkToOneLine: false,
-    existsHeightLimit: true,
+    disableHeightLimit: false,
     isStretchableOnFocus: false
   }
 )
@@ -169,7 +168,7 @@ $vertical-padding: 8px;
   padding: $vertical-padding 16px;
   // 左から、余白、スタンプパレットボタン、余白、送信ボタン、スクロールバー
   padding-right: calc(8px + 24px + 8px + 24px + var(--input-scrollbar-width));
-  &[data-exists-height-limit='true'] {
+  &[data-disable-height-limit='false'] {
     &[data-is-mobile='true'] {
       max-height: 70px;
     }
@@ -182,7 +181,7 @@ $vertical-padding: 8px;
       ); // 320px if mobile = false, 140px if mobile = true
     }
   }
-  &[data-exists-height-limit='false'] {
+  &[data-disable-height-limit='true'] {
     max-height: none;
   }
   &[readonly] {
