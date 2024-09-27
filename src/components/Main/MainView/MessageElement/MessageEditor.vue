@@ -12,7 +12,7 @@
         :class="$style.inputTextArea"
         :is-posting="isPostingAttachment"
         simple-padding
-        is-stretchable
+        exists-height-limit="false"
         @add-attachments="onAddAttachments"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
