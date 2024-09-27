@@ -10,6 +10,7 @@
       rows="1"
       :data-simple-padding="simplePadding"
       :data-shrink-to-one-line="shrinkToOneLine"
+      :data-exists-height-limit="existsHeightLimit"
       :data-is-stretchable="isStretchable"
       :data-is-stretchable-on-focus="isStretchableOnFocus"
       :data-is-mobile="isMobile"
@@ -55,7 +56,7 @@ const props = withDefaults(
     isPosting?: boolean
     simplePadding?: boolean
     shrinkToOneLine?: boolean
-    isStretchable?: boolean
+    existsHeightLimit?: boolean
     isStretchableOnFocus?: boolean
   }>(),
   {
@@ -64,7 +65,7 @@ const props = withDefaults(
     isPosting: false,
     simplePadding: false,
     shrinkToOneLine: false,
-    isStretchable: false,
+    existsHeightLimit: true,
     isStretchableOnFocus: false
   }
 )
@@ -168,23 +169,28 @@ $vertical-padding: 8px;
   padding: $vertical-padding 16px;
   // 左から、余白、スタンプパレットボタン、余白、送信ボタン、スクロールバー
   padding-right: calc(8px + 24px + 8px + 24px + var(--input-scrollbar-width));
-  &[data-is-mobile='false'] {
-    max-height: 160px;
-    &[data-is-stretchable='true'] {
-      max-height: 320px;
+  &[data-exists-height-limit='true'] {
+    &[data-is-mobile='false'] {
+      max-height: 160px;
+      &[data-is-stretchable='true'] {
+        max-height: 320px;
+      }
+      &[data-is-stretchable-on-focus='true']:focus {
+        max-height: 320px;
+      }
     }
-    &[data-is-stretchable-on-focus='true']:focus {
-      max-height: 320px;
+    &[data-is-mobile='true'] {
+      max-height: 70px;
+      &[data-is-stretchable='true'] {
+        max-height: 140px;
+      }
+      &[data-is-stretchable-on-focus='true']:focus {
+        max-height: 140px;
+      }
     }
   }
-  &[data-is-mobile='true'] {
-    max-height: 70px;
-    &[data-is-stretchable='true'] {
-      max-height: 140px;
-    }
-    &[data-is-stretchable-on-focus='true']:focus {
-      max-height: 140px;
-    }
+  &[data-exists-height-limit='false'] {
+    max-height: none;
   }
   &[readonly] {
     @include color-ui-secondary-inactive;
