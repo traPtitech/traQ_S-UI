@@ -28,7 +28,7 @@ import { useModalStore } from '/@/store/ui/modal'
 withDefaults(
   defineProps<{
     iconMdi?: boolean
-    iconName: string
+    iconName?: string
     title: string
     subtitle?: string
     returnButton?: boolean
