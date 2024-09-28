@@ -81,7 +81,6 @@ const cacheNames = async (category: CacheCategory) => {
   return allNames.filter(name => name.startsWith(category))
 }
 
-
 const cacheLabel = (cacheCategory: CacheCategory) => {
   switch (cacheCategory) {
     case 'traQ_S-precache':
