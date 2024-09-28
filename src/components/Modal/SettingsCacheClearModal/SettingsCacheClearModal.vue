@@ -13,7 +13,7 @@
         >
           <div :class="$style.label">
             {{ cacheLabel(name) }}
-            <!-- TODO: キャッシュサイズの計算ロジックを修正し、キャッシュサイズを表示する -->
+            <!-- TODO: キャッシュサイズを表示する -->
           </div>
         </form-checkbox>
       </div>
@@ -81,43 +81,6 @@ const cacheNames = async (category: CacheCategory) => {
   return allNames.filter(name => name.startsWith(category))
 }
 
-// TODO: キャッシュサイズの計算ロジックを修正する。現在の状態ではキャッシュサイズの合計値がnavigator.storage.estimate().usageと一致しない。
-// const cacheSize = ref(
-//   Object.fromEntries(cacheCategories.map(name => [name, '計算中...']))
-// )
-// const updateCacheSize = async () => {
-//   await Promise.all(
-//     cacheCategories.map(async category => {
-//       cacheSize.value[category] = prettifyFileSize(
-//         await calculateCacheSizeSum(await cacheNames(category))
-//       )
-//     })
-//   )
-// }
-// onMounted(updateCacheSize)
-// const calculateCacheSizeSum = async (cacheNames: string[]) => {
-//   let size = 0
-//   await Promise.all(
-//     cacheNames.map(async cacheName => {
-//       size += await calculateEachCacheSize(cacheName)
-//     })
-//   )
-//   return size
-// }
-// const calculateEachCacheSize = async (cacheName: string) => {
-//   const cache = await window.caches.open(cacheName)
-//   const keys = await cache.keys()
-//   let size = 0
-//   await Promise.all(
-//     keys.map(async key => {
-//       const response = await cache.match(key)
-//       if (!response) return
-//       const blob = await response.blob()
-//       size += blob.size
-//     })
-//   )
-//   return size
-// }
 
 const cacheLabel = (cacheCategory: CacheCategory) => {
   switch (cacheCategory) {
