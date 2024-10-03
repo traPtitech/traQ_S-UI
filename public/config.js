@@ -84,12 +84,12 @@
       },
       {
         label: 'traPortfolio',
-        iconPath: 'traP.svg',
+        iconPath: 'traPortfolio_UI.svg',
         appLink: 'https://portfolio.trap.jp/'
       },
       {
         label: 'tpf-admin',
-        iconPath: 'traP.svg',
+        iconPath: 'traPortfolio_Dashboard.svg',
         appLink: 'https://portfolio-admin.trap.jp/'
       }
     ],
