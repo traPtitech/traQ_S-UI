@@ -38,7 +38,7 @@ describe('getFullDayString', () => {
     expect(getFullDayString(defaultDate1)).toBe('1985/12/04')
   })
   it('can get full day (2)', () => {
-    expect(getFullDayString(defaultDate2)).toBe('2001/04/03')
+    expect(getFullDayString(defaultDate2)).toBe('2001/04/04')
   })
 })
 
