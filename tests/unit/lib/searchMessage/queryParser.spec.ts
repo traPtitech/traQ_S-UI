@@ -51,7 +51,7 @@ describe('parseQuery', () => {
     const { normalizedQuery, queryObject } = await parseQuery(query)
     expect(normalizedQuery).toBe(query)
     expect(queryObject.word).toBe('lorem ipsum')
-    expect(queryObject.after).toBe('2021-01-23T00:00:00.000Z')
+    expect(queryObject.after).toBe('2021-01-23T15:00:00.000Z')
   })
   it('can parse query with in-filter (prefix: `in:`)', async () => {
     const query = `lorem ipsum in:${mockChannelName}`
