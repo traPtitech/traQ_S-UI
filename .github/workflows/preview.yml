@@ -42,7 +42,7 @@ jobs:
 
       # 隔離された環境でビルドを行い、write perm付きトークンをユーザーのコードに与えないよう注意すること
       - name: Build
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64
