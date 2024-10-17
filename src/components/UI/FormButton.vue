@@ -46,17 +46,18 @@ type Props = {
   mdi?: boolean
 } & (NonDangerType | DangerType)
 
-const props = withDefaults(defineProps<Props>(), {
-  label: '',
-  loading: false,
-  disabled: false,
-  type: 'primary',
-  isDanger: false,
-  mdi: false
-})
+
+const {
+  label = '',
+  loading = false,
+  disabled = false,
+  type = 'primary',
+  isDanger = false,
+  mdi = false
+} = defineProps<Props>()
 
 const spinnerColor = computed(() => {
-  return match([props.type, props.isDanger] as const)
+  return match([type, isDanger] as const)
     .with(['primary', P._], () => 'white' as const)
     .with(['secondary', true], () => 'accent-error' as const)
     .with(['secondary', false], () => 'accent-primary' as const)

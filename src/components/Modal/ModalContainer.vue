@@ -76,6 +76,7 @@ import StampCreateModal from './StampCreateModal/StampCreateModal.vue'
 import StampEditModal from './StampEditModal/StampEditModal.vue'
 import StampImageEditModal from './StampImageEditModal/StampImageEditModal.vue'
 import ProfileIconEditModal from './ProfileIconEditModal/ProfileIconEditModal.vue'
+import SettingsCacheClearModal from './SettingsCacheClearModal/SettingsCacheClearModal.vue'
 import SettingsThemeEditModal from './SettingsThemeEditModal/SettingsThemeEditModal.vue'
 import type { ModalStateType } from '/@/store/ui/modal/states'
 
@@ -100,6 +101,7 @@ const components: Record<ModalStateType, Component> = {
   'settings-stamp-edit': StampEditModal,
   'settings-stamp-image-edit': StampImageEditModal,
   'settings-profile-icon-edit': ProfileIconEditModal,
+  'settings-cache-clear': SettingsCacheClearModal,
   'settings-theme-edit': SettingsThemeEditModal
 }
 const component = computed(() => {

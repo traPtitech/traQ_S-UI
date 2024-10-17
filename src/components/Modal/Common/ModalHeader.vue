@@ -8,7 +8,8 @@
           :class="$style.icon"
           :name="iconName"
           :mdi="iconMdi"
-        />{{ title }}
+        />
+        {{ title }}
       </h1>
       <h2 :class="$style.subtitle" :data-has-icon="$boolAttr(!iconName)">
         <slot name="subtitle" />
@@ -74,7 +75,6 @@ withDefaults(
     weight: 500;
     size: 0.875rem;
   }
-
   &[data-has-icon] {
     padding-left: 0;
   }

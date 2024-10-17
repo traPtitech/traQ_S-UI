@@ -22,8 +22,9 @@
     <form-checkbox
       v-model="addMember"
       :class="[$style.item, $style.memberCheckbox]"
-      label="自分自身をメンバーに追加する"
-    />
+    >
+      自分自身をメンバーに追加する
+    </form-checkbox>
     <div :class="$style.createButtonWrapper">
       <form-button label="作成" @click="create" />
     </div>

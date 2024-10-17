@@ -28,6 +28,7 @@ export type ModalStateType =
   | 'settings-stamp-edit'
   | 'settings-stamp-image-edit'
   | 'settings-profile-icon-edit'
+  | 'settings-cache-clear'
   | 'settings-theme-edit'
 
 export type ModalState =
@@ -49,6 +50,7 @@ export type ModalState =
   | SettingsStampEditModalState
   | SettingsStampImageEditModalState
   | SettingsProfileIconEdit
+  | SettingsCacheClearModalState
   | SettingsThemeEditState
 
 interface BaseModalState {
@@ -154,6 +156,11 @@ interface SettingsProfileIconEdit extends BaseModalState {
   type: 'settings-profile-icon-edit'
   file: File
 }
+
+interface SettingsCacheClearModalState extends BaseModalState {
+  type: 'settings-cache-clear'
+}
+
 interface SettingsThemeEditState extends BaseModalState {
   type: 'settings-theme-edit'
 }

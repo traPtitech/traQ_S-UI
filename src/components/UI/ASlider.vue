@@ -1,5 +1,18 @@
 <template>
   <vue-slider
+    v-if="isClickPrevent"
+    v-model="value"
+    :min="min"
+    :max="max"
+    :disabled="disabled"
+    :interval="interval"
+    :tooltip="tooltip"
+    :tooltip-formatter="tooltipFormatter"
+    :dot-size="12"
+    @click.prevent
+  />
+  <vue-slider
+    v-else
     v-model="value"
     :min="min"
     :max="max"
@@ -29,12 +42,14 @@ const props = withDefaults(
     tooltipFormatter?: TooltipFormatter
     tooltip?: TooltipProp
     interval?: number
+    isClickPrevent?: boolean
   }>(),
   {
     disabled: false,
     min: 0,
     max: 100,
-    tooltip: 'active'
+    tooltip: 'active',
+    isClickPrevent: false
   }
 )
 
