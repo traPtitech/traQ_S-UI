@@ -46,7 +46,6 @@ type Props = {
   mdi?: boolean
 } & (NonDangerType | DangerType)
 
-
 const {
   label = '',
   loading = false,
