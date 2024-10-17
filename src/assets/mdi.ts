@@ -79,7 +79,8 @@ import {
   mdiCrown,
   mdiFormatTitle,
   mdiCloseCircle,
-  mdiNotebook
+  mdiNotebook,
+  mdiCodeBraces
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -167,7 +168,8 @@ const mdi: MdiIconsMapping = {
   'music-note': mdiMusicNote,
   stop: mdiStop,
   crown: mdiCrown,
-  'format-title': mdiFormatTitle
+  'format-title': mdiFormatTitle,
+  'code-braces': mdiCodeBraces
 }
 
 export default mdi
