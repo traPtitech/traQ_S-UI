@@ -64,10 +64,6 @@ $ephemeralNavigationMinHeight: 64px;
   flex-direction: column;
   height: 100%;
   flex-shrink: 0;
-  overflow: {
-    x: hidden;
-    y: auto;
-  }
   scrollbar-gutter: stable;
 }
 .navigations {
