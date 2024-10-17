@@ -7,8 +7,8 @@
       v-model:open-mode="state.openMode"
       v-model:open-channel-name="state.openChannelName"
     />
-    <send-key v-model:sendWithModifierKey="state.sendWithModifierKey" />
-    <modifier-keys v-model:modifierKey="state.modifierKey" />
+    <send-key v-model:send-with-modifier-key="state.sendWithModifierKey" />
+    <modifier-keys v-model:modifier-key="state.modifierKey" />
     <cache-manager />
   </section>
 </template>
