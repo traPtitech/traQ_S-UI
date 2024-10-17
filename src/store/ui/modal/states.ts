@@ -5,7 +5,8 @@ import type {
   FileId,
   UserGroupId,
   TagId,
-  MessageId
+  MessageId,
+  StampId
 } from '/@/types/entity-ids'
 
 export type ModalStateType =
@@ -23,6 +24,10 @@ export type ModalStateType =
   | 'group-member-edit'
   | 'group-admin-add'
   | 'group-member-add'
+  | 'settings-stamp-create'
+  | 'settings-stamp-edit'
+  | 'settings-stamp-image-edit'
+  | 'settings-profile-icon-edit'
   | 'settings-cache-clear'
   | 'settings-theme-edit'
 
@@ -41,6 +46,10 @@ export type ModalState =
   | GroupMemberEditModalState
   | GroupAdminAddModalState
   | GroupMemberAddModalState
+  | SettingsStampCreateModalState
+  | SettingsStampEditModalState
+  | SettingsStampImageEditModalState
+  | SettingsProfileIconEdit
   | SettingsCacheClearModalState
   | SettingsThemeEditState
 
@@ -125,6 +134,27 @@ interface GroupAdminAddModalState extends BaseModalState {
 interface GroupMemberAddModalState extends BaseModalState {
   type: 'group-member-add'
   id: UserGroupId
+}
+
+interface SettingsStampCreateModalState extends BaseModalState {
+  type: 'settings-stamp-create'
+  file: File
+}
+
+interface SettingsStampEditModalState extends BaseModalState {
+  type: 'settings-stamp-edit'
+  id: StampId
+}
+
+interface SettingsStampImageEditModalState extends BaseModalState {
+  type: 'settings-stamp-image-edit'
+  id: StampId
+  file: File
+}
+
+interface SettingsProfileIconEdit extends BaseModalState {
+  type: 'settings-profile-icon-edit'
+  file: File
 }
 
 interface SettingsCacheClearModalState extends BaseModalState {
