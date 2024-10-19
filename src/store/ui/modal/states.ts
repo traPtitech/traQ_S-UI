@@ -8,13 +8,12 @@ import type {
   MessageId
 } from '/@/types/entity-ids'
 
-type ModalStateType =
+export type ModalStateType =
   | 'user'
   | 'group'
   | 'notification'
   | 'file'
   | 'tag'
-  | 'group'
   | 'channel-create'
   | 'qrcode'
   | 'clip-create'
@@ -24,6 +23,7 @@ type ModalStateType =
   | 'group-member-edit'
   | 'group-admin-add'
   | 'group-member-add'
+  | 'settings-cache-clear'
   | 'settings-theme-edit'
 
 export type ModalState =
@@ -41,6 +41,7 @@ export type ModalState =
   | GroupMemberEditModalState
   | GroupAdminAddModalState
   | GroupMemberAddModalState
+  | SettingsCacheClearModalState
   | SettingsThemeEditState
 
 interface BaseModalState {
@@ -124,6 +125,10 @@ interface GroupAdminAddModalState extends BaseModalState {
 interface GroupMemberAddModalState extends BaseModalState {
   type: 'group-member-add'
   id: UserGroupId
+}
+
+interface SettingsCacheClearModalState extends BaseModalState {
+  type: 'settings-cache-clear'
 }
 
 interface SettingsThemeEditState extends BaseModalState {
