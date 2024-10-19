@@ -10,7 +10,7 @@ declare module '@vue/runtime-dom' {
     // https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/enterkeyhint
     enterkeyhint?: string
   }
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-empty-object-type
   interface SVGAttributes extends DataAndAriaAttributes {}
 }
 
