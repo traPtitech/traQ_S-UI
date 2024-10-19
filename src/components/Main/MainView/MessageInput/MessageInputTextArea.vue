@@ -62,7 +62,7 @@ const props = withDefaults(
     isPosting: false,
     simplePadding: false,
     shrinkToOneLine: false,
-    disableHeightLimit: false,
+    disableHeightLimit: false
   }
 )
 
