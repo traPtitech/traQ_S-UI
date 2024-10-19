@@ -37,7 +37,6 @@
         :channel-id="channelId"
         :is-posting="isPosting"
         :shrink-to-one-line="isMobile && isLeftControlsExpanded"
-        is-stretchable-on-focus
         @focus="onFocus"
         @blur="onBlur"
         @add-attachments="onAddAttachments"
