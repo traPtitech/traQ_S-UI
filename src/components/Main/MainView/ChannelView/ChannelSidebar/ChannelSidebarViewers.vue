@@ -9,7 +9,7 @@
       direction="row"
       transition="fade-right"
       :user-ids="viewerIds"
-      @click="toggle"
+      @toggle="toggle"
     />
   </sidebar-content-container>
   <channel-sidebar-viewers-detail

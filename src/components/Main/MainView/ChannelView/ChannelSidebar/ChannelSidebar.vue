@@ -7,7 +7,7 @@
         </template>
         <template #content>
           <channel-sidebar-content
-            v-model:isViewersDetailOpen="isViewersDetailOpen"
+            v-model:is-viewers-detail-open="isViewersDetailOpen"
             :channel-id="channelId"
             :viewer-ids="viewingUsers"
             :pinned-messages-count="pinnedMessages.length"

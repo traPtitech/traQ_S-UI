@@ -9,7 +9,7 @@
         v-model="roundedVolume"
         :disabled="disabled"
         tooltip="none"
-        @click.prevent
+        is-click-prevent
       />
     </div>
     <a-icon

@@ -63,6 +63,7 @@ import GroupCreateModal from './GroupCreateModal/GroupCreateModal.vue'
 import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vue'
 import GroupAdminAddModal from './GroupAdminAddModal/GroupAdminAddModal.vue'
 import GroupMemberAddModal from './GroupMemberAddModal/GroupMemberAddModal.vue'
+import SettingsCacheClearModal from './SettingsCacheClearModal/SettingsCacheClearModal.vue'
 import SettingsThemeEditModal from './SettingsThemeEditModal/SettingsThemeEditModal.vue'
 import type { ModalStateType } from '/@/store/ui/modal/states'
 
@@ -83,6 +84,7 @@ const components: Record<ModalStateType, Component> = {
   'group-member-edit': GroupMemberEditModal,
   'group-admin-add': GroupAdminAddModal,
   'group-member-add': GroupMemberAddModal,
+  'settings-cache-clear': SettingsCacheClearModal,
   'settings-theme-edit': SettingsThemeEditModal
 }
 const component = computed(() => {

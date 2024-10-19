@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div
+    :class="$style.container"
+    :style="styles.container"
+    @click="emit('toggle')"
+  >
     <transition-group :name="transition">
       <span
         v-if="inVisibleCount > 0 && showCount"
@@ -57,6 +61,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'countClick'): void
+  (e: 'toggle'): void
 }>()
 
 const styles = computed(() => {

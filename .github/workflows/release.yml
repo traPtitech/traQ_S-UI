@@ -28,7 +28,7 @@ jobs:
       - name: Archive dist/
         run: tar -zcvf ./dist.tar.gz ./dist
       - name: Create Release and upload dist.tar.gz
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

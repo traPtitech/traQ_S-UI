@@ -2,7 +2,7 @@
   <router-link :to="fileLink" :class="$style.container">
     <div :class="$style.header">
       <audio-player-play-button
-        v-model:isPlaying="isPlaying"
+        v-model:is-playing="isPlaying"
         :class="$style.icon"
         :size="32"
         :disabled="cantPlay"
