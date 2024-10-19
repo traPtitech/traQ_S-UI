@@ -11,7 +11,6 @@
       :data-simple-padding="simplePadding"
       :data-shrink-to-one-line="shrinkToOneLine"
       :data-disable-height-limit="disableHeightLimit"
-      :data-is-stretchable-on-focus="isStretchableOnFocus"
       :data-is-mobile="isMobile"
       :data-is-firefox="firefoxFlag"
       data-testid="message-input-textarea"
@@ -56,7 +55,6 @@ const props = withDefaults(
     simplePadding?: boolean
     shrinkToOneLine?: boolean
     disableHeightLimit?: boolean
-    isStretchableOnFocus?: boolean
   }>(),
   {
     modelValue: '',
@@ -65,7 +63,6 @@ const props = withDefaults(
     simplePadding: false,
     shrinkToOneLine: false,
     disableHeightLimit: false,
-    isStretchableOnFocus: false
   }
 )
 
@@ -174,11 +171,6 @@ $vertical-padding: 8px;
     }
     &[data-is-mobile='false'] {
       max-height: 160px;
-    }
-    &[data-is-stretchable-on-focus='true']:focus {
-      max-height: calc(
-        100% * 2
-      ); // 320px if mobile = false, 140px if mobile = true
     }
   }
   &[data-disable-height-limit='true'] {
