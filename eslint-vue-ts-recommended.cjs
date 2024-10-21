@@ -6,6 +6,7 @@
  * 適用されるようにするためにoverridesに'*.vue'を追加する
  */
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const typescriptEslintEslintRecommended = require('./node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended')
 
 module.exports = {
