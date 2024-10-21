@@ -159,7 +159,7 @@ jobs:
         env:
           CYPRESS_username: ${{ secrets.traQ_username }}
           CYPRESS_password: ${{ secrets.traQ_password }}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: failed-screenshots
           path: ./tests/e2e/screenshots
