@@ -1,44 +1,49 @@
 <template>
-  <div :class="$style.container">
-    <div :class="$style.header">
-      <user-name
-        v-if="titleType === 'user'"
-        :class="$style.item"
-        :user="userState"
-        is-title
-      />
-      <channel-name
-        v-if="titleType === 'channel'"
-        :class="$style.item"
-        :path="path"
-        is-title
-      />
-      <a-icon
-        v-if="showContextMenuButton"
-        :class="$style.icon"
-        :size="28"
-        mdi
-        name="dots-horizontal"
-        @click.prevent="onClickContextMenuButton"
+  <router-link :to="to">
+    <div :class="$style.container">
+      <div :class="$style.header">
+        <user-name
+          v-if="titleType === 'user'"
+          :class="$style.item"
+          :user="userState"
+          is-title
+        />
+        <channel-name
+          v-if="titleType === 'channel'"
+          :class="$style.item"
+          :path="path"
+          is-title
+        />
+        <a-icon
+          v-if="showContextMenuButton"
+          :class="$style.icon"
+          :size="28"
+          mdi
+          name="dots-horizontal"
+          @click.prevent="onClickContextMenuButton"
+        />
+      </div>
+      <div :class="$style.separator" />
+      <div
+        v-if="!hideSubtitle"
+        :class="[$style.subTitleContainer, $style.item]"
+      >
+        <user-name v-if="titleType === 'channel'" :user="userState" />
+        <channel-name v-if="titleType === 'user'" :path="path" />
+        <a-icon
+          v-if="message.createdAt !== message.updatedAt"
+          :class="$style.editIcon"
+          :size="16"
+          name="pencil-outline"
+          mdi
+        />
+      </div>
+      <render-content
+        :content="message.content"
+        :line-clamp-content="lineClampContent"
       />
     </div>
-    <div :class="$style.separator" />
-    <div v-if="!hideSubtitle" :class="[$style.subTitleContainer, $style.item]">
-      <user-name v-if="titleType === 'channel'" :user="userState" />
-      <channel-name v-if="titleType === 'user'" :path="path" />
-      <a-icon
-        v-if="message.createdAt !== message.updatedAt"
-        :class="$style.editIcon"
-        :size="16"
-        name="pencil-outline"
-        mdi
-      />
-    </div>
-    <render-content
-      :content="message.content"
-      :line-clamp-content="lineClampContent"
-    />
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts" setup>
@@ -58,6 +63,7 @@ const props = withDefaults(
     message: Message | ActivityTimelineMessage
     lineClampContent?: boolean
     showContextMenuButton?: boolean
+    to: string
   }>(),
   {
     titleType: 'channel' as const,
@@ -98,7 +104,6 @@ const onClickContextMenuButton = (e: MouseEvent) => {
   @include background-primary;
   border-radius: 4px;
   padding: 8px 16px;
-  cursor: pointer;
 }
 .header {
   display: flex;

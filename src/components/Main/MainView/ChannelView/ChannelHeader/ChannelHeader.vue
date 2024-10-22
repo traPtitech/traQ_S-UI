@@ -3,6 +3,10 @@
     <template #header>
       <div :class="$style.header">
         <channel-header-channel-name :channel-id="channelId" />
+        <channel-header-relation-button
+          :key="channelId"
+          :channel-id="channelId"
+        />
         <channel-header-topic :class="$style.topic" :channel-id="channelId" />
       </div>
     </template>
@@ -15,6 +19,7 @@
 <script lang="ts" setup>
 import PrimaryViewHeader from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeader.vue'
 import ChannelHeaderChannelName from './ChannelHeaderChannelName.vue'
+import ChannelHeaderRelationButton from './ChannelHeaderRelationButton.vue'
 import ChannelHeaderTopic from './ChannelHeaderTopic.vue'
 import ChannelHeaderTools from './ChannelHeaderTools.vue'
 import type { ChannelId } from '/@/types/entity-ids'
@@ -37,6 +42,7 @@ defineProps<{
   display: flex;
   align-items: center;
   overflow-x: auto;
+  margin-bottom: -6px;
 }
 .topic {
   margin-left: 16px;

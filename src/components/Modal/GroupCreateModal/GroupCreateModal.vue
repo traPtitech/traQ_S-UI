@@ -5,6 +5,7 @@
       :class="$style.item"
       label="グループ名"
       :max-length="30"
+      focus-on-mount
     />
     <form-input
       v-model="desc"
@@ -21,8 +22,9 @@
     <form-checkbox
       v-model="addMember"
       :class="[$style.item, $style.memberCheckbox]"
-      label="自分自身をメンバーに追加する"
-    />
+    >
+      自分自身をメンバーに追加する
+    </form-checkbox>
     <div :class="$style.createButtonWrapper">
       <form-button label="作成" @click="create" />
     </div>
@@ -39,6 +41,7 @@ import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'
 import { useMeStore } from '/@/store/domain/me'
+import { AxiosError } from 'axios'
 
 const { myId } = useMeStore()
 const { addErrorToast } = useToastStore()
@@ -62,11 +65,14 @@ const create = async () => {
     if (addMember.value) {
       await apis.addUserGroupMember(group.id, { id: myIdV, role: '' })
     }
-  } catch {
-    addErrorToast('グループの作成に失敗しました')
+    await popModal()
+  } catch (e) {
+    if (e instanceof AxiosError && e.response?.status === 409) {
+      addErrorToast('既に同じ名前のグループが存在しています')
+    } else {
+      addErrorToast('グループの作成に失敗しました')
+    }
   }
-
-  await popModal()
 }
 </script>
 

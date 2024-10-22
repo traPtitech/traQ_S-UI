@@ -10,7 +10,7 @@
       :min="0"
       :max="roundedDuration"
       tooltip="none"
-      @click.prevent
+      is-click-prevent
     />
   </div>
 </template>

@@ -9,6 +9,7 @@
     <div :class="$style.newTopic" :data-is-empty="details.after === ''">
       <inline-markdown
         :content="details.after !== '' ? details.after : '未設定'"
+        accept-action
       />
     </div>
   </sidebar-event-frame>

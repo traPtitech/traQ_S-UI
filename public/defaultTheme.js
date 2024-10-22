@@ -9,7 +9,7 @@
       accent: {
         primary: '#005BAC',
         notification: '#F2994A',
-        online: '#28F0E4',
+        online: '#02D931',
         error: '#F26451',
         focus: '#005BACC0'
       },
@@ -39,7 +39,7 @@
       accent: {
         primary: '#4899F9',
         notification: '#F2994A',
-        online: '#28F0E4',
+        online: '#02D931',
         error: '#F26451',
         focus: '#4899F9C0'
       },

@@ -9,7 +9,7 @@ describe('themeSchema', () => {
         accent: {
           primary: '#005BAC', // upper case
           notification: '#f2994a', // lower case
-          online: '#28f0E4', // mixed case
+          online: '#02D931', // mixed case
           error: '#F26451',
           focus: '#005BACC0'
         },
@@ -40,7 +40,7 @@ describe('themeSchema', () => {
         accent: {
           primary: '#005BAC',
           notification: '#F2994A',
-          online: '#28F0E4',
+          online: '#02D931',
           error: '#F26451',
           focus: '#005BACC0'
         },

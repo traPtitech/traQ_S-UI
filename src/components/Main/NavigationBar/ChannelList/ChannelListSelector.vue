@@ -1,34 +1,73 @@
 <template>
-  <div :class="$style.container">
-    <div :class="$style.buttonContainer">
-      <button
-        :class="$style.button"
-        :aria-selected="!isStared"
-        @click="unselectStarFilter"
-      >
-        すべて
-      </button>
-    </div>
-    <div :class="$style.buttonContainer">
-      <button
-        :class="$style.button"
-        :aria-selected="isStared"
-        @click="selectStarFilter"
-      >
-        お気に入り
-      </button>
-    </div>
+  <div
+    :class="$style.container"
+    role="tablist"
+    @keydown.left="onKeydown"
+    @keydown.right="onKeydown"
+  >
+    <a-tab
+      ref="allTabRef"
+      label="すべて"
+      :aria-selected="!isStared"
+      :aria-controls="allPanelId"
+      :tabindex="isStared ? -1 : 0"
+      @click="unselectStarFilter"
+    />
+    <a-tab
+      ref="staredTabRef"
+      label="お気に入り"
+      :aria-selected="isStared"
+      :aria-controls="staredPanelId"
+      :tabindex="isStared ? 0 : -1"
+      @click="selectStarFilter"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ref, type Ref } from 'vue'
+import ATab from '/@/components/UI/ATab.vue'
+
 const props = defineProps<{
   isStared: boolean
+  allPanelId: string
+  staredPanelId: string
 }>()
 
 const emit = defineEmits<{
   (e: 'update:isStared', v: boolean): void
 }>()
+
+const allTabRef = ref<InstanceType<typeof ATab> | null>(null)
+const staredTabRef = ref<InstanceType<typeof ATab> | null>(null)
+
+const tabNames = ['all', 'stared'] as const
+const tabNameRefs: Record<
+  (typeof tabNames)[number],
+  Ref<InstanceType<typeof ATab> | null>
+> = {
+  all: allTabRef,
+  stared: staredTabRef
+}
+
+const onKeydown = (e: KeyboardEvent) => {
+  const index = props.isStared ? 1 : 0
+
+  let nextIndex: number
+  if (e.key === 'ArrowLeft') {
+    nextIndex = index - 1
+  } else if (e.key === 'ArrowRight') {
+    nextIndex = index + 1
+  } else {
+    return
+  }
+
+  nextIndex = (nextIndex + tabNames.length) % tabNames.length
+
+  const nextTabName = tabNames[nextIndex] ?? tabNames[index]
+  emit('update:isStared', tabNames[nextIndex] === 'stared')
+  tabNameRefs[nextTabName].value?.focus()
+}
 
 const selectStarFilter = () => {
   emit('update:isStared', true)
@@ -44,40 +83,5 @@ const unselectStarFilter = () => {
   gap: 0.5rem;
   margin-bottom: 0.75rem;
   flex-wrap: wrap;
-}
-.buttonContainer {
-  position: relative;
-  text-align: center;
-}
-
-.button {
-  padding: 0.25rem 1rem;
-  height: 2rem;
-  cursor: pointer;
-  @include color-ui-secondary;
-
-  &[aria-selected='true'] {
-    @include color-accent-primary;
-  }
-  &::after {
-    content: '';
-    position: absolute;
-    display: block;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: -1;
-    opacity: 0;
-    border-radius: 100vw;
-  }
-  &[aria-selected='true']::after {
-    opacity: 0.1;
-    @include background-accent-primary;
-  }
-  &[aria-selected='false']:hover::after {
-    opacity: 1;
-    @include background-tertiary;
-  }
 }
 </style>

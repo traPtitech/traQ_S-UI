@@ -15,7 +15,7 @@ import type { ChannelId } from '/@/types/entity-ids'
  * share-target: Web Share Target APIで使う画面で利用
  */
 const VIRTUAL_IDS = ['share-target'] as const
-export type VirtualChannelId = typeof VIRTUAL_IDS[number]
+export type VirtualChannelId = (typeof VIRTUAL_IDS)[number]
 const virtualIds: ReadonlySet<string> = new Set(VIRTUAL_IDS)
 
 export interface MessageInputState {

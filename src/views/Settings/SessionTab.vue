@@ -1,10 +1,10 @@
 <template>
-  <section>
+  <div>
     <account-state :class="$style.element" />
     <view-states :class="$style.element" />
     <password-change :class="$style.element" />
     <token-manager :class="$style.element" />
-  </section>
+  </div>
 </template>
 
 <script lang="ts" setup>

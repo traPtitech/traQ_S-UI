@@ -1,64 +1,54 @@
 <template>
-  <section>
-    <div :class="$style.element">
-      <h3 :class="$style.header">アイコン</h3>
-      <user-icon
-        :user-id="detail.id"
-        :size="100"
-        prevent-modal
-        :class="$style.icon"
-      />
-      <image-upload v-model="newIcon" rounded :class="$style.uploder" />
-    </div>
-    <div :class="$style.element">
-      <h3 :class="$style.header">表示名</h3>
-      <form-input
-        v-model="state.displayName"
-        :class="$style.form"
-        :max-length="32"
-      />
-    </div>
-    <div :class="$style.element">
-      <h3 :class="$style.header">ひとこと</h3>
-      <div :class="$style.bioContainer">
-        <form-text-area
-          v-model="state.bio"
-          :class="$style.form"
-          rows="1"
-          :max-length="1000"
+  <div>
+    <section :class="$style.section">
+      <h3 :class="$style.heading">アイコン</h3>
+      <div :class="$style.iconContainer">
+        <user-icon :user-id="detail.id" :size="200" prevent-modal />
+        <form-button
+          label="アイコンを変更する"
+          type="secondary"
+          :class="$style.iconEditButton"
+          @click="handleOpenModal"
         />
-        <div :class="$style.form">
-          <h4>プレビュー</h4>
-          <inline-markdown :content="state.bio" accept-action />
-        </div>
       </div>
-    </div>
-    <div :class="$style.element">
-      <h3 :class="$style.header">ホームチャンネル</h3>
-      <form-selector
+    </section>
+    <section :class="$style.section">
+      <h3 :class="$style.heading">表示名</h3>
+      <form-input v-model="state.displayName" :max-length="32" />
+    </section>
+    <section :class="$style.section">
+      <h3 :class="$style.heading">ひとこと</h3>
+      <div :class="$style.bioContainer">
+        <inline-markdown :content="state.bio" accept-action />
+        <form-text-area v-model="state.bio" rows="2" :max-length="1000" />
+      </div>
+    </section>
+    <section :class="$style.section">
+      <h3 :class="$style.heading">ホームチャンネル</h3>
+      <form-selector-filterable
         v-model="state.homeChannel"
         :options="channelOptions"
-        :class="$style.form"
       />
-    </div>
-    <div :class="$style.element">
-      <h3 :class="$style.header">Twitter</h3>
-      <form-input
-        v-model="state.twitterId"
-        prefix="@"
-        :class="$style.form"
-        :max-length="15"
-      />
-    </div>
-    <div :class="$style.updater">
+    </section>
+    <section :class="$style.section">
+      <h3 :class="$style.heading">X (旧Twitter)</h3>
+      <form-input v-model="state.twitterId" prefix="@" :max-length="15" />
+    </section>
+    <div :class="$style.buttonContainer">
       <form-button
-        label="更新"
+        label="リセット"
+        :disabled="!isChanged"
+        type="tertiary"
+        @click="handleReset"
+      />
+      <form-button
+        label="プロフィールを更新"
         :disabled="!canUpdate"
         :loading="isUpdating"
-        @click="onUpdateClick"
+        @click="handleUpdate"
       />
     </div>
-  </section>
+  </div>
 </template>
 
 <script lang="ts">
@@ -77,6 +67,10 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useGroupsStore } from '/@/store/entities/groups'
+import FormButton from '/@/components/UI/FormButton.vue'
+import { useFileSelect } from '/@/composables/dom/useFileSelect'
+import { useModalStore } from '/@/store/ui/modal'
+import { onBeforeRouteLeave } from 'vue-router'
 
 const useState = (detail: Ref<UserDetail>) => {
   const profile = computed(() => ({
@@ -90,7 +84,12 @@ const useState = (detail: Ref<UserDetail>) => {
   const { hasDiff } = useStateDiff<UserDetail>()
   const isStateChanged = computed(() => hasDiff(state, detail))
 
-  return { state, isStateChanged }
+  const handleReset = () => {
+    if (!confirm('変更をリセットしますか？')) return
+    Object.assign(state, profile.value)
+  }
+
+  return { state, isStateChanged, handleReset }
 }
 
 type Profile = Pick<
@@ -98,26 +97,14 @@ type Profile = Pick<
   'displayName' | 'bio' | 'twitterId' | 'homeChannel'
 > & { homeChannel: string }
 
-const useProfileUpdate = (
-  state: Profile,
-  newIcon: Ref<File | undefined>,
-  isStateChanged: Ref<boolean>
-) => {
+const useProfileUpdate = (state: Profile) => {
   const { addSuccessToast, addErrorToast } = useToastStore()
   const isUpdating = ref(false)
 
-  const onUpdateClick = async () => {
-    const promises = []
-    if (newIcon.value !== undefined) {
-      promises.push(apis.changeMyIcon(newIcon.value))
-    }
-    if (isStateChanged.value) {
-      promises.push(apis.editMe(state))
-    }
+  const handleUpdate = async () => {
     try {
       isUpdating.value = true
-      await Promise.all(promises)
-      newIcon.value = undefined
+      await apis.editMe(state)
 
       addSuccessToast('プロフィールを更新しました')
     } catch (e) {
@@ -128,7 +115,7 @@ const useProfileUpdate = (
     }
     isUpdating.value = false
   }
-  return { isUpdating, onUpdateClick }
+  return { isUpdating, handleUpdate }
 }
 
 const useIsLengthValid = (state: Profile) => {
@@ -147,14 +134,13 @@ const useIsLengthValid = (state: Profile) => {
 
 <script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
+import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const { detail: detailMayBeUndefined } = useMeStore()
+
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const detail = computed(() => detailMayBeUndefined.value!)
 
@@ -171,18 +157,11 @@ fetchStamps()
 
 const { channelOptions } = useChannelOptions('--未設定--')
 
-const { state, isStateChanged } = useState(detail)
+const { state, isStateChanged, handleReset } = useState(detail)
 
-const newIcon = ref<File | undefined>()
-const isChanged = computed(
-  () => isStateChanged.value || newIcon.value !== undefined
-)
+const isChanged = computed(() => isStateChanged.value)
 
-const { isUpdating, onUpdateClick } = useProfileUpdate(
-  state,
-  newIcon,
-  isChanged
-)
+const { isUpdating, handleUpdate } = useProfileUpdate(state)
 const isLengthValid = useIsLengthValid(state)
 const isTwitterIdValid = computed(
   () => state.twitterId === '' || isValidTwitter(state.twitterId)
@@ -191,38 +170,55 @@ const isTwitterIdValid = computed(
 const canUpdate = computed(
   () => isChanged.value && isLengthValid.value && isTwitterIdValid.value
 )
+
+const { pushModal } = useModalStore()
+
+const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
+const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
+  if (!files[0]) return
+  pushModal({
+    type: 'settings-profile-icon-edit',
+    file: files[0]
+  })
+})
+const handleOpenModal = () => {
+  selectImage()
+}
+
+onBeforeRouteLeave(() => {
+  if (!isChanged.value) return
+  const result = window.confirm(
+    'このページを離れると変更が破棄されます。本当に離れますか？'
+  )
+  if (!result) {
+    return false
+  }
+})
 </script>
 
 <style lang="scss" module>
-.element {
-  margin: 24px 0;
+.section {
+  margin: 32px 0;
 }
-.header {
-  margin-bottom: 8px;
+.heading {
+  margin-bottom: 4px;
 }
-.form {
-  margin-left: 12px;
+.iconContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
 }
-.icon {
-  margin: {
-    bottom: 8px;
-    left: 36px;
-  }
-}
-.uploder {
-  margin-left: 12px;
+.iconEditButton {
+  margin-top: 8px;
 }
 .bioContainer {
   display: flex;
-  flex-wrap: wrap;
-  > * {
-    width: 50%;
-    flex: 1 1 15rem;
-  }
+  flex-direction: column;
+  gap: 4px;
 }
-.updater {
+.buttonContainer {
   display: flex;
-  justify-content: center;
-  margin-top: 24px;
+  justify-content: flex-end;
+  gap: 16px;
 }
 </style>

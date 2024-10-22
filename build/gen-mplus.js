@@ -10,6 +10,8 @@ import util from 'util'
 import esbuild from 'esbuild'
 import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
 import browserslist from 'browserslist'
+import { Buffer } from 'node:buffer'
+import process from 'process'
 
 const brotliCompress = util.promisify(zlib.brotliCompress)
 
@@ -75,11 +77,14 @@ const getUrlFromSrc = src => {
 }
 
 const generateFilename = font => {
-  const i = getUrlFromSrc(font.src).match(/\/v\d+\/[^.]+\.(\d+)\.woff2/)
-  if (!i) throw new Error(`Unexpected: ${getUrlFromSrc(font.src)}`)
   const family = font['font-family'].replace(/[' ]/g, '')
   const weight = font['font-weight'].replace(/[' ]/g, '')
-  return `${family}.${weight}.${i[1]}.woff2`
+
+  const fontSrcWithId = getUrlFromSrc(font.src).match(/\/v\d+\/([^/]+)\.woff2/)
+  if (!fontSrcWithId) {
+    throw new Error(`Unexpected URL: ${getUrlFromSrc(font.src)}`)
+  }
+  return `${family}.${weight}.${fontSrcWithId[1]}.woff2`
 }
 
 const downloadAndtransform = async (url, filename) => {

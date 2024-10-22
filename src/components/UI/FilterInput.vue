@@ -16,7 +16,7 @@
       :data-disable-ime="$boolAttr(disableIme)"
       :enterkeyhint="enterkeyhint"
       @input="onInput"
-      @keydown.esc="reset"
+      @keydown.esc.stop="reset"
       @keydown.enter="emit('enter')"
     />
   </div>
@@ -71,6 +71,8 @@ onMounted(() => {
   if (!props.focusOnMount || isTouchDevice()) return
   focus()
 })
+
+defineExpose({ focus })
 </script>
 
 <style lang="scss" module>

@@ -99,5 +99,6 @@ const iconName = computed(() => iconNameMap[props.toast.type])
 .text {
   margin: 4px;
   word-break: break-all;
+  white-space: pre-wrap;
 }
 </style>

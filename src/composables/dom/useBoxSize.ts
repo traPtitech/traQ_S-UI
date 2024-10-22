@@ -16,23 +16,23 @@ const useBoxSize = (
       // borderBoxSizeはSafari 15.4+
       if (entry.borderBoxSize) {
         const box = entry.borderBoxSize[0]
-        height.value = box?.blockSize
-        width.value = box?.inlineSize
+        height.value = box?.blockSize ? Math.ceil(box?.blockSize) : undefined
+        width.value = box?.inlineSize ? Math.ceil(box?.inlineSize) : undefined
       } else {
         const box = entry.target.getBoundingClientRect()
-        height.value = box.height
-        width.value = box.width
+        height.value = Math.ceil(box.height)
+        width.value = Math.ceil(box.width)
       }
     } else {
       // contentBoxSizeはSafari 15.4+
       if (entry.contentBoxSize) {
         const box = entry.contentBoxSize[0]
-        height.value = box?.blockSize
-        width.value = box?.inlineSize
+        height.value = box?.blockSize ? Math.ceil(box?.blockSize) : undefined
+        width.value = box?.inlineSize ? Math.ceil(box?.inlineSize) : undefined
       } else {
         const box = entry.target.getClientRects()[0]
-        height.value = box?.height
-        width.value = box?.width
+        height.value = box?.height ? Math.ceil(box?.height) : undefined
+        width.value = box?.width ? Math.ceil(box?.width) : undefined
       }
     }
   })

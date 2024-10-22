@@ -29,8 +29,8 @@ const useStampFilter = () => {
   const altNameTable = computed<Record<AltName, string>>(() =>
     Object.fromEntries(
       Object.entries({
-        ...emojiAltnameTableData.value?.altNameTable,
-        ...emojiAltnameTableData.value?.unicodeTable
+        ...emojiAltnameTableData.value?.unicodeTable,
+        ...emojiAltnameTableData.value?.altNameTable
         // unicodeの対応バージョン違いで存在しないものが含まれている場合がある
       }).filter(([k, v]) => stampNames.value.includes(v))
     )
@@ -42,7 +42,9 @@ const useStampFilter = () => {
   const oneLetterNames = computed(() =>
     stampNames.value.filter(name => name.length === 1)
   )
-  const oneLetterAltNames = altNames.value.filter(name => name.length === 1)
+  const oneLetterAltNames = computed(() =>
+    altNames.value.filter(name => name.length === 1)
+  )
 
   const getStamps = (stampNames: Iterable<string>) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -58,7 +60,7 @@ const useStampFilter = () => {
 
       const query = state.query.toLowerCase()
       if (state.query.length === 1) {
-        const altNameMatched = oneLetterAltNames
+        const altNameMatched = oneLetterAltNames.value
           .filter(altName => altName.toLowerCase() === query)
           .map(altNameToName)
         const matched = oneLetterNames.value.filter(
@@ -76,11 +78,15 @@ const useStampFilter = () => {
       const result = [
         ...altNameRes.map(r => ({
           value: altNameToName(r.value),
-          priority: r.priority
+          priority: r.priority,
+          isAltName: true
         })),
-        ...res
+        ...res.map(r => ({ ...r, isAltName: false }))
       ]
-        .map(r => ({ value: r.value, sortKey: `${r.priority}${r.value}` }))
+        .map(r => ({
+          value: r.value,
+          sortKey: `${r.priority}${r.isAltName ? 1 : 0}${r.value}` // 同じpriorityの場合、別名は別名でないものよりも優先度が低い
+        }))
         .sort((a, b) => compareStringInsensitive(a.sortKey, b.sortKey))
         .map(r => r.value)
 

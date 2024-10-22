@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-is-open="$boolAttr(isOpen)">
+  <button :class="$style.container" :data-is-open="$boolAttr(isOpen)">
     <div :class="$style.name">
       {{ name }}
       <div v-if="hasNotification" :class="$style.indicator">
@@ -8,7 +8,7 @@
     </div>
     <div :class="$style.line" />
     <a-icon name="rounded-triangle" :class="$style.icon" :size="20" />
-  </div>
+  </button>
 </template>
 
 <script lang="ts" setup>
@@ -34,9 +34,14 @@ withDefaults(
   @include color-ui-secondary;
   @include size-body2;
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   font-weight: bold;
+  &:hover .icon,
+  &:focus-visible .icon {
+    @include color-ui-secondary;
+  }
 }
 .name {
   position: relative;

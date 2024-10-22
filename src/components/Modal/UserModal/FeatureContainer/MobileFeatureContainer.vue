@@ -4,17 +4,13 @@
     <div :class="$style.names">
       <h1 :class="$style.displayName">{{ user.displayName }}</h1>
       <div :class="$style.nameInfo">
-        <online-indicator-with-tooltip
-          :class="$style.indicator"
-          :user-id="user.id"
-          :last-online="detail?.lastOnline ?? undefined"
-        />
         <span :class="$style.name">@{{ user.name }}</span>
+        <online-indicator :user-id="user.id" has-text />
       </div>
     </div>
     <link-buttons
       :class="$style.buttons"
-      :home-channel-id="detail?.homeChannel ?? undefined"
+      :home-channel-id="detail?.homeChannel"
       :user-name="user.name"
     />
   </section>
@@ -22,7 +18,7 @@
 
 <script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import OnlineIndicatorWithTooltip from './OnlineIndicatorWithTooltip.vue'
+import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 import LinkButtons from './LinkButtons.vue'
 import type { User, UserDetail } from '@traptitech/traq'
 
@@ -59,14 +55,12 @@ defineProps<{
 }
 .nameInfo {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.625rem;
 }
 .name {
   word-break: break-all;
-}
-.indicator {
-  margin-top: 6px;
-  margin-right: 4px;
-  flex-shrink: 0;
 }
 .buttons {
   margin-right: 8px;

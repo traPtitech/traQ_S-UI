@@ -5,6 +5,7 @@
     <login-form-saved
       v-if="saved"
       :saved="saved"
+      :login-state="loginState"
       @login="loginWithSaved"
       @use-other="dontUseSaved"
     />

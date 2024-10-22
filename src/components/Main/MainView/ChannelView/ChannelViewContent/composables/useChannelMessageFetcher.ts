@@ -154,6 +154,7 @@ const useChannelMessageFetcher = (
     ]
   }
 
+  // 直近のメッセージを取得し作成日時昇順で並べ替えて返す
   const fetchNewMessages = async (isReachedLatest: Ref<boolean>) => {
     await waitHeightResolved
     const { messages, hasMore } = await fetchMessagesByChannelId({
@@ -167,9 +168,10 @@ const useChannelMessageFetcher = (
       isReachedLatest.value = true
     }
 
-    updateDates(messages)
+    const messagesAsc = messages.reverse()
+    updateDates(messagesAsc)
 
-    return messages.map(message => message.id)
+    return messagesAsc.map(message => message.id)
   }
 
   const onReachedLatest = async () => {

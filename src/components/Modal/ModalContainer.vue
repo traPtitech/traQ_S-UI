@@ -3,6 +3,7 @@
     <div v-if="shouldShowModal && currentState" :class="$style.container">
       <component
         :is="component"
+        v-if="component"
         :id="
           currentState.type === 'user' ||
           currentState.type === 'tag' ||
@@ -10,10 +11,13 @@
           currentState.type === 'file' ||
           currentState.type === 'channel-manage' ||
           currentState.type === 'group-admin-add' ||
-          currentState.type === 'group-member-add'
+          currentState.type === 'group-member-add' ||
+          currentState.type === 'settings-stamp-edit' ||
+          currentState.type === 'settings-stamp-image-edit'
             ? currentState.id
             : undefined
         "
+        :key="currentState.type === 'user' ? currentState.id : undefined"
         :channel-id="
           currentState.type === 'notification'
             ? currentState.channelId
@@ -39,54 +43,76 @@
             ? currentState.userId
             : undefined
         "
+        :file="
+          currentState.type === 'settings-stamp-create' ||
+          currentState.type === 'settings-stamp-image-edit' ||
+          currentState.type === 'settings-profile-icon-edit'
+            ? currentState.file
+            : undefined
+        "
       />
     </div>
   </transition>
 </template>
 
-<script lang="ts">
-import type { DefineComponent } from 'vue'
-import { computed, defineAsyncComponent } from 'vue'
-import type { ModalState } from '/@/store/ui/modal/states'
-import { useModalStore } from '/@/store/ui/modal'
-
-const modalComponentMap: Record<ModalState['type'], string> = {
-  user: 'UserModal/UserModal',
-  notification: 'NotificationModal/NotificationModal',
-  tag: 'TagModal/TagModal',
-  group: 'GroupModal/GroupModal',
-  'channel-create': 'ChannelCreateModal/ChannelCreateModal',
-  file: 'FileModal/FileModal',
-  qrcode: 'QRCodeModal/QRCodeModal',
-  'clip-create': 'ClipCreateModal/ClipCreateModal',
-  'clip-folder-create': 'ClipFolderCreateModal/ClipFolderCreateModal',
-  'channel-manage': 'ChannelManageModal/ChannelManageModal',
-  'group-create': 'GroupCreateModal/GroupCreateModal',
-  'group-member-edit': 'GroupMemberEditModal/GroupMemberEditModal',
-  'group-admin-add': 'GroupAdminAddModal/GroupAdminAddModal',
-  'group-member-add': 'GroupMemberAddModal/GroupMemberAddModal'
-}
-
-const modalModules = import.meta.glob<DefineComponent>(
-  '/src/components/Modal/*/*Modal.vue'
-)
-</script>
-
 <script lang="ts" setup>
+import { type Component, computed } from 'vue'
+import { useModalStore } from '/@/store/ui/modal'
+import UserModal from './UserModal/UserModal.vue'
+import NotificationModal from './NotificationModal/NotificationModal.vue'
+import TagModal from './TagModal/TagModal.vue'
+import GroupModal from './GroupModal/GroupModal.vue'
+import ChannelCreateModal from './ChannelCreateModal/ChannelCreateModal.vue'
+import FileModal from './FileModal/FileModal.vue'
+import QRCodeModal from './QRCodeModal/QRCodeModal.vue'
+import ClipCreateModal from './ClipCreateModal/ClipCreateModal.vue'
+import ClipFolderCreateModal from './ClipFolderCreateModal/ClipFolderCreateModal.vue'
+import ChannelManageModal from './ChannelManageModal/ChannelManageModal.vue'
+import GroupCreateModal from './GroupCreateModal/GroupCreateModal.vue'
+import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vue'
+import GroupAdminAddModal from './GroupAdminAddModal/GroupAdminAddModal.vue'
+import GroupMemberAddModal from './GroupMemberAddModal/GroupMemberAddModal.vue'
+import StampCreateModal from './StampCreateModal/StampCreateModal.vue'
+import StampEditModal from './StampEditModal/StampEditModal.vue'
+import StampImageEditModal from './StampImageEditModal/StampImageEditModal.vue'
+import ProfileIconEditModal from './ProfileIconEditModal/ProfileIconEditModal.vue'
+import SettingsCacheClearModal from './SettingsCacheClearModal/SettingsCacheClearModal.vue'
+import SettingsThemeEditModal from './SettingsThemeEditModal/SettingsThemeEditModal.vue'
+import type { ModalStateType } from '/@/store/ui/modal/states'
+
 const { shouldShowModal, currentState } = useModalStore()
 
-// ここでpathを束縛することでcomputed内で戻り値の関数がpathに依存していることが伝わる？
-const getComponent = (path: string) =>
-  defineAsyncComponent(() =>
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    modalModules[`/src/components/Modal/${path}.vue`]!()
-  )
-
-const component = computed(() =>
-  currentState.value
-    ? getComponent(modalComponentMap[currentState.value.type])
-    : undefined
-)
+const components: Record<ModalStateType, Component> = {
+  user: UserModal,
+  notification: NotificationModal,
+  tag: TagModal,
+  group: GroupModal,
+  'channel-create': ChannelCreateModal,
+  file: FileModal,
+  qrcode: QRCodeModal,
+  'clip-create': ClipCreateModal,
+  'clip-folder-create': ClipFolderCreateModal,
+  'channel-manage': ChannelManageModal,
+  'group-create': GroupCreateModal,
+  'group-member-edit': GroupMemberEditModal,
+  'group-admin-add': GroupAdminAddModal,
+  'group-member-add': GroupMemberAddModal,
+  'settings-stamp-create': StampCreateModal,
+  'settings-stamp-edit': StampEditModal,
+  'settings-stamp-image-edit': StampImageEditModal,
+  'settings-profile-icon-edit': ProfileIconEditModal,
+  'settings-cache-clear': SettingsCacheClearModal,
+  'settings-theme-edit': SettingsThemeEditModal
+}
+const component = computed(() => {
+  if (currentState.value) {
+    return components[currentState.value.type]
+  } else {
+    // eslint-disable-next-line no-console
+    console.error('Unexpected modal type:', currentState.value)
+    return undefined
+  }
+})
 </script>
 
 <style lang="scss" module>

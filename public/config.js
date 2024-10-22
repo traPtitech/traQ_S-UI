@@ -29,11 +29,11 @@
       },
       {
         label: 'Wiki',
-        iconPath: 'growi.svg',
+        iconPath: 'crowi.svg',
         appLink: 'https://wiki.trap.jp/'
       },
       {
-        label: 'Blog',
+        label: 'Blog Admin',
         iconPath: 'ghost.svg',
         appLink: 'https://blog-admin.trap.jp/'
       },
@@ -43,7 +43,7 @@
         appLink: 'https://drive.trap.jp/'
       },
       {
-        label: 'Git',
+        label: 'Gitea',
         iconPath: 'gitea.svg',
         appLink: 'https://git.trap.jp/'
       },
@@ -81,6 +81,16 @@
         label: 'Jomon',
         iconPath: 'jomon.svg',
         appLink: 'https://jomon.trap.jp/'
+      },
+      {
+        label: 'traPortfolio',
+        iconPath: 'traP.svg',
+        appLink: 'https://portfolio.trap.jp/'
+      },
+      {
+        label: 'tpf-admin',
+        iconPath: 'traP.svg',
+        appLink: 'https://portfolio-admin.trap.jp/'
       }
     ],
     ogpIgnoreHostNames: [
@@ -96,20 +106,28 @@
       'md.trapti.tech',
       'drive.trapti.tech',
       'jomon.trap.jp',
-      'ns.trap.jp'
+      'ns.trap.jp',
+      'portfolio-admin.trap.jp'
     ],
     wikiPageOrigin: 'https://wiki.trap.jp',
     blogPagePrefix: 'https://trap.jp/author/',
     auth: {
       resetLink: 'https://portal.trap.jp/reset-password',
-      changeLink: 'https://portal.trap.jp',
+      changeLink: 'https://portal.trap.jp/me/change-password',
       changeName: 'traPortal'
     },
     isRootChannelSelectableAsParentChannel: false,
     showQrCodeButton: true,
     tooLargeFileMessage: '大きい%sの共有にはDriveを使用してください',
     showWidgetCopyButton: true,
-    inlineReplyDisableChannels: ['#general', '#random'],
+    inlineReplyDisableChannels: [
+      '#general',
+      '#general/schedule',
+      '#general/meeting',
+      '#random',
+      '#random/wasure',
+      '#services'
+    ],
     iosPwaInfoLink: 'https://wiki.trap.jp/SysAd/docs/traQ-S/PWA'
   }
 

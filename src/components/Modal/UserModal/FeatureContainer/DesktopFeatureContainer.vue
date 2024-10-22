@@ -2,16 +2,13 @@
   <section :class="$style.feature">
     <div>
       <h1>{{ user.displayName }}</h1>
-      <p>
-        <online-indicator-with-tooltip
-          :user-id="user.id"
-          :last-online="detail?.lastOnline ?? undefined"
-        />
-        @{{ user.name }}
-      </p>
+      <div :class="$style.onlineContainer">
+        <p>@{{ user.name }}</p>
+        <online-indicator :user-id="user.id" has-text />
+      </div>
     </div>
     <link-buttons
-      :home-channel-id="detail?.homeChannel ?? undefined"
+      :home-channel-id="detail?.homeChannel"
       :user-name="user.name"
       show-title
     />
@@ -19,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import OnlineIndicatorWithTooltip from './OnlineIndicatorWithTooltip.vue'
+import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 import LinkButtons from './LinkButtons.vue'
 import type { User, UserDetail } from '@traptitech/traq'
 
@@ -33,5 +30,13 @@ defineProps<{
 .feature {
   grid-column: 1/3;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.onlineContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 </style>

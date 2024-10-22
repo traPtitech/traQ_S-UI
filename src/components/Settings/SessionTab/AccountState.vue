@@ -1,15 +1,21 @@
 <template>
-  <div>
+  <section>
     <h3 :class="$style.header">アカウント</h3>
-    <div :class="$style.content">
+    <div>
       <form-button
         label="ログアウト"
         :class="$style.logout"
+        type="secondary"
+        is-danger
         @click="onLogoutClick"
       />
-      <form-button label="全セッション破棄" @click="onSessionDelete" />
+      <form-button
+        label="全セッション破棄"
+        is-danger
+        @click="onSessionDelete"
+      />
     </div>
-  </div>
+  </section>
 </template>
 
 <script lang="ts" setup>
@@ -40,11 +46,9 @@ const onSessionDelete = async () => {
 
 <style lang="scss" module>
 .header {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
-.content {
-  margin-left: 12px;
-}
+
 .logout {
   margin-right: 8px;
   margin-bottom: 8px;

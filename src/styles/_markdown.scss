@@ -46,3 +46,7 @@ html[data-stamp-edge='true'] {
   overflow: auto hidden;
   padding: 2px;
 }
+
+.markdown-body a {
+  font-variant-ligatures: no-contextual;
+}

@@ -8,10 +8,21 @@ import {
   getAngleBetweenLines
 } from '/@/lib/basic/point'
 
-const ZOOM_STEP = 1.2
-const MIN_ZOOM_LEVEL = -15
-const MAX_ZOOM_LEVEL = 30
-const MIN_PINCH_DISTANCE = 30
+const WHEEL_SCALE_DELTAX = new Map<number, number>([
+  [0x00, 1], // WheelEvent.DOM_DELTA_PIXEL
+  [0x01, 10], // WheelEvent.DOM_DELTA_LINE
+  [0x02, 20] // WheelEvent.DOM_DELTA_PAGE
+])
+const WHEEL_SCALE_DELTAY = new Map<number, number>([
+  [0x00, 1], // WheelEvent.DOM_DELTA_PIXEL
+  [0x01, 10], // WheelEvent.DOM_DELTA_LINE
+  [0x02, 20] // WheelEvent.DOM_DELTA_PAGE
+])
+
+const WHEEL_SCROLL_SCALE_X = 0.5
+const WHEEL_SCROLL_SCALE_Y = 0.5
+const WHEEL_ZOOM_SCALE = 0.01
+const ZOOM_RATIO_MIN = 1.0
 const ROTATE_STEP = 5
 
 export interface State {
@@ -20,9 +31,9 @@ export interface State {
    */
   centerDiff: Point
   /**
-   * 拡大レベル (0のとき等倍)
+   * 拡大倍率 (1.0のとき等倍)
    */
-  zoomLevel: number
+  zoomRatio: number
   /**
    * 回転 (deg、-180～180)
    */
@@ -54,22 +65,12 @@ const getAngleBetweenLinesFromTouches = (
   touchesB: TwoTouch
 ) => getAngleBetweenLines(touchesToPoints(touchesA), touchesToPoints(touchesB))
 
-const getNewZoomLevel = (isZoomIn: boolean, oldZoomLevel: number) => {
-  let r = oldZoomLevel
-  if (isZoomIn) {
-    r++
-  } else {
-    r--
-  }
-  return Math.max(Math.min(r, MAX_ZOOM_LEVEL), MIN_ZOOM_LEVEL)
-}
-
 /**
  * 座標軸は合わせていないので相対的な情報のみ使える
- * @param newPoint 移動前の点
- * @param oldPoint 移動後の点
+ * @param newPoint 現在の点
+ * @param firstPoint タッチ開始時の点
  */
-type MoveHandler = (newPoint: Point, oldPoint: Point) => void
+type MoveHandler = (newPoint: Point, firstPoint: Point) => void
 
 /**
  * @param point スクロールをした点
@@ -78,16 +79,22 @@ type WheelHandler = (wheelEvent: WheelEvent, point: Point) => void
 
 /**
  * @param newDistance 新しい指二本の間の距離
- * @param oldDistance 元の指二本の間の距離
- * @param midpoint 元と新しい指四本の中点
- * @param rotateAngle 変化した角度
+ * @param firstDistance タッチ開始時の指二本の間の距離
+ * @param newMidpoint 新しい指二本の中点
+ * @param firstMidpoint タッチ開始時の指二本の中点
+ * @param rotateAngle タッチ開始時から変化した角度
  */
 type PinchHandler = (
   newDistance: number,
-  oldDistance: number,
-  midpoint: Point,
+  firstDistance: number,
+  newMidpoint: Point,
+  firstMidpoint: Point,
   rotateAngle: number
 ) => void
+
+/**
+ */
+type ChangeTouchModeHandler = () => void
 
 const useMouseMove = (
   containerEle: Ref<HTMLElement | undefined>,
@@ -134,6 +141,7 @@ const useMouseWheel = (
       x: e.clientX - left,
       y: e.clientY - top
     })
+    e.preventDefault()
   }
 
   onMounted(() => {
@@ -147,118 +155,116 @@ const useMouseWheel = (
 const useTouch = (
   containerEle: Ref<HTMLElement | undefined>,
   moveHandler: MoveHandler,
-  pinchHandler: PinchHandler
+  pinchHandler: PinchHandler,
+  changeTouchModeHandler: ChangeTouchModeHandler
 ) => {
-  let handlingTouch = false
+  let firstMoveTouch: Touch | null = null
+  let firstPinchTouches: TwoTouch | null = null
+
   const onTouchStart = (_startEvent: TouchEvent) => {
-    if (handlingTouch) return
-    handlingTouch = true
+    changeTouchMode(_startEvent)
+  }
+  const onTouchEnd = (_endEvent: TouchEvent) => {
+    changeTouchMode(_endEvent)
+  }
+  const onMove = (moveEvent: TouchEvent) => {
+    // タッチによるスクロールの無効化
+    moveEvent.preventDefault()
 
-    let lastMoveTouch: Touch | null = null
-    let lastPinchTouches: TwoTouch | null = null
+    const touches = moveEvent.touches
 
-    const onMove = (moveEvent: TouchEvent) => {
-      // タッチによるスクロールの無効化
-      moveEvent.preventDefault()
-
-      const touches = moveEvent.targetTouches
-
-      if (touches.length >= 2) {
-        lastMoveTouch = null
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        lastPinchTouches = pinch([touches[0]!, touches[1]!], lastPinchTouches)
-      } else if (touches.length > 0) {
-        lastMoveTouch = move(touches, lastMoveTouch)
-        lastPinchTouches = null
-      }
-    }
-
-    const move = (targetTouches: TouchList, lastMoveTouch: Touch | null) => {
+    if (firstPinchTouches && touches.length >= 2) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const newMoveTouch = targetTouches[0]!
-      if (lastMoveTouch === null) return newMoveTouch
+      const newPinchTouches: TwoTouch = [touches[0]!, touches[1]!]
 
-      moveHandler(clientXYToPoint(newMoveTouch), clientXYToPoint(lastMoveTouch))
+      pinch(newPinchTouches, firstPinchTouches)
+    } else if (firstMoveTouch && touches.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const newMoveTouch: Touch = touches[0]!
 
-      return newMoveTouch
+      move(newMoveTouch, firstMoveTouch)
     }
-    const pinch = (
-      newPinchTouches: TwoTouch,
-      lastPinchTouches: TwoTouch | null
-    ) => {
-      if (lastPinchTouches === null) return newPinchTouches
+  }
 
-      let newDistance = touchesToDistance(newPinchTouches)
-      const oldDistance = touchesToDistance(lastPinchTouches)
+  const changeTouchMode = (e: TouchEvent) => {
+    const touches = e.touches
 
-      // 変化が一定距離以下の場合は拡大率の変化はなしにする
-      if (Math.abs(newDistance - oldDistance) < MIN_PINCH_DISTANCE) {
-        newDistance = oldDistance
-        newPinchTouches = lastPinchTouches
-      }
+    if (touches.length >= 2) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const newPinchTouches: TwoTouch = [touches[0]!, touches[1]!]
 
-      pinchHandler(
-        newDistance,
-        oldDistance,
-        getTouchesMidpoint(...newPinchTouches, ...lastPinchTouches),
-        getAngleBetweenLinesFromTouches(newPinchTouches, lastPinchTouches)
-      )
+      firstMoveTouch = null
+      firstPinchTouches = newPinchTouches
+    } else if (touches.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const newMoveTouch: Touch = touches[0]!
 
-      return newPinchTouches
+      firstMoveTouch = newMoveTouch
+      firstPinchTouches = null
+    } else {
+      firstMoveTouch = null
+      firstPinchTouches = null
     }
+    changeTouchModeHandler()
+  }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    containerEle.value!.addEventListener('touchmove', onMove)
+  const move = (newMoveTouch: Touch, firstMoveTouch: Touch) => {
+    moveHandler(clientXYToPoint(newMoveTouch), clientXYToPoint(firstMoveTouch))
+  }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    containerEle.value!.addEventListener(
-      'touchend',
-      _endEvent => {
-        handlingTouch = false
+  const pinch = (newPinchTouches: TwoTouch, firstPinchTouches: TwoTouch) => {
+    if (firstPinchTouches === null) return newPinchTouches
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        containerEle.value!.removeEventListener('touchmove', onMove)
-      },
-      { once: true }
+    const newDistance = touchesToDistance(newPinchTouches)
+    const firstDistance = touchesToDistance(firstPinchTouches)
+
+    pinchHandler(
+      newDistance,
+      firstDistance,
+      getTouchesMidpoint(...newPinchTouches),
+      getTouchesMidpoint(...firstPinchTouches),
+      getAngleBetweenLinesFromTouches(firstPinchTouches, newPinchTouches)
     )
+
+    return newPinchTouches
   }
 
   onMounted(() => {
     containerEle.value?.addEventListener('touchstart', onTouchStart)
+    containerEle.value?.addEventListener('touchmove', onMove)
+    containerEle.value?.addEventListener('touchend', onTouchEnd)
   })
   onBeforeUnmount(() => {
     containerEle.value?.removeEventListener('touchstart', onTouchStart)
+    containerEle.value?.removeEventListener('touchmove', onMove)
+    containerEle.value?.removeEventListener('touchend', onTouchEnd)
   })
 }
 
-const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
+const useImageViewer = (
+  containerEle: Ref<HTMLElement | undefined>,
+  imgEle: Ref<HTMLImageElement | undefined>
+) => {
   const state: State = reactive({
     centerDiff: {
       x: 0,
       y: 0
     },
-    zoomLevel: 0,
+    zoomRatio: 1.0,
     rotate: 0
   })
 
   /**
-   * 拡大率 (1.0で等倍)
+   * 基準となるタッチ開始時の状態情報
    */
-  const zoomRatio = computed(() => ZOOM_STEP ** state.zoomLevel)
+  let firstState: State | null = null
 
   const styles = reactive({
     imgContainer: computed(() => ({
       /*
-       * - translate(-50%, -50%)は中心にもってくるために必要
-       *   (`position: relative; top: 50%; left: 50%`)
-       * - translate(x, y)をscale(ratio)の前に持ってくると画像の位置のずれも拡大されてしまうので、
-       *   scale(ratio)のあとにおく
-       * - translate(x,y)のx,yがzoomRatioで割られているのはscale(ratio)のあとに持ってきているので、
-       *   座標軸が拡大されているため
+       * scale(ratio)による拡縮後にtranslate(x, y)による移動
        */
-      transform: `translate(-50%, -50%) scale(${zoomRatio.value}) translate(${
-        state.centerDiff.x / zoomRatio.value
-      }px, ${state.centerDiff.y / zoomRatio.value}px)`
+      transform: `translate(${state.centerDiff.x}px, ${state.centerDiff.y}px) scale(${state.zoomRatio})`
     })),
     img: computed(() => ({
       /*
@@ -273,33 +279,6 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
     state.centerDiff.x -= d.x
     state.centerDiff.y -= d.y
   }
-  /**
-   * @see https://github.com/traPtitech/traQ_S-UI/pull/1603#discussion_r526882122
-   */
-  const rewriteZoomLevel = (isZoomIn: boolean, point: Point) => {
-    const oldZoomLevel = state.zoomLevel
-    const oldZoomRatio = zoomRatio.value
-
-    const newZoomLevel = getNewZoomLevel(isZoomIn, oldZoomLevel)
-    state.zoomLevel = newZoomLevel
-    const newZoomRatio = zoomRatio.value
-
-    // 左上を原点としたときのviewerの中心点
-    const viewerCenterPoint = {
-      x: (containerEle.value?.offsetWidth ?? 0) / 2,
-      y: (containerEle.value?.offsetHeight ?? 0) / 2
-    }
-
-    // 拡大縮小の中心点のviewerの中心点からのずれ
-    const zoomCenterDiff = diff(point, viewerCenterPoint)
-    // 拡大縮小の中心点の画像の中心点からのずれ
-    const zoomCenterDiffFromImg = diff(zoomCenterDiff, state.centerDiff)
-
-    state.centerDiff.x -=
-      (zoomCenterDiffFromImg.x * (newZoomRatio - oldZoomRatio)) / oldZoomRatio
-    state.centerDiff.y -=
-      (zoomCenterDiffFromImg.y * (newZoomRatio - oldZoomRatio)) / oldZoomRatio
-  }
   const rewriteRotate = (newRotate: number) => {
     if (360 < newRotate) {
       newRotate -= 360
@@ -307,35 +286,156 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
     state.rotate = newRotate
   }
 
+  const clampCenterDiff = (centerDiff: Point) => {
+    if (!imgEle.value) return centerDiff
+
+    const imgRect = imgEle.value.getBoundingClientRect()
+
+    const width = imgEle.value.width * state.zoomRatio
+    const height = imgEle.value.height * state.zoomRatio
+
+    const newCenterDiff: Point = {
+      x: Math.max(-width / 2, Math.min(width / 2, centerDiff.x)),
+      y: Math.max(-height / 2, Math.min(height / 2, centerDiff.y))
+    }
+    return newCenterDiff
+  }
+
+  /**
+   * centerDiffを移動範囲制限を適用して変更
+   * @return 移動範囲制限が適用されたかどうか
+   */
+  const rewriteCenterDiffWithClamp = (newCenterDiff: Point) => {
+    state.centerDiff = clampCenterDiff(newCenterDiff)
+    return (
+      state.centerDiff.x !== newCenterDiff.x ||
+      state.centerDiff.y !== newCenterDiff.y
+    )
+  }
+  /**
+   * zoomRatioを範囲制限を適用して変更
+   * @return 範囲制限が適用されたかどうか
+   */
+  const rewriteZoomRatioWithClamp = (scale: number) => {
+    state.zoomRatio = Math.max(ZOOM_RATIO_MIN, scale)
+    return state.zoomRatio !== scale
+  }
+
   useMouseMove(containerEle, (newPoint, oldPoint) => {
-    rewriteCenterDiff(newPoint, oldPoint)
+    const d = diff(newPoint, oldPoint)
+    const newCenterDiff = {
+      x: state.centerDiff.x + d.x,
+      y: state.centerDiff.y + d.y
+    }
+    rewriteCenterDiffWithClamp(newCenterDiff)
   })
 
   useMouseWheel(containerEle, (e, point) => {
+    const deltaXScale = WHEEL_SCALE_DELTAX.get(e.deltaMode)
+    const deltaYScale = WHEEL_SCALE_DELTAY.get(e.deltaMode)
+    if (deltaXScale === undefined || deltaYScale === undefined) return
+
+    const deltaX = e.deltaX * deltaXScale
+    const deltaY = e.deltaY * deltaYScale
+
     if (e.altKey || e.metaKey) {
       let r = state.rotate
-      if (e.deltaY > 0) {
+      if (deltaY > 0) {
         r += ROTATE_STEP
       } else {
         r -= ROTATE_STEP
       }
       rewriteRotate(r)
+    } else if (e.ctrlKey) {
+      // トラックパッドでズームジェスチャをする場合は e.ctrlKey == true になる
+      const beforeScale = state.zoomRatio
+      rewriteZoomRatioWithClamp(
+        // ratio * exp(a) * exp(b) == ratio * exp(a+b) より deltaYの総和に対応して一定の拡縮
+        state.zoomRatio * Math.exp(-deltaY * WHEEL_ZOOM_SCALE)
+      )
+      const afterScale = state.zoomRatio
+
+      if (containerEle.value) {
+        const containerRect = containerEle.value.getBoundingClientRect()
+        const cursorCenterDiff = {
+          x: e.clientX - containerRect.x - containerRect.width / 2,
+          y: e.clientY - containerRect.y - containerRect.height / 2
+        }
+
+        const newCenterDiff = {
+          x:
+            cursorCenterDiff.x +
+            ((state.centerDiff.x - cursorCenterDiff.x) * afterScale) /
+              beforeScale,
+          y:
+            cursorCenterDiff.y +
+            ((state.centerDiff.y - cursorCenterDiff.y) * afterScale) /
+              beforeScale
+        }
+        rewriteCenterDiffWithClamp(newCenterDiff)
+      }
     } else {
-      rewriteZoomLevel(e.deltaY < 0, point)
+      // トラックパッドでスクロールジェスチャをする場合は e.ctrlKey == false になる
+      const newCenterDiff = {
+        x: state.centerDiff.x - deltaX * WHEEL_SCROLL_SCALE_X,
+        y: state.centerDiff.y - deltaY * WHEEL_SCROLL_SCALE_Y
+      }
+      rewriteCenterDiffWithClamp(newCenterDiff)
     }
   })
 
   useTouch(
     containerEle,
-    (newPoint, oldPoint) => {
-      rewriteCenterDiff(newPoint, oldPoint)
+    (newPoint, firstPoint) => {
+      const newCenterDiff = {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        x: firstState!.centerDiff.x + newPoint.x - firstPoint.x,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        y: firstState!.centerDiff.y + newPoint.y - firstPoint.y
+      }
+      rewriteCenterDiffWithClamp(newCenterDiff)
     },
-    (newDistance, oldDistance, centerPoint, rotateAngle) => {
-      rewriteRotate(state.rotate - rotateAngle)
+    (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
+      if (containerEle.value) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const beforeScale = firstState!.zoomRatio
+        rewriteZoomRatioWithClamp((beforeScale * newDistance) / firstDistance)
+        const afterScale = state.zoomRatio
+        const scaleDiff = afterScale / beforeScale
 
-      // 変化がないときは処理しない(oldDistanceを変更しないのはuseTouch内で実装)
-      if (newDistance === oldDistance) return
-      rewriteZoomLevel(newDistance - oldDistance >= 0, centerPoint)
+        const containerRect = containerEle.value.getBoundingClientRect()
+        const newMidPointCenterDiff = {
+          x: newMidPoint.x - containerRect.x - containerRect.width / 2,
+          y: newMidPoint.y - containerRect.y - containerRect.height / 2
+        }
+        const firstMidPointCenterDiff = {
+          x: firstMidPoint.x - containerRect.x - containerRect.width / 2,
+          y: firstMidPoint.y - containerRect.y - containerRect.height / 2
+        }
+
+        const newCenterDiff = {
+          x:
+            newMidPointCenterDiff.x +
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            (firstState!.centerDiff.x - firstMidPointCenterDiff.x) * scaleDiff,
+          y:
+            newMidPointCenterDiff.y +
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            (firstState!.centerDiff.y - firstMidPointCenterDiff.y) * scaleDiff
+        }
+
+        rewriteCenterDiffWithClamp(newCenterDiff)
+      }
+    },
+    () => {
+      firstState = {
+        centerDiff: {
+          x: state.centerDiff.x,
+          y: state.centerDiff.y
+        },
+        zoomRatio: state.zoomRatio,
+        rotate: state.rotate
+      }
     }
   )
 

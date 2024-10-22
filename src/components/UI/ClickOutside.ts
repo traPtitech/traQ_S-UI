@@ -6,7 +6,8 @@ import {
   cloneVNode,
   shallowRef,
   onMounted,
-  onBeforeUnmount
+  onBeforeUnmount,
+  ref
 } from 'vue'
 import { isIOS } from '/@/lib/dom/browser'
 import { useModalStore } from '/@/store/ui/modal'
@@ -23,7 +24,8 @@ const filterChildren = <T extends VNode>(vnodes: T[]) =>
     return true
   })
 
-const eventName = isIOS() ? 'touchend' : 'click'
+const startEventName = isIOS() ? 'touchstart' : 'mousedown'
+const endEventName = isIOS() ? 'touchend' : 'mouseup'
 
 /**
  * そのデフォルトスロットに指定した要素の外でクリックされたときにclickOutsideイベントを発火する
@@ -51,8 +53,9 @@ export default defineComponent({
     const element = shallowRef<Element | ComponentPublicInstance>()
 
     const { shouldShowModal } = useModalStore()
+    const isMouseDown = ref(false)
 
-    const onClick = (e: MouseEvent | TouchEvent) => {
+    const onMouseDown = (e: MouseEvent | TouchEvent) => {
       if (!element.value) return
 
       if (props.unableWhileModalOpen && shouldShowModal.value) return
@@ -64,17 +67,39 @@ export default defineComponent({
         return
       }
 
-      emit('clickOutside', e)
+      isMouseDown.value = true
+      if (props.stop) {
+        e.stopPropagation()
+      }
+    }
+    const onMouseUp = (e: MouseEvent | TouchEvent) => {
+      if (!isMouseDown.value) return
+      isMouseDown.value = false
+
+      if (!element.value) return
+      const ele =
+        element.value instanceof Element ? element.value : element.value.$el
+
+      if (ele === e.target || e.composedPath().includes(ele)) {
+        return
+      }
+
+      setTimeout(() => {
+        emit('clickOutside', e)
+      }, 0)
+
       if (props.stop) {
         e.stopPropagation()
       }
     }
 
     onMounted(() => {
-      window.addEventListener(eventName, onClick, { capture: true })
+      window.addEventListener(startEventName, onMouseDown, { capture: true })
+      window.addEventListener(endEventName, onMouseUp, { capture: true })
     })
     onBeforeUnmount(() => {
-      window.removeEventListener(eventName, onClick, { capture: true })
+      window.removeEventListener(startEventName, onMouseDown, { capture: true })
+      window.removeEventListener(endEventName, onMouseUp, { capture: true })
     })
 
     return () => {

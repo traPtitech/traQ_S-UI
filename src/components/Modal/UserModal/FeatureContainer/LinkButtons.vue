@@ -8,7 +8,7 @@
       @mousedown="onDMClick"
     />
     <link-button
-      v-if="homeChannelId"
+      v-if="homeChannelId !== null"
       :class="$style.button"
       :title="`${showTitle ? 'ホーム' : ''}`"
       icon-name="home"
@@ -26,7 +26,7 @@ import useChannelPath from '/@/composables/useChannelPath'
 
 const props = withDefaults(
   defineProps<{
-    homeChannelId?: string
+    homeChannelId?: string | null
     userName: string
     showTitle?: boolean
   }>(),

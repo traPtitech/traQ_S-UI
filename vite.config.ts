@@ -51,10 +51,11 @@ export default defineConfig(({ command, mode }) => ({
           if (['@traptitech/traq/', 'axios'].some(t => id.includes(t))) {
             return 'apis'
           }
-          if (id.includes('node_modules/highlight.js')) {
+          const hljsLangs = 'node_modules/highlight.js/lib/languages/'
+          const hljsLangIndex = id.indexOf(hljsLangs)
+          if (id.includes(hljsLangs)) {
             // hljsは適当に二つに分割する
-            const t = 'node_modules/highlight.js/lib/languages/'
-            const firstLetter = id.slice(id.indexOf(t) + t.length)[0]
+            const firstLetter = id[hljsLangIndex + hljsLangs.length]
             if (firstLetter < 'i') {
               return 'hljs'
             }

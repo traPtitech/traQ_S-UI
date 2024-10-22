@@ -1,6 +1,10 @@
 <template>
   <transition name="typing-users">
-    <div v-if="typingUsers.length > 0" :class="$style.container">
+    <div
+      v-if="typingUsers.length > 0"
+      :class="$style.container"
+      :data-is-mobile="$boolAttr(isMobile)"
+    >
       <message-input-typing-animation />
       <div :class="$style.text">
         {{ text }}
@@ -21,12 +25,15 @@
 <script lang="ts" setup>
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import MessageInputTypingAnimation from './MessageInputTypingAnimation.vue'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import { computed } from 'vue'
 import type { UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   typingUsers: readonly UserId[]
 }>()
+
+const { isMobile } = useResponsiveStore()
 
 const text = computed(
   () =>
@@ -40,11 +47,15 @@ const text = computed(
 .container {
   position: absolute;
   top: -4px;
-  left: 0;
+  left: 0px;
   transform: translateY(-100%);
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
+
+  &[data-is-mobile] {
+    left: 16px;
+  }
 }
 
 .text {

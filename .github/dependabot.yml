@@ -5,13 +5,28 @@ updates:
     schedule:
       interval: monthly
     open-pull-requests-limit: 10
+    groups:
+      non-majors:
+        update-types:
+          - 'patch'
+          - 'minor'
   - package-ecosystem: docker
     directory: '/'
     schedule:
       interval: monthly
     open-pull-requests-limit: 10
+    groups:
+      non-majors:
+        update-types:
+          - 'patch'
+          - 'minor'
   - package-ecosystem: github-actions
     directory: '/'
     schedule:
       interval: monthly
     open-pull-requests-limit: 10
+    groups:
+      non-majors:
+        update-types:
+          - 'patch'
+          - 'minor'

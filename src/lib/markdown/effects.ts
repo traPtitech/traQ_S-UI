@@ -40,8 +40,8 @@ const animeEffects = [
 ] as const
 const sizeEffects = ['ex-large', 'large', 'small'] as const
 
-type AnimeEffectsCustom = typeof animeEffects[number]
-type SizeEffectsCustom = typeof sizeEffects[number]
+type AnimeEffectsCustom = (typeof animeEffects)[number]
+type SizeEffectsCustom = (typeof sizeEffects)[number]
 
 // []でくくっているのはDistributive Conditional Typesを避けたいため
 // https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types
