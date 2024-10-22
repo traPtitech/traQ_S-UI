@@ -28,6 +28,7 @@ import { computed } from 'vue'
 import type { Word } from '../composables/useWordSuggestionList'
 import type { WordOrConfirmedPart } from '../composables/useWordSuggester'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
+import { isIOS } from '/@/lib/dom/browser'
 
 const props = withDefaults(
   defineProps<{
@@ -51,8 +52,15 @@ const emit = defineEmits<{
 
 const WIDTH = 240
 const MARGIN = 8
+
+const iOSFlag = isIOS()
+
 const styledPosition = computed(() => ({
-  top: `${(window.visualViewport?.offsetTop ?? 0) + props.position.top}px`,
+  top: `${
+    iOSFlag
+      ? (window.visualViewport?.offsetTop ?? 0) + props.position.top
+      : props.position.top
+  }px`,
   left: `min(${props.position.left}px, calc(100vw - ${WIDTH + MARGIN}px))`,
   width: `${WIDTH}px`
 }))
