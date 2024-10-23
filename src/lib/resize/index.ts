@@ -1,6 +1,5 @@
 import { deleteCanvas, loadImage, resetCanvas } from './canvas'
 import { needResize, getThumbnailDimensions } from './size'
-import { isIOS } from '/@/lib/dom/browser'
 import { mimeToFileType } from '/@/lib/basic/file'
 
 export const canResize = (mime: string) =>
