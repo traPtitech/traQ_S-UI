@@ -1,35 +1,36 @@
-// KaTeXのCSSは遅延読み込みするのでmain.tsを参照
-$link-color: var(--markdown-link-text);
-$hr-color: var(--markdown-hr-text);
-$h6-color: var(--markdown-h6-text);
-$quote-text-color: var(--markdown-quote-text);
-$quote-bar-color: var(--markdown-quote-bar);
-$code-background-color: var(--markdown-code-background);
-$code-file-name-background-color: var(--markdown-code-file-name-background);
-$table-td-border-color: var(--markdown-table-td-border);
-$table-tr-border-color: var(--markdown-table-tr-border);
-$table-tr-background-color: var(--markdown-table-tr-background);
-$table-tr-background-color2: var(--markdown-table-tr-background2);
-$img-background-color: var(--markdown-img-background);
-$mark-color: var(--markdown-mark-text);
-$mark-background-color: var(--markdown-mark-background);
-$spoiler-background-color: var(--markdown-spoiler-background);
-$spoiler-shown-background-color: var(--markdown-spoiler-shown-background);
-$link-text-color: var(--markdown-embed-link-text);
-$link-background-color: var(--markdown-embed-link-background);
-$link-highlight-text-color: var(--markdown-embed-link-highlight-text);
-$link-highlight-background-color: var(
-  --markdown-embed-link-highlight-background
+@use 'sass:meta';
+@use '@traptitech/traq-markdown-it/src/css/markdown' with (
+  $link-color: var(--markdown-link-text),
+  $hr-color: var(--markdown-hr-text),
+  $h6-color: var(--markdown-h6-text),
+  $quote-text-color: var(--markdown-quote-text),
+  $quote-bar-color: var(--markdown-quote-bar),
+  $code-background-color: var(--markdown-code-background),
+  $code-file-name-background-color: var(--markdown-code-file-name-background),
+  $table-td-border-color: var(--markdown-table-td-border),
+  $table-tr-border-color: var(--markdown-table-tr-border),
+  $table-tr-background-color: var(--markdown-table-tr-background),
+  $table-tr-background-color2: var(--markdown-table-tr-background2),
+  $img-background-color: var(--markdown-img-background),
+  $mark-color: var(--markdown-mark-text),
+  $mark-background-color: var(--markdown-mark-background),
+  $spoiler-background-color: var(--markdown-spoiler-background),
+  $spoiler-shown-background-color: var(--markdown-spoiler-shown-background),
+  $link-text-color: var(--markdown-embed-link-text),
+  $link-background-color: var(--markdown-embed-link-background),
+  $link-highlight-text-color: var(--markdown-embed-link-highlight-text),
+  $link-highlight-background-color:
+    var(--markdown-embed-link-highlight-background)
 );
 
-@import '@traptitech/traq-markdown-it/src/css/markdown';
-
 html[data-code-highlight='light'] {
-  @import 'highlight.js/styles/atom-one-light';
+  @include meta.load-css('highlight.js/styles/atom-one-light');
 }
 html[data-code-highlight='dark'] {
-  @import 'highlight.js/styles/atom-one-dark';
+  @include meta.load-css('highlight.js/styles/atom-one-dark');
 }
+
+// KaTeXのCSSは遅延読み込みするのでmain.tsを参照
 
 html[data-stamp-edge='true'] {
   .emoji {

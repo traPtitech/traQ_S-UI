@@ -49,21 +49,28 @@ const showValue = computed(() => props.format(value.value))
 </script>
 
 <style lang="scss" module>
+@use 'sass:meta';
+
 .container {
   display: flex;
   align-items: center;
 }
+
 .range {
   flex: 1 1;
   margin-right: 16px;
   :global {
-    $dotBgColor: $theme-accent-primary-background;
-    $dotShadow: none;
+    @include meta.load-css(
+      'vue-slider-component/lib/theme/default.scss',
+      $with: (
+        dotBgColor: $theme-accent-primary-background,
+        dotShadow: none,
 
-    $bgColor: rgba(107, 125, 138, 0.5); // $theme-ui-secondary-default;
-    $themeColor: $theme-accent-primary-background;
-
-    @import 'vue-slider-component/lib/theme/default.scss';
+        bgColor: rgba(107, 125, 138, 0.5),
+        // $theme-ui-secondary-default;
+        themeColor: $theme-accent-primary-background
+      )
+    );
   }
 }
 </style>

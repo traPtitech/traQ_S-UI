@@ -57,6 +57,8 @@ const toggleVolume = () => {
 </script>
 
 <style lang="scss" module>
+@use 'sass:meta';
+
 $afterVolumeSliderWidth: 48px;
 
 .volume {
@@ -71,12 +73,15 @@ $afterVolumeSliderWidth: 48px;
   }
 
   :global {
-    $dotBgColor: #1e1e1e;
+    @include meta.load-css(
+      'vue-slider-component/lib/theme/default.scss',
+      $with: (
+        dotBgColor: #1e1e1e,
 
-    $bgColor: #b7b9ba;
-    $themeColor: #585859;
-
-    @import 'vue-slider-component/lib/theme/default.scss';
+        bgColor: #b7b9ba,
+        themeColor: #585859
+      )
+    );
   }
 }
 .volumeSlider {

@@ -61,13 +61,13 @@ const value = useModelValueSyncer(props, emit)
 </script>
 
 <style lang="scss">
-$dotBgColor: $theme-ui-secondary-default;
-$dotShadow: none;
+@use 'vue-slider-component/lib/theme/default.scss' with (
+  $dotBgColor: $theme-ui-secondary-default,
+  $dotShadow: none,
 
-$bgColor: var(--specific-slider-background);
-$themeColor: $theme-ui-secondary-default;
+  $bgColor: var(--specific-slider-background),
+  $themeColor: $theme-ui-secondary-default,
 
-$tooltipBgColor: $theme-ui-secondary-default;
-
-@import 'vue-slider-component/lib/theme/default.scss';
+  $tooltipBgColor: $theme-ui-secondary-default
+);
 </style>

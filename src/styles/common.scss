@@ -1,3 +1,7 @@
-@import './variables';
-@import './mixins';
-@import './z-index';
+@use 'variables';
+@use 'mixins';
+@use 'z-index';
+
+@forward 'variables';
+@forward 'mixins';
+@forward 'z-index';
