@@ -9,8 +9,6 @@ export const isJpeg = (mime: string) => mime === 'image/jpeg'
 const resize = async (
   inputFile: Readonly<File>
 ): Promise<File | 'cannot resize' | 'error' | null> => {
-  console.log('start')
-
   const inputUrl = URL.createObjectURL(inputFile as File)
 
   const $input = document.createElement('canvas')
@@ -18,7 +16,6 @@ const resize = async (
   const finish = <T>(result: T) => {
     deleteCanvas($input)
     URL.revokeObjectURL(inputUrl)
-    console.log('end')
     return result
   }
 
