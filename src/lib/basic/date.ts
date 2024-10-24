@@ -41,8 +41,8 @@ export const getDateRepresentationWithoutSameDate = (
   return timeString
 }
 
-export const getDisplayDate = (createdAt: string, updatedAt: string) => {
-  const displayDate = new Date(updatedAt)
+export const getDateRepresentation = (date: string) => {
+  const displayDate = new Date(date)
   const today = new Date()
   const timeString = getTimeString(displayDate)
   const yesterday = new Date(today.getTime() - 1000 * 60 * 60 * 24)
@@ -68,10 +68,12 @@ export const getDisplayDate = (createdAt: string, updatedAt: string) => {
   }
 }
 
+export const getDisplayDate = (createdAt: string, updatedAt: string) => {
+  return getDateRepresentation(updatedAt)
+}
+
 export const getCreatedDate = (createdAt: string) => {
-  const createdDate = new Date(createdAt)
-  const now = new Date()
-  return getDateRepresentationWithoutSameDate(createdDate, now)
+  return getDateRepresentation(createdAt)
 }
 
 export const compareDate = (date1: Date, date2: Date, inverse = false) => {

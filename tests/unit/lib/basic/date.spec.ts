@@ -130,7 +130,7 @@ describe('getCreatedDate', () => {
   today.setMinutes(23)
 
   it('can get', () => {
-    expect(getCreatedDate(today.toISOString())).toBe('01:23')
+    expect(getCreatedDate(today.toISOString())).toBe('今日 01:23')
   })
 })
 
