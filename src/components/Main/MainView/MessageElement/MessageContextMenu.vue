@@ -63,6 +63,7 @@ import { useMeStore } from '/@/store/domain/me'
 import { useModalStore } from '/@/store/ui/modal'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
+import useCopyText from '/@/composables/toast/useCopyText'
 
 const useMessageChanger = (messageId: Ref<MessageId>) => {
   const { execWithToast } = useExecWithToast()
@@ -86,15 +87,13 @@ const useMessageChanger = (messageId: Ref<MessageId>) => {
 }
 
 const useCopyMd = (messageId: Ref<MessageId>) => {
-  const { execWithToast } = useExecWithToast()
   const { messagesMap } = useMessagesStore()
+  const { copyText } = useCopyText()
 
   const copyMd = async () => {
     const content = messagesMap.value.get(messageId.value)?.content ?? ''
     const replacedContent = replaceBack(content)
-    execWithToast('コピーしました', 'コピーに失敗しました', () =>
-      navigator.clipboard.writeText(replacedContent)
-    )
+    copyText(replacedContent, 'Markdown')
   }
   return { copyMd }
 }
