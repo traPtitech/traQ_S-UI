@@ -42,7 +42,12 @@ const emit = defineEmits<{
 const { pushModal } = useModalStore()
 const { execWithToast } = useExecWithToast()
 
-const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
+const acceptImageType = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/svg+xml'
+].join(',')
 
 const close = () => {
   emit('close')
