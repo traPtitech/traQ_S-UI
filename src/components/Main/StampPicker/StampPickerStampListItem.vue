@@ -6,6 +6,7 @@
       :stamp-id="stamp.id"
       :size="32"
       :class="$style.item"
+      no-context-menu
       @click="onClickStamp"
       @mouseenter="onStampHover"
     />
