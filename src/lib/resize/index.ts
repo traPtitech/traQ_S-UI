@@ -31,7 +31,7 @@ const resize = async (
 
     resetCanvas($input, getThumbnailDimensions(inputSize), $img)
 
-    const output = await await new Promise<Blob | null>(resolve => {
+    const output = await new Promise<Blob | null>(resolve => {
       $input.toBlob(resolve, inputFile.type)
     })
 
