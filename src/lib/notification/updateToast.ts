@@ -33,16 +33,6 @@ export const setupUpdateToast = (
   }
 
   // swが更新できるときにトースト表示
-  const newWorker = registration.installing
-  if (newWorker) {
-    newWorker.addEventListener('statechange', () => {
-      if (newWorker.state !== 'installed') return
-      doCanUpdate()
-    })
-    return
-  }
-
-  // swが更新できるときにトースト表示
   registration.addEventListener('updatefound', () => {
     const newWorker = registration.installing
     newWorker?.addEventListener('statechange', () => {
