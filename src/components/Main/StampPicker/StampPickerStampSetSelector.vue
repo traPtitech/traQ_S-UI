@@ -41,12 +41,12 @@ const onStampSetSelect = (stampSet: StampSet) => {
 .container {
   @include background-secondary;
   position: relative;
-  height: 36px;
+  height: fit-content;
 }
 .innerContainer {
   display: flex;
   align-items: center;
-  height: 100%;
+  height: fit-content;
   overflow-x: scroll;
   &::-webkit-scrollbar {
     display: none;
