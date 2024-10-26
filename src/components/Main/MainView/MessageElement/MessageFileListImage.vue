@@ -1,28 +1,30 @@
 <template>
-  <template v-if="canShow">
-    <router-link v-if="isLarge" :to="fileLink" :class="$style.largeContainer">
-      <!--
+  <div>
+    <template v-if="canShow">
+      <router-link v-if="isLarge" :to="fileLink" :class="$style.largeContainer">
+        <!--
         height, widthはlayout shift対策
         https://www.mizdra.net/entry/2020/05/31/192613
       -->
-      <img
-        draggable="false"
-        :alt="name"
-        :src="fileThumbnailPath"
-        :height="fileThumbnailSize.height"
-        :width="fileThumbnailSize.width"
-      />
-      <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
-    </router-link>
-    <router-link v-else :to="fileLink" :class="$style.container">
-      <!--
+        <img
+          draggable="false"
+          :alt="name"
+          :src="fileThumbnailPath"
+          :height="fileThumbnailSize.height"
+          :width="fileThumbnailSize.width"
+        />
+        <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
+      </router-link>
+      <router-link v-else :to="fileLink" :class="$style.container">
+        <!--
         CSSで固定値指定なのでheight, widthはつけない
       -->
-      <img draggable="false" :alt="name" :src="fileThumbnailPath" />
-      <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
-    </router-link>
-  </template>
-  <div v-else :class="$style.container">表示できない画像です</div>
+        <img draggable="false" :alt="name" :src="fileThumbnailPath" />
+        <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
+      </router-link>
+    </template>
+    <div v-else :class="$style.container">表示できない画像です</div>
+  </div>
 </template>
 
 <script lang="ts" setup>
