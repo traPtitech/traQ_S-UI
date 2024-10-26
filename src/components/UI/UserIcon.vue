@@ -1,7 +1,7 @@
 <template>
   <div
     :role="isClickable ? 'button' : 'img'"
-    :class="$style.container"
+    :class="[$style.container, isInactive && $style.transparent]"
     :style="styles.container"
     @click.prevent.stop="openModal"
   >
@@ -42,12 +42,14 @@ const props = withDefaults(
     indicatorSize?: number
     preventModal?: boolean
     hasNotification?: boolean
+    isInactive?: boolean
   }>(),
   {
     size: 36,
     indicatorSize: 10,
     preventModal: false,
-    hasNotification: false
+    hasNotification: false,
+    isInactive: false
   }
 )
 
@@ -108,5 +110,8 @@ const { isClickable, openModal } = useUserModalOpener(
   position: absolute;
   top: 0;
   right: 0;
+}
+.transparent {
+  opacity: 0.5;
 }
 </style>

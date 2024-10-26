@@ -10,6 +10,7 @@
             v-model:is-viewers-detail-open="isViewersDetailOpen"
             :channel-id="channelId"
             :viewer-ids="viewingUsers"
+            :inactive-viewer-ids="inactiveViewingUsers"
             :pinned-messages-count="pinnedMessages.length"
             @move-to-pinned="moveToPinnedPage"
             @move-to-events="moveToEventsPage"
@@ -30,6 +31,7 @@
     <template #opener>
       <channel-sidebar-hidden
         :viewer-ids="viewingUsers"
+        :inactive-viewer-ids="inactiveViewingUsers"
         @open="openSidebar"
         @open-viewers="openViewers"
       />
@@ -57,6 +59,7 @@ const props = defineProps<{
   isSidebarOpenerReady: boolean
   pinnedMessages: Pin[]
   viewingUsers: UserId[]
+  inactiveViewingUsers: UserId[]
 }>()
 
 const { channelsMap } = useChannelsStore()

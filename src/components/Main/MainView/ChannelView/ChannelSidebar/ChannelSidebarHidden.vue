@@ -13,6 +13,7 @@
       count-clickable
       show-count
       :user-ids="viewerIds"
+      :inactive-user-ids="inactiveViewerIds"
       :class="$style.rest"
       @count-click="emit('openViewers')"
     />
@@ -27,6 +28,7 @@ import type { UserId } from '/@/types/entity-ids'
 withDefaults(
   defineProps<{
     viewerIds?: readonly UserId[]
+    inactiveViewerIds?: readonly UserId[]
   }>(),
   {
     viewerIds: () => []
