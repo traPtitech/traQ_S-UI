@@ -10,7 +10,7 @@
       :min="0"
       :max="roundedDuration"
       tooltip="none"
-      @click.prevent
+      is-click-prevent
     />
   </div>
 </template>
@@ -48,6 +48,8 @@ const disabled = computed(() => props.duration === 0)
 </script>
 
 <style lang="scss" module>
+@use 'sass:meta';
+
 .timeSlider {
   &[data-show-background-on-hover='true']:not([aria-disabled='true']):hover {
     background: rgba(32, 33, 36, 0.06);
@@ -63,14 +65,16 @@ const disabled = computed(() => props.duration === 0)
   &:not(:hover) :global(.vue-slider-dot-handle) {
     opacity: 0;
   }
-
   :global {
-    $dotBgColor: #1e1e1e;
+    @include meta.load-css(
+      'vue-slider-component/lib/theme/default.scss',
+      $with: (
+        dotBgColor: #1e1e1e,
 
-    $bgColor: #b7b9ba;
-    $themeColor: #585859;
-
-    @import 'vue-slider-component/lib/theme/default.scss';
+        bgColor: #b7b9ba,
+        themeColor: #585859
+      )
+    );
   }
 }
 </style>

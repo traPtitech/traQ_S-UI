@@ -1,4 +1,5 @@
-@import './easing';
+@use 'easing';
+@forward 'easing';
 
 $vs: 'vertical-swap';
 $vs-reverse: 'vertical-swap-reverse';
@@ -6,7 +7,7 @@ $vs-reverse: 'vertical-swap-reverse';
 .#{$vs}-leave-active,
 .#{$vs-reverse}-enter-active,
 .#{$vs-reverse}-leave-active {
-  transition: transform 0.3s $easeOutBack;
+  transition: transform 0.3s easing.$easeOutBack;
 }
 .#{$vs-reverse}-leave-to,
 .#{$vs}-enter-from {
@@ -19,10 +20,10 @@ $vs-reverse: 'vertical-swap-reverse';
 
 $ts: 'toast-slide';
 .#{$ts}-enter-active {
-  transition: all 0.3s $easeOutCirc;
+  transition: all 0.3s easing.$easeOutCirc;
 }
 .#{$ts}-leave-active {
-  transition: all 0.8s $easeInExpo;
+  transition: all 0.8s easing.$easeInExpo;
 }
 .#{$ts}-enter-from {
   transform: translateX(-20px);
@@ -39,7 +40,7 @@ $ts: 'toast-slide';
 $sv: 'slide-vertical';
 .#{$sv}-enter-active,
 .#{$sv}-leave-active {
-  transition: all 0.15s $easeOutQuad;
+  transition: all 0.15s easing.$easeOutQuad;
   height: 0;
 }
 
@@ -68,7 +69,7 @@ $bk: 'background-shadow';
 $tu: 'typing-users';
 .#{$tu}-enter-active,
 .#{$tu}-leave-active {
-  transition: all 0.5s $easeOutCubic;
+  transition: all 0.5s easing.$easeOutCubic;
 }
 .#{$tu}-enter-from,
 .#{$tu}-leave-to {
@@ -82,10 +83,10 @@ $ft: 'fade-top';
 $fb: 'fade-bottom';
 @each $c in $fl, $fr, $ft, $fb {
   .#{$c}-enter-active {
-    transition: all 0.3s $easeOutCirc;
+    transition: all 0.3s easing.$easeOutCirc;
   }
   .#{$c}-leave-active {
-    transition: all 0.3s $easeInCirc;
+    transition: all 0.3s easing.$easeInCirc;
   }
   .#{$c}-move {
     transition: transform 0.3s;
@@ -115,7 +116,7 @@ $fb: 'fade-bottom';
 $s: 'stamp';
 .#{$s}-enter-active,
 .#{$s}-leave-active {
-  transition: all 0.3s $easeOutCirc;
+  transition: all 0.3s easing.$easeOutCirc;
 }
 .#{$s}-enter-from,
 .#{$s}-leave-to {
@@ -125,10 +126,10 @@ $s: 'stamp';
 
 $p: 'post';
 .#{$p}-enter-active {
-  transition: all 0.3s $easeOutCirc;
+  transition: all 0.3s easing.$easeOutCirc;
 }
 .#{$p}-leave-active {
-  transition: all 0.3s $easeInCirc;
+  transition: all 0.3s easing.$easeInCirc;
 }
 .#{$p}-leave-to {
   transform: translateX(20px);
@@ -142,7 +143,7 @@ $p: 'post';
 $qr: 'quick-reaction';
 .#{$qr}-enter-active,
 .#{$qr}-leave-active {
-  transition: all 0.3s $easeOutCirc;
+  transition: all 0.3s easing.$easeOutCirc;
 }
 .#{$qr}-enter-from,
 .#{$qr}-leave-to {
@@ -153,7 +154,7 @@ $qr: 'quick-reaction';
 $z: 'zoom';
 .#{$z}-enter-active,
 .#{$z}-leave-active {
-  transition: all 0.15s $easeOutCirc;
+  transition: all 0.15s easing.$easeOutCirc;
 }
 .#{$z}-enter-from,
 .#{$z}-leave-to {

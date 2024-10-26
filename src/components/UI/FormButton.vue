@@ -6,7 +6,10 @@
     :data-type="type"
     :data-is-danger="$boolAttr(isDanger)"
   >
-    <div :class="$style.label">{{ label }}</div>
+    <div :class="$style.label">
+      <a-icon v-if="icon" :mdi="mdi" :name="icon" />
+      {{ label }}
+    </div>
     <loading-spinner
       v-if="loading"
       :class="$style.spinner"
@@ -18,6 +21,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { match, P } from 'ts-pattern'
 
 interface Type {
@@ -38,18 +42,21 @@ type Props = {
   label?: string
   loading?: boolean
   disabled?: boolean
+  icon?: string
+  mdi?: boolean
 } & (NonDangerType | DangerType)
 
-const props = withDefaults(defineProps<Props>(), {
-  label: '',
-  loading: false,
-  disabled: false,
-  type: 'primary',
-  isDanger: false
-})
+const {
+  label = '',
+  loading = false,
+  disabled = false,
+  type = 'primary',
+  isDanger = false,
+  mdi = false
+} = defineProps<Props>()
 
 const spinnerColor = computed(() => {
-  return match([props.type, props.isDanger] as const)
+  return match([type, isDanger] as const)
     .with(['primary', P._], () => 'white' as const)
     .with(['secondary', true], () => 'accent-error' as const)
     .with(['secondary', false], () => 'accent-primary' as const)
@@ -97,6 +104,9 @@ const spinnerColor = computed(() => {
   }
 }
 .label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin: 8px 32px;
   .container[data-is-loading] & {
     visibility: hidden;

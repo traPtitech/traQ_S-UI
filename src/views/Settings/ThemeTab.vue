@@ -85,7 +85,11 @@
 <script lang="ts" setup>
 import EditTheme from '/@/components/Settings/ThemeTab/EditTheme.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
+import FormRadio from '/@/components/UI/FormRadio.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import { reactive } from 'vue'
+import type { Theme } from '/@/lib/theme/schema'
+import { useThemeSettings } from '/@/store/app/themeSettings'
 
 const state = reactive(useThemeSettings())
 const changeTheme = (theme: Theme) => {

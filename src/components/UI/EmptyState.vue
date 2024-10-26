@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-empty-object-type
 interface Props extends /* @vue-ignore */ HTMLAttributes {}
 
 defineProps<Props>()

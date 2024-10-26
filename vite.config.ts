@@ -71,9 +71,10 @@ export default defineConfig(({ command, mode }) => ({
   css: {
     preprocessorOptions: {
       scss: {
+        api: 'modern-compiler',
         additionalData: `
           @use "sass:math";
-          @import "/@/styles/common.scss";
+          @use "/@/styles/common.scss" as *;
         `,
         charset: false
       }

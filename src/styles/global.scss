@@ -1,8 +1,14 @@
-@import './reset';
-@import './emoji';
-@import './markdown';
-@import './transition';
-@import './scrollbar';
+// @use 'reset';
+// @use 'emoji';
+// @use 'markdown';
+// @use 'transition';
+// @use 'scrollbar';
+
+@forward 'reset';
+@forward 'emoji';
+@forward 'markdown';
+@forward 'transition';
+@forward 'scrollbar';
 
 :root {
   color-scheme: var(--color-scheme);
