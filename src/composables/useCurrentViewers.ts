@@ -18,7 +18,11 @@ const useCurrentViewers = (channelId: Ref<ChannelId>) => {
    */
   const viewingUsers = computed(() =>
     currentViewers.value
-      .filter(v => v.state === ChannelViewState.Monitoring)
+      .filter(
+        v =>
+          v.state === ChannelViewState.Monitoring ||
+          v.state === ChannelViewState.Editing
+      )
       .map(v => v.userId)
   )
 

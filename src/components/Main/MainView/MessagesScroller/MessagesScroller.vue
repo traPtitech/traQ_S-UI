@@ -191,7 +191,6 @@ watch(
   (ids, prevIds) => {
     if (!rootRef.value) return
     /* state.height の更新を忘れないようにすること */
-
     const newHeight = rootRef.value.scrollHeight
     if (
       props.lastLoadingDirection === 'latest' ||
@@ -206,7 +205,6 @@ watch(
       if (ids.length - prevIds.length === 0) {
         const scrollBottom =
           rootRef.value.scrollTop + rootRef.value.clientHeight
-
         // 一番下のメッセージあたりを見ているときに、
         // 新規に一つ追加された場合は一番下までスクロール
         if (state.height - 50 <= scrollBottom) {
@@ -246,16 +244,27 @@ const requestLoadMessages = () => {
 const handleScroll = throttle(17, requestLoadMessages)
 
 const visibilitychangeListener = () => {
+  emit('resetIsReachedLatest')
   if (document.visibilityState === 'visible') {
-    requestLoadMessages()
+    nextTick(requestLoadMessages)
   }
+}
+const focusListener = () => {
+  emit('resetIsReachedLatest')
+  nextTick(requestLoadMessages)
+}
+const blurListener = () => {
   emit('resetIsReachedLatest')
 }
 onMounted(() => {
   document.addEventListener('visibilitychange', visibilitychangeListener)
+  window.addEventListener('focus', focusListener)
+  window.addEventListener('blur', blurListener)
 })
 onUnmounted(() => {
   document.removeEventListener('visibilitychange', visibilitychangeListener)
+  window.removeEventListener('focus', focusListener)
+  window.removeEventListener('blur', blurListener)
 })
 
 const { onClick } = useMarkdownInternalHandler()
