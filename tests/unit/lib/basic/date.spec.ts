@@ -4,11 +4,9 @@ import {
   getFullDayString,
   getFullDayWithTimeString,
   getISOFullDayString,
-  getDateRepresentationWithoutSameDate,
   getDisplayDate,
   compareDate,
   compareDateString,
-  getCreatedDate,
   getCurrentTimeString
 } from '/@/lib/basic/date'
 
@@ -69,30 +67,6 @@ describe('getCurrentTimeString', () => {
   })
 })
 
-describe('getDateRepresentationWithoutSameDate', () => {
-  const date = new Date(defaultDate1.getTime())
-
-  it('can get time string', () => {
-    const date2 = new Date(defaultDate1.getTime())
-    date2.setMinutes(date2.getMinutes() + 2)
-    expect(getDateRepresentationWithoutSameDate(date2, date)).toBe('15:23')
-  })
-  it('can get date with time string', () => {
-    const date2 = new Date(defaultDate1.getTime())
-    date2.setDate(date2.getDate() + 2)
-    expect(getDateRepresentationWithoutSameDate(date2, date)).toBe(
-      '12/06 15:21'
-    )
-  })
-  it('can get date with time string and year', () => {
-    const date2 = new Date(defaultDate1.getTime())
-    date2.setFullYear(date2.getFullYear() + 2)
-    expect(getDateRepresentationWithoutSameDate(date2, date)).toBe(
-      '1987/12/04 15:21'
-    )
-  })
-})
-
 describe('getDisplayDate', () => {
   beforeEach(() => {
     vi.useFakeTimers()
@@ -122,15 +96,9 @@ describe('getDisplayDate', () => {
       '2010/05/02 14:28'
     )
   })
-})
-
-describe('getCreatedDate', () => {
-  const today = new Date()
-  today.setHours(1)
-  today.setMinutes(23)
-
-  it('can get', () => {
-    expect(getCreatedDate(today.toISOString())).toBe('今日 01:23')
+  it('with one parameter', () => {
+    vi.setSystemTime('2010-04-01T12:00:00')
+    expect(getDisplayDate(createdDateISO)).toBe('今日 12:34')
   })
 })
 

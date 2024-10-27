@@ -41,8 +41,8 @@ export const getDateRepresentationWithoutSameDate = (
   return timeString
 }
 
-export const getDateRepresentation = (date: string) => {
-  const displayDate = new Date(date)
+export const getDateRepresentation = (date: Readonly<Date>) => {
+  const displayDate = date
   const today = new Date()
   const timeString = getTimeString(displayDate)
   const yesterday = new Date(today.getTime() - 1000 * 60 * 60 * 24)
@@ -68,12 +68,16 @@ export const getDateRepresentation = (date: string) => {
   }
 }
 
-export const getDisplayDate = (createdAt: string, updatedAt: string) => {
-  return getDateRepresentation(updatedAt)
-}
+export const getDisplayDate = (createdAt: string, updatedAt?: string) => {
+  const createdAtUnix = Date.parse(createdAt)
+  const updatedAtUnix = Date.parse(updatedAt ?? '')
+  if (!Number.isNaN(updatedAtUnix)) {
+    return getDateRepresentation(new Date(updatedAtUnix))
+  }
 
-export const getCreatedDate = (createdAt: string) => {
-  return getDateRepresentation(createdAt)
+  return Number.isNaN(createdAtUnix)
+    ? ''
+    : getDateRepresentation(new Date(createdAtUnix))
 }
 
 export const compareDate = (date1: Date, date2: Date, inverse = false) => {
