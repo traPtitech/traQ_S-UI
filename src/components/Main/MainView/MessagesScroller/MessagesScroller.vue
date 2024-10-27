@@ -150,7 +150,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'requestLoadFormer'): void
   (e: 'requestLoadLatter'): void
-  (e: 'resetIsReachedLatest'): void
+  (e: 'windowViewd'): void
   (e: 'scrollPassive'): void
 }>()
 
@@ -192,15 +192,16 @@ watch(
     if (!rootRef.value) return
     /* state.height の更新を忘れないようにすること */
     const newHeight = rootRef.value.scrollHeight
+    if (ids.length - prevIds.length === -1) {
+      // 削除された場合は何もしない
+      state.height = newHeight
+      return
+    }
     if (
       props.lastLoadingDirection === 'latest' ||
-      props.lastLoadingDirection === 'former'
+      props.lastLoadingDirection === 'former' ||
+      props.isReachedLatest
     ) {
-      if (ids.length - prevIds.length === -1) {
-        // 削除された場合は何もしない
-        state.height = newHeight
-        return
-      }
       // XXX: 追加時にここは0になる
       if (ids.length - prevIds.length === 0) {
         const scrollBottom =
@@ -215,11 +216,13 @@ watch(
         state.height = newHeight
         return
       }
-      rootRef.value.scrollTo({
-        top: newHeight - state.height
-      })
-    }
-    state.height = newHeight
+      //上に追加された時はスクロール位置を変更する。
+      if (props.lastLoadingDirection === 'former') {
+        rootRef.value.scrollTo({
+          top: newHeight - state.height
+        })
+      }
+    } else state.height = newHeight
   },
   { deep: true, flush: 'post' }
 )
@@ -244,17 +247,17 @@ const requestLoadMessages = () => {
 const handleScroll = throttle(17, requestLoadMessages)
 
 const visibilitychangeListener = () => {
-  emit('resetIsReachedLatest')
+  emit('windowViewd')
   if (document.visibilityState === 'visible') {
     nextTick(requestLoadMessages)
   }
 }
 const focusListener = () => {
-  emit('resetIsReachedLatest')
+  emit('windowViewd')
   nextTick(requestLoadMessages)
 }
 const blurListener = () => {
-  emit('resetIsReachedLatest')
+  emit('windowViewd')
 }
 onMounted(() => {
   document.addEventListener('visibilitychange', visibilitychangeListener)

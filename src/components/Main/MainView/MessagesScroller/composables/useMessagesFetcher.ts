@@ -114,10 +114,6 @@ const useMessageFetcher = (
         isLoading.value = false
         isInitialLoad.value = false
         lastLoadingDirection.value = 'latter'
-        // 一番新しいメッセージに達した時は`latest`にする
-        if (isReachedLatest.value) {
-          lastLoadingDirection.value = 'latest'
-        }
         messageIds.value = [...new Set([...messageIds.value, ...newMessageIds])]
       }
     )
