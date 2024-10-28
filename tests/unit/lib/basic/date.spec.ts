@@ -4,7 +4,7 @@ import {
   getFullDayString,
   getFullDayWithTimeString,
   getISOFullDayString,
-  getDisplayDate,
+  getDateRepresentation,
   compareDate,
   compareDateString,
   getCurrentTimeString
@@ -75,30 +75,23 @@ describe('getDisplayDate', () => {
     vi.useRealTimers()
   })
 
-  const createdDateISO = '2010-04-01T12:34:56'
-  const updatedDateISO = '2010-05-02T14:28:57'
+  const dateISO = '2010-05-02T14:28:57'
 
   it('should say 今日 when updated today', () => {
     vi.setSystemTime('2010-05-02T15:00:00')
-    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('今日 14:28')
+    expect(getDateRepresentation(dateISO)).toBe('今日 14:28')
   })
   it('should say 昨日 when updated yesterday', () => {
     vi.setSystemTime('2010-05-03T15:00:00')
-    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('昨日 14:28')
+    expect(getDateRepresentation(dateISO)).toBe('昨日 14:28')
   })
   it('should get MM/DD when updated in the same year', () => {
     vi.setSystemTime('2010-07-07T15:00:00')
-    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe('05/02 14:28')
+    expect(getDateRepresentation(dateISO)).toBe('05/02 14:28')
   })
   it('should get YYYY/MM/DD when updated before last year', () => {
     vi.setSystemTime('2015-10-10T15:00:00')
-    expect(getDisplayDate(createdDateISO, updatedDateISO)).toBe(
-      '2010/05/02 14:28'
-    )
-  })
-  it('with one parameter', () => {
-    vi.setSystemTime('2010-04-01T12:00:00')
-    expect(getDisplayDate(createdDateISO)).toBe('今日 12:34')
+    expect(getDateRepresentation(dateISO)).toBe('2010/05/02 14:28')
   })
 })
 
