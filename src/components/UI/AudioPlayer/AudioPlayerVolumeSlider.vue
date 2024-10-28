@@ -16,8 +16,8 @@
       :class="$style.icon"
       mdi
       :size="20"
-      :name="volume > 0 ? 'volume-high' : 'volume-off'"
-      @click.prevent="toggleVolume"
+      :name="isMute ? 'volume-off' : 'volume-high'"
+      @click.prevent="emit('toggleMute')"
     />
   </div>
 </template>
@@ -30,6 +30,7 @@ import { computed } from 'vue'
 const props = withDefaults(
   defineProps<{
     volume: number
+    isMute: boolean | undefined
     keepExpanded?: boolean
     disabled?: boolean
   }>(),
@@ -41,6 +42,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'update:volume', _val: number): void
+  (e: 'toggleMute'): void
 }>()
 
 const roundedVolume = computed({
@@ -51,9 +53,6 @@ const roundedVolume = computed({
     emit('update:volume', v)
   }
 })
-const toggleVolume = () => {
-  roundedVolume.value = props.volume > 0 ? 0 : 100
-}
 </script>
 
 <style lang="scss" module>

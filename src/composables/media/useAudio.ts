@@ -145,11 +145,25 @@ export const useDuration = (audio: Ref<HTMLAudioElement | undefined>) => {
 
 const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
   const { audioVolume, restoringPromise } = useMediaSettingsStore()
+  const storeVolume = computed(() => audioVolume.value ?? 1)
 
   onMounted(async () => {
     await restoringPromise.value
-    setVolume(toFinite(audioVolume.value, 1))
+    setVolume(toFinite(storeVolume.value, 1))
   })
+
+  const isMute = ref(audio.value?.muted)
+
+  const toggleMute = () => {
+    if (!audio.value) return
+    if (isMute.value === true) {
+      audio.value.muted = false
+      isMute.value = false
+    } else {
+      audio.value.muted = true
+      isMute.value = true
+    }
+  }
 
   const setVolume = (v: number) => {
     if (audio.value) audio.value.volume = v
@@ -158,7 +172,7 @@ const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
 
   const onVolumeChange = () => {
     if (!audio.value) return
-    setVolume(toFinite(audio.value.volume, audioVolume.value ?? 1))
+    setVolume(toFinite(audio.value.volume, storeVolume.value))
   }
 
   watch(
@@ -168,7 +182,7 @@ const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
         oldAudio.removeEventListener('volumechange', onVolumeChange)
       }
       if (newAudio) {
-        setVolume(toFinite(audioVolume.value, 1))
+        setVolume(toFinite(storeVolume.value, 1))
         newAudio.addEventListener('volumechange', onVolumeChange)
       }
     },
@@ -177,14 +191,14 @@ const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
 
   const volume = computed<number>({
     get() {
-      return audioVolume.value ?? 1
+      return storeVolume.value
     },
     set(v) {
       if (!audio.value) return
       audio.value.volume = v / 100
     }
   })
-  return volume
+  return { volume, isMute, toggleMute }
 }
 
 const useLoop = (audio: Ref<HTMLAudioElement | undefined>) => {

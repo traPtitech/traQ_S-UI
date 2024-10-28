@@ -28,8 +28,10 @@
       />
       <audio-player-volume-slider
         v-model:volume="volume"
+        :is-mute="isMute"
         :class="$style.volumeSlider"
         :disabled="duration === 0"
+        @toggle-mute="toggleMute"
       />
     </div>
   </div>
@@ -52,11 +54,13 @@ const { fileMeta, fileRawPath } = useFileMeta(
   reactive({ fileId: computed(() => fileId.value ?? '') })
 )
 const name = computed(() => fileMeta.value?.name ?? '')
-const { isPlaying, currentTime, duration, volume, loop } = useAudio(
-  fileMeta,
-  fileRawPath,
-  audio
-)
+const {
+  isPlaying,
+  currentTime,
+  duration,
+  volume: { volume, toggleMute, isMute },
+  loop
+} = useAudio(fileMeta, fileRawPath, audio)
 </script>
 
 <style lang="scss" module>

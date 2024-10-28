@@ -16,9 +16,11 @@
         />
         <audio-player-volume-slider
           v-model:volume="volume"
+          :is-mute="isMute"
           :class="$style.volumeSlider"
           :disabled="cantPlay"
           keep-expanded
+          @toggle-mute="toggleMute"
         />
         <audio-player-loop-button
           v-model:loop="loop"
@@ -88,7 +90,7 @@ const {
   isPlaying,
   currentTime,
   duration,
-  volume,
+  volume: { volume, isMute, toggleMute },
   loop,
   isPinPShown,
   startPinP
