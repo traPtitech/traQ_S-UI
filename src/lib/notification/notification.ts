@@ -165,6 +165,7 @@ export const deleteToken = () => {
   if (window.Notification?.permission !== 'granted') return
 
   const firebaseApp = getFirebaseApp()
+  if (!firebaseApp) return
   const messaging = getMessaging(firebaseApp)
   deleteTokenFb(messaging)
 }
