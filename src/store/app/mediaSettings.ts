@@ -5,13 +5,11 @@ import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 
 export type IDBState = {
   audioVolume: Readonly<number> | undefined
-  videoVolume: Readonly<number> | undefined
 }
 
 const useMediaSettingsStorePinia = defineStore('app/mediaSettings', () => {
   const initialValue: IDBState = {
-    audioVolume: 1,
-    videoVolume: 1
+    audioVolume: 1
   }
 
   const [state, restoring, restoringPromise] = useIndexedDbValue(
