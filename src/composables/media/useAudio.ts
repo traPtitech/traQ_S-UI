@@ -3,12 +3,12 @@ import type { FileInfo } from '@traptitech/traq'
 import type { Ref } from 'vue'
 import {
   computed,
-  onMounted,
   onUnmounted,
   readonly,
   ref,
   shallowRef,
-  watch
+  watch,
+  watchEffect
 } from 'vue'
 
 import { useMediaSettingsStore } from '/@/store/app/mediaSettings'
@@ -147,33 +147,29 @@ export const useDuration = (audio: Ref<HTMLAudioElement | undefined>) => {
 }
 
 const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
-  const { audioVolume, restoringPromise } = useMediaSettingsStore()
+  const { audioVolume } = useMediaSettingsStore()
+  const isMute = ref(audio.value?.muted ?? false)
 
-  onMounted(async () => {
-    await restoringPromise
-    setVolume(toFinite(audioVolume.value, 1))
+  // ストア音量とミュートをaudio要素へ常に反映する
+  // 要素の差し替え・他プレイヤーによるストア変更・restore完了のいずれにも自動で追従する
+  watchEffect(() => {
+    if (!audio.value) return
+    audio.value.volume = audioVolume.value ?? 1
+    audio.value.muted = isMute.value
   })
 
-  const setVolume = (v: number) => {
-    if (audio.value) audio.value.volume = v
-    audioVolume.value = v
-  }
-
+  // ネイティブコントロール(<audio controls>)側の変更を取り込む
   const onVolumeChange = () => {
     if (!audio.value) return
-    setVolume(toFinite(audio.value.volume, audioVolume.value ?? 1))
+    audioVolume.value = toFinite(audio.value.volume, audioVolume.value ?? 1)
+    isMute.value = audio.value.muted
   }
 
   watch(
     audio,
     (newAudio, oldAudio) => {
-      if (oldAudio) {
-        oldAudio.removeEventListener('volumechange', onVolumeChange)
-      }
-      if (newAudio) {
-        setVolume(toFinite(audioVolume.value, 1))
-        newAudio.addEventListener('volumechange', onVolumeChange)
-      }
+      oldAudio?.removeEventListener('volumechange', onVolumeChange)
+      newAudio?.addEventListener('volumechange', onVolumeChange)
     },
     { immediate: true }
   )
@@ -183,11 +179,10 @@ const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
       return audioVolume.value ?? 1
     },
     set(v) {
-      if (!audio.value) return
-      audio.value.volume = v / 100
+      audioVolume.value = v / 100
     }
   })
-  return volume
+  return { volume, isMute }
 }
 
 const useLoop = (audio: Ref<HTMLAudioElement | undefined>) => {
