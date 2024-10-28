@@ -16,7 +16,7 @@ import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue
 import { computed } from 'vue'
 import useFileMeta from '/@/composables/files/useFileMeta'
 import useChannelPath from '/@/composables/useChannelPath'
-import { getCreatedDate } from '/@/lib/basic/date'
+import { getDateRepresentation } from '/@/lib/basic/date'
 import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
 import { useUsersStore } from '/@/store/entities/users'
 
@@ -39,7 +39,7 @@ const user = computed(() =>
   usersMap.value.get(fileMeta.value?.uploaderId ?? '')
 )
 const createdAt = computed(() =>
-  getCreatedDate(fileMeta.value?.createdAt ?? '')
+  getDateRepresentation(fileMeta.value?.createdAt ?? '')
 )
 
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
