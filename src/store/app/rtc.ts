@@ -46,16 +46,15 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
   }
 
   /** マイクミュート */
-  const isMicMuted = ref(false)
   const muteLocalStream = () => {
     if (!localStreamManager.value) return
     localStreamManager.value.mute()
-    isMicMuted.value = true
+    rtcSettings.isMute.value = true
   }
   const unmuteLocalStream = () => {
     if (!localStreamManager.value) return
     localStreamManager.value.unmute()
-    isMicMuted.value = false
+    rtcSettings.isMute.value = false
   }
 
   /** 現在発話しているユーザーを判定するsetIntervalのID */
@@ -283,7 +282,7 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
       setUserVolume(userId, 0.5)
     })
 
-    if (isMicMuted.value) {
+    if (rtcSettings.isMute.value) {
       mute()
     } else {
       unmute()
@@ -352,7 +351,7 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
 
   return {
     isCurrentDevice,
-    isMicMuted,
+    isMicMuted: rtcSettings.isMute,
     talkingUsersState,
     startQall,
     endQall,
