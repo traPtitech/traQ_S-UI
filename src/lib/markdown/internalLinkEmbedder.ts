@@ -115,7 +115,6 @@ const replaceAll = (m: string, getters: Readonly<ReplaceGetters>) => {
 
 const replaceMention = (m: string, getters: Readonly<UserAndGroupGetters>) => {
   return m.replace(mentionRegex, s => {
-    console.log(s)
     const isStartsWithColon = s.startsWith(':')
 
     // 始まりと終わりが:なものを除外
