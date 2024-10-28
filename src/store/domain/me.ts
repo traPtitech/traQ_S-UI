@@ -50,7 +50,7 @@ const useMeStorePinia = defineStore('domain/me', () => {
   const onUserUpdated = (userId: UserId) => {
     if (myId.value !== userId) return
     fetchMe().then(res => {
-      if (res === undefined) router.push('/logout')
+      if (res === undefined) router.push('/login')
     })
   }
   wsListener.on('USER_UPDATED', ({ id }) => {
@@ -61,7 +61,7 @@ const useMeStorePinia = defineStore('domain/me', () => {
   })
   wsListener.on('reconnect', () => {
     fetchMe().then(res => {
-      if (res === undefined) router.push('/logout')
+      if (res === undefined) router.push('/login')
     })
   })
 
