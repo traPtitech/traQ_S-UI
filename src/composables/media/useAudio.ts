@@ -1,8 +1,17 @@
 import type { FileInfo } from '@traptitech/traq'
 
 import type { Ref } from 'vue'
-import { computed, onUnmounted, readonly, ref, shallowRef, watch } from 'vue'
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  readonly,
+  ref,
+  shallowRef,
+  watch
+} from 'vue'
 
+import { useMediaSettingsStore } from '/@/store/app/mediaSettings'
 import { useAudioController } from '/@/store/ui/audioController'
 
 import usePictureInPicture from './usePictureInPicture'
@@ -138,11 +147,21 @@ export const useDuration = (audio: Ref<HTMLAudioElement | undefined>) => {
 }
 
 const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
-  const nativeVolume = ref(toFinite(audio.value?.volume, 1))
+  const { audioVolume, restoringPromise } = useMediaSettingsStore()
+
+  onMounted(async () => {
+    await restoringPromise
+    setVolume(toFinite(audioVolume.value, 1))
+  })
+
+  const setVolume = (v: number) => {
+    if (audio.value) audio.value.volume = v
+    audioVolume.value = v
+  }
 
   const onVolumeChange = () => {
     if (!audio.value) return
-    nativeVolume.value = toFinite(audio.value.volume, 1)
+    setVolume(toFinite(audio.value.volume, audioVolume.value ?? 1))
   }
 
   watch(
@@ -152,7 +171,7 @@ const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
         oldAudio.removeEventListener('volumechange', onVolumeChange)
       }
       if (newAudio) {
-        nativeVolume.value = toFinite(newAudio.volume, 1)
+        setVolume(toFinite(audioVolume.value, 1))
         newAudio.addEventListener('volumechange', onVolumeChange)
       }
     },
@@ -161,7 +180,7 @@ const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
 
   const volume = computed<number>({
     get() {
-      return nativeVolume.value
+      return audioVolume.value ?? 1
     },
     set(v) {
       if (!audio.value) return
