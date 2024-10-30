@@ -37,9 +37,8 @@ const useIndexedDbValue = <T extends object>(
 
   watch(
     value,
-    async () => {
+    async v => {
       if (restoring.value) return
-
       // indexedDBにはproxyされたobjectは入らないのでtoRawする
       await set(key, toRawDeep(value), store)
     },

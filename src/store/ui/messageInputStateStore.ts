@@ -1,9 +1,11 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import type { Ref } from 'vue'
-import { reactive, computed, unref } from 'vue'
+import { computed, unref, toRef } from 'vue'
 import type { AttachmentType } from '/@/lib/basic/file'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
+import useIndexedDbValue, { key } from '/@/composables/utils/useIndexedDbValue'
+import { promisifyRequest } from 'idb-keyval'
 
 /**
  * 基本的に直接利用しないで`/@/composables/messageInputState`を利用する
@@ -36,24 +38,41 @@ export const createDefaultValue = () => ({ text: '', attachments: [] })
 const useMessageInputStateStorePinia = defineStore(
   'ui/messageInputStateStore',
   () => {
-    const states = reactive(
-      new Map<ChannelId | VirtualChannelId, MessageInputState>()
+    const initialValue = {
+      messageInputState: new Map<
+        ChannelId | VirtualChannelId,
+        MessageInputState
+      >()
+    }
+
+    const [state, restoring, restoringPromise] = useIndexedDbValue(
+      'store/ui/messageInputStateStore',
+      1,
+      {
+        1: async getStore => {
+          const store = getStore()
+          const setReq = store.put(initialValue, key)
+          await promisifyRequest(setReq)
+        }
+      },
+      initialValue
     )
 
+    const states = toRef(() => state.messageInputState)
     const inputChannels = computed(() =>
-      [...states].filter(([id]) => !virtualIds.has(id))
+      [...states.value].filter(([id]) => !virtualIds.has(id))
     )
     const hasInputChannel = computed(() => inputChannels.value.length > 0)
 
-    const getStore = (cId: MessageInputStateKey) => states.get(unref(cId))
+    const getStore = (cId: MessageInputStateKey) => states.value.get(unref(cId))
     const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
       // 空のときは削除、空でないときはセット
       if (v && (v.text !== '' || v.attachments.length > 0)) {
         // コピーしないと参照が変わらないから上書きされる
         // toRawしちゃうとreactiveで包めなくなるので、そうはしない
-        states.set(unref(cId), { ...v })
+        states.value.set(unref(cId), { ...v })
       } else {
-        states.delete(unref(cId))
+        states.value.delete(unref(cId))
       }
     }
 
