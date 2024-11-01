@@ -39,7 +39,7 @@
     "idb-keyval": "^6.2.0",
     "mitt": "^3.0.0",
     "skyway-js": "^4.4.5",
-    "text-field-edit": "^3.2.0",
+    "text-field-edit": "^4.1.1",
     "throttle-debounce": "^5.0.2",
     "ts-pattern": "^5.5.0",
     "turndown": "^7.2.0",
