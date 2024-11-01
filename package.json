@@ -57,7 +57,7 @@
     "@types/dom-screen-wake-lock": "^1.0.3",
     "@types/katex": "^0.16.7",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "^20.14.10",
+    "@types/node": "^22.8.6",
     "@types/punycode": "^2.1.4",
     "@types/serviceworker": "^0.0.99",
     "@types/throttle-debounce": "^5.0.2",
