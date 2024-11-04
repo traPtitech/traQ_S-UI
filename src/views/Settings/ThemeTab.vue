@@ -53,7 +53,7 @@
               <!-- eslint-disable vue/valid-v-model -->
               <!-- TODO: 自動適用じゃなくてバリデーションしてから適用するようにする -->
               <form-input
-                v-model="(val[name as keyof typeof val] as string)"
+                v-model="val[name as keyof typeof val] as string"
                 use-change-event
                 on-secondary
                 :class="$style.input"

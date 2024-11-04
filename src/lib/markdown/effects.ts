@@ -47,15 +47,14 @@ type SizeEffectsCustom = (typeof sizeEffects)[number]
 // https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types
 type IsSame<T, S> = [T] extends [S] ? ([S] extends [T] ? true : false) : false
 
-type AnimeEffects = IsSame<
-  AnimeEffectsOriginal,
-  AnimeEffectsCustom
-> extends true
-  ? AnimeEffectsCustom
-  : never
-type SizeEffects = IsSame<SizeEffectsOriginal, SizeEffectsCustom> extends true
-  ? SizeEffectsCustom
-  : never
+type AnimeEffects =
+  IsSame<AnimeEffectsOriginal, AnimeEffectsCustom> extends true
+    ? AnimeEffectsCustom
+    : never
+type SizeEffects =
+  IsSame<SizeEffectsOriginal, SizeEffectsCustom> extends true
+    ? SizeEffectsCustom
+    : never
 
 // 一致しなかったらneverになって型エラーが出る
 export const animeEffectSet = new Set<AnimeEffects>(animeEffects)
