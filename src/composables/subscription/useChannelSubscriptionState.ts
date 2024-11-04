@@ -22,8 +22,8 @@ const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
       currentChannelSubscription.value === ChannelSubscribeLevel.notified
         ? ChannelSubscribeLevel.none
         : currentChannelSubscription.value === ChannelSubscribeLevel.subscribed
-        ? ChannelSubscribeLevel.notified
-        : ChannelSubscribeLevel.subscribed
+          ? ChannelSubscribeLevel.notified
+          : ChannelSubscribeLevel.subscribed
     changeSubscriptionLevel(level)
   }
   return {

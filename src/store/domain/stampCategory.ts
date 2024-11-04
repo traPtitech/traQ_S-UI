@@ -25,9 +25,8 @@ const useStampCategoryPinia = defineStore('domain/stampCategory', () => {
       toRaw(stampsStore.stampsMap.value)
     )
     traQStampCategory.value = traQStampsToStampCategory(traQStampMap)
-    unicodeStampCategories.value = await categorizeUnicodeStamps(
-      unicodeStampMap
-    )
+    unicodeStampCategories.value =
+      await categorizeUnicodeStamps(unicodeStampMap)
   }
 
   constructStampCategories()

@@ -61,8 +61,8 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
         return s1 && !s2
           ? -1
           : !s1 && s2
-          ? 1
-          : compareStringInsensitive(u1.name, u2.name)
+            ? 1
+            : compareStringInsensitive(u1.name, u2.name)
       })
   )
 

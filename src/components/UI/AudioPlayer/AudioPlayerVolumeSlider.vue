@@ -85,13 +85,19 @@ $afterVolumeSliderWidth: 48px;
   }
 }
 .volumeSlider {
-  transition: width ease 0.3s, margin ease 0.3s, opacity ease 0.25s;
+  transition:
+    width ease 0.3s,
+    margin ease 0.3s,
+    opacity ease 0.25s;
   width: 0;
   opacity: 0;
   margin: auto 0;
   .volume[data-keep-expanded='true'] &,
   .volume:hover & {
-    transition: width ease 0.3s, margin ease 0.3s, opacity ease 0.25s;
+    transition:
+      width ease 0.3s,
+      margin ease 0.3s,
+      opacity ease 0.25s;
     width: $afterVolumeSliderWidth;
     opacity: 1;
     margin: auto 8px;
