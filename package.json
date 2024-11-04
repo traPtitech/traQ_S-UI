@@ -99,7 +99,7 @@
     "vue-tsc": "^2.1.10",
     "workbox-cacheable-response": "^7.3.0",
     "workbox-core": "^7.3.0",
-    "workbox-expiration": "^6.5.4",
+    "workbox-expiration": "^7.3.0",
     "workbox-precaching": "^7.3.0",
     "workbox-routing": "^7.3.0",
     "workbox-strategies": "^6.5.4"
