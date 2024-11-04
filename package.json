@@ -56,7 +56,7 @@
     "@types/autosize": "^4.0.3",
     "@types/dom-screen-wake-lock": "^1.0.3",
     "@types/katex": "^0.16.7",
-    "@types/markdown-it": "^12.2.3",
+    "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.8.7",
     "@types/punycode": "^2.1.4",
     "@types/serviceworker": "^0.0.101",
