@@ -6,8 +6,8 @@
       hasChild && !isOpened
         ? 'チャンネルツリーを展開'
         : hasChild && isOpened
-        ? 'チャンネルツリーを閉じる'
-        : undefined
+          ? 'チャンネルツリーを閉じる'
+          : undefined
     "
   >
     <div

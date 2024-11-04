@@ -42,7 +42,10 @@ export const setupUpdateToast = (
   })
 
   // 1時間毎にアップデートをチェックする
-  setInterval(() => {
-    registration.update()
-  }, 1000 * 60 * 60)
+  setInterval(
+    () => {
+      registration.update()
+    },
+    1000 * 60 * 60
+  )
 }
