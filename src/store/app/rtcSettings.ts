@@ -38,7 +38,7 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
     isMute: false
   }
 
-  const [state, restoring, restoringPromise] = useIndexedDbValue(
+  const [state] = useIndexedDbValue(
     'store/app/rtcSettings',
     3,
     {
