@@ -32,7 +32,7 @@ const useMessageInputState = (channelId: MessageInputStateKey) => {
     v => {
       setStore(channelId, v)
     },
-    { deep: true }
+    { deep: true, immediate: true }
   )
 
   const isTextEmpty = computed(() => state.text === '')
