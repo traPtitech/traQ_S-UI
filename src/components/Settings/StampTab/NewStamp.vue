@@ -18,7 +18,12 @@ import { useModalStore } from '/@/store/ui/modal'
 
 const { pushModal } = useModalStore()
 
-const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
+const acceptImageType = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/svg+xml'
+].join(',')
 const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
   if (!files[0]) return
   pushModal({
