@@ -59,6 +59,13 @@
                 :class="$style.input"
               />
               <!-- eslint-enable vue/valid-v-model --->
+              <div>
+                <input
+                  v-model="(val[name as keyof typeof val] as string)"
+                  type="color"
+                  :class="$style.colorInput"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -136,17 +143,22 @@ const resetToDark = () => {
   .color {
     display: flex;
     margin: 4px 0;
+    gap: 0.5rem;
   }
   .name {
     @include color-ui-secondary;
-    margin-right: 8px;
   }
   .input {
     margin-left: auto;
   }
 }
 .resetButtonContainer {
+  margin-top: 1rem;
   display: flex;
   gap: 1rem;
+}
+.colorInput {
+  width: 3rem;
+  height: 100%;
 }
 </style>
