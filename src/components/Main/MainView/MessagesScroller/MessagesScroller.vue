@@ -150,7 +150,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'requestLoadFormer'): void
   (e: 'requestLoadLatter'): void
-  (e: 'resetIsReachedLatest'): void
+  (e: 'windowViewd'): void
   (e: 'scrollPassive'): void
 }>()
 
@@ -191,22 +191,21 @@ watch(
   (ids, prevIds) => {
     if (!rootRef.value) return
     /* state.height の更新を忘れないようにすること */
-
     const newHeight = rootRef.value.scrollHeight
+    if (ids.length - prevIds.length === -1) {
+      // 削除された場合は何もしない
+      state.height = newHeight
+      return
+    }
     if (
       props.lastLoadingDirection === 'latest' ||
-      props.lastLoadingDirection === 'former'
+      props.lastLoadingDirection === 'former' ||
+      props.isReachedLatest
     ) {
-      if (ids.length - prevIds.length === -1) {
-        // 削除された場合は何もしない
-        state.height = newHeight
-        return
-      }
       // XXX: 追加時にここは0になる
       if (ids.length - prevIds.length === 0) {
         const scrollBottom =
           rootRef.value.scrollTop + rootRef.value.clientHeight
-
         // 一番下のメッセージあたりを見ているときに、
         // 新規に一つ追加された場合は一番下までスクロール
         if (state.height - 50 <= scrollBottom) {
@@ -217,11 +216,13 @@ watch(
         state.height = newHeight
         return
       }
-      rootRef.value.scrollTo({
-        top: newHeight - state.height
-      })
-    }
-    state.height = newHeight
+      //上に追加された時はスクロール位置を変更する。
+      if (props.lastLoadingDirection === 'former') {
+        rootRef.value.scrollTo({
+          top: newHeight - state.height
+        })
+      }
+    } else state.height = newHeight
   },
   { deep: true, flush: 'post' }
 )
@@ -246,16 +247,27 @@ const requestLoadMessages = () => {
 const handleScroll = throttle(17, requestLoadMessages)
 
 const visibilitychangeListener = () => {
+  emit('windowViewd')
   if (document.visibilityState === 'visible') {
-    requestLoadMessages()
+    nextTick(requestLoadMessages)
   }
-  emit('resetIsReachedLatest')
+}
+const focusListener = () => {
+  emit('windowViewd')
+  nextTick(requestLoadMessages)
+}
+const blurListener = () => {
+  emit('windowViewd')
 }
 onMounted(() => {
   document.addEventListener('visibilitychange', visibilitychangeListener)
+  window.addEventListener('focus', focusListener)
+  window.addEventListener('blur', blurListener)
 })
 onUnmounted(() => {
   document.removeEventListener('visibilitychange', visibilitychangeListener)
+  window.removeEventListener('focus', focusListener)
+  window.removeEventListener('blur', blurListener)
 })
 
 const { onClick } = useMarkdownInternalHandler()
