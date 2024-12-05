@@ -1,13 +1,14 @@
 import type { FileInfo, Message, MessageStamp, Ogp } from '@traptitech/traq'
 import type { AxiosError } from 'axios'
 import mitt from 'mitt'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
 import apis from '/@/lib/apis'
 import { createSingleflight } from '/@/lib/basic/async'
 import { wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ExternalUrl, FileId, MessageId } from '/@/types/entity-ids'
+import axios from 'axios'
 
 type MessageEventMap = {
   reconnect: void
@@ -21,7 +22,14 @@ export const messageMitt = mitt<MessageEventMap>()
 
 const getMessage = createSingleflight(apis.getMessage.bind(apis))
 const getFileMeta = createSingleflight(apis.getFileMeta.bind(apis))
-const getOgp = createSingleflight(apis.getOgp.bind(apis))
+// メッセージごとにネットワーク上 (ブラウザ上) のキャッシュを分けるために message=encodeURIComponent(messageId) を apis.getOgp に追加している
+// (クエリパラメータを追加で渡せないので fetch で回避している)
+const getOgp = createSingleflight((url: string, messageId: string) => {
+  const base = '/api/v3/ogp'
+  const urlEncoded = encodeURIComponent(url)
+  const messageIdEncoded = encodeURIComponent(messageId)
+  return axios.get(`${base}?url=${urlEncoded}&message=${messageIdEncoded}`)
+})
 
 const useMessagesStorePinia = defineStore('entities/messages', () => {
   /**
@@ -101,18 +109,14 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
   const ogpDataMap = ref(new Map<ExternalUrl, Ogp | undefined>())
   const fetchOgpData = async ({
     url,
-    ignoreCache = false
+    messageId
   }: {
     url: ExternalUrl
+    messageId: MessageId
     ignoreCache?: boolean
   }) => {
-    if (!ignoreCache && ogpDataMap.value.has(url)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return ogpDataMap.value.get(url)!
-    }
-
     try {
-      const [{ data: ogpData }, shared] = await getOgp(url)
+      const [{ data: ogpData }, shared] = await getOgp(url, messageId)
       // ページにOGPが存在しない場合、undefinedを返す
       if (ogpData.type === 'empty') {
         if (!shared) ogpDataMap.value.set(url, undefined)
