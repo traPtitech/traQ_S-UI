@@ -2,7 +2,9 @@
  * https://github.com/traPtitech/traQ/blob/master/utils/message/replacer.goと同様
  */
 
-const mentionRegex = /:?[@＠]([^\s@＠]{0,31}[^\s@＠:])/g
+// URLの一部になっているときは置換しない (URLの正規表現は完全ではない)
+const mentionRegex =
+  /(?<!(?:https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]+\/(?:.+\/)*):?[@＠]([^\s@＠]{0,31}[^\s@＠:])/g
 const userStartsRegex = /^[@＠]([a-zA-Z0-9_-]{1,32})/g
 const channelRegex = /[#＃]([a-zA-Z0-9_/-]+)/g
 
