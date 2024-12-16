@@ -6,7 +6,8 @@
 const mentionRegex =
   /(?<!(?:https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]+\/(?:.+\/)*):?[@＠]([^\s@＠]{0,31}[^\s@＠:])/g
 const userStartsRegex = /^[@＠]([a-zA-Z0-9_-]{1,32})/g
-const channelRegex = /[#＃]([a-zA-Z0-9_/-]+)/g
+const channelRegex =
+  /(?<!(?:https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]+(?:\/.+)*\/?)[#＃]([a-zA-Z0-9_/-]+)/g
 
 const backQuote = '`'
 const dollar = '$'

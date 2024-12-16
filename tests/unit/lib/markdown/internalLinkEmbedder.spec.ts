@@ -115,6 +115,9 @@ const specs: Spec[] = [
     '!{"type":"user","raw":"@a","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d44"}'
   ],
   // must not embed cases
+  ['https://example.com#a', 'https://example.com#a'],
+  ['example.com/#a', 'example.com/#a'],
+  ['example.com/hello#a', 'example.com/hello#a'],
   ['https://example.com/@takashi_trap', 'https://example.com/@takashi_trap'],
   [
     'example.com/users/@takashi_trap/hello',
