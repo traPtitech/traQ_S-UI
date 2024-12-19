@@ -7,6 +7,7 @@ import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 import { deleteToken } from '/@/lib/notification/notification'
 import { wsListener } from '/@/lib/websocket'
 import apis from '/@/lib/apis'
+import { useRouter } from 'vue-router'
 
 export type IDBState = {
   detail: Readonly<MyUserDetail> | undefined
@@ -16,6 +17,7 @@ const useMeStorePinia = defineStore('domain/me', () => {
   const initialValue: IDBState = {
     detail: undefined
   }
+  const router = useRouter()
 
   // TODO: ログインチェック時にrestoreを待つ必要があるかもしれない
   const [state] = useIndexedDbValue('store/domain/me', 1, {}, initialValue)
@@ -28,7 +30,7 @@ const useMeStorePinia = defineStore('domain/me', () => {
       state.detail = data
       return data
     } catch {
-      state.detail = undefined
+      logout()
       return undefined
     }
   }
@@ -42,7 +44,9 @@ const useMeStorePinia = defineStore('domain/me', () => {
 
   const onUserUpdated = (userId: UserId) => {
     if (myId.value !== userId) return
-    fetchMe()
+    fetchMe().then(res => {
+      if (res === undefined) router.push('/login')
+    })
   }
   wsListener.on('USER_UPDATED', ({ id }) => {
     onUserUpdated(id)
@@ -51,7 +55,9 @@ const useMeStorePinia = defineStore('domain/me', () => {
     onUserUpdated(id)
   })
   wsListener.on('reconnect', () => {
-    fetchMe()
+    fetchMe().then(res => {
+      if (res === undefined) router.push('/login')
+    })
   })
 
   return {
