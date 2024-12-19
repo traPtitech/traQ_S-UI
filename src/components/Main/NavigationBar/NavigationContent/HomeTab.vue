@@ -9,14 +9,30 @@
     </navigation-content-container>
     <navigation-content-container
       v-if="
-        dmChannelsWithNotification.length + channelsWithNotification.length !==
+        dmChannelsWithNotification.length +
+          starredChannelsWithNoticeable.length +
+          notStarredChannelsWithNoticeable.length !==
+        0
+      "
+      subtitle="メンション"
+      :class="$style.item"
+    >
+      <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
+      <channel-list :channels="starredChannelsWithNoticeable" show-star />
+      <channel-list :channels="notStarredChannelsWithNoticeable" />
+    </navigation-content-container>
+    <navigation-content-container
+      v-if="
+        dmChannelsWithNotification.length +
+          starredChannelsWithUnreadMessage.length +
+          notStarredChannelsWithUnreadMessage.length !==
         0
       "
       subtitle="未読"
       :class="$style.item"
     >
-      <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
-      <channel-list :channels="channelsWithNotification" />
+      <channel-list :channels="starredChannelsWithUnreadMessage" show-star />
+      <channel-list :channels="notStarredChannelsWithUnreadMessage" />
     </navigation-content-container>
     <navigation-content-container subtitle="チャンネル" :class="$style.item">
       <channel-tree
@@ -66,8 +82,13 @@ const homeChannelWithTree = computed(() => {
   return filterTrees(trees, channel => !channel.archived)
 })
 
-const { channelsWithNotification, dmChannelsWithNotification } =
-  useChannelsWithNotification()
+const {
+  starredChannelsWithNoticeable,
+  notStarredChannelsWithNoticeable,
+  starredChannelsWithUnreadMessage,
+  notStarredChannelsWithUnreadMessage,
+  dmChannelsWithNotification
+} = useChannelsWithNotification()
 
 const topLevelChannels = computed(() =>
   // filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
