@@ -17,6 +17,7 @@
         :is-sidebar-opener-ready="isReady"
         :pinned-messages="pinnedMessages"
         :viewing-users="viewingUsers"
+        :inactive-viewing-users="inactiveViewingUsers"
       />
     </template>
   </primary-view-frame>
@@ -40,5 +41,7 @@ const props = defineProps<{
 
 const channelId = toRef(props, 'channelId')
 const pinnedMessages = usePinnedMessages(channelId)
-const { viewingUsers, typingUsers } = useCurrentViewers(channelId)
+
+const { viewingUsers, inactiveViewingUsers, typingUsers } =
+  useCurrentViewers(channelId)
 </script>

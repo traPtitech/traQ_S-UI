@@ -3,6 +3,7 @@
     <channel-sidebar-viewers
       v-model="isViewersDetailOpen"
       :viewer-ids="viewerIds"
+      :inactive-viewer-ids="inactiveViewerIds"
       :class="$style.sidebarItem"
     />
     <channel-sidebar-qall
@@ -56,6 +57,7 @@ const props = withDefaults(
   defineProps<{
     channelId: ChannelId
     viewerIds: readonly UserId[]
+    inactiveViewerIds: readonly UserId[]
     pinnedMessagesCount?: number
     isViewersDetailOpen: boolean
   }>(),

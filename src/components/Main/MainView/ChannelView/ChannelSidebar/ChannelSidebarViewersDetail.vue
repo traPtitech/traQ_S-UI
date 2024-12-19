@@ -4,6 +4,14 @@
       <user-icon :user-id="user.id" :size="32" />
       <div :class="$style.userName">{{ user.displayName }}</div>
     </div>
+    <div
+      v-for="user in inactiveUsers"
+      :key="user.id"
+      :class="[$style.item, $style.transparent]"
+    >
+      <user-icon :user-id="user.id" :size="32" />
+      <div :class="$style.userName">{{ user.displayName }}</div>
+    </div>
   </sidebar-content-container>
 </template>
 
@@ -18,9 +26,11 @@ import { useUsersStore } from '/@/store/entities/users'
 const props = withDefaults(
   defineProps<{
     viewerIds?: readonly UserId[]
+    inactiveViewerIds?: readonly UserId[]
   }>(),
   {
-    viewerIds: () => []
+    viewerIds: () => [],
+    inactiveViewerIds: () => []
   }
 )
 
@@ -31,6 +41,9 @@ const emit = defineEmits<{
 const { usersMap } = useUsersStore()
 const users = computed(() =>
   props.viewerIds.map(id => usersMap.value.get(id)).filter(isDefined)
+)
+const inactiveUsers = computed(() =>
+  props.inactiveViewerIds.map(id => usersMap.value.get(id)).filter(isDefined)
 )
 </script>
 
@@ -45,6 +58,9 @@ const users = computed(() =>
   &:last-child {
     margin-bottom: 0;
   }
+}
+.transparent {
+  opacity: 0.5;
 }
 .userName {
   margin-left: 8px;
