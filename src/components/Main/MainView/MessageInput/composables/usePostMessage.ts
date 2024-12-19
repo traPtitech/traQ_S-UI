@@ -1,6 +1,5 @@
 import type { ChannelId } from '/@/types/entity-ids'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
-import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
 import useChannelPath from '/@/composables/useChannelPath'
 import { computed, ref, unref } from 'vue'
 import { nullUuid } from '/@/lib/basic/uuid'
@@ -93,23 +92,10 @@ const usePostMessage = (
       bothChannelsMapInitialFetchPromise.value
     ])
 
-    const embededText = embedInternalLink(state.text, {
-      getUser: findUserByName,
-      getGroup: getUserGroupByName,
-      getChannel: path => {
-        try {
-          const id = channelPathToId(path.split('/'), channelTree.value)
-          return { id }
-        } catch {
-          return undefined
-        }
-      }
-    })
-
     const dummyFileUrls = state.attachments.map(() =>
       buildFilePathForPost(nullUuid)
     )
-    const dummyText = createContent(embededText, dummyFileUrls)
+    const dummyText = createContent(state.text, dummyFileUrls)
     if (countLength(dummyText) > MESSAGE_MAX_LENGTH) {
       addErrorToast('メッセージが長すぎます')
       return
@@ -124,7 +110,7 @@ const usePostMessage = (
       })
 
       await apis.postMessage(cId, {
-        content: createContent(embededText, fileUrls)
+        content: createContent(state.text, fileUrls)
       })
 
       clearState()
