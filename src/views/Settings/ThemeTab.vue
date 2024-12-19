@@ -61,7 +61,7 @@
               <!-- eslint-enable vue/valid-v-model --->
               <div>
                 <input
-                  v-model="(val[name as keyof typeof val] as string)"
+                  v-model="val[name as keyof typeof val] as string"
                   type="color"
                   :class="$style.colorInput"
                 />
