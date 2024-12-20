@@ -54,7 +54,7 @@ const useTtsPinia = defineStore('ui/tts', () => {
   })
 
   // タブ閉じたときには止める
-  window.addEventListener('unload', () => {
+  window.addEventListener('pagehide', () => {
     stop()
   })
 
