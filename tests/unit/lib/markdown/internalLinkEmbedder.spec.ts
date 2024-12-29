@@ -20,6 +20,10 @@ const users = {
   'dfdff0c9-5de0-46ee-9721-2525e8bb3d47': {
     name: 'very_long_long_long_long_lo_name',
     id: 'dfdff0c9-5de0-46ee-9721-2525e8bb3d47'
+  },
+  'dfdff0c9-5de0-46ee-9721-2525e8bb3d48': {
+    name: 'trap',
+    id: 'dfdff0c9-5de0-46ee-9721-2525e8bb3d48'
   }
 }
 const groups = {
@@ -122,7 +126,9 @@ const specs: Spec[] = [
   [
     'example.com/users/@takashi_trap/hello',
     'example.com/users/@takashi_trap/hello'
-  ]
+  ],
+  ['info@trap.jp', 'info@trap.jp'],
+  ['@ab', '@ab']
 ]
 
 describe('internalLinkEmbedder', () => {
