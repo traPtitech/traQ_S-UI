@@ -1,6 +1,6 @@
 import type {
-  ReplaceGetters,
-  Entity
+  Entity,
+  ReplaceGetters
 } from '/@/lib/markdown/internalLinkEmbedder'
 import { replace } from '/@/lib/markdown/internalLinkEmbedder'
 
@@ -20,6 +20,10 @@ const users = {
   'dfdff0c9-5de0-46ee-9721-2525e8bb3d47': {
     name: 'very_long_long_long_long_lo_name',
     id: 'dfdff0c9-5de0-46ee-9721-2525e8bb3d47'
+  },
+  'dfdff0c9-5de0-46ee-9721-2525e8bb3d48': {
+    name: 'trap',
+    id: 'dfdff0c9-5de0-46ee-9721-2525e8bb3d48'
   }
 }
 const groups = {
@@ -60,6 +64,7 @@ const testStore: ReplaceGetters = {
 type Spec = [string, string]
 
 const specs: Spec[] = [
+  // must embed cases
   [
     'aaaa#aeee `#a` @takashi_trapa @takashi_trap @#a\n```\n#a @takashi_trap\n```\n@okあok',
     'aaaa#aeee `#a` @takashi_trapa !{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"} @!{"type":"channel","raw":"#a","id":"ea452867-553b-4808-a14f-a47ee0009ee6"}\n```\n#a @takashi_trap\n```\n!{"type":"group","raw":"@okあok","id":"dfabf0c9-5de0-46ee-9721-2525e8bb3d45"}'
@@ -112,12 +117,23 @@ const specs: Spec[] = [
   [
     '@a',
     '!{"type":"user","raw":"@a","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d44"}'
-  ]
+  ],
+  // must not embed cases
+  ['https://example.com#a', 'https://example.com#a'],
+  ['example.com/#a', 'example.com/#a'],
+  ['example.com/hello#a', 'example.com/hello#a'],
+  ['https://example.com/@takashi_trap', 'https://example.com/@takashi_trap'],
+  [
+    'example.com/users/@takashi_trap/hello',
+    'example.com/users/@takashi_trap/hello'
+  ],
+  ['info@trap.jp', 'info@trap.jp'],
+  ['@ab', '@ab']
 ]
 
 describe('internalLinkEmbedder', () => {
   specs.forEach(([before, after], i) => {
-    it(`can embed internal links ${i}`, () => {
+    it(`must or must not embed internal links ${i}`, () => {
       expect(replace(before, testStore)).toEqual(after)
     })
   })
