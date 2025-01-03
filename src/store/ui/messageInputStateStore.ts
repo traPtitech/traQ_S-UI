@@ -1,6 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import type { Ref } from 'vue'
-import { computed, unref, toRef } from 'vue'
+import { computed, unref, toRef, ref } from 'vue'
 import type { AttachmentType } from '/@/lib/basic/file'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
@@ -40,7 +40,7 @@ const useMessageInputStateStorePinia = defineStore(
   () => {
     const initialValue = {
       messageInputState: new Map<
-        ChannelId | VirtualChannelId,
+        ChannelId,
         MessageInputState
       >()
     }
@@ -59,20 +59,27 @@ const useMessageInputStateStorePinia = defineStore(
     )
 
     const states = toRef(() => state.messageInputState)
-    const inputChannels = computed(() =>
-      [...states.value].filter(([id]) => !virtualIds.has(id))
-    )
+    const inputChannels = computed(() => [...states.value])
     const hasInputChannel = computed(() => inputChannels.value.length > 0)
+    const virtualChannelStates = ref(
+      new Map<VirtualChannelId, MessageInputState>()
+    )
 
-    const getStore = (cId: MessageInputStateKey) => states.value.get(unref(cId))
+    const getStore = (cId: MessageInputStateKey) => {
+      const cId_ = unref(cId)
+      const st =  (virtualIds.has(cId_) ? virtualChannelStates : states)
+      return st.value.get(cId_)
+    }
     const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
+      const cId_ = unref(cId)
+      const st =  (virtualIds.has(cId_) ? virtualChannelStates : states)
       // 空のときは削除、空でないときはセット
       if (v && (v.text !== '' || v.attachments.length > 0)) {
         // コピーしないと参照が変わらないから上書きされる
         // toRawしちゃうとreactiveで包めなくなるので、そうはしない
-        states.value.set(unref(cId), { ...v })
+        st.value.set(cId_, { ...v })
       } else {
-        states.value.delete(unref(cId))
+        st.value.delete(cId_)
       }
     }
 
