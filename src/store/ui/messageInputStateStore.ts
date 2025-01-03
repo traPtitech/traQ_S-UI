@@ -39,10 +39,7 @@ const useMessageInputStateStorePinia = defineStore(
   'ui/messageInputStateStore',
   () => {
     const initialValue = {
-      messageInputState: new Map<
-        ChannelId,
-        MessageInputState
-      >()
+      messageInputState: new Map<ChannelId, MessageInputState>()
     }
 
     const [state, restoring, restoringPromise] = useIndexedDbValue(
@@ -67,12 +64,12 @@ const useMessageInputStateStorePinia = defineStore(
 
     const getStore = (cId: MessageInputStateKey) => {
       const cId_ = unref(cId)
-      const st =  (virtualIds.has(cId_) ? virtualChannelStates : states)
+      const st = virtualIds.has(cId_) ? virtualChannelStates : states
       return st.value.get(cId_)
     }
     const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
       const cId_ = unref(cId)
-      const st =  (virtualIds.has(cId_) ? virtualChannelStates : states)
+      const st = virtualIds.has(cId_) ? virtualChannelStates : states
       // 空のときは削除、空でないときはセット
       if (v && (v.text !== '' || v.attachments.length > 0)) {
         // コピーしないと参照が変わらないから上書きされる
