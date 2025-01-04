@@ -17,11 +17,11 @@
     </transition>
     <spin-number :value="stamp.sum" :class="$style.count" />
   </div>
-    <stamp-scaled-element
+  <stamp-scaled-element
     :class="$style.scaleReaction"
     :show="isHovered && !isDetailShown"
     :stamp="stamp"
-    />
+  />
 </template>
 
 <script lang="ts" setup>
