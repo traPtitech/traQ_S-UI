@@ -4,6 +4,7 @@
   :class="$style.scaleReaction"
   >
     <transition name="scale-reaction">
+      <!-- sizeを46より大きくすると見切れる -->
         <a-stamp
             :key="stamp.id"
             :stamp-id="stamp.id"
@@ -12,26 +13,22 @@
             without-title
         />
     </transition>
-    <div :class="$style.detail">{{ value }}</div>
+    <stamp-detail-element
+    :class="$style.detail"
+    :stamp="stamp"
+  />
   </div>
   </template>
   
   <script lang="ts" setup>
   import AStamp from '/@/components/UI/AStamp.vue'
-  import { computed } from 'vue'
-  import { useStampsStore } from '/@/store/entities/stamps'
   import type { MessageStampById } from '/@/lib/messageStampList'
+  import StampDetailElement from './StampDetailElement.vue'
 
 const props = defineProps<{
   stamp: MessageStampById
   show: boolean
 }>()
-
-const { stampsMap } = useStampsStore()
-
-const stampName = computed(
-  () => stampsMap.value.get(props.stamp.id)?.name ?? ''
-)
 </script>
 
 <style lang="scss" module>
@@ -41,6 +38,7 @@ const stampName = computed(
     display: flex;
     border-radius: 4px;
     contain: none;
+    flex-wrap: wrap;
     border: solid 2px $theme-ui-tertiary-default;
 }
 .stamp {
@@ -48,12 +46,20 @@ const stampName = computed(
         right: 0.2rem;
         bottom: 0.2rem;
     }
-
     display: flex;
 }
 
 .detail {
-  display: flex;
+  color: var(--specific-count-text);
+  @include color-ui-primary;
+  max-width : 500px;
+  min-width: 0;
+  overflow: hidden;
+  overflow: clip;
+  margin: {
+    left: 6px;
+    right: 4px;
+  }
 }
 </style>
   
