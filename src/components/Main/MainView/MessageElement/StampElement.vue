@@ -20,8 +20,6 @@
     <stamp-scaled-element
     :class="$style.scaleReaction"
     :show="isHovered && !isDetailShown"
-    :value="tooltip"
-    :stamp-id="stamp.id"
     :stamp="stamp"
     />
 </template>
@@ -137,15 +135,14 @@ const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 .scaleReaction {
   @include background-tertiary;
   display: flex;
-  flex-direction: column;
   height: 3.5rem;
-  align-items: center;
+  align-items: flex-start;
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   user-select: none;
   overflow: visible;
   contain: content;
   position: absolute;
-  bottom: 30px;
+  bottom: 105%;
 }
 </style>
