@@ -34,21 +34,21 @@
             />
             <p v-else>読み上げ音声の声の種類が取得できませんでした。</p>
             <form-input
-              v-model.number="state.voicePitch"
+              v-model="state.voicePitch"
               label="ピッチ"
               type="number"
               step="0.1"
               :class="$style.option"
             />
             <form-input
-              v-model.number="state.voiceRate"
+              v-model="state.voiceRate"
               label="速度"
               type="number"
               step="0.1"
               :class="$style.option"
             />
             <form-input
-              v-model.number="state.voiceVolume"
+              v-model="state.voiceVolume"
               label="音量"
               type="number"
               step="0.1"

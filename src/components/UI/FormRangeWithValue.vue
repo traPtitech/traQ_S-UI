@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <a-slider
-      v-model.number="value"
+      v-model="value"
       :class="$style.range"
       :min="min"
       :max="max"
