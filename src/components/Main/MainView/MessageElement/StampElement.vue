@@ -1,7 +1,7 @@
 <template>
   <div
   :class="$style.body"
-  :aria-label="`${tooltip}`"
+  :aria-label="tooltip"
   :data-include-me="$boolAttr(includeMe)"
   @click="onClick"
   @mouseenter="onMouseEnter"
