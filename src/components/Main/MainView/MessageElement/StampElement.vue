@@ -1,14 +1,7 @@
 <template>
-  <!-- <div
-    :class="$style.body"
-    :title="tooltip"
-    :data-include-me="$boolAttr(includeMe)"
-    @click="onClick"
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
-  > -->
   <div
   :class="$style.body"
+  :aria-label="`${tooltip}`"
   :data-include-me="$boolAttr(includeMe)"
   @click="onClick"
   @mouseenter="onMouseEnter"
@@ -58,14 +51,11 @@ const stampName = computed(
   () => stampsMap.value.get(props.stamp.id)?.name ?? ''
 )
 
-// const tooltip = computed(() =>
-//   [
-//     `:${stampName.value}:`,
-//     ...props.stamp.users.map(
-//       u => `${usersMap.value.get(u.id)?.displayName ?? ''}(${u.count})`
-//     )
-//   ].join(' ')
-// )
+const tooltip = computed(() =>
+  [
+    `${stampName.value}, ${props.stamp.sum}件のリアクション, クリック／タップでリアクションを削除`
+  ].join(' ')
+)
 
 const includeMe = computed(() => props.stamp.myCount > 0)
 
