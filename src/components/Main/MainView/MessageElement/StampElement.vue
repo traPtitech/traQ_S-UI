@@ -1,12 +1,19 @@
 <template>
-  <div
+  <!-- <div
     :class="$style.body"
     :title="tooltip"
     :data-include-me="$boolAttr(includeMe)"
     @click="onClick"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
-  >
+  > -->
+  <div
+  :class="$style.body"
+  :data-include-me="$boolAttr(includeMe)"
+  @click="onClick"
+  @mouseenter="onMouseEnter"
+  @mouseleave="onMouseLeave"
+>
     <transition name="stamp-pressed" mode="out-in">
       <a-stamp
         :key="pressAnimationKey"
@@ -51,14 +58,14 @@ const stampName = computed(
   () => stampsMap.value.get(props.stamp.id)?.name ?? ''
 )
 
-const tooltip = computed(() =>
-  [
-    `:${stampName.value}:`,
-    ...props.stamp.users.map(
-      u => `${usersMap.value.get(u.id)?.displayName ?? ''}(${u.count})`
-    )
-  ].join(' ')
-)
+// const tooltip = computed(() =>
+//   [
+//     `:${stampName.value}:`,
+//     ...props.stamp.users.map(
+//       u => `${usersMap.value.get(u.id)?.displayName ?? ''}(${u.count})`
+//     )
+//   ].join(' ')
+// )
 
 const includeMe = computed(() => props.stamp.myCount > 0)
 
