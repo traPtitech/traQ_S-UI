@@ -1,12 +1,12 @@
 <template>
   <div
-  :class="$style.body"
-  :aria-label="tooltip"
-  :data-include-me="$boolAttr(includeMe)"
-  @click="onClick"
-  @mouseenter="onMouseEnter"
-  @mouseleave="onMouseLeave"
->
+    :class="$style.body"
+    :aria-label="tooltip"
+    :data-include-me="$boolAttr(includeMe)"
+    @click="onClick"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+  >
     <transition name="stamp-pressed" mode="out-in">
       <a-stamp
         :key="pressAnimationKey"
