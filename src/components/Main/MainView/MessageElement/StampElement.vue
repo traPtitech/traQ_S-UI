@@ -141,5 +141,6 @@ const { isHovered, onMouseEnter, onMouseLeave } = useHover()
   contain: content;
   position: absolute;
   bottom: 105%;
+  z-index: $z-index-message-element-scaled-stamp;
 }
 </style>
