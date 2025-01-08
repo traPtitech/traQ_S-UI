@@ -13,6 +13,8 @@ import {
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import useUserList from '/@/composables/users/useUserList'
+import { useChannelsStore } from '/@/store/entities/channels'
+import useChannelPath from '/@/composables/useChannelPath'
 
 const events: Array<keyof EntityEventMap> = [
   'setUser',
@@ -23,11 +25,14 @@ const events: Array<keyof EntityEventMap> = [
   'deleteUserGroup',
   'setStamp',
   'setStamps',
-  'deleteStamp'
+  'deleteStamp',
+  'addChannel',
+  'setChannels',
+  'updateChannel'
 ]
 
 type WordWithId = {
-  type: 'user' | 'user-group' | 'stamp'
+  type: 'user' | 'user-group' | 'stamp' | 'channel'
   text: string
   id: string
 }
@@ -42,6 +47,8 @@ const useCandidateTree = () => {
   const userList = useUserList()
   const { userGroupsMap } = useGroupsStore()
   const { stampsMap } = useStampsStore()
+  const { channelsMap } = useChannelsStore()
+  const { channelIdToPathString } = useChannelPath()
 
   const constructTree = () =>
     new TrieTree<Word>(
@@ -66,6 +73,11 @@ const useCandidateTree = () => {
       [...animeEffectSet, ...sizeEffectSet].map(effectName => ({
         type: 'stamp-effect',
         text: '.' + effectName
+      })),
+      [...channelsMap.value.values()].map(channel => ({
+        type: 'channel',
+        text: channelIdToPathString(channel.id, true),
+        id: channel.id
       }))
     )
 
@@ -86,6 +98,11 @@ const useCandidateTree = () => {
   return tree
 }
 
+const replaceMap: Record<string, string | undefined> = {
+  '＠': '@',
+  '＃': '#'
+}
+
 /**
  * @param minLength 補完が利用できるようになる最小の文字数
  */
@@ -97,7 +114,9 @@ const useWordSuggestionList = (
   const tree = useCandidateTree()
   const candidates = computed(() =>
     target.value.word.length >= minLength
-      ? tree.value.search(target.value.word.replaceAll('＠', '@'))
+      ? tree.value.search(
+          target.value.word.replace(/[＠＃]/g, c => replaceMap[c] ?? c)
+        )
       : []
   )
   const confirmedPart = computed(() =>

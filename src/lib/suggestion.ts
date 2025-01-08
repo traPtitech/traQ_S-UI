@@ -11,7 +11,7 @@ export const getCurrentWord = (
   text: string
 ): Target => {
   const startIndex = elm.selectionStart
-  const nearest = lastIndexOf(text, ['@', ':', '.'], startIndex - 1)
+  const nearest = lastIndexOf(text, ['@', ':', '.', '#'], startIndex - 1)
   const prevSpaceIndex = lastIndexOf(text, [' ', '　'], startIndex - 1)
   if (prevSpaceIndex > nearest) {
     return { word: '', begin: 0, end: 0 }
