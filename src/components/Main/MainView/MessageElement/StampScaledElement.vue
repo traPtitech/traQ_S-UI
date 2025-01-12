@@ -47,7 +47,6 @@ const props = defineProps<{
   color: var(--specific-count-text);
   @include color-ui-primary;
   flex: 1 1 0;
-  max-width: 500px;
   min-width: 0;
   overflow: hidden;
   overflow: clip;
