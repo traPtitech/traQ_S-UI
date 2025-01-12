@@ -17,7 +17,7 @@
 <script lang="ts" setup>
 import AStamp from '/@/components/UI/AStamp.vue'
 import type { MessageStampById } from '/@/lib/messageStampList'
-import StampDetailElement from './StampDetailElement.vue'
+import StampDetailElement from './StampScaledDetailElement.vue'
 
 const props = defineProps<{
   stamp: MessageStampById
