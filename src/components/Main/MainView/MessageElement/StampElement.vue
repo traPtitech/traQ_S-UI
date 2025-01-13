@@ -97,7 +97,7 @@ const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
 const isLongHovered = ref(false)
 
-watch(isHovered, (beginHover) => {
+watch(isHovered, beginHover => {
   if (beginHover) {
     hoverTimeout.value = setTimeout(() => {
       isLongHovered.value = true
