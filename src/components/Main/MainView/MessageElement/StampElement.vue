@@ -19,7 +19,7 @@
   </div>
   <stamp-scaled-element
     :class="$style.scaleReaction"
-    :show="isHovered && !isDetailShown"
+    :show="isHovered && isLongHovered && !isDetailShown"
     :stamp="stamp"
   />
 </template>
@@ -94,6 +94,22 @@ watch(
 )
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const isLongHovered = ref(false)
+
+watch(isHovered, (beginHover) => {
+  if (beginHover) {
+    hoverTimeout.value = setTimeout(() => {
+      isLongHovered.value = true
+    }, 500)
+  } else {
+    if (hoverTimeout.value) {
+      clearTimeout(hoverTimeout.value)
+      hoverTimeout.value = null
+    }
+    isLongHovered.value = false
+  }
+})
 </script>
 
 <style lang="scss" module>
