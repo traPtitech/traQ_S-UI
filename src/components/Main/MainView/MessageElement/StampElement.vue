@@ -19,7 +19,7 @@
   </div>
   <stamp-scaled-element
     :class="$style.scaleReaction"
-    :show="isHovered && isLongHovered && !isDetailShown"
+    :show="isHovered && isLongHovered && !isDetailShown && !isMobile"
     :stamp="stamp"
   />
 </template>
@@ -30,6 +30,7 @@ import AStamp from '/@/components/UI/AStamp.vue'
 import { ref, computed, watch, onMounted } from 'vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageStampById } from '/@/lib/messageStampList'
 import StampScaledElement from './StampScaledElement.vue'
 import useHover from '/@/composables/dom/useHover'
@@ -44,6 +45,7 @@ const emit = defineEmits<{
   (e: 'removeStamp', _stampId: string): void
 }>()
 
+const { isMobile } = useResponsiveStore()
 const { stampsMap } = useStampsStore()
 const { usersMap } = useUsersStore()
 
