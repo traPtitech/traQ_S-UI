@@ -1,43 +1,14 @@
 <template>
   <div :class="$style.container">
-    <div>
-      {{ ':' + stampName + ': が ' }}
-    </div>
-    <div v-for="user in limitedUsers" :key="user.id" :class="$style.contents">
-      <stamp-detail-element-content
-        :user-id="user.id"
-        :count="user.count"
-        :class="$style.content"
-      />
-      <span
-        v-if="
-          (!isLastUser(user) && !isSecondLastUser(user)) ||
-          isOverLimitSecondUser(user)
-        "
-        :class="$style.contents"
-      >
-        、
-      </span>
-      <span
-        v-if="isSecondLastUser(user) && !isOverLimitSecondUser(user)"
-        :class="$style.contents"
-        >と</span
-      >
-      <span v-if="isOverLimitUser(user)" :class="$style.contents"
-        >と他{{ props.stamp.users.length - 3 }}人</span
-      >
-      <span v-if="isLastUser(user)" :class="$style.contents">
-        にリアクションされました
-      </span>
-    </div>
+    {{ detailContents }}
   </div>
 </template>
 
 <script lang="ts" setup>
-import StampDetailElementContent from './StampDetailElementContent.vue'
 import { computed } from 'vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { StampUser, MessageStampById } from '/@/lib/messageStampList'
+import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
   stamp: MessageStampById
@@ -46,6 +17,7 @@ const props = defineProps<{
 const { stampsMap } = useStampsStore()
 
 const limitedUsers = computed(() => props.stamp.users.slice(0, 3))
+const { usersMap } = useUsersStore()
 
 const stampName = computed(
   () => stampsMap.value.get(props.stamp.id)?.name ?? ''
@@ -62,6 +34,25 @@ const isOverLimitUser = (user: StampUser) =>
 
 const isOverLimitSecondUser = (user: StampUser) =>
   user === props.stamp.users[1] && props.stamp.users.length > 3
+
+const detailContents = computed(() => {
+  let message = `:${stampName.value}: が `
+  limitedUsers.value.forEach((user, index) => {
+    message += `${usersMap.value.get(user.id)?.displayName ?? 'unknown'}`
+    message += user.count > 1 ? `(${user.count})` : ''
+    if (!isLastUser(user) && !isSecondLastUser(user)) {
+      message += '、'
+    } else if (isSecondLastUser(user) && !isOverLimitSecondUser(user)) {
+      message += 'と'
+    } else if (isOverLimitUser(user)) {
+      message += `と他${props.stamp.users.length - 3}人`
+    }
+    if (isLastUser(user)) {
+      message += 'にリアクションされました'
+    }
+  })
+  return message
+})
 </script>
 
 <style lang="scss" module>

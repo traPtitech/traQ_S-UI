@@ -1,17 +1,19 @@
 <template>
-  <div v-show="show" :class="$style.scaleReaction">
-    <transition name="scale-reaction">
-      <!-- sizeを46より大きくすると見切れる -->
-      <a-stamp
-        :key="stamp.id"
-        :stamp-id="stamp.id"
-        :size="46"
-        :class="$style.stamp"
-        without-title
-      />
-    </transition>
-    <stamp-detail-element :class="$style.detail" :stamp="stamp" />
-  </div>
+  <teleport to="#stamp-picker-popup">
+    <div v-show="show" :class="$style.scaleReaction">
+      <transition name="scale-reaction">
+        <!-- sizeを46より大きくすると見切れる -->
+        <a-stamp
+          :key="stamp.id"
+          :stamp-id="stamp.id"
+          :size="50"
+          :class="$style.stamp"
+          without-title
+        />
+      </transition>
+      <stamp-detail-element :class="$style.detail" :stamp="stamp" />
+    </div>
+  </teleport>
 </template>
 
 <script lang="ts" setup>
@@ -31,9 +33,12 @@ const props = defineProps<{
   @include background-primary;
   display: flex;
   border-radius: 4px;
+  width: 500px;
+  align-items: center;
   contain: none;
   flex-wrap: wrap;
   border: solid 2px $theme-ui-tertiary-default;
+  position: absolute;
 }
 .stamp {
   margin: {
