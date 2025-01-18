@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="stampRoot"
     :class="$style.body"
     :aria-label="tooltip"
     :data-include-me="$boolAttr(includeMe)"
@@ -21,6 +22,7 @@
     :class="$style.scaleReaction"
     :show="isHovered && isLongHovered && !isDetailShown"
     :stamp="stamp"
+    :target-rect="hoveredRect"
   />
 </template>
 
@@ -94,13 +96,17 @@ watch(
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
 const isLongHovered = ref(false)
+const stampRoot = ref<HTMLElement | null>(null)
+const hoveredRect = ref<DOMRect | undefined>(undefined)
 
 watch(isHovered, beginHover => {
   if (beginHover) {
+    hoveredRect.value = stampRoot.value?.getBoundingClientRect() ?? undefined
     hoverTimeout.value = setTimeout(() => {
       isLongHovered.value = true
     }, 500)
   } else {
+    hoveredRect.value = undefined
     if (hoverTimeout.value) {
       clearTimeout(hoverTimeout.value)
       hoverTimeout.value = null

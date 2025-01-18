@@ -1,6 +1,11 @@
 <template>
   <teleport to="#stamp-picker-popup">
-    <div v-show="show" :class="$style.scaleReaction">
+    <div
+      v-show="show"
+      ref="containerEle"
+      :class="$style.scaleReaction"
+      :style="stylePosition"
+    >
       <transition name="scale-reaction">
         <!-- sizeを46より大きくすると見切れる -->
         <a-stamp
@@ -17,14 +22,25 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, ref } from 'vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import type { MessageStampById } from '/@/lib/messageStampList'
 import StampDetailElement from './StampScaledDetailElement.vue'
-
 const props = defineProps<{
   stamp: MessageStampById
   show: boolean
+  targetRect?: DOMRect
 }>()
+
+const containerEle = ref<HTMLDivElement>()
+const stylePosition = computed(() => {
+  if (!props.targetRect) return { display: 'none' }
+  return {
+    top: `${props.targetRect.top}px`,
+    left: `${props.targetRect.left + props.targetRect.width / 2 - 25}px`,
+    transform: 'translateY(-105%) translateX(-30%)'
+  }
+})
 </script>
 
 <style lang="scss" module>
@@ -33,12 +49,22 @@ const props = defineProps<{
   @include background-primary;
   display: flex;
   border-radius: 4px;
-  width: 500px;
+  max-width: 500px;
   align-items: center;
   contain: none;
   flex-wrap: wrap;
   border: solid 2px $theme-ui-tertiary-default;
   position: absolute;
+  animation: transformAnimation 0.15s ease-in;
+}
+
+@keyframes transformAnimation {
+  from {
+    transform: translateY(-125%) translateX(-30%);
+  }
+  to {
+    transform: translateY(-105%) translateX(-30%);
+  }
 }
 .stamp {
   margin: {
