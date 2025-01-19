@@ -1,6 +1,30 @@
+<script setup lang="ts">
+import { useQall } from '/@/composables/qall/useQall'
+import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
+import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
+
+const { tracksMap } = useQall()
+</script>
+
 <template>
   <div :class="$style.Block">
     <h1 :class="$style.Header">Qall View</h1>
+    <div>
+      <template
+        v-for="track of tracksMap.values()"
+        :key="track.trackPublication?.trackSid"
+      >
+        <VideoComponent
+          v-if="track.trackPublication?.kind === 'video'"
+          :track="track.trackPublication.videoTrack!"
+          :participant-identity="track.participantIdentity"
+        />
+        <AudioComponent
+          v-else-if="track.trackPublication?.kind === 'audio'"
+          :track="track.trackPublication.audioTrack!"
+        />
+      </template>
+    </div>
   </div>
 </template>
 

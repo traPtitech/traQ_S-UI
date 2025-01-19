@@ -10,7 +10,7 @@
         :data-is-active="$boolAttr(isQallSessionOpened)"
         :data-is-joined="$boolAttr(canEndQall)"
         :tooltip="qallLabel"
-        @click="toggleQall"
+        @click="toggleCalling(props.channelId)"
       />
       <header-tools-item
         :class="$style.notificationIcon"
@@ -57,6 +57,7 @@ import type { ChannelId } from '/@/types/entity-ids'
 import HeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
 import useQall from './composables/useQall'
 import useStarChannel from './composables/useStarChannel'
+import { useQall as useNewQall } from '/@/composables/qall/useQall'
 
 const props = withDefaults(
   defineProps<{
@@ -87,6 +88,8 @@ const {
   qallLabel,
   toggleQall
 } = useQall(props)
+
+const { toggleCalling } = useNewQall()
 
 const { changeToNextSubscriptionLevel, currentChannelSubscription } =
   useChannelSubscriptionState(toRef(props, 'channelId'))
