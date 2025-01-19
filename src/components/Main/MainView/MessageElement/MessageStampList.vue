@@ -137,7 +137,7 @@ const { toggleStampPicker } = useStampPickerInvoker(
   &[data-show-details] {
     flex-direction: column;
   }
-  contain: none;
+  contain: content;
 }
 .stamp {
   margin: {

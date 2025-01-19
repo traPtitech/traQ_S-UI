@@ -134,7 +134,6 @@ watch(isHovered, beginHover => {
   user-select: none;
   overflow: hidden;
   contain: content;
-  position: relative;
 }
 
 .count {

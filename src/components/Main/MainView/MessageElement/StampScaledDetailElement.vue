@@ -40,7 +40,7 @@ const detailContents = computed(() => {
   limitedUsers.value.forEach((user, index) => {
     message += `${usersMap.value.get(user.id)?.displayName ?? 'unknown'}`
     message += user.count > 1 ? `(${user.count})` : ''
-    if (!isLastUser(user) && !isSecondLastUser(user)) {
+    if ((!isLastUser(user) && !isSecondLastUser(user))||isOverLimitSecondUser(user)) {
       message += '、'
     } else if (isSecondLastUser(user) && !isOverLimitSecondUser(user)) {
       message += 'と'
