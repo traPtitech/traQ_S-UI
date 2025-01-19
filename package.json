@@ -82,7 +82,7 @@
     "esbuild": "^0.24.2",
     "esbuild-plugin-browserslist": "^0.15.0",
     "fonteditor-core": "^2.4.1",
-    "jsdom": "^25.0.1",
+    "jsdom": "^26.0.0",
     "patch-package": "^8.0.0",
     "pinia": "^2.3.0",
     "postcss": "^8.4.39",
