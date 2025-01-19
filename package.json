@@ -74,7 +74,7 @@
     "axios": "^1.7.9",
     "browserslist": "^4.24.3",
     "eslint": "^9.17.0",
-    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-cypress": "^4.1.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "eslint-plugin-vue": "^9.32.0",
