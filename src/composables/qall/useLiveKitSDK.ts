@@ -47,7 +47,7 @@ type CameraProcessor = {
 const room = ref<Room>()
 const speakerIdentity = ref<string[]>([])
 const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
-const cameraProcesserMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
+const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
 
 function handleTrackSubscribed(
   track: RemoteTrack,
@@ -207,13 +207,19 @@ const addCameraTrack = async (
     }
     const processedTrack = await processor.startProcessing(track, options)
     const localTrack = new LocalVideoTrack(processedTrack)
+    await room.value?.localParticipant.publishTrack(localTrack).catch(e => {
+      addErrorToast('カメラの共有に失敗しました')
+      track.stop()
+      processor.stopProcessing()
+      return
+    })
     if (localTrack.sid) {
-      cameraProcesserMap.value.set(localTrack.sid, {
+      console.log(localTrack.sid)
+      cameraProcessorMap.value.set(localTrack.sid, {
         processor,
         track
       })
     }
-    room.value?.localParticipant.publishTrack(localTrack)
   } catch {
     addErrorToast('カメラの共有に失敗しました')
     return
@@ -258,14 +264,14 @@ const removeVideoTrack = async (localpublication: LocalTrackPublication) => {
       addErrorToast('ルームが存在しません')
       return
     }
-    const cameraProcessor = cameraProcesserMap.value.get(
+    const cameraProcessor = cameraProcessorMap.value.get(
       localpublication.trackSid
     )
     if (cameraProcessor) {
       console.log('stopProcessing')
       cameraProcessor.processor.stopProcessing()
       cameraProcessor.track.stop()
-      cameraProcesserMap.value.delete(localpublication.trackSid)
+      cameraProcessorMap.value.delete(localpublication.trackSid)
     }
 
     const { [localpublication.trackSid]: audioSid, ...newAttributes } =
