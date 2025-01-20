@@ -169,13 +169,15 @@ async function leaveRoom() {
 
 const Attributes = ref<{ [key: string]: string }>({})
 
-const addCameraTrack = async () => {
+const addCameraTrack = async (videoInputDevice?: MediaDeviceInfo) => {
   try {
     if (!room.value) {
       addErrorToast('ルームが存在しません')
       return
     }
-    const localTrack = await createLocalVideoTrack()
+    const localTrack = await createLocalVideoTrack({
+      deviceId: videoInputDevice?.deviceId
+    })
     room.value?.localParticipant.publishTrack(localTrack)
   } catch {
     addErrorToast('カメラの共有に失敗しました')

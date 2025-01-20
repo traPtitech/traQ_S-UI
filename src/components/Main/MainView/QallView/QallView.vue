@@ -2,17 +2,30 @@
 import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
+import { onMounted, ref } from 'vue'
 
 const { tracksMap, addScreenShareTrack, addCameraTrack } = useQall()
 
-const devices = navigator.mediaDevices.enumerateDevices()
+const videoInputs = ref<MediaDeviceInfo[]>([])
+onMounted(async () => {
+  const devices = await navigator.mediaDevices.enumerateDevices()
+  videoInputs.value = devices.filter(d => d.kind === 'videoinput')
+})
+const selectedVideoInput = ref<MediaDeviceInfo>()
 </script>
 
 <template>
   <div :class="$style.Block">
     <h1 :class="$style.Header">Qall View</h1>
     <button @click="addScreenShareTrack">Add Screen Share Track</button>
-    <button @click="addCameraTrack">Add Camera Track</button>
+    <select v-model="selectedVideoInput">
+      <option v-for="videoInput in videoInputs" :key="videoInput.deviceId">
+        {{ videoInput.label }}
+      </option>
+    </select>
+    <button @click="addCameraTrack(selectedVideoInput)">
+      Add Camera Track
+    </button>
     <div :class="$style.TrackContainer">
       <template
         v-for="track of tracksMap.values()"
