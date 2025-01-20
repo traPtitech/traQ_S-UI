@@ -27,5 +27,5 @@ onUnmounted(() => {
 
 <template>
   <audio :id="trackInfo.trackPublication?.trackSid" ref="audioElement"></audio>
-  <input v-model="volume" type="slider" min="0" max="1" step="0.01" />
+  <input v-model="volume" type="range" min="0" max="1" step="0.01" />
 </template>

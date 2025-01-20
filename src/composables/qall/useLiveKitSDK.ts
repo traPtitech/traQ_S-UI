@@ -74,7 +74,7 @@ function handleLocalTrackPublished(
   participant: LocalParticipant
 ) {
   // when local tracks are ended, update UI to remove them from rendering
-  if (!publication.track || publication.track.kind === Track.Kind.Audio) return
+  if (!publication.track) return
   tracksMap.value.set(publication.trackSid, {
     isRemote: false,
     trackPublication: publication,
@@ -93,22 +93,20 @@ function handleDisconnect() {
 
 const joinRoom = async (roomName: string, userName: string) => {
   try {
-    // const traQtoken = (await apis.getMyQRCode(true)).data
-    // console.log(traQtoken)
-    // const res = await fetch(
-    //   `https://easy-livekit-token-publisher.trap.show/token`,
-    //   {
-    //     method: 'GET',
-    //     headers: {
-    //       Authorization: `Bearer ${traQtoken}`,
-    //       'Content-Type': 'application/json'
-    //     }
-    //   }
-    // )
-    // const json = await res.json()
-    // const token = json.token
-    const token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzc0NDI5MDksImlzcyI6IkFQSTdUZWZvc1FoaWdXUiIsIm5hbWUiOiJub2M3dCIsIm5iZiI6MTczNzM1NjUwOSwic3ViIjoibm9jN3QiLCJ2aWRlbyI6eyJyb29tIjoibXktcm9vbSIsInJvb21Kb2luIjp0cnVlfX0.7AAPmZlHMgXHtZ1FwhLn_zW5k038pFWSx3JBHcUc-hs'
+    const traQtoken = (await apis.getMyQRCode(true)).data
+    console.log(traQtoken)
+    const res = await fetch(
+      `https://easy-livekit-token-publisher.trap.show/token`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${traQtoken}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+    const json = await res.json()
+    const token = json.token
 
     // pre-warm connection, this can be called as early as your page is loaded
     //room.prepareConnection("https://livekit-test.trap.show:39357", token);
@@ -168,6 +166,8 @@ async function leaveRoom() {
   window.removeEventListener('beforeunload', leaveRoom)
 }
 
+const Attributes = ref<{ [key: string]: string }>({})
+
 const addScreenShareTrack = async () => {
   try {
     if (!room.value) {
@@ -186,6 +186,10 @@ const addScreenShareTrack = async () => {
     const videoSid = localTracks.find(t => t.kind === Track.Kind.Video)?.sid
     const audioSid = localTracks.find(t => t.kind === Track.Kind.Audio)?.sid
     if (audioSid && videoSid) {
+      Attributes.value = {
+        ...room.value.localParticipant.attributes,
+        [videoSid]: audioSid
+      }
       await room.value.localParticipant.setAttributes({
         ...room.value.localParticipant.attributes,
         [videoSid]: audioSid
@@ -206,14 +210,23 @@ const removeScreenShareTrack = async (
     }
 
     const { [localpublication.trackSid]: audioSid, ...newAttributes } =
-      room.value.localParticipant.attributes
-    room.value.localParticipant.unpublishTrack(localpublication.track)
+      Attributes.value
+    //room.value.localParticipant.attributes
+    console.log(audioSid)
+    await room.value.localParticipant.unpublishTrack(
+      localpublication.track,
+      true
+    )
+    console.log(audioSid)
     room.value.localParticipant.setAttributes(newAttributes)
+    Attributes.value = newAttributes
     if (!audioSid) {
       return
     }
 
     const audioTrack = tracksMap.value.get(audioSid)
+    console.log(audioTrack)
+    console.log(tracksMap.value)
     if (
       !audioTrack ||
       audioTrack.isRemote ||
@@ -222,8 +235,9 @@ const removeScreenShareTrack = async (
       return
     }
 
-    room.value.localParticipant.unpublishTrack(
-      audioTrack.trackPublication.track
+    await room.value.localParticipant.unpublishTrack(
+      audioTrack.trackPublication.track,
+      true
     )
   }
 }

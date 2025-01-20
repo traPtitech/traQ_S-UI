@@ -10,7 +10,7 @@ const { tracksMap, addScreenShareTrack } = useQall()
   <div :class="$style.Block">
     <h1 :class="$style.Header">Qall View</h1>
     <button @click="addScreenShareTrack">Add Screen Share Track</button>
-    <div>
+    <div :class="$style.TrackContainer">
       <template
         v-for="track of tracksMap.values()"
         :key="track.trackPublication?.trackSid"
@@ -22,7 +22,7 @@ const { tracksMap, addScreenShareTrack } = useQall()
           :class="$style.video"
         />
         <AudioComponent
-          v-else-if="track.trackPublication?.kind === 'audio'"
+          v-else-if="track.trackPublication?.kind === 'audio' && track.isRemote"
           :track-info="track"
         />
       </template>
@@ -31,12 +31,16 @@ const { tracksMap, addScreenShareTrack } = useQall()
 </template>
 
 <style lang="scss" module>
+.TrackContainer {
+  height: fit-content;
+}
 .video {
   width: 50%;
   height: 50%;
 }
 .Block {
   color: green;
+  overflow: scroll;
 }
 
 .Header {
