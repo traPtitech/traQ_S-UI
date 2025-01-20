@@ -12,15 +12,24 @@ import type {
   LocalTrackPublication,
   LocalParticipant,
   Participant,
-  TrackPublication
+  TrackPublication,
+  LocalTrack
 } from 'livekit-client'
 import { ref, type Ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 
 const { addErrorToast } = useToastStore()
 
-type TrackInfo = {
-  trackPublication: TrackPublication | undefined
+type TrackInfo = (
+  | {
+      isRemote: true
+      trackPublication: RemoteTrackPublication
+    }
+  | {
+      isRemote: false
+      trackPublication: LocalTrackPublication | undefined
+    }
+) & {
   participantIdentity: string
 }
 
@@ -36,6 +45,7 @@ function handleTrackSubscribed(
   if (track.kind === Track.Kind.Video || track.kind === Track.Kind.Audio) {
     // attach it to a new HTMLVideoElement or HTMLAudioElement
     tracksMap.value.set(publication.trackSid, {
+      isRemote: true,
       trackPublication: publication,
       participantIdentity: participant.identity
     })
@@ -66,6 +76,7 @@ function handleLocalTrackPublished(
   // when local tracks are ended, update UI to remove them from rendering
   if (!publication.track || publication.track.kind === Track.Kind.Audio) return
   tracksMap.value.set(publication.trackSid, {
+    isRemote: false,
     trackPublication: publication,
     participantIdentity: participant.identity
   })
@@ -83,13 +94,17 @@ function handleDisconnect() {
 const joinRoom = async (roomName: string, userName: string) => {
   try {
     const res = await fetch(
-      `http://localhost:3000/getToken?roomName=${roomName}&participantName=${userName}`
+      `https://easy-livekit-token-publisher.trap.show/token`
     )
-    const token = await res.text()
+    const json = await res.json()
+    const token = json.token
     // pre-warm connection, this can be called as early as your page is loaded
     //room.prepareConnection("https://livekit-test.trap.show:39357", token);
     room.value = new Room()
-    await room.value.prepareConnection('ws://localhost:7880', token)
+    await room.value.prepareConnection(
+      'wss://livekit.qall-dev.trapti.tech',
+      token
+    )
     console.log(token)
 
     // set up event listeners
@@ -158,11 +173,28 @@ const addScreenShareTrack = async () => {
   }
 }
 
+const setLocalTrackMute = async (track: LocalTrack, muted: boolean) => {
+  if (muted) {
+    await track.mute()
+  } else {
+    await track.unmute()
+  }
+}
+
+const setTrackEnabled = (
+  publication: RemoteTrackPublication,
+  muted: boolean
+) => {
+  publication.setEnabled(!muted)
+}
+
 export const useLiveKitSDK = () => {
   return {
     joinRoom,
     leaveRoom,
     addScreenShareTrack,
+    setTrackEnabled,
+    setLocalTrackMute,
     tracksMap
   }
 }
