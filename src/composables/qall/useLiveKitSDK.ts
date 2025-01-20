@@ -3,7 +3,8 @@ import {
   RoomEvent,
   AudioPresets,
   createLocalScreenTracks,
-  Room
+  Room,
+  createLocalVideoTrack
 } from 'livekit-client'
 import type {
   RemoteTrack,
@@ -168,6 +169,20 @@ async function leaveRoom() {
 
 const Attributes = ref<{ [key: string]: string }>({})
 
+const addCameraTrack = async () => {
+  try {
+    if (!room.value) {
+      addErrorToast('ルームが存在しません')
+      return
+    }
+    const localTrack = await createLocalVideoTrack()
+    room.value?.localParticipant.publishTrack(localTrack)
+  } catch {
+    addErrorToast('カメラの共有に失敗しました')
+    return
+  }
+}
+
 const addScreenShareTrack = async () => {
   try {
     if (!room.value) {
@@ -200,14 +215,7 @@ const addScreenShareTrack = async () => {
   }
 }
 
-watch(
-  () => Attributes.value,
-  () => console.log(Attributes.value)
-)
-
-const removeScreenShareTrack = async (
-  localpublication: LocalTrackPublication
-) => {
+const removeVideoTrack = async (localpublication: LocalTrackPublication) => {
   if (localpublication.track) {
     if (!room.value) {
       addErrorToast('ルームが存在しません')
@@ -217,12 +225,10 @@ const removeScreenShareTrack = async (
     const { [localpublication.trackSid]: audioSid, ...newAttributes } =
       Attributes.value
     //room.value.localParticipant.attributes
-    console.log(audioSid)
     await room.value.localParticipant.unpublishTrack(
       localpublication.track,
       true
     )
-    console.log(audioSid)
     room.value.localParticipant.setAttributes(newAttributes)
     Attributes.value = newAttributes
     if (!audioSid) {
@@ -267,7 +273,8 @@ export const useLiveKitSDK = () => {
     joinRoom,
     leaveRoom,
     addScreenShareTrack,
-    removeScreenShareTrack,
+    addCameraTrack,
+    removeVideoTrack,
     setTrackEnabled,
     setLocalTrackMute,
     tracksMap

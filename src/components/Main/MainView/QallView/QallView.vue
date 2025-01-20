@@ -3,13 +3,16 @@ import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 
-const { tracksMap, addScreenShareTrack } = useQall()
+const { tracksMap, addScreenShareTrack, addCameraTrack } = useQall()
+
+const devices = navigator.mediaDevices.enumerateDevices()
 </script>
 
 <template>
   <div :class="$style.Block">
     <h1 :class="$style.Header">Qall View</h1>
     <button @click="addScreenShareTrack">Add Screen Share Track</button>
+    <button @click="addCameraTrack">Add Camera Track</button>
     <div :class="$style.TrackContainer">
       <template
         v-for="track of tracksMap.values()"

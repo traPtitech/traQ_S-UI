@@ -8,7 +8,7 @@ const { trackInfo, participantIdentity } = defineProps<{
   participantIdentity: string
 }>()
 
-const { removeScreenShareTrack } = useQall()
+const { removeVideoTrack } = useQall()
 
 const videoElement = useTemplateRef<HTMLVideoElement>('videoElement')
 const volume = ref(1)
@@ -43,7 +43,7 @@ onUnmounted(() => {
     <input v-model="volume" type="range" min="0" max="1" step="0.01" />
     <button
       v-if="!trackInfo.isRemote && trackInfo.trackPublication"
-      @click="removeScreenShareTrack(trackInfo.trackPublication)"
+      @click="removeVideoTrack(trackInfo.trackPublication)"
     >
       Remove Screen Share
     </button>
