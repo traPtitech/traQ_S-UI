@@ -175,6 +175,10 @@ const addCameraTrack = async (videoInputDevice?: MediaDeviceInfo) => {
       addErrorToast('ルームが存在しません')
       return
     }
+    console.log({
+      deviceId: videoInputDevice?.deviceId,
+      deviceName: videoInputDevice?.label
+    })
     const localTrack = await createLocalVideoTrack({
       deviceId: videoInputDevice?.deviceId
     })

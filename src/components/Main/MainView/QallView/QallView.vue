@@ -19,11 +19,20 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
     <h1 :class="$style.Header">Qall View</h1>
     <button @click="addScreenShareTrack">Add Screen Share Track</button>
     <select v-model="selectedVideoInput">
-      <option v-for="videoInput in videoInputs" :key="videoInput.deviceId">
+      <option
+        v-for="videoInput in videoInputs"
+        :key="videoInput.deviceId"
+        :value="videoInput"
+      >
         {{ videoInput.label }}
       </option>
     </select>
-    <button @click="addCameraTrack(selectedVideoInput)">
+    <button
+      @click="[
+        addCameraTrack(selectedVideoInput),
+        console.log(selectedVideoInput)
+      ]"
+    >
       Add Camera Track
     </button>
     <div :class="$style.TrackContainer">
