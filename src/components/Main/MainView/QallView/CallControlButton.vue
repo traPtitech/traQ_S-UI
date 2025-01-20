@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
+
 const props = defineProps({
   icon: {
     type: String,
@@ -10,29 +11,30 @@ const props = defineProps({
     default: null
   }
 })
+
 function handleClick() {
   if (props.onClick) props.onClick()
 }
 </script>
+
 <template>
-  <button class="call-control-btn" @click="handleClick">
-    <img v-if="icon" :src="icon" alt="Call control" class="icon" />
+  <button :class="$style.callControlBtn" @click="handleClick">
+    <img v-if="icon" :src="icon" alt="Call control"/>
   </button>
+  <div :class="$style.test">test</div>
 </template>
-<style scoped lang="scss">
-.call-control-btn {
+
+<style lang="scss" module>
+.callControlBtn {
   width: 64px;
   height: 64px;
-  border-radius: 50%;
-  border: none;
   cursor: pointer;
-  background-color: #ddd;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.icon {
-  width: 24px;
-  height: 24px;
+
+.test{
+	color: blue;
 }
 </style>
