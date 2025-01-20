@@ -2,8 +2,12 @@
 import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
+import CallControlButton from './CallControlButton.vue'
+const { tracksMap, toggleCalling } = useQall()
 
-const { tracksMap } = useQall()
+const endCall = () => {
+  toggleCalling('')
+}
 </script>
 
 <template>
@@ -22,6 +26,10 @@ const { tracksMap } = useQall()
         <AudioComponent
           v-else-if="track.trackPublication?.kind === 'audio'"
           :track="track.trackPublication.audioTrack!"
+        />
+        <CallControlButton
+          icon="/@/assets/icons/call_off.svg?url"
+          :on-click="endCall"
         />
       </template>
     </div>
