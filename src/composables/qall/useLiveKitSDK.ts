@@ -12,11 +12,11 @@ import type {
   LocalTrackPublication,
   LocalParticipant,
   Participant,
-  TrackPublication,
   LocalTrack
 } from 'livekit-client'
 import { ref, type Ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
+import apis from '/@/lib/apis'
 
 const { addErrorToast } = useToastStore()
 
@@ -93,8 +93,17 @@ function handleDisconnect() {
 
 const joinRoom = async (roomName: string, userName: string) => {
   try {
+    const traQtoken = (await apis.getMyQRCode(true)).data
+    console.log(traQtoken)
     const res = await fetch(
-      `https://easy-livekit-token-publisher.trap.show/token`
+      `https://easy-livekit-token-publisher.trap.show/token`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${traQtoken}`,
+          'Content-Type': 'application/json'
+        }
+      }
     )
     const json = await res.json()
     const token = json.token
@@ -117,7 +126,7 @@ const joinRoom = async (roomName: string, userName: string) => {
       .on(RoomEvent.LocalTrackPublished, handleLocalTrackPublished)
 
     // connect to room
-    await room.value.connect('ws://localhost:7880', token)
+    await room.value.connect('wss://livekit.qall-dev.trapti.tech', token)
     console.log('connected to room', room.value.name)
 
     // publish local camera and mic tracks
@@ -164,12 +173,21 @@ const addScreenShareTrack = async () => {
       addErrorToast('ルームが存在しません')
       return
     }
-    const localTrack = await createLocalScreenTracks({})
-    localTrack.map(async t => {
+    const localTracks = await createLocalScreenTracks({})
+    localTracks.map(async t => {
       await room.value?.localParticipant.publishTrack(t)
     })
   } catch {
     addErrorToast('スクリーン共有に失敗しました')
+  }
+}
+
+const removeScreenShareTrack = async (
+  localpublication: LocalTrackPublication
+) => {
+  if (localpublication.track) {
+    room.value?.localParticipant.unpublishTrack(localpublication.track)
+    localpublication.track.stop()
   }
 }
 

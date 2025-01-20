@@ -38,6 +38,7 @@ export const useQall = () => {
   return {
     isCalling,
     toggleCalling,
+    addScreenShareTrack,
     tracksMap
   }
 }
