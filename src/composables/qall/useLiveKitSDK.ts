@@ -233,12 +233,26 @@ const addScreenShareTrack = async () => {
       return
     }
     const localTracks = await createLocalScreenTracks({
-      audio: true
+      audio: {
+        channelCount: 2,
+        autoGainControl: false,
+        noiseSuppression: false,
+        echoCancellation: false,
+        voiceIsolation: false
+      }
     })
 
     await Promise.all(
       localTracks.map(async t => {
-        await room.value?.localParticipant.publishTrack(t)
+        if (t.kind === Track.Kind.Video) {
+          await room.value?.localParticipant.publishTrack(t)
+        } else {
+          await room.value?.localParticipant.publishTrack(t, {
+            audioPreset: AudioPresets.musicHighQualityStereo,
+            dtx: false,
+            red: false
+          })
+        }
       })
     )
     const videoSid = localTracks.find(t => t.kind === Track.Kind.Video)?.sid
