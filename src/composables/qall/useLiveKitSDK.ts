@@ -14,7 +14,7 @@ import type {
   Participant,
   LocalTrack
 } from 'livekit-client'
-import { ref, type Ref } from 'vue'
+import { ref, watch, type Ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import apis from '/@/lib/apis'
 
@@ -187,7 +187,7 @@ const addScreenShareTrack = async () => {
     const audioSid = localTracks.find(t => t.kind === Track.Kind.Audio)?.sid
     if (audioSid && videoSid) {
       Attributes.value = {
-        ...room.value.localParticipant.attributes,
+        ...Attributes.value,
         [videoSid]: audioSid
       }
       await room.value.localParticipant.setAttributes({
@@ -199,6 +199,11 @@ const addScreenShareTrack = async () => {
     addErrorToast('スクリーン共有に失敗しました')
   }
 }
+
+watch(
+  () => Attributes.value,
+  () => console.log(Attributes.value)
+)
 
 const removeScreenShareTrack = async (
   localpublication: LocalTrackPublication
