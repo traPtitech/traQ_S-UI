@@ -20,7 +20,7 @@ import apis from '/@/lib/apis'
 
 const { addErrorToast } = useToastStore()
 
-type TrackInfo = (
+export type TrackInfo = (
   | {
       isRemote: true
       trackPublication: RemoteTrackPublication
@@ -93,20 +93,23 @@ function handleDisconnect() {
 
 const joinRoom = async (roomName: string, userName: string) => {
   try {
-    const traQtoken = (await apis.getMyQRCode(true)).data
-    console.log(traQtoken)
-    const res = await fetch(
-      `https://easy-livekit-token-publisher.trap.show/token`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${traQtoken}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    )
-    const json = await res.json()
-    const token = json.token
+    // const traQtoken = (await apis.getMyQRCode(true)).data
+    // console.log(traQtoken)
+    // const res = await fetch(
+    //   `https://easy-livekit-token-publisher.trap.show/token`,
+    //   {
+    //     method: 'GET',
+    //     headers: {
+    //       Authorization: `Bearer ${traQtoken}`,
+    //       'Content-Type': 'application/json'
+    //     }
+    //   }
+    // )
+    // const json = await res.json()
+    // const token = json.token
+    const token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzc0NDI5MDksImlzcyI6IkFQSTdUZWZvc1FoaWdXUiIsIm5hbWUiOiJub2M3dCIsIm5iZiI6MTczNzM1NjUwOSwic3ViIjoibm9jN3QiLCJ2aWRlbyI6eyJyb29tIjoibXktcm9vbSIsInJvb21Kb2luIjp0cnVlfX0.7AAPmZlHMgXHtZ1FwhLn_zW5k038pFWSx3JBHcUc-hs'
+
     // pre-warm connection, this can be called as early as your page is loaded
     //room.prepareConnection("https://livekit-test.trap.show:39357", token);
     room.value = new Room()
@@ -145,9 +148,7 @@ const joinRoom = async (roomName: string, userName: string) => {
         dtx: false
       }
     )
-    await room.value.localParticipant.setScreenShareEnabled(true, {
-      audio: true
-    })
+    await room.value.localParticipant.setAttributes({})
   } catch {
     addErrorToast('Qallの接続に失敗しました')
     await leaveRoom()
@@ -173,10 +174,23 @@ const addScreenShareTrack = async () => {
       addErrorToast('ルームが存在しません')
       return
     }
-    const localTracks = await createLocalScreenTracks({})
-    localTracks.map(async t => {
-      await room.value?.localParticipant.publishTrack(t)
+    const localTracks = await createLocalScreenTracks({
+      audio: true
     })
+
+    await Promise.all(
+      localTracks.map(async t => {
+        await room.value?.localParticipant.publishTrack(t)
+      })
+    )
+    const videoSid = localTracks.find(t => t.kind === Track.Kind.Video)?.sid
+    const audioSid = localTracks.find(t => t.kind === Track.Kind.Audio)?.sid
+    if (audioSid && videoSid) {
+      await room.value.localParticipant.setAttributes({
+        ...room.value.localParticipant.attributes,
+        [videoSid]: audioSid
+      })
+    }
   } catch {
     addErrorToast('スクリーン共有に失敗しました')
   }
@@ -186,8 +200,31 @@ const removeScreenShareTrack = async (
   localpublication: LocalTrackPublication
 ) => {
   if (localpublication.track) {
-    room.value?.localParticipant.unpublishTrack(localpublication.track)
-    localpublication.track.stop()
+    if (!room.value) {
+      addErrorToast('ルームが存在しません')
+      return
+    }
+
+    const { [localpublication.trackSid]: audioSid, ...newAttributes } =
+      room.value.localParticipant.attributes
+    room.value.localParticipant.unpublishTrack(localpublication.track)
+    room.value.localParticipant.setAttributes(newAttributes)
+    if (!audioSid) {
+      return
+    }
+
+    const audioTrack = tracksMap.value.get(audioSid)
+    if (
+      !audioTrack ||
+      audioTrack.isRemote ||
+      !audioTrack.trackPublication?.track
+    ) {
+      return
+    }
+
+    room.value.localParticipant.unpublishTrack(
+      audioTrack.trackPublication.track
+    )
   }
 }
 
@@ -211,6 +248,7 @@ export const useLiveKitSDK = () => {
     joinRoom,
     leaveRoom,
     addScreenShareTrack,
+    removeScreenShareTrack,
     setTrackEnabled,
     setLocalTrackMute,
     tracksMap

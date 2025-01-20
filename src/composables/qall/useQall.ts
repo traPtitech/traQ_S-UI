@@ -9,6 +9,7 @@ const {
   joinRoom,
   leaveRoom,
   addScreenShareTrack,
+  removeScreenShareTrack,
   setLocalTrackMute,
   tracksMap
 } = useLiveKitSDK()
@@ -39,6 +40,7 @@ export const useQall = () => {
     isCalling,
     toggleCalling,
     addScreenShareTrack,
+    removeScreenShareTrack,
     tracksMap
   }
 }

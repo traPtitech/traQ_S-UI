@@ -17,13 +17,13 @@ const { tracksMap, addScreenShareTrack } = useQall()
       >
         <VideoComponent
           v-if="track.trackPublication?.kind === 'video'"
-          :track="track.trackPublication.videoTrack!"
+          :track-info="track"
           :participant-identity="track.participantIdentity"
           :class="$style.video"
         />
         <AudioComponent
           v-else-if="track.trackPublication?.kind === 'audio'"
-          :track="track.trackPublication.audioTrack!"
+          :track-info="track"
         />
       </template>
     </div>
