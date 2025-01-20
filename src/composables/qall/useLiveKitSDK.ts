@@ -4,7 +4,8 @@ import {
   AudioPresets,
   createLocalScreenTracks,
   Room,
-  createLocalVideoTrack
+  createLocalVideoTrack,
+  LocalVideoTrack
 } from 'livekit-client'
 import type {
   RemoteTrack,
@@ -18,6 +19,10 @@ import type {
 import { ref, watch, type Ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import apis from '/@/lib/apis'
+import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
+
+const virtualBackgroundAssetsPath =
+  'https://cdn.jsdelivr.net/npm/@shiguredo/virtual-background@latest/dist'
 
 const { addErrorToast } = useToastStore()
 
@@ -169,18 +174,37 @@ async function leaveRoom() {
 
 const Attributes = ref<{ [key: string]: string }>({})
 
-const addCameraTrack = async (videoInputDevice?: MediaDeviceInfo) => {
+const addCameraTrack = async (
+  videoInputDevice?: MediaDeviceInfo,
+  isBlur?: boolean
+) => {
   try {
     if (!room.value) {
       addErrorToast('ルームが存在しません')
       return
     }
-    console.log({
-      deviceId: videoInputDevice?.deviceId,
-      deviceName: videoInputDevice?.label
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { deviceId: videoInputDevice?.deviceId }
     })
-    const localTrack = await createLocalVideoTrack({
-      deviceId: videoInputDevice?.deviceId
+    const track = stream.getVideoTracks()[0]
+    if (!track) {
+      addErrorToast('映像が取得できませんでした')
+      return
+    }
+    const processor = new VirtualBackgroundProcessor(
+      virtualBackgroundAssetsPath
+    )
+
+    const options = {
+      blurRadius: 15 // 背景ぼかし設定
+    }
+    const processedTrack = await processor.startProcessing(track, options)
+    const localTrack = new LocalVideoTrack(processedTrack)
+    localTrack.on('ended', () => {
+      console.log('ended')
+      processor.stopProcessing()
+      track.stop()
     })
     room.value?.localParticipant.publishTrack(localTrack)
   } catch {
