@@ -3,7 +3,9 @@ import {
   RoomEvent,
   AudioPresets,
   createLocalScreenTracks,
-  Room
+  Room,
+  createLocalVideoTrack,
+  LocalVideoTrack
 } from 'livekit-client'
 import type {
   RemoteTrack,
@@ -14,9 +16,13 @@ import type {
   Participant,
   LocalTrack
 } from 'livekit-client'
-import { ref, type Ref } from 'vue'
+import { ref, watch, type Ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import apis from '/@/lib/apis'
+import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
+
+const virtualBackgroundAssetsPath =
+  'https://cdn.jsdelivr.net/npm/@shiguredo/virtual-background@latest/dist'
 
 const { addErrorToast } = useToastStore()
 
@@ -33,9 +39,15 @@ export type TrackInfo = (
   participantIdentity: string
 }
 
+type CameraProcessor = {
+  processor: VirtualBackgroundProcessor
+  track: MediaStreamVideoTrack
+}
+
 const room = ref<Room>()
 const speakerIdentity = ref<string[]>([])
 const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
+const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
 
 function handleTrackSubscribed(
   track: RemoteTrack,
@@ -168,6 +180,52 @@ async function leaveRoom() {
 
 const Attributes = ref<{ [key: string]: string }>({})
 
+const addCameraTrack = async (
+  videoInputDevice?: MediaDeviceInfo,
+  isBlur?: boolean
+) => {
+  try {
+    if (!room.value) {
+      addErrorToast('ルームが存在しません')
+      return
+    }
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { deviceId: videoInputDevice?.deviceId }
+    })
+    const track = stream.getVideoTracks()[0]
+    if (!track) {
+      addErrorToast('映像が取得できませんでした')
+      return
+    }
+    const processor = new VirtualBackgroundProcessor(
+      virtualBackgroundAssetsPath
+    )
+
+    const options = {
+      blurRadius: 15 // 背景ぼかし設定
+    }
+    const processedTrack = await processor.startProcessing(track, options)
+    const localTrack = new LocalVideoTrack(processedTrack)
+    await room.value?.localParticipant.publishTrack(localTrack).catch(e => {
+      addErrorToast('カメラの共有に失敗しました')
+      track.stop()
+      processor.stopProcessing()
+      return
+    })
+    if (localTrack.sid) {
+      console.log(localTrack.sid)
+      cameraProcessorMap.value.set(localTrack.sid, {
+        processor,
+        track
+      })
+    }
+  } catch {
+    addErrorToast('カメラの共有に失敗しました')
+    return
+  }
+}
+
 const addScreenShareTrack = async () => {
   try {
     if (!room.value) {
@@ -175,19 +233,33 @@ const addScreenShareTrack = async () => {
       return
     }
     const localTracks = await createLocalScreenTracks({
-      audio: true
+      audio: {
+        channelCount: 2,
+        autoGainControl: false,
+        noiseSuppression: false,
+        echoCancellation: false,
+        voiceIsolation: false
+      }
     })
 
     await Promise.all(
       localTracks.map(async t => {
-        await room.value?.localParticipant.publishTrack(t)
+        if (t.kind === Track.Kind.Video) {
+          await room.value?.localParticipant.publishTrack(t)
+        } else {
+          await room.value?.localParticipant.publishTrack(t, {
+            audioPreset: AudioPresets.musicHighQualityStereo,
+            dtx: false,
+            red: false
+          })
+        }
       })
     )
     const videoSid = localTracks.find(t => t.kind === Track.Kind.Video)?.sid
     const audioSid = localTracks.find(t => t.kind === Track.Kind.Audio)?.sid
     if (audioSid && videoSid) {
       Attributes.value = {
-        ...room.value.localParticipant.attributes,
+        ...Attributes.value,
         [videoSid]: audioSid
       }
       await room.value.localParticipant.setAttributes({
@@ -200,24 +272,29 @@ const addScreenShareTrack = async () => {
   }
 }
 
-const removeScreenShareTrack = async (
-  localpublication: LocalTrackPublication
-) => {
+const removeVideoTrack = async (localpublication: LocalTrackPublication) => {
   if (localpublication.track) {
     if (!room.value) {
       addErrorToast('ルームが存在しません')
       return
     }
+    const cameraProcessor = cameraProcessorMap.value.get(
+      localpublication.trackSid
+    )
+    if (cameraProcessor) {
+      console.log('stopProcessing')
+      cameraProcessor.processor.stopProcessing()
+      cameraProcessor.track.stop()
+      cameraProcessorMap.value.delete(localpublication.trackSid)
+    }
 
     const { [localpublication.trackSid]: audioSid, ...newAttributes } =
       Attributes.value
     //room.value.localParticipant.attributes
-    console.log(audioSid)
     await room.value.localParticipant.unpublishTrack(
       localpublication.track,
       true
     )
-    console.log(audioSid)
     room.value.localParticipant.setAttributes(newAttributes)
     Attributes.value = newAttributes
     if (!audioSid) {
@@ -262,7 +339,8 @@ export const useLiveKitSDK = () => {
     joinRoom,
     leaveRoom,
     addScreenShareTrack,
-    removeScreenShareTrack,
+    addCameraTrack,
+    removeVideoTrack,
     setTrackEnabled,
     setLocalTrackMute,
     tracksMap
