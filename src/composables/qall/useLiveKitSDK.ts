@@ -267,7 +267,9 @@ const addScreenShareTrack = async () => {
       })
     }
   } catch {
+    // TODO:シェアをキャンセルした時も失敗しましたメッセージがでるのはちょっと違和感があるかも
     addErrorToast('スクリーン共有に失敗しました')
+    throw new Error('スクリーン共有に失敗しました')
   }
 }
 

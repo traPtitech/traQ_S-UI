@@ -37,68 +37,84 @@ const screenShareIcon = ref(
 const endCall = () => {
   toggleCalling('')
 }
+
 const toggleAudio = async () => {
-  for (const trackInfo of tracksMap.value.values()) {
-    if (
-      !trackInfo.isRemote &&
-      trackInfo.trackPublication?.kind === 'audio' &&
-      trackInfo.trackPublication.track
-    ) {
-      if (isMicOn.value) {
-        await trackInfo.trackPublication.track.mute()
-      } else {
-        await trackInfo.trackPublication.track.unmute()
+  try {
+    for (const trackInfo of tracksMap.value.values()) {
+      if (
+        !trackInfo.isRemote &&
+        trackInfo.trackPublication?.kind === 'audio' &&
+        trackInfo.trackPublication.track
+      ) {
+        if (isMicOn.value) {
+          await trackInfo.trackPublication.track.mute()
+        } else {
+          await trackInfo.trackPublication.track.unmute()
+        }
+        isMicOn.value = !isMicOn.value
+        micIcon.value = isMicOn.value
+          ? '/@/assets/icons/mic.svg?url'
+          : '/@/assets/icons/mic_off.svg?url'
+        break
       }
-      isMicOn.value = !isMicOn.value
-      micIcon.value = isMicOn.value
-        ? '/@/assets/icons/mic.svg?url'
-        : '/@/assets/icons/mic_off.svg?url'
-      break
     }
+  } catch (err) {
+    console.error('Failed to toggle audio:', err)
   }
 }
+
 const toggleVideo = async () => {
-  if (!isCameraOn.value) {
-    await addCameraTrack(selectedVideoInput.value)
-    isCameraOn.value = true
-  } else {
-    for (const trackInfo of tracksMap.value.values()) {
-      if (
-        !trackInfo.isRemote &&
-        trackInfo.trackPublication?.kind === 'video' &&
-        !trackInfo.trackPublication.trackName?.includes('screen')
-      ) {
-        await removeVideoTrack(trackInfo.trackPublication)
-        break
+  try {
+    if (!isCameraOn.value) {
+      await addCameraTrack(selectedVideoInput.value)
+      isCameraOn.value = true
+    } else {
+      for (const trackInfo of tracksMap.value.values()) {
+        if (
+          !trackInfo.isRemote &&
+          trackInfo.trackPublication?.kind === 'video' &&
+          !trackInfo.trackPublication.trackName?.includes('screen')
+        ) {
+          await removeVideoTrack(trackInfo.trackPublication)
+          break
+        }
       }
+      isCameraOn.value = false
     }
-    isCameraOn.value = false
+    cameraIcon.value = isCameraOn.value
+      ? '/@/assets/icons/videocam.svg?url'
+      : '/@/assets/icons/videocam_off.svg?url'
+  } catch (err) {
+    console.error('Failed to toggle video:', err)
   }
-  cameraIcon.value = isCameraOn.value
-    ? '/@/assets/icons/videocam.svg?url'
-    : '/@/assets/icons/videocam_off.svg?url'
 }
+
 const toggleScreen = async () => {
-  if (!isScreenSharing.value) {
-    await addScreenShareTrack()
-    isScreenSharing.value = true
-  } else {
-    for (const trackInfo of tracksMap.value.values()) {
-      if (
-        !trackInfo.isRemote &&
-        trackInfo.trackPublication?.kind === 'video' &&
-        trackInfo.trackPublication.trackName?.includes('screen')
-      ) {
-        await removeVideoTrack(trackInfo.trackPublication)
-        break
+  try {
+    if (!isScreenSharing.value) {
+      await addScreenShareTrack()
+      isScreenSharing.value = true
+    } else {
+      for (const trackInfo of tracksMap.value.values()) {
+        if (
+          !trackInfo.isRemote &&
+          trackInfo.trackPublication?.kind === 'video' &&
+          trackInfo.trackPublication.trackName?.includes('screen')
+        ) {
+          await removeVideoTrack(trackInfo.trackPublication)
+          break
+        }
       }
+      isScreenSharing.value = false
     }
-    isScreenSharing.value = false
+    screenShareIcon.value = isScreenSharing.value
+      ? '/@/assets/icons/stop_screen_share.svg?url'
+      : '/@/assets/icons/screen_share.svg?url'
+  } catch (err) {
+    console.error('Failed to toggle screen sharing:', err)
   }
-  screenShareIcon.value = isScreenSharing.value
-    ? '/@/assets/icons/stop_screen_share.svg?url'
-    : '/@/assets/icons/screen_share.svg?url'
 }
+
 const handleSound = () => {
   // TODO
   console.log('sound')
