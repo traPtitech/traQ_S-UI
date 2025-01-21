@@ -182,7 +182,6 @@ const addCameraTrack = async (
   backgroundType?: 'original' | 'blur' | 'file' | 'screen',
   backgroundFile?: File
 ) => {
-  console.log(backgroundFile)
   try {
     if (!room.value) {
       addErrorToast('ルームが存在しません')
@@ -287,10 +286,8 @@ const drawVideoToCanvas = (video: HTMLVideoElement) => {
   })
   if (!canvasCtx) return
   const updateCanvas = () => {
-    createImageBitmap(video).then(bitmap => {
-      canvasCtx.drawImage(bitmap, 0, 0)
-      requestAnimationFrame(updateCanvas)
-    })
+    canvasCtx.drawImage(video, 0, 0)
+    requestAnimationFrame(updateCanvas)
   }
   updateCanvas()
   return canvas
