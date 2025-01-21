@@ -106,7 +106,6 @@ function handleDisconnect() {
 const joinRoom = async (roomName: string, userName: string) => {
   try {
     const traQtoken = (await apis.getMyQRCode(true)).data
-    console.log(traQtoken)
     const res = await fetch(
       `https://easy-livekit-token-publisher.trap.show/token`,
       {
@@ -122,12 +121,11 @@ const joinRoom = async (roomName: string, userName: string) => {
 
     // pre-warm connection, this can be called as early as your page is loaded
     //room.prepareConnection("https://livekit-test.trap.show:39357", token);
-    room.value = new Room()
+    room.value = new Room({ dynacast: true, adaptiveStream: true })
     await room.value.prepareConnection(
       'wss://livekit.qall-dev.trapti.tech',
       token
     )
-    console.log(token)
 
     // set up event listeners
     room.value
@@ -207,12 +205,14 @@ const addCameraTrack = async (
     }
     const processedTrack = await processor.startProcessing(track, options)
     const localTrack = new LocalVideoTrack(processedTrack)
-    await room.value?.localParticipant.publishTrack(localTrack).catch(e => {
-      addErrorToast('カメラの共有に失敗しました')
-      track.stop()
-      processor.stopProcessing()
-      return
-    })
+    await room.value?.localParticipant
+      .publishTrack(localTrack, { simulcast: true })
+      .catch(() => {
+        addErrorToast('カメラの共有に失敗しました')
+        track.stop()
+        processor.stopProcessing()
+        return
+      })
     if (localTrack.sid) {
       console.log(localTrack.sid)
       cameraProcessorMap.value.set(localTrack.sid, {
@@ -245,7 +245,9 @@ const addScreenShareTrack = async () => {
     await Promise.all(
       localTracks.map(async t => {
         if (t.kind === Track.Kind.Video) {
-          await room.value?.localParticipant.publishTrack(t)
+          await room.value?.localParticipant.publishTrack(t, {
+            simulcast: true
+          })
         } else {
           await room.value?.localParticipant.publishTrack(t, {
             audioPreset: AudioPresets.musicHighQualityStereo,
