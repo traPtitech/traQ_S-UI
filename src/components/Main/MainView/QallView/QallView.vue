@@ -6,8 +6,13 @@ import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 import CallControlButton from './CallControlButton.vue'
 import CallControlButoonSmall from './CallControlButoonSmall.vue'
 
-const { tracksMap, toggleCalling, addScreenShareTrack, addCameraTrack } =
-  useQall()
+const {
+  tracksMap,
+  toggleCalling,
+  addScreenShareTrack,
+  addCameraTrack,
+  removeVideoTrack
+} = useQall()
 
 const isMicOn = ref(true)
 const isCameraOn = ref(false)
@@ -32,23 +37,67 @@ const screenShareIcon = ref(
 const endCall = () => {
   toggleCalling('')
 }
-const toggleAudio = () => {
-  isMicOn.value = !isMicOn.value
-  micIcon.value = isMicOn.value
-    ? '/@/assets/icons/mic.svg?url'
-    : '/@/assets/icons/mic_off.svg?url'
+const toggleAudio = async () => {
+  for (const trackInfo of tracksMap.value.values()) {
+    if (
+      !trackInfo.isRemote &&
+      trackInfo.trackPublication?.kind === 'audio' &&
+      trackInfo.trackPublication.track
+    ) {
+      if (isMicOn.value) {
+        await trackInfo.trackPublication.track.mute()
+      } else {
+        await trackInfo.trackPublication.track.unmute()
+      }
+      isMicOn.value = !isMicOn.value
+      micIcon.value = isMicOn.value
+        ? '/@/assets/icons/mic.svg?url'
+        : '/@/assets/icons/mic_off.svg?url'
+      break
+    }
+  }
 }
-const toggleVideo = () => {
-  isCameraOn.value = !isCameraOn.value
+const toggleVideo = async () => {
+  if (!isCameraOn.value) {
+    await addCameraTrack(selectedVideoInput.value)
+    isCameraOn.value = true
+  } else {
+    for (const trackInfo of tracksMap.value.values()) {
+      if (
+        !trackInfo.isRemote &&
+        trackInfo.trackPublication?.kind === 'video' &&
+        !trackInfo.trackPublication.trackName?.includes('screen')
+      ) {
+        await removeVideoTrack(trackInfo.trackPublication)
+        break
+      }
+    }
+    isCameraOn.value = false
+  }
   cameraIcon.value = isCameraOn.value
     ? '/@/assets/icons/videocam.svg?url'
     : '/@/assets/icons/videocam_off.svg?url'
 }
-const toggleScreen = () => {
-  isScreenSharing.value = !isScreenSharing.value
+const toggleScreen = async () => {
+  if (!isScreenSharing.value) {
+    await addScreenShareTrack()
+    isScreenSharing.value = true
+  } else {
+    for (const trackInfo of tracksMap.value.values()) {
+      if (
+        !trackInfo.isRemote &&
+        trackInfo.trackPublication?.kind === 'video' &&
+        trackInfo.trackPublication.trackName?.includes('screen')
+      ) {
+        await removeVideoTrack(trackInfo.trackPublication)
+        break
+      }
+    }
+    isScreenSharing.value = false
+  }
   screenShareIcon.value = isScreenSharing.value
-    ? '/@/assets/icons/screen_share.svg?url'
-    : '/@/assets/icons/stop_screen_share.svg?url'
+    ? '/@/assets/icons/stop_screen_share.svg?url'
+    : '/@/assets/icons/screen_share.svg?url'
 }
 const handleSound = () => {
   // TODO
