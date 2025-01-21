@@ -4,7 +4,6 @@ import {
   AudioPresets,
   createLocalScreenTracks,
   Room,
-  createLocalVideoTrack,
   LocalVideoTrack
 } from 'livekit-client'
 import type {
@@ -16,7 +15,7 @@ import type {
   Participant,
   LocalTrack
 } from 'livekit-client'
-import { ref, watch, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import apis from '/@/lib/apis'
 import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
@@ -42,6 +41,7 @@ export type TrackInfo = (
 type CameraProcessor = {
   processor: VirtualBackgroundProcessor
   track: MediaStreamVideoTrack
+  backgroundImageSrc?: MediaStream
 }
 
 const room = ref<Room>()
@@ -138,7 +138,6 @@ const joinRoom = async (roomName: string, userName: string) => {
 
     // connect to room
     await room.value.connect('wss://livekit.qall-dev.trapti.tech', token)
-    console.log('connected to room', room.value.name)
 
     // publish local camera and mic tracks
     await room.value.localParticipant.setMicrophoneEnabled(
@@ -181,7 +180,8 @@ const Attributes = ref<{ [key: string]: string }>({})
 const addCameraTrack = async (
   videoInputDevice?: MediaDeviceInfo,
   isBlur?: boolean,
-  backgroundImage?: File
+  backgroundImage?: File,
+  HTMLDivElement?: HTMLDivElement | null
 ) => {
   try {
     if (!room.value) {
@@ -197,20 +197,59 @@ const addCameraTrack = async (
       addErrorToast('映像が取得できませんでした')
       return
     }
+    let backgroundImageSrc: MediaStream | undefined
     const processor = new VirtualBackgroundProcessor(
       virtualBackgroundAssetsPath
     )
     let options = {}
     if (backgroundImage) {
       const blob = new Blob([backgroundImage], { type: backgroundImage.type })
-      console.log(blob)
-      const imageBitmap = await createImageBitmap(blob)
+
+      if (backgroundImage.type.startsWith('image/')) {
+        //画像のとき
+        const imageBitmap = await createImageBitmap(blob)
+        options = {
+          backgroundImage: imageBitmap
+        }
+      } else {
+        //動画のとき
+        const videoElement = await new Promise<HTMLVideoElement>(resolve => {
+          const video = document.createElement('video')
+          video.addEventListener('loadedmetadata', () => {
+            video.play()
+            resolve(video)
+          })
+          video.src = URL.createObjectURL(blob)
+          video.muted = true
+          video.loop = true
+        })
+        const canvas = drawVideoToCanvas(videoElement)
+        options = {
+          backgroundImage: canvas
+        }
+      }
+    } else {
+      backgroundImageSrc = await navigator.mediaDevices.getDisplayMedia({
+        video: true
+      })
+      const videoElement = await new Promise<HTMLVideoElement>(resolve => {
+        const video = document.createElement('video')
+        video.addEventListener('loadedmetadata', () => {
+          video.play()
+          resolve(video)
+        })
+        if (backgroundImageSrc) {
+          video.srcObject = backgroundImageSrc
+          video.autoplay = true
+          video.muted = true
+        }
+      })
+
+      const canvas = drawVideoToCanvas(videoElement)
       options = {
-        // blurRadius: 15 // 背景ぼかし設定
-        backgroundImage: imageBitmap
+        backgroundImage: canvas
       }
     }
-
     const processedTrack = await processor.startProcessing(track, options)
     const localTrack = new LocalVideoTrack(processedTrack)
     await room.value?.localParticipant
@@ -222,16 +261,29 @@ const addCameraTrack = async (
         return
       })
     if (localTrack.sid) {
-      console.log(localTrack.sid)
       cameraProcessorMap.value.set(localTrack.sid, {
         processor,
-        track
+        track,
+        backgroundImageSrc
       })
     }
-  } catch {
+  } catch (e) {
     addErrorToast('カメラの共有に失敗しました')
     return
   }
+}
+
+const drawVideoToCanvas = (video: HTMLVideoElement) => {
+  const canvas = new OffscreenCanvas(video.videoWidth, video.videoHeight)
+  setInterval(() => {
+    const canvasCtx = canvas.getContext('2d', {
+      desynchronized: true,
+      willReadFrequently: false // ここをtrueにするとCPU-GPUメモリ転送が発生して遅くなる
+    })
+    if (!canvasCtx) return
+    canvasCtx.drawImage(video, 0, 0)
+  }, 30)
+  return canvas
 }
 
 const addScreenShareTrack = async () => {
@@ -292,9 +344,11 @@ const removeVideoTrack = async (localpublication: LocalTrackPublication) => {
       localpublication.trackSid
     )
     if (cameraProcessor) {
-      console.log('stopProcessing')
       cameraProcessor.processor.stopProcessing()
       cameraProcessor.track.stop()
+      cameraProcessor.backgroundImageSrc
+        ?.getTracks()
+        .forEach(track => track.stop())
       cameraProcessorMap.value.delete(localpublication.trackSid)
     }
 
@@ -312,8 +366,6 @@ const removeVideoTrack = async (localpublication: LocalTrackPublication) => {
     }
 
     const audioTrack = tracksMap.value.get(audioSid)
-    console.log(audioTrack)
-    console.log(tracksMap.value)
     if (
       !audioTrack ||
       audioTrack.isRemote ||
