@@ -182,7 +182,8 @@ const Attributes = ref<{ [key: string]: string }>({})
 
 const addCameraTrack = async (
   videoInputDevice?: MediaDeviceInfo,
-  isBlur?: boolean
+  isBlur?: boolean,
+  backgroundImage?: File
 ) => {
   try {
     if (!room.value) {
@@ -201,10 +202,17 @@ const addCameraTrack = async (
     const processor = new VirtualBackgroundProcessor(
       virtualBackgroundAssetsPath
     )
-
-    const options = {
-      blurRadius: 15 // 背景ぼかし設定
+    let options = {}
+    if (backgroundImage) {
+      const blob = new Blob([backgroundImage], { type: backgroundImage.type })
+      console.log(blob)
+      const imageBitmap = await createImageBitmap(blob)
+      options = {
+        // blurRadius: 15 // 背景ぼかし設定
+        backgroundImage: imageBitmap
+      }
     }
+
     const processedTrack = await processor.startProcessing(track, options)
     const localTrack = new LocalVideoTrack(processedTrack)
     await room.value?.localParticipant.publishTrack(localTrack).catch(e => {

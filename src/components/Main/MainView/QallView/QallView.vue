@@ -12,6 +12,8 @@ onMounted(async () => {
   videoInputs.value = devices.filter(d => d.kind === 'videoinput')
 })
 const selectedVideoInput = ref<MediaDeviceInfo>()
+
+const backgroundImage = ref<File>()
 </script>
 
 <template>
@@ -27,9 +29,18 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
         {{ videoInput.label }}
       </option>
     </select>
+    <input
+      @change="
+        e => {
+          const target = e.target as HTMLInputElement
+          backgroundImage = target?.files?.[0]
+        }
+      "
+      type="file"
+    />
     <button
       @click="[
-        addCameraTrack(selectedVideoInput),
+        addCameraTrack(selectedVideoInput, false, backgroundImage),
         console.log(selectedVideoInput)
       ]"
     >
