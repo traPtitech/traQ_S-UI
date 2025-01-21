@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 
 const { trackInfo } = defineProps<{
@@ -23,10 +24,30 @@ onMounted(() => {
 onUnmounted(() => {
   trackInfo.trackPublication?.track?.detach()
 })
+const userIdOfRamdos = '8f7a93ab-1e92-4dc6-b1a2-4231ab1681c7'
 </script>
 
 <template>
   <div>{{ trackInfo.participantIdentity }}</div>
-  <audio :id="trackInfo.trackPublication?.trackSid" ref="audioElement"></audio>
+  <div :class="$style.UserCard">
+    <audio
+      :id="trackInfo.trackPublication?.trackSid"
+      ref="audioElement"
+    ></audio>
+    <user-icon :class="$style.InnerIcon" :size="96" :user-id="userIdOfRamdos" />
+  </div>
   <input v-model="volume" type="range" min="0" max="1" step="0.01" />
 </template>
+<style lang="scss" module>
+.UserCard {
+  height: 108px;
+  width: 192px;
+  border: 1px solid black;
+}
+.InnerIcon {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

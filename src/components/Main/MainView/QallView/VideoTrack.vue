@@ -39,6 +39,7 @@ onUnmounted(() => {
       :id="trackInfo.trackPublication.trackSid"
       ref="videoElement"
       :class="$style.video"
+      
     ></video>
     <input v-model="volume" type="range" min="0" max="1" step="0.01" />
     <button

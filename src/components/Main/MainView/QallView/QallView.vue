@@ -2,6 +2,7 @@
 import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
+import UserList from '/@/components/Main/MainView/QallView/UserList.vue'
 import { onMounted, ref } from 'vue'
 
 const { tracksMap, addScreenShareTrack, addCameraTrack } = useQall()
@@ -35,34 +36,12 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
     >
       Add Camera Track
     </button>
-    <div :class="$style.TrackContainer">
-      <template
-        v-for="track of tracksMap.values()"
-        :key="track.trackPublication?.trackSid"
-      >
-        <VideoComponent
-          v-if="track.trackPublication?.kind === 'video'"
-          :track-info="track"
-          :participant-identity="track.participantIdentity"
-          :class="$style.video"
-        />
-        <AudioComponent
-          v-else-if="track.trackPublication?.kind === 'audio' && track.isRemote"
-          :track-info="track"
-        />
-      </template>
-    </div>
+    <UserList />
   </div>
 </template>
 
 <style lang="scss" module>
-.TrackContainer {
-  height: fit-content;
-}
-.video {
-  width: 50%;
-  height: 50%;
-}
+
 .Block {
   color: green;
   overflow: scroll;
