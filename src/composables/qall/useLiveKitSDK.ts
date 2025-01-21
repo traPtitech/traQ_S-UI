@@ -100,7 +100,7 @@ function handleActiveSpeakerChange(speakers: Participant[]) {
 }
 
 function handleDisconnect() {
-  console.log('disconnected from room')
+  //
 }
 
 const joinRoom = async (roomName: string, userName: string) => {
