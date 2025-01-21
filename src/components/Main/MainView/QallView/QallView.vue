@@ -1,12 +1,61 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 import CallControlButton from './CallControlButton.vue'
 const { tracksMap, toggleCalling } = useQall()
 
+const isMicOn = ref(true)
+const isCameraOn = ref(false)
+const isScreenSharing = ref(false)
+
+const micIcon = ref(
+  isMicOn.value
+    ? '/@/assets/icons/mic.svg?url'
+    : '/@/assets/icons/mic_off.svg?url'
+)
+const cameraIcon = ref(
+  isCameraOn.value
+    ? '/@/assets/icons/videocam.svg?url'
+    : '/@/assets/icons/videocam_off.svg?url'
+)
+
+const screenShareIcon = ref(
+  isScreenSharing.value
+    ? '/@/assets/icons/stop_screen_share.svg?url'
+    : '/@/assets/icons/screen_share.svg?url'
+)
+
 const endCall = () => {
   toggleCalling('')
+}
+// mute or unmute audio
+const toggleAudio = () => {
+  isMicOn.value = !isMicOn.value
+  micIcon.value = isMicOn.value
+    ? '/@/assets/icons/mic.svg?url'
+    : '/@/assets/icons/mic_off.svg?url'
+  console.log('toggleAudio')
+}
+// mute or unmute video
+const toggleVideo = () => {
+  isCameraOn.value = !isCameraOn.value
+  cameraIcon.value = isCameraOn.value
+    ? '/@/assets/icons/videocam.svg?url'
+    : '/@/assets/icons/videocam_off.svg?url'
+  // TODO
+  console.log('toggleVideo')
+}
+
+// sharing or stop sharing screen
+const toggleScreen = () => {
+  isScreenSharing.value = !isScreenSharing.value
+  screenShareIcon.value = isScreenSharing.value
+    ? '/@/assets/icons/screen_share.svg?url'
+    : '/@/assets/icons/stop_screen_share.svg?url'
+  // TODO
+  console.log('toggleScreen')
 }
 </script>
 
@@ -27,10 +76,30 @@ const endCall = () => {
           v-else-if="track.trackPublication?.kind === 'audio'"
           :track="track.trackPublication.audioTrack!"
         />
-        <CallControlButton
-          icon="/@/assets/icons/call_off.svg?url"
-          :on-click="endCall"
-        />
+        <div :class="$style.controlBar">
+          <div :class="$style.verticalBar"></div>
+          <CallControlButton
+            :icon="screenShareIcon"
+            :on-click="toggleScreen"
+            :is-on="!isScreenSharing"
+          />
+          <CallControlButton
+            :icon="cameraIcon"
+            :on-click="toggleVideo"
+            :is-on="isCameraOn"
+          />
+          <CallControlButton
+            :icon="micIcon"
+            :on-click="toggleAudio"
+            :is-on="isMicOn"
+          />
+          <CallControlButton
+            icon="/@/assets/icons/call_end.svg?url"
+            :on-click="endCall"
+            :is-on="false"
+          />
+          <div :class="$style.verticalBar"></div>
+        </div>
       </template>
     </div>
   </div>
@@ -47,5 +116,17 @@ const endCall = () => {
     weight: bold;
   }
   color: green;
+}
+
+.controlBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.verticalBar {
+  width: 1px;
+  height: 64px;
+  background-color: #ced6db;
 }
 </style>
