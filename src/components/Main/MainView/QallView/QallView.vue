@@ -65,7 +65,6 @@ const handleGroup = () => {
 
 <template>
   <div :class="$style.Block">
-    <h1 :class="$style.Header">Qall View</h1>
     <div>
       <div
         v-for="track of tracksMap.values()"
@@ -93,12 +92,6 @@ const handleGroup = () => {
           </div>
 
           <div :class="$style.verticalBar"></div>
-
-          <CallControlButton
-            icon="/@/assets/icons/sound_detection_loud_sound.svg?url"
-            :on-click="handleSound"
-            :is-on="false"
-          />
           <CallControlButton
             :icon="screenShareIcon"
             :on-click="toggleScreen"
@@ -139,6 +132,7 @@ const handleGroup = () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: #222325;
 }
 
 .Header {
