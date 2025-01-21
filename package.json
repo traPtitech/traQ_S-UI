@@ -28,6 +28,7 @@
   "dependencies": {
     "@mdi/js": "^7.4.47",
     "@sapphi-red/web-noise-suppressor": "^0.3.5",
+    "@shiguredo/virtual-background": "^2023.2.0",
     "@traptitech/traq": "^3.17.0-3",
     "@traptitech/traq-markdown-it": "^6.3.0",
     "autosize": "^6.0.1",

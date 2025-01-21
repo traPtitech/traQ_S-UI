@@ -3,7 +3,9 @@ import {
   RoomEvent,
   AudioPresets,
   createLocalScreenTracks,
-  Room
+  Room,
+  createLocalVideoTrack,
+  LocalVideoTrack
 } from 'livekit-client'
 import type {
   RemoteTrack,
@@ -12,21 +14,40 @@ import type {
   LocalTrackPublication,
   LocalParticipant,
   Participant,
-  TrackPublication
+  LocalTrack
 } from 'livekit-client'
-import { ref, type Ref } from 'vue'
+import { ref, watch, type Ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
+import apis from '/@/lib/apis'
+import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
+
+const virtualBackgroundAssetsPath =
+  'https://cdn.jsdelivr.net/npm/@shiguredo/virtual-background@latest/dist'
 
 const { addErrorToast } = useToastStore()
 
-type TrackInfo = {
-  trackPublication: TrackPublication | undefined
+export type TrackInfo = (
+  | {
+      isRemote: true
+      trackPublication: RemoteTrackPublication
+    }
+  | {
+      isRemote: false
+      trackPublication: LocalTrackPublication | undefined
+    }
+) & {
   participantIdentity: string
+}
+
+type CameraProcessor = {
+  processor: VirtualBackgroundProcessor
+  track: MediaStreamVideoTrack
 }
 
 const room = ref<Room>()
 const speakerIdentity = ref<string[]>([])
 const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
+const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
 
 function handleTrackSubscribed(
   track: RemoteTrack,
@@ -36,6 +57,7 @@ function handleTrackSubscribed(
   if (track.kind === Track.Kind.Video || track.kind === Track.Kind.Audio) {
     // attach it to a new HTMLVideoElement or HTMLAudioElement
     tracksMap.value.set(publication.trackSid, {
+      isRemote: true,
       trackPublication: publication,
       participantIdentity: participant.identity
     })
@@ -64,8 +86,9 @@ function handleLocalTrackPublished(
   participant: LocalParticipant
 ) {
   // when local tracks are ended, update UI to remove them from rendering
-  if (!publication.track || publication.track.kind === Track.Kind.Audio) return
+  if (!publication.track) return
   tracksMap.value.set(publication.trackSid, {
+    isRemote: false,
     trackPublication: publication,
     participantIdentity: participant.identity
   })
@@ -82,24 +105,28 @@ function handleDisconnect() {
 
 const joinRoom = async (roomName: string, userName: string) => {
   try {
-    const participantName = 'mathsuky'
-    const res = await fetch(`http://localhost:6080/token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        roomName,
-        participantName
-      })
-    })
-    // const token = await res.text()
-    const data = await res.json()
-    const token = data.token
+    const traQtoken = (await apis.getMyQRCode(true)).data
+    console.log(traQtoken)
+    const res = await fetch(
+      `https://easy-livekit-token-publisher.trap.show/token`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${traQtoken}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+    const json = await res.json()
+    const token = json.token
+
     // pre-warm connection, this can be called as early as your page is loaded
     //room.prepareConnection("https://livekit-test.trap.show:39357", token);
     room.value = new Room()
-    await room.value.prepareConnection('ws://localhost:7880', token)
+    await room.value.prepareConnection(
+      'wss://livekit.qall-dev.trapti.tech',
+      token
+    )
     console.log(token)
 
     // set up event listeners
@@ -112,7 +139,7 @@ const joinRoom = async (roomName: string, userName: string) => {
       .on(RoomEvent.LocalTrackPublished, handleLocalTrackPublished)
 
     // connect to room
-    await room.value.connect('ws://localhost:7880', token)
+    await room.value.connect('wss://livekit.qall-dev.trapti.tech', token)
     console.log('connected to room', room.value.name)
 
     // publish local camera and mic tracks
@@ -131,9 +158,7 @@ const joinRoom = async (roomName: string, userName: string) => {
         dtx: false
       }
     )
-    await room.value.localParticipant.setScreenShareEnabled(true, {
-      audio: true
-    })
+    await room.value.localParticipant.setAttributes({})
   } catch {
     addErrorToast('Qallの接続に失敗しました')
     await leaveRoom()
@@ -153,19 +178,160 @@ async function leaveRoom() {
   window.removeEventListener('beforeunload', leaveRoom)
 }
 
+const Attributes = ref<{ [key: string]: string }>({})
+
+const addCameraTrack = async (
+  videoInputDevice?: MediaDeviceInfo,
+  isBlur?: boolean
+) => {
+  try {
+    if (!room.value) {
+      addErrorToast('ルームが存在しません')
+      return
+    }
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { deviceId: videoInputDevice?.deviceId }
+    })
+    const track = stream.getVideoTracks()[0]
+    if (!track) {
+      addErrorToast('映像が取得できませんでした')
+      return
+    }
+    const processor = new VirtualBackgroundProcessor(
+      virtualBackgroundAssetsPath
+    )
+
+    const options = {
+      blurRadius: 15 // 背景ぼかし設定
+    }
+    const processedTrack = await processor.startProcessing(track, options)
+    const localTrack = new LocalVideoTrack(processedTrack)
+    await room.value?.localParticipant.publishTrack(localTrack).catch(e => {
+      addErrorToast('カメラの共有に失敗しました')
+      track.stop()
+      processor.stopProcessing()
+      return
+    })
+    if (localTrack.sid) {
+      console.log(localTrack.sid)
+      cameraProcessorMap.value.set(localTrack.sid, {
+        processor,
+        track
+      })
+    }
+  } catch {
+    addErrorToast('カメラの共有に失敗しました')
+    return
+  }
+}
+
 const addScreenShareTrack = async () => {
   try {
     if (!room.value) {
       addErrorToast('ルームが存在しません')
       return
     }
-    const localTrack = await createLocalScreenTracks({})
-    localTrack.map(async t => {
-      await room.value?.localParticipant.publishTrack(t)
+    const localTracks = await createLocalScreenTracks({
+      audio: {
+        channelCount: 2,
+        autoGainControl: false,
+        noiseSuppression: false,
+        echoCancellation: false,
+        voiceIsolation: false
+      }
     })
+
+    await Promise.all(
+      localTracks.map(async t => {
+        if (t.kind === Track.Kind.Video) {
+          await room.value?.localParticipant.publishTrack(t)
+        } else {
+          await room.value?.localParticipant.publishTrack(t, {
+            audioPreset: AudioPresets.musicHighQualityStereo,
+            dtx: false,
+            red: false
+          })
+        }
+      })
+    )
+    const videoSid = localTracks.find(t => t.kind === Track.Kind.Video)?.sid
+    const audioSid = localTracks.find(t => t.kind === Track.Kind.Audio)?.sid
+    if (audioSid && videoSid) {
+      Attributes.value = {
+        ...Attributes.value,
+        [videoSid]: audioSid
+      }
+      await room.value.localParticipant.setAttributes({
+        ...room.value.localParticipant.attributes,
+        [videoSid]: audioSid
+      })
+    }
   } catch {
     addErrorToast('スクリーン共有に失敗しました')
   }
+}
+
+const removeVideoTrack = async (localpublication: LocalTrackPublication) => {
+  if (localpublication.track) {
+    if (!room.value) {
+      addErrorToast('ルームが存在しません')
+      return
+    }
+    const cameraProcessor = cameraProcessorMap.value.get(
+      localpublication.trackSid
+    )
+    if (cameraProcessor) {
+      console.log('stopProcessing')
+      cameraProcessor.processor.stopProcessing()
+      cameraProcessor.track.stop()
+      cameraProcessorMap.value.delete(localpublication.trackSid)
+    }
+
+    const { [localpublication.trackSid]: audioSid, ...newAttributes } =
+      Attributes.value
+    //room.value.localParticipant.attributes
+    await room.value.localParticipant.unpublishTrack(
+      localpublication.track,
+      true
+    )
+    room.value.localParticipant.setAttributes(newAttributes)
+    Attributes.value = newAttributes
+    if (!audioSid) {
+      return
+    }
+
+    const audioTrack = tracksMap.value.get(audioSid)
+    console.log(audioTrack)
+    console.log(tracksMap.value)
+    if (
+      !audioTrack ||
+      audioTrack.isRemote ||
+      !audioTrack.trackPublication?.track
+    ) {
+      return
+    }
+
+    await room.value.localParticipant.unpublishTrack(
+      audioTrack.trackPublication.track,
+      true
+    )
+  }
+}
+
+const setLocalTrackMute = async (track: LocalTrack, muted: boolean) => {
+  if (muted) {
+    await track.mute()
+  } else {
+    await track.unmute()
+  }
+}
+
+const setTrackEnabled = (
+  publication: RemoteTrackPublication,
+  muted: boolean
+) => {
+  publication.setEnabled(!muted)
 }
 
 export const useLiveKitSDK = () => {
@@ -173,6 +339,10 @@ export const useLiveKitSDK = () => {
     joinRoom,
     leaveRoom,
     addScreenShareTrack,
+    addCameraTrack,
+    removeVideoTrack,
+    setTrackEnabled,
+    setLocalTrackMute,
     tracksMap
   }
 }

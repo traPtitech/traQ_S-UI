@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 import CallControlButton from './CallControlButton.vue'
 import CallControlButoonSmall from './CallControlButoonSmall.vue'
 
-const { tracksMap, toggleCalling } = useQall()
+const { tracksMap, toggleCalling, addScreenShareTrack, addCameraTrack } =
+  useQall()
 
 const isMicOn = ref(true)
 const isCameraOn = ref(false)
@@ -61,6 +62,13 @@ const handleGroup = () => {
   // TODO
   console.log('group')
 }
+
+const videoInputs = ref<MediaDeviceInfo[]>([])
+onMounted(async () => {
+  const devices = await navigator.mediaDevices.enumerateDevices()
+  videoInputs.value = devices.filter(d => d.kind === 'videoinput')
+})
+const selectedVideoInput = ref<MediaDeviceInfo>()
 </script>
 
 <template>
@@ -72,12 +80,13 @@ const handleGroup = () => {
       >
         <VideoComponent
           v-if="track.trackPublication?.kind === 'video'"
-          :track="track.trackPublication.videoTrack!"
+          :track-info="track"
           :participant-identity="track.participantIdentity"
+          :class="$style.video"
         />
         <AudioComponent
-          v-else-if="track.trackPublication?.kind === 'audio'"
-          :track="track.trackPublication.audioTrack!"
+          v-else-if="track.trackPublication?.kind === 'audio' && track.isRemote"
+          :track-info="track"
         />
         <div :class="$style.controlBar">
           <div :class="$style.smallButtonGroup">
@@ -126,6 +135,13 @@ const handleGroup = () => {
 </template>
 
 <style lang="scss" module>
+.TrackContainer {
+  height: fit-content;
+}
+.video {
+  width: 50%;
+  height: 50%;
+}
 .Block {
   color: green;
   display: flex;
@@ -133,6 +149,7 @@ const handleGroup = () => {
   align-items: center;
   height: 100vh;
   background-color: #222325;
+  overflow: scroll;
 }
 
 .Header {

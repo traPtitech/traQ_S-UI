@@ -1,22 +1,31 @@
 <script setup lang="ts">
-import type { VideoTrack } from 'livekit-client'
-import { onMounted, onUnmounted, useTemplateRef } from 'vue'
+import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
+import { useQall } from '/@/composables/qall/useQall'
+import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 
-const { track, participantIdentity } = defineProps<{
-  track: VideoTrack
+const { trackInfo, participantIdentity } = defineProps<{
+  trackInfo: TrackInfo
   participantIdentity: string
 }>()
 
+const { removeVideoTrack } = useQall()
+
 const videoElement = useTemplateRef<HTMLVideoElement>('videoElement')
+const volume = ref(1)
+watchEffect(() => {
+  if (videoElement.value) {
+    videoElement.value.volume = volume.value
+  }
+})
 
 onMounted(() => {
   if (videoElement.value) {
-    track.attach(videoElement.value)
+    trackInfo.trackPublication?.track?.attach(videoElement.value)
   }
 })
 
 onUnmounted(() => {
-  track.detach()
+  trackInfo.trackPublication?.track?.detach()
 })
 </script>
 
@@ -25,6 +34,25 @@ onUnmounted(() => {
     <div>
       <p>{{ participantIdentity }}</p>
     </div>
-    <video :id="track.sid" ref="videoElement"></video>
+    <video
+      v-if="trackInfo.trackPublication"
+      :id="trackInfo.trackPublication.trackSid"
+      ref="videoElement"
+      :class="$style.video"
+    ></video>
+    <input v-model="volume" type="range" min="0" max="1" step="0.01" />
+    <button
+      v-if="!trackInfo.isRemote && trackInfo.trackPublication"
+      @click="removeVideoTrack(trackInfo.trackPublication)"
+    >
+      Remove Screen Share
+    </button>
   </div>
 </template>
+
+<style lang="scss" module>
+.video {
+  width: 100%;
+  height: 100%;
+}
+</style>
