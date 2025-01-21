@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { useQall } from '/@/composables/qall/useQall'
-import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
-import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 import UserList from '/@/components/Main/MainView/QallView/UserList.vue'
 import { onMounted, ref } from 'vue'
 
@@ -41,7 +39,6 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
 </template>
 
 <style lang="scss" module>
-
 .Block {
   color: green;
   overflow: scroll;

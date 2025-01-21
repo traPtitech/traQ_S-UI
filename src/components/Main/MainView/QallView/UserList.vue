@@ -25,12 +25,12 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
           v-if="track.trackPublication?.kind === 'video'"
           :track-info="track"
           :participant-identity="track.participantIdentity"
-          :class="[$style.video, $style.UserCard]"
+          :class="$style.UserCard"
         />
         <AudioComponent
           v-else-if="track.trackPublication?.kind === 'audio' && track.isRemote"
           :track-info="track"
-          :class="[$style.UserCard]"
+          :class="$style.UserCard"
         />
       </div>
     </template>
@@ -39,19 +39,19 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
 
 <style lang="scss" module>
 .TrackContainer {
-  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
 }
 .UserBlock {
-  border: 1px solid black;
+  // border: 1px solid black;
   float: left;
 }
-.video {
-  width: 50%;
-  height: 50%;
-}
+
 .UserCard {
   height: 108px;
   width: 192px;
-  border: 1px solid black;
 }
 </style>
