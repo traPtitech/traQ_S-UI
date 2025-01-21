@@ -4,7 +4,6 @@ import {
   AudioPresets,
   createLocalScreenTracks,
   Room,
-  createLocalVideoTrack,
   LocalVideoTrack
 } from 'livekit-client'
 import type {
@@ -16,7 +15,7 @@ import type {
   Participant,
   LocalTrack
 } from 'livekit-client'
-import { ref, watch, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import apis from '/@/lib/apis'
 import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
