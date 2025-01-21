@@ -273,6 +273,8 @@ const addCameraTrack = async (
       })
     }
   } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e)
     addErrorToast('カメラの共有に失敗しました')
     return
   }
@@ -280,14 +282,17 @@ const addCameraTrack = async (
 
 const drawVideoToCanvas = (video: HTMLVideoElement) => {
   const canvas = new OffscreenCanvas(video.videoWidth, video.videoHeight)
-  setInterval(() => {
-    const canvasCtx = canvas.getContext('2d', {
-      desynchronized: true,
-      willReadFrequently: false // ここをtrueにするとCPU-GPUメモリ転送が発生して遅くなる
+  const canvasCtx = canvas.getContext('2d', {
+    desynchronized: true
+  })
+  if (!canvasCtx) return
+  const updateCanvas = () => {
+    createImageBitmap(video).then(bitmap => {
+      canvasCtx.drawImage(bitmap, 0, 0)
+      requestAnimationFrame(updateCanvas)
     })
-    if (!canvasCtx) return
-    canvasCtx.drawImage(video, 0, 0)
-  }, 30)
+  }
+  updateCanvas()
   return canvas
 }
 
