@@ -82,10 +82,20 @@ function handleDisconnect() {
 
 const joinRoom = async (roomName: string, userName: string) => {
   try {
-    const res = await fetch(
-      `http://localhost:3000/getToken?roomName=${roomName}&participantName=${userName}`
-    )
-    const token = await res.text()
+    const participantName = 'mathsuky'
+    const res = await fetch(`http://localhost:6080/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        roomName,
+        participantName
+      })
+    })
+    // const token = await res.text()
+    const data = await res.json()
+    const token = data.token
     // pre-warm connection, this can be called as early as your page is loaded
     //room.prepareConnection("https://livekit-test.trap.show:39357", token);
     room.value = new Room()

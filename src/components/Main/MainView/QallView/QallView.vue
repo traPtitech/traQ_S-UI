@@ -4,6 +4,8 @@ import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 import CallControlButton from './CallControlButton.vue'
+import CallControlButoonSmall from './CallControlButoonSmall.vue'
+
 const { tracksMap, toggleCalling } = useQall()
 
 const isMicOn = ref(true)
@@ -20,7 +22,6 @@ const cameraIcon = ref(
     ? '/@/assets/icons/videocam.svg?url'
     : '/@/assets/icons/videocam_off.svg?url'
 )
-
 const screenShareIcon = ref(
   isScreenSharing.value
     ? '/@/assets/icons/stop_screen_share.svg?url'
@@ -30,32 +31,35 @@ const screenShareIcon = ref(
 const endCall = () => {
   toggleCalling('')
 }
-// mute or unmute audio
 const toggleAudio = () => {
   isMicOn.value = !isMicOn.value
   micIcon.value = isMicOn.value
     ? '/@/assets/icons/mic.svg?url'
     : '/@/assets/icons/mic_off.svg?url'
-  console.log('toggleAudio')
 }
-// mute or unmute video
 const toggleVideo = () => {
   isCameraOn.value = !isCameraOn.value
   cameraIcon.value = isCameraOn.value
     ? '/@/assets/icons/videocam.svg?url'
     : '/@/assets/icons/videocam_off.svg?url'
-  // TODO
-  console.log('toggleVideo')
 }
-
-// sharing or stop sharing screen
 const toggleScreen = () => {
   isScreenSharing.value = !isScreenSharing.value
   screenShareIcon.value = isScreenSharing.value
     ? '/@/assets/icons/screen_share.svg?url'
     : '/@/assets/icons/stop_screen_share.svg?url'
+}
+const handleSound = () => {
   // TODO
-  console.log('toggleScreen')
+  console.log('sound')
+}
+const handleReaction = () => {
+  // TODO
+  console.log('reaction')
+}
+const handleGroup = () => {
+  // TODO
+  console.log('group')
 }
 </script>
 
@@ -63,7 +67,7 @@ const toggleScreen = () => {
   <div :class="$style.Block">
     <h1 :class="$style.Header">Qall View</h1>
     <div>
-      <template
+      <div
         v-for="track of tracksMap.values()"
         :key="track.trackPublication?.trackSid"
       >
@@ -77,7 +81,24 @@ const toggleScreen = () => {
           :track="track.trackPublication.audioTrack!"
         />
         <div :class="$style.controlBar">
+          <div :class="$style.smallButtonGroup">
+            <CallControlButoonSmall
+              icon="/@/assets/icons/sound_detection_loud_sound.svg?url"
+              :on-click="handleSound"
+            />
+            <CallControlButoonSmall
+              icon="/@/assets/icons/add_reaction.svg?url"
+              :on-click="handleReaction"
+            />
+          </div>
+
           <div :class="$style.verticalBar"></div>
+
+          <CallControlButton
+            icon="/@/assets/icons/sound_detection_loud_sound.svg?url"
+            :on-click="handleSound"
+            :is-on="false"
+          />
           <CallControlButton
             :icon="screenShareIcon"
             :on-click="toggleScreen"
@@ -99,8 +120,14 @@ const toggleScreen = () => {
             :is-on="false"
           />
           <div :class="$style.verticalBar"></div>
+          <div :class="$style.smallButtonGroup">
+            <CallControlButoonSmall
+              icon="/@/assets/icons/group_qall.svg?url"
+              :on-click="handleGroup"
+            />
+          </div>
         </div>
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -108,6 +135,10 @@ const toggleScreen = () => {
 <style lang="scss" module>
 .Block {
   color: green;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .Header {
@@ -116,17 +147,27 @@ const toggleScreen = () => {
     weight: bold;
   }
   color: green;
+  text-align: center;
 }
 
 .controlBar {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 16px;
+  width: 100%;
 }
 
 .verticalBar {
   width: 1px;
   height: 64px;
   background-color: #ced6db;
+  margin: 0 16px;
+}
+
+.smallButtonGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 </style>
