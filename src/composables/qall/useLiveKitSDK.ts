@@ -179,10 +179,10 @@ const Attributes = ref<{ [key: string]: string }>({})
 
 const addCameraTrack = async (
   videoInputDevice?: MediaDeviceInfo,
-  isBlur?: boolean,
-  backgroundImage?: File,
-  HTMLDivElement?: HTMLDivElement | null
+  backgroundType?: 'original' | 'blur' | 'file' | 'screen',
+  backgroundFile?: File
 ) => {
+  console.log(backgroundFile)
   try {
     if (!room.value) {
       addErrorToast('ルームが存在しません')
@@ -202,16 +202,21 @@ const addCameraTrack = async (
       virtualBackgroundAssetsPath
     )
     let options = {}
-    if (backgroundImage) {
-      const blob = new Blob([backgroundImage], { type: backgroundImage.type })
 
-      if (backgroundImage.type.startsWith('image/')) {
+    if (backgroundType === 'blur') {
+      options = {
+        blurRadius: 10
+      }
+    } else if (backgroundType === 'file' && backgroundFile) {
+      const blob = new Blob([backgroundFile], { type: backgroundFile.type })
+
+      if (backgroundFile.type.startsWith('image/')) {
         //画像のとき
         const imageBitmap = await createImageBitmap(blob)
         options = {
           backgroundImage: imageBitmap
         }
-      } else {
+      } else if (backgroundFile.type.startsWith('video/')) {
         //動画のとき
         const videoElement = await new Promise<HTMLVideoElement>(resolve => {
           const video = document.createElement('video')
@@ -228,7 +233,7 @@ const addCameraTrack = async (
           backgroundImage: canvas
         }
       }
-    } else {
+    } else if (backgroundType === 'screen') {
       backgroundImageSrc = await navigator.mediaDevices.getDisplayMedia({
         video: true
       })

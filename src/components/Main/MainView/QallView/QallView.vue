@@ -2,7 +2,7 @@
 import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
-import { onMounted, ref, useTemplateRef } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const { tracksMap, addScreenShareTrack, addCameraTrack } = useQall()
 
@@ -15,14 +15,14 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
 
 const backgroundImage = ref<File>()
 
-const videoDiv = useTemplateRef<HTMLDivElement>('videoDiv')
+const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 </script>
 
 <template>
   <div :class="$style.Block">
     <h1 :class="$style.Header">Qall View</h1>
+    {{ backgroundType }}
     <button @click="addScreenShareTrack">Add Screen Share Track</button>
-    <div ref="videoDiv"></div>
     <select v-model="selectedVideoInput">
       <option
         v-for="videoInput in videoInputs"
@@ -32,6 +32,21 @@ const videoDiv = useTemplateRef<HTMLDivElement>('videoDiv')
         {{ videoInput.label }}
       </option>
     </select>
+
+    <input
+      id="original"
+      v-model="backgroundType"
+      type="radio"
+      value="original"
+    />
+    <label for="original">original</label>
+    <input id="blur" v-model="backgroundType" type="radio" value="blur" />
+    <label for="blur">blur</label>
+    <input id="file" v-model="backgroundType" type="radio" value="file" />
+    <label for="file">file</label>
+    <input id="screen" v-model="backgroundType" type="radio" value="screen" />
+    <label for="screen">screen</label>
+
     <input
       type="file"
       @change="
@@ -43,7 +58,7 @@ const videoDiv = useTemplateRef<HTMLDivElement>('videoDiv')
     />
     <button
       @click="[
-        addCameraTrack(selectedVideoInput, false, backgroundImage, videoDiv),
+        addCameraTrack(selectedVideoInput, backgroundType, backgroundImage),
         console.log(selectedVideoInput)
       ]"
     >
