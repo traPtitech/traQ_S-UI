@@ -95,7 +95,7 @@ const handleGroup = () => {
           <CallControlButton
             :icon="screenShareIcon"
             :on-click="toggleScreen"
-            :is-on="!isScreenSharing"
+            :is-on="isScreenSharing"
           />
           <CallControlButton
             :icon="cameraIcon"
