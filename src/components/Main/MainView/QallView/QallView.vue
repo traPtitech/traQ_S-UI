@@ -137,46 +137,46 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
           v-else-if="track.trackPublication?.kind === 'audio' && track.isRemote"
           :track-info="track"
         />
-        <div :class="$style.controlBar">
-          <div :class="$style.smallButtonGroup">
-            <CallControlButoonSmall
-              icon="/@/assets/icons/sound_detection_loud_sound.svg?url"
-              :on-click="handleSound"
-            />
-            <CallControlButoonSmall
-              icon="/@/assets/icons/add_reaction.svg?url"
-              :on-click="handleReaction"
-            />
-          </div>
+      </div>
+      <div :class="$style.controlBar">
+        <div :class="$style.smallButtonGroup">
+          <CallControlButoonSmall
+            icon="/@/assets/icons/sound_detection_loud_sound.svg?url"
+            :on-click="handleSound"
+          />
+          <CallControlButoonSmall
+            icon="/@/assets/icons/add_reaction.svg?url"
+            :on-click="handleReaction"
+          />
+        </div>
 
-          <div :class="$style.verticalBar"></div>
-          <CallControlButton
-            :icon="screenShareIcon"
-            :on-click="toggleScreen"
-            :is-on="isScreenSharing"
+        <div :class="$style.verticalBar"></div>
+        <CallControlButton
+          :icon="screenShareIcon"
+          :on-click="toggleScreen"
+          :is-on="isScreenSharing"
+        />
+        <CallControlButton
+          :icon="cameraIcon"
+          :on-click="toggleVideo"
+          :is-on="isCameraOn"
+        />
+        <CallControlButton
+          :icon="micIcon"
+          :on-click="toggleAudio"
+          :is-on="isMicOn"
+        />
+        <CallControlButton
+          icon="/@/assets/icons/call_end.svg?url"
+          :on-click="endCall"
+          :is-on="false"
+        />
+        <div :class="$style.verticalBar"></div>
+        <div :class="$style.smallButtonGroup">
+          <CallControlButoonSmall
+            icon="/@/assets/icons/group_qall.svg?url"
+            :on-click="handleGroup"
           />
-          <CallControlButton
-            :icon="cameraIcon"
-            :on-click="toggleVideo"
-            :is-on="isCameraOn"
-          />
-          <CallControlButton
-            :icon="micIcon"
-            :on-click="toggleAudio"
-            :is-on="isMicOn"
-          />
-          <CallControlButton
-            icon="/@/assets/icons/call_end.svg?url"
-            :on-click="endCall"
-            :is-on="false"
-          />
-          <div :class="$style.verticalBar"></div>
-          <div :class="$style.smallButtonGroup">
-            <CallControlButoonSmall
-              icon="/@/assets/icons/group_qall.svg?url"
-              :on-click="handleGroup"
-            />
-          </div>
         </div>
       </div>
     </div>
