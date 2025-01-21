@@ -3,6 +3,7 @@ import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 import { onMounted, ref } from 'vue'
+import DanmakuContainer from './DanmakuContainer.vue'
 
 const { tracksMap, addScreenShareTrack, addCameraTrack } = useQall()
 
@@ -20,6 +21,7 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 
 <template>
   <div :class="$style.Block">
+    <DanmakuContainer />
     <h1 :class="$style.Header">Qall View</h1>
     {{ backgroundType }}
     <button @click="addScreenShareTrack">Add Screen Share Track</button>
@@ -95,6 +97,8 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 .Block {
   color: green;
   overflow: scroll;
+  position: relative;
+  height: 80%;
 }
 
 .Header {

@@ -11,7 +11,7 @@
 <script lang="ts" setup>
 import { renderInline } from '/@/lib/markdown/markdown'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, nextTick, ref, watchEffect } from 'vue'
 import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
 
 const props = withDefaults(
@@ -24,10 +24,15 @@ const props = withDefaults(
     acceptAction: false
   }
 )
+const emit = defineEmits<{
+  render: []
+}>()
 
 const rendered = ref<MarkdownRenderResult>()
 watchEffect(async () => {
   rendered.value = await renderInline(props.content)
+  await nextTick()
+  emit('render')
 })
 const renderedContent = computed(() => rendered.value?.renderedText)
 
