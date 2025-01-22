@@ -12,6 +12,7 @@
         :pinned-messages="pinnedMessages"
         :typing-users="typingUsers"
       />
+      <!-- <SubQallView /> -->
     </template>
     <template #sidebar>
       <channel-sidebar

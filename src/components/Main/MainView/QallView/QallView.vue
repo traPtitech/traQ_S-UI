@@ -7,6 +7,8 @@ import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButton from './CallControlButton.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
+import { LocalTrackPublication } from 'livekit-client'
+import VideoTrack from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 
 const {
   tracksMap,
@@ -71,6 +73,7 @@ const toggleVideo = async () => {
       for (const trackInfo of tracksMap.value.values()) {
         if (
           !trackInfo.isRemote &&
+          trackInfo.trackPublication instanceof LocalTrackPublication &&
           trackInfo.trackPublication?.kind === 'video' &&
           !trackInfo.trackPublication.trackName?.includes('screen')
         ) {
@@ -97,6 +100,7 @@ const toggleScreen = async () => {
       for (const trackInfo of tracksMap.value.values()) {
         if (
           !trackInfo.isRemote &&
+          trackInfo.trackPublication instanceof LocalTrackPublication &&
           trackInfo.trackPublication?.kind === 'video' &&
           trackInfo.trackPublication.trackName?.includes('screen')
         ) {
@@ -188,17 +192,14 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
     </button>
 
     <div :class="$style.TrackContainer">
-      <template
-        v-for="([sid, track], index) in tracksMap.entries()"
-        :key="index"
-      >
+      <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
         <VideoComponent
           v-if="
             track.trackPublication?.kind === 'video' &&
+            !(track.trackPublication.track instanceof VideoTrack) &&
             !screenShareTrackSidMap.has(sid)
           "
           :track-info="track"
-          :participant-identity="track.participantIdentity"
           :class="$style.video"
         />
         <ScreenShareComponent
@@ -214,7 +215,9 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
           v-else-if="
             track.trackPublication?.kind === 'audio' &&
             track.isRemote &&
-            !screenShareTrackSidMap.values().some(valueSid => valueSid === sid)
+            !screenShareTrackSidMap
+              .values()
+              ?.some?.(valueSid => valueSid === sid)
           "
           :track-info="track"
         />

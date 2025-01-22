@@ -367,10 +367,10 @@ const addScreenShareTrack = async () => {
         [videoSid]: audioSid
       }
       screenShareTrackSidMap.value.set(videoSid, audioSid)
-      await room.value.localParticipant.setAttributes({
-        ...room.value.localParticipant.attributes,
-        [videoSid]: audioSid
-      })
+      // await room.value.localParticipant.setAttributes({
+      //   ...room.value.localParticipant.attributes,
+      //   [videoSid]: audioSid
+      // })
     }
   } catch {
     // TODO:シェアをキャンセルした時も失敗しましたメッセージがでるのはちょっと違和感があるかも

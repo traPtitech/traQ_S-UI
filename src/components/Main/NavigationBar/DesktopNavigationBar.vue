@@ -20,7 +20,7 @@
       />
       <transition name="fade-bottom">
         <ephemeral-navigation-content
-          v-if="ephemeralNavigationSelectorState.currentNavigation"
+          v-if="true"
           :class="$style.ephemeralNavigation"
           :current-ephemeral-navigation="
             ephemeralNavigationSelectorState.currentNavigation
