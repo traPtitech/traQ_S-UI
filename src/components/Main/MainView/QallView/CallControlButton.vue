@@ -19,7 +19,7 @@ const props = defineProps({
 const style = useCssModule()
 
 const buttonClass = computed(() => ({
-  [style.callControlBtn]: true,
+  [style.callControlButton]: true,
   [style.on]: props.isOn,
   [style.off]: !props.isOn
 }))
@@ -36,7 +36,7 @@ function handleClick() {
 </template>
 
 <style lang="scss" module>
-.callControlBtn {
+.callControlButton {
   width: 64px;
   height: 64px;
   border-radius: 50%;
@@ -47,15 +47,15 @@ function handleClick() {
   transition: background-color 0.3s;
 }
 
-.callControlBtn.on {
+.callControlButton.on {
   background-color: white;
 }
 
-.callControlBtn.off {
+.callControlButton.off {
   background-color: #49535b;
 }
 
-.callControlBtn:hover {
+.callControlButton:hover {
   opacity: 0.85;
 }
 </style>

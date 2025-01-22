@@ -4,7 +4,7 @@ import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 import CallControlButton from './CallControlButton.vue'
-import CallControlButtonSmall from './CallControlButoonSmall.vue'
+import CallControlButtonSmall from './CallControlButtonSmall.vue'
 
 const {
   tracksMap,
