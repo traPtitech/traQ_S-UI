@@ -40,6 +40,7 @@
     "idb-keyval": "^6.2.0",
     "livekit-client": "^2.8.0",
     "mitt": "^3.0.0",
+    "party-js": "^2.2.0",
     "skyway-js": "^4.4.5",
     "text-field-edit": "^4.1.1",
     "throttle-debounce": "^5.0.2",
