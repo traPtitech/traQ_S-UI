@@ -28,8 +28,10 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  trackInfo.trackPublication?.track?.detach()
-  audioTrackInfo?.trackPublication?.track?.detach()
+  if (videoElement.value && audioElement.value) {
+    trackInfo.trackPublication?.track?.detach(videoElement.value)
+    audioTrackInfo?.trackPublication?.track?.detach(audioElement.value)
+  }
 })
 </script>
 

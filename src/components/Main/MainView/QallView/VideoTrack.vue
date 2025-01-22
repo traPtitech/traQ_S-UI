@@ -3,9 +3,8 @@ import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 
-const { trackInfo, participantIdentity } = defineProps<{
+const { trackInfo } = defineProps<{
   trackInfo: TrackInfo
-  participantIdentity: string
 }>()
 
 const { removeVideoTrack } = useQall()
@@ -25,14 +24,16 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  trackInfo.trackPublication?.track?.detach()
+  if (videoElement.value) {
+    trackInfo.trackPublication?.track?.detach(videoElement.value)
+  }
 })
 </script>
 
 <template>
-  <div :id="'camera-' + participantIdentity">
+  <div :id="'camera-' + trackInfo.participantIdentity">
     <div>
-      <p>{{ participantIdentity }}</p>
+      <p>{{ trackInfo.participantIdentity }}</p>
     </div>
     <video
       v-if="trackInfo.trackPublication"
