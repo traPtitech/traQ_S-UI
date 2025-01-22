@@ -1,11 +1,129 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
-import { onMounted, ref } from 'vue'
 import DanmakuContainer from './DanmakuContainer.vue'
+import CallControlButton from './CallControlButton.vue'
+import CallControlButtonSmall from './CallControlButtonSmall.vue'
 
-const { tracksMap, addScreenShareTrack, addCameraTrack } = useQall()
+const {
+  tracksMap,
+  leaveQall,
+  addScreenShareTrack,
+  addCameraTrack,
+  removeVideoTrack
+} = useQall()
+
+const isMicOn = ref(true)
+const isCameraOn = ref(false)
+const isScreenSharing = ref(false)
+
+const micIcon = ref(
+  isMicOn.value
+    ? '/@/assets/icons/mic.svg?url'
+    : '/@/assets/icons/mic_off.svg?url'
+)
+const cameraIcon = ref(
+  isCameraOn.value
+    ? '/@/assets/icons/videocam.svg?url'
+    : '/@/assets/icons/videocam_off.svg?url'
+)
+const screenShareIcon = ref(
+  isScreenSharing.value
+    ? '/@/assets/icons/stop_screen_share.svg?url'
+    : '/@/assets/icons/screen_share.svg?url'
+)
+
+const toggleAudio = async () => {
+  try {
+    for (const trackInfo of tracksMap.value.values()) {
+      if (
+        !trackInfo.isRemote &&
+        trackInfo.trackPublication?.kind === 'audio' &&
+        trackInfo.trackPublication.track
+      ) {
+        if (isMicOn.value) {
+          await trackInfo.trackPublication.track.mute()
+        } else {
+          await trackInfo.trackPublication.track.unmute()
+        }
+        isMicOn.value = !isMicOn.value
+        micIcon.value = isMicOn.value
+          ? '/@/assets/icons/mic.svg?url'
+          : '/@/assets/icons/mic_off.svg?url'
+        break
+      }
+    }
+  } catch (err) {
+    console.error('Failed to toggle audio:', err)
+  }
+}
+
+const toggleVideo = async () => {
+  try {
+    if (!isCameraOn.value) {
+      await addCameraTrack(selectedVideoInput.value)
+      isCameraOn.value = true
+    } else {
+      for (const trackInfo of tracksMap.value.values()) {
+        if (
+          !trackInfo.isRemote &&
+          trackInfo.trackPublication?.kind === 'video' &&
+          !trackInfo.trackPublication.trackName?.includes('screen')
+        ) {
+          await removeVideoTrack(trackInfo.trackPublication)
+          break
+        }
+      }
+      isCameraOn.value = false
+    }
+    cameraIcon.value = isCameraOn.value
+      ? '/@/assets/icons/videocam.svg?url'
+      : '/@/assets/icons/videocam_off.svg?url'
+  } catch (err) {
+    console.error('Failed to toggle video:', err)
+  }
+}
+
+const toggleScreen = async () => {
+  try {
+    if (!isScreenSharing.value) {
+      await addScreenShareTrack()
+      isScreenSharing.value = true
+    } else {
+      for (const trackInfo of tracksMap.value.values()) {
+        if (
+          !trackInfo.isRemote &&
+          trackInfo.trackPublication?.kind === 'video' &&
+          trackInfo.trackPublication.trackName?.includes('screen')
+        ) {
+          await removeVideoTrack(trackInfo.trackPublication)
+          break
+        }
+      }
+      isScreenSharing.value = false
+    }
+    screenShareIcon.value = isScreenSharing.value
+      ? '/@/assets/icons/stop_screen_share.svg?url'
+      : '/@/assets/icons/screen_share.svg?url'
+  } catch (err) {
+    console.error('Failed to toggle screen sharing:', err)
+  }
+}
+
+const handleSound = () => {
+  // TODO
+  console.log('sound')
+}
+const handleReaction = () => {
+  // TODO
+  console.log('reaction')
+}
+const handleGroup = () => {
+  // TODO
+  console.log('group')
+}
 
 const videoInputs = ref<MediaDeviceInfo[]>([])
 onMounted(async () => {
@@ -66,11 +184,9 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
     >
       Add Camera Track
     </button>
+
     <div :class="$style.TrackContainer">
-      <template
-        v-for="track of tracksMap.values()"
-        :key="track.trackPublication?.trackSid"
-      >
+      <template v-for="(track, index) in tracksMap.values()" :key="index">
         <VideoComponent
           v-if="track.trackPublication?.kind === 'video'"
           :track-info="track"
@@ -82,6 +198,47 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
           :track-info="track"
         />
       </template>
+      <div :class="$style.controlBar">
+        <div :class="$style.smallButtonGroup">
+          <CallControlButtonSmall
+            icon="/@/assets/icons/sound_detection_loud_sound.svg?url"
+            :on-click="handleSound"
+          />
+          <CallControlButtonSmall
+            icon="/@/assets/icons/add_reaction.svg?url"
+            :on-click="handleReaction"
+          />
+        </div>
+
+        <div :class="$style.verticalBar"></div>
+        <CallControlButton
+          :icon="screenShareIcon"
+          :on-click="toggleScreen"
+          :is-on="isScreenSharing"
+        />
+        <CallControlButton
+          :icon="cameraIcon"
+          :on-click="toggleVideo"
+          :is-on="isCameraOn"
+        />
+        <CallControlButton
+          :icon="micIcon"
+          :on-click="toggleAudio"
+          :is-on="isMicOn"
+        />
+        <CallControlButton
+          icon="/@/assets/icons/call_end.svg?url"
+          :on-click="leaveQall"
+          :is-on="false"
+        />
+        <div :class="$style.verticalBar"></div>
+        <div :class="$style.smallButtonGroup">
+          <CallControlButtonSmall
+            icon="/@/assets/icons/group_qall.svg?url"
+            :on-click="handleGroup"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -96,6 +253,11 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 }
 .Block {
   color: green;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #222325;
   overflow: scroll;
   position: relative;
   height: 80%;
@@ -107,5 +269,27 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
     weight: bold;
   }
   color: green;
+  text-align: center;
+}
+
+.controlBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.verticalBar {
+  width: 1px;
+  height: 64px;
+  background-color: #ced6db;
+  margin: 0 16px;
+}
+
+.smallButtonGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 </style>
