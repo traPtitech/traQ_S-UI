@@ -261,6 +261,8 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
   height: 100vh;
   background-color: #222325;
   overflow: scroll;
+  position: relative;
+  height: 100%;
 }
 
 .Header {
