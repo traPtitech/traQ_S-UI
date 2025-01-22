@@ -3,12 +3,13 @@ import { onMounted, ref } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
+import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButton from './CallControlButton.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
 
 const {
   tracksMap,
-  toggleCalling,
+  leaveQall,
   addScreenShareTrack,
   addCameraTrack,
   removeVideoTrack
@@ -33,10 +34,6 @@ const screenShareIcon = ref(
     ? '/@/assets/icons/stop_screen_share.svg?url'
     : '/@/assets/icons/screen_share.svg?url'
 )
-
-const endCall = () => {
-  toggleCalling('')
-}
 
 const toggleAudio = async () => {
   try {
@@ -142,6 +139,7 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 
 <template>
   <div :class="$style.Block">
+    <DanmakuContainer />
     <h1 :class="$style.Header">Qall View</h1>
     {{ backgroundType }}
     <button @click="addScreenShareTrack">Add Screen Share Track</button>
@@ -230,7 +228,7 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
         />
         <CallControlButton
           icon="/@/assets/icons/call_end.svg?url"
-          :on-click="endCall"
+          :on-click="leaveQall"
           :is-on="false"
         />
         <div :class="$style.verticalBar"></div>
@@ -261,6 +259,8 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
   height: 100vh;
   background-color: #222325;
   overflow: scroll;
+  position: relative;
+  height: 80%;
 }
 
 .Header {
