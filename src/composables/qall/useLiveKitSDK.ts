@@ -108,7 +108,6 @@ function handleDisconnect() {
 }
 
 function handleDataReceived(payload: Uint8Array<ArrayBufferLike>) {
-  console.log(payload)
   const data = JSON.parse(decoder.decode(payload))
   if (!data.type || !data.message) return
   if (data.type === 'stamp') {
