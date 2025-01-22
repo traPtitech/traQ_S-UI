@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import { onMounted, ref, useTemplateRef } from 'vue'
+import { nextTick, onMounted, ref, useTemplateRef } from 'vue'
 import DanmakuComment from './DanmakuComment.vue'
 import DanmakuStamp from './DanmakuStamp.vue'
 
 import party from 'party-js'
 import { useDanmakuSparkle } from './useDanmakuSparkle'
+import { useQall } from '/@/composables/qall/useQall'
+
+import { messageMitt } from '/@/store/entities/messages'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+import useMittListener from '/@/composables/utils/useMittListener'
+
+const { callingChannel, publishData, qallMitt } = useQall()
 
 const comments = ref<{ id: string; markdown: string }[]>([])
 const stamps = ref<{ id: string; stampId: string }[]>([])
@@ -21,6 +28,51 @@ const showSparkle = (stampElement: HTMLElement) => {
   })
 }
 
+messageMitt.on('addMessage', ({ message }) => {
+  if (message.channelId !== callingChannel.value) return
+
+  comments.value.push({
+    id: message.id,
+    markdown: message.content
+  })
+  setTimeout(() => {
+    comments.value = comments.value.filter(v => v.id !== message.id)
+  }, 6000)
+})
+
+messageMitt.on('deleteMessage', messageId => {
+  comments.value = comments.value.filter(v => v.id !== messageId)
+})
+
+messageMitt.on('updateMessage', async message => {
+  if (message.channelId !== callingChannel.value) return
+  comments.value = comments.value.filter(v => v.id !== message.id)
+  await nextTick()
+  comments.value.push({
+    id: message.id,
+    markdown: message.content
+  })
+  setTimeout(() => {
+    comments.value = comments.value.filter(v => v.id !== message.id)
+  }, 6000)
+})
+
+const { toggleStampPicker } = useStampPickerInvoker(
+  async stampData => {
+    try {
+      await publishData({ type: 'stamp', message: stampData.id })
+      qallMitt.emit('pushStamp', stampData.id)
+    } catch (e) {}
+  },
+  danmakuContainer,
+  false,
+  'bottom-right'
+)
+
+useMittListener(qallMitt, 'pushStamp', stamp => {
+  sparkle(stamp)
+})
+
 const { sparkle } = useDanmakuSparkle(showSparkle)
 
 onMounted(() => {
@@ -28,7 +80,7 @@ onMounted(() => {
   setInterval(() => {
     comments.value.push({
       id: Math.random().toString(36).substring(2, 15),
-      markdown: 'this is *comment*'
+      markdown: 'うおおおおおおおおおお!:tada::tada.party::tada.parrot:'
     })
     setTimeout(() => {
       comments.value.shift()
@@ -53,6 +105,9 @@ onMounted(() => {
 
 <template>
   <div ref="danmakuContainer" :class="$style.danmakuContainer">
+    <button :style="{ pointerEvents: 'auto' }" @click="toggleStampPicker">
+      スタンプピッカー
+    </button>
     <DanmakuComment
       v-for="comment in comments"
       :key="comment.id"

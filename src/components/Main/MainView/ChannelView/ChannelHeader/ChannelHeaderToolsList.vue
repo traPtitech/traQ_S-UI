@@ -10,7 +10,7 @@
         :data-is-active="$boolAttr(isQallSessionOpened)"
         :data-is-joined="$boolAttr(canEndQall)"
         :tooltip="qallLabel"
-        @click="toggleCalling(props.channelId)"
+        @click="joinQall(props.channelId)"
       />
       <header-tools-item
         :class="$style.notificationIcon"
@@ -89,7 +89,7 @@ const {
   toggleQall
 } = useQall(props)
 
-const { toggleCalling } = useNewQall()
+const { joinQall } = useNewQall()
 
 const { changeToNextSubscriptionLevel, currentChannelSubscription } =
   useChannelSubscriptionState(toRef(props, 'channelId'))

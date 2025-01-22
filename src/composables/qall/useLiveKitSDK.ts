@@ -19,11 +19,15 @@ import { ref, type Ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import apis from '/@/lib/apis'
 import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
+import mitt from 'mitt'
 
 const virtualBackgroundAssetsPath =
   'https://cdn.jsdelivr.net/npm/@shiguredo/virtual-background@latest/dist'
-
+type QallEventMap = {
+  pushStamp: string
+}
 const { addErrorToast } = useToastStore()
+const qallMitt = mitt<QallEventMap>()
 
 export type TrackInfo = (
   | {
@@ -103,6 +107,15 @@ function handleDisconnect() {
   //
 }
 
+function handleDataReceived(payload: Uint8Array<ArrayBufferLike>) {
+  console.log(payload)
+  const data = JSON.parse(decoder.decode(payload))
+  if (!data.type || !data.message) return
+  if (data.type === 'stamp') {
+    qallMitt.emit('pushStamp', data.message)
+  }
+}
+
 const joinRoom = async (roomName: string, userName: string) => {
   try {
     const traQtoken = (await apis.getMyQRCode(true)).data
@@ -135,6 +148,7 @@ const joinRoom = async (roomName: string, userName: string) => {
       .on(RoomEvent.Disconnected, handleDisconnect)
       .on(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished)
       .on(RoomEvent.LocalTrackPublished, handleLocalTrackPublished)
+      .on(RoomEvent.DataReceived, handleDataReceived)
 
     // connect to room
     await room.value.connect('wss://livekit.qall-dev.trapti.tech', token)
@@ -403,6 +417,18 @@ const setTrackEnabled = (
   publication.setEnabled(!muted)
 }
 
+const publishData = async (data: { type: 'stamp'; message: string }) => {
+  if (!room.value) return
+  const strData = JSON.stringify(data)
+  const encoder = new TextEncoder()
+
+  // publishData takes in a Uint8Array, so we need to convert it
+  const encoded = encoder.encode(strData)
+  await room.value.localParticipant.publishData(encoded, { reliable: true })
+  console.log(data)
+}
+const decoder = new TextDecoder()
+
 export const useLiveKitSDK = () => {
   return {
     joinRoom,
@@ -410,8 +436,10 @@ export const useLiveKitSDK = () => {
     addScreenShareTrack,
     addCameraTrack,
     removeVideoTrack,
+    publishData,
     setTrackEnabled,
     setLocalTrackMute,
-    tracksMap
+    tracksMap,
+    qallMitt
   }
 }
