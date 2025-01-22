@@ -4,7 +4,7 @@
       <channel-header :channel-id="channelId" />
     </template>
     <template #default>
-      <QallView v-if="isCalling" />
+      <QallView v-if="callingChannel === channelId" />
       <channel-view-content
         v-else
         :channel-id="channelId"
@@ -45,5 +45,5 @@ const props = defineProps<{
 const channelId = toRef(props, 'channelId')
 const pinnedMessages = usePinnedMessages(channelId)
 const { viewingUsers, typingUsers } = useCurrentViewers(channelId)
-const { isCalling } = useQall()
+const { callingChannel } = useQall()
 </script>

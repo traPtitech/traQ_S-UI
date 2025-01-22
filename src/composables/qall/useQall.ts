@@ -4,7 +4,8 @@ import { useMeStore } from '/@/store/domain/me'
 import { useToastStore } from '/@/store/ui/toast'
 import type { LocalAudioTrack, LocalVideoTrack } from 'livekit-client'
 
-const isCalling = ref(false)
+const callingChannel = ref('')
+
 const {
   joinRoom,
   leaveRoom,
@@ -12,7 +13,9 @@ const {
   removeVideoTrack,
   addCameraTrack,
   setLocalTrackMute,
-  tracksMap
+  publishData,
+  tracksMap,
+  qallMitt
 } = useLiveKitSDK()
 const { myId } = useMeStore()
 const { addErrorToast } = useToastStore()
@@ -24,25 +27,33 @@ const setSpeakerMute = (track: LocalAudioTrack, muted: boolean) => {
 const setVideoMute = (track: LocalVideoTrack, muted: boolean) => {
   setLocalTrackMute(track, muted)
 }
+
 export const useQall = () => {
-  const toggleCalling = (channelName: string) => {
-    if (isCalling.value) {
+  const joinQall = (channelName: string) => {
+    if (callingChannel.value) {
       leaveRoom()
-    } else {
-      if (!myId.value) {
-        addErrorToast('接続に失敗しました')
-        return
-      }
-      joinRoom('test', myId.value)
     }
-    isCalling.value = !isCalling.value
+    if (!myId.value) {
+      addErrorToast('接続に失敗しました')
+      return
+    }
+    joinRoom(channelName, myId.value)
+
+    callingChannel.value = channelName
+  }
+  const leaveQall = () => {
+    leaveRoom()
+    callingChannel.value = ''
   }
   return {
-    isCalling,
-    toggleCalling,
+    callingChannel,
+    joinQall,
+    leaveQall,
     addScreenShareTrack,
     addCameraTrack,
     removeVideoTrack,
-    tracksMap
+    publishData,
+    tracksMap,
+    qallMitt
   }
 }
