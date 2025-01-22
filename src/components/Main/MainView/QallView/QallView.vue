@@ -169,8 +169,23 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
     <input id="screen" v-model="backgroundType" type="radio" value="screen" />
     <label for="screen">screen</label>
 
-    <input type="file" @change="handleFileChange" />
-    <button @click="handleAddCameraTrack">Add Camera Track</button>
+    <input
+      type="file"
+      @change="
+        e => {
+          const target = e.target as HTMLInputElement
+          backgroundImage = target?.files?.[0]
+        }
+      "
+    />
+    <button
+      @click="[
+        addCameraTrack(selectedVideoInput, backgroundType, backgroundImage),
+        console.log(selectedVideoInput)
+      ]"
+    >
+      Add Camera Track
+    </button>
 
     <div :class="$style.TrackContainer">
       <template v-for="(track, index) in tracksMap.values()" :key="index">
