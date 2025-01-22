@@ -1,15 +1,17 @@
 <template>
   <div :class="$style.container">
     <template v-if="!isMobile">
+      <!-- TODO:Qall -->
+      <!-- 元々はデフォルト値ではなくUseQallの関数で計算していた -->
       <header-tools-item
-        v-if="isQallFeatureEnabled"
+        v-if="true"
         icon-mdi
-        :icon-name="qallIconName"
+        :icon-name="'phone'"
         :class="$style.qallIcon"
-        :disabled="!canToggleQall"
-        :data-is-active="$boolAttr(isQallSessionOpened)"
-        :data-is-joined="$boolAttr(canEndQall)"
-        :tooltip="qallLabel"
+        :disabled="false"
+        :data-is-active="$boolAttr(true)"
+        :data-is-joined="$boolAttr(true)"
+        :tooltip="'Qallボタン'"
         @click="joinQall(props.channelId)"
       />
       <header-tools-item
@@ -55,9 +57,8 @@ import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { ChannelId } from '/@/types/entity-ids'
 import HeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
-import useQall from './composables/useQall'
 import useStarChannel from './composables/useStarChannel'
-import { useQall as useNewQall } from '/@/composables/qall/useQall'
+import { useQall } from '/@/composables/qall/useQall'
 
 const props = withDefaults(
   defineProps<{
@@ -79,17 +80,7 @@ const emit = defineEmits<{
 
 const { isMobile } = useResponsiveStore()
 
-const {
-  isQallFeatureEnabled,
-  isQallSessionOpened,
-  canEndQall,
-  canToggleQall,
-  qallIconName,
-  qallLabel,
-  toggleQall
-} = useQall(props)
-
-const { joinQall } = useNewQall()
+const { joinQall } = useQall()
 
 const { changeToNextSubscriptionLevel, currentChannelSubscription } =
   useChannelSubscriptionState(toRef(props, 'channelId'))
