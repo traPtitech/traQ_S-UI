@@ -6,9 +6,11 @@ import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButton from './CallControlButton.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
+import ScreenShareComponent from './ScreenShareComponent.vue'
 
 const {
   tracksMap,
+  screenShareTrackSidMap,
   leaveQall,
   addScreenShareTrack,
   addCameraTrack,
@@ -186,15 +188,34 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
     </button>
 
     <div :class="$style.TrackContainer">
-      <template v-for="(track, index) in tracksMap.values()" :key="index">
+      <template
+        v-for="([sid, track], index) in tracksMap.entries()"
+        :key="index"
+      >
         <VideoComponent
-          v-if="track.trackPublication?.kind === 'video'"
+          v-if="
+            track.trackPublication?.kind === 'video' &&
+            !screenShareTrackSidMap.has(sid)
+          "
           :track-info="track"
           :participant-identity="track.participantIdentity"
           :class="$style.video"
         />
+        <ScreenShareComponent
+          v-else-if="track.trackPublication?.kind === 'video'"
+          :track-info="track"
+          :audio-track-info="
+            tracksMap.get(screenShareTrackSidMap.get(sid) ?? '')
+          "
+          :participant-identity="track.participantIdentity"
+          :class="$style.video"
+        />
         <AudioComponent
-          v-else-if="track.trackPublication?.kind === 'audio' && track.isRemote"
+          v-else-if="
+            track.trackPublication?.kind === 'audio' &&
+            track.isRemote &&
+            !screenShareTrackSidMap.values().some(valueSid => valueSid === sid)
+          "
           :track-info="track"
         />
       </template>
