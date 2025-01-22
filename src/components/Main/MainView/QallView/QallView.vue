@@ -8,7 +8,6 @@ import CallControlButton from './CallControlButton.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
 import { LocalTrackPublication } from 'livekit-client'
-import VideoTrack from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 
 const {
   tracksMap,
@@ -196,7 +195,6 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
         <VideoComponent
           v-if="
             track.trackPublication?.kind === 'video' &&
-            !(track.trackPublication.track instanceof VideoTrack) &&
             !screenShareTrackSidMap.has(sid)
           "
           :track-info="track"

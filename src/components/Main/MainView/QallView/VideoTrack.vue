@@ -24,7 +24,9 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  trackInfo.trackPublication?.track?.detach()
+  if (videoElement.value) {
+    trackInfo.trackPublication?.track?.detach(videoElement.value)
+  }
 })
 </script>
 

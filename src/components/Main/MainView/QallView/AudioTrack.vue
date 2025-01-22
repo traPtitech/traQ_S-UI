@@ -21,7 +21,9 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  trackInfo.trackPublication?.track?.detach()
+  if (audioElement.value) {
+    trackInfo.trackPublication?.track?.detach(audioElement.value)
+  }
 })
 </script>
 
