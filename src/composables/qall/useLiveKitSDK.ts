@@ -41,6 +41,7 @@ export type TrackInfo = (
 type CameraProcessor = {
   processor: VirtualBackgroundProcessor
   track: MediaStreamVideoTrack
+  backgroundImageSrc?: MediaStream
 }
 
 const room = ref<Room>()
@@ -99,13 +100,12 @@ function handleActiveSpeakerChange(speakers: Participant[]) {
 }
 
 function handleDisconnect() {
-  console.log('disconnected from room')
+  //
 }
 
 const joinRoom = async (roomName: string, userName: string) => {
   try {
     const traQtoken = (await apis.getMyQRCode(true)).data
-    console.log(traQtoken)
     const res = await fetch(
       `https://easy-livekit-token-publisher.trap.show/token`,
       {
@@ -121,12 +121,11 @@ const joinRoom = async (roomName: string, userName: string) => {
 
     // pre-warm connection, this can be called as early as your page is loaded
     //room.prepareConnection("https://livekit-test.trap.show:39357", token);
-    room.value = new Room()
+    room.value = new Room({ dynacast: true, adaptiveStream: true })
     await room.value.prepareConnection(
       'wss://livekit.qall-dev.trapti.tech',
       token
     )
-    console.log(token)
 
     // set up event listeners
     room.value
@@ -139,7 +138,6 @@ const joinRoom = async (roomName: string, userName: string) => {
 
     // connect to room
     await room.value.connect('wss://livekit.qall-dev.trapti.tech', token)
-    console.log('connected to room', room.value.name)
 
     // publish local camera and mic tracks
     await room.value.localParticipant.setMicrophoneEnabled(
@@ -181,7 +179,8 @@ const Attributes = ref<{ [key: string]: string }>({})
 
 const addCameraTrack = async (
   videoInputDevice?: MediaDeviceInfo,
-  isBlur?: boolean
+  backgroundType?: 'original' | 'blur' | 'file' | 'screen',
+  backgroundFile?: File
 ) => {
   try {
     if (!room.value) {
@@ -197,32 +196,101 @@ const addCameraTrack = async (
       addErrorToast('映像が取得できませんでした')
       return
     }
+    let backgroundImageSrc: MediaStream | undefined
     const processor = new VirtualBackgroundProcessor(
       virtualBackgroundAssetsPath
     )
+    let options = {}
 
-    const options = {
-      blurRadius: 15 // 背景ぼかし設定
+    if (backgroundType === 'blur') {
+      options = {
+        blurRadius: 10
+      }
+    } else if (backgroundType === 'file' && backgroundFile) {
+      const blob = new Blob([backgroundFile], { type: backgroundFile.type })
+
+      if (backgroundFile.type.startsWith('image/')) {
+        //画像のとき
+        const imageBitmap = await createImageBitmap(blob)
+        options = {
+          backgroundImage: imageBitmap
+        }
+      } else if (backgroundFile.type.startsWith('video/')) {
+        //動画のとき
+        const videoElement = await new Promise<HTMLVideoElement>(resolve => {
+          const video = document.createElement('video')
+          video.addEventListener('loadedmetadata', () => {
+            video.play()
+            resolve(video)
+          })
+          video.src = URL.createObjectURL(blob)
+          video.muted = true
+          video.loop = true
+        })
+        const canvas = drawVideoToCanvas(videoElement)
+        options = {
+          backgroundImage: canvas
+        }
+      }
+    } else if (backgroundType === 'screen') {
+      backgroundImageSrc = await navigator.mediaDevices.getDisplayMedia({
+        video: true
+      })
+      const videoElement = await new Promise<HTMLVideoElement>(resolve => {
+        const video = document.createElement('video')
+        video.addEventListener('loadedmetadata', () => {
+          video.play()
+          resolve(video)
+        })
+        if (backgroundImageSrc) {
+          video.srcObject = backgroundImageSrc
+          video.autoplay = true
+          video.muted = true
+        }
+      })
+
+      const canvas = drawVideoToCanvas(videoElement)
+      options = {
+        backgroundImage: canvas
+      }
     }
     const processedTrack = await processor.startProcessing(track, options)
     const localTrack = new LocalVideoTrack(processedTrack)
-    await room.value?.localParticipant.publishTrack(localTrack).catch(e => {
-      addErrorToast('カメラの共有に失敗しました')
-      track.stop()
-      processor.stopProcessing()
-      return
-    })
+    await room.value?.localParticipant
+      .publishTrack(localTrack, { simulcast: true })
+      .catch(() => {
+        addErrorToast('カメラの共有に失敗しました')
+        track.stop()
+        processor.stopProcessing()
+        return
+      })
     if (localTrack.sid) {
-      console.log(localTrack.sid)
       cameraProcessorMap.value.set(localTrack.sid, {
         processor,
-        track
+        track,
+        backgroundImageSrc
       })
     }
-  } catch {
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e)
     addErrorToast('カメラの共有に失敗しました')
     return
   }
+}
+
+const drawVideoToCanvas = (video: HTMLVideoElement) => {
+  const canvas = new OffscreenCanvas(video.videoWidth, video.videoHeight)
+  const canvasCtx = canvas.getContext('2d', {
+    desynchronized: true
+  })
+  if (!canvasCtx) return
+  const updateCanvas = () => {
+    canvasCtx.drawImage(video, 0, 0)
+    requestAnimationFrame(updateCanvas)
+  }
+  updateCanvas()
+  return canvas
 }
 
 const addScreenShareTrack = async () => {
@@ -244,7 +312,9 @@ const addScreenShareTrack = async () => {
     await Promise.all(
       localTracks.map(async t => {
         if (t.kind === Track.Kind.Video) {
-          await room.value?.localParticipant.publishTrack(t)
+          await room.value?.localParticipant.publishTrack(t, {
+            simulcast: true
+          })
         } else {
           await room.value?.localParticipant.publishTrack(t, {
             audioPreset: AudioPresets.musicHighQualityStereo,
@@ -283,9 +353,11 @@ const removeVideoTrack = async (localpublication: LocalTrackPublication) => {
       localpublication.trackSid
     )
     if (cameraProcessor) {
-      console.log('stopProcessing')
       cameraProcessor.processor.stopProcessing()
       cameraProcessor.track.stop()
+      cameraProcessor.backgroundImageSrc
+        ?.getTracks()
+        .forEach(track => track.stop())
       cameraProcessorMap.value.delete(localpublication.trackSid)
     }
 
@@ -303,8 +375,6 @@ const removeVideoTrack = async (localpublication: LocalTrackPublication) => {
     }
 
     const audioTrack = tracksMap.value.get(audioSid)
-    console.log(audioTrack)
-    console.log(tracksMap.value)
     if (
       !audioTrack ||
       audioTrack.isRemote ||

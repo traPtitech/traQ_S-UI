@@ -4,7 +4,7 @@ import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 import CallControlButton from './CallControlButton.vue'
-import CallControlButoonSmall from './CallControlButoonSmall.vue'
+import CallControlButtonSmall from './CallControlButoonSmall.vue'
 
 const {
   tracksMap,
@@ -134,15 +134,46 @@ onMounted(async () => {
   videoInputs.value = devices.filter(d => d.kind === 'videoinput')
 })
 const selectedVideoInput = ref<MediaDeviceInfo>()
+
+const backgroundImage = ref<File>()
+
+const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 </script>
 
 <template>
   <div :class="$style.Block">
-    <div>
-      <div
-        v-for="track of tracksMap.values()"
-        :key="track.trackPublication?.trackSid"
+    <h1 :class="$style.Header">Qall View</h1>
+    {{ backgroundType }}
+    <button @click="addScreenShareTrack">Add Screen Share Track</button>
+    <select v-model="selectedVideoInput">
+      <option
+        v-for="videoInput in videoInputs"
+        :key="videoInput.deviceId"
+        :value="videoInput"
       >
+        {{ videoInput.label }}
+      </option>
+    </select>
+
+    <input
+      id="original"
+      v-model="backgroundType"
+      type="radio"
+      value="original"
+    />
+    <label for="original">original</label>
+    <input id="blur" v-model="backgroundType" type="radio" value="blur" />
+    <label for="blur">blur</label>
+    <input id="file" v-model="backgroundType" type="radio" value="file" />
+    <label for="file">file</label>
+    <input id="screen" v-model="backgroundType" type="radio" value="screen" />
+    <label for="screen">screen</label>
+
+    <input type="file" @change="handleFileChange" />
+    <button @click="handleAddCameraTrack">Add Camera Track</button>
+
+    <div :class="$style.TrackContainer">
+      <template v-for="(track, index) in tracksMap.values()" :key="index">
         <VideoComponent
           v-if="track.trackPublication?.kind === 'video'"
           :track-info="track"
@@ -153,14 +184,14 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
           v-else-if="track.trackPublication?.kind === 'audio' && track.isRemote"
           :track-info="track"
         />
-      </div>
+      </template>
       <div :class="$style.controlBar">
         <div :class="$style.smallButtonGroup">
-          <CallControlButoonSmall
+          <CallControlButtonSmall
             icon="/@/assets/icons/sound_detection_loud_sound.svg?url"
             :on-click="handleSound"
           />
-          <CallControlButoonSmall
+          <CallControlButtonSmall
             icon="/@/assets/icons/add_reaction.svg?url"
             :on-click="handleReaction"
           />
@@ -189,7 +220,7 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
         />
         <div :class="$style.verticalBar"></div>
         <div :class="$style.smallButtonGroup">
-          <CallControlButoonSmall
+          <CallControlButtonSmall
             icon="/@/assets/icons/group_qall.svg?url"
             :on-click="handleGroup"
           />
