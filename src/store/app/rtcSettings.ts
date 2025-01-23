@@ -1,11 +1,7 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { toRefs } from 'vue'
-import { getVuexData } from '/@/store/utils/migrateFromVuex'
-import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import useIndexedDbValue, { key } from '/@/composables/utils/useIndexedDbValue'
-import { promisifyRequest } from 'idb-keyval'
-import type { NoiseSuppressionType } from '/@/lib/webrtc/LocalStreamManager'
+import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 
 type State = {
   isTtsEnabled: boolean

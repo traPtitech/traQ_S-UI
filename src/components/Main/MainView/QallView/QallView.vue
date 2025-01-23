@@ -2,12 +2,9 @@
 import { useQall } from '/@/composables/qall/useQall'
 import UserList from '/@/components/Main/MainView/QallView/UserList.vue'
 import { onMounted, ref } from 'vue'
-import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.vue'
-import AudioComponent from '/@/components/Main/MainView/QallView/AudioComponent.vue'
 import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButton from './CallControlButton.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
-import ScreenShareComponent from './ScreenShareComponent.vue'
 import { LocalTrackPublication } from 'livekit-client'
 import QallMessageView from './QallMessageView.vue'
 
