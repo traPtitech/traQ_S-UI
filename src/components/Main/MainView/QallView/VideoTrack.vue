@@ -3,9 +3,8 @@ import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 
-const { trackInfo, participantIdentity } = defineProps<{
+const { trackInfo } = defineProps<{
   trackInfo: TrackInfo
-  participantIdentity: string
 }>()
 
 const { removeVideoTrack } = useQall()

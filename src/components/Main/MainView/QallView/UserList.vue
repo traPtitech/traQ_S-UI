@@ -24,7 +24,6 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
         <VideoComponent
           v-if="track.trackPublication?.kind === 'video'"
           :track-info="track"
-          :participant-identity="track.participantIdentity"
           :class="$style.UserCard"
         />
         <AudioComponent
