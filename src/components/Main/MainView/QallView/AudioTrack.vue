@@ -17,20 +17,35 @@ const { trackInfo } = defineProps<{
 const audioElement = useTemplateRef<HTMLMediaElement>('audioElement')
 const volume = ref(1)
 const { findUserByName } = useUsersStore()
+const audioContext = new AudioContext()
+const gainNode = audioContext.createGain()
+gainNode.gain.value = 1
+
 watchEffect(() => {
   if (audioElement.value) {
-    audioElement.value.volume = volume.value
+    gainNode.gain.value = volume.value
   }
 })
 
 onMounted(() => {
   if (audioElement.value) {
+    // chromeだと一回要素に入れないと上手く再生してくれない
     trackInfo.trackPublication?.track?.attach(audioElement.value)
+    if (trackInfo.trackPublication?.track?.mediaStream) {
+      audioContext
+        .createMediaStreamSource(trackInfo.trackPublication?.track?.mediaStream)
+        .connect(gainNode)
+        .connect(audioContext.destination)
+      audioElement.value.muted = true
+    }
   }
 })
 
 onUnmounted(() => {
-  trackInfo.trackPublication?.track?.detach()
+  if (audioElement.value) {
+    trackInfo.trackPublication?.track?.detach(audioElement.value)
+    audioContext.close()
+  }
 })
 const user = computed(() => findUserByName(trackInfo.participantIdentity))
 const userIconFileId = computed(() => user.value?.iconFileId ?? '')
@@ -44,6 +59,9 @@ const iconStyle = reactive({
 </script>
 
 <template>
+  <div>{{ trackInfo.participantIdentity }}</div>
+  <audio :id="trackInfo.trackPublication?.trackSid" ref="audioElement"></audio>
+  <input v-model="volume" type="range" min="0" max="3" step="0.01" />
   <div :class="$style.UserCard">
     <audio
       :id="trackInfo.trackPublication?.trackSid"

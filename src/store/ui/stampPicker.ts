@@ -88,7 +88,7 @@ export const useStampPicker = convertToRefsStore(useStampPickerPinia)
  */
 export const useStampPickerInvoker = (
   newSelectHandler: StampSelectHandler,
-  element: Ref<HTMLElement | undefined>,
+  element: Ref<HTMLElement | undefined | null>,
   argIsEffectEnabled: boolean,
   newAlignment: AlignmentPosition = 'top-right'
 ) => {
