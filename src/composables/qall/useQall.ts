@@ -15,6 +15,7 @@ const {
   setLocalTrackMute,
   publishData,
   tracksMap,
+  screenShareTrackSidMap,
   qallMitt
 } = useLiveKitSDK()
 const { myId } = useMeStore()
@@ -54,6 +55,7 @@ export const useQall = () => {
     removeVideoTrack,
     publishData,
     tracksMap,
+    screenShareTrackSidMap,
     qallMitt
   }
 }

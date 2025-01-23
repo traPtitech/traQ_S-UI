@@ -125,7 +125,7 @@ onMounted(() => {
 .danmakuContainer {
   pointer-events: none;
   width: 100%;
-  height: 100%; /* 適切な高さを設定 */
+  height: 100%;
   position: absolute;
   bottom: 0;
   left: 0;

@@ -52,6 +52,7 @@ const room = ref<Room>()
 const speakerIdentity = ref<string[]>([])
 const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
 const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
+const screenShareTrackSidMap = ref<Map<string, string>>(new Map())
 
 function handleTrackSubscribed(
   track: RemoteTrack,
@@ -75,6 +76,7 @@ function handleTrackUnsubscribed(
 ) {
   // remove tracks from all attached elements
   tracksMap.value.delete(publication.trackSid)
+  screenShareTrackSidMap.value.delete(publication.trackSid)
 }
 
 function handleLocalTrackUnpublished(
@@ -83,6 +85,7 @@ function handleLocalTrackUnpublished(
 ) {
   // when local tracks are ended, update UI to remove them from rendering
   tracksMap.value.delete(publication.trackSid)
+  screenShareTrackSidMap.value.delete(publication.trackSid)
 }
 
 function handleLocalTrackPublished(
@@ -115,11 +118,20 @@ function handleDataReceived(payload: Uint8Array<ArrayBufferLike>) {
   }
 }
 
+function handleParticipantAttributesChanged(
+  changed: Record<string, string>,
+  participant: Participant
+) {
+  Object.keys(changed).forEach(key =>
+    screenShareTrackSidMap.value.set(key, changed[key] ?? '')
+  )
+}
+
 const joinRoom = async (roomName: string, userName: string) => {
   try {
     const traQtoken = (await apis.getMyQRCode(true)).data
     const res = await fetch(
-      `https://easy-livekit-token-publisher.trap.show/token`,
+      `https://qall-microservice-for-livekit.trap.show/api/token?room=${roomName}`,
       {
         method: 'GET',
         headers: {
@@ -148,6 +160,10 @@ const joinRoom = async (roomName: string, userName: string) => {
       .on(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished)
       .on(RoomEvent.LocalTrackPublished, handleLocalTrackPublished)
       .on(RoomEvent.DataReceived, handleDataReceived)
+      .on(
+        RoomEvent.ParticipantAttributesChanged,
+        handleParticipantAttributesChanged
+      )
 
     // connect to room
     await room.value.connect('wss://livekit.qall-dev.trapti.tech', token)
@@ -169,6 +185,11 @@ const joinRoom = async (roomName: string, userName: string) => {
       }
     )
     await room.value.localParticipant.setAttributes({})
+    room.value.remoteParticipants.forEach(participant => {
+      Object.keys(participant.attributes).forEach(key =>
+        screenShareTrackSidMap.value.set(key, participant.attributes[key] ?? '')
+      )
+    })
   } catch {
     addErrorToast('Qallの接続に失敗しました')
     await leaveRoom()
@@ -184,6 +205,7 @@ async function leaveRoom() {
   // Empty all variables
   room.value = undefined
   tracksMap.value.clear()
+  screenShareTrackSidMap.value.clear()
 
   window.removeEventListener('beforeunload', leaveRoom)
 }
@@ -344,10 +366,11 @@ const addScreenShareTrack = async () => {
         ...Attributes.value,
         [videoSid]: audioSid
       }
-      await room.value.localParticipant.setAttributes({
-        ...room.value.localParticipant.attributes,
-        [videoSid]: audioSid
-      })
+      screenShareTrackSidMap.value.set(videoSid, audioSid)
+      // await room.value.localParticipant.setAttributes({
+      //   ...room.value.localParticipant.attributes,
+      //   [videoSid]: audioSid
+      // })
     }
   } catch {
     // TODO:シェアをキャンセルした時も失敗しましたメッセージがでるのはちょっと違和感があるかも
@@ -426,7 +449,6 @@ const publishData = async (data: { type: 'stamp'; message: string }) => {
   // publishData takes in a Uint8Array, so we need to convert it
   const encoded = encoder.encode(strData)
   await room.value.localParticipant.publishData(encoded, { reliable: true })
-  console.log(data)
 }
 const decoder = new TextDecoder()
 
@@ -441,6 +463,7 @@ export const useLiveKitSDK = () => {
     setTrackEnabled,
     setLocalTrackMute,
     tracksMap,
+    screenShareTrackSidMap,
     qallMitt
   }
 }

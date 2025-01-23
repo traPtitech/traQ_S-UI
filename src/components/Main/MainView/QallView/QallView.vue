@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
+import UserList from '/@/components/Main/MainView/QallView/UserList.vue'
+import { onMounted, ref } from 'vue'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButton from './CallControlButton.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
+import ScreenShareComponent from './ScreenShareComponent.vue'
+import { LocalTrackPublication } from 'livekit-client'
+import ChannelViewContentMain from '../ChannelView/ChannelViewContent/ChannelViewContentMain.vue'
+import QallMessageView from './QallMessageView.vue'
 
 const {
   tracksMap,
+  screenShareTrackSidMap,
+  callingChannel,
   leaveQall,
   addScreenShareTrack,
   addCameraTrack,
@@ -69,6 +76,7 @@ const toggleVideo = async () => {
       for (const trackInfo of tracksMap.value.values()) {
         if (
           !trackInfo.isRemote &&
+          trackInfo.trackPublication instanceof LocalTrackPublication &&
           trackInfo.trackPublication?.kind === 'video' &&
           !trackInfo.trackPublication.trackName?.includes('screen')
         ) {
@@ -95,6 +103,7 @@ const toggleScreen = async () => {
       for (const trackInfo of tracksMap.value.values()) {
         if (
           !trackInfo.isRemote &&
+          trackInfo.trackPublication instanceof LocalTrackPublication &&
           trackInfo.trackPublication?.kind === 'video' &&
           trackInfo.trackPublication.trackName?.includes('screen')
         ) {
@@ -140,6 +149,11 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 <template>
   <div :class="$style.Block">
     <DanmakuContainer />
+    <QallMessageView
+      :channel-id="callingChannel"
+      :typing-users="[]"
+      :class="$style.channelView"
+    />
     <h1 :class="$style.Header">Qall View</h1>
     {{ backgroundType }}
     <button @click="addScreenShareTrack">Add Screen Share Track</button>
@@ -184,17 +198,35 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
     >
       Add Camera Track
     </button>
+    <UserList />
 
     <div :class="$style.TrackContainer">
-      <template v-for="(track, index) in tracksMap.values()" :key="index">
+      <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
         <VideoComponent
-          v-if="track.trackPublication?.kind === 'video'"
+          v-if="
+            track.trackPublication?.kind === 'video' &&
+            !screenShareTrackSidMap.has(sid)
+          "
           :track-info="track"
+          :class="$style.video"
+        />
+        <ScreenShareComponent
+          v-else-if="track.trackPublication?.kind === 'video'"
+          :track-info="track"
+          :audio-track-info="
+            tracksMap.get(screenShareTrackSidMap.get(sid) ?? '')
+          "
           :participant-identity="track.participantIdentity"
           :class="$style.video"
         />
         <AudioComponent
-          v-else-if="track.trackPublication?.kind === 'audio' && track.isRemote"
+          v-else-if="
+            track.trackPublication?.kind === 'audio' &&
+            track.isRemote &&
+            !screenShareTrackSidMap
+              .values()
+              ?.some?.(valueSid => valueSid === sid)
+          "
           :track-info="track"
         />
       </template>
@@ -246,6 +278,12 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 <style lang="scss" module>
 .TrackContainer {
   height: fit-content;
+}
+.channelView {
+  position: absolute;
+  width: 30%;
+  right: 0;
+  bottom: 0;
 }
 .video {
   width: 50%;
