@@ -32,9 +32,9 @@
 </template>
 
 <script lang="ts" setup>
+// TODO: Qall
 import { computed } from 'vue'
 import type { UserId } from '/@/types/entity-ids'
-import { useAppRtcStore } from '/@/store/app/rtc'
 import { useUsersStore } from '/@/store/entities/users'
 import ASlider from '/@/components/UI/ASlider.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
@@ -65,22 +65,14 @@ const emit = defineEmits<{
 
 const maxVolumeValue = 200
 
-const { talkingUsersState, streamVolumeMap, setUserVolume } = useAppRtcStore()
 const { usersMap } = useUsersStore()
-const volume = computed({
-  get() {
-    return Math.round(
-      (streamVolumeMap.value.get(props.userId) ?? 1) * maxVolumeValue
-    )
-  },
-  set(value: number) {
-    setUserVolume(props.userId, value / maxVolumeValue)
-  }
-})
+// TODO: Qall
+const volume = 0
+
 const userName = computed(
   () => usersMap.value.get(props.userId)?.displayName ?? ''
 )
-const talkingLevel = computed(() => talkingUsersState.value.get(props.userId))
+const talkingLevel = 0
 </script>
 
 <style lang="scss" module>

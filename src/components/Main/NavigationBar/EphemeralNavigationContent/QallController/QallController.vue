@@ -5,7 +5,7 @@
       :status="status"
       :channel-id="currentChannel"
       :is-mic-muted="isMicMuted"
-      @end-qall-click="endQall"
+      @end-qall-click="leaveQall"
       @mic-click="onMicClick"
     />
   </div>
@@ -14,15 +14,20 @@
 <script lang="ts" setup>
 import QallControlPanel from './QallControlPanel.vue'
 import QallDetailsPanel from './QallDetailsPanel.vue'
-import { computed } from 'vue'
-import { useAppRtcStore } from '/@/store/app/rtc'
-import { useDomainRtcStore } from '/@/store/domain/rtc'
+import { computed, ref } from 'vue'
+import { useQall } from '/@/composables/qall/useQall'
 
-const { isMicMuted, endQall, mute, unmute } = useAppRtcStore()
-const { qallSession, currentRTCState } = useDomainRtcStore()
-const currentChannel = computed(() =>
-  qallSession.value ? currentRTCState.value?.channelId : undefined
-)
+const { leaveQall } = useQall()
+
+// TODO: Qall
+const currentChannel = ref(undefined)
+const isMicMuted = ref(false)
+const unmute = () => {
+  isMicMuted.value = false
+}
+const mute = () => {
+  isMicMuted.value = true
+}
 const onMicClick = () => {
   if (isMicMuted.value) {
     unmute()

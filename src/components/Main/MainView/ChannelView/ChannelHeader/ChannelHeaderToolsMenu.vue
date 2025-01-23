@@ -1,14 +1,16 @@
 <template>
   <primary-view-header-popup-frame>
+    <!-- TODO:Qall -->
+    <!-- 元々はデフォルト値ではなくUseQallの関数で計算していた -->
     <header-tools-menu-item
-      v-if="isMobile && isQallFeatureEnabled"
-      :icon-name="qallIconName"
+      v-if="isMobile"
+      :icon-name="'phone'"
       icon-mdi
       :class="$style.qallIcon"
-      :label="qallLabel"
-      :disabled="!canToggleQall"
-      :data-is-active="$boolAttr(isQallSessionOpened)"
-      @click="toggleQall"
+      :label="'Qallを開始'"
+      :disabled="false"
+      :data-is-active="$boolAttr(true)"
+      @click="joinQall(props.channelId)"
       @click-item="emit('clickItem')"
     />
     <header-tools-menu-item
@@ -58,7 +60,7 @@ import { UserPermission } from '@traptitech/traq'
 import { useMeStore } from '/@/store/domain/me'
 import PrimaryViewHeaderPopupFrame from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderPopupMenuItem.vue'
-import useQall from './composables/useQall'
+import { useQall } from '/@/composables/qall/useQall'
 import type { ChannelId } from '/@/types/entity-ids'
 import useChannelCreateModal from './composables/useChannelCreateModal'
 import useNotificationModal from './composables/useNotificationModal'
@@ -84,14 +86,7 @@ const props = withDefaults(
 
 const { isMobile } = useResponsiveStore()
 
-const {
-  isQallFeatureEnabled,
-  isQallSessionOpened,
-  canToggleQall,
-  qallIconName,
-  qallLabel,
-  toggleQall
-} = useQall(props)
+const { joinQall } = useQall()
 
 const { isChildChannelCreatable, openChannelCreateModal } =
   useChannelCreateModal(props)
