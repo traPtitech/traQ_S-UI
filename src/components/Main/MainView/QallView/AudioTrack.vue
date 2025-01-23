@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
+import {
+  onMounted,
+  onUnmounted,
+  ref,
+  reactive,
+  useTemplateRef,
+  watchEffect,
+  computed
+} from 'vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useUsersStore } from '/@/store/entities/users'
-
+import { buildUserIconPath } from '/@/lib/apis'
 const { trackInfo } = defineProps<{
   trackInfo: TrackInfo
 }>()
@@ -25,7 +32,15 @@ onMounted(() => {
 onUnmounted(() => {
   trackInfo.trackPublication?.track?.detach()
 })
-const user = findUserByName(trackInfo.participantIdentity)
+const user = computed(() => findUserByName(trackInfo.participantIdentity))
+const userIconFileId = computed(() => user.value?.iconFileId ?? '')
+const iconStyle = reactive({
+  container: computed(() => ({
+    backgroundImage: userIconFileId.value
+      ? `url(${buildUserIconPath(userIconFileId.value)})`
+      : undefined
+  }))
+})
 </script>
 
 <template>
@@ -35,18 +50,8 @@ const user = findUserByName(trackInfo.participantIdentity)
       ref="audioElement"
     ></audio>
 
-    <user-icon
-      v-if="user !== null"
-      :class="$style.OuterIcon"
-      :size="250"
-      :user-id="user.id"
-    />
-    <user-icon
-      v-if="user !== null"
-      :class="$style.InnerIcon"
-      :size="96"
-      :user-id="user.id"
-    />
+    <div :style="iconStyle.container" :class="$style.OuterIcon" />
+    <div :style="iconStyle.container" :class="$style.InnerIcon" />
 
     <div :class="$style.NameLabel">{{ trackInfo.participantIdentity }}</div>
   </div>
@@ -56,12 +61,15 @@ const user = findUserByName(trackInfo.participantIdentity)
 .UserCard {
   height: 108px;
   width: 192px;
-  // border: 1px solid black;
   position: relative;
   overflow: hidden;
   border-radius: 12px;
 }
 .InnerIcon {
+  height: 96px;
+  width: 96px;
+  background-size: cover;
+  border-radius: 50%;
   margin: auto;
   position: absolute;
   top: 0;
@@ -70,6 +78,8 @@ const user = findUserByName(trackInfo.participantIdentity)
   left: 0;
 }
 .OuterIcon {
+  height: 250px;
+  width: 250px;
   position: absolute;
   top: 50%;
   left: 50%;
