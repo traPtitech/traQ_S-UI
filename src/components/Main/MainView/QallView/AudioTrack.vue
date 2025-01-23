@@ -19,6 +19,7 @@ watchEffect(() => {
 
 onMounted(() => {
   if (audioElement.value) {
+    // chromeだと一回要素に入れないと上手く再生してくれない
     trackInfo.trackPublication?.track?.attach(audioElement.value)
     if (trackInfo.trackPublication?.track?.mediaStream) {
       audioContext
@@ -42,17 +43,4 @@ onUnmounted(() => {
   <div>{{ trackInfo.participantIdentity }}</div>
   <audio :id="trackInfo.trackPublication?.trackSid" ref="audioElement"></audio>
   <input v-model="volume" type="range" min="0" max="3" step="0.01" />
-  <button
-    @click="
-      async () => {
-        if (audioElement) {
-          audioElement.play()
-        }
-        await audioContext.resume()
-        console.log('resume')
-      }
-    "
-  >
-    gain
-  </button>
 </template>
