@@ -8,10 +8,13 @@ import CallControlButton from './CallControlButton.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
 import { LocalTrackPublication } from 'livekit-client'
+import ChannelViewContentMain from '../ChannelView/ChannelViewContent/ChannelViewContentMain.vue'
+import QallMessageView from './QallMessageView.vue'
 
 const {
   tracksMap,
   screenShareTrackSidMap,
+  callingChannel,
   leaveQall,
   addScreenShareTrack,
   addCameraTrack,
@@ -145,6 +148,11 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 <template>
   <div :class="$style.Block">
     <DanmakuContainer />
+    <QallMessageView
+      :channel-id="callingChannel"
+      :typing-users="[]"
+      :class="$style.channelView"
+    />
     <h1 :class="$style.Header">Qall View</h1>
     {{ backgroundType }}
     <button @click="addScreenShareTrack">Add Screen Share Track</button>
@@ -268,6 +276,12 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 <style lang="scss" module>
 .TrackContainer {
   height: fit-content;
+}
+.channelView {
+  position: absolute;
+  width: 30%;
+  right: 0;
+  bottom: 0;
 }
 .video {
   width: 50%;
