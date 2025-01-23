@@ -1,5 +1,4 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { useAppRtcStore } from '/@/store/app/rtc'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
@@ -8,7 +7,6 @@ import { parse } from '/@/lib/markdown/markdown'
 import { format } from '/@/lib/tts/format'
 import { embeddingOrigin } from '/@/lib/apis'
 import { watchEffect } from 'vue'
-import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '../entities/users'
 
@@ -24,8 +22,6 @@ const MAX_SPEED_RATIO = 2
 const MAX_CHAR_COUNT = 140
 
 const useTtsPinia = defineStore('ui/tts', () => {
-  const appRtcStore = useAppRtcStore()
-  const domainRtcStore = useDomainRtcStore()
   const rtcSettings = useRtcSettings()
   const meStore = useMeStore()
   const usersStore = useUsersStore()
@@ -76,12 +72,9 @@ const useTtsPinia = defineStore('ui/tts', () => {
   }
 
   const isNeeded = (channelId: ChannelId): boolean => {
+    // TODO: Qall
     if (!rtcSettings.isTtsEnabled.value) return false
-    if (!domainRtcStore.qallSession.value) return false
-    if (domainRtcStore.currentRTCState.value?.channelId !== channelId) {
-      return false
-    }
-    return appRtcStore.isCurrentDevice.value
+    return true
   }
 
   const createUtter = (text: string): SpeechSynthesisUtterance => {
@@ -129,11 +122,6 @@ const useTtsPinia = defineStore('ui/tts', () => {
     speechSynthesis.cancel()
   }
 
-  watchEffect(() => {
-    if (!appRtcStore.isCurrentDevice.value) {
-      stop()
-    }
-  })
   watchEffect(() => {
     if (!rtcSettings.isTtsEnabled) {
       stop()

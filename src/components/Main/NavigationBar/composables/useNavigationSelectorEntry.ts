@@ -7,7 +7,6 @@ import type { ThemeClaim } from '/@/lib/styles'
 import { isDefined } from '/@/lib/basic/array'
 import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 import { useAudioController } from '/@/store/ui/audioController'
-import { useAppRtcStore } from '/@/store/app/rtc'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 
@@ -79,7 +78,6 @@ export const ephemeralItems: Record<
 }
 
 const useNavigationSelectorEntry = () => {
-  const { isCurrentDevice: hasActiveQallSession } = useAppRtcStore()
   const { unreadChannelsMap } = useSubscriptionStore()
   const { channelsMap, dmChannelsMap } = useChannelsStore()
   const { hasInputChannel } = useMessageInputStateStore()
@@ -96,8 +94,11 @@ const useNavigationSelectorEntry = () => {
   })
   const entries = computed(() => createItems(notificationState))
 
+  const hasActiveQallSession = computed(() => false) // TODO: Qall
   const ephemeralEntries = computed(() =>
     [
+      // TODO: Qall
+      // 適切な変数を置く
       hasActiveQallSession.value ? ephemeralItems.qallController : undefined,
       hasInputChannel.value ? ephemeralItems.draftList : undefined,
       fileId.value ? ephemeralItems.audioController : undefined
