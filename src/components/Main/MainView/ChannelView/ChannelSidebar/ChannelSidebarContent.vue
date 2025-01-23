@@ -5,6 +5,8 @@
       :viewer-ids="viewerIds"
       :class="$style.sidebarItem"
     />
+    <!-- TODO: Qall -->
+    <!-- デザインが確定したら消すか消さないか決める -->
     <channel-sidebar-qall
       v-if="qallUserIds.length > 0"
       :qall-user-ids="qallUserIds"
@@ -49,7 +51,6 @@ import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
 import ChannelSidebarQall from './ChannelSidebarQall.vue'
 import ChannelSidebarBots from './ChannelSidebarBots.vue'
 import type { UserId, ChannelId } from '/@/types/entity-ids'
-import { useQallSession } from './composables/useChannelRTCSession'
 import { useModelSyncer } from '/@/composables/useModelSyncer'
 
 const props = withDefaults(
@@ -70,7 +71,7 @@ const emit = defineEmits<{
   (e: 'update:isViewersDetailOpen', value: boolean): void
 }>()
 
-const { sessionUserIds: qallUserIds } = useQallSession(props)
+const qallUserIds: UserId[] = []
 
 const isViewersDetailOpen = useModelSyncer(props, emit, 'isViewersDetailOpen')
 </script>
