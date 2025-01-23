@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
+import { onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import AudioTrack from './AudioTrack.vue'
@@ -40,7 +40,7 @@ onUnmounted(() => {
       :track-info="audioTrackInfo"
       :volume="volume"
     />
-    <input v-model="volume" type="range" min="0" max="1" step="0.01" />
+    <input v-model="volume" type="range" min="0" max="3" step="0.01" />
     <button
       v-if="!trackInfo.isRemote && trackInfo.trackPublication"
       @click="removeVideoTrack(trackInfo.trackPublication)"

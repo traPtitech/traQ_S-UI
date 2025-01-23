@@ -29,7 +29,7 @@ const iconStyle = computed(() => ({
 
     <div :class="$style.NameLabel">{{ trackInfo.participantIdentity }}</div>
   </div>
-  <input v-model="volume" type="range" min="0" max="1" step="0.01" />
+  <input v-model="volume" type="range" min="0" max="3" step="0.01" />
 </template>
 <style lang="scss" module>
 .UserCard {
