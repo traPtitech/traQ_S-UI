@@ -131,7 +131,7 @@ const joinRoom = async (roomName: string, userName: string) => {
   try {
     const traQtoken = (await apis.getMyQRCode(true)).data
     const res = await fetch(
-      `https://easy-livekit-token-publisher.trap.show/token`,
+      `https://qall-microservice-for-livekit.trap.show/api/token?room=test`,
       {
         method: 'GET',
         headers: {
