@@ -5,12 +5,7 @@ import AudioComponent from '/@/components/Main/MainView/QallView/AudioComponent.
 import { onMounted, ref } from 'vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
 
-const {
-  tracksMap,
-  screenShareTrackSidMap,
-  addScreenShareTrack,
-  addCameraTrack
-} = useQall()
+const { tracksMap, screenShareTrackSidMap } = useQall()
 
 const videoInputs = ref<MediaDeviceInfo[]>([])
 onMounted(async () => {

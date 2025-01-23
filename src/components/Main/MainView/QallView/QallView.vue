@@ -154,49 +154,50 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
       :class="$style.channelView"
     />
     <h1 :class="$style.Header">Qall View</h1>
-    {{ backgroundType }}
-    <button @click="addScreenShareTrack">Add Screen Share Track</button>
-    <select v-model="selectedVideoInput">
-      <option
-        v-for="videoInput in videoInputs"
-        :key="videoInput.deviceId"
-        :value="videoInput"
+    <div>
+      <button @click="addScreenShareTrack">Add Screen Share Track</button>
+      <select v-model="selectedVideoInput">
+        <option
+          v-for="videoInput in videoInputs"
+          :key="videoInput.deviceId"
+          :value="videoInput"
+        >
+          {{ videoInput.label }}
+        </option>
+      </select>
+
+      <input
+        id="original"
+        v-model="backgroundType"
+        type="radio"
+        value="original"
+      />
+      <label for="original">original</label>
+      <input id="blur" v-model="backgroundType" type="radio" value="blur" />
+      <label for="blur">blur</label>
+      <input id="file" v-model="backgroundType" type="radio" value="file" />
+      <label for="file">file</label>
+      <input id="screen" v-model="backgroundType" type="radio" value="screen" />
+      <label for="screen">screen</label>
+
+      <input
+        type="file"
+        @change="
+          e => {
+            const target = e.target as HTMLInputElement
+            backgroundImage = target?.files?.[0]
+          }
+        "
+      />
+      <button
+        @click="[
+          addCameraTrack(selectedVideoInput, backgroundType, backgroundImage),
+          console.log(selectedVideoInput)
+        ]"
       >
-        {{ videoInput.label }}
-      </option>
-    </select>
-
-    <input
-      id="original"
-      v-model="backgroundType"
-      type="radio"
-      value="original"
-    />
-    <label for="original">original</label>
-    <input id="blur" v-model="backgroundType" type="radio" value="blur" />
-    <label for="blur">blur</label>
-    <input id="file" v-model="backgroundType" type="radio" value="file" />
-    <label for="file">file</label>
-    <input id="screen" v-model="backgroundType" type="radio" value="screen" />
-    <label for="screen">screen</label>
-
-    <input
-      type="file"
-      @change="
-        e => {
-          const target = e.target as HTMLInputElement
-          backgroundImage = target?.files?.[0]
-        }
-      "
-    />
-    <button
-      @click="[
-        addCameraTrack(selectedVideoInput, backgroundType, backgroundImage),
-        console.log(selectedVideoInput)
-      ]"
-    >
-      Add Camera Track
-    </button>
+        Add Camera Track
+      </button>
+    </div>
     <UserList />
 
     <div :class="$style.TrackContainer">
@@ -262,6 +263,7 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 .Block {
   color: green;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;

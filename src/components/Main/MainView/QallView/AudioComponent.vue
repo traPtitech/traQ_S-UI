@@ -15,15 +15,17 @@ const iconImage = computed(() => buildUserIconPath(userIconFileId.value))
 </script>
 
 <template>
-  <div :class="$style.UserCard">
-    <AudioTrack :track-info="trackInfo" :volume="volume" />
+  <div>
+    <div :class="$style.UserCard">
+      <AudioTrack :track-info="trackInfo" :volume="volume" />
 
-    <div :class="$style.OuterIcon"><img :src="iconImage" /></div>
-    <div :class="$style.InnerIcon"><img :src="iconImage" /></div>
+      <div :class="$style.OuterIcon"><img :src="iconImage" /></div>
+      <div :class="$style.InnerIcon"><img :src="iconImage" /></div>
 
-    <div :class="$style.NameLabel">{{ trackInfo.participantIdentity }}</div>
+      <div :class="$style.NameLabel">{{ trackInfo.participantIdentity }}</div>
+    </div>
+    <input v-model="volume" type="range" min="0" max="3" step="0.01" />
   </div>
-  <input v-model="volume" type="range" min="0" max="3" step="0.01" />
 </template>
 <style lang="scss" module>
 .UserCard {

@@ -12,11 +12,6 @@ const { removeVideoTrack } = useQall()
 
 <template>
   <div :id="'camera-' + trackInfo.participantIdentity">
-    <div>
-      <p>{{ trackInfo.participantIdentity }}</p>
-    </div>
-  </div>
-  <div :id="'camera-' + trackInfo.participantIdentity">
     <div :class="$style.UserCard">
       <VideoTrack :track-info="trackInfo" :class="$style.video" />
       <div :class="$style.NameLabel">{{ trackInfo.participantIdentity }}</div>
