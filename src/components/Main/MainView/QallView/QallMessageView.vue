@@ -1,12 +1,15 @@
 <template>
-  <div :class="$style.container">
+  <div
+    :class="$style.container"
+    :data-is-not-messages-show="$boolAttr(!isMessageShow)"
+  >
     <scroll-loading-bar
       :class="$style.loadingBar"
       :show="isLoading && isMessageShow"
     />
     <transition name="fade-bottom" mode="out-in">
       <messages-scroller
-        v-show="isMessageShow"
+        v-if="isMessageShow"
         ref="scrollerEle"
         :message-ids="messageIds"
         :is-reached-end="isReachedEnd"
@@ -31,26 +34,28 @@
         </template>
       </messages-scroller>
     </transition>
-    <FormButton
-      label="メッセージを表示"
-      @click="
-        () => {
-          if (isMessageShow) {
-            isMessageShow = false
-            toNewMessage('smooth')
-          } else {
-            isMessageShow = true
-            nextTick(() => toNewMessage())
+    <div :class="$style.uiElement">
+      <FormButton
+        label="メッセージを表示"
+        @click="
+          () => {
+            if (isMessageShow) {
+              isMessageShow = false
+              toNewMessage('smooth')
+            } else {
+              isMessageShow = true
+              nextTick(() => toNewMessage())
+            }
           }
-        }
-      "
-    />
-    <message-input
-      :channel-id="channelId"
-      :typing-users="typingUsers"
-      :show-to-new-message-button="showToNewMessageButton"
-      @click-to-new-message-button="toNewMessage"
-    />
+        "
+      />
+      <message-input
+        :channel-id="channelId"
+        :typing-users="typingUsers"
+        :show-to-new-message-button="showToNewMessageButton"
+        @click-to-new-message-button="toNewMessage"
+      />
+    </div>
   </div>
 </template>
 
@@ -122,8 +127,11 @@ const handleScroll = () => {
   flex-direction: column;
   justify-content: end;
   position: relative;
-  height: 100%;
   width: 100%;
+  height: 100%;
+  &[data-is-not-messages-show] {
+    pointer-events: none;
+  }
 }
 
 .loadingBar {
@@ -145,5 +153,8 @@ const handleScroll = () => {
 .element {
   margin: 4px 0;
   contain: content;
+}
+.uiElement {
+  pointer-events: all;
 }
 </style>
