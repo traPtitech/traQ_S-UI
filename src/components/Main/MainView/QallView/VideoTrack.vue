@@ -30,16 +30,20 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div :id="'camera-' + participantIdentity">
+  <div :id="'camera-' + trackInfo.participantIdentity">
+    <div>
+      <p>{{ trackInfo.participantIdentity }}</p>
+    </div>
+  </div>
+  <div :id="'camera-' + trackInfo.participantIdentity">
     <div :class="$style.UserCard">
-    <video
-      v-if="trackInfo.trackPublication"
-      :id="trackInfo.trackPublication.trackSid"
-      ref="videoElement"
-      :class="$style.video"
-      
-    ></video>
-    <div :class="$style.NameLabel">{{ participantIdentity }}</div>
+      <video
+        v-if="trackInfo.trackPublication"
+        :id="trackInfo.trackPublication.trackSid"
+        ref="videoElement"
+        :class="$style.video"
+      ></video>
+      <div :class="$style.NameLabel">{{ trackInfo.participantIdentity }}</div>
     </div>
     <input v-model="volume" type="range" min="0" max="1" step="0.01" />
     <button
