@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
+import UserList from '/@/components/Main/MainView/QallView/UserList.vue'
+import { onMounted, ref } from 'vue'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 import DanmakuContainer from './DanmakuContainer.vue'
@@ -197,6 +198,7 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
     >
       Add Camera Track
     </button>
+    <UserList />
 
     <div :class="$style.TrackContainer">
       <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
