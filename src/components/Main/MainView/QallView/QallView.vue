@@ -2,14 +2,13 @@
 import { useQall } from '/@/composables/qall/useQall'
 import UserList from '/@/components/Main/MainView/QallView/UserList.vue'
 import { onMounted, ref } from 'vue'
-import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
-import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
+import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.vue'
+import AudioComponent from '/@/components/Main/MainView/QallView/AudioComponent.vue'
 import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButton from './CallControlButton.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
 import { LocalTrackPublication } from 'livekit-client'
-import ChannelViewContentMain from '../ChannelView/ChannelViewContent/ChannelViewContentMain.vue'
 import QallMessageView from './QallMessageView.vue'
 
 const {
@@ -201,35 +200,6 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
     <UserList />
 
     <div :class="$style.TrackContainer">
-      <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
-        <VideoComponent
-          v-if="
-            track.trackPublication?.kind === 'video' &&
-            !screenShareTrackSidMap.has(sid)
-          "
-          :track-info="track"
-          :class="$style.video"
-        />
-        <ScreenShareComponent
-          v-else-if="track.trackPublication?.kind === 'video'"
-          :track-info="track"
-          :audio-track-info="
-            tracksMap.get(screenShareTrackSidMap.get(sid) ?? '')
-          "
-          :participant-identity="track.participantIdentity"
-          :class="$style.video"
-        />
-        <AudioComponent
-          v-else-if="
-            track.trackPublication?.kind === 'audio' &&
-            track.isRemote &&
-            !screenShareTrackSidMap
-              .values()
-              ?.some?.(valueSid => valueSid === sid)
-          "
-          :track-info="track"
-        />
-      </template>
       <div :class="$style.controlBar">
         <div :class="$style.smallButtonGroup">
           <CallControlButtonSmall

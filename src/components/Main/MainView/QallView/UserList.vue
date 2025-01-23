@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { useQall } from '/@/composables/qall/useQall'
-import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
-import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
+import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.vue'
+import AudioComponent from '/@/components/Main/MainView/QallView/AudioComponent.vue'
 import { onMounted, ref } from 'vue'
+import ScreenShareComponent from './ScreenShareComponent.vue'
 
-const { tracksMap, addScreenShareTrack, addCameraTrack } = useQall()
+const {
+  tracksMap,
+  screenShareTrackSidMap,
+  addScreenShareTrack,
+  addCameraTrack
+} = useQall()
 
 const videoInputs = ref<MediaDeviceInfo[]>([])
 onMounted(async () => {
@@ -16,22 +22,27 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
 
 <template>
   <div :class="$style.TrackContainer">
-    <template
-      v-for="track of tracksMap.values()"
-      :key="track.trackPublication?.trackSid"
-    >
-      <div :class="$style.UserBlock">
-        <VideoComponent
-          v-if="track.trackPublication?.kind === 'video'"
-          :track-info="track"
-          :class="$style.UserCard"
-        />
-        <AudioComponent
-          v-else-if="track.trackPublication?.kind === 'audio' && track.isRemote"
-          :track-info="track"
-          :class="$style.UserCard"
-        />
-      </div>
+    <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
+      <VideoComponent
+        v-if="
+          track.trackPublication?.kind === 'video' &&
+          !screenShareTrackSidMap.has(sid)
+        "
+        :track-info="track"
+      />
+      <ScreenShareComponent
+        v-else-if="track.trackPublication?.kind === 'video'"
+        :track-info="track"
+        :audio-track-info="tracksMap.get(screenShareTrackSidMap.get(sid) ?? '')"
+      />
+      <AudioComponent
+        v-else-if="
+          track.trackPublication?.kind === 'audio' &&
+          track.isRemote &&
+          !screenShareTrackSidMap.values()?.some?.(valueSid => valueSid === sid)
+        "
+        :track-info="track"
+      />
     </template>
   </div>
 </template>
