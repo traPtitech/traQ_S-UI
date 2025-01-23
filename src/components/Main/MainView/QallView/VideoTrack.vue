@@ -35,6 +35,7 @@ onUnmounted(() => {
     <div>
       <p>{{ trackInfo.participantIdentity }}</p>
     </div>
+  </div>
   <div :id="'camera-' + participantIdentity">
     <div :class="$style.UserCard">
     <video

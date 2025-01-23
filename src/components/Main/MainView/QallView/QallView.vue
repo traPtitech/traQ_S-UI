@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
 import UserList from '/@/components/Main/MainView/QallView/UserList.vue'
 import { onMounted, ref } from 'vue'
