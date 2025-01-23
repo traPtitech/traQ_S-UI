@@ -11,21 +11,15 @@ const volume = ref(1)
 const { findUserByName } = useUsersStore()
 const user = computed(() => findUserByName(trackInfo.participantIdentity))
 const userIconFileId = computed(() => user.value?.iconFileId ?? '')
-const iconStyle = computed(() => ({
-  container: {
-    backgroundImage: userIconFileId.value
-      ? `url(${buildUserIconPath(userIconFileId.value)})`
-      : undefined
-  }
-}))
+const iconImage = computed(() => buildUserIconPath(userIconFileId.value))
 </script>
 
 <template>
   <div :class="$style.UserCard">
     <AudioTrack :track-info="trackInfo" :volume="volume" />
 
-    <div :style="iconStyle.container" :class="$style.OuterIcon"></div>
-    <div :style="iconStyle.container" :class="$style.InnerIcon"></div>
+    <div :class="$style.OuterIcon"><img :src="iconImage" /></div>
+    <div :class="$style.InnerIcon"><img :src="iconImage" /></div>
 
     <div :class="$style.NameLabel">{{ trackInfo.participantIdentity }}</div>
   </div>
