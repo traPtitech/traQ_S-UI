@@ -3,8 +3,9 @@ import { useQall } from '/@/composables/qall/useQall'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import VideoTrack from './VideoTrack.vue'
 
-const { trackInfo } = defineProps<{
+const { trackInfo, isLarge } = defineProps<{
   trackInfo: TrackInfo
+  isLarge: boolean
 }>()
 
 const { removeVideoTrack } = useQall()
@@ -12,7 +13,7 @@ const { removeVideoTrack } = useQall()
 
 <template>
   <div :id="'camera-' + trackInfo.username">
-    <div :class="$style.UserCard">
+    <div :class="isLarge ? $style.LargeCard : $style.UserCard">
       <VideoTrack :track-info="trackInfo" :class="$style.video" />
       <div :class="$style.NameLabel">{{ trackInfo.username }}</div>
     </div>
@@ -45,9 +46,18 @@ const { removeVideoTrack } = useQall()
 .UserCard {
   height: 108px;
   width: 192px;
-  // border: 1px solid black;
+  background-color: #000;
   position: relative;
   overflow: hidden;
   border-radius: 12px;
+}
+.LargeCard {
+  height: 324px;
+  width: 576px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+
+  background-color: #000;
 }
 </style>

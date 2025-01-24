@@ -5,8 +5,9 @@ import { useUsersStore } from '/@/store/entities/users'
 import { buildUserIconPath } from '/@/lib/apis'
 import AudioTrack from './AudioTrack.vue'
 import { useUserVolume } from '/@/store/app/userVolume'
-const { trackInfo } = defineProps<{
+const { trackInfo, isLarge } = defineProps<{
   trackInfo: TrackInfo
+  isLarge: boolean
 }>()
 const { getStore, setStore, restoringPromise } = useUserVolume()
 const volume = ref<number | string>(getStore(trackInfo.username) ?? 1)
@@ -44,11 +45,15 @@ watch(
 
 <template>
   <div>
-    <div :class="$style.UserCard">
+    <div :class="isLarge ? $style.LargeCard : $style.UserCard">
       <AudioTrack :track-info="trackInfo" :volume="parseToFloat(volume)" />
 
-      <div :class="$style.OuterIcon"><img :src="iconImage" /></div>
-      <div :class="$style.InnerIcon"><img :src="iconImage" /></div>
+      <div :class="$style.OuterIcon">
+        <img :src="iconImage" :class="$style.OuterImage" />
+      </div>
+      <div :class="isLarge ? $style.LargeInnerIcon : $style.InnerIcon">
+        <img :src="iconImage" :class="$style.InnerImage" />
+      </div>
 
       <div :class="$style.NameLabel">{{ trackInfo.username }}</div>
     </div>
@@ -63,9 +68,28 @@ watch(
   overflow: hidden;
   border-radius: 12px;
 }
+.LargeCard {
+  height: 324px;
+  width: 576px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
 .InnerIcon {
-  height: 96px;
-  width: 96px;
+  height: 64px;
+  width: 64px;
+  background-size: cover;
+  border-radius: 50%;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.LargeInnerIcon {
+  height: 192px;
+  width: 192px;
   background-size: cover;
   border-radius: 50%;
   margin: auto;
@@ -76,8 +100,8 @@ watch(
   left: 0;
 }
 .OuterIcon {
-  height: 250px;
-  width: 250px;
+  height: 100%;
+  width: 100%;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -97,5 +121,16 @@ watch(
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.5);
   color: #fff;
+}
+.OuterImage {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.InnerImage {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 </style>
