@@ -5,7 +5,6 @@ import { onMounted, ref } from 'vue'
 import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import CallControlButton from './CallControlButton.vue'
-import ScreenShareComponent from './ScreenShareComponent.vue'
 import { LocalTrackPublication } from 'livekit-client'
 import QallMessageView from './QallMessageView.vue'
 
@@ -203,6 +202,7 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
           :is-on="isScreenSharing"
           :on-click="toggleScreen"
           :mdi="false"
+          :inverted="isScreenSharing"
         />
         <CallControlButton
           :icon="cameraIcon"
