@@ -3,8 +3,9 @@ import { useQall } from '/@/composables/qall/useQall'
 import UserList from '/@/components/Main/MainView/QallView/UserList.vue'
 import { onMounted, ref } from 'vue'
 import DanmakuContainer from './DanmakuContainer.vue'
-import CallControlButton from './CallControlButton.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
+import CallControlButton from './CallControlButton.vue'
+import ScreenShareComponent from './ScreenShareComponent.vue'
 import { LocalTrackPublication } from 'livekit-client'
 import QallMessageView from './QallMessageView.vue'
 
@@ -22,20 +23,10 @@ const isMicOn = ref(true)
 const isCameraOn = ref(false)
 const isScreenSharing = ref(false)
 
-const micIcon = ref(
-  isMicOn.value
-    ? '/@/assets/icons/mic.svg?url'
-    : '/@/assets/icons/mic_off.svg?url'
-)
-const cameraIcon = ref(
-  isCameraOn.value
-    ? '/@/assets/icons/videocam.svg?url'
-    : '/@/assets/icons/videocam_off.svg?url'
-)
+const micIcon = ref(isMicOn.value ? 'microphone' : 'microphone-off')
+const cameraIcon = ref(isCameraOn.value ? 'vide' : 'video-off')
 const screenShareIcon = ref(
-  isScreenSharing.value
-    ? '/@/assets/icons/stop_screen_share.svg?url'
-    : '/@/assets/icons/screen_share.svg?url'
+  isScreenSharing.value ? 'stop-screen-share' : 'screen-share'
 )
 
 const toggleAudio = async () => {
@@ -52,9 +43,7 @@ const toggleAudio = async () => {
           await trackInfo.trackPublication.track.unmute()
         }
         isMicOn.value = !isMicOn.value
-        micIcon.value = isMicOn.value
-          ? '/@/assets/icons/mic.svg?url'
-          : '/@/assets/icons/mic_off.svg?url'
+        micIcon.value = isMicOn.value ? 'microphone' : 'microphone-off'
         break
       }
     }
@@ -82,9 +71,7 @@ const toggleVideo = async () => {
       }
       isCameraOn.value = false
     }
-    cameraIcon.value = isCameraOn.value
-      ? '/@/assets/icons/videocam.svg?url'
-      : '/@/assets/icons/videocam_off.svg?url'
+    cameraIcon.value = isCameraOn.value ? 'video' : 'video-off'
   } catch (err) {
     console.error('Failed to toggle video:', err)
   }
@@ -110,8 +97,8 @@ const toggleScreen = async () => {
       isScreenSharing.value = false
     }
     screenShareIcon.value = isScreenSharing.value
-      ? '/@/assets/icons/stop_screen_share.svg?url'
-      : '/@/assets/icons/screen_share.svg?url'
+      ? 'stop-screen-share'
+      : 'screen-share'
   } catch (err) {
     console.error('Failed to toggle screen sharing:', err)
   }
@@ -201,11 +188,11 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
       <div :class="$style.controlBar">
         <div :class="$style.smallButtonGroup">
           <CallControlButtonSmall
-            icon="/@/assets/icons/sound_detection_loud_sound.svg?url"
+            icon="sound_detection_loud_sound"
             :on-click="handleSound"
           />
           <CallControlButtonSmall
-            icon="/@/assets/icons/add_reaction.svg?url"
+            icon="add_reaction"
             :on-click="handleReaction"
           />
         </div>
@@ -213,29 +200,34 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
         <div :class="$style.verticalBar"></div>
         <CallControlButton
           :icon="screenShareIcon"
-          :on-click="toggleScreen"
           :is-on="isScreenSharing"
+          :on-click="toggleScreen"
+          :mdi="false"
         />
         <CallControlButton
           :icon="cameraIcon"
-          :on-click="toggleVideo"
           :is-on="isCameraOn"
+          :on-click="toggleVideo"
+          :inverted="isCameraOn"
         />
         <CallControlButton
           :icon="micIcon"
-          :on-click="toggleAudio"
           :is-on="isMicOn"
+          :on-click="toggleAudio"
+          :inverted="isMicOn"
         />
         <CallControlButton
-          icon="/@/assets/icons/call_end.svg?url"
+          icon="phone-hangup"
+          is-on
           :on-click="leaveQall"
-          :is-on="false"
+          :on-background-color="'#F26451'"
         />
         <div :class="$style.verticalBar"></div>
         <div :class="$style.smallButtonGroup">
           <CallControlButtonSmall
-            icon="/@/assets/icons/group_qall.svg?url"
+            icon="account-multiple"
             :on-click="handleGroup"
+            mdi
           />
         </div>
       </div>

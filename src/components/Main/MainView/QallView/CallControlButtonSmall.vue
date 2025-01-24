@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { defineProps, useCssModule } from 'vue'
+import { defineProps, useCssModule, computed } from 'vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = defineProps({
   icon: {
@@ -9,10 +10,23 @@ const props = defineProps({
   onClick: {
     type: Function,
     default: null
+  },
+  mdi: {
+    type: Boolean,
+    default: false
+  },
+  inverted: {
+    type: Boolean,
+    default: false
   }
 })
 
 const style = useCssModule()
+
+const iconClass = computed(() => ({
+  [style.icon]: true,
+  [style.inverted]: props.inverted
+}))
 
 function handleClick() {
   props.onClick?.()
@@ -21,14 +35,14 @@ function handleClick() {
 
 <template>
   <button :class="style.callControlBtnSmall" @click="handleClick">
-    <img v-if="icon" :src="icon" alt="Call control" :class="style.icon" />
+    <AIcon v-if="icon" :name="icon" :mdi="mdi" :size="32" :class="iconClass" />
   </button>
 </template>
 
 <style lang="scss" module>
 .callControlBtnSmall {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   background-color: #222325;
   border: none;
   cursor: pointer;
@@ -37,6 +51,7 @@ function handleClick() {
   justify-content: center;
   align-items: center;
   transition: opacity 0.3s;
+  color: white;
 }
 
 .callControlBtnSmall:hover {
@@ -46,7 +61,12 @@ function handleClick() {
 .icon {
   width: 32px;
   height: 32px;
-  background-color: #222325;
-  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inverted {
+  filter: invert(1);
 }
 </style>

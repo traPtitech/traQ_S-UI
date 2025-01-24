@@ -30,6 +30,7 @@ import {
   mdiEmoticonOutline,
   mdiCog,
   mdiAccount,
+  mdiAccountMultiple,
   mdiCogs,
   mdiBrightness6,
   mdiPencilOutline,
@@ -80,7 +81,9 @@ import {
   mdiFormatTitle,
   mdiCloseCircle,
   mdiNotebook,
-  mdiDelete
+  mdiDelete,
+  mdiVideo,
+  mdiVideoOff
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -121,6 +124,7 @@ const mdi: MdiIconsMapping = {
   'emoticon-outline': mdiEmoticonOutline,
   cog: mdiCog,
   account: mdiAccount,
+  'account-multiple': mdiAccountMultiple,
   cogs: mdiCogs,
   'brightness-6': mdiBrightness6,
   pencil: mdiPencil,
@@ -169,7 +173,9 @@ const mdi: MdiIconsMapping = {
   stop: mdiStop,
   crown: mdiCrown,
   'format-title': mdiFormatTitle,
-  delete: mdiDelete
+  delete: mdiDelete,
+  video: mdiVideo,
+  'video-off': mdiVideoOff
 }
 
 export default mdi

@@ -4,6 +4,7 @@ import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioComponent.vue'
 import { onMounted, ref } from 'vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
+import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 
 const { tracksMap, screenShareTrackSidMap } = useQall()
 
@@ -13,9 +14,37 @@ onMounted(async () => {
   videoInputs.value = devices.filter(d => d.kind === 'videoinput')
 })
 const selectedVideoInput = ref<MediaDeviceInfo>()
+const selectedTrack = ref<TrackInfo>()
+const selectedSid = ref<string>()
 </script>
 
 <template>
+  <div v-if="selectedTrack !== undefined">
+    <VideoComponent
+      v-if="
+        selectedTrack.trackPublication?.kind === 'video' &&
+        !screenShareTrackSidMap.has(selectedSid ?? '')
+      "
+      :track-info="selectedTrack"
+    />
+    <ScreenShareComponent
+      v-else-if="selectedTrack.trackPublication?.kind === 'video'"
+      :track-info="selectedTrack"
+      :audio-track-info="
+        tracksMap.get(screenShareTrackSidMap.get(selectedSid ?? '') ?? '')
+      "
+    />
+    <AudioComponent
+      v-else-if="
+        selectedTrack.trackPublication?.kind === 'audio' &&
+        selectedTrack.isRemote &&
+        !screenShareTrackSidMap
+          .values()
+          ?.some?.(valueSid => valueSid === selectedSid)
+      "
+      :track-info="selectedTrack"
+    />
+  </div>
   <div :class="$style.TrackContainer">
     <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
       <VideoComponent
@@ -24,11 +53,13 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
           !screenShareTrackSidMap.has(sid)
         "
         :track-info="track"
+        @click="[selectedTrack, selectedSid] = [track, sid]"
       />
       <ScreenShareComponent
         v-else-if="track.trackPublication?.kind === 'video'"
         :track-info="track"
         :audio-track-info="tracksMap.get(screenShareTrackSidMap.get(sid) ?? '')"
+        @click="[selectedTrack, selectedSid] = [track, sid]"
       />
       <AudioComponent
         v-else-if="
@@ -37,6 +68,7 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
           !screenShareTrackSidMap.values()?.some?.(valueSid => valueSid === sid)
         "
         :track-info="track"
+        @click="[selectedTrack, selectedSid] = [track, sid]"
       />
     </template>
   </div>
@@ -49,14 +81,5 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
   align-items: center;
   gap: 8px;
   align-self: stretch;
-}
-.UserBlock {
-  // border: 1px solid black;
-  float: left;
-}
-
-.UserCard {
-  height: 108px;
-  width: 192px;
 }
 </style>
