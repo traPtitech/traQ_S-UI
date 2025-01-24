@@ -248,8 +248,10 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
         />
         <CallControlButton
           icon="phone-hangup"
-          :is-on="false"
+          is-on
           :on-click="leaveQall"
+          :on-background-color="'#F26451'"
+          inverted
         />
         <div :class="$style.verticalBar"></div>
         <div :class="$style.smallButtonGroup">

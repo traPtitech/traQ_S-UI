@@ -22,6 +22,10 @@ const props = defineProps({
   mdi: {
     type: Boolean,
     default: true
+  },
+  onBackgroundColor: {
+    type: String,
+    default: 'white'
   }
 })
 
@@ -29,7 +33,6 @@ const style = useCssModule()
 
 const buttonClass = computed(() => ({
   [style.callControlButton]: true,
-  [style.on]: props.isOn,
   [style.off]: !props.isOn
 }))
 
@@ -38,13 +41,17 @@ const iconClass = computed(() => ({
   [style.inverted]: props.inverted
 }))
 
+const buttonStyle = computed(() => ({
+  backgroundColor: props.isOn ? props.onBackgroundColor : ''
+}))
+
 function handleClick() {
   props.onClick?.()
 }
 </script>
 
 <template>
-  <button :class="buttonClass" @click="handleClick">
+  <button :class="buttonClass" :style="buttonStyle" @click="handleClick">
     <AIcon v-if="icon" :name="icon" :mdi="mdi" :size="32" :class="iconClass" />
   </button>
 </template>
@@ -59,10 +66,6 @@ function handleClick() {
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s;
-}
-
-.callControlButton.on {
-  background-color: white;
 }
 
 .callControlButton.off {
