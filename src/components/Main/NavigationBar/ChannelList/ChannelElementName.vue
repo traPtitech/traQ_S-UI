@@ -3,7 +3,6 @@
     <span :class="$style.name" :title="pathTooltip">
       {{ pathToShow }}
     </span>
-    <!-- TODO:Qall -->
     <!-- デザインが確定したら消すか消さないか決める -->
     <template v-if="qallUserIds.length > 0">
       <a-icon :class="$style.qallIcon" :size="16" mdi name="phone-outline" />
@@ -29,6 +28,7 @@ import { usePath } from './composables/usePath'
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import { useQall } from '/@/composables/qall/useQall'
+import { computed } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -45,10 +45,12 @@ const typedProps = props as TypedProps
 
 const { pathToShow, pathTooltip } = usePath(typedProps)
 const { rooms } = useQall()
-const qallUserIds: string[] =
-  rooms.value
-    .find(room => room.channel.id === props.channel.id)
-    ?.participants.map(participant => participant.user.id) ?? []
+const qallUserIds = computed(
+  () =>
+    rooms.value
+      .find(room => room.channel.id === props.channel.id)
+      ?.participants.map(participant => participant.user.id) ?? []
+)
 </script>
 
 <style lang="scss" module>

@@ -14,7 +14,9 @@ import { useRtcSettings } from '/@/store/app/rtcSettings'
 type RoomsWithParticipants =
   | {
       roomId: string
-      participants: { identity: string; joinedAt: string }[] | null
+      participants:
+        | { identity: string; joinedAt: string; name: string }[]
+        | null
     }[]
   | null
 
@@ -42,17 +44,18 @@ const {
 } = useLiveKitSDK()
 const { myId } = useMeStore()
 const { addErrorToast } = useToastStore()
-const { channelsMap } = useChannelsStore()
+const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
 const { findUserByName, usersMap } = useUsersStore()
 const { addQueue } = useTts()
 
 const meStore = useMeStore()
 const rtcSettings = useRtcSettings()
 
-const purifyRoomData = (data: RoomsWithParticipants): Rooms => {
+const purifyRoomData = async (data: RoomsWithParticipants): Promise<Rooms> => {
   if (!data) return []
+  await bothChannelsMapInitialFetchPromise.value
   return data
-    .filter(room => room.participants)
+    .filter(room => room.participants && room.participants.length > 0)
     .map(room => {
       return {
         channel: channelsMap.value.get(room.roomId),
@@ -78,29 +81,16 @@ const ws = new AutoReconnectWebSocket(
     minReconnectionDelay: 1000
   }
 )
-ws.connect()
-ws.addEventListener('message', event => {
+ws.addEventListener('message', async event => {
   try {
     const data: RoomsWithParticipants = JSON.parse(event.detail as string)
-    rooms.value = purifyRoomData(data)
+    rooms.value = await purifyRoomData(data)
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn('[WebSocket] Failed to parse: ', e)
   }
 })
-
-fetch('https://qall-microservice-for-livekit.trap.show/api/rooms').then(res => {
-  res
-    .json()
-    .then(data => {
-      if (!data) return
-      rooms.value = purifyRoomData(data)
-    })
-    .catch(e => {
-      // eslint-disable-next-line no-console
-      console.warn('Failed to parse: ', e)
-    })
-})
+ws.connect()
 
 const setSpeakerMute = (track: LocalAudioTrack, muted: boolean) => {
   setLocalTrackMute(track, muted)

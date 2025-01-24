@@ -28,15 +28,19 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div :id="'camera-' + trackInfo.participantIdentity">
-      <VideoComponent v-if="trackInfo.trackPublication" :track-info="trackInfo" :isLarge="isLarge" />
-      <AudioTrack
-        v-if="audioTrackInfo?.trackPublication"
-        :track-info="audioTrackInfo"
-        :volume="volume"
-      />
-    </div>
-    <input v-model="volume" type="range" min="0" max="3" step="0.01" />
+  <div :id="'camera-' + trackInfo.username">
+    <VideoComponent
+      v-if="trackInfo.trackPublication"
+      :track-info="trackInfo"
+      :is-large="isLarge"
+    />
+    <AudioTrack
+      v-if="audioTrackInfo?.trackPublication"
+      :track-info="audioTrackInfo"
+      :volume="volume"
+    />
+  </div>
+  <input v-model="volume" type="range" min="0" max="3" step="0.01" />
 </template>
 
 <style lang="scss" module>

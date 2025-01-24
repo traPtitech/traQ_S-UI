@@ -2,13 +2,10 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
-import { messageMitt } from '/@/store/entities/messages'
 import { parse } from '/@/lib/markdown/markdown'
 import { format } from '/@/lib/tts/format'
 import { embeddingOrigin } from '/@/lib/apis'
 import { watchEffect } from 'vue'
-import { useMeStore } from '/@/store/domain/me'
-import { useUsersStore } from '../entities/users'
 
 interface Speach {
   channelId: ChannelId
@@ -72,7 +69,6 @@ const useTtsPinia = defineStore('ui/tts', () => {
   }
 
   const speak = async ({ userDisplayName, text }: Speach) => {
-    console.log('speak', text)
     const tokens = await parse(text)
     let formatedText = format(tokens, embeddingOrigin)
 
