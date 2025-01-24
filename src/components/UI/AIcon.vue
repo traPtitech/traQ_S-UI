@@ -3,9 +3,10 @@
     v-if="mdi"
     :width="size"
     :height="size"
-    viewBox="0 0 24 24"
+    :viewBox="`0 0 ${size} ${size}`"
     v-bind="$attrs"
     role="img"
+    preserveAspectRatio="xMidYMid mid"
     :class="$style.icon"
   >
     <path :d="path" fill="currentColor" />
@@ -15,9 +16,10 @@
     v-else
     :width="size"
     :height="size"
-    viewBox="0 0 24 24"
+    :viewBox="`0 0 ${size} ${size}`"
     v-bind="$attrs"
     role="img"
+    preserveAspectRatio="xMidYMid slice"
     :class="$style.icon"
   />
 </template>
