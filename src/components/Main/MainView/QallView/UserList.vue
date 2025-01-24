@@ -26,7 +26,7 @@ const selectedSid = ref<string>()
         !screenShareTrackSidMap.has(selectedSid ?? '')
       "
       :track-info="selectedTrack"
-      :isLarge="true"
+      is-large
     />
     <ScreenShareComponent
       v-else-if="selectedTrack.trackPublication?.kind === 'video'"
@@ -34,7 +34,7 @@ const selectedSid = ref<string>()
       :audio-track-info="
         tracksMap.get(screenShareTrackSidMap.get(selectedSid ?? '') ?? '')
       "
-      :isLarge=true
+      is-large
     />
     <AudioComponent
       v-else-if="
@@ -45,7 +45,7 @@ const selectedSid = ref<string>()
           ?.some?.(valueSid => valueSid === selectedSid)
       "
       :track-info="selectedTrack"
-      :isLarge=true
+      is-large
     />
   </div>
   <div :class="$style.TrackContainer">
@@ -56,14 +56,14 @@ const selectedSid = ref<string>()
           !screenShareTrackSidMap.has(sid)
         "
         :track-info="track"
-        :isLarge=false
+        :is-large="false"
         @click="[selectedTrack, selectedSid] = [track, sid]"
       />
       <ScreenShareComponent
         v-else-if="track.trackPublication?.kind === 'video'"
         :track-info="track"
         :audio-track-info="tracksMap.get(screenShareTrackSidMap.get(sid) ?? '')"
-        :isLarge=false
+        :is-large="false"
         @click="[selectedTrack, selectedSid] = [track, sid]"
       />
       <AudioComponent
@@ -73,7 +73,7 @@ const selectedSid = ref<string>()
           !screenShareTrackSidMap.values()?.some?.(valueSid => valueSid === sid)
         "
         :track-info="track"
-        :isLarge=false
+        :is-large="false"
         @click="[selectedTrack, selectedSid] = [track, sid]"
       />
     </template>
