@@ -7,6 +7,7 @@ import VideoComponent from './VideoComponent.vue'
 const { trackInfo, audioTrackInfo } = defineProps<{
   trackInfo: TrackInfo
   audioTrackInfo: TrackInfo | undefined
+  isLarge: boolean
 }>()
 
 const volume = ref(1)
@@ -28,14 +29,14 @@ onUnmounted(() => {
 
 <template>
   <div :id="'camera-' + trackInfo.participantIdentity">
-    <VideoComponent v-if="trackInfo.trackPublication" :track-info="trackInfo" />
-    <AudioTrack
-      v-if="audioTrackInfo?.trackPublication"
-      :track-info="audioTrackInfo"
-      :volume="volume"
-    />
+      <VideoComponent v-if="trackInfo.trackPublication" :track-info="trackInfo" :isLarge="isLarge" />
+      <AudioTrack
+        v-if="audioTrackInfo?.trackPublication"
+        :track-info="audioTrackInfo"
+        :volume="volume"
+      />
+    </div>
     <input v-model="volume" type="range" min="0" max="3" step="0.01" />
-  </div>
 </template>
 
 <style lang="scss" module>

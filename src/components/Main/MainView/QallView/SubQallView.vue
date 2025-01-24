@@ -19,6 +19,7 @@ const firstVideoTrack = computed(
     v-if="firstVideoTrack"
     :key="firstVideoTrack[0]"
     :track-info="firstVideoTrack[1]"
+    :isLarge=false
   />
   <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
     <audio-track
