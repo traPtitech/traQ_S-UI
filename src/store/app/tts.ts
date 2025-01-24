@@ -23,9 +23,6 @@ const MAX_CHAR_COUNT = 140
 
 const useTtsPinia = defineStore('ui/tts', () => {
   const rtcSettings = useRtcSettings()
-  const meStore = useMeStore()
-  const usersStore = useUsersStore()
-
   let lastSpeachPromise = Promise.resolve()
   const queue: Speach[] = []
 
@@ -36,18 +33,6 @@ const useTtsPinia = defineStore('ui/tts', () => {
       return next ? speak(next) : Promise.resolve()
     })
   }
-
-  messageMitt.on('addMessage', ({ message }) => {
-    if (meStore.myId.value === message.userId) return
-
-    const userDisplayName =
-      usersStore.usersMap.value.get(message.userId)?.displayName ?? 'はてな'
-    addQueue({
-      channelId: message.channelId,
-      userDisplayName,
-      text: message.content
-    })
-  })
 
   // タブ閉じたときには止める
   window.addEventListener('pagehide', () => {
@@ -71,12 +56,6 @@ const useTtsPinia = defineStore('ui/tts', () => {
     return defaultRate * Math.min(Math.max(ratio, 1), MAX_SPEED_RATIO)
   }
 
-  const isNeeded = (channelId: ChannelId): boolean => {
-    // TODO: Qall
-    if (!rtcSettings.isTtsEnabled.value) return false
-    return true
-  }
-
   const createUtter = (text: string): SpeechSynthesisUtterance => {
     const utter = new SpeechSynthesisUtterance(text)
     const voice = speechSynthesis
@@ -92,9 +71,8 @@ const useTtsPinia = defineStore('ui/tts', () => {
     return utter
   }
 
-  const speak = async ({ channelId, userDisplayName, text }: Speach) => {
-    if (!isNeeded(channelId)) return
-
+  const speak = async ({ userDisplayName, text }: Speach) => {
+    console.log('speak', text)
     const tokens = await parse(text)
     let formatedText = format(tokens, embeddingOrigin)
 
@@ -128,7 +106,7 @@ const useTtsPinia = defineStore('ui/tts', () => {
     }
   })
 
-  return {}
+  return { addQueue }
 })
 
 export const useTts = convertToRefsStore(useTtsPinia)

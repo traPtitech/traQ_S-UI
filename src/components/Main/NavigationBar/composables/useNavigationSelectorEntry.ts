@@ -9,6 +9,7 @@ import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 import { useAudioController } from '/@/store/ui/audioController'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useQall } from '/@/composables/qall/useQall'
 
 export type NavigationSelectorEntry = {
   type: NavigationItemType
@@ -82,6 +83,7 @@ const useNavigationSelectorEntry = () => {
   const { channelsMap, dmChannelsMap } = useChannelsStore()
   const { hasInputChannel } = useMessageInputStateStore()
   const { fileId } = useAudioController()
+  const { callingChannel } = useQall()
 
   const unreadChannels = computed(() => [...unreadChannelsMap.value.values()])
   const notificationState = reactive({
@@ -94,11 +96,9 @@ const useNavigationSelectorEntry = () => {
   })
   const entries = computed(() => createItems(notificationState))
 
-  const hasActiveQallSession = computed(() => false) // TODO: Qall
+  const hasActiveQallSession = computed(() => !!callingChannel.value)
   const ephemeralEntries = computed(() =>
     [
-      // TODO: Qall
-      // 適切な変数を置く
       hasActiveQallSession.value ? ephemeralItems.qallController : undefined,
       hasInputChannel.value ? ephemeralItems.draftList : undefined,
       fileId.value ? ephemeralItems.audioController : undefined

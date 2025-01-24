@@ -5,8 +5,6 @@
       :viewer-ids="viewerIds"
       :class="$style.sidebarItem"
     />
-    <!-- TODO: Qall -->
-    <!-- デザインが確定したら消すか消さないか決める -->
     <channel-sidebar-qall
       v-if="qallUserIds.length > 0"
       :qall-user-ids="qallUserIds"
@@ -52,6 +50,8 @@ import ChannelSidebarQall from './ChannelSidebarQall.vue'
 import ChannelSidebarBots from './ChannelSidebarBots.vue'
 import type { UserId, ChannelId } from '/@/types/entity-ids'
 import { useModelSyncer } from '/@/composables/useModelSyncer'
+import { useQall } from '/@/composables/qall/useQall'
+import { computed } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -71,7 +71,14 @@ const emit = defineEmits<{
   (e: 'update:isViewersDetailOpen', value: boolean): void
 }>()
 
-const qallUserIds: UserId[] = []
+const { rooms: roomWithParticipants } = useQall()
+
+const qallUserIds = computed(
+  () =>
+    roomWithParticipants.value
+      .find(room => room.channel.id === props.channelId)
+      ?.participants?.map(participant => participant.user.id) ?? []
+)
 
 const isViewersDetailOpen = useModelSyncer(props, emit, 'isViewersDetailOpen')
 </script>

@@ -48,10 +48,12 @@ import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 import useChannelsWithNotification from '/@/composables/subscription/useChannelsWithNotification'
 import { filterTrees } from '/@/lib/basic/tree'
+import { useQall } from '/@/composables/qall/useQall'
 
 const { homeChannelTree } = useChannelTree()
 const { detail } = useMeStore()
 const { channelsMap } = useChannelsStore()
+const { rooms: roomWithParticipants } = useQall()
 
 const homeChannelWithTree = computed(() => {
   if (!detail.value?.homeChannel) return []
@@ -70,8 +72,10 @@ const topLevelChannels = computed(() =>
   // filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
   filterTrees(toRaw(homeChannelTree.value.children), node => !node.archived)
 )
-// TODO: Qall
-const qallingChannels = []
+
+const qallingChannels = computed(() =>
+  roomWithParticipants.value.map(room => room.channel)
+)
 </script>
 
 <style lang="scss" module>

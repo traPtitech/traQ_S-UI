@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, useTemplateRef, watchEffect } from 'vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
+import { useRtcSettings } from '/@/store/app/rtcSettings'
 const { trackInfo, volume } = defineProps<{
   trackInfo: TrackInfo
   volume: number
@@ -8,10 +9,14 @@ const { trackInfo, volume } = defineProps<{
 const audioElement = useTemplateRef<HTMLMediaElement>('audioElement')
 const audioContext = new AudioContext()
 const gainNode = audioContext.createGain()
-gainNode.gain.value = 1
+const { masterVolume } = useRtcSettings()
+gainNode.gain.value = volume * masterVolume.value
 
 watchEffect(() => {
-  gainNode.gain.value = volume
+  gainNode.gain.exponentialRampToValueAtTime(
+    Math.max(volume * masterVolume.value, 1e-44),
+    audioContext.currentTime + 0.2
+  )
 })
 
 onMounted(() => {

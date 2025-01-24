@@ -1,16 +1,14 @@
 <template>
   <div :class="$style.container">
     <template v-if="!isMobile">
-      <!-- TODO:Qall -->
-      <!-- 元々はデフォルト値ではなくUseQallの関数で計算していた -->
       <header-tools-item
         v-if="true"
         icon-mdi
-        :icon-name="'phone'"
+        :icon-name="isCallingHere ? 'phone' : 'phone-outline'"
         :class="$style.qallIcon"
-        :disabled="false"
-        :data-is-active="$boolAttr(true)"
-        :data-is-joined="$boolAttr(true)"
+        :disabled="disabled"
+        :data-is-active="$boolAttr(isCallingHere)"
+        :data-is-joined="$boolAttr(isCallingHere)"
         :tooltip="'Qallボタン'"
         @click="joinQall(props.channelId)"
       />
@@ -80,7 +78,9 @@ const emit = defineEmits<{
 
 const { isMobile } = useResponsiveStore()
 
-const { joinQall } = useQall()
+const { joinQall, callingChannel } = useQall()
+const isCallingHere = computed(() => callingChannel.value === props.channelId)
+const disabled = computed(() => !!callingChannel.value && !isCallingHere.value)
 
 const { changeToNextSubscriptionLevel, currentChannelSubscription } =
   useChannelSubscriptionState(toRef(props, 'channelId'))

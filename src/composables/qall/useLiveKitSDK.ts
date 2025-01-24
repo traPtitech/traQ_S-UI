@@ -210,8 +210,6 @@ async function leaveRoom() {
   window.removeEventListener('beforeunload', leaveRoom)
 }
 
-const Attributes = ref<{ [key: string]: string }>({})
-
 const addCameraTrack = async (
   videoInputDevice?: MediaDeviceInfo,
   backgroundType?: 'original' | 'blur' | 'file' | 'screen',
@@ -362,15 +360,12 @@ const addScreenShareTrack = async () => {
     const videoSid = localTracks.find(t => t.kind === Track.Kind.Video)?.sid
     const audioSid = localTracks.find(t => t.kind === Track.Kind.Audio)?.sid
     if (audioSid && videoSid) {
-      Attributes.value = {
-        ...Attributes.value,
-        [videoSid]: audioSid
-      }
       screenShareTrackSidMap.value.set(videoSid, audioSid)
-      // await room.value.localParticipant.setAttributes({
-      //   ...room.value.localParticipant.attributes,
-      //   [videoSid]: audioSid
-      // })
+      await room.value.localParticipant.setAttributes({
+        ...room.value.localParticipant.attributes,
+        [videoSid]: audioSid
+      })
+      console.log(room.value.localParticipant.attributes)
     }
   } catch {
     // TODO:シェアをキャンセルした時も失敗しましたメッセージがでるのはちょっと違和感があるかも
@@ -398,14 +393,13 @@ const removeVideoTrack = async (localpublication: LocalTrackPublication) => {
     }
 
     const { [localpublication.trackSid]: audioSid, ...newAttributes } =
-      Attributes.value
-    //room.value.localParticipant.attributes
+      room.value.localParticipant.attributes
     await room.value.localParticipant.unpublishTrack(
       localpublication.track,
       true
     )
-    room.value.localParticipant.setAttributes(newAttributes)
-    Attributes.value = newAttributes
+    await room.value.localParticipant.setAttributes(newAttributes)
+    console.log(room.value.localParticipant.attributes)
     if (!audioSid) {
       return
     }

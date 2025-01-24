@@ -25,7 +25,7 @@ const useQallConfirmer = () => {
   window.addEventListener('beforeunload', event => {
     // TODO: Qall
     // ここは適切な変数を置く
-    const isCurrentDevice = computed(() => true)
+    const isCurrentDevice = computed(() => false)
     if (isCurrentDevice.value) {
       const unloadMessage = 'Qall中ですが本当に終了しますか？'
       event.preventDefault()
