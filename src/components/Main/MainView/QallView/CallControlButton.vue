@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineProps, computed, useCssModule } from 'vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = defineProps({
   icon: {
@@ -13,6 +14,18 @@ const props = defineProps({
   isOn: {
     type: Boolean,
     required: true
+  },
+  inverted: {
+    type: Boolean,
+    default: false
+  },
+  mdi: {
+    type: Boolean,
+    default: true
+  },
+  onBackgroundColor: {
+    type: String,
+    default: 'white'
   }
 })
 
@@ -20,8 +33,16 @@ const style = useCssModule()
 
 const buttonClass = computed(() => ({
   [style.callControlButton]: true,
-  [style.on]: props.isOn,
   [style.off]: !props.isOn
+}))
+
+const iconClass = computed(() => ({
+  [style.icon]: true,
+  [style.inverted]: props.inverted
+}))
+
+const buttonStyle = computed(() => ({
+  backgroundColor: props.isOn ? props.onBackgroundColor : ''
 }))
 
 function handleClick() {
@@ -30,8 +51,8 @@ function handleClick() {
 </script>
 
 <template>
-  <button :class="buttonClass" @click="handleClick">
-    <img v-if="icon" :src="icon" alt="Call control" />
+  <button :class="buttonClass" :style="buttonStyle" @click="handleClick">
+    <AIcon v-if="icon" :name="icon" :mdi="mdi" :size="32" :class="iconClass" />
   </button>
 </template>
 
@@ -45,10 +66,7 @@ function handleClick() {
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s;
-}
-
-.callControlButton.on {
-  background-color: white;
+  color: white;
 }
 
 .callControlButton.off {
@@ -57,5 +75,17 @@ function handleClick() {
 
 .callControlButton:hover {
   opacity: 0.85;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inverted {
+  filter: invert(1);
 }
 </style>
