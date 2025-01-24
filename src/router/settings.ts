@@ -9,6 +9,7 @@ export type SettingsRouteName =
   | 'settingsQall'
   | 'settingsStamp'
   | 'settingsTheme'
+  | 'settingsAudio'
 
 export const isSettingsRouteName = (
   name: string
@@ -33,6 +34,8 @@ const pathByRouteName = (routeName: SettingsRouteName) => {
       return 'stamp'
     case 'settingsTheme':
       return 'theme'
+    case 'settingsAudio':
+      return 'audio'
   }
 }
 
@@ -42,6 +45,7 @@ const Browser = () => import('/@/views/Settings/BrowserTab.vue')
 const Qall = () => import('/@/views/Settings/QallTab.vue')
 const Stamp = () => import('/@/views/Settings/StampTab.vue')
 const Theme = () => import('/@/views/Settings/ThemeTab.vue')
+const Audio = () => import('/@/views/Settings/AudioTab.vue')
 
 const createRoute = (name: SettingsRouteName, component: Component) => ({
   name,
@@ -55,7 +59,8 @@ export const settingsRoutes: RouteRecordRaw[] = [
   createRoute('settingsBrowser', Browser),
   createRoute('settingsQall', Qall),
   createRoute('settingsStamp', Stamp),
-  createRoute('settingsTheme', Theme)
+  createRoute('settingsTheme', Theme),
+  createRoute('settingsAudio', Audio)
 ]
 
 export const defaultSettingsName: SettingsRouteName = 'settingsProfile'
