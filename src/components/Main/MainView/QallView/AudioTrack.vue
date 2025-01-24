@@ -1,30 +1,17 @@
 <script setup lang="ts">
-import {
-  onMounted,
-  onUnmounted,
-  ref,
-  reactive,
-  useTemplateRef,
-  watchEffect,
-  computed
-} from 'vue'
+import { onMounted, onUnmounted, useTemplateRef, watchEffect } from 'vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
-import { useUsersStore } from '/@/store/entities/users'
-import { buildUserIconPath } from '/@/lib/apis'
-const { trackInfo } = defineProps<{
+const { trackInfo, volume } = defineProps<{
   trackInfo: TrackInfo
+  volume: number
 }>()
 const audioElement = useTemplateRef<HTMLMediaElement>('audioElement')
-const volume = ref(1)
-const { findUserByName } = useUsersStore()
 const audioContext = new AudioContext()
 const gainNode = audioContext.createGain()
 gainNode.gain.value = 1
 
 watchEffect(() => {
-  if (audioElement.value) {
-    gainNode.gain.value = volume.value
-  }
+  gainNode.gain.value = volume
 })
 
 onMounted(() => {
@@ -47,33 +34,10 @@ onUnmounted(() => {
     audioContext.close()
   }
 })
-const user = computed(() => findUserByName(trackInfo.participantIdentity))
-const userIconFileId = computed(() => user.value?.iconFileId ?? '')
-const iconStyle = reactive({
-  container: computed(() => ({
-    backgroundImage: userIconFileId.value
-      ? `url(${buildUserIconPath(userIconFileId.value)})`
-      : undefined
-  }))
-})
 </script>
 
 <template>
-  <div>{{ trackInfo.participantIdentity }}</div>
   <audio :id="trackInfo.trackPublication?.trackSid" ref="audioElement"></audio>
-  <input v-model="volume" type="range" min="0" max="3" step="0.01" />
-  <div :class="$style.UserCard">
-    <audio
-      :id="trackInfo.trackPublication?.trackSid"
-      ref="audioElement"
-    ></audio>
-
-    <div :style="iconStyle.container" :class="$style.OuterIcon" />
-    <div :style="iconStyle.container" :class="$style.InnerIcon" />
-
-    <div :class="$style.NameLabel">{{ trackInfo.participantIdentity }}</div>
-  </div>
-  <input v-model="volume" type="range" min="0" max="1" step="0.01" />
 </template>
 <style lang="scss" module>
 .UserCard {

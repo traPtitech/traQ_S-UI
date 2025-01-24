@@ -64,7 +64,7 @@ function handleTrackSubscribed(
     tracksMap.value.set(publication.trackSid, {
       isRemote: true,
       trackPublication: publication,
-      participantIdentity: participant.identity
+      participantIdentity: participant.identity.slice(0, -37)
     })
   }
 }
@@ -97,7 +97,7 @@ function handleLocalTrackPublished(
   tracksMap.value.set(publication.trackSid, {
     isRemote: false,
     trackPublication: publication,
-    participantIdentity: participant.identity
+    participantIdentity: participant.identity.slice(0, -37)
   })
 }
 
