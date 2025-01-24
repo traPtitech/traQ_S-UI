@@ -80,7 +80,9 @@ import {
   mdiFormatTitle,
   mdiCloseCircle,
   mdiNotebook,
-  mdiDelete
+  mdiDelete,
+  mdiVideo,
+  mdiVideoOff
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -169,7 +171,9 @@ const mdi: MdiIconsMapping = {
   stop: mdiStop,
   crown: mdiCrown,
   'format-title': mdiFormatTitle,
-  delete: mdiDelete
+  delete: mdiDelete,
+  video: mdiVideo,
+  'video-off': mdiVideoOff
 }
 
 export default mdi

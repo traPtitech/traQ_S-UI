@@ -5,11 +5,10 @@ import { onMounted, ref } from 'vue'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoTrack.vue'
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioTrack.vue'
 import DanmakuContainer from './DanmakuContainer.vue'
-import CallControlButton from './CallControlButton.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
+import CallControlButton from './CallControlButton.vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
 import { LocalTrackPublication } from 'livekit-client'
-import ChannelViewContentMain from '../ChannelView/ChannelViewContent/ChannelViewContentMain.vue'
 import QallMessageView from './QallMessageView.vue'
 
 const {
@@ -26,20 +25,10 @@ const isMicOn = ref(true)
 const isCameraOn = ref(false)
 const isScreenSharing = ref(false)
 
-const micIcon = ref(
-  isMicOn.value
-    ? '/@/assets/icons/mic.svg?url'
-    : '/@/assets/icons/mic_off.svg?url'
-)
-const cameraIcon = ref(
-  isCameraOn.value
-    ? '/@/assets/icons/videocam.svg?url'
-    : '/@/assets/icons/videocam_off.svg?url'
-)
+const micIcon = ref(isMicOn.value ? 'microphone' : 'microphone-off')
+const cameraIcon = ref(isCameraOn.value ? 'vide' : 'video-off')
 const screenShareIcon = ref(
-  isScreenSharing.value
-    ? '/@/assets/icons/stop_screen_share.svg?url'
-    : '/@/assets/icons/screen_share.svg?url'
+  isScreenSharing.value ? 'stop-screen-share' : 'screen-share'
 )
 
 const toggleAudio = async () => {
@@ -56,9 +45,7 @@ const toggleAudio = async () => {
           await trackInfo.trackPublication.track.unmute()
         }
         isMicOn.value = !isMicOn.value
-        micIcon.value = isMicOn.value
-          ? '/@/assets/icons/mic.svg?url'
-          : '/@/assets/icons/mic_off.svg?url'
+        micIcon.value = isMicOn.value ? 'microphone' : 'microphone-off'
         break
       }
     }
@@ -86,9 +73,7 @@ const toggleVideo = async () => {
       }
       isCameraOn.value = false
     }
-    cameraIcon.value = isCameraOn.value
-      ? '/@/assets/icons/videocam.svg?url'
-      : '/@/assets/icons/videocam_off.svg?url'
+    cameraIcon.value = isCameraOn.value ? 'video' : 'video-off'
   } catch (err) {
     console.error('Failed to toggle video:', err)
   }
@@ -114,8 +99,8 @@ const toggleScreen = async () => {
       isScreenSharing.value = false
     }
     screenShareIcon.value = isScreenSharing.value
-      ? '/@/assets/icons/stop_screen_share.svg?url'
-      : '/@/assets/icons/screen_share.svg?url'
+      ? 'stop-screen-share'
+      : 'screen-share'
   } catch (err) {
     console.error('Failed to toggle screen sharing:', err)
   }
@@ -245,23 +230,26 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
         <div :class="$style.verticalBar"></div>
         <CallControlButton
           :icon="screenShareIcon"
-          :on-click="toggleScreen"
           :is-on="isScreenSharing"
+          :on-click="toggleScreen"
+          :mdi="false"
         />
         <CallControlButton
           :icon="cameraIcon"
-          :on-click="toggleVideo"
           :is-on="isCameraOn"
+          :on-click="toggleVideo"
+          :inverted="!isCameraOn"
         />
         <CallControlButton
           :icon="micIcon"
-          :on-click="toggleAudio"
           :is-on="isMicOn"
+          :on-click="toggleAudio"
+          :inverted="!isMicOn"
         />
         <CallControlButton
-          icon="/@/assets/icons/call_end.svg?url"
-          :on-click="leaveQall"
+          icon="phone-hangup"
           :is-on="false"
+          :on-click="leaveQall"
         />
         <div :class="$style.verticalBar"></div>
         <div :class="$style.smallButtonGroup">

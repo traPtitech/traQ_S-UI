@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineProps, computed, useCssModule } from 'vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = defineProps({
   icon: {
@@ -13,6 +14,14 @@ const props = defineProps({
   isOn: {
     type: Boolean,
     required: true
+  },
+  inverted: {
+    type: Boolean,
+    default: false
+  },
+  mdi: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -24,6 +33,11 @@ const buttonClass = computed(() => ({
   [style.off]: !props.isOn
 }))
 
+const iconClass = computed(() => ({
+  [style.icon]: true,
+  [style.inverted]: props.inverted
+}))
+
 function handleClick() {
   props.onClick?.()
 }
@@ -31,7 +45,7 @@ function handleClick() {
 
 <template>
   <button :class="buttonClass" @click="handleClick">
-    <img v-if="icon" :src="icon" alt="Call control" />
+    <AIcon v-if="icon" :name="icon" :mdi="mdi" :size="32" :class="iconClass" />
   </button>
 </template>
 
@@ -57,5 +71,17 @@ function handleClick() {
 
 .callControlButton:hover {
   opacity: 0.85;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inverted {
+  filter: invert(1);
 }
 </style>
