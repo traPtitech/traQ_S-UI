@@ -1,15 +1,13 @@
 <template>
   <primary-view-header-popup-frame>
-    <!-- TODO:Qall -->
-    <!-- 元々はデフォルト値ではなくUseQallの関数で計算していた -->
     <header-tools-menu-item
       v-if="isMobile"
-      :icon-name="'phone'"
+      :icon-name="isCallingHere ? 'phone' : 'phone-outline'"
       icon-mdi
       :class="$style.qallIcon"
       :label="'Qallを開始'"
-      :disabled="false"
-      :data-is-active="$boolAttr(true)"
+      :disabled="disabled"
+      :data-is-active="$boolAttr(isCallingHere)"
       @click="joinQall(props.channelId)"
       @click-item="emit('clickItem')"
     />
@@ -86,7 +84,9 @@ const props = withDefaults(
 
 const { isMobile } = useResponsiveStore()
 
-const { joinQall } = useQall()
+const { joinQall, callingChannel } = useQall()
+const isCallingHere = computed(() => callingChannel.value === props.channelId)
+const disabled = computed(() => !!callingChannel.value && !isCallingHere.value)
 
 const { isChildChannelCreatable, openChannelCreateModal } =
   useChannelCreateModal(props)
