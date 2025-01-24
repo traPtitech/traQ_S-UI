@@ -41,7 +41,7 @@ import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelLis
 import ChannelTree from '/@/components/Main/NavigationBar/ChannelList/ChannelTree.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
-import { computed, toRaw, watchEffect } from 'vue'
+import { computed, toRaw } from 'vue'
 import { constructTreeFromIds } from '/@/lib/channelTree'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useMeStore } from '/@/store/domain/me'
@@ -53,7 +53,7 @@ import { useQall } from '/@/composables/qall/useQall'
 const { homeChannelTree } = useChannelTree()
 const { detail } = useMeStore()
 const { channelsMap } = useChannelsStore()
-const { roomWithParticipants } = useQall()
+const { rooms: roomWithParticipants } = useQall()
 
 const homeChannelWithTree = computed(() => {
   if (!detail.value?.homeChannel) return []
@@ -74,14 +74,8 @@ const topLevelChannels = computed(() =>
 )
 
 const qallingChannels = computed(() =>
-  roomWithParticipants.value
-    .map(room => channelsMap.value.get(room.roomId))
-    .flatMap(channel => (channel?.archived === false ? [channel] : []))
+  roomWithParticipants.value.map(room => room.channel)
 )
-
-watchEffect(() => {
-  console.log('qalling', qallingChannels.value)
-})
 </script>
 
 <style lang="scss" module>
