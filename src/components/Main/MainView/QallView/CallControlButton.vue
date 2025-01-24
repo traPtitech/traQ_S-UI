@@ -66,6 +66,7 @@ function handleClick() {
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s;
+  color: white;
 }
 
 .callControlButton.off {

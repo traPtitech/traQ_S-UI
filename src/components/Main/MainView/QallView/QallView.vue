@@ -218,11 +218,11 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
       <div :class="$style.controlBar">
         <div :class="$style.smallButtonGroup">
           <CallControlButtonSmall
-            icon="/@/assets/icons/sound_detection_loud_sound.svg?url"
+            icon="sound_detection_loud_sound"
             :on-click="handleSound"
           />
           <CallControlButtonSmall
-            icon="/@/assets/icons/add_reaction.svg?url"
+            icon="add_reaction"
             :on-click="handleReaction"
           />
         </div>
@@ -238,26 +238,26 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
           :icon="cameraIcon"
           :is-on="isCameraOn"
           :on-click="toggleVideo"
-          :inverted="!isCameraOn"
+          :inverted="isCameraOn"
         />
         <CallControlButton
           :icon="micIcon"
           :is-on="isMicOn"
           :on-click="toggleAudio"
-          :inverted="!isMicOn"
+          :inverted="isMicOn"
         />
         <CallControlButton
           icon="phone-hangup"
           is-on
           :on-click="leaveQall"
           :on-background-color="'#F26451'"
-          inverted
         />
         <div :class="$style.verticalBar"></div>
         <div :class="$style.smallButtonGroup">
           <CallControlButtonSmall
-            icon="/@/assets/icons/group_qall.svg?url"
+            icon="account-multiple"
             :on-click="handleGroup"
+            mdi
           />
         </div>
       </div>
