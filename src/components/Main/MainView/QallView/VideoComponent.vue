@@ -11,10 +11,10 @@ const { removeVideoTrack } = useQall()
 </script>
 
 <template>
-  <div :id="'camera-' + trackInfo.participantIdentity">
+  <div :id="'camera-' + trackInfo.username">
     <div :class="$style.UserCard">
       <VideoTrack :track-info="trackInfo" :class="$style.video" />
-      <div :class="$style.NameLabel">{{ trackInfo.participantIdentity }}</div>
+      <div :class="$style.NameLabel">{{ trackInfo.username }}</div>
     </div>
     <button
       v-if="!trackInfo.isRemote && trackInfo.trackPublication"

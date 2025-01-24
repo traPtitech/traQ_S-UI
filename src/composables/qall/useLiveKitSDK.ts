@@ -39,7 +39,7 @@ export type TrackInfo = (
       trackPublication: LocalTrackPublication | undefined
     }
 ) & {
-  participantIdentity: string
+  username: string
 }
 
 type CameraProcessor = {
@@ -64,7 +64,7 @@ function handleTrackSubscribed(
     tracksMap.value.set(publication.trackSid, {
       isRemote: true,
       trackPublication: publication,
-      participantIdentity: participant.identity.slice(0, -37)
+      username: participant.identity.slice(0, -37)
     })
   }
 }
@@ -97,7 +97,7 @@ function handleLocalTrackPublished(
   tracksMap.value.set(publication.trackSid, {
     isRemote: false,
     trackPublication: publication,
-    participantIdentity: participant.identity.slice(0, -37)
+    username: participant.identity.slice(0, -37)
   })
 }
 

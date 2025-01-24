@@ -27,7 +27,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div :id="'camera-' + trackInfo.participantIdentity">
+  <div :id="'camera-' + trackInfo.username">
     <VideoComponent v-if="trackInfo.trackPublication" :track-info="trackInfo" />
     <AudioTrack
       v-if="audioTrackInfo?.trackPublication"
