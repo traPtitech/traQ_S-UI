@@ -10,6 +10,7 @@ import ParticipantList from './ParticipantList.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useModalStore } from '/@/store/ui/modal'
 import CameraDetailSetting from './CameraDetailSetting.vue'
+import ScreenShareDetailSetting from './ScreenShareDetailSetting.vue'
 
 const { pushModal } = useModalStore()
 
@@ -179,14 +180,15 @@ const handleBackgroundSave = (data: {
   console.log('選択された背景', data.backgroundType, data.backgroundImage)
   backgroundType.value = data.backgroundType
   backgroundImage.value = data.backgroundImage
-  showBackgroundSelector.value = false
+  showCameraDetailSetting.value = false
 }
 
 const handleClose = () => {
-  showBackgroundSelector.value = false
+  showCameraDetailSetting.value = false
 }
 
-const showBackgroundSelector = ref(false)
+const showCameraDetailSetting = ref(false)
+const showShareScreenSettingDetail = ref(false)
 </script>
 
 <template>
@@ -203,19 +205,38 @@ const showBackgroundSelector = ref(false)
       <button
         @click="
           () => {
-            showBackgroundSelector = true
+            showCameraDetailSetting = true
           }
         "
       >
         バックグランドセレクター
       </button>
       <CameraDetailSetting
-        :open="showBackgroundSelector"
+        :open="showCameraDetailSetting"
         :video-inputs="videoInputs"
         @save="handleBackgroundSave"
         @close="handleClose"
       />
       <button @click="consoleLog">console.log</button>
+    </div>
+    <div>
+      <button
+        @click="
+          () => {
+            showShareScreenSettingDetail = true
+          }
+        "
+      >
+        スクリーンシェアセレクター
+      </button>
+      <ScreenShareDetailSetting
+        :open="showShareScreenSettingDetail"
+        @close="
+          () => {
+            showShareScreenSettingDetail = false
+          }
+        "
+      />
     </div>
 
     <div :class="$style.TrackContainer">
