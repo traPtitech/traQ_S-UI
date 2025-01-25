@@ -127,11 +127,11 @@ function handleParticipantAttributesChanged(
   )
 }
 
-const joinRoom = async (roomName: string, userName: string) => {
+const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
   try {
     const traQtoken = (await apis.getMyQRCode(true)).data
     const res = await fetch(
-      `https://qall-microservice-for-livekit.trap.show/api/token?room=${roomName}`,
+      `https://qall-microservice-for-livekit.trap.show/api/token?room=${roomName}&isWebinar=${isWebinar}`,
       {
         method: 'GET',
         headers: {
@@ -168,22 +168,25 @@ const joinRoom = async (roomName: string, userName: string) => {
     // connect to room
     await room.value.connect('wss://livekit.qall-dev.trapti.tech', token)
 
-    // publish local camera and mic tracks
-    await room.value.localParticipant.setMicrophoneEnabled(
-      true,
-      {
-        channelCount: 2,
-        voiceIsolation: true,
-        echoCancellation: true,
-        noiseSuppression: true
-      },
-      {
-        audioPreset: AudioPresets.musicHighQualityStereo,
-        forceStereo: true,
-        red: false,
-        dtx: false
-      }
-    )
+    if (room.value.localParticipant?.permissions?.canPublish) {
+      // publish local camera and mic tracks
+      await room.value.localParticipant.setMicrophoneEnabled(
+        true,
+        {
+          channelCount: 2,
+          voiceIsolation: true,
+          echoCancellation: true,
+          noiseSuppression: true
+        },
+        {
+          audioPreset: AudioPresets.musicHighQualityStereo,
+          forceStereo: true,
+          red: false,
+          dtx: false
+        }
+      )
+    }
+
     await room.value.localParticipant.setAttributes({})
     room.value.remoteParticipants.forEach(participant => {
       Object.keys(participant.attributes).forEach(key =>
@@ -218,6 +221,10 @@ const addCameraTrack = async (
   try {
     if (!room.value) {
       addErrorToast('ルームが存在しません')
+      return
+    }
+    if (!room.value?.localParticipant?.permissions?.canPublish) {
+      addErrorToast('権限がありません')
       return
     }
 
@@ -330,6 +337,10 @@ const addScreenShareTrack = async () => {
   try {
     if (!room.value) {
       addErrorToast('ルームが存在しません')
+      return
+    }
+    if (!room.value?.localParticipant?.permissions?.canPublish) {
+      addErrorToast('権限がありません')
       return
     }
     const localTracks = await createLocalScreenTracks({

@@ -15,15 +15,28 @@ type RoomsWithParticipants =
   | {
       roomId: string
       participants:
-        | { identity: string; joinedAt: string; name: string }[]
+        | {
+            identity: string
+            joinedAt: string
+            name: string
+            canPublish: boolean
+            attributes: { [key: string]: string }
+          }[]
         | null
+      isWebinar: boolean
     }[]
   | null
 
-type Participant = { user: User; joinedAt: string }
+type Participant = {
+  user: User
+  joinedAt: string
+  canPublish: boolean
+  attributes: { [key: string]: string }
+}
 type Room = {
   channel: Channel
   participants: Participant[]
+  isWebinar: boolean
 }
 type Rooms = Room[]
 
@@ -63,9 +76,12 @@ const purifyRoomData = async (data: RoomsWithParticipants): Promise<Rooms> => {
           room.participants
             ?.map(p => ({
               joinedAt: p.joinedAt,
-              user: findUserByName(p.identity.slice(0, -37))
+              user: findUserByName(p.identity.slice(0, -37)),
+              canPublish: p.canPublish ?? false,
+              attributes: p.attributes ?? {}
             }))
-            .filter((p): p is Participant => !!p.user) ?? []
+            .filter((p): p is Participant => !!p.user) ?? [],
+        isWebinar: room.isWebinar ?? false
       }
     })
     .filter((room): room is Room => {
@@ -115,7 +131,7 @@ messageMitt.on('addMessage', ({ message }) => {
 })
 
 export const useQall = () => {
-  const joinQall = (channelName: string) => {
+  const joinQall = (channelName: string, isWebinar: boolean = false) => {
     if (callingChannel.value) {
       leaveRoom()
     }
@@ -123,7 +139,7 @@ export const useQall = () => {
       addErrorToast('接続に失敗しました')
       return
     }
-    joinRoom(channelName, myId.value)
+    joinRoom(channelName, isWebinar)
 
     callingChannel.value = channelName
   }

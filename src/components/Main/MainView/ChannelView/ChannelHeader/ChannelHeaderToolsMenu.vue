@@ -48,6 +48,13 @@
       @click="openChannelManageModal"
       @click-item="emit('clickItem')"
     />
+    <header-tools-menu-item
+      icon-name="phone-outline"
+      icon-mdi
+      label="ウェビナーモードでQallを開始"
+      @click="() => joinQall(props.channelId, true)"
+      @click-item="emit('clickItem')"
+    />
   </primary-view-header-popup-frame>
 </template>
 
