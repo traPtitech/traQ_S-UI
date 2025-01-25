@@ -222,6 +222,14 @@ const showShareScreenSettingDetail = ref(false)
           />
           <ScreenShareDetailSetting
             :open="showShareScreenSettingDetail"
+            @add="
+              () => {
+                isScreenSharing = true
+                screenShareIcon = isScreenSharing
+                  ? 'stop-screen-share'
+                  : 'screen-share'
+              }
+            "
             @close="
               () => {
                 showShareScreenSettingDetail = false
@@ -248,6 +256,12 @@ const showShareScreenSettingDetail = ref(false)
             :open="showCameraDetailSetting"
             :video-inputs="videoInputs"
             @save="handleBackgroundSave"
+            @add="
+              () => {
+                isCameraOn = true
+                cameraIcon = isCameraOn ? 'video' : 'video-off'
+              }
+            "
             @close="
               () => {
                 showCameraDetailSetting = false

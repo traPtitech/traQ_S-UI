@@ -9,7 +9,6 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'close'): void
   (
     e: 'save',
     data: {
@@ -18,6 +17,8 @@ const emit = defineEmits<{
       selectedVideoInput: MediaDeviceInfo
     }
   ): void
+  (e: 'add'): void
+  (e: 'close'): void
 }>()
 
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
@@ -63,6 +64,7 @@ const handleAddCameraTrack = () => {
     backgroundType.value,
     backgroundImage.value
   )
+  emit('add')
   emit('close')
 }
 

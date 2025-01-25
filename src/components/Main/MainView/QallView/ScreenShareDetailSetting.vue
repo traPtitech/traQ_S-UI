@@ -8,6 +8,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
+  (e: 'add'): void
   (e: 'close'): void
 }>()
 
@@ -15,6 +16,7 @@ const { addScreenShareTrack } = useQall()
 
 const handleScreenShare = () => {
   addScreenShareTrack()
+  emit('add')
   emit('close')
 }
 
