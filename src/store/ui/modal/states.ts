@@ -30,6 +30,7 @@ export type ModalStateType =
   | 'settings-profile-icon-edit'
   | 'settings-cache-clear'
   | 'settings-theme-edit'
+  | 'qall-select-background'
 
 export type ModalState =
   | UserModalState
@@ -52,6 +53,7 @@ export type ModalState =
   | SettingsProfileIconEdit
   | SettingsCacheClearModalState
   | SettingsThemeEditState
+  | QallSelectBackgroundModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -163,4 +165,8 @@ interface SettingsCacheClearModalState extends BaseModalState {
 
 interface SettingsThemeEditState extends BaseModalState {
   type: 'settings-theme-edit'
+}
+
+interface QallSelectBackgroundModalState extends BaseModalState {
+  type: 'qall-select-background'
 }

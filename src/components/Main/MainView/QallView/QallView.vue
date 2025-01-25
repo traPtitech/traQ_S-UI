@@ -8,6 +8,9 @@ import { LocalTrackPublication } from 'livekit-client'
 import QallMessageView from './QallMessageView.vue'
 import ParticipantList from './ParticipantList.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
+import { useModalStore } from '/@/store/ui/modal'
+
+const { pushModal } = useModalStore()
 
 const {
   tracksMap,
@@ -162,6 +165,12 @@ const filteredParticipants = computed(() =>
     participant => getParticipantTrackInfo(participant) !== undefined
   )
 )
+
+const handleModal = () => {
+  pushModal({
+    type: 'qall-select-background'
+  })
+}
 </script>
 
 <template>
@@ -175,6 +184,7 @@ const filteredParticipants = computed(() =>
     <h1 :class="$style.Header">Qall View</h1>
     <div>
       <button @click="addScreenShareTrack">Add Screen Share Track</button>
+      <button @click="handleModal">もーーーだる</button>
       <select v-model="selectedVideoInput">
         <option
           v-for="videoInput in videoInputs"
