@@ -7,6 +7,7 @@ import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import CallControlButton from './CallControlButton.vue'
 import { LocalTrackPublication } from 'livekit-client'
 import QallMessageView from './QallMessageView.vue'
+import SoundBoard from './SoundBoard.vue'
 
 const {
   tracksMap,
@@ -130,6 +131,7 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 
 <template>
   <div :class="$style.Block">
+    <SoundBoard />
     <DanmakuContainer />
     <QallMessageView
       :channel-id="callingChannel"
