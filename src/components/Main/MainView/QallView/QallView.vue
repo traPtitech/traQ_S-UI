@@ -9,7 +9,7 @@ import QallMessageView from './QallMessageView.vue'
 import ParticipantList from './ParticipantList.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useModalStore } from '/@/store/ui/modal'
-import BackgroundSelector from './BackgroundSelector.vue'
+import CameraDetailSetting from './CameraDetailSetting.vue'
 
 const { pushModal } = useModalStore()
 
@@ -209,56 +209,13 @@ const showBackgroundSelector = ref(false)
       >
         バックグランドセレクター
       </button>
-      <BackgroundSelector
-        v-if="showBackgroundSelector"
+      <CameraDetailSetting
         :open="showBackgroundSelector"
         :video-inputs="videoInputs"
         @save="handleBackgroundSave"
         @close="handleClose"
       />
       <button @click="consoleLog">console.log</button>
-      <!-- <select v-model="selectedVideoInput">
-        <option
-          v-for="videoInput in videoInputs"
-          :key="videoInput.deviceId"
-          :value="videoInput"
-        >
-          {{ videoInput.label }}
-        </option>
-      </select> -->
-
-      <!-- <input
-        id="original"
-        v-model="backgroundType"
-        type="radio"
-        value="original"
-      />
-      <label for="original">original</label>
-      <input id="blur" v-model="backgroundType" type="radio" value="blur" />
-      <label for="blur">blur</label>
-      <input id="file" v-model="backgroundType" type="radio" value="file" />
-      <label for="file">file</label>
-      <input id="screen" v-model="backgroundType" type="radio" value="screen" />
-      <label for="screen">screen</label>
-
-      <input
-        type="file"
-        @change="
-          e => {
-            const target = e.target as HTMLInputElement
-            backgroundImage = target?.files?.[0]
-          }
-        "
-      />
-      -->
-      <button
-        @click="[
-          addCameraTrack(selectedVideoInput, backgroundType, backgroundImage),
-          console.log(selectedVideoInput)
-        ]"
-      >
-        Add Camera Track
-      </button>
     </div>
 
     <div :class="$style.TrackContainer">

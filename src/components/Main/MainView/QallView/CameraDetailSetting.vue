@@ -28,6 +28,7 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
 const { addCameraTrack } = useQall()
 
 onMounted(() => {
+  // 初期値として最初のカメラデバイスを設定
   if (props.videoInputs[0] !== undefined && props.videoInputs.length > 0) {
     selectedCamera.value = props.videoInputs[0].deviceId
     selectedVideoInput.value = props.videoInputs[0]
@@ -62,10 +63,10 @@ const handleClose = () => {
 </script>
 
 <template>
-  <div v-if="open" class="modal-overlay">
-    <div class="modal-content">
+  <div v-if="open" class="popover-container">
+    <div class="popover-content">
       <div>
-        <h3 class="modal-title">カメラ設定</h3>
+        <h3 class="popover-title">カメラ設定</h3>
         <div class="form-group">
           <div class="form-item">
             <label for="camera-select" class="form-item-label"
@@ -132,6 +133,7 @@ const handleClose = () => {
               </div>
             </div>
           </div>
+
           <div v-if="backgroundType === 'file'" class="form-item">
             <button type="button" class="file-button">
               背景画像を選択
@@ -165,28 +167,22 @@ const handleClose = () => {
 </template>
 
 <style scoped lang="scss">
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+.popover-container {
+  position: absolute;
   z-index: 50;
 }
 
-.modal-content {
+.popover-content {
   @include background-primary;
   @include color-ui-primary;
   padding: 24px;
   border-radius: 8px;
-  width: 95%;
-  max-width: 500px;
+  width: 500px;
   border: 1px solid $theme-text-primary-default;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-.modal-title {
+.popover-title {
   font-size: 1.25rem;
   margin-bottom: 16px;
   font-weight: bold;
