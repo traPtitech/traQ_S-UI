@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { useQall } from '../../../../composables/qall/useQall'
+import { useQall } from '/@/composables/qall/useQall'
 import { onMounted, ref, computed } from 'vue'
 import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import CallControlButton from './CallControlButton.vue'
 import { LocalTrackPublication } from 'livekit-client'
 import QallMessageView from './QallMessageView.vue'
-import UserIcon from '../../../../components/UI/UserIcon.vue'
-import AIcon from '../../../../components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const {
   tracksMap,
