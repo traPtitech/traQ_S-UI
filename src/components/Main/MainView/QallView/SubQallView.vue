@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
-import AudioTrack from './AudioTrack.vue'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.vue'
+import AudioComponent from './AudioComponent.vue'
 import { useQall } from '/@/composables/qall/useQall'
 
 const { tracksMap } = useQall()
@@ -19,13 +19,14 @@ const firstVideoTrack = computed(
     v-if="firstVideoTrack"
     :key="firstVideoTrack[0]"
     :track-info="firstVideoTrack[1]"
-    :isLarge=false
+    :is-large="false"
   />
   <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
-    <audio-track
+    <AudioComponent
       v-if="track.trackPublication?.kind === 'audio'"
       :track-info="track"
-      :volume="1"
+      :is-large="false"
+      :is-show="false"
     />
   </template>
 </template>

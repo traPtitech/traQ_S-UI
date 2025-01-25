@@ -285,16 +285,18 @@ const filteredParticipants = computed(() =>
         <div :class="$style.verticalBar"></div>
         <div :class="$style.smallButtonGroup">
           <div :class="$style.participantsContainer">
-            <div v-show="showParticipants" :class="$style.participantsList">
-              <div :class="$style.participantsContent">
-                <participant-list
-                  v-for="participant in filteredParticipants"
-                  :key="participant.user.id"
-                  :participant="participant.user"
-                  :track-info="getParticipantTrackInfo(participant)!"
-                />
+            <ClickOutside @click-outside="showParticipants = false">
+              <div v-if="showParticipants" :class="$style.participantsList">
+                <div :class="$style.participantsContent">
+                  <participant-list
+                    v-for="participant in filteredParticipants"
+                    :key="participant.user.id"
+                    :participant="participant.user"
+                    :track-info="getParticipantTrackInfo(participant)!"
+                  />
+                </div>
               </div>
-            </div>
+            </ClickOutside>
             <CallControlButtonSmall
               icon="account-multiple"
               :on-click="handleGroup"

@@ -5,12 +5,19 @@ import { useUsersStore } from '/@/store/entities/users'
 import { buildUserIconPath } from '/@/lib/apis'
 import AudioTrack from './AudioTrack.vue'
 import { useUserVolume } from '/@/store/app/userVolume'
-const { trackInfo, isLarge } = defineProps<{
+const {
+  trackInfo,
+  isLarge,
+  isShow = true
+} = defineProps<{
   trackInfo: TrackInfo
   isLarge: boolean
+  isShow: boolean
 }>()
 const { getStore, setStore, restoringPromise } = useUserVolume()
-const volume = ref<number | string>(getStore(trackInfo.username) ?? 1)
+const volume = computed<number | string>(
+  () => getStore(trackInfo.username) ?? 1
+)
 
 const { findUserByName } = useUsersStore()
 const user = computed(() => findUserByName(trackInfo.username))
@@ -23,42 +30,28 @@ const parseToFloat = (value: number | string): number => {
   }
   return parseFloat(value)
 }
-
-watch(
-  () => volume.value,
-  v => {
-    setStore(trackInfo.username, parseToFloat(v))
-  },
-  { deep: true, immediate: true }
-)
-
-watch(
-  () => getStore(trackInfo.username),
-  v => {
-    if (v) {
-      volume.value = v
-    }
-  },
-  { deep: true }
-)
 </script>
 
 <template>
-  <div>
-    <div :class="isLarge ? $style.LargeCard : $style.UserCard">
-      <AudioTrack :track-info="trackInfo" :volume="parseToFloat(volume)" />
+  <template v-if="isShow">
+    <div>
+      <div :class="isLarge ? $style.LargeCard : $style.UserCard">
+        <AudioTrack :track-info="trackInfo" :volume="parseToFloat(volume)" />
 
-      <div :class="$style.OuterIcon">
-        <img :src="iconImage" :class="$style.OuterImage" />
-      </div>
-      <div :class="isLarge ? $style.LargeInnerIcon : $style.InnerIcon">
-        <img :src="iconImage" :class="$style.InnerImage" />
-      </div>
+        <div :class="$style.OuterIcon">
+          <img :src="iconImage" :class="$style.OuterImage" />
+        </div>
+        <div :class="isLarge ? $style.LargeInnerIcon : $style.InnerIcon">
+          <img :src="iconImage" :class="$style.InnerImage" />
+        </div>
 
-      <div :class="$style.NameLabel">{{ trackInfo.username }}</div>
+        <div :class="$style.NameLabel">{{ trackInfo.username }}</div>
+      </div>
     </div>
-    <input v-model="volume" type="range" min="0" max="3" step="0.01" />
-  </div>
+  </template>
+  <template v-else>
+    <AudioTrack :track-info="trackInfo" :volume="parseToFloat(volume)" />
+  </template>
 </template>
 <style lang="scss" module>
 .UserCard {
