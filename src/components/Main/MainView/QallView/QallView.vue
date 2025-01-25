@@ -189,9 +189,13 @@ const showShareScreenSettingDetail = ref(false)
       :typing-users="[]"
       :class="$style.channelView"
     />
-    <h1 :class="$style.Header">Qall View</h1>
+    <IconButton
+      icon-name="close"
+      icon-mdi
+      :class="$style.closeButton"
+      @click="isSubView = true"
+    />
     <UserList />
-    <IconButton icon-name="close" icon-mdi @click="isSubView = true" />
 
     <div :class="$style.TrackContainer">
       <div :class="$style.controlBar">
@@ -397,5 +401,11 @@ const showShareScreenSettingDetail = ref(false)
 
 .soundBoardButton {
   position: relative;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }
 </style>

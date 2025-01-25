@@ -16,6 +16,7 @@
     </template>
     <template #sidebar>
       <channel-sidebar
+        v-if="getQallingState(channelId) !== 'mainView'"
         :channel-id="channelId"
         :is-sidebar-opener-ready="isReady"
         :pinned-messages="pinnedMessages"
