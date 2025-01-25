@@ -150,9 +150,6 @@ const volumeSliderClass = computed(() => ({
   background: transparent;
   border-radius: 8px;
 
-  /* overflow: hidden; を削除 or overflow: visible; に変更する */
-  /* overflow: hidden; */
-
   &::-webkit-slider-runnable-track {
     -webkit-appearance: none;
     width: 100%;
