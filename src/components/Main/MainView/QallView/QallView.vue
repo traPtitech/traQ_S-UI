@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { useQall } from '/@/composables/qall/useQall'
 import UserList from '/@/components/Main/MainView/QallView/UserList.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, useTemplateRef } from 'vue'
 import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import CallControlButton from './CallControlButton.vue'
 import { LocalTrackPublication } from 'livekit-client'
 import QallMessageView from './QallMessageView.vue'
 import SoundBoard from './SoundBoard.vue'
+import ClickOutside from '/@/components/UI/ClickOutside'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 
 const {
   tracksMap,
@@ -16,7 +18,9 @@ const {
   leaveQall,
   addScreenShareTrack,
   addCameraTrack,
-  removeVideoTrack
+  removeVideoTrack,
+  publishData,
+  qallMitt
 } = useQall()
 
 const isMicOn = ref(true)
@@ -105,12 +109,24 @@ const toggleScreen = async () => {
 }
 
 const handleSound = () => {
-  // TODO
-  console.log('sound')
+  showSoundBoard.value = true
 }
+
+const reactionButton = useTemplateRef<HTMLDivElement>('reactionButton')
+const { openStampPicker, closeStampPicker } = useStampPickerInvoker(
+  async stampData => {
+    try {
+      await publishData({ type: 'stamp', message: stampData.id })
+      qallMitt.emit('pushStamp', stampData.id)
+    } catch (e) {}
+  },
+  reactionButton,
+  false,
+  'bottom-left'
+)
 const handleReaction = () => {
   // TODO
-  console.log('reaction')
+  openStampPicker()
 }
 const handleGroup = () => {
   // TODO
@@ -127,11 +143,15 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
 const backgroundImage = ref<File>()
 
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
+
+const showSoundBoard = ref(false)
 </script>
 
 <template>
   <div :class="$style.Block">
-    <SoundBoard />
+    <ClickOutside @click-outside="showSoundBoard = false">
+      <SoundBoard v-if="showSoundBoard" />
+    </ClickOutside>
     <DanmakuContainer />
     <QallMessageView
       :channel-id="callingChannel"
@@ -188,14 +208,18 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
     <div :class="$style.TrackContainer">
       <div :class="$style.controlBar">
         <div :class="$style.smallButtonGroup">
-          <CallControlButtonSmall
-            icon="sound_detection_loud_sound"
-            :on-click="handleSound"
-          />
-          <CallControlButtonSmall
-            icon="add_reaction"
-            :on-click="handleReaction"
-          />
+          <div>
+            <CallControlButtonSmall
+              icon="sound_detection_loud_sound"
+              :on-click="handleSound"
+            />
+          </div>
+          <div ref="reactionButton">
+            <CallControlButtonSmall
+              icon="add_reaction"
+              :on-click="handleReaction"
+            />
+          </div>
         </div>
 
         <div :class="$style.verticalBar"></div>
