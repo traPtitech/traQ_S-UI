@@ -42,7 +42,6 @@ const selectedSid = ref<string>()
     <UserCard
       v-else-if="
         selectedTrack.trackPublication?.kind === 'audio' &&
-        selectedTrack.isRemote &&
         !screenShareTrackSidMap
           .values()
           ?.some?.(valueSid => valueSid === selectedSid)
@@ -78,13 +77,12 @@ const selectedSid = ref<string>()
       <div
         v-else-if="
           track.trackPublication?.kind === 'audio' &&
-          track.isRemote &&
           !screenShareTracks.some?.(([_, valueSid]) => valueSid === sid)
         "
         :class="$style.card"
         @click="[selectedTrack, selectedSid] = [track, sid]"
       >
-        <AudioComponent :track-info="track" is-show />
+        <UserCard :track-info="track" />
       </div>
     </template>
   </div>
