@@ -139,7 +139,7 @@ const backgroundImage = ref<File>()
 
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 
-const handleVolume = (e: Event) => {
+const handleParticipantVolume = (e: Event) => {
   const target = e.target as HTMLInputElement
   console.log(target.value)
 }
@@ -276,7 +276,7 @@ const handleParticipantMute = () => {
                       type="range"
                       min="0"
                       max="100"
-                      @input="handleVolume"
+                      @input="handleParticipantVolume"
                     />
                     <button :class="$style.accountMinusButton">
                       <a-icon name="account-minus" :size="24" mdi />
