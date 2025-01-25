@@ -42,6 +42,7 @@ type Room = {
 type Rooms = Room[]
 
 const rooms = ref<Rooms>([])
+
 const callingChannel = ref('')
 
 const {
@@ -120,8 +121,7 @@ const qallFetch = async (
   })
 }
 
-/** 内部で使うサウンドボード一覧の型(サーバレスポンス) */
-type SoundboardItem = {
+export type SoundboardItem = {
   soundId: string
   soundName: string
   stampId: string
@@ -150,11 +150,13 @@ const getSoundboardList = async (): Promise<SoundboardListResponse> => {
  */
 const postSoundboard = async (
   file: File,
-  soundName: string
+  soundName: string,
+  stampId: string
 ): Promise<{ soundId: string }> => {
   const formData = new FormData()
   formData.append('audio', file)
   formData.append('soundName', soundName)
+  formData.append('stampId', stampId)
 
   // 「headers.Content-Type = ''」でヘッダを削除し、multipartを有効にする
   const res = await qallFetch('/api/soundboard', {
@@ -171,7 +173,6 @@ const postSoundboard = async (
   }
   return await res.json()
 }
-
 
 /**
  * POST /soundboard/play

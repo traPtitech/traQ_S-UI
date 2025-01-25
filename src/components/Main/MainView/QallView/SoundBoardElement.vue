@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import AStamp from '/@/components/UI/AStamp.vue'
-
-const stampId = ref('69c10725-2176-45ac-a4a5-22e70b8a76f7')
-const soundName = ref(
-  '草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草'
-)
+const { soundName, stampId } = defineProps<{
+  soundName: string
+  stampId: string
+}>()
+console.log(stampId)
 </script>
 
 <template>

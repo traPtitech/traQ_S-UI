@@ -2,26 +2,6 @@
   <div :class="$style.container">
     <h2>音声ファイル管理</h2>
 
-    <!-- サウンド一覧の表示 -->
-    <div v-if="soundboardList.length" :class="$style.listSection">
-      <h3>登録されている音声一覧</h3>
-      <ul>
-        <li v-for="item in soundboardList" :key="item.soundId" :class="$style.soundItem">
-          <!-- 音声の名前表示 -->
-          <span>{{ item.soundName }}</span>
-          <!-- Stampアイコンなど表示したければ、stampIdとcreatorId等も表示 -->
-          <AStamp v-if="item.stampId" :stamp-id="item.stampId" :size="20" />
-          <!-- 再生ボタン (今入っている通話で再生) -->
-          <form-button
-            label="再生"
-            type="primary"
-            icon="play"
-            @click="handlePlaySound(item.soundId)"
-          />
-        </li>
-      </ul>
-    </div>
-
     <div :class="$style.content">
       <div :class="$style.fileSection">
         <input
@@ -70,13 +50,29 @@
         />
       </div>
     </div>
+
+    <!-- サウンド一覧の表示 -->
+    <div v-if="soundboardList.length" :class="$style.listSection">
+      <h3>登録されている音声一覧</h3>
+      <ul>
+        <li
+          v-for="item in soundboardList"
+          :key="item.soundId"
+          :class="$style.soundItem"
+        >
+          <!-- 音声の名前表示 -->
+          <span>{{ item.soundName }}</span>
+          <!-- Stampアイコンなど表示したければ、stampIdとcreatorId等も表示 -->
+          <AStamp v-if="item.stampId" :stamp-id="item.stampId" :size="20" />
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, useTemplateRef } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import { templateRef } from '@vueuse/core'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import AStamp from '/@/components/UI/AStamp.vue'
 
@@ -84,10 +80,15 @@ import AStamp from '/@/components/UI/AStamp.vue'
 import { useToastStore } from '/@/store/ui/toast'
 
 // Qall関連のcomposableを利用
-import { useQall } from '/@/composables/qall/useQall'
+import { useQall, type SoundboardItem } from '/@/composables/qall/useQall'
 
 // ◆ Qallの通信インターフェイスを取得
-const { getSoundboardList, postSoundboard, postSoundboardPlay, callingChannel } = useQall()
+const {
+  getSoundboardList,
+  postSoundboard,
+  postSoundboardPlay,
+  callingChannel
+} = useQall()
 
 // UI・状態
 const fileInput = ref<HTMLInputElement | null>(null)
@@ -96,7 +97,7 @@ const audioName = ref('')
 
 // StampPicker関連
 const stampId = ref('')
-const stampPickerButton = templateRef<HTMLButtonElement>('stampPickerButton')
+const stampPickerButton = useTemplateRef<HTMLButtonElement>('stampPickerButton')
 const { toggleStampPicker } = useStampPickerInvoker(
   async stampData => {
     stampId.value = stampData.id
@@ -105,16 +106,6 @@ const { toggleStampPicker } = useStampPickerInvoker(
   false,
   'bottom-left'
 )
-
-// 音声一覧
-// 手動で定義された SoundboardItem 型
-type SoundboardItem = {
-  soundId: string // サーバが発行したサウンドID
-  soundName: string // ユーザが指定した表示用のサウンド名
-  stampId: string // 任意のスタンプID等、サウンドに紐づく拡張情報
-  creatorId: string // 作成者のユーザID
-};
-
 const soundboardList = ref<SoundboardItem[]>([])
 
 // エラーメッセージなどUI表示
@@ -143,13 +134,21 @@ const handleFileSelect = (event: Event) => {
  * アップロードボタン押下時
  */
 const handleUpload = async () => {
-  if (!selectedFile.value || !audioName.value) {
-    addErrorToast('音声ファイルまたは名前が指定されていません')
+  if (!selectedFile.value) {
+    addErrorToast('音声ファイルが指定されていません')
+    return
+  }
+  if (!audioName.value) {
+    addErrorToast('音声名が指定されていません')
+    return
+  }
+  if (!stampId.value) {
+    addErrorToast('スタンプIDが指定されていません')
     return
   }
 
   try {
-    await postSoundboard(selectedFile.value, audioName.value) // 必須フィールドを送信
+    await postSoundboard(selectedFile.value, audioName.value, stampId.value) // 必須フィールドを送信
     addSuccessToast('アップロードが完了しました')
     await loadSoundboardList() // サウンド一覧を再取得
     resetUploadForm() // フォームリセット
@@ -166,7 +165,6 @@ const resetUploadForm = () => {
     fileInput.value.value = ''
   }
 }
-
 
 /**
  * サウンド一覧を読み込み

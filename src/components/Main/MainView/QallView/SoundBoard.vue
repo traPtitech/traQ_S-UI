@@ -1,16 +1,61 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import SoundBoardElement from './SoundBoardElement.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
+import { useToastStore } from '/@/store/ui/toast'
+import { useQall, type SoundboardItem } from '/@/composables/qall/useQall'
 
 const searchQuery = ref('')
+
+const { addErrorToast, addSuccessToast } = useToastStore()
+
+const { getSoundboardList, postSoundboardPlay, callingChannel } = useQall()
+const soundboardList = ref<SoundboardItem[]>([])
+/**
+ * サウンド一覧を読み込み
+ */
+const loadSoundboardList = async () => {
+  try {
+    const list = await getSoundboardList()
+    soundboardList.value = list
+  } catch (e) {
+    addErrorToast(`サウンド一覧の取得に失敗しました: ${String(e)}`)
+  }
+}
+
+/**
+ * 指定サウンドを再生
+ */
+const handlePlaySound = async (soundId: string) => {
+  if (!callingChannel.value) {
+    addErrorToast('再生するには通話中である必要があります')
+    return
+  }
+  try {
+    const result = await postSoundboardPlay(soundId, callingChannel.value)
+    // resultには ingressId 等が返る
+    addSuccessToast(`サウンドを再生中 (IngressID: ${result.ingressId})`)
+  } catch (e) {
+    addErrorToast(`サウンド再生に失敗しました: ${String(e)}`)
+  }
+}
+
+onMounted(() => {
+  loadSoundboardList()
+})
 </script>
 
 <template>
   <div :class="$style.soundBoard">
     <div><FormInput v-model="searchQuery" placeholder="検索" /></div>
     <div :class="$style.elementContainer">
-      <SoundBoardElement v-for="i in 15" :key="i" />
+      <SoundBoardElement
+        v-for="item in soundboardList"
+        :key="item.soundId"
+        :sound-name="item.soundName"
+        :stamp-id="item.stampId"
+        @click="handlePlaySound(item.soundId)"
+      />
     </div>
   </div>
 </template>
