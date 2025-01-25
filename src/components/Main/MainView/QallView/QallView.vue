@@ -123,18 +123,6 @@ const currentRoomParticipants = computed(() => {
     )?.participants ?? []
   )
 })
-// const currentRoomParticipants = ref([
-//   { user: { id: '1', displayName: 'User 1' }, joinedAt: '2023-01-01' },
-//   { user: { id: '2', displayName: 'User 2' }, joinedAt: '2023-01-02' },
-//   { user: { id: '3', displayName: 'User 3' }, joinedAt: '2023-01-03' },
-//   { user: { id: '4', displayName: 'User 4' }, joinedAt: '2023-01-04' },
-//   { user: { id: '5', displayName: 'User 5' }, joinedAt: '2023-01-05' },
-//   { user: { id: '6', displayName: 'User 6' }, joinedAt: '2023-01-06' },
-//   { user: { id: '7', displayName: 'User 7' }, joinedAt: '2023-01-07' },
-//   { user: { id: '8', displayName: 'User 8' }, joinedAt: '2023-01-08' },
-//   { user: { id: '9', displayName: 'User 9' }, joinedAt: '2023-01-09' },
-//   { user: { id: '10', displayName: 'User 10' }, joinedAt: '2023-01-10' }
-// ])
 
 const handleGroup = () => {
   showParticipants.value = !showParticipants.value
