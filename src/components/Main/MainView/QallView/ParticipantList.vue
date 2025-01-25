@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useUserVolume } from '/@/store/app/userVolume'
 import { ref, watch, useCssModule, computed } from 'vue'

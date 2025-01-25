@@ -51,6 +51,7 @@ const {
   addCameraTrack,
   setLocalTrackMute,
   publishData,
+  toggleMicTrack,
   tracksMap,
   screenShareTrackSidMap,
   qallMitt
@@ -157,6 +158,7 @@ export const useQall = () => {
     removeVideoTrack,
     publishData,
     setSpeakerMute,
+    toggleMicMute: toggleMicTrack,
     tracksMap,
     screenShareTrackSidMap,
     qallMitt

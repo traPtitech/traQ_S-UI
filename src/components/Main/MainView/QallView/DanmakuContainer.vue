@@ -8,7 +8,6 @@ import { useDanmakuSparkle } from './useDanmakuSparkle'
 import { useQall } from '/@/composables/qall/useQall'
 
 import { messageMitt } from '/@/store/entities/messages'
-import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import useMittListener from '/@/composables/utils/useMittListener'
 
 const { callingChannel, publishData, qallMitt } = useQall()

@@ -444,7 +444,6 @@ const addScreenShareTrack = async () => {
         ...room.value.localParticipant.attributes,
         [videoSid]: audioSid
       })
-      console.log(room.value.localParticipant.attributes)
     }
   } catch {
     // TODO:シェアをキャンセルした時も失敗しましたメッセージがでるのはちょっと違和感があるかも
@@ -478,7 +477,6 @@ const removeVideoTrack = async (localpublication: LocalTrackPublication) => {
       true
     )
     await room.value.localParticipant.setAttributes(newAttributes)
-    console.log(room.value.localParticipant.attributes)
     if (!audioSid) {
       return
     }
@@ -535,6 +533,7 @@ export const useLiveKitSDK = () => {
     publishData,
     setTrackEnabled,
     setLocalTrackMute,
+    toggleMicTrack,
     tracksMap,
     screenShareTrackSidMap,
     qallMitt

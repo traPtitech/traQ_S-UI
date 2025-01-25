@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useQall } from '/@/composables/qall/useQall'
-import UserList from '/@/components/Main/MainView/QallView/UserList.vue'
 import { onMounted, ref, useTemplateRef, computed } from 'vue'
 import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
@@ -22,6 +21,7 @@ const {
   addCameraTrack,
   removeVideoTrack,
   publishData,
+  toggleMicMute,
   qallMitt,
   rooms
 } = useQall()
@@ -30,7 +30,9 @@ const isMicOn = ref(true)
 const isCameraOn = ref(false)
 const isScreenSharing = ref(false)
 
-const micIcon = ref(isMicOn.value ? 'microphone' : 'microphone-off')
+const micIcon = computed(() =>
+  isMicOn.value ? 'microphone' : 'microphone-off'
+)
 const cameraIcon = ref(isCameraOn.value ? 'vide' : 'video-off')
 const screenShareIcon = ref(
   isScreenSharing.value ? 'stop-screen-share' : 'screen-share'
@@ -38,25 +40,9 @@ const screenShareIcon = ref(
 
 const toggleAudio = async () => {
   try {
-    for (const trackInfo of tracksMap.value.values()) {
-      if (
-        !trackInfo.isRemote &&
-        trackInfo.trackPublication?.kind === 'audio' &&
-        trackInfo.trackPublication.track
-      ) {
-        if (isMicOn.value) {
-          await trackInfo.trackPublication.track.mute()
-        } else {
-          await trackInfo.trackPublication.track.unmute()
-        }
-        isMicOn.value = !isMicOn.value
-        micIcon.value = isMicOn.value ? 'microphone' : 'microphone-off'
-        break
-      }
-    }
-  } catch (err) {
-    console.error('Failed to toggle audio:', err)
-  }
+    toggleMicMute()
+    isMicOn.value = !isMicOn.value
+  } catch (err) {}
 }
 
 const toggleVideo = async () => {
