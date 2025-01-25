@@ -19,7 +19,6 @@ const firstVideoTrack = computed(
 )
 
 const restoreMainView = () => {
-  console.log(callingChannel.value)
   const channelPath = channelIdToPathString(callingChannel.value)
   router.push(constructChannelPath(channelPath))
   isSubView.value = false
