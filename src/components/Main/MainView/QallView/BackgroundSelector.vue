@@ -1,14 +1,38 @@
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits, onMounted } from 'vue'
+import { useQall } from '/@/composables/qall/useQall'
+import FormButton from '/@/components/UI/FormButton.vue'
+
+const props = defineProps<{
+  open: boolean
+  videoInputs: MediaDeviceInfo[]
+}>()
 
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'save', data: { backgroundType: string; backgroundImage?: File }): void
+  (
+    e: 'save',
+    data: {
+      backgroundType: 'original' | 'blur' | 'file' | 'screen'
+      backgroundImage?: File
+      selectedVideoInput: MediaDeviceInfo
+    }
+  ): void
 }>()
 
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
-
 const backgroundImage = ref<File | undefined>()
+const selectedCamera = ref('')
+const selectedVideoInput = ref<MediaDeviceInfo>()
+
+const { addCameraTrack } = useQall()
+
+onMounted(() => {
+  if (props.videoInputs[0] !== undefined && props.videoInputs.length > 0) {
+    selectedCamera.value = props.videoInputs[0].deviceId
+    selectedVideoInput.value = props.videoInputs[0]
+  }
+})
 
 const handleFileChange = (e: Event) => {
   const target = e.target as HTMLInputElement
@@ -18,10 +42,18 @@ const handleFileChange = (e: Event) => {
 }
 
 const handleSave = () => {
-  emit('save', {
-    backgroundType: backgroundType.value,
-    backgroundImage: backgroundImage.value
-  })
+  const selectedVideoInput = props.videoInputs.find(
+    d => d.deviceId === selectedCamera.value
+  )
+  if (selectedVideoInput) {
+    emit('save', {
+      backgroundType: backgroundType.value,
+      backgroundImage: backgroundImage.value,
+      selectedVideoInput
+    })
+  } else {
+    console.error('No video input device selected')
+  }
 }
 
 const handleClose = () => {
@@ -30,60 +62,205 @@ const handleClose = () => {
 </script>
 
 <template>
-  <div class="backgroundSelector">
-    <h3>背景を選択</h3>
-    <div class="radioGroup">
-      <label>
-        <input v-model="backgroundType" type="radio" value="original" />
-        Original
-      </label>
-      <label>
-        <input v-model="backgroundType" type="radio" value="blur" />
-        Blur
-      </label>
-      <label>
-        <input v-model="backgroundType" type="radio" value="file" />
-        File
-      </label>
-      <label>
-        <input v-model="backgroundType" type="radio" value="screen" />
-        Screen
-      </label>
-    </div>
-    <!-- file選択中のみファイルアップロードを表示 -->
-    <div v-if="backgroundType === 'file'" class="fileUpload">
-      <input type="file" @change="handleFileChange" />
-      <p v-if="backgroundImage">選択中: {{ backgroundImage.name }}</p>
-    </div>
-    <div class="buttons">
-      <button @click="handleSave">保存</button>
-      <button @click="handleClose">キャンセル</button>
+  <div v-if="open" class="modal-overlay">
+    <div class="modal-content">
+      <div>
+        <h3 class="modal-title">カメラ設定</h3>
+        <div class="form-group">
+          <div class="form-item">
+            <label for="camera-select" class="form-item-label"
+              >カメラを選択</label
+            >
+            <select id="camera-select" v-model="selectedCamera" class="input">
+              <option value="" disabled>選択してください</option>
+              <option
+                v-for="device in videoInputs"
+                :key="device.deviceId"
+                :value="device.deviceId"
+              >
+                {{ device.label || 'No Label' }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-item">
+            <label class="form-item-label">背景を選択</label>
+            <div class="radio-group">
+              <div class="radio-item">
+                <input
+                  id="original"
+                  v-model="backgroundType"
+                  type="radio"
+                  value="original"
+                />
+                <label for="original" class="radio-label">
+                  <span>Original</span>
+                </label>
+              </div>
+              <div class="radio-item">
+                <input
+                  id="blur"
+                  v-model="backgroundType"
+                  type="radio"
+                  value="blur"
+                />
+                <label for="blur" class="radio-label">
+                  <span>Blur</span>
+                </label>
+              </div>
+              <div class="radio-item">
+                <input
+                  id="file"
+                  v-model="backgroundType"
+                  type="radio"
+                  value="file"
+                />
+                <label for="file" class="radio-label">
+                  <span>File</span>
+                </label>
+              </div>
+              <div class="radio-item">
+                <input
+                  id="screen"
+                  v-model="backgroundType"
+                  type="radio"
+                  value="screen"
+                />
+                <label for="screen" class="radio-label">
+                  <span>Screen</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div v-if="backgroundType === 'file'" class="form-item">
+            <button type="button" class="file-button">
+              背景画像を選択
+              <input
+                type="file"
+                class="file-input"
+                accept="image/*"
+                @change="handleFileChange"
+              />
+            </button>
+            <p v-if="backgroundImage" class="file-name">
+              選択中: {{ backgroundImage.name }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <FormButton label="保存" type="primary" @click="handleSave" />
+        <FormButton
+          label="カメラを追加"
+          type="tertiary"
+          @click="
+            addCameraTrack(selectedVideoInput, backgroundType, backgroundImage)
+          "
+        />
+        <FormButton label="閉じる" type="secondary" @click="handleClose" />
+      </div>
     </div>
   </div>
 </template>
 
-<style module lang="scss">
-.backgroundSelector {
-  padding: 16px;
-  background-color: #fff;
-  border-radius: 8px;
-  width: 300px;
+<style scoped lang="scss">
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
 }
 
-.radioGroup {
+.modal-content {
+  @include background-primary;
+  @include color-ui-primary;
+  padding: 24px;
+  border-radius: 8px;
+  width: 95%;
+  max-width: 500px;
+  border: 1px solid $theme-text-primary-default;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-item {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 16px;
 }
 
-.fileUpload {
-  margin-bottom: 16px;
+.form-item-label {
+  font-weight: bold;
 }
 
-.buttons {
+.input {
+  padding: 8px;
+  border-radius: 4px;
+  @include background-primary;
+  @include color-ui-primary;
+  border: 1px solid $theme-ui-secondary-default;
+}
+
+.radio-group {
   display: flex;
+  flex-direction: column;
   gap: 8px;
+}
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radio-label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.file-button {
+  position: relative;
+  padding: 12px 16px;
+  border-radius: 4px;
+  @include background-primary;
+  @include color-ui-primary;
+  border: 1px solid $theme-ui-secondary-default;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.file-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-name {
+  font-size: 0.875rem;
+  color: $theme-text-secondary-default;
+}
+
+.actions {
+  display: flex;
   justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
 }
 </style>

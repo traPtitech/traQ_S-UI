@@ -174,11 +174,19 @@ const consoleLog = () => {
 const handleBackgroundSave = (data: {
   backgroundType: 'original' | 'blur' | 'file' | 'screen'
   backgroundImage?: File
+  selectedVideoInput?: MediaDeviceInfo
 }) => {
   console.log('選択された背景', data.backgroundType, data.backgroundImage)
   backgroundType.value = data.backgroundType
   backgroundImage.value = data.backgroundImage
+  showBackgroundSelector.value = false
 }
+
+const handleClose = () => {
+  showBackgroundSelector.value = false
+}
+
+const showBackgroundSelector = ref(false)
 </script>
 
 <template>
@@ -192,9 +200,24 @@ const handleBackgroundSave = (data: {
     <h1 :class="$style.Header">Qall View</h1>
     <div>
       <button @click="addScreenShareTrack">Add Screen Share Track</button>
-      <BackgroundSelector @save="handleBackgroundSave" />
+      <button
+        @click="
+          () => {
+            showBackgroundSelector = true
+          }
+        "
+      >
+        バックグランドセレクター
+      </button>
+      <BackgroundSelector
+        v-if="showBackgroundSelector"
+        :open="showBackgroundSelector"
+        :video-inputs="videoInputs"
+        @save="handleBackgroundSave"
+        @close="handleClose"
+      />
       <button @click="consoleLog">console.log</button>
-      <select v-model="selectedVideoInput">
+      <!-- <select v-model="selectedVideoInput">
         <option
           v-for="videoInput in videoInputs"
           :key="videoInput.deviceId"
@@ -202,9 +225,9 @@ const handleBackgroundSave = (data: {
         >
           {{ videoInput.label }}
         </option>
-      </select>
+      </select> -->
 
-      <input
+      <!-- <input
         id="original"
         v-model="backgroundType"
         type="radio"
@@ -227,6 +250,7 @@ const handleBackgroundSave = (data: {
           }
         "
       />
+      -->
       <button
         @click="[
           addCameraTrack(selectedVideoInput, backgroundType, backgroundImage),
