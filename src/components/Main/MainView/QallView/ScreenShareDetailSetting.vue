@@ -13,6 +13,11 @@ const emit = defineEmits<{
 
 const { addScreenShareTrack } = useQall()
 
+const handleScreenShare = () => {
+  addScreenShareTrack()
+  emit('close')
+}
+
 const handleClose = () => {
   emit('close')
 }
@@ -26,7 +31,7 @@ const handleClose = () => {
         <FormButton
           label="画面共有を追加"
           type="tertiary"
-          @click="addScreenShareTrack"
+          @click="handleScreenShare"
         />
         <FormButton label="閉じる" type="secondary" @click="handleClose" />
       </div>
