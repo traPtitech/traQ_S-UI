@@ -15,11 +15,14 @@ import type {
   Participant,
   LocalTrack
 } from 'livekit-client'
-import { computed, ref, watch, watchEffect, type Ref } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import apis from '/@/lib/apis'
 import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
 import mitt from 'mitt'
+import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'
+import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
+import { useRtcSettings } from '/@/store/app/rtcSettings'
 
 const virtualBackgroundAssetsPath =
   'https://cdn.jsdelivr.net/npm/@shiguredo/virtual-background@latest/dist'
@@ -28,6 +31,7 @@ type QallEventMap = {
 }
 const { addErrorToast } = useToastStore()
 const qallMitt = mitt<QallEventMap>()
+const rtcSettings = useRtcSettings()
 
 export type TrackInfo = (
   | {
@@ -53,6 +57,7 @@ const speakerIdentity = ref<string[]>([])
 const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
 const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
 const screenShareTrackSidMap = ref<Map<string, string>>(new Map())
+const mixer = ref<AudioStreamMixer>()
 
 function handleTrackSubscribed(
   track: RemoteTrack,
@@ -127,6 +132,14 @@ function handleParticipantAttributesChanged(
   )
 }
 
+function handleParticipantConnected(participant: Participant) {
+  mixer.value?.playFileSource('qall_joined')
+}
+
+function handleParticipantDisconnected(participant: Participant) {
+  mixer.value?.playFileSource('qall_left')
+}
+
 const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
   try {
     const traQtoken = (await apis.getMyQRCode(true)).data
@@ -164,6 +177,8 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
         RoomEvent.ParticipantAttributesChanged,
         handleParticipantAttributesChanged
       )
+      .on(RoomEvent.ParticipantConnected, handleParticipantConnected)
+      .on(RoomEvent.ParticipantDisconnected, handleParticipantDisconnected)
 
     // connect to room
     await room.value.connect('wss://livekit.qall-dev.trapti.tech', token)
@@ -194,6 +209,14 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
         screenShareTrackSidMap.value.set(key, participant.attributes[key] ?? '')
       })
     })
+
+    const audioContext = new ExtendedAudioContext()
+    mixer.value = new AudioStreamMixer(
+      audioContext,
+      rtcSettings.masterVolume.value
+    )
+    await mixer.value.initializePromise
+    await mixer.value.playFileSource('qall_start')
   } catch {
     addErrorToast('Qallの接続に失敗しました')
     await leaveRoom()
@@ -208,12 +231,13 @@ const screenShareTracks = computed(() =>
 async function leaveRoom() {
   // Leave the room by calling 'disconnect' method over the Room object
   await room.value?.disconnect()
+  await mixer.value?.playFileSource('qall_end')
 
   // Empty all variables
   room.value = undefined
   tracksMap.value.clear()
   screenShareTrackSidMap.value.clear()
-
+  mixer.value = undefined
   window.removeEventListener('beforeunload', leaveRoom)
 }
 

@@ -288,8 +288,8 @@ export const useQall = () => {
 
     callingChannel.value = channelName
   }
-  const leaveQall = () => {
-    leaveRoom()
+  const leaveQall = async () => {
+    await leaveRoom()
     callingChannel.value = ''
     isSubView.value = false
     selectedTrack.value = undefined
