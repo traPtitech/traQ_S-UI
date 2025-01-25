@@ -1,5 +1,8 @@
 import { ref } from 'vue'
-import { useLiveKitSDK } from '/@/composables/qall/useLiveKitSDK'
+import {
+  useLiveKitSDK,
+  type TrackInfo
+} from '/@/composables/qall/useLiveKitSDK'
 import { useMeStore } from '/@/store/domain/me'
 import { useToastStore } from '/@/store/ui/toast'
 import type { LocalAudioTrack, LocalVideoTrack } from 'livekit-client'
@@ -55,6 +58,7 @@ const {
   tracksMap,
   screenShareTrackSidMap,
   screenShareTracks,
+  isMicOn,
   qallMitt
 } = useLiveKitSDK()
 const { myId } = useMeStore()
@@ -266,9 +270,10 @@ const getQallingState = (channelId: string) => {
   return 'subView'
 }
 
-const isMicOn = ref(true)
 const isCameraOn = ref(false)
 const isScreenSharing = ref(false)
+
+const selectedTrack = ref<TrackInfo>()
 
 export const useQall = () => {
   const joinQall = (channelName: string, isWebinar: boolean = false) => {
@@ -286,6 +291,11 @@ export const useQall = () => {
   const leaveQall = () => {
     leaveRoom()
     callingChannel.value = ''
+    isSubView.value = false
+    selectedTrack.value = undefined
+    isMicOn.value = true
+    isCameraOn.value = false
+    isScreenSharing.value = false
   }
   return {
     callingChannel,
@@ -310,6 +320,7 @@ export const useQall = () => {
     postSoundboardPlay,
     isMicOn,
     isCameraOn,
-    isScreenSharing
+    isScreenSharing,
+    selectedTrack
   }
 }

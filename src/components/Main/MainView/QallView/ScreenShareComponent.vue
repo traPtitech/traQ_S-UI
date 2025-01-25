@@ -7,7 +7,6 @@ import VideoComponent from './VideoComponent.vue'
 const { trackInfo, audioTrackInfo } = defineProps<{
   trackInfo: TrackInfo
   audioTrackInfo: TrackInfo | undefined
-  isLarge: boolean
   notMute?: boolean
 }>()
 

@@ -4,9 +4,10 @@ import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.
 import AudioComponent from '/@/components/Main/MainView/QallView/AudioComponent.vue'
 import { onMounted, ref } from 'vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
-import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
+import UserCard from './UserCard.vue'
 
-const { tracksMap, screenShareTrackSidMap, screenShareTracks } = useQall()
+const { tracksMap, screenShareTrackSidMap, screenShareTracks, selectedTrack } =
+  useQall()
 
 const videoInputs = ref<MediaDeviceInfo[]>([])
 onMounted(async () => {
@@ -14,12 +15,15 @@ onMounted(async () => {
   videoInputs.value = devices.filter(d => d.kind === 'videoinput')
 })
 const selectedVideoInput = ref<MediaDeviceInfo>()
-const selectedTrack = ref<TrackInfo>()
 const selectedSid = ref<string>()
 </script>
 
 <template>
-  <div v-if="selectedTrack !== undefined" :class="$style.largeCard">
+  <div
+    v-if="selectedTrack !== undefined"
+    :key="selectedTrack.trackPublication?.trackSid"
+    :class="$style.largeCard"
+  >
     <VideoComponent
       v-if="
         selectedTrack.trackPublication?.kind === 'video' &&
@@ -33,10 +37,9 @@ const selectedSid = ref<string>()
       :audio-track-info="
         tracksMap.get(screenShareTrackSidMap.get(selectedSid ?? '') ?? '')
       "
-      is-large
       not-mute
     />
-    <AudioComponent
+    <UserCard
       v-else-if="
         selectedTrack.trackPublication?.kind === 'audio' &&
         selectedTrack.isRemote &&
@@ -45,7 +48,6 @@ const selectedSid = ref<string>()
           ?.some?.(valueSid => valueSid === selectedSid)
       "
       :track-info="selectedTrack"
-      is-show
     />
   </div>
   <div :class="$style.TrackContainer">
@@ -71,7 +73,6 @@ const selectedSid = ref<string>()
           :audio-track-info="
             tracksMap.get(screenShareTrackSidMap.get(sid) ?? '')
           "
-          :is-large="false"
         />
       </div>
       <div

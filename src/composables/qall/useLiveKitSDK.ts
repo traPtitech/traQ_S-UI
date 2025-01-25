@@ -185,6 +185,7 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
           dtx: true
         }
       )
+      isMicOn.value = true
     }
 
     await room.value.localParticipant.setAttributes({})
@@ -511,6 +512,7 @@ const publishData = async (data: { type: 'stamp'; message: string }) => {
   await room.value.localParticipant.publishData(encoded, { reliable: true })
 }
 const decoder = new TextDecoder()
+const isMicOn = ref(false)
 
 export const useLiveKitSDK = () => {
   return {
@@ -526,6 +528,7 @@ export const useLiveKitSDK = () => {
     tracksMap,
     screenShareTrackSidMap,
     screenShareTracks,
+    isMicOn,
     qallMitt
   }
 }
