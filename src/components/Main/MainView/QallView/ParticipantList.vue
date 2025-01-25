@@ -1,43 +1,94 @@
 <script setup lang="ts">
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
+import { useUserVolume } from '/@/store/app/userVolume'
+import { ref, watch, useCssModule, computed } from 'vue'
+import type { User } from '@traptitech/traq'
 
-interface Props {
-  participant: {
-    user: {
-      id: string
-      name: string
-      displayName: string
-    }
-  }
-  onMute: (participant: Props['participant']) => void
-  onVolumeChange: (e: Event, participant: Props['participant']) => void
+const { participant, trackInfo } = defineProps<{
+  participant: User
+  trackInfo: TrackInfo
+}>()
+
+const { getStore, setStore } = useUserVolume()
+const volume = ref<number | string>(getStore(trackInfo.username) ?? 1)
+
+const parseToFloat = (value: number | string): number => {
+  if (typeof value === 'number') return value
+  return parseFloat(value)
 }
 
-defineProps<Props>()
+watch(
+  () => volume.value,
+  v => {
+    setStore(trackInfo.username, parseToFloat(v))
+  },
+  { deep: true, immediate: true }
+)
+
+watch(
+  () => getStore(trackInfo.username),
+  v => {
+    if (v) {
+      volume.value = v
+    }
+  },
+  { deep: true }
+)
+
+const isMuted = ref(false)
+const toggleMute = (trackInfo: TrackInfo) => {
+  isMuted.value = !isMuted.value
+}
+
+const style = useCssModule()
+const minValue = 0
+const maxValue = 100
+const sliderValue = ref(50)
+
+const sliderStyle = computed(() => {
+  const val = Number(sliderValue.value)
+  const percent = ((val - minValue) / (maxValue - minValue)) * 100
+  const startColor = isMuted.value ? '#6b7d8a' : '#005BAC'
+  return {
+    background: `
+      linear-gradient(to right,
+        ${startColor} 0%,
+        ${startColor} ${percent}%,
+        #ced6db ${percent}%,
+        #ced6db 100%)
+    `
+  }
+})
+
+const volumeSliderClass = computed(() => ({
+  [style.volumeSlider]: true,
+  [style.muted]: isMuted.value
+}))
 </script>
 
 <template>
   <div :class="$style.container">
     <div :class="$style.leftSide">
-      <user-icon :size="40" :user-id="participant.user.id" />
-      <span :class="$style.userName">{{ participant.user.displayName }}</span>
+      <user-icon :size="40" :user-id="participant.id" />
+      <span :class="$style.userName">{{ participant.displayName }}</span>
       <button :class="$style.micIconButton">
-        <a-icon name="microphone-off" mdi />
+        <a-icon v-if="isMuted" name="microphone-off" mdi />
       </button>
     </div>
     <div :class="$style.rightSide">
-      <button :class="$style.iconButton" @click="() => onMute(participant)">
-        <!-- TODO: Qall 適切な条件分岐 -->
-        <a-icon v-if="false" name="volume-high" :size="24" mdi />
-        <a-icon v-else name="volume-off" mdi :size="24" />
+      <button :class="$style.iconButton" @click="toggleMute(trackInfo)">
+        <a-icon v-if="isMuted" name="volume-off" :size="24" mdi />
+        <a-icon v-else name="volume-high" mdi :size="24" />
       </button>
       <input
-        :class="$style.volumeSlider"
+        v-model="sliderValue"
         type="range"
-        min="0"
-        max="100"
-        @input="e => onVolumeChange(e, participant)"
+        :min="minValue"
+        :max="maxValue"
+        :style="sliderStyle"
+        :class="volumeSliderClass"
       />
       <button :class="$style.accountMinusButton">
         <a-icon name="account-minus" :size="24" mdi />
@@ -91,6 +142,64 @@ defineProps<Props>()
 
 .volumeSlider {
   width: 100px;
+  appearance: none;
+  background: transparent;
+  &::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 8px;
+  }
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #49535b;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -4px;
+  }
+  &::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 8px;
+  }
+  &::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #49535b;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  &::-ms-track {
+    width: 100%;
+    height: 8px;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+  }
+  &::-ms-fill-lower {
+    border-radius: 8px;
+  }
+  &::-ms-fill-upper {
+    border-radius: 8px;
+  }
+  &::-ms-thumb {
+    width: 16px;
+    height: 16px;
+    background: #49535b;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+}
+
+.muted::-webkit-slider-thumb {
+  background: #6b7d8a !important;
+}
+.muted::-moz-range-thumb {
+  background: #6b7d8a !important;
+}
+.muted::-ms-thumb {
+  background: #6b7d8a !important;
 }
 
 .accountMinusButton {
