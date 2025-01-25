@@ -10,6 +10,7 @@
           style="display: none"
           @change="handleFileSelect"
         />
+
         <form-button
           label="音声ファイルを選択"
           type="secondary"
@@ -30,6 +31,16 @@
             required
           />
         </div>
+        <AStamp v-if="stampId" :stamp-id="stampId" :size="32" />
+        <div ref="stampPickerButton">
+          <form-button
+            label="アイコンスタンプを選択"
+            type="secondary"
+            icon="plus"
+            mdi
+            @click="toggleStampPicker"
+          />
+        </div>
         <form-button
           label="アップロード"
           type="primary"
@@ -42,8 +53,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+import AStamp from '/@/components/UI/AStamp.vue'
 
 const fileInput = ref<HTMLInputElement | null>(null)
 const selectedFile = ref<File | null>(null)
@@ -60,8 +73,18 @@ const handleFileSelect = (event: Event) => {
 
   selectedFile.value = file
   audioName.value = file.name.replace(/\.[^/.]+$/, '')
-  console.log('Selected audio file:', file.name)
 }
+
+const stampId = ref('')
+const stampPickerButton = useTemplateRef<HTMLButtonElement>('stampPickerButton')
+const { toggleStampPicker } = useStampPickerInvoker(
+  async stampData => {
+    stampId.value = stampData.id
+  },
+  stampPickerButton,
+  false,
+  'bottom-left'
+)
 
 const handleUpload = () => {
   if (!selectedFile.value || !audioName.value) return

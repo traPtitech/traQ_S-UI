@@ -213,6 +213,74 @@ async function leaveRoom() {
   window.removeEventListener('beforeunload', leaveRoom)
 }
 
+const addMicTrack = async () => {
+  try {
+    if (!room.value) {
+      addErrorToast('ルームが存在しません')
+      return
+    }
+    if (!room.value?.localParticipant?.permissions?.canPublish) {
+      addErrorToast('権限がありません')
+      return
+    }
+    await room.value.localParticipant.setMicrophoneEnabled(
+      true,
+      {
+        channelCount: 2,
+        voiceIsolation: true,
+        echoCancellation: true,
+        noiseSuppression: true
+      },
+      {
+        audioPreset: AudioPresets.musicHighQualityStereo,
+        forceStereo: true,
+        red: false,
+        dtx: false
+      }
+    )
+  } catch (e) {
+    addErrorToast('マイクの共有に失敗しました')
+  }
+}
+
+const removeMicTrack = async () => {
+  try {
+    if (!room.value) {
+      addErrorToast('ルームが存在しません')
+      return
+    }
+    await room.value.localParticipant.setMicrophoneEnabled(
+      false,
+      {
+        channelCount: 2,
+        voiceIsolation: true,
+        echoCancellation: true,
+        noiseSuppression: true
+      },
+      {
+        audioPreset: AudioPresets.musicHighQualityStereo,
+        forceStereo: true,
+        red: false,
+        dtx: false
+      }
+    )
+  } catch (e) {
+    addErrorToast('マイクのミュートに失敗しました')
+  }
+}
+
+const toggleMicTrack = async () => {
+  if (!room.value) {
+    addErrorToast('ルームが存在しません')
+    return
+  }
+  if (room.value.localParticipant?.isMicrophoneEnabled) {
+    await removeMicTrack()
+  } else {
+    await addMicTrack()
+  }
+}
+
 const addCameraTrack = async (
   videoInputDevice?: MediaDeviceInfo,
   backgroundType?: 'original' | 'blur' | 'file' | 'screen',
