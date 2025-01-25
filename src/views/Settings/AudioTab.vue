@@ -83,12 +83,7 @@ import { useToastStore } from '/@/store/ui/toast'
 import { useQall, type SoundboardItem } from '/@/composables/qall/useQall'
 
 // ◆ Qallの通信インターフェイスを取得
-const {
-  getSoundboardList,
-  postSoundboard,
-  postSoundboardPlay,
-  callingChannel
-} = useQall()
+const { getSoundboardList, postSoundboard, postSoundboardPlay } = useQall()
 
 // UI・状態
 const fileInput = ref<HTMLInputElement | null>(null)
@@ -175,23 +170,6 @@ const loadSoundboardList = async () => {
     soundboardList.value = list
   } catch (e) {
     addErrorToast(`サウンド一覧の取得に失敗しました: ${String(e)}`)
-  }
-}
-
-/**
- * 指定サウンドを再生
- */
-const handlePlaySound = async (soundId: string) => {
-  if (!callingChannel.value) {
-    addErrorToast('再生するには通話中である必要があります')
-    return
-  }
-  try {
-    const result = await postSoundboardPlay(soundId, callingChannel.value)
-    // resultには ingressId 等が返る
-    addSuccessToast(`サウンドを再生中 (IngressID: ${result.ingressId})`)
-  } catch (e) {
-    addErrorToast(`サウンド再生に失敗しました: ${String(e)}`)
   }
 }
 

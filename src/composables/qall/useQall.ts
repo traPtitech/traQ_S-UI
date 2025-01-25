@@ -43,8 +43,6 @@ type Rooms = Room[]
 
 const rooms = ref<Rooms>([])
 
-const callingChannel = ref('')
-
 const {
   joinRoom,
   leaveRoom,
@@ -260,6 +258,17 @@ messageMitt.on('addMessage', ({ message }) => {
     text: message.content
   })
 })
+const callingChannel = ref('')
+const isSubView = ref(false)
+const getQallingState = (channelId: string) => {
+  if (!callingChannel.value) return 'none'
+  if (callingChannel.value === channelId && !isSubView.value) return 'mainView'
+  return 'subView'
+}
+
+const isMicOn = ref(true)
+const isCameraOn = ref(false)
+const isScreenSharing = ref(false)
 
 export const useQall = () => {
   const joinQall = (channelName: string, isWebinar: boolean = false) => {
@@ -280,6 +289,7 @@ export const useQall = () => {
   }
   return {
     callingChannel,
+    isSubView,
     rooms,
     joinQall,
     leaveQall,
@@ -294,8 +304,12 @@ export const useQall = () => {
     screenShareTrackSidMap,
     screenShareTracks,
     qallMitt,
+    getQallingState,
     getSoundboardList,
     postSoundboard,
-    postSoundboardPlay
+    postSoundboardPlay,
+    isMicOn,
+    isCameraOn,
+    isScreenSharing
   }
 }

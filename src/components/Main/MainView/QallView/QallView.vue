@@ -15,12 +15,12 @@ import { useModalStore } from '/@/store/ui/modal'
 import CameraDetailSetting from './CameraDetailSetting.vue'
 import ScreenShareDetailSetting from './ScreenShareDetailSetting.vue'
 import DetailButton from './DetailButton.vue'
+import IconButton from '/@/components/UI/IconButton.vue'
 
 const { pushModal } = useModalStore()
 
 const {
   tracksMap,
-  screenShareTrackSidMap,
   screenShareTracks,
   callingChannel,
   leaveQall,
@@ -30,12 +30,12 @@ const {
   publishData,
   toggleMicMute,
   qallMitt,
-  rooms
+  rooms,
+  isMicOn,
+  isCameraOn,
+  isScreenSharing,
+  isSubView
 } = useQall()
-
-const isMicOn = ref(true)
-const isCameraOn = ref(false)
-const isScreenSharing = ref(false)
 
 const micIcon = computed(() =>
   isMicOn.value ? 'microphone' : 'microphone-off'
@@ -191,6 +191,7 @@ const showShareScreenSettingDetail = ref(false)
     />
     <h1 :class="$style.Header">Qall View</h1>
     <UserList />
+    <IconButton icon-name="close" icon-mdi @click="isSubView = true" />
 
     <div :class="$style.TrackContainer">
       <div :class="$style.controlBar">
