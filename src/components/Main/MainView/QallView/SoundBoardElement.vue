@@ -19,7 +19,6 @@ const soundName = ref(
 
 <style lang="scss" module>
 .soundBoardContainer {
-  margin: 0.5rem;
   padding: 0.5rem;
   border-radius: 0.5rem;
   gap: 0.5rem;
@@ -29,7 +28,7 @@ const soundName = ref(
     background-color: rgba(0, 100, 255, 1);
     @include background-tertiary;
   }
-  width: 20rem;
+  width: 15rem;
   min-height: 4rem;
   user-select: none;
   @include color-ui-primary;
