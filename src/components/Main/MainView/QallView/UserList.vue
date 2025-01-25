@@ -19,14 +19,13 @@ const selectedSid = ref<string>()
 </script>
 
 <template>
-  <div v-if="selectedTrack !== undefined">
+  <div v-if="selectedTrack !== undefined" :class="$style.largeCard">
     <VideoComponent
       v-if="
         selectedTrack.trackPublication?.kind === 'video' &&
         !screenShareTrackSidMap.has(selectedSid ?? '')
       "
       :track-info="selectedTrack"
-      is-large
     />
     <ScreenShareComponent
       v-else-if="selectedTrack.trackPublication?.kind === 'video'"
@@ -45,39 +44,46 @@ const selectedSid = ref<string>()
           ?.some?.(valueSid => valueSid === selectedSid)
       "
       :track-info="selectedTrack"
-      is-large
       is-show
     />
   </div>
   <div :class="$style.TrackContainer">
     <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
-      <VideoComponent
+      <div
         v-if="
           track.trackPublication?.kind === 'video' &&
           !screenShareTrackSidMap.has(sid)
         "
-        :track-info="track"
-        :is-large="false"
+        :class="$style.card"
         @click="[selectedTrack, selectedSid] = [track, sid]"
-      />
-      <ScreenShareComponent
+      >
+        <VideoComponent :track-info="track" />
+      </div>
+
+      <div
         v-else-if="track.trackPublication?.kind === 'video'"
-        :track-info="track"
-        :audio-track-info="tracksMap.get(screenShareTrackSidMap.get(sid) ?? '')"
-        :is-large="false"
+        :class="$style.card"
         @click="[selectedTrack, selectedSid] = [track, sid]"
-      />
-      <AudioComponent
+      >
+        <ScreenShareComponent
+          :track-info="track"
+          :audio-track-info="
+            tracksMap.get(screenShareTrackSidMap.get(sid) ?? '')
+          "
+          :is-large="false"
+        />
+      </div>
+      <div
         v-else-if="
           track.trackPublication?.kind === 'audio' &&
           track.isRemote &&
           !screenShareTrackSidMap.values()?.some?.(valueSid => valueSid === sid)
         "
-        :track-info="track"
-        :is-large="false"
-        is-show
+        :class="$style.card"
         @click="[selectedTrack, selectedSid] = [track, sid]"
-      />
+      >
+        <AudioComponent :track-info="track" is-show />
+      </div>
     </template>
   </div>
 </template>
@@ -85,9 +91,18 @@ const selectedSid = ref<string>()
 <style lang="scss" module>
 .TrackContainer {
   display: flex;
+
   justify-content: center;
   align-items: center;
   gap: 8px;
   align-self: stretch;
+}
+.card {
+  height: 108px;
+  width: 192px;
+}
+.largeCard {
+  height: 324px;
+  width: 576px;
 }
 </style>

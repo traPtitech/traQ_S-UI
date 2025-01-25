@@ -5,9 +5,8 @@ import { useUsersStore } from '/@/store/entities/users'
 import { buildUserIconPath } from '/@/lib/apis'
 import AudioTrack from './AudioTrack.vue'
 import { useUserVolume } from '/@/store/app/userVolume'
-const { trackInfo, isLarge, isShow } = defineProps<{
+const { trackInfo, isShow } = defineProps<{
   trackInfo: TrackInfo
-  isLarge: boolean
   isShow?: boolean
 }>()
 const { getStore, setStore, restoringPromise } = useUserVolume()
@@ -30,19 +29,17 @@ const parseToFloat = (value: number | string): number => {
 
 <template>
   <template v-if="isShow">
-    <div>
-      <div :class="isLarge ? $style.LargeCard : $style.UserCard">
-        <AudioTrack :track-info="trackInfo" :volume="parseToFloat(volume)" />
+    <div :class="$style.UserCard">
+      <AudioTrack :track-info="trackInfo" :volume="parseToFloat(volume)" />
 
-        <div :class="$style.OuterIcon">
-          <img :src="iconImage" :class="$style.OuterImage" />
-        </div>
-        <div :class="isLarge ? $style.LargeInnerIcon : $style.InnerIcon">
-          <img :src="iconImage" :class="$style.InnerImage" />
-        </div>
-
-        <div :class="$style.NameLabel">{{ trackInfo.username }}</div>
+      <div :class="$style.OuterIcon">
+        <img :src="iconImage" :class="$style.OuterImage" />
       </div>
+      <div :class="$style.InnerIcon">
+        <img :src="iconImage" :class="$style.InnerImage" />
+      </div>
+
+      <div :class="$style.NameLabel">{{ trackInfo.username }}</div>
     </div>
   </template>
   <template v-else>
@@ -51,38 +48,18 @@ const parseToFloat = (value: number | string): number => {
 </template>
 <style lang="scss" module>
 .UserCard {
-  height: 108px;
-  width: 192px;
+  height: 100%;
+  width: 100%;
   position: relative;
   overflow: hidden;
   border-radius: 12px;
   pointer-events: none;
   user-select: none;
 }
-.LargeCard {
-  height: 324px;
-  width: 576px;
-  position: relative;
-  overflow: hidden;
-  border-radius: 12px;
-  pointer-events: none;
-  user-select: none;
-}
+
 .InnerIcon {
-  height: 64px;
-  width: 64px;
-  background-size: cover;
-  border-radius: 50%;
-  margin: auto;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-.LargeInnerIcon {
-  height: 192px;
-  width: 192px;
+  width: calc(100% / 3);
+  aspect-ratio: 1;
   background-size: cover;
   border-radius: 50%;
   margin: auto;
