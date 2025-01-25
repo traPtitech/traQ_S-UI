@@ -67,6 +67,10 @@ const { addQueue } = useTts()
 const meStore = useMeStore()
 const rtcSettings = useRtcSettings()
 
+/**
+ * 認証付きFetch
+ * qallFetch(input, init) -> fetch(...) にBearerトークンやheadersを付与
+ */
 const qallFetch = async (
   input: string | URL | globalThis.Request,
   init?: RequestInit
@@ -81,6 +85,80 @@ const qallFetch = async (
     }
   })
   return res
+}
+
+/** 内部で使うサウンドボード一覧の型(サーバレスポンス) */
+type SoundboardItem = {
+  soundId: string
+  soundName: string
+  stampId: string
+  creatorId: string
+}
+/** サウンドボード一覧 */
+type SoundboardListResponse = SoundboardItem[]
+
+/**
+ * GET /soundboard
+ * サウンドボード一覧を取得する
+ */
+const getSoundboardList = async (): Promise<SoundboardListResponse> => {
+  const res = await qallFetch('/api/soundboard', { method: 'GET' })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`GET /soundboard failed: ${text}`)
+  }
+  return (await res.json()) as SoundboardListResponse
+}
+
+/**
+ * POST /soundboard (multipart/form-data)
+ * @param file アップロードする音声ファイル (15秒～20秒以内)
+ * @param soundName ユーザがつける音声の名前
+ */
+const postSoundboard = async (
+  file: File,
+  soundName: string
+): Promise<{ soundId: string }> => {
+  // multipart送信のため、FormDataを利用
+  const formData = new FormData()
+  formData.append('audio', file)
+  formData.append('soundName', soundName)
+
+  // Content-Typeは自動設定させたいので、init.headers で空文字を指定して上書きする
+  const res = await qallFetch('/api/soundboard', {
+    method: 'POST',
+    // 下記の書き方で 'application/json' を上書きしないようにする
+    headers: {
+      'Content-Type': ''
+    },
+    body: formData
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`POST /soundboard failed: ${text}`)
+  }
+  return await res.json()
+}
+
+/**
+ * POST /soundboard/play
+ * @param soundId 再生したい音声のID
+ * @param roomName 対象ルームのUUID文字列
+ */
+const postSoundboardPlay = async (soundId: string, roomName: string) => {
+  const body = { soundId, roomName }
+  const res = await qallFetch('/api/soundboard/play', {
+    method: 'POST',
+    body: JSON.stringify(body)
+    // headers: Content-Type は JSONでOK
+    // 問題なくqallFetch内で 'application/json' が付与される
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`POST /soundboard/play failed: ${text}`)
+  }
+  // 正常時に IngressInfo(ingressId, url, streamKey)が返る想定
+  return await res.json()
 }
 
 const purifyRoomData = async (data: RoomsWithParticipants): Promise<Rooms> => {
@@ -181,6 +259,9 @@ export const useQall = () => {
     tracksMap,
     screenShareTrackSidMap,
     screenShareTracks,
-    qallMitt
+    qallMitt,
+    getSoundboardList,
+    postSoundboard,
+    postSoundboardPlay
   }
 }
