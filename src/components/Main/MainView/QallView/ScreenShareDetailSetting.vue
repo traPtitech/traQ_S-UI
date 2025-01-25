@@ -34,7 +34,7 @@ const handleClose = () => {
         <div :class="$style.actions">
           <FormButton
             label="画面共有を追加"
-            type="tertiary"
+            type="primary"
             @click="handleScreenShare"
           />
         </div>
@@ -47,6 +47,7 @@ const handleClose = () => {
 .popoverContainer {
   position: absolute;
   z-index: 50;
+  bottom: 0;
 }
 
 .popoverContent {

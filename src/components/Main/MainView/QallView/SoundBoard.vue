@@ -10,7 +10,7 @@ const searchQuery = ref('')
   <div :class="$style.soundBoard">
     <div><FormInput v-model="searchQuery" placeholder="検索" /></div>
     <div :class="$style.elementContainer">
-      <SoundBoardElement v-for="i in 10" :key="i" />
+      <SoundBoardElement v-for="i in 15" :key="i" />
     </div>
   </div>
 </template>
@@ -20,15 +20,16 @@ const searchQuery = ref('')
   position: absolute;
   margin: 0.5rem;
   padding: 0.5rem;
-  bottom: 0;
+  bottom: 48px;
   left: 0;
-  max-height: 60%;
+  height: 30rem;
   overflow-y: scroll;
   border-radius: 0.5rem;
   @include background-primary;
+  overflow: scroll;
 }
 .elementContainer {
-  width: 31rem;
+  width: 30.5rem;
   max-width: 100%;
 
   margin: 0.5rem;

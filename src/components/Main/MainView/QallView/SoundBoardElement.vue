@@ -3,9 +3,7 @@ import { ref } from 'vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 
 const stampId = ref('69c10725-2176-45ac-a4a5-22e70b8a76f7')
-const soundName = ref(
-  '草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草草'
-)
+const soundName = ref('草草')
 </script>
 
 <template>
@@ -25,12 +23,12 @@ const soundName = ref(
   display: flex;
   align-items: center;
   &:hover {
-    background-color: rgba(0, 100, 255, 1);
     @include background-tertiary;
   }
   width: 15rem;
   min-height: 4rem;
   user-select: none;
   @include color-ui-primary;
+  @include size-body2;
 }
 </style>

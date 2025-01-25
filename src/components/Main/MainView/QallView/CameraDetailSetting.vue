@@ -112,7 +112,7 @@ const handleClose = () => {
                     value="original"
                   />
                   <label for="original" :class="$style.radioLabel">
-                    <span>Original</span>
+                    <span>何もしない</span>
                   </label>
                 </div>
                 <div :class="$style.radioItem">
@@ -123,7 +123,7 @@ const handleClose = () => {
                     value="blur"
                   />
                   <label for="blur" :class="$style.radioLabel">
-                    <span>Blur</span>
+                    <span>ぼかし</span>
                   </label>
                 </div>
                 <div :class="$style.radioItem">
@@ -134,7 +134,7 @@ const handleClose = () => {
                     value="file"
                   />
                   <label for="file" :class="$style.radioLabel">
-                    <span>File</span>
+                    <span>ファイル</span>
                   </label>
                 </div>
                 <div :class="$style.radioItem">
@@ -145,7 +145,7 @@ const handleClose = () => {
                     value="screen"
                   />
                   <label for="screen" :class="$style.radioLabel">
-                    <span>Screen</span>
+                    <span>画面配信</span>
                   </label>
                 </div>
               </div>
@@ -169,13 +169,11 @@ const handleClose = () => {
         </div>
 
         <div :class="$style.actions">
-          <FormButton label="保存" type="primary" @click="handleSave" />
           <FormButton
             label="カメラを追加"
-            type="tertiary"
+            type="primary"
             @click="handleAddCameraTrack"
           />
-          <FormButton label="閉じる" type="secondary" @click="handleClose" />
         </div>
       </div>
     </ClickOutside>
@@ -194,7 +192,7 @@ const handleClose = () => {
   @include color-ui-primary;
   padding: 24px;
   border-radius: 8px;
-  width: 500px;
+  width: 20rem;
   border: 1px solid $theme-text-primary-default;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
@@ -272,7 +270,6 @@ const handleClose = () => {
 
 .actions {
   display: flex;
-  justify-content: flex-end;
   gap: 8px;
   margin-top: 16px;
 }

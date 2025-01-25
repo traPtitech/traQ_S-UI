@@ -4,7 +4,6 @@ import { onMounted, ref, useTemplateRef, computed } from 'vue'
 import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import CallControlButton from './CallControlButton.vue'
-import { LocalTrackPublication } from 'livekit-client'
 import QallMessageView from './QallMessageView.vue'
 import SoundBoard from './SoundBoard.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
@@ -109,6 +108,7 @@ const { openStampPicker, closeStampPicker } = useStampPickerInvoker(
     try {
       await publishData({ type: 'stamp', message: stampData.id })
       qallMitt.emit('pushStamp', stampData.id)
+      openStampPicker()
     } catch (e) {}
   },
   reactionButton,
@@ -116,7 +116,6 @@ const { openStampPicker, closeStampPicker } = useStampPickerInvoker(
   'bottom-left'
 )
 const handleReaction = () => {
-  // TODO
   openStampPicker()
 }
 
@@ -184,9 +183,6 @@ const showShareScreenSettingDetail = ref(false)
 
 <template>
   <div :class="$style.Block">
-    <ClickOutside @click-outside="showSoundBoard = false">
-      <SoundBoard v-if="showSoundBoard" />
-    </ClickOutside>
     <DanmakuContainer />
     <QallMessageView
       :channel-id="callingChannel"
@@ -194,17 +190,19 @@ const showShareScreenSettingDetail = ref(false)
       :class="$style.channelView"
     />
     <h1 :class="$style.Header">Qall View</h1>
-
     <UserList />
 
     <div :class="$style.TrackContainer">
       <div :class="$style.controlBar">
         <div :class="$style.smallButtonGroup">
-          <div>
+          <div :class="$style.soundBoardButton">
             <CallControlButtonSmall
               icon="sound_detection_loud_sound"
               :on-click="handleSound"
             />
+            <ClickOutside @click-outside="showSoundBoard = false">
+              <SoundBoard v-if="showSoundBoard" />
+            </ClickOutside>
           </div>
           <div ref="reactionButton">
             <CallControlButtonSmall
@@ -352,13 +350,11 @@ const showShareScreenSettingDetail = ref(false)
 }
 
 .Block {
-  color: green;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  overflow: scroll;
   position: relative;
   height: 100%;
 }
@@ -396,5 +392,9 @@ const showShareScreenSettingDetail = ref(false)
 .buttonWithDetail {
   position: relative;
   display: inline-block;
+}
+
+.soundBoardButton {
+  position: relative;
 }
 </style>
