@@ -6,8 +6,7 @@ import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import CallControlButton from './CallControlButton.vue'
 import { LocalTrackPublication } from 'livekit-client'
 import QallMessageView from './QallMessageView.vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+import ParticipantList from './ParticipantList.vue'
 
 const {
   tracksMap,
@@ -109,10 +108,12 @@ const handleSound = () => {
   // TODO
   console.log('sound')
 }
+
 const handleReaction = () => {
   // TODO
   console.log('reaction')
 }
+
 const showParticipants = ref(false)
 
 const currentRoomParticipants = computed(() => {
@@ -139,14 +140,39 @@ const backgroundImage = ref<File>()
 
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 
-const handleParticipantVolume = (e: Event) => {
+const handleParticipantVolume = (
+  e: Event,
+  participant: { user: { name: string } }
+) => {
   const target = e.target as HTMLInputElement
-  console.log(target.value)
+  // Convert 0-100 range to 0-3 range to match AudioComponent
+  const normalizedVolume = (parseInt(target.value) / 100) * 3
+  // Find track for this participant
+  for (const trackInfo of tracksMap.value.values()) {
+    if (trackInfo.isRemote && trackInfo.username === participant.user.name) {
+      if (trackInfo.trackPublication?.track?.attach) {
+        // Get audio element and set its volume
+        const audioElement = trackInfo.trackPublication.track.attach()
+        audioElement.volume = normalizedVolume
+      }
+      break
+    }
+  }
 }
 
-const handleParticipantMute = () => {
-  // TODO: Qall 適切な処理
-  console.log('participant mute')
+const handleParticipantMute = (participant: { user: { name: string } }) => {
+  // Find track for this participant
+  for (const trackInfo of tracksMap.value.values()) {
+    if (trackInfo.isRemote && trackInfo.username === participant.user.name) {
+      if (trackInfo.trackPublication) {
+        // Toggle enabled state using the proper method
+        trackInfo.trackPublication.setEnabled(
+          !trackInfo.trackPublication.isEnabled
+        )
+      }
+      break
+    }
+  }
 }
 </script>
 
@@ -248,41 +274,13 @@ const handleParticipantMute = () => {
           <div :class="$style.participantsContainer">
             <div v-show="showParticipants" :class="$style.participantsList">
               <div :class="$style.participantsContent">
-                <div
+                <participant-list
                   v-for="participant in currentRoomParticipants"
                   :key="participant.user.id"
-                  :class="$style.participantItem"
-                >
-                  <div :class="$style.leftSide">
-                    <user-icon :size="40" :user-id="participant.user.id" />
-                    <span :class="$style.userName">{{
-                      participant.user.displayName
-                    }}</span>
-                    <button :class="$style.micIconButton">
-                      <a-icon name="microphone-off" mdi />
-                    </button>
-                  </div>
-                  <div :class="$style.rightSide">
-                    <button
-                      :class="$style.iconButton"
-                      @click="handleParticipantMute"
-                    >
-                      <!-- TODO: Qall 適切な条件分岐 -->
-                      <a-icon v-if="false" name="volume-high" :size="24" mdi />
-                      <a-icon v-else name="volume-off" mdi :size="24" />
-                    </button>
-                    <input
-                      :class="$style.volumeSlider"
-                      type="range"
-                      min="0"
-                      max="100"
-                      @input="handleParticipantVolume"
-                    />
-                    <button :class="$style.accountMinusButton">
-                      <a-icon name="account-minus" :size="24" mdi />
-                    </button>
-                  </div>
-                </div>
+                  :participant="participant"
+                  :on-mute="handleParticipantMute"
+                  :on-volume-change="handleParticipantVolume"
+                />
               </div>
             </div>
             <CallControlButtonSmall
@@ -319,24 +317,6 @@ const handleParticipantMute = () => {
   height: 100%;
   overflow-y: auto;
   padding: 16px;
-}
-
-.participantItem {
-  padding: 8px;
-  border-bottom: 1px solid rgba(206, 214, 219, 0.2);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  &:last-child {
-    border-bottom: none;
-  }
-}
-
-.userIcon {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 .TrackContainer {
@@ -395,45 +375,5 @@ const handleParticipantMute = () => {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.leftSide {
-  display: flex;
-  align-items: center;
-}
-
-.userName {
-  line-height: 24px;
-  margin-left: 12px;
-}
-
-.micIconButton {
-  margin-left: 4px;
-  color: black;
-  cursor: pointer;
-}
-
-.rightSide {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.iconButton {
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-}
-
-.volumeSlider {
-  width: 100px;
-}
-
-.accountMinusButton {
-  cursor: pointer;
-  color: #f26451;
 }
 </style>
