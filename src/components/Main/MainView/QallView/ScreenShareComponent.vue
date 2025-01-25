@@ -12,20 +12,6 @@ const { trackInfo, audioTrackInfo } = defineProps<{
 }>()
 
 const volume = ref(1)
-
-const videoElement = useTemplateRef<HTMLVideoElement>('videoElement')
-
-onMounted(() => {
-  if (videoElement.value) {
-    trackInfo.trackPublication?.track?.attach(videoElement.value)
-  }
-})
-
-onUnmounted(() => {
-  if (videoElement.value) {
-    trackInfo.trackPublication?.track?.detach(videoElement.value)
-  }
-})
 </script>
 
 <template>
@@ -37,7 +23,6 @@ onUnmounted(() => {
       :volume="volume"
     />
     <input
-      v-if="notMute && trackInfo.isRemote && audioTrackInfo?.trackPublication"
       v-model="volume"
       type="range"
       min="0"
@@ -52,10 +37,12 @@ onUnmounted(() => {
 .container {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 .volume {
   position: absolute;
   bottom: 0;
   right: 4px;
+  width: 4rem;
 }
 </style>

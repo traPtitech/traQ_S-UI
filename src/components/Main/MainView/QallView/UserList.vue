@@ -6,7 +6,7 @@ import { onMounted, ref } from 'vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 
-const { tracksMap, screenShareTrackSidMap } = useQall()
+const { tracksMap, screenShareTrackSidMap, screenShareTracks } = useQall()
 
 const videoInputs = ref<MediaDeviceInfo[]>([])
 onMounted(async () => {
@@ -74,17 +74,17 @@ const selectedSid = ref<string>()
           :is-large="false"
         />
       </div>
-      <!-- <div
+      <div
         v-else-if="
           track.trackPublication?.kind === 'audio' &&
           track.isRemote &&
-          !screenShareTrackSidMap.values()?.some?.(valueSid => valueSid === sid)
+          !screenShareTracks.some?.(([_, valueSid]) => valueSid === sid)
         "
         :class="$style.card"
         @click="[selectedTrack, selectedSid] = [track, sid]"
       >
         <AudioComponent :track-info="track" is-show />
-      </div> -->
+      </div>
     </template>
   </div>
 </template>
