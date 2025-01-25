@@ -11,6 +11,7 @@ import ClickOutside from '/@/components/UI/ClickOutside'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import ParticipantList from './ParticipantList.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
+import UserList from './UserList.vue'
 
 const {
   tracksMap,
@@ -224,6 +225,7 @@ const filteredParticipants = computed(() =>
         Add Camera Track
       </button>
     </div>
+    <UserList />
 
     <div :class="$style.TrackContainer">
       <div :class="$style.controlBar">
@@ -241,7 +243,6 @@ const filteredParticipants = computed(() =>
             />
           </div>
         </div>
-
         <div :class="$style.verticalBar"></div>
         <CallControlButton
           :icon="screenShareIcon"

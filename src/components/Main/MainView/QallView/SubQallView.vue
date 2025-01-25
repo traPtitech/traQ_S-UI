@@ -21,12 +21,4 @@ const firstVideoTrack = computed(
     :track-info="firstVideoTrack[1]"
     :is-large="false"
   />
-  <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
-    <AudioComponent
-      v-if="track.trackPublication?.kind === 'audio'"
-      :track-info="track"
-      :is-large="false"
-      :is-show="false"
-    />
-  </template>
 </template>

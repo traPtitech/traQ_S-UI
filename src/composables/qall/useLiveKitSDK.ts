@@ -179,10 +179,10 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
           noiseSuppression: true
         },
         {
-          audioPreset: AudioPresets.musicHighQualityStereo,
+          audioPreset: AudioPresets.speech,
           forceStereo: true,
-          red: false,
-          dtx: false
+          red: true,
+          dtx: true
         }
       )
     }
@@ -232,10 +232,10 @@ const addMicTrack = async () => {
         noiseSuppression: true
       },
       {
-        audioPreset: AudioPresets.musicHighQualityStereo,
+        audioPreset: AudioPresets.speech,
         forceStereo: true,
-        red: false,
-        dtx: false
+        red: true,
+        dtx: true
       }
     )
   } catch (e) {
@@ -249,21 +249,7 @@ const removeMicTrack = async () => {
       addErrorToast('ルームが存在しません')
       return
     }
-    await room.value.localParticipant.setMicrophoneEnabled(
-      false,
-      {
-        channelCount: 2,
-        voiceIsolation: true,
-        echoCancellation: true,
-        noiseSuppression: true
-      },
-      {
-        audioPreset: AudioPresets.musicHighQualityStereo,
-        forceStereo: true,
-        red: false,
-        dtx: false
-      }
-    )
+    await room.value.localParticipant.setMicrophoneEnabled(false)
   } catch (e) {
     addErrorToast('マイクのミュートに失敗しました')
   }

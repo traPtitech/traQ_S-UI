@@ -46,6 +46,7 @@ const selectedSid = ref<string>()
       "
       :track-info="selectedTrack"
       is-large
+      is-show
     />
   </div>
   <div :class="$style.TrackContainer">
@@ -74,6 +75,7 @@ const selectedSid = ref<string>()
         "
         :track-info="track"
         :is-large="false"
+        is-show
         @click="[selectedTrack, selectedSid] = [track, sid]"
       />
     </template>

@@ -5,11 +5,7 @@ import { useUsersStore } from '/@/store/entities/users'
 import { buildUserIconPath } from '/@/lib/apis'
 import AudioTrack from './AudioTrack.vue'
 import { useUserVolume } from '/@/store/app/userVolume'
-const {
-  trackInfo,
-  isLarge,
-  isShow = true
-} = defineProps<{
+const { trackInfo, isLarge, isShow } = defineProps<{
   trackInfo: TrackInfo
   isLarge: boolean
   isShow?: boolean
@@ -60,6 +56,8 @@ const parseToFloat = (value: number | string): number => {
   position: relative;
   overflow: hidden;
   border-radius: 12px;
+  pointer-events: none;
+  user-select: none;
 }
 .LargeCard {
   height: 324px;
@@ -67,6 +65,8 @@ const parseToFloat = (value: number | string): number => {
   position: relative;
   overflow: hidden;
   border-radius: 12px;
+  pointer-events: none;
+  user-select: none;
 }
 .InnerIcon {
   height: 64px;
