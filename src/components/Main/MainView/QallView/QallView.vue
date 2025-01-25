@@ -16,6 +16,7 @@ import UserList from './UserList.vue'
 const {
   tracksMap,
   screenShareTrackSidMap,
+  screenShareTracks,
   callingChannel,
   leaveQall,
   addScreenShareTrack,
@@ -153,9 +154,9 @@ const getParticipantTrackInfo = (participant: {
     if (
       trackInfo.username === participant.user.name &&
       trackInfo.trackPublication?.kind === 'audio' &&
-      !screenShareTrackSidMap.value
-        .values()
-        ?.some?.(valueSid => valueSid === trackInfo.trackPublication?.trackSid)
+      !screenShareTracks.value?.some?.(
+        ([_, valueSid]) => valueSid === trackInfo.trackPublication?.trackSid
+      )
     ) {
       return trackInfo
     }

@@ -34,6 +34,7 @@ const selectedSid = ref<string>()
         tracksMap.get(screenShareTrackSidMap.get(selectedSid ?? '') ?? '')
       "
       is-large
+      not-mute
     />
     <AudioComponent
       v-else-if="
@@ -73,7 +74,7 @@ const selectedSid = ref<string>()
           :is-large="false"
         />
       </div>
-      <div
+      <!-- <div
         v-else-if="
           track.trackPublication?.kind === 'audio' &&
           track.isRemote &&
@@ -83,7 +84,7 @@ const selectedSid = ref<string>()
         @click="[selectedTrack, selectedSid] = [track, sid]"
       >
         <AudioComponent :track-info="track" is-show />
-      </div>
+      </div> -->
     </template>
   </div>
 </template>

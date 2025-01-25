@@ -15,7 +15,7 @@ import type {
   Participant,
   LocalTrack
 } from 'livekit-client'
-import { ref, type Ref } from 'vue'
+import { computed, ref, watch, watchEffect, type Ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import apis from '/@/lib/apis'
 import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
@@ -189,9 +189,9 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
 
     await room.value.localParticipant.setAttributes({})
     room.value.remoteParticipants.forEach(participant => {
-      Object.keys(participant.attributes).forEach(key =>
+      Object.keys(participant.attributes).forEach(key => {
         screenShareTrackSidMap.value.set(key, participant.attributes[key] ?? '')
-      )
+      })
     })
   } catch {
     addErrorToast('Qallの接続に失敗しました')
@@ -200,6 +200,9 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
 
   window.addEventListener('beforeunload', leaveRoom)
 }
+const screenShareTracks = computed(() =>
+  Array.from(screenShareTrackSidMap.value.entries())
+)
 
 async function leaveRoom() {
   // Leave the room by calling 'disconnect' method over the Room object
@@ -522,6 +525,7 @@ export const useLiveKitSDK = () => {
     toggleMicTrack,
     tracksMap,
     screenShareTrackSidMap,
+    screenShareTracks,
     qallMitt
   }
 }

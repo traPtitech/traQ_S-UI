@@ -54,6 +54,7 @@ const {
   toggleMicTrack,
   tracksMap,
   screenShareTrackSidMap,
+  screenShareTracks,
   qallMitt
 } = useLiveKitSDK()
 const { myId } = useMeStore()
@@ -161,6 +162,7 @@ export const useQall = () => {
     toggleMicMute: toggleMicTrack,
     tracksMap,
     screenShareTrackSidMap,
+    screenShareTracks,
     qallMitt
   }
 }
