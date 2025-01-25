@@ -12,6 +12,12 @@ import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import ParticipantList from './ParticipantList.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import UserList from './UserList.vue'
+import { useModalStore } from '/@/store/ui/modal'
+import CameraDetailSetting from './CameraDetailSetting.vue'
+import ScreenShareDetailSetting from './ScreenShareDetailSetting.vue'
+import DetailButton from './DetailButton.vue'
+
+const { pushModal } = useModalStore()
 
 const {
   tracksMap,
@@ -35,8 +41,8 @@ const isScreenSharing = ref(false)
 const micIcon = computed(() =>
   isMicOn.value ? 'microphone' : 'microphone-off'
 )
-const cameraIcon = ref(isCameraOn.value ? 'vide' : 'video-off')
-const screenShareIcon = ref(
+const cameraIcon = computed(() => (isCameraOn.value ? 'video' : 'video-off'))
+const screenShareIcon = computed(() =>
   isScreenSharing.value ? 'stop-screen-share' : 'screen-share'
 )
 
@@ -66,7 +72,6 @@ const toggleVideo = async () => {
       }
       isCameraOn.value = false
     }
-    cameraIcon.value = isCameraOn.value ? 'video' : 'video-off'
   } catch (err) {
     console.error('Failed to toggle video:', err)
   }
@@ -91,9 +96,6 @@ const toggleScreen = async () => {
       }
       isScreenSharing.value = false
     }
-    screenShareIcon.value = isScreenSharing.value
-      ? 'stop-screen-share'
-      : 'screen-share'
   } catch (err) {
     console.error('Failed to toggle screen sharing:', err)
   }
@@ -141,16 +143,14 @@ onMounted(async () => {
   videoInputs.value = devices.filter(d => d.kind === 'videoinput')
 })
 const selectedVideoInput = ref<MediaDeviceInfo>()
-
 const backgroundImage = ref<File>()
-
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 
 const showSoundBoard = ref(false)
 const getParticipantTrackInfo = (participant: {
   user: { name: string }
 }): TrackInfo | undefined => {
-  for (const [_, trackInfo] of tracksMap.value.entries()) {
+  for (const [, trackInfo] of tracksMap.value.entries()) {
     if (
       trackInfo.username === participant.user.name &&
       trackInfo.trackPublication?.kind === 'audio' &&
@@ -163,11 +163,26 @@ const getParticipantTrackInfo = (participant: {
   }
   return undefined
 }
+
 const filteredParticipants = computed(() =>
   currentRoomParticipants.value.filter(
     participant => getParticipantTrackInfo(participant) !== undefined
   )
 )
+
+const handleBackgroundSave = (data: {
+  backgroundType: 'original' | 'blur' | 'file' | 'screen'
+  backgroundImage?: File
+  selectedVideoInput?: MediaDeviceInfo
+}) => {
+  backgroundType.value = data.backgroundType
+  backgroundImage.value = data.backgroundImage
+  showCameraDetailSetting.value = false
+  console.log(data.selectedVideoInput)
+}
+
+const showCameraDetailSetting = ref(false)
+const showShareScreenSettingDetail = ref(false)
 </script>
 
 <template>
@@ -245,19 +260,70 @@ const filteredParticipants = computed(() =>
           </div>
         </div>
         <div :class="$style.verticalBar"></div>
-        <CallControlButton
-          :icon="screenShareIcon"
-          :is-on="isScreenSharing"
-          :on-click="toggleScreen"
-          :mdi="false"
-          :inverted="isScreenSharing"
-        />
-        <CallControlButton
-          :icon="cameraIcon"
-          :is-on="isCameraOn"
-          :on-click="toggleVideo"
-          :inverted="isCameraOn"
-        />
+        <div :class="$style.buttonWithDetail">
+          <CallControlButton
+            :icon="screenShareIcon"
+            :is-on="isScreenSharing"
+            :on-click="toggleScreen"
+            :mdi="false"
+            :inverted="isScreenSharing"
+          />
+          <DetailButton
+            @click="
+              () => {
+                showShareScreenSettingDetail = true
+              }
+            "
+          />
+          <ScreenShareDetailSetting
+            :open="showShareScreenSettingDetail"
+            @add="
+              () => {
+                isScreenSharing = true
+                screenShareIcon = isScreenSharing
+                  ? 'stop-screen-share'
+                  : 'screen-share'
+              }
+            "
+            @close="
+              () => {
+                showShareScreenSettingDetail = false
+              }
+            "
+          />
+        </div>
+        <div :class="$style.buttonWithDetail">
+          <CallControlButton
+            :icon="cameraIcon"
+            :is-on="isCameraOn"
+            :on-click="toggleVideo"
+            :inverted="isCameraOn"
+          />
+          <DetailButton
+            :inverted="isCameraOn"
+            @click="
+              () => {
+                showCameraDetailSetting = true
+              }
+            "
+          />
+          <CameraDetailSetting
+            :open="showCameraDetailSetting"
+            :video-inputs="videoInputs"
+            @save="handleBackgroundSave"
+            @add="
+              () => {
+                isCameraOn = true
+                cameraIcon = isCameraOn ? 'video' : 'video-off'
+              }
+            "
+            @close="
+              () => {
+                showCameraDetailSetting = false
+              }
+            "
+          />
+        </div>
         <CallControlButton
           :icon="micIcon"
           :is-on="isMicOn"
@@ -335,11 +401,6 @@ const filteredParticipants = computed(() =>
   bottom: 0;
 }
 
-.video {
-  width: 50%;
-  height: 50%;
-}
-
 .Block {
   color: green;
   display: flex;
@@ -380,5 +441,10 @@ const filteredParticipants = computed(() =>
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.buttonWithDetail {
+  position: relative;
+  display: inline-block;
 }
 </style>
