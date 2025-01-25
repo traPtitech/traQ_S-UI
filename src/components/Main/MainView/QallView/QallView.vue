@@ -11,6 +11,7 @@ import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useModalStore } from '/@/store/ui/modal'
 import CameraDetailSetting from './CameraDetailSetting.vue'
 import ScreenShareDetailSetting from './ScreenShareDetailSetting.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const { pushModal } = useModalStore()
 
@@ -30,7 +31,7 @@ const isCameraOn = ref(false)
 const isScreenSharing = ref(false)
 
 const micIcon = ref(isMicOn.value ? 'microphone' : 'microphone-off')
-const cameraIcon = ref(isCameraOn.value ? 'vide' : 'video-off')
+const cameraIcon = ref(isCameraOn.value ? 'video' : 'video-off')
 const screenShareIcon = ref(
   isScreenSharing.value ? 'stop-screen-share' : 'screen-share'
 )
@@ -141,15 +142,13 @@ onMounted(async () => {
   videoInputs.value = devices.filter(d => d.kind === 'videoinput')
 })
 const selectedVideoInput = ref<MediaDeviceInfo>()
-
 const backgroundImage = ref<File>()
-
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 
 const getParticipantTrackInfo = (participant: {
   user: { name: string }
 }): TrackInfo | undefined => {
-  for (const [_, trackInfo] of tracksMap.value.entries()) {
+  for (const [, trackInfo] of tracksMap.value.entries()) {
     if (
       trackInfo.username === participant.user.name &&
       trackInfo.trackPublication?.kind === 'audio' &&
@@ -162,22 +161,18 @@ const getParticipantTrackInfo = (participant: {
   }
   return undefined
 }
+
 const filteredParticipants = computed(() =>
   currentRoomParticipants.value.filter(
     participant => getParticipantTrackInfo(participant) !== undefined
   )
 )
 
-const consoleLog = () => {
-  console.log(backgroundType.value)
-}
-
 const handleBackgroundSave = (data: {
   backgroundType: 'original' | 'blur' | 'file' | 'screen'
   backgroundImage?: File
   selectedVideoInput?: MediaDeviceInfo
 }) => {
-  console.log('選択された背景', data.backgroundType, data.backgroundImage)
   backgroundType.value = data.backgroundType
   backgroundImage.value = data.backgroundImage
   showCameraDetailSetting.value = false
@@ -200,45 +195,6 @@ const showShareScreenSettingDetail = ref(false)
       :class="$style.channelView"
     />
     <h1 :class="$style.Header">Qall View</h1>
-    <div>
-      <button @click="addScreenShareTrack">Add Screen Share Track</button>
-      <button
-        @click="
-          () => {
-            showCameraDetailSetting = true
-          }
-        "
-      >
-        バックグランドセレクター
-      </button>
-      <CameraDetailSetting
-        :open="showCameraDetailSetting"
-        :video-inputs="videoInputs"
-        @save="handleBackgroundSave"
-        @close="handleClose"
-      />
-      <button @click="consoleLog">console.log</button>
-    </div>
-    <div>
-      <button
-        @click="
-          () => {
-            showShareScreenSettingDetail = true
-          }
-        "
-      >
-        スクリーンシェアセレクター
-      </button>
-      <ScreenShareDetailSetting
-        :open="showShareScreenSettingDetail"
-        @close="
-          () => {
-            showShareScreenSettingDetail = false
-          }
-        "
-      />
-    </div>
-
     <div :class="$style.TrackContainer">
       <div :class="$style.controlBar">
         <div :class="$style.smallButtonGroup">
@@ -251,21 +207,62 @@ const showShareScreenSettingDetail = ref(false)
             :on-click="handleReaction"
           />
         </div>
-
         <div :class="$style.verticalBar"></div>
-        <CallControlButton
-          :icon="screenShareIcon"
-          :is-on="isScreenSharing"
-          :on-click="toggleScreen"
-          :mdi="false"
-          :inverted="isScreenSharing"
-        />
-        <CallControlButton
-          :icon="cameraIcon"
-          :is-on="isCameraOn"
-          :on-click="toggleVideo"
-          :inverted="isCameraOn"
-        />
+        <div :class="$style.buttonWithDetail">
+          <CallControlButton
+            :icon="screenShareIcon"
+            :is-on="isScreenSharing"
+            :on-click="toggleScreen"
+            :mdi="false"
+            :inverted="isScreenSharing"
+          />
+          <button
+            :class="$style.detailButton"
+            @click="
+              () => {
+                showShareScreenSettingDetail = true
+              }
+            "
+          >
+            <AIcon name="plus-circle" mdi />
+          </button>
+          <ScreenShareDetailSetting
+            :open="showShareScreenSettingDetail"
+            @close="
+              () => {
+                showShareScreenSettingDetail = false
+              }
+            "
+          />
+        </div>
+        <div :class="$style.buttonWithDetail">
+          <CallControlButton
+            :icon="cameraIcon"
+            :is-on="isCameraOn"
+            :on-click="toggleVideo"
+            :inverted="isCameraOn"
+          />
+          <button
+            :class="$style.detailButton"
+            @click="
+              () => {
+                showCameraDetailSetting = true
+              }
+            "
+          >
+            <AIcon name="plus-circle" mdi />
+          </button>
+          <CameraDetailSetting
+            :open="showCameraDetailSetting"
+            :video-inputs="videoInputs"
+            @save="handleBackgroundSave"
+            @close="
+              () => {
+                showCameraDetailSetting = false
+              }
+            "
+          />
+        </div>
         <CallControlButton
           :icon="micIcon"
           :is-on="isMicOn"
@@ -341,11 +338,6 @@ const showShareScreenSettingDetail = ref(false)
   bottom: 0;
 }
 
-.video {
-  width: 50%;
-  height: 50%;
-}
-
 .Block {
   color: green;
   display: flex;
@@ -386,5 +378,16 @@ const showShareScreenSettingDetail = ref(false)
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.buttonWithDetail {
+  position: relative;
+  display: inline-block;
+}
+
+.detailButton {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
 }
 </style>
