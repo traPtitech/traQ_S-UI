@@ -12,7 +12,7 @@ const {
 } = defineProps<{
   trackInfo: TrackInfo
   isLarge: boolean
-  isShow: boolean
+  isShow?: boolean
 }>()
 const { getStore, setStore, restoringPromise } = useUserVolume()
 const volume = computed<number | string>(
