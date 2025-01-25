@@ -293,17 +293,20 @@ const filteredParticipants = computed(() =>
   right: 50%;
   width: 450px;
   height: 300px;
-  background: white;
+  @include background-primary;
   border-radius: 8px;
   margin-bottom: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   transform: translateX(50%);
+  @include color-ui-primary;
 }
 
 .participantsContent {
   height: 100%;
   overflow-y: auto;
   padding: 16px;
+  border: 2px solid $theme-background-secondary-default;
+  border-radius: 8px;
 }
 
 .TrackContainer {

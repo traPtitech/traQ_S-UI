@@ -51,6 +51,7 @@ const sliderStyle = computed(() => {
   const val = Number(sliderValue.value)
   const percent = ((val - minValue) / (maxValue - minValue)) * 100
   const startColor = isMuted.value ? '#6b7d8a' : '#005BAC'
+  // TODO ここもSCSS変数でかける？
   return {
     background: `
       linear-gradient(to right,
@@ -107,6 +108,7 @@ const volumeSliderClass = computed(() => ({
   &:last-child {
     border-bottom: none;
   }
+  @include background-primary;
 }
 
 .leftSide {
@@ -153,7 +155,7 @@ const volumeSliderClass = computed(() => ({
     appearance: none;
     width: 16px;
     height: 16px;
-    background: #49535b;
+    background: $theme-ui-primary-default;
     border-radius: 50%;
     cursor: pointer;
     margin-top: -4px;
@@ -166,7 +168,7 @@ const volumeSliderClass = computed(() => ({
   &::-moz-range-thumb {
     width: 16px;
     height: 16px;
-    background: #49535b;
+    background: $theme-ui-primary-default;
     border-radius: 50%;
     cursor: pointer;
   }
@@ -186,24 +188,24 @@ const volumeSliderClass = computed(() => ({
   &::-ms-thumb {
     width: 16px;
     height: 16px;
-    background: #49535b;
+    background: $theme-ui-primary-default;
     border-radius: 50%;
     cursor: pointer;
   }
 }
 
 .muted::-webkit-slider-thumb {
-  background: #6b7d8a !important;
+  background: $theme-ui-secondary-default !important;
 }
 .muted::-moz-range-thumb {
-  background: #6b7d8a !important;
+  background: $theme-ui-secondary-default !important;
 }
 .muted::-ms-thumb {
-  background: #6b7d8a !important;
+  background: $theme-ui-secondary-default !important;
 }
 
 .accountMinusButton {
   cursor: pointer;
-  color: #f26451;
+  color: $theme-accent-error-default;
 }
 </style>
