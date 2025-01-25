@@ -9,7 +9,6 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'close'): void
   (
     e: 'save',
     data: {
@@ -18,6 +17,8 @@ const emit = defineEmits<{
       selectedVideoInput: MediaDeviceInfo
     }
   ): void
+  (e: 'add'): void
+  (e: 'close'): void
 }>()
 
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
@@ -51,9 +52,20 @@ const handleSave = () => {
       backgroundImage: backgroundImage.value,
       selectedVideoInput
     })
+    emit('close')
   } else {
     console.error('No video input device selected')
   }
+}
+
+const handleAddCameraTrack = () => {
+  addCameraTrack(
+    selectedVideoInput.value,
+    backgroundType.value,
+    backgroundImage.value
+  )
+  emit('add')
+  emit('close')
 }
 
 const handleClose = () => {
@@ -155,9 +167,7 @@ const handleClose = () => {
         <FormButton
           label="カメラを追加"
           type="tertiary"
-          @click="
-            addCameraTrack(selectedVideoInput, backgroundType, backgroundImage)
-          "
+          @click="handleAddCameraTrack"
         />
         <FormButton label="閉じる" type="secondary" @click="handleClose" />
       </div>

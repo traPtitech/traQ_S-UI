@@ -11,7 +11,7 @@ import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useModalStore } from '/@/store/ui/modal'
 import CameraDetailSetting from './CameraDetailSetting.vue'
 import ScreenShareDetailSetting from './ScreenShareDetailSetting.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+import DetailButton from './DetailButton.vue'
 
 const { pushModal } = useModalStore()
 
@@ -176,10 +176,7 @@ const handleBackgroundSave = (data: {
   backgroundType.value = data.backgroundType
   backgroundImage.value = data.backgroundImage
   showCameraDetailSetting.value = false
-}
-
-const handleClose = () => {
-  showCameraDetailSetting.value = false
+  console.log(data.selectedVideoInput)
 }
 
 const showCameraDetailSetting = ref(false)
@@ -216,18 +213,23 @@ const showShareScreenSettingDetail = ref(false)
             :mdi="false"
             :inverted="isScreenSharing"
           />
-          <button
-            :class="$style.detailButton"
+          <DetailButton
             @click="
               () => {
                 showShareScreenSettingDetail = true
               }
             "
-          >
-            <AIcon name="plus-circle" mdi />
-          </button>
+          />
           <ScreenShareDetailSetting
             :open="showShareScreenSettingDetail"
+            @add="
+              () => {
+                isScreenSharing = true
+                screenShareIcon = isScreenSharing
+                  ? 'stop-screen-share'
+                  : 'screen-share'
+              }
+            "
             @close="
               () => {
                 showShareScreenSettingDetail = false
@@ -242,20 +244,24 @@ const showShareScreenSettingDetail = ref(false)
             :on-click="toggleVideo"
             :inverted="isCameraOn"
           />
-          <button
-            :class="$style.detailButton"
+          <DetailButton
+            :inverted="isCameraOn"
             @click="
               () => {
                 showCameraDetailSetting = true
               }
             "
-          >
-            <AIcon name="plus-circle" mdi />
-          </button>
+          />
           <CameraDetailSetting
             :open="showCameraDetailSetting"
             :video-inputs="videoInputs"
             @save="handleBackgroundSave"
+            @add="
+              () => {
+                isCameraOn = true
+                cameraIcon = isCameraOn ? 'video' : 'video-off'
+              }
+            "
             @close="
               () => {
                 showCameraDetailSetting = false
@@ -383,11 +389,5 @@ const showShareScreenSettingDetail = ref(false)
 .buttonWithDetail {
   position: relative;
   display: inline-block;
-}
-
-.detailButton {
-  position: absolute;
-  bottom: -6px;
-  right: -6px;
 }
 </style>
