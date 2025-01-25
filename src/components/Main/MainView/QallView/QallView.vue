@@ -9,6 +9,7 @@ import QallMessageView from './QallMessageView.vue'
 import ParticipantList from './ParticipantList.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useModalStore } from '/@/store/ui/modal'
+import BackgroundSelector from './BackgroundSelector.vue'
 
 const { pushModal } = useModalStore()
 
@@ -166,10 +167,17 @@ const filteredParticipants = computed(() =>
   )
 )
 
-const handleModal = () => {
-  pushModal({
-    type: 'qall-select-background'
-  })
+const consoleLog = () => {
+  console.log(backgroundType.value)
+}
+
+const handleBackgroundSave = (data: {
+  backgroundType: 'original' | 'blur' | 'file' | 'screen'
+  backgroundImage?: File
+}) => {
+  console.log('選択された背景', data.backgroundType, data.backgroundImage)
+  backgroundType.value = data.backgroundType
+  backgroundImage.value = data.backgroundImage
 }
 </script>
 
@@ -184,7 +192,8 @@ const handleModal = () => {
     <h1 :class="$style.Header">Qall View</h1>
     <div>
       <button @click="addScreenShareTrack">Add Screen Share Track</button>
-      <button @click="handleModal">もーーーだる</button>
+      <BackgroundSelector @save="handleBackgroundSave" />
+      <button @click="consoleLog">console.log</button>
       <select v-model="selectedVideoInput">
         <option
           v-for="videoInput in videoInputs"

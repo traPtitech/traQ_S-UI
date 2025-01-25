@@ -78,7 +78,6 @@ import StampImageEditModal from './StampImageEditModal/StampImageEditModal.vue'
 import ProfileIconEditModal from './ProfileIconEditModal/ProfileIconEditModal.vue'
 import SettingsCacheClearModal from './SettingsCacheClearModal/SettingsCacheClearModal.vue'
 import SettingsThemeEditModal from './SettingsThemeEditModal/SettingsThemeEditModal.vue'
-import SelectBackgroundModal from './QallModal/SelectBackgroundModal.vue'
 import type { ModalStateType } from '/@/store/ui/modal/states'
 
 const { shouldShowModal, currentState } = useModalStore()
@@ -103,8 +102,7 @@ const components: Record<ModalStateType, Component> = {
   'settings-stamp-image-edit': StampImageEditModal,
   'settings-profile-icon-edit': ProfileIconEditModal,
   'settings-cache-clear': SettingsCacheClearModal,
-  'settings-theme-edit': SettingsThemeEditModal,
-  'qall-select-background': SelectBackgroundModal
+  'settings-theme-edit': SettingsThemeEditModal
 }
 const component = computed(() => {
   if (currentState.value) {
