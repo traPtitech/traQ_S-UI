@@ -7,6 +7,7 @@ import CallControlButton from './CallControlButton.vue'
 import { LocalTrackPublication } from 'livekit-client'
 import QallMessageView from './QallMessageView.vue'
 import ParticipantList from './ParticipantList.vue'
+import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 
 const {
   tracksMap,
@@ -140,40 +141,27 @@ const backgroundImage = ref<File>()
 
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 
-const handleParticipantVolume = (
-  e: Event,
-  participant: { user: { name: string } }
-) => {
-  const target = e.target as HTMLInputElement
-  // Convert 0-100 range to 0-3 range to match AudioComponent
-  const normalizedVolume = (parseInt(target.value) / 100) * 3
-  // Find track for this participant
-  for (const trackInfo of tracksMap.value.values()) {
-    if (trackInfo.isRemote && trackInfo.username === participant.user.name) {
-      if (trackInfo.trackPublication?.track?.attach) {
-        // Get audio element and set its volume
-        const audioElement = trackInfo.trackPublication.track.attach()
-        audioElement.volume = normalizedVolume
-      }
-      break
+const getParticipantTrackInfo = (participant: {
+  user: { name: string }
+}): TrackInfo | undefined => {
+  for (const [_, trackInfo] of tracksMap.value.entries()) {
+    if (
+      trackInfo.username === participant.user.name &&
+      trackInfo.trackPublication?.kind === 'audio' &&
+      !screenShareTrackSidMap.value
+        .values()
+        ?.some?.(valueSid => valueSid === trackInfo.trackPublication?.trackSid)
+    ) {
+      return trackInfo
     }
   }
+  return undefined
 }
-
-const handleParticipantMute = (participant: { user: { name: string } }) => {
-  // Find track for this participant
-  for (const trackInfo of tracksMap.value.values()) {
-    if (trackInfo.isRemote && trackInfo.username === participant.user.name) {
-      if (trackInfo.trackPublication) {
-        // Toggle enabled state using the proper method
-        trackInfo.trackPublication.setEnabled(
-          !trackInfo.trackPublication.isEnabled
-        )
-      }
-      break
-    }
-  }
-}
+const filteredParticipants = computed(() =>
+  currentRoomParticipants.value.filter(
+    participant => getParticipantTrackInfo(participant) !== undefined
+  )
+)
 </script>
 
 <template>
@@ -275,11 +263,10 @@ const handleParticipantMute = (participant: { user: { name: string } }) => {
             <div v-show="showParticipants" :class="$style.participantsList">
               <div :class="$style.participantsContent">
                 <participant-list
-                  v-for="participant in currentRoomParticipants"
+                  v-for="participant in filteredParticipants"
                   :key="participant.user.id"
-                  :participant="participant"
-                  :on-mute="handleParticipantMute"
-                  :on-volume-change="handleParticipantVolume"
+                  :participant="participant.user"
+                  :track-info="getParticipantTrackInfo(participant)!"
                 />
               </div>
             </div>
