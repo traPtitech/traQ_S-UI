@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useQall } from '/@/composables/qall/useQall'
-import UserList from '/@/components/Main/MainView/QallView/UserList.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import CallControlButton from './CallControlButton.vue'
 import { LocalTrackPublication } from 'livekit-client'
 import QallMessageView from './QallMessageView.vue'
+import ParticipantList from './ParticipantList.vue'
+import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 
 const {
   tracksMap,
@@ -15,7 +16,8 @@ const {
   leaveQall,
   addScreenShareTrack,
   addCameraTrack,
-  removeVideoTrack
+  removeVideoTrack,
+  rooms
 } = useQall()
 
 const isMicOn = ref(true)
@@ -107,13 +109,25 @@ const handleSound = () => {
   // TODO
   console.log('sound')
 }
+
 const handleReaction = () => {
   // TODO
   console.log('reaction')
 }
+
+const showParticipants = ref(false)
+
+const currentRoomParticipants = computed(() => {
+  return (
+    rooms.value.find(
+      (room: { channel: { id: string } }) =>
+        room.channel.id === callingChannel.value
+    )?.participants ?? []
+  )
+})
+
 const handleGroup = () => {
-  // TODO
-  console.log('group')
+  showParticipants.value = !showParticipants.value
 }
 
 const videoInputs = ref<MediaDeviceInfo[]>([])
@@ -126,6 +140,28 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
 const backgroundImage = ref<File>()
 
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
+
+const getParticipantTrackInfo = (participant: {
+  user: { name: string }
+}): TrackInfo | undefined => {
+  for (const [_, trackInfo] of tracksMap.value.entries()) {
+    if (
+      trackInfo.username === participant.user.name &&
+      trackInfo.trackPublication?.kind === 'audio' &&
+      !screenShareTrackSidMap.value
+        .values()
+        ?.some?.(valueSid => valueSid === trackInfo.trackPublication?.trackSid)
+    ) {
+      return trackInfo
+    }
+  }
+  return undefined
+}
+const filteredParticipants = computed(() =>
+  currentRoomParticipants.value.filter(
+    participant => getParticipantTrackInfo(participant) !== undefined
+  )
+)
 </script>
 
 <template>
@@ -181,7 +217,6 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
         Add Camera Track
       </button>
     </div>
-    <UserList />
 
     <div :class="$style.TrackContainer">
       <div :class="$style.controlBar">
@@ -224,11 +259,23 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
         />
         <div :class="$style.verticalBar"></div>
         <div :class="$style.smallButtonGroup">
-          <CallControlButtonSmall
-            icon="account-multiple"
-            :on-click="handleGroup"
-            mdi
-          />
+          <div :class="$style.participantsContainer">
+            <div v-show="showParticipants" :class="$style.participantsList">
+              <div :class="$style.participantsContent">
+                <participant-list
+                  v-for="participant in filteredParticipants"
+                  :key="participant.user.id"
+                  :participant="participant.user"
+                  :track-info="getParticipantTrackInfo(participant)!"
+                />
+              </div>
+            </div>
+            <CallControlButtonSmall
+              icon="account-multiple"
+              :on-click="handleGroup"
+              mdi
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -236,19 +283,48 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 </template>
 
 <style lang="scss" module>
+.participantsContainer {
+  position: relative;
+}
+
+.participantsList {
+  position: absolute;
+  bottom: 100%;
+  right: 50%;
+  width: 450px;
+  height: 300px;
+  @include background-primary;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transform: translateX(50%);
+  @include color-ui-primary;
+}
+
+.participantsContent {
+  height: 100%;
+  overflow-y: auto;
+  padding: 16px;
+  border: 2px solid $theme-background-secondary-default;
+  border-radius: 8px;
+}
+
 .TrackContainer {
   height: fit-content;
 }
+
 .channelView {
   position: absolute;
   width: 30%;
   right: 0;
   bottom: 0;
 }
+
 .video {
   width: 50%;
   height: 50%;
 }
+
 .Block {
   color: green;
   display: flex;
@@ -256,7 +332,6 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #222325;
   overflow: scroll;
   position: relative;
   height: 100%;
