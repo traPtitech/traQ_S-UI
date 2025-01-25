@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { useQall } from '/@/composables/qall/useQall'
-import UserList from '/@/components/Main/MainView/QallView/UserList.vue'
-import { onMounted, ref } from 'vue'
+import { useQall } from '../../../../composables/qall/useQall'
+import { onMounted, ref, computed } from 'vue'
 import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import CallControlButton from './CallControlButton.vue'
 import { LocalTrackPublication } from 'livekit-client'
 import QallMessageView from './QallMessageView.vue'
+import UserIcon from '../../../../components/UI/UserIcon.vue'
+import AIcon from '../../../../components/UI/AIcon.vue'
 
 const {
   tracksMap,
@@ -15,7 +16,8 @@ const {
   leaveQall,
   addScreenShareTrack,
   addCameraTrack,
-  removeVideoTrack
+  removeVideoTrack,
+  rooms
 } = useQall()
 
 const isMicOn = ref(true)
@@ -111,9 +113,31 @@ const handleReaction = () => {
   // TODO
   console.log('reaction')
 }
+const showParticipants = ref(false)
+
+const currentRoomParticipants = computed(() => {
+  return (
+    rooms.value.find(
+      (room: { channel: { id: string } }) =>
+        room.channel.id === callingChannel.value
+    )?.participants ?? []
+  )
+})
+// const currentRoomParticipants = ref([
+//   { user: { id: '1', displayName: 'User 1' }, joinedAt: '2023-01-01' },
+//   { user: { id: '2', displayName: 'User 2' }, joinedAt: '2023-01-02' },
+//   { user: { id: '3', displayName: 'User 3' }, joinedAt: '2023-01-03' },
+//   { user: { id: '4', displayName: 'User 4' }, joinedAt: '2023-01-04' },
+//   { user: { id: '5', displayName: 'User 5' }, joinedAt: '2023-01-05' },
+//   { user: { id: '6', displayName: 'User 6' }, joinedAt: '2023-01-06' },
+//   { user: { id: '7', displayName: 'User 7' }, joinedAt: '2023-01-07' },
+//   { user: { id: '8', displayName: 'User 8' }, joinedAt: '2023-01-08' },
+//   { user: { id: '9', displayName: 'User 9' }, joinedAt: '2023-01-09' },
+//   { user: { id: '10', displayName: 'User 10' }, joinedAt: '2023-01-10' }
+// ])
+
 const handleGroup = () => {
-  // TODO
-  console.log('group')
+  showParticipants.value = !showParticipants.value
 }
 
 const videoInputs = ref<MediaDeviceInfo[]>([])
@@ -126,6 +150,11 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
 const backgroundImage = ref<File>()
 
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
+
+const handleVolume = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  console.log(target.value)
+}
 </script>
 
 <template>
@@ -181,7 +210,6 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
         Add Camera Track
       </button>
     </div>
-    <UserList />
 
     <div :class="$style.TrackContainer">
       <div :class="$style.controlBar">
@@ -224,11 +252,41 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
         />
         <div :class="$style.verticalBar"></div>
         <div :class="$style.smallButtonGroup">
-          <CallControlButtonSmall
-            icon="account-multiple"
-            :on-click="handleGroup"
-            mdi
-          />
+          <div :class="$style.participantsContainer">
+            <div v-show="showParticipants" :class="$style.participantsList">
+              <div :class="$style.participantsContent">
+                <div
+                  v-for="participant in currentRoomParticipants"
+                  :key="participant.user.id"
+                  :class="$style.participantItem"
+                >
+                  <div :class="$style.leftSide">
+                    <user-icon :size="40" :user-id="participant.user.id" />
+                    <span :class="$style.userName">{{
+                      participant.user.displayName
+                    }}</span>
+                  </div>
+                  <div :class="$style.rightSide">
+                    <button :class="$style.iconButton">
+                      <a-icon name="microphone" />
+                    </button>
+                    <input
+                      :class="$style.volumeSlider"
+                      type="range"
+                      min="0"
+                      max="100"
+                      @input="handleVolume"
+                    />
+                    <a-icon name="account-minus" mdi />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <CallControlButtonSmall
+              icon="account-multiple"
+              :on-click="handleGroup"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -236,19 +294,63 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 </template>
 
 <style lang="scss" module>
+.participantsContainer {
+  position: relative;
+}
+
+.participantsList {
+  position: absolute;
+  bottom: 100%;
+  right: 50%;
+  width: 450px;
+  height: 300px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transform: translateX(50%);
+}
+
+.participantsContent {
+  height: 100%;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.participantItem {
+  padding: 8px;
+  border-bottom: 1px solid rgba(206, 214, 219, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.userIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .TrackContainer {
   height: fit-content;
 }
+
 .channelView {
   position: absolute;
   width: 30%;
   right: 0;
   bottom: 0;
 }
+
 .video {
   width: 50%;
   height: 50%;
 }
+
 .Block {
   color: green;
   display: flex;
@@ -256,7 +358,6 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #222325;
   overflow: scroll;
   position: relative;
   height: 100%;
@@ -290,5 +391,34 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.leftSide {
+  display: flex;
+  align-items: center;
+}
+
+.userName {
+  line-height: 24px;
+  margin-left: 12px;
+}
+
+.rightSide {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.iconButton {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.volumeSlider {
+  width: 100px;
 }
 </style>
