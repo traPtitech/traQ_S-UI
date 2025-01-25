@@ -145,31 +145,41 @@ const volumeSliderClass = computed(() => ({
 .volumeSlider {
   width: 100px;
   appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   background: transparent;
+  border-radius: 8px;
+
+  /* overflow: hidden; を削除 or overflow: visible; に変更する */
+  /* overflow: hidden; */
+
   &::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
     width: 100%;
     height: 8px;
     border-radius: 8px;
   }
   &::-webkit-slider-thumb {
-    appearance: none;
+    -webkit-appearance: none;
     width: 16px;
     height: 16px;
     background: $theme-ui-primary-default;
-    border-radius: 50%;
+    border-radius: 8px;
     cursor: pointer;
     margin-top: -4px;
   }
   &::-moz-range-track {
+    -moz-appearance: none;
     width: 100%;
     height: 8px;
     border-radius: 8px;
   }
   &::-moz-range-thumb {
+    -moz-appearance: none;
     width: 16px;
     height: 16px;
     background: $theme-ui-primary-default;
-    border-radius: 50%;
+    border-radius: 8px;
     cursor: pointer;
   }
   &::-ms-track {
@@ -189,7 +199,7 @@ const volumeSliderClass = computed(() => ({
     width: 16px;
     height: 16px;
     background: $theme-ui-primary-default;
-    border-radius: 50%;
+    border-radius: 8px;
     cursor: pointer;
   }
 }
