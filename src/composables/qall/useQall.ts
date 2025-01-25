@@ -10,6 +10,7 @@ import { useUsersStore } from '/@/store/entities/users'
 import { messageMitt } from '/@/store/entities/messages'
 import { useTts } from '/@/store/app/tts'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
+import apis from '/@/lib/apis'
 
 type RoomsWithParticipants =
   | {
@@ -65,6 +66,22 @@ const { addQueue } = useTts()
 
 const meStore = useMeStore()
 const rtcSettings = useRtcSettings()
+
+const qallFetch = async (
+  input: string | URL | globalThis.Request,
+  init?: RequestInit
+) => {
+  const traQtoken = (await apis.getMyQRCode(true)).data
+  const res = await fetch(input, {
+    ...init,
+    headers: {
+      ...init?.headers,
+      Authorization: `Bearer ${traQtoken}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  return res
+}
 
 const purifyRoomData = async (data: RoomsWithParticipants): Promise<Rooms> => {
   if (!data) return []
@@ -160,6 +177,7 @@ export const useQall = () => {
     publishData,
     setSpeakerMute,
     toggleMicMute: toggleMicTrack,
+    qallFetch,
     tracksMap,
     screenShareTrackSidMap,
     screenShareTracks,

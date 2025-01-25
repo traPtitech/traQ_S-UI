@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, onMounted } from 'vue'
+import { ref, defineProps, defineEmits, onMounted, watch } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
 import FormButton from '/@/components/UI/FormButton.vue'
+import ClickOutside from '/@/components/UI/ClickOutside'
 
 const props = defineProps<{
   open: boolean
@@ -14,7 +15,7 @@ const emit = defineEmits<{
     data: {
       backgroundType: 'original' | 'blur' | 'file' | 'screen'
       backgroundImage?: File
-      selectedVideoInput: MediaDeviceInfo
+      selectedVideoInput?: MediaDeviceInfo
     }
   ): void
   (e: 'add'): void
@@ -28,6 +29,9 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
 
 const { addCameraTrack } = useQall()
 
+watch(selectedCamera, () => {
+  handleSave()
+})
 onMounted(() => {
   if (props.videoInputs[0] !== undefined && props.videoInputs.length > 0) {
     selectedCamera.value = props.videoInputs[0].deviceId
@@ -39,6 +43,7 @@ const handleFileChange = (e: Event) => {
   const target = e.target as HTMLInputElement
   if (target.files?.[0]) {
     backgroundImage.value = target.files[0]
+    handleSave()
   }
 }
 
@@ -46,16 +51,12 @@ const handleSave = () => {
   const selectedVideoInput = props.videoInputs.find(
     d => d.deviceId === selectedCamera.value
   )
-  if (selectedVideoInput) {
-    emit('save', {
-      backgroundType: backgroundType.value,
-      backgroundImage: backgroundImage.value,
-      selectedVideoInput
-    })
-    emit('close')
-  } else {
-    console.error('No video input device selected')
-  }
+
+  emit('save', {
+    backgroundType: backgroundType.value,
+    backgroundImage: backgroundImage.value,
+    selectedVideoInput
+  })
 }
 
 const handleAddCameraTrack = () => {
@@ -74,114 +75,121 @@ const handleClose = () => {
 </script>
 
 <template>
-  <div v-if="open" class="popover-container">
-    <div class="popover-content">
-      <div>
-        <h3 class="popover-title">カメラ設定</h3>
-        <div class="form-group">
-          <div class="form-item">
-            <label for="camera-select" class="form-item-label"
-              >カメラを選択</label
-            >
-            <select id="camera-select" v-model="selectedCamera" class="input">
-              <option value="" disabled>選択してください</option>
-              <option
-                v-for="device in videoInputs"
-                :key="device.deviceId"
-                :value="device.deviceId"
+  <div v-if="open" :class="$style.popoverContainer">
+    <ClickOutside @click-outside="handleClose">
+      <div :class="$style.popoverContent">
+        <div>
+          <h3 :class="$style.popoverTitle">カメラ設定</h3>
+          <div :class="$style.formGroup">
+            <div :class="$style.formItem">
+              <label for="camera-select" :class="$style.formItemLabel"
+                >カメラを選択</label
               >
-                {{ device.label || 'No Label' }}
-              </option>
-            </select>
-          </div>
+              <select
+                id="camera-select"
+                v-model="selectedCamera"
+                :class="$style.input"
+              >
+                <option value="" disabled>選択してください</option>
+                <option
+                  v-for="device in videoInputs"
+                  :key="device.deviceId"
+                  :value="device.deviceId"
+                >
+                  {{ device.label || 'No Label' }}
+                </option>
+              </select>
+            </div>
 
-          <div class="form-item">
-            <label class="form-item-label">背景を選択</label>
-            <div class="radio-group">
-              <div class="radio-item">
-                <input
-                  id="original"
-                  v-model="backgroundType"
-                  type="radio"
-                  value="original"
-                />
-                <label for="original" class="radio-label">
-                  <span>Original</span>
-                </label>
-              </div>
-              <div class="radio-item">
-                <input
-                  id="blur"
-                  v-model="backgroundType"
-                  type="radio"
-                  value="blur"
-                />
-                <label for="blur" class="radio-label">
-                  <span>Blur</span>
-                </label>
-              </div>
-              <div class="radio-item">
-                <input
-                  id="file"
-                  v-model="backgroundType"
-                  type="radio"
-                  value="file"
-                />
-                <label for="file" class="radio-label">
-                  <span>File</span>
-                </label>
-              </div>
-              <div class="radio-item">
-                <input
-                  id="screen"
-                  v-model="backgroundType"
-                  type="radio"
-                  value="screen"
-                />
-                <label for="screen" class="radio-label">
-                  <span>Screen</span>
-                </label>
+            <div :class="$style.formItem">
+              <label :class="$style.formItemLabel">背景を選択</label>
+              <div :class="$style.radioGroup">
+                <div :class="$style.radioItem">
+                  <input
+                    id="original"
+                    v-model="backgroundType"
+                    type="radio"
+                    value="original"
+                  />
+                  <label for="original" :class="$style.radioLabel">
+                    <span>Original</span>
+                  </label>
+                </div>
+                <div :class="$style.radioItem">
+                  <input
+                    id="blur"
+                    v-model="backgroundType"
+                    type="radio"
+                    value="blur"
+                  />
+                  <label for="blur" :class="$style.radioLabel">
+                    <span>Blur</span>
+                  </label>
+                </div>
+                <div :class="$style.radioItem">
+                  <input
+                    id="file"
+                    v-model="backgroundType"
+                    type="radio"
+                    value="file"
+                  />
+                  <label for="file" :class="$style.radioLabel">
+                    <span>File</span>
+                  </label>
+                </div>
+                <div :class="$style.radioItem">
+                  <input
+                    id="screen"
+                    v-model="backgroundType"
+                    type="radio"
+                    value="screen"
+                  />
+                  <label for="screen" :class="$style.radioLabel">
+                    <span>Screen</span>
+                  </label>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div v-if="backgroundType === 'file'" class="form-item">
-            <button type="button" class="file-button">
-              背景画像を選択
-              <input
-                type="file"
-                class="file-input"
-                accept="image/*"
-                @change="handleFileChange"
-              />
-            </button>
-            <p v-if="backgroundImage" class="file-name">
-              選択中: {{ backgroundImage.name }}
-            </p>
+            <div v-if="backgroundType === 'file'" :class="$style.formItem">
+              <button type="button" :class="$style.fileButton">
+                背景画像を選択
+                <input
+                  type="file"
+                  :class="$style.fileInput"
+                  accept="image/*,video/*"
+                  @change="handleFileChange"
+                />
+              </button>
+              <p v-if="backgroundImage" :class="$style.fileName">
+                選択中: {{ backgroundImage.name }}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="actions">
-        <FormButton label="保存" type="primary" @click="handleSave" />
-        <FormButton
-          label="カメラを追加"
-          type="tertiary"
-          @click="handleAddCameraTrack"
-        />
-        <FormButton label="閉じる" type="secondary" @click="handleClose" />
+        <div :class="$style.actions">
+          <FormButton label="保存" type="primary" @click="handleSave" />
+          <FormButton
+            label="カメラを追加"
+            type="tertiary"
+            @click="handleAddCameraTrack"
+          />
+          <FormButton label="閉じる" type="secondary" @click="handleClose" />
+        </div>
       </div>
-    </div>
+    </ClickOutside>
   </div>
 </template>
 
-<style scoped lang="scss">
-.popover-container {
+<style module lang="scss">
+.popoverContainer {
   position: absolute;
   z-index: 50;
+  bottom: 0;
 }
 
-.popover-content {
+.popoverContent {
   @include background-primary;
   @include color-ui-primary;
   padding: 24px;
@@ -191,25 +199,25 @@ const handleClose = () => {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-.popover-title {
+.popoverTitle {
   font-size: 1.25rem;
   margin-bottom: 16px;
   font-weight: bold;
 }
 
-.form-group {
+.formGroup {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.form-item {
+.formItem {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.form-item-label {
+.formItemLabel {
   font-weight: bold;
 }
 
@@ -221,25 +229,25 @@ const handleClose = () => {
   border: 1px solid $theme-ui-secondary-default;
 }
 
-.radio-group {
+.radioGroup {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.radio-item {
+.radioItem {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.radio-label {
+.radioLabel {
   cursor: pointer;
   display: flex;
   align-items: center;
 }
 
-.file-button {
+.fileButton {
   position: relative;
   padding: 12px 16px;
   border-radius: 4px;
@@ -250,14 +258,14 @@ const handleClose = () => {
   overflow: hidden;
 }
 
-.file-input {
+.fileInput {
   position: absolute;
   inset: 0;
   opacity: 0;
   cursor: pointer;
 }
 
-.file-name {
+.fileName {
   font-size: 0.875rem;
   color: $theme-text-secondary-default;
 }

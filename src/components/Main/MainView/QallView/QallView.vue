@@ -62,17 +62,16 @@ const toggleVideo = async () => {
       for (const trackInfo of tracksMap.value.values()) {
         if (
           !trackInfo.isRemote &&
-          trackInfo.trackPublication instanceof LocalTrackPublication &&
           trackInfo.trackPublication?.kind === 'video' &&
-          !trackInfo.trackPublication.trackName?.includes('screen')
+          !trackInfo.trackPublication.source?.includes('screen')
         ) {
           await removeVideoTrack(trackInfo.trackPublication)
-          break
         }
       }
       isCameraOn.value = false
     }
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Failed to toggle video:', err)
   }
 }
@@ -86,17 +85,16 @@ const toggleScreen = async () => {
       for (const trackInfo of tracksMap.value.values()) {
         if (
           !trackInfo.isRemote &&
-          trackInfo.trackPublication instanceof LocalTrackPublication &&
           trackInfo.trackPublication?.kind === 'video' &&
-          trackInfo.trackPublication.trackName?.includes('screen')
+          trackInfo.trackPublication.source?.includes('screen')
         ) {
           await removeVideoTrack(trackInfo.trackPublication)
-          break
         }
       }
       isScreenSharing.value = false
     }
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Failed to toggle screen sharing:', err)
   }
 }
@@ -178,7 +176,6 @@ const handleBackgroundSave = (data: {
   backgroundType.value = data.backgroundType
   backgroundImage.value = data.backgroundImage
   showCameraDetailSetting.value = false
-  console.log(data.selectedVideoInput)
 }
 
 const showCameraDetailSetting = ref(false)
@@ -197,50 +194,7 @@ const showShareScreenSettingDetail = ref(false)
       :class="$style.channelView"
     />
     <h1 :class="$style.Header">Qall View</h1>
-    <div>
-      <button @click="addScreenShareTrack">Add Screen Share Track</button>
-      <select v-model="selectedVideoInput">
-        <option
-          v-for="videoInput in videoInputs"
-          :key="videoInput.deviceId"
-          :value="videoInput"
-        >
-          {{ videoInput.label }}
-        </option>
-      </select>
 
-      <input
-        id="original"
-        v-model="backgroundType"
-        type="radio"
-        value="original"
-      />
-      <label for="original">original</label>
-      <input id="blur" v-model="backgroundType" type="radio" value="blur" />
-      <label for="blur">blur</label>
-      <input id="file" v-model="backgroundType" type="radio" value="file" />
-      <label for="file">file</label>
-      <input id="screen" v-model="backgroundType" type="radio" value="screen" />
-      <label for="screen">screen</label>
-
-      <input
-        type="file"
-        @change="
-          e => {
-            const target = e.target as HTMLInputElement
-            backgroundImage = target?.files?.[0]
-          }
-        "
-      />
-      <button
-        @click="[
-          addCameraTrack(selectedVideoInput, backgroundType, backgroundImage),
-          console.log(selectedVideoInput)
-        ]"
-      >
-        Add Camera Track
-      </button>
-    </div>
     <UserList />
 
     <div :class="$style.TrackContainer">
@@ -280,9 +234,6 @@ const showShareScreenSettingDetail = ref(false)
             @add="
               () => {
                 isScreenSharing = true
-                screenShareIcon = isScreenSharing
-                  ? 'stop-screen-share'
-                  : 'screen-share'
               }
             "
             @close="
@@ -314,7 +265,6 @@ const showShareScreenSettingDetail = ref(false)
             @add="
               () => {
                 isCameraOn = true
-                cameraIcon = isCameraOn ? 'video' : 'video-off'
               }
             "
             @close="
