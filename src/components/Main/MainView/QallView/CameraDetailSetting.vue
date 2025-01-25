@@ -28,7 +28,6 @@ const selectedVideoInput = ref<MediaDeviceInfo>()
 const { addCameraTrack } = useQall()
 
 onMounted(() => {
-  // 初期値として最初のカメラデバイスを設定
   if (props.videoInputs[0] !== undefined && props.videoInputs.length > 0) {
     selectedCamera.value = props.videoInputs[0].deviceId
     selectedVideoInput.value = props.videoInputs[0]
