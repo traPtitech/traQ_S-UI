@@ -155,6 +155,11 @@ const handleVolume = (e: Event) => {
   const target = e.target as HTMLInputElement
   console.log(target.value)
 }
+
+const handleParticipantMute = () => {
+  // TODO: Qall 適切な処理
+  console.log('participant mute')
+}
 </script>
 
 <template>
@@ -265,10 +270,18 @@ const handleVolume = (e: Event) => {
                     <span :class="$style.userName">{{
                       participant.user.displayName
                     }}</span>
+                    <button :class="$style.micIconButton">
+                      <a-icon name="microphone-off" mdi />
+                    </button>
                   </div>
                   <div :class="$style.rightSide">
-                    <button :class="$style.iconButton">
-                      <a-icon name="microphone" />
+                    <button
+                      :class="$style.iconButton"
+                      @click="handleParticipantMute"
+                    >
+                      <!-- TODO: Qall 適切な条件分岐 -->
+                      <a-icon v-if="false" name="volume-high" :size="24" mdi />
+                      <a-icon v-else name="volume-off" mdi :size="24" />
                     </button>
                     <input
                       :class="$style.volumeSlider"
@@ -277,7 +290,9 @@ const handleVolume = (e: Event) => {
                       max="100"
                       @input="handleVolume"
                     />
-                    <a-icon name="account-minus" mdi />
+                    <button :class="$style.accountMinusButton">
+                      <a-icon name="account-minus" :size="24" mdi />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -285,6 +300,7 @@ const handleVolume = (e: Event) => {
             <CallControlButtonSmall
               icon="account-multiple"
               :on-click="handleGroup"
+              mdi
             />
           </div>
         </div>
@@ -403,6 +419,12 @@ const handleVolume = (e: Event) => {
   margin-left: 12px;
 }
 
+.micIconButton {
+  margin-left: 4px;
+  color: black;
+  cursor: pointer;
+}
+
 .rightSide {
   display: flex;
   align-items: center;
@@ -420,5 +442,10 @@ const handleVolume = (e: Event) => {
 
 .volumeSlider {
   width: 100px;
+}
+
+.accountMinusButton {
+  cursor: pointer;
+  color: #f26451;
 }
 </style>
