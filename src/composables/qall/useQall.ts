@@ -289,8 +289,8 @@ export const useQall = () => {
     callingChannel.value = channelName
   }
   const leaveQall = async () => {
-    await leaveRoom()
     callingChannel.value = ''
+    await leaveRoom()
     isSubView.value = false
     selectedTrack.value = undefined
     isMicOn.value = true
