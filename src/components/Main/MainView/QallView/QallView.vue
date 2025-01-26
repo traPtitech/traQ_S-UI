@@ -70,6 +70,7 @@ const toggleVideo = async () => {
       isCameraOn.value = false
     }
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Failed to toggle video:', err)
   }
 }
@@ -92,6 +93,7 @@ const toggleScreen = async () => {
       isScreenSharing.value = false
     }
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Failed to toggle screen sharing:', err)
   }
 }
