@@ -8,7 +8,6 @@ import useChannelMessageFetcher from '../ChannelView/ChannelViewContent/composab
 import { useChannelsStore } from '/@/store/entities/channels'
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
-import FormButton from '/@/components/UI/FormButton.vue'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -111,22 +110,6 @@ defineExpose({
             </template>
           </messages-scroller>
         </transition>
-        <div :class="$style.uiElement">
-          <FormButton
-            label="メッセージを表示"
-            @click="
-              () => {
-                if (isMessageShow) {
-                  isMessageShow = false
-                  toNewMessage('smooth')
-                } else {
-                  isMessageShow = true
-                  nextTick(() => toNewMessage())
-                }
-              }
-            "
-          />
-        </div>
       </div>
       <slot name="default"></slot>
     </div>
