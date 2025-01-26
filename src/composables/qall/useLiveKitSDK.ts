@@ -92,6 +92,7 @@ const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
 const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
 const screenShareTrackSidMap = ref<Map<string, string>>(new Map())
 const mixer = ref<AudioStreamMixer>()
+const audioTrackId = ref<string>()
 
 function handleTrackSubscribed(
   track: RemoteTrack,
@@ -310,6 +311,8 @@ const addMicTrack = async () => {
       throw new Error('Failed to get audio track')
     }
 
+    audioTrackId.value = audioTrack.id
+
     // Publish the processed stream
     await room.value.localParticipant.publishTrack(audioTrack, {
       audioPreset: AudioPresets.musicHighQualityStereo,
@@ -317,6 +320,7 @@ const addMicTrack = async () => {
       red: false,
       dtx: false
     })
+    isMicOn.value = true
 
   } catch (e) {
     console.error(e)
@@ -336,7 +340,17 @@ const removeMicTrack = async () => {
       addErrorToast('ルームが存在しません')
       return
     }
-    await room.value.localParticipant.setMicrophoneEnabled(false)
+    for (const [trackSid, trackInfo] of tracksMap.value) {
+      if (trackInfo.isRemote) continue
+      if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
+        if (audioContext.value) {
+          await audioContext.value.close()
+          audioContext.value = undefined
+        }
+        await trackInfo.trackPublication?.track?.mute()
+      }
+    }
+    // await room.value.localParticipant.setMicrophoneEnabled(false)
   } catch (e) {
     console.error(e)
     addErrorToast('マイクのミュートに失敗しました')
@@ -348,10 +362,23 @@ const toggleMicTrack = async () => {
     addErrorToast('ルームが存在しません')
     return
   }
-  if (room.value.localParticipant?.isMicrophoneEnabled) {
+  if (isMicOn.value) {
     await removeMicTrack()
   } else {
-    await addMicTrack()
+    if (!room.value) {
+      addErrorToast('ルームが存在しません')
+      return
+    }
+    for (const [trackSid, trackInfo] of tracksMap.value) {
+      if (trackInfo.isRemote) continue
+      if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
+        if (audioContext.value) {
+          await audioContext.value.close()
+          audioContext.value = undefined
+        }
+        await trackInfo.trackPublication?.track?.unmute()
+      }
+    }
   }
 }
 
