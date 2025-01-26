@@ -119,9 +119,8 @@ const handleScroll = () => {
     <message-input
       :channel-id="channelId"
       :typing-users="typingUsers"
-      :show-to-new-message-button="showToNewMessageButton"
+      :show-to-new-message-button="false"
       force-mobile-style
-      @click-to-new-message-button="toNewMessage"
     />
   </div>
 </template>
