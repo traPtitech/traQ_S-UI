@@ -15,11 +15,44 @@ import type {
   Participant,
   LocalTrack
 } from 'livekit-client'
-import { ref, type Ref } from 'vue'
+import { ref, type Ref, computed } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import apis from '/@/lib/apis'
 import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
 import mitt from 'mitt'
+import rnnoiseWorkletPath from '@sapphi-red/web-noise-suppressor/rnnoiseWorklet.js?url'
+import rnnoiseWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise.wasm?url'
+import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.wasm?url'
+import {
+  loadRnnoise as loadRnnoiseLib,
+  loadSpeex as loadSpeexLib,
+  NoiseGateWorkletNode,
+  RnnoiseWorkletNode,
+  SpeexWorkletNode
+} from '@sapphi-red/web-noise-suppressor'
+import speexWasmPath from '@sapphi-red/web-noise-suppressor/speex.wasm?url'
+import speexWorkletPath from '@sapphi-red/web-noise-suppressor/speexWorklet.js?url'
+import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWorklet.js?url'
+
+type NoiseSuppressionType = 'rnnoise' | 'speex' | 'none'
+
+let speexWasmBinary: ArrayBuffer | undefined
+const loadSpeexWasmBinary = async () => {
+  if (speexWasmBinary) return speexWasmBinary
+  speexWasmBinary = await loadSpeexLib({ url: speexWasmPath })
+  return speexWasmBinary
+}
+
+
+let rnnoiseWasmBinary: ArrayBuffer | undefined
+const loadRnnoiseWasmBinary = async () => {
+  if (rnnoiseWasmBinary) return rnnoiseWasmBinary
+  rnnoiseWasmBinary = await loadRnnoiseLib({
+    url: rnnoiseWasmPath,
+    simdUrl: rnnoiseSimdWasmPath
+  })
+  return rnnoiseWasmBinary
+}
 
 const virtualBackgroundAssetsPath =
   'https://cdn.jsdelivr.net/npm/@shiguredo/virtual-background@latest/dist'
@@ -49,6 +82,8 @@ type CameraProcessor = {
 }
 
 const room = ref<Room>()
+const audioContext = ref<AudioContext>()
+const isRnnoiseSupported = computed(() => !!audioContext.value)
 const speakerIdentity = ref<string[]>([])
 const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
 const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
@@ -213,32 +248,73 @@ async function leaveRoom() {
   window.removeEventListener('beforeunload', leaveRoom)
 }
 
-const addMicTrack = async () => {
+const addMicTrack = async (noiseSuppression: NoiseSuppressionType = 'rnnoise') => {
+  let stream: MediaStream | undefined
+  
   try {
-    if (!room.value) {
-      addErrorToast('ルームが存在しません')
-      return
-    }
+    addErrorToast(noiseSuppression);
     if (!room.value?.localParticipant?.permissions?.canPublish) {
-      addErrorToast('権限がありません')
-      return
+      throw new Error('権限がありません')
     }
-    await room.value.localParticipant.setMicrophoneEnabled(
-      true,
-      {
-        channelCount: 2,
-        voiceIsolation: true,
-        echoCancellation: true,
-        noiseSuppression: true
-      },
-      {
-        audioPreset: AudioPresets.musicHighQualityStereo,
-        forceStereo: true,
-        red: false,
-        dtx: false
-      }
-    )
+
+    if (!audioContext.value) {
+      audioContext.value = new AudioContext()
+    }
+
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    const source = audioContext.value.createMediaStreamSource(stream)
+    
+    let lastNode: AudioNode = source
+
+    if (noiseSuppression === 'rnnoise') {
+      const [rnnoiseBinary] = await Promise.all([
+        loadRnnoiseWasmBinary(),
+        audioContext.value?.audioWorklet.addModule(rnnoiseWorkletPath)
+      ])
+      console.log("rnnoise process")
+      const rnnoiseNode = new RnnoiseWorkletNode(audioContext.value, {
+        wasmBinary: rnnoiseBinary,
+        maxChannels: 2
+      })
+      source.connect(rnnoiseNode)
+      lastNode = rnnoiseNode
+    } else if (noiseSuppression === 'speex') {
+      const [speexBinary] = await Promise.all([
+        loadSpeexWasmBinary(),
+        audioContext.value?.audioWorklet.addModule(speexWorkletPath)
+      ])
+      const speexNode = new SpeexWorkletNode(audioContext.value, {
+        wasmBinary: speexBinary,
+        maxChannels: 2
+      })
+      source.connect(speexNode)
+      lastNode = speexNode
+    }
+
+    const destination = audioContext.value.createMediaStreamDestination()
+    lastNode.connect(destination)
+
+    const audioTrack = destination.stream.getAudioTracks()[0]
+    if (!audioTrack) {
+      throw new Error('Failed to get audio track')
+    }
+
+    // Publish the processed stream
+    await room.value.localParticipant.publishTrack(audioTrack, {
+      audioPreset: AudioPresets.musicHighQualityStereo,
+      forceStereo: true,
+      red: false,
+      dtx: false
+    })
+
   } catch (e) {
+    console.error(e)
+    // Cleanup
+    stream?.getTracks().forEach(track => track.stop())
+    if (audioContext.value) {
+      await audioContext.value.close()
+      audioContext.value = undefined  
+    }
     addErrorToast('マイクの共有に失敗しました')
   }
 }
@@ -249,13 +325,20 @@ const removeMicTrack = async () => {
       addErrorToast('ルームが存在しません')
       return
     }
+    
+    // Stop all audio processing
+    if (audioContext.value) {
+      await audioContext.value.close()
+      audioContext.value = undefined
+    }
+
     await room.value.localParticipant.setMicrophoneEnabled(
       false,
       {
         channelCount: 2,
-        voiceIsolation: true,
+        voiceIsolation: false,
         echoCancellation: true,
-        noiseSuppression: true
+        noiseSuppression: false
       },
       {
         audioPreset: AudioPresets.musicHighQualityStereo,
@@ -265,6 +348,7 @@ const removeMicTrack = async () => {
       }
     )
   } catch (e) {
+    console.error(e)
     addErrorToast('マイクのミュートに失敗しました')
   }
 }
