@@ -22,33 +22,36 @@ const showAllTracks = ref(false)
   <div
     v-if="selectedTrack !== undefined"
     :key="selectedTrack.trackPublication?.trackSid"
-    :class="$style.largeCard"
+    :class="$style.parentContainer"
   >
-    <VideoComponent
-      v-if="
-        selectedTrack.trackPublication?.kind === 'video' &&
-        !screenShareTrackSidMap.has(selectedSid ?? '')
-      "
-      :track-info="selectedTrack"
-    />
-    <ScreenShareComponent
-      v-else-if="selectedTrack.trackPublication?.kind === 'video'"
-      :track-info="selectedTrack"
-      :audio-track-info="
-        tracksMap.get(screenShareTrackSidMap.get(selectedSid ?? '') ?? '')
-      "
-      not-mute
-    />
-    <UserCard
-      v-else-if="
-        selectedTrack.trackPublication?.kind === 'audio' &&
-        !screenShareTrackSidMap
-          .values()
-          ?.some?.(valueSid => valueSid === selectedSid)
-      "
-      :track-info="selectedTrack"
-    />
-    <div :class="$style.TrackContainer">
+    <div :class="$style.largeCard">
+      <VideoComponent
+        v-if="
+          selectedTrack.trackPublication?.kind === 'video' &&
+          !screenShareTrackSidMap.has(selectedSid ?? '')
+        "
+        :track-info="selectedTrack"
+      />
+      <ScreenShareComponent
+        v-else-if="selectedTrack.trackPublication?.kind === 'video'"
+        :track-info="selectedTrack"
+        :audio-track-info="
+          tracksMap.get(screenShareTrackSidMap.get(selectedSid ?? '') ?? '')
+        "
+        not-mute
+      />
+      <UserCard
+        v-else-if="
+          selectedTrack.trackPublication?.kind === 'audio' &&
+          !screenShareTrackSidMap
+            .values()
+            ?.some?.(valueSid => valueSid === selectedSid)
+        "
+        :track-info="selectedTrack"
+      />
+    </div>
+
+    <div :class="$style.SuViewContainer">
       <template v-for="([sid, track], index) in tracksMap.entries()" :key="sid">
         <div
           v-if="index < 5"
@@ -79,7 +82,9 @@ const showAllTracks = ref(false)
         </div>
       </template>
       <div v-if="tracksMap.size > 5" :class="$style.card">
-        <button @click="showAllTracks = true">+{{ tracksMap.size - 5 }}</button>
+        <button @click="showAllTracks = false">
+          +{{ tracksMap.size - 5 }}
+        </button>
       </div>
     </div>
   </div>
@@ -123,11 +128,18 @@ const showAllTracks = ref(false)
 </template>
 
 <style lang="scss" module>
+.parentContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
 .largeCard {
   height: 69%;
   width: 92%;
   position: absolute;
-  bottom: calc(300px + 24px);
+  bottom: calc(200px + 24px);
   left: 50%;
   transform: translateX(-50%);
 }
@@ -147,9 +159,7 @@ const showAllTracks = ref(false)
   width: 192px;
 }
 
-.TrackContainer {
-  position: absolute;
-  bottom: calc(100px + 24px);
+.SuViewContainer {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -157,6 +167,8 @@ const showAllTracks = ref(false)
   align-items: center;
   gap: 8px;
   align-self: stretch;
+  position: absolute;
+  bottom: 100px;
 }
 
 .card {
