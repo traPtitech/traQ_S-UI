@@ -10,14 +10,11 @@ import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import ParticipantList from './ParticipantList.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import UserList from './UserList.vue'
-import { useModalStore } from '/@/store/ui/modal'
 import CameraDetailSetting from './CameraDetailSetting.vue'
 import ScreenShareDetailSetting from './ScreenShareDetailSetting.vue'
 import DetailButton from './DetailButton.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import QallMessageView from './QallMessageView.vue'
-
-const { pushModal } = useModalStore()
 
 const {
   tracksMap,
@@ -177,23 +174,28 @@ const handleBackgroundSave = (data: {
 
 const showCameraDetailSetting = ref(false)
 const showShareScreenSettingDetail = ref(false)
+
+const childRef = ref<InstanceType<typeof QallMessageView> | null>(null)
+
+const showMessage = () => {
+  childRef.value?.handleMessage()
+}
 </script>
 
 <template>
   <div :class="$style.Block">
-    <QallMessageView :channel-id="callingChannel" :typing-users="[]">
+    <QallMessageView
+      ref="childRef"
+      :channel-id="callingChannel"
+      :typing-users="[]"
+    >
       <DanmakuContainer />
-      <IconButton
-        icon-name="close"
-        icon-mdi
-        :class="$style.closeButton"
-        @click="isSubView = true"
-      />
-
-      <!-- 縦並び用のラッパ -->
+      <div :class="$style.iconContainer">
+        <IconButton icon-name="comment-outline" icon-mdi @click="showMessage" />
+        <IconButton icon-name="close" icon-mdi @click="isSubView = true" />
+      </div>
       <div :class="$style.stackContainer">
         <UserList :class="$style.userList" />
-
         <div :class="$style.controlBarContainer">
           <div :class="$style.controlBar">
             <div :class="$style.smallButtonGroup">
@@ -376,6 +378,14 @@ const showShareScreenSettingDetail = ref(false)
 }
 
 .closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.iconContainer {
+  display: flex;
+  gap: 4px;
   position: absolute;
   top: 1rem;
   right: 1rem;
