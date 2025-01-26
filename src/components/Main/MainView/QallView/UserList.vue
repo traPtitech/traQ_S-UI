@@ -1,17 +1,9 @@
 <script setup lang="ts">
 import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.vue'
-import {
-  onMounted,
-  onUnmounted,
-  ref,
-  useTemplateRef,
-  watch,
-  watchEffect
-} from 'vue'
+import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
 import UserCard from './UserCard.vue'
-import { on } from 'events'
 
 const { tracksMap, screenShareTrackSidMap, screenShareTracks, selectedTrack } =
   useQall()

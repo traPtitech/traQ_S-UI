@@ -26,13 +26,11 @@ import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.w
 import {
   loadRnnoise as loadRnnoiseLib,
   loadSpeex as loadSpeexLib,
-  NoiseGateWorkletNode,
   RnnoiseWorkletNode,
   SpeexWorkletNode
 } from '@sapphi-red/web-noise-suppressor'
 import speexWasmPath from '@sapphi-red/web-noise-suppressor/speex.wasm?url'
 import speexWorkletPath from '@sapphi-red/web-noise-suppressor/speexWorklet.js?url'
-import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWorklet.js?url'
 
 type NoiseSuppressionType = 'rnnoise' | 'speex' | 'none'
 
@@ -284,7 +282,6 @@ const addMicTrack = async () => {
         loadRnnoiseWasmBinary(),
         audioContext.value?.audioWorklet.addModule(rnnoiseWorkletPath)
       ])
-      console.log('rnnoise process')
       const rnnoiseNode = new RnnoiseWorkletNode(audioContext.value, {
         wasmBinary: rnnoiseBinary,
         maxChannels: 2
@@ -323,6 +320,7 @@ const addMicTrack = async () => {
     })
     isMicOn.value = true
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(e)
     // Cleanup
     stream?.getTracks().forEach(track => track.stop())
@@ -352,6 +350,7 @@ const removeMicTrack = async () => {
     }
     // await room.value.localParticipant.setMicrophoneEnabled(false)
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(e)
     addErrorToast('マイクのミュートに失敗しました')
   }

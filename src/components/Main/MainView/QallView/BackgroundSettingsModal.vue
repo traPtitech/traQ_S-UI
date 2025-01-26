@@ -79,9 +79,7 @@ const handleApply = () => {
           <button :class="$style.cancelButton" @click="onClose">
             キャンセル
           </button>
-          <button :class="$style.applyButton" @click="handleApply">
-            適用
-          </button>
+          <button :class="$style.applyButton" @click="handleApply">適用</button>
         </div>
       </div>
     </div>
@@ -161,7 +159,7 @@ const handleApply = () => {
   background-color: transparent;
   border: 1px solid $theme-ui-secondary;
   color: $theme-ui-secondary;
-  
+
   &:hover {
     background-color: rgba($theme-ui-secondary, 0.1);
   }
@@ -170,7 +168,7 @@ const handleApply = () => {
 .applyButton {
   background-color: $theme-accent-primary;
   color: white;
-  
+
   &:hover {
     background-color: darken($theme-accent-primary, 5%);
   }

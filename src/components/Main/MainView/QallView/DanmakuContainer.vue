@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref, useTemplateRef } from 'vue'
+import { nextTick, ref, useTemplateRef } from 'vue'
 import DanmakuComment from './DanmakuComment.vue'
 import DanmakuStamp from './DanmakuStamp.vue'
 
@@ -57,37 +57,21 @@ messageMitt.on('updateMessage', async message => {
 })
 
 useMittListener(qallMitt, 'pushStamp', stamp => {
-  sparkle(stamp)
+  stamps.value.push({
+    id: Math.random().toString(36).substring(2, 15),
+    stampId: stamp
+  })
+  setTimeout(() => {
+    stamps.value.shift()
+  }, 1400)
+
+  //TODO: 出現ロジックを考える
+  if (Math.random() < 0.005) {
+    sparkle(stamp)
+  }
 })
 
 const { sparkle } = useDanmakuSparkle(showSparkle)
-
-onMounted(() => {
-  // 一定間隔でコメントを生成
-  setInterval(() => {
-    comments.value.push({
-      id: Math.random().toString(36).substring(2, 15),
-      markdown: 'うおおおおおおおおおお!:tada::tada.party::tada.parrot:'
-    })
-    setTimeout(() => {
-      comments.value.shift()
-    }, 6000)
-  }, 1000)
-
-  setInterval(() => {
-    stamps.value.push({
-      id: Math.random().toString(36).substring(2, 15),
-      stampId: '69c10725-2176-45ac-a4a5-22e70b8a76f7'
-    })
-    setTimeout(() => {
-      stamps.value.shift()
-    }, 1400)
-  }, 1000)
-
-  setInterval(() => {
-    sparkle('e0e0c3a6-c544-4c96-8529-d597563fd1ad')
-  }, 5000)
-})
 </script>
 
 <template>

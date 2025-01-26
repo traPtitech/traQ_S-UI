@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
+import { ref } from 'vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import AudioTrack from './AudioTrack.vue'
 import VideoComponent from './VideoComponent.vue'
