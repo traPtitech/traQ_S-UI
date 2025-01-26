@@ -82,7 +82,13 @@ const showAllTracks = ref(false)
         </div>
       </template>
       <div v-if="tracksMap.size > 5" :class="$style.card">
-        <button @click="showAllTracks = false">
+        <button
+          @click="
+            () => {
+              selectedTrack = undefined
+            }
+          "
+        >
           +{{ tracksMap.size - 5 }}
         </button>
       </div>
