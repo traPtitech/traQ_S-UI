@@ -8,7 +8,6 @@ import { useDanmakuSparkle } from './useDanmakuSparkle'
 import { useQall } from '/@/composables/qall/useQall'
 
 import { messageMitt } from '/@/store/entities/messages'
-import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import useMittListener from '/@/composables/utils/useMittListener'
 
 const { callingChannel, publishData, qallMitt } = useQall()
@@ -57,18 +56,6 @@ messageMitt.on('updateMessage', async message => {
   }, 6000)
 })
 
-const { toggleStampPicker } = useStampPickerInvoker(
-  async stampData => {
-    try {
-      await publishData({ type: 'stamp', message: stampData.id })
-      qallMitt.emit('pushStamp', stampData.id)
-    } catch (e) {}
-  },
-  danmakuContainer,
-  false,
-  'bottom-right'
-)
-
 useMittListener(qallMitt, 'pushStamp', stamp => {
   sparkle(stamp)
 })
@@ -105,9 +92,6 @@ onMounted(() => {
 
 <template>
   <div ref="danmakuContainer" :class="$style.danmakuContainer">
-    <button :style="{ pointerEvents: 'auto' }" @click="toggleStampPicker">
-      スタンプピッカー
-    </button>
     <DanmakuComment
       v-for="comment in comments"
       :key="comment.id"

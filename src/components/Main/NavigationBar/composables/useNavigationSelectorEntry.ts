@@ -10,6 +10,7 @@ import { useAudioController } from '/@/store/ui/audioController'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useQall } from '/@/composables/qall/useQall'
+import { useMainViewStore } from '/@/store/ui/mainView'
 
 export type NavigationSelectorEntry = {
   type: NavigationItemType
@@ -83,7 +84,8 @@ const useNavigationSelectorEntry = () => {
   const { channelsMap, dmChannelsMap } = useChannelsStore()
   const { hasInputChannel } = useMessageInputStateStore()
   const { fileId } = useAudioController()
-  const { callingChannel } = useQall()
+  const { getQallingState } = useQall()
+  const { primaryView } = useMainViewStore()
 
   const unreadChannels = computed(() => [...unreadChannelsMap.value.values()])
   const notificationState = reactive({
@@ -96,7 +98,11 @@ const useNavigationSelectorEntry = () => {
   })
   const entries = computed(() => createItems(notificationState))
 
-  const hasActiveQallSession = computed(() => !!callingChannel.value)
+  const hasActiveQallSession = computed(
+    () =>
+      primaryView.value.type === 'channel' &&
+      getQallingState(primaryView.value.channelId) === 'subView'
+  )
   const ephemeralEntries = computed(() =>
     [
       hasActiveQallSession.value ? ephemeralItems.qallController : undefined,

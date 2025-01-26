@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useUserVolume } from '/@/store/app/userVolume'
 import { ref, watch, useCssModule, computed } from 'vue'
@@ -12,30 +11,11 @@ const { participant, trackInfo } = defineProps<{
 }>()
 
 const { getStore, setStore } = useUserVolume()
-const volume = ref<number | string>(getStore(trackInfo.username) ?? 1)
 
 const parseToFloat = (value: number | string): number => {
   if (typeof value === 'number') return value
   return parseFloat(value)
 }
-
-watch(
-  () => volume.value,
-  v => {
-    setStore(trackInfo.username, parseToFloat(v))
-  },
-  { deep: true, immediate: true }
-)
-
-watch(
-  () => getStore(trackInfo.username),
-  v => {
-    if (v) {
-      volume.value = v
-    }
-  },
-  { deep: true }
-)
 
 const isMuted = ref(false)
 const toggleMute = (trackInfo: TrackInfo) => {
@@ -44,11 +24,11 @@ const toggleMute = (trackInfo: TrackInfo) => {
 
 const style = useCssModule()
 const minValue = 0
-const maxValue = 100
-const sliderValue = ref(50)
+const maxValue = 2
+const volume = ref<number | string>(getStore(trackInfo.username) ?? 1)
 
 const sliderStyle = computed(() => {
-  const val = Number(sliderValue.value)
+  const val = parseToFloat(volume.value)
   const percent = ((val - minValue) / (maxValue - minValue)) * 100
   const startColor = isMuted.value ? '#6b7d8a' : '#005BAC'
   // TODO ここもSCSS変数でかける？
@@ -62,7 +42,22 @@ const sliderStyle = computed(() => {
     `
   }
 })
-
+watch(
+  () => getStore(trackInfo.username),
+  v => {
+    if (v) {
+      volume.value = v
+    }
+  },
+  { deep: true }
+)
+watch(
+  () => volume.value,
+  v => {
+    setStore(trackInfo.username, parseToFloat(v))
+  },
+  { deep: true, immediate: true }
+)
 const volumeSliderClass = computed(() => ({
   [style.volumeSlider]: true,
   [style.muted]: isMuted.value
@@ -74,26 +69,25 @@ const volumeSliderClass = computed(() => ({
     <div :class="$style.leftSide">
       <user-icon :size="40" :user-id="participant.id" />
       <span :class="$style.userName">{{ participant.displayName }}</span>
-      <button :class="$style.micIconButton">
+      <!-- TODO: Qall: ミュートを実装する -->
+      <!-- <button :class="$style.micIconButton">
         <a-icon v-if="isMuted" name="microphone-off" mdi />
-      </button>
+      </button> -->
     </div>
     <div :class="$style.rightSide">
-      <button :class="$style.iconButton" @click="toggleMute(trackInfo)">
+      <!-- <button :class="$style.iconButton" @click="toggleMute(trackInfo)">
         <a-icon v-if="isMuted" name="volume-off" :size="24" mdi />
         <a-icon v-else name="volume-high" mdi :size="24" />
-      </button>
+      </button> -->
       <input
-        v-model="sliderValue"
+        v-model="volume"
         type="range"
         :min="minValue"
         :max="maxValue"
+        step="0.01"
         :style="sliderStyle"
         :class="volumeSliderClass"
       />
-      <button :class="$style.accountMinusButton">
-        <a-icon name="account-minus" :size="24" mdi />
-      </button>
     </div>
   </div>
 </template>
