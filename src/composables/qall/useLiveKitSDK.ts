@@ -15,7 +15,7 @@ import type {
   Participant,
   LocalTrack
 } from 'livekit-client'
-import { ref, type Ref, computed } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import apis from '/@/lib/apis'
 import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
@@ -33,7 +33,6 @@ import {
 import speexWasmPath from '@sapphi-red/web-noise-suppressor/speex.wasm?url'
 import speexWorkletPath from '@sapphi-red/web-noise-suppressor/speexWorklet.js?url'
 import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWorklet.js?url'
-import { useRtcSettings } from '/@/store/app/rtcSettings'
 
 type NoiseSuppressionType = 'rnnoise' | 'speex' | 'none'
 
@@ -44,7 +43,6 @@ const loadSpeexWasmBinary = async () => {
   return speexWasmBinary
 }
 
-
 let rnnoiseWasmBinary: ArrayBuffer | undefined
 const loadRnnoiseWasmBinary = async () => {
   if (rnnoiseWasmBinary) return rnnoiseWasmBinary
@@ -54,6 +52,9 @@ const loadRnnoiseWasmBinary = async () => {
   })
   return rnnoiseWasmBinary
 }
+import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'
+import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
+import { useRtcSettings } from '/@/store/app/rtcSettings'
 
 const virtualBackgroundAssetsPath =
   'https://cdn.jsdelivr.net/npm/@shiguredo/virtual-background@latest/dist'
@@ -62,6 +63,7 @@ type QallEventMap = {
 }
 const { addErrorToast } = useToastStore()
 const qallMitt = mitt<QallEventMap>()
+const rtcSettings = useRtcSettings()
 
 export type TrackInfo = (
   | {
@@ -89,6 +91,7 @@ const speakerIdentity = ref<string[]>([])
 const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
 const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
 const screenShareTrackSidMap = ref<Map<string, string>>(new Map())
+const mixer = ref<AudioStreamMixer>()
 
 function handleTrackSubscribed(
   track: RemoteTrack,
@@ -163,6 +166,14 @@ function handleParticipantAttributesChanged(
   )
 }
 
+function handleParticipantConnected(participant: Participant) {
+  mixer.value?.playFileSource('qall_joined')
+}
+
+function handleParticipantDisconnected(participant: Participant) {
+  mixer.value?.playFileSource('qall_left')
+}
+
 const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
   try {
     const traQtoken = (await apis.getMyQRCode(true)).data
@@ -200,6 +211,8 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
         RoomEvent.ParticipantAttributesChanged,
         handleParticipantAttributesChanged
       )
+      .on(RoomEvent.ParticipantConnected, handleParticipantConnected)
+      .on(RoomEvent.ParticipantDisconnected, handleParticipantDisconnected)
 
     // connect to room
     await room.value.connect('wss://livekit.qall-dev.trapti.tech', token)
@@ -210,10 +223,18 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
 
     await room.value.localParticipant.setAttributes({})
     room.value.remoteParticipants.forEach(participant => {
-      Object.keys(participant.attributes).forEach(key =>
+      Object.keys(participant.attributes).forEach(key => {
         screenShareTrackSidMap.value.set(key, participant.attributes[key] ?? '')
-      )
+      })
     })
+
+    const audioContext = new ExtendedAudioContext()
+    mixer.value = new AudioStreamMixer(
+      audioContext,
+      rtcSettings.masterVolume.value
+    )
+    await mixer.value.initializePromise
+    await mixer.value.playFileSource('qall_start')
   } catch {
     addErrorToast('Qallの接続に失敗しました')
     await leaveRoom()
@@ -221,16 +242,20 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
 
   window.addEventListener('beforeunload', leaveRoom)
 }
+const screenShareTracks = computed(() =>
+  Array.from(screenShareTrackSidMap.value.entries())
+)
 
 async function leaveRoom() {
   // Leave the room by calling 'disconnect' method over the Room object
   await room.value?.disconnect()
+  await mixer.value?.playFileSource('qall_end')
 
   // Empty all variables
   room.value = undefined
   tracksMap.value.clear()
   screenShareTrackSidMap.value.clear()
-
+  mixer.value = undefined
   window.removeEventListener('beforeunload', leaveRoom)
 }
 
@@ -311,28 +336,7 @@ const removeMicTrack = async () => {
       addErrorToast('ルームが存在しません')
       return
     }
-    
-    // Stop all audio processing
-    if (audioContext.value) {
-      await audioContext.value.close()
-      audioContext.value = undefined
-    }
-
-    await room.value.localParticipant.setMicrophoneEnabled(
-      false,
-      {
-        channelCount: 2,
-        voiceIsolation: false,
-        echoCancellation: true,
-        noiseSuppression: false
-      },
-      {
-        audioPreset: AudioPresets.musicHighQualityStereo,
-        forceStereo: true,
-        red: false,
-        dtx: false
-      }
-    )
+    await room.value.localParticipant.setMicrophoneEnabled(false)
   } catch (e) {
     console.error(e)
     addErrorToast('マイクのミュートに失敗しました')
@@ -592,6 +596,7 @@ const publishData = async (data: { type: 'stamp'; message: string }) => {
   await room.value.localParticipant.publishData(encoded, { reliable: true })
 }
 const decoder = new TextDecoder()
+const isMicOn = ref(false)
 
 export const useLiveKitSDK = () => {
   return {
@@ -606,6 +611,8 @@ export const useLiveKitSDK = () => {
     toggleMicTrack,
     tracksMap,
     screenShareTrackSidMap,
+    screenShareTracks,
+    isMicOn,
     qallMitt
   }
 }

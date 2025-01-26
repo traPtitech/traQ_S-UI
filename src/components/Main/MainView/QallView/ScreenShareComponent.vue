@@ -7,45 +7,41 @@ import VideoComponent from './VideoComponent.vue'
 const { trackInfo, audioTrackInfo } = defineProps<{
   trackInfo: TrackInfo
   audioTrackInfo: TrackInfo | undefined
-  isLarge: boolean
+  notMute?: boolean
 }>()
 
 const volume = ref(1)
-
-const videoElement = useTemplateRef<HTMLVideoElement>('videoElement')
-
-onMounted(() => {
-  if (videoElement.value) {
-    trackInfo.trackPublication?.track?.attach(videoElement.value)
-  }
-})
-
-onUnmounted(() => {
-  if (videoElement.value) {
-    trackInfo.trackPublication?.track?.detach(videoElement.value)
-  }
-})
 </script>
 
 <template>
-  <div :id="'camera-' + trackInfo.username">
-    <VideoComponent
-      v-if="trackInfo.trackPublication"
-      :track-info="trackInfo"
-      :is-large="isLarge"
-    />
+  <div :class="$style.container">
+    <VideoComponent v-if="trackInfo.trackPublication" :track-info="trackInfo" />
     <AudioTrack
-      v-if="audioTrackInfo?.trackPublication"
+      v-if="notMute && trackInfo.isRemote && audioTrackInfo?.trackPublication"
       :track-info="audioTrackInfo"
       :volume="volume"
     />
+    <input
+      v-model="volume"
+      type="range"
+      min="0"
+      max="2"
+      step="0.01"
+      :class="$style.volume"
+    />
   </div>
-  <input v-model="volume" type="range" min="0" max="3" step="0.01" />
 </template>
 
 <style lang="scss" module>
-.video {
+.container {
   width: 100%;
   height: 100%;
+  position: relative;
+}
+.volume {
+  position: absolute;
+  bottom: 0;
+  right: 4px;
+  width: 4rem;
 }
 </style>

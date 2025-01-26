@@ -43,7 +43,6 @@ function handleClick() {
 .callControlBtnSmall {
   width: 48px;
   height: 48px;
-  background-color: #222325;
   border: none;
   cursor: pointer;
   padding: 0;
@@ -51,11 +50,12 @@ function handleClick() {
   justify-content: center;
   align-items: center;
   transition: opacity 0.3s;
-  color: white;
+  @include background-tertiary;
+  @include color-ui-primary;
 }
 
 .callControlBtnSmall:hover {
-  opacity: 0.1;
+  opacity: 0.5;
 }
 
 .icon {

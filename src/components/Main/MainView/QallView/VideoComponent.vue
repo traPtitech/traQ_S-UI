@@ -3,26 +3,23 @@ import { useQall } from '/@/composables/qall/useQall'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import VideoTrack from './VideoTrack.vue'
 
-const { trackInfo, isLarge } = defineProps<{
+const { trackInfo } = defineProps<{
   trackInfo: TrackInfo
-  isLarge: boolean
 }>()
 
 const { removeVideoTrack } = useQall()
 </script>
 
 <template>
-  <div :id="'camera-' + trackInfo.username">
-    <div :class="isLarge ? $style.LargeCard : $style.UserCard">
-      <VideoTrack :track-info="trackInfo" :class="$style.video" />
-      <div :class="$style.NameLabel">{{ trackInfo.username }}</div>
-    </div>
-    <button
+  <div :class="$style.UserCard">
+    <!-- <button
       v-if="!trackInfo.isRemote && trackInfo.trackPublication"
       @click="removeVideoTrack(trackInfo.trackPublication)"
     >
       Remove Video
-    </button>
+    </button> -->
+    <VideoTrack :track-info="trackInfo" :class="$style.video" />
+    <div :class="$style.NameLabel">{{ trackInfo.username }}</div>
   </div>
 </template>
 
@@ -44,20 +41,12 @@ const { removeVideoTrack } = useQall()
   color: #fff;
 }
 .UserCard {
-  height: 108px;
-  width: 192px;
   background-color: #000;
-  position: relative;
-  overflow: hidden;
-  border-radius: 12px;
-}
-.LargeCard {
-  height: 324px;
-  width: 576px;
   position: relative;
   overflow: hidden;
   border-radius: 12px;
 
-  background-color: #000;
+  width: 100%;
+  height: 100%;
 }
 </style>

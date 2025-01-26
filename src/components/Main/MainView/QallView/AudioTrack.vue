@@ -34,9 +34,9 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  audioContext.close()
   if (audioElement.value) {
     trackInfo.trackPublication?.track?.detach(audioElement.value)
-    audioContext.close()
   }
 })
 </script>
