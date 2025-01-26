@@ -4,6 +4,7 @@ import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.
 import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
 import UserCard from './UserCard.vue'
+import UserSurplusCard from './UserSurplusCard.vue'
 
 const { tracksMap, screenShareTrackSidMap, screenShareTracks, selectedTrack } =
   useQall()
@@ -131,15 +132,14 @@ onUnmounted(() => {
           </div>
         </template>
         <div v-if="tracksMap.size > 5" :class="$style.card">
-          <button
-            @click="
+          <UserSurplusCard
+            :number="tracksMap.size - 5"
+            @switch="
               () => {
                 selectedTrack = undefined
               }
             "
-          >
-            +{{ tracksMap.size - 5 }}
-          </button>
+          />
         </div>
       </div>
     </div>
