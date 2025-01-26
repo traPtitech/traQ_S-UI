@@ -10,14 +10,11 @@ import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import ParticipantList from './ParticipantList.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import UserList from './UserList.vue'
-import { useModalStore } from '/@/store/ui/modal'
 import CameraDetailSetting from './CameraDetailSetting.vue'
 import ScreenShareDetailSetting from './ScreenShareDetailSetting.vue'
 import DetailButton from './DetailButton.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import QallMessageView from './QallMessageView.vue'
-
-const { pushModal } = useModalStore()
 
 const {
   tracksMap,
@@ -179,23 +176,27 @@ const handleBackgroundSave = (data: {
 
 const showCameraDetailSetting = ref(false)
 const showShareScreenSettingDetail = ref(false)
+
+const showDanmaku = ref(true)
+const toggleDanmaku = () => {
+  showDanmaku.value = !showDanmaku.value
+}
 </script>
 
 <template>
   <div :class="$style.Block">
     <QallMessageView :channel-id="callingChannel" :typing-users="[]">
-      <DanmakuContainer />
-      <IconButton
-        icon-name="close"
-        icon-mdi
-        :class="$style.closeButton"
-        @click="isSubView = true"
-      />
-
-      <!-- 縦並び用のラッパ -->
+      <DanmakuContainer v-if="showDanmaku" />
+      <div :class="$style.iconContainer">
+        <IconButton
+          :icon-name="`comment${showDanmaku ? '' : '-off'}-outline`"
+          icon-mdi
+          @click="toggleDanmaku"
+        />
+        <IconButton icon-name="close" icon-mdi @click="isSubView = true" />
+      </div>
       <div :class="$style.stackContainer">
         <UserList :class="$style.userList" />
-
         <div :class="$style.controlBarContainer">
           <div :class="$style.controlBar">
             <div :class="$style.smallButtonGroup">
@@ -378,6 +379,14 @@ const showShareScreenSettingDetail = ref(false)
 }
 
 .closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.iconContainer {
+  display: flex;
+  gap: 4px;
   position: absolute;
   top: 1rem;
   right: 1rem;
