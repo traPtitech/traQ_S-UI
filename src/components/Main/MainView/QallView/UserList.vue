@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.vue'
-import AudioComponent from '/@/components/Main/MainView/QallView/AudioComponent.vue'
 import { onMounted, ref } from 'vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
 import UserCard from './UserCard.vue'
@@ -102,7 +101,7 @@ const selectedSid = ref<string>()
   width: 192px;
 }
 .largeCard {
-  height: 324px;
-  width: 576px;
+  height: 50%;
+  width: 66%;
 }
 </style>
