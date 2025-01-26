@@ -341,7 +341,15 @@ const showShareScreenSettingDetail = ref(false)
 }
 
 .TrackContainer {
-  height: fit-content;
+  position: absolute;
+  bottom: 24px; // 仮置き，メッセージの表示非表示に動的対応
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
 }
 
 .channelView {
