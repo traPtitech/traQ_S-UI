@@ -4,7 +4,6 @@ import { onMounted, ref, useTemplateRef, computed } from 'vue'
 import DanmakuContainer from './DanmakuContainer.vue'
 import CallControlButtonSmall from './CallControlButtonSmall.vue'
 import CallControlButton from './CallControlButton.vue'
-import QallMessageView from './QallMessageView.vue'
 import SoundBoard from './SoundBoard.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
@@ -16,6 +15,7 @@ import CameraDetailSetting from './CameraDetailSetting.vue'
 import ScreenShareDetailSetting from './ScreenShareDetailSetting.vue'
 import DetailButton from './DetailButton.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
+import QallMessageView from './QallMessageView.vue'
 
 const { pushModal } = useModalStore()
 
@@ -183,136 +183,133 @@ const showShareScreenSettingDetail = ref(false)
 
 <template>
   <div :class="$style.Block">
-    <DanmakuContainer />
-    <QallMessageView
-      :channel-id="callingChannel"
-      :typing-users="[]"
-      :class="$style.channelView"
-    />
-    <IconButton
-      icon-name="close"
-      icon-mdi
-      :class="$style.closeButton"
-      @click="isSubView = true"
-    />
-    <UserList />
+    <QallMessageView :channel-id="callingChannel" :typing-users="[]">
+      <DanmakuContainer />
+      <IconButton
+        icon-name="close"
+        icon-mdi
+        :class="$style.closeButton"
+        @click="isSubView = true"
+      />
+      <UserList />
 
-    <div :class="$style.TrackContainer">
-      <div :class="$style.controlBar">
-        <div :class="$style.smallButtonGroup">
-          <div :class="$style.soundBoardButton">
-            <CallControlButtonSmall
-              icon="sound_detection_loud_sound"
-              :on-click="handleSound"
-            />
-            <ClickOutside @click-outside="showSoundBoard = false">
-              <SoundBoard v-if="showSoundBoard" />
-            </ClickOutside>
+      <div :class="$style.TrackContainer">
+        <div :class="$style.controlBar">
+          <div :class="$style.smallButtonGroup">
+            <div :class="$style.soundBoardButton">
+              <CallControlButtonSmall
+                icon="sound_detection_loud_sound"
+                :on-click="handleSound"
+              />
+              <ClickOutside @click-outside="showSoundBoard = false">
+                <SoundBoard v-if="showSoundBoard" />
+              </ClickOutside>
+            </div>
+            <div ref="reactionButton">
+              <CallControlButtonSmall
+                icon="add_reaction"
+                :on-click="handleReaction"
+              />
+            </div>
           </div>
-          <div ref="reactionButton">
-            <CallControlButtonSmall
-              icon="add_reaction"
-              :on-click="handleReaction"
+          <div :class="$style.verticalBar"></div>
+          <div :class="$style.buttonWithDetail">
+            <CallControlButton
+              :icon="screenShareIcon"
+              :is-on="isScreenSharing"
+              :on-click="toggleScreen"
+              :mdi="false"
+              :inverted="isScreenSharing"
+            />
+            <DetailButton
+              @click="
+                () => {
+                  showShareScreenSettingDetail = true
+                }
+              "
+            />
+            <ScreenShareDetailSetting
+              :open="showShareScreenSettingDetail"
+              @add="
+                () => {
+                  isScreenSharing = true
+                }
+              "
+              @close="
+                () => {
+                  showShareScreenSettingDetail = false
+                }
+              "
             />
           </div>
-        </div>
-        <div :class="$style.verticalBar"></div>
-        <div :class="$style.buttonWithDetail">
+          <div :class="$style.buttonWithDetail">
+            <CallControlButton
+              :icon="cameraIcon"
+              :is-on="isCameraOn"
+              :on-click="toggleVideo"
+              :inverted="isCameraOn"
+            />
+            <DetailButton
+              :inverted="isCameraOn"
+              @click="
+                () => {
+                  showCameraDetailSetting = true
+                }
+              "
+            />
+            <CameraDetailSetting
+              :open="showCameraDetailSetting"
+              :video-inputs="videoInputs"
+              @save="handleBackgroundSave"
+              @add="
+                () => {
+                  isCameraOn = true
+                }
+              "
+              @close="
+                () => {
+                  showCameraDetailSetting = false
+                }
+              "
+            />
+          </div>
           <CallControlButton
-            :icon="screenShareIcon"
-            :is-on="isScreenSharing"
-            :on-click="toggleScreen"
-            :mdi="false"
-            :inverted="isScreenSharing"
+            :icon="micIcon"
+            :is-on="isMicOn"
+            :on-click="toggleAudio"
+            :inverted="isMicOn"
           />
-          <DetailButton
-            @click="
-              () => {
-                showShareScreenSettingDetail = true
-              }
-            "
-          />
-          <ScreenShareDetailSetting
-            :open="showShareScreenSettingDetail"
-            @add="
-              () => {
-                isScreenSharing = true
-              }
-            "
-            @close="
-              () => {
-                showShareScreenSettingDetail = false
-              }
-            "
-          />
-        </div>
-        <div :class="$style.buttonWithDetail">
           <CallControlButton
-            :icon="cameraIcon"
-            :is-on="isCameraOn"
-            :on-click="toggleVideo"
-            :inverted="isCameraOn"
+            icon="phone-hangup"
+            is-on
+            :on-click="leaveQall"
+            :on-background-color="'#F26451'"
           />
-          <DetailButton
-            :inverted="isCameraOn"
-            @click="
-              () => {
-                showCameraDetailSetting = true
-              }
-            "
-          />
-          <CameraDetailSetting
-            :open="showCameraDetailSetting"
-            :video-inputs="videoInputs"
-            @save="handleBackgroundSave"
-            @add="
-              () => {
-                isCameraOn = true
-              }
-            "
-            @close="
-              () => {
-                showCameraDetailSetting = false
-              }
-            "
-          />
-        </div>
-        <CallControlButton
-          :icon="micIcon"
-          :is-on="isMicOn"
-          :on-click="toggleAudio"
-          :inverted="isMicOn"
-        />
-        <CallControlButton
-          icon="phone-hangup"
-          is-on
-          :on-click="leaveQall"
-          :on-background-color="'#F26451'"
-        />
-        <div :class="$style.verticalBar"></div>
-        <div :class="$style.smallButtonGroup">
-          <div :class="$style.participantsContainer">
-            <ClickOutside @click-outside="showParticipants = false">
-              <div v-if="showParticipants" :class="$style.participantsList">
-                <div :class="$style.participantsContent">
-                  <participant-list
-                    v-for="participant in filteredParticipants"
-                    :key="participant.user.id"
-                    :participant="participant.user"
-                    :track-info="getParticipantTrackInfo(participant)!"
-                  />
+          <div :class="$style.verticalBar"></div>
+          <div :class="$style.smallButtonGroup">
+            <div :class="$style.participantsContainer">
+              <ClickOutside @click-outside="showParticipants = false">
+                <div v-if="showParticipants" :class="$style.participantsList">
+                  <div :class="$style.participantsContent">
+                    <participant-list
+                      v-for="participant in filteredParticipants"
+                      :key="participant.user.id"
+                      :participant="participant.user"
+                      :track-info="getParticipantTrackInfo(participant)!"
+                    />
+                  </div>
                 </div>
-              </div>
-            </ClickOutside>
-            <CallControlButtonSmall
-              icon="account-multiple"
-              :on-click="handleGroup"
-              mdi
-            />
+              </ClickOutside>
+              <CallControlButtonSmall
+                icon="account-multiple"
+                :on-click="handleGroup"
+                mdi
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </QallMessageView>
   </div>
 </template>
 
@@ -355,12 +352,7 @@ const showShareScreenSettingDetail = ref(false)
 }
 
 .Block {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  position: relative;
+  height: 100%;
   height: 100%;
 }
 

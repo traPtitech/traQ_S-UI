@@ -1,64 +1,3 @@
-<template>
-  <div
-    :class="$style.container"
-    :data-is-not-messages-show="$boolAttr(!isMessageShow)"
-  >
-    <scroll-loading-bar
-      :class="$style.loadingBar"
-      :show="isLoading && isMessageShow"
-    />
-    <transition name="fade-bottom" mode="out-in">
-      <messages-scroller
-        v-if="isMessageShow"
-        ref="scrollerEle"
-        :message-ids="messageIds"
-        :is-reached-end="isReachedEnd"
-        :is-reached-latest="isReachedLatest"
-        :is-loading="isLoading"
-        :last-loading-direction="lastLoadingDirection"
-        @request-load-former="onLoadFormerMessagesRequest"
-        @request-load-latter="onLoadLatterMessagesRequest"
-        @scroll-passive="handleScroll"
-        @reset-is-reached-latest="resetIsReachedLatest"
-      >
-        <template
-          #default="{ messageId, onChangeHeight, onEntryMessageLoaded }"
-        >
-          <message-element
-            :class="$style.element"
-            :message-id="messageId"
-            :is-archived="isArchived"
-            @change-height="onChangeHeight"
-            @entry-message-loaded="onEntryMessageLoaded"
-          />
-        </template>
-      </messages-scroller>
-    </transition>
-    <div :class="$style.uiElement">
-      <FormButton
-        label="メッセージを表示"
-        @click="
-          () => {
-            if (isMessageShow) {
-              isMessageShow = false
-              toNewMessage('smooth')
-            } else {
-              isMessageShow = true
-              nextTick(() => toNewMessage())
-            }
-          }
-        "
-      />
-      <message-input
-        :channel-id="channelId"
-        :typing-users="typingUsers"
-        :show-to-new-message-button="showToNewMessageButton"
-        @click-to-new-message-button="toNewMessage"
-      />
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
 import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
@@ -120,15 +59,97 @@ const handleScroll = () => {
 }
 </script>
 
+<template>
+  <div
+    :class="$style.container"
+    :data-is-not-messages-show="$boolAttr(!isMessageShow)"
+  >
+    <div :class="$style.mainViewConteiner">
+      <div :class="$style.messageContainer">
+        <scroll-loading-bar
+          :class="$style.loadingBar"
+          :show="isLoading && isMessageShow"
+        />
+        <transition name="fade-bottom" mode="out-in">
+          <messages-scroller
+            v-if="isMessageShow"
+            ref="scrollerEle"
+            :message-ids="messageIds"
+            :is-reached-end="isReachedEnd"
+            :is-reached-latest="isReachedLatest"
+            :is-loading="isLoading"
+            :last-loading-direction="lastLoadingDirection"
+            @request-load-former="onLoadFormerMessagesRequest"
+            @request-load-latter="onLoadLatterMessagesRequest"
+            @scroll-passive="handleScroll"
+            @reset-is-reached-latest="resetIsReachedLatest"
+          >
+            <template
+              #default="{ messageId, onChangeHeight, onEntryMessageLoaded }"
+            >
+              <message-element
+                :class="$style.element"
+                :message-id="messageId"
+                :is-archived="isArchived"
+                @change-height="onChangeHeight"
+                @entry-message-loaded="onEntryMessageLoaded"
+              />
+            </template>
+          </messages-scroller>
+        </transition>
+        <div :class="$style.uiElement">
+          <FormButton
+            label="メッセージを表示"
+            @click="
+              () => {
+                if (isMessageShow) {
+                  isMessageShow = false
+                  toNewMessage('smooth')
+                } else {
+                  isMessageShow = true
+                  nextTick(() => toNewMessage())
+                }
+              }
+            "
+          />
+        </div>
+      </div>
+      <slot name="default"></slot>
+    </div>
+    <message-input
+      :channel-id="channelId"
+      :typing-users="typingUsers"
+      :show-to-new-message-button="showToNewMessageButton"
+      force-mobile-style
+      @click-to-new-message-button="toNewMessage"
+    />
+  </div>
+</template>
+
 <style lang="scss" module>
 .container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+}
+
+.mainViewConteiner {
+  flex-grow: 1;
+  position: relative;
+}
+
+.messageContainer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30%;
+  height: 100%;
+
   display: flex;
   flex: 1 1;
   flex-direction: column;
   justify-content: end;
-  position: relative;
-  width: 100%;
-  height: 100%;
   &[data-is-not-messages-show] {
     pointer-events: none;
   }
