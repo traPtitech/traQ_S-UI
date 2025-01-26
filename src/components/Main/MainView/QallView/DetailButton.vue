@@ -1,38 +1,22 @@
 <script setup lang="ts">
-import { defineProps, useCssModule, computed } from 'vue'
+import { defineProps } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = defineProps({
   onClick: {
     type: Function,
     required: true
-  },
-  inverted: {
-    type: Boolean,
-    default: false
   }
 })
-
-const style = useCssModule()
 
 function handleClick() {
   props.onClick?.()
 }
-
-const iconClass = computed(() => ({
-  [style.inverted]: props.inverted
-}))
-
-const buttonClass = computed(() => ({
-  [style.detailButton]: true,
-  [style.invertedBackground]: props.inverted,
-  [style.normalBackground]: !props.inverted
-}))
 </script>
 
 <template>
-  <button :class="buttonClass" @click="handleClick">
-    <AIcon name="plus-circle" mdi :class="iconClass" :size="24" />
+  <button :class="$style.detailButton" @click="handleClick">
+    <AIcon name="plus-circle" mdi :size="24" />
   </button>
 </template>
 
@@ -45,22 +29,7 @@ const buttonClass = computed(() => ({
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
-}
-
-.inverted {
-  filter: invert(1);
-}
-
-.invertedBackground {
-  background-color: white;
-  width: 24px;
-  height: 24px;
-}
-
-.normalBackground {
-  background-color: black;
+  background-color: $theme-background-primary-default;
   width: 24px;
   height: 24px;
 }
