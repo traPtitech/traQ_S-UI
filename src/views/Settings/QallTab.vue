@@ -69,6 +69,17 @@
         </div>
       </section>
       <section :class="$style.element">
+        <h3 :class="$style.heading">出力デバイス</h3>
+        <div>
+          <form-selector
+            v-if="!fetchFailed && audioOutputDevices.length"
+            v-model="state.audioOutputDeviceId"
+            :options="audioOutputDeviceOptions"
+          />
+          <p v-else>デバイスが取得できませんでした。</p>
+        </div>
+      </section>
+      <section :class="$style.element">
         <h3 :class="$style.heading">マスターボリューム</h3>
         <form-range-with-value
           v-model="state.masterVolume"
@@ -199,10 +210,17 @@ const formatMasterVolume = (v: number) =>
 
 const formatNoiseGateThreshold = (v: number) => `${v}dB`
 
-const { fetchFailed, audioInputDevices } = useDevicesInfo()
+const { fetchFailed, audioInputDevices, audioOutputDevices } = useDevicesInfo()
 
 const audioInputDeviceOptions = computed(() =>
   audioInputDevices.value.map(d => ({
+    key: d.label,
+    value: d.deviceId
+  }))
+)
+
+const audioOutputDeviceOptions = computed(() =>
+  audioOutputDevices.value.map(d => ({
     key: d.label,
     value: d.deviceId
   }))

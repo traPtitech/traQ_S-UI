@@ -12,6 +12,7 @@ export type NavigationItemType =
   | 'qall'
   | 'stamp'
   | 'theme'
+  | 'audio'
 
 // TODO: 言語系リソースの置き場所
 export const navigationRouteNameTitleMap: Record<SettingsRouteName, string> = {
@@ -20,7 +21,8 @@ export const navigationRouteNameTitleMap: Record<SettingsRouteName, string> = {
   settingsBrowser: 'ブラウザ',
   settingsQall: '通話 (Qall)',
   settingsStamp: 'スタンプ',
-  settingsTheme: 'テーマ'
+  settingsTheme: 'テーマ',
+  settingsAudio: '音声'
 }
 
 export const navigations: {
@@ -59,6 +61,11 @@ export const navigations: {
   {
     routeName: 'settingsTheme',
     iconName: 'brightness-6',
+    iconMdi: true
+  },
+  {
+    routeName: 'settingsAudio',
+    iconName: 'volume-high',
     iconMdi: true
   }
 ]

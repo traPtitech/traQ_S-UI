@@ -4,7 +4,10 @@
       <channel-header :channel-id="channelId" />
     </template>
     <template #default>
+      <QallAudio />
+      <QallView v-if="getQallingState(channelId) === 'mainView'" />
       <channel-view-content
+        v-else
         :channel-id="channelId"
         :entry-message-id="entryMessageId"
         :pinned-messages="pinnedMessages"
@@ -13,6 +16,7 @@
     </template>
     <template #sidebar>
       <channel-sidebar
+        v-if="getQallingState(channelId) !== 'mainView'"
         :channel-id="channelId"
         :is-sidebar-opener-ready="isReady"
         :pinned-messages="pinnedMessages"
@@ -31,6 +35,9 @@ import type { ChannelId, MessageId } from '/@/types/entity-ids'
 import { toRef } from 'vue'
 import usePinnedMessages from '/@/composables/message/usePinnedMessages'
 import useCurrentViewers from '/@/composables/useCurrentViewers'
+import { useQall } from '/@/composables/qall/useQall'
+import QallView from '../QallView/QallView.vue'
+import QallAudio from '../QallView/QallAudio.vue'
 
 const props = defineProps<{
   isReady: boolean
@@ -41,4 +48,5 @@ const props = defineProps<{
 const channelId = toRef(props, 'channelId')
 const pinnedMessages = usePinnedMessages(channelId)
 const { viewingUsers, typingUsers } = useCurrentViewers(channelId)
+const { getQallingState } = useQall()
 </script>
