@@ -374,7 +374,7 @@ const toggleDanmaku = () => {
 .verticalBar {
   width: 1px;
   height: 64px;
-  background-color: #ced6db;
+  background-color: $theme-ui-tertiary-default;
   margin: 0 16px;
 }
 
