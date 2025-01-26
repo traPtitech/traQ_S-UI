@@ -344,10 +344,6 @@ const removeMicTrack = async () => {
     for (const [trackSid, trackInfo] of tracksMap.value) {
       if (trackInfo.isRemote) continue
       if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
-        if (audioContext.value) {
-          await audioContext.value.close()
-          audioContext.value = undefined
-        }
         await trackInfo.trackPublication?.track?.mute()
       }
     }
