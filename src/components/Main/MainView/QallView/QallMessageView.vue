@@ -8,6 +8,7 @@ import useChannelMessageFetcher from '../ChannelView/ChannelViewContent/composab
 import { useChannelsStore } from '/@/store/entities/channels'
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import IconButton from '/@/components/UI/IconButton.vue'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -56,20 +57,6 @@ const handleScroll = () => {
     showToNewMessageButton.value = true
   }
 }
-
-const handleMessage = () => {
-  if (isMessageShow.value) {
-    isMessageShow.value = false
-    toNewMessage('smooth')
-  } else {
-    isMessageShow.value = true
-    nextTick(() => toNewMessage())
-  }
-}
-
-defineExpose({
-  handleMessage
-})
 </script>
 
 <template>
@@ -77,39 +64,66 @@ defineExpose({
     :class="$style.container"
     :data-is-not-messages-show="$boolAttr(!isMessageShow)"
   >
-    <div :class="$style.mainViewConteiner">
-      <div :class="$style.messageContainer">
+    <div :class="$style.mainViewContainer">
+      <div
+        :class="$style.messageContainer"
+        :data-is-not-messages-show="$boolAttr(!isMessageShow)"
+      >
         <scroll-loading-bar
           :class="$style.loadingBar"
           :show="isLoading && isMessageShow"
         />
         <transition name="fade-bottom" mode="out-in">
-          <messages-scroller
+          <div
             v-if="isMessageShow"
-            ref="scrollerEle"
-            :message-ids="messageIds"
-            :is-reached-end="isReachedEnd"
-            :is-reached-latest="isReachedLatest"
-            :is-loading="isLoading"
-            :last-loading-direction="lastLoadingDirection"
-            @request-load-former="onLoadFormerMessagesRequest"
-            @request-load-latter="onLoadLatterMessagesRequest"
-            @scroll-passive="handleScroll"
-            @reset-is-reached-latest="resetIsReachedLatest"
+            :class="$style.messageContainerBackgroundContainer"
           >
-            <template
-              #default="{ messageId, onChangeHeight, onEntryMessageLoaded }"
+            <div :class="$style.messageContainerBackground"></div>
+
+            <messages-scroller
+              v-if="isMessageShow"
+              ref="scrollerEle"
+              :message-ids="messageIds"
+              :is-reached-end="isReachedEnd"
+              :is-reached-latest="isReachedLatest"
+              :is-loading="isLoading"
+              :last-loading-direction="lastLoadingDirection"
+              @request-load-former="onLoadFormerMessagesRequest"
+              @request-load-latter="onLoadLatterMessagesRequest"
+              @scroll-passive="handleScroll"
+              @reset-is-reached-latest="resetIsReachedLatest"
             >
-              <message-element
-                :class="$style.element"
-                :message-id="messageId"
-                :is-archived="isArchived"
-                @change-height="onChangeHeight"
-                @entry-message-loaded="onEntryMessageLoaded"
-              />
-            </template>
-          </messages-scroller>
+              <template
+                #default="{ messageId, onChangeHeight, onEntryMessageLoaded }"
+              >
+                <message-element
+                  :class="$style.element"
+                  :message-id="messageId"
+                  :is-archived="isArchived"
+                  @change-height="onChangeHeight"
+                  @entry-message-loaded="onEntryMessageLoaded"
+                />
+              </template>
+            </messages-scroller>
+          </div>
         </transition>
+        <div :class="[$style.uiElement, $style.uiToggleButton]">
+          <IconButton
+            :icon-name="`chevron-double-${isMessageShow ? 'down' : 'up'}`"
+            icon-mdi
+            @click="
+              () => {
+                if (isMessageShow) {
+                  isMessageShow = false
+                  toNewMessage('smooth')
+                } else {
+                  isMessageShow = true
+                  nextTick(() => toNewMessage())
+                }
+              }
+            "
+          />
+        </div>
       </div>
       <slot name="default"></slot>
     </div>
@@ -130,7 +144,7 @@ defineExpose({
   flex-direction: column;
 }
 
-.mainViewConteiner {
+.mainViewContainer {
   flex-grow: 1;
   position: relative;
 }
@@ -139,7 +153,8 @@ defineExpose({
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 30%;
+  width: 33%;
+  min-width: 25rem;
   height: 100%;
 
   display: flex;
@@ -149,13 +164,33 @@ defineExpose({
   &[data-is-not-messages-show] {
     pointer-events: none;
   }
+  z-index: 400;
+}
+
+.messageContainerBackgroundContainer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.messageContainerBackground {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  backdrop-filter: blur(100px);
+
+  @include background-primary;
 }
 
 .loadingBar {
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
   height: 12px;
   z-index: $z-index-message-loading;
 }
@@ -173,5 +208,15 @@ defineExpose({
 }
 .uiElement {
   pointer-events: all;
+}
+
+.uiToggleButton {
+  @include color-ui-secondary;
+  @include background-primary;
+  padding: 0.5rem;
+  border-radius: 2rem;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
 }
 </style>

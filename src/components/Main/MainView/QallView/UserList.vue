@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useQall } from '/@/composables/qall/useQall'
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
 import UserCard from './UserCard.vue'
 
@@ -16,6 +16,49 @@ onMounted(async () => {
 const selectedVideoInput = ref<MediaDeviceInfo>()
 const selectedSid = ref<string>()
 const showAllTracks = ref(false)
+
+const largeCard = useTemplateRef<HTMLDivElement>('largeCard')
+const largeCardParent = useTemplateRef<HTMLDivElement>('largeCardParent')
+
+const resizeObserver = new ResizeObserver(entries => {
+  for (const entry of entries) {
+    const element = entry.target
+    keepAspectRatio(element)
+  }
+})
+
+const keepAspectRatio = (element: Element) => {
+  if (!(element instanceof HTMLDivElement)) return
+  if (!largeCard.value) return
+  const { height, width } = element.getBoundingClientRect()
+  const originalRatio = height / width
+  const targetRatio = 9 / 16
+
+  let newWidth
+  let newHeight
+
+  if (originalRatio > targetRatio) {
+    newWidth = width
+    newHeight = (newWidth * 9) / 16
+  } else {
+    newHeight = height
+    newWidth = (newHeight * 16) / 9
+  }
+  largeCard.value.style.width = `${newWidth}px`
+  largeCard.value.style.height = `${newHeight}px`
+}
+
+watchEffect(() => {
+  if (!largeCardParent.value) return
+  resizeObserver.unobserve(largeCardParent.value)
+  resizeObserver.observe(largeCardParent.value)
+  keepAspectRatio(largeCardParent.value)
+})
+
+onUnmounted(() => {
+  if (!largeCardParent.value) return
+  resizeObserver.unobserve(largeCardParent.value)
+})
 </script>
 
 <template>
@@ -25,31 +68,33 @@ const showAllTracks = ref(false)
     :class="$style.parentContainer"
   >
     <div :class="$style.flexContainer">
-      <div :class="$style.largeCard">
-        <VideoComponent
-          v-if="
-            selectedTrack.trackPublication?.kind === 'video' &&
-            !screenShareTrackSidMap.has(selectedSid ?? '')
-          "
-          :track-info="selectedTrack"
-        />
-        <ScreenShareComponent
-          v-else-if="selectedTrack.trackPublication?.kind === 'video'"
-          :track-info="selectedTrack"
-          :audio-track-info="
-            tracksMap.get(screenShareTrackSidMap.get(selectedSid ?? '') ?? '')
-          "
-          not-mute
-        />
-        <UserCard
-          v-else-if="
-            selectedTrack.trackPublication?.kind === 'audio' &&
-            !screenShareTrackSidMap
-              .values()
-              ?.some?.(valueSid => valueSid === selectedSid)
-          "
-          :track-info="selectedTrack"
-        />
+      <div ref="largeCardParent" :class="$style.largeCardParent">
+        <div ref="largeCard" :class="$style.largeCard">
+          <VideoComponent
+            v-if="
+              selectedTrack.trackPublication?.kind === 'video' &&
+              !screenShareTrackSidMap.has(selectedSid ?? '')
+            "
+            :track-info="selectedTrack"
+          />
+          <ScreenShareComponent
+            v-else-if="selectedTrack.trackPublication?.kind === 'video'"
+            :track-info="selectedTrack"
+            :audio-track-info="
+              tracksMap.get(screenShareTrackSidMap.get(selectedSid ?? '') ?? '')
+            "
+            not-mute
+          />
+          <UserCard
+            v-else-if="
+              selectedTrack.trackPublication?.kind === 'audio' &&
+              !screenShareTrackSidMap
+                .values()
+                ?.some?.(valueSid => valueSid === selectedSid)
+            "
+            :track-info="selectedTrack"
+          />
+        </div>
       </div>
 
       <div :class="$style.subViewContainer">
@@ -156,11 +201,20 @@ const showAllTracks = ref(false)
   width: 100%;
 }
 
-.largeCard {
+.largeCardParent {
   flex-grow: 1;
+  max-width: 100%;
+  max-height: 100%;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.largeCard {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
 }
 
 .subViewContainer {

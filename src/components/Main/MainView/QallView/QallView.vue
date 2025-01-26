@@ -67,6 +67,7 @@ const toggleVideo = async () => {
       isCameraOn.value = false
     }
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Failed to toggle video:', err)
   }
 }
@@ -89,6 +90,7 @@ const toggleScreen = async () => {
       isScreenSharing.value = false
     }
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Failed to toggle screen sharing:', err)
   }
 }
@@ -175,23 +177,22 @@ const handleBackgroundSave = (data: {
 const showCameraDetailSetting = ref(false)
 const showShareScreenSettingDetail = ref(false)
 
-const childRef = ref<InstanceType<typeof QallMessageView> | null>(null)
-
-const showMessage = () => {
-  childRef.value?.handleMessage()
+const showDanmaku = ref(true)
+const toggleDanmaku = () => {
+  showDanmaku.value = !showDanmaku.value
 }
 </script>
 
 <template>
   <div :class="$style.Block">
-    <QallMessageView
-      ref="childRef"
-      :channel-id="callingChannel"
-      :typing-users="[]"
-    >
-      <DanmakuContainer />
+    <QallMessageView :channel-id="callingChannel" :typing-users="[]">
+      <DanmakuContainer v-if="showDanmaku" />
       <div :class="$style.iconContainer">
-        <IconButton icon-name="comment-outline" icon-mdi @click="showMessage" />
+        <IconButton
+          :icon-name="`comment${showDanmaku ? '' : '-off'}-outline`"
+          icon-mdi
+          @click="toggleDanmaku"
+        />
         <IconButton icon-name="close" icon-mdi @click="isSubView = true" />
       </div>
       <div :class="$style.stackContainer">

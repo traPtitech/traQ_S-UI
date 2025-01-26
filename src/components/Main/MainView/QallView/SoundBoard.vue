@@ -67,7 +67,7 @@ onMounted(() => {
   padding: 0.5rem;
   bottom: 48px;
   left: 0;
-  height: 30rem;
+  height: 4rem;
   overflow-y: scroll;
   border-radius: 0.5rem;
   @include background-primary;

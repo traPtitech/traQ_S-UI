@@ -39,6 +39,8 @@ import {
   mdiToggleSwitchOff,
   mdiToggleSwitch,
   mdiChevronDoubleLeft,
+  mdiChevronDoubleUp,
+  mdiChevronDoubleDown,
   mdiChevronLeft,
   mdiChevronRight,
   mdiBookmark,
@@ -86,7 +88,8 @@ import {
   mdiDelete,
   mdiVideo,
   mdiVideoOff,
-  mdiCommentTextMultipleOutline
+  mdiCommentTextMultipleOutline,
+  mdiCommentOffOutline
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -137,6 +140,8 @@ const mdi: MdiIconsMapping = {
   'toggle-switch-off': mdiToggleSwitchOff,
   'toggle-switch-on': mdiToggleSwitch,
   'chevron-double': mdiChevronDoubleLeft,
+  'chevron-double-up': mdiChevronDoubleUp,
+  'chevron-double-down': mdiChevronDoubleDown,
   'chevron-left': mdiChevronLeft,
   'chevron-right': mdiChevronRight,
   'chevron-up': mdiChevronUp,
@@ -181,7 +186,8 @@ const mdi: MdiIconsMapping = {
   delete: mdiDelete,
   video: mdiVideo,
   'video-off': mdiVideoOff,
-  'comment-outline': mdiCommentTextMultipleOutline
+  'comment-outline': mdiCommentTextMultipleOutline,
+  'comment-off-outline': mdiCommentOffOutline
 }
 
 export default mdi

@@ -4,7 +4,6 @@ const { soundName, stampId } = defineProps<{
   soundName: string
   stampId: string
 }>()
-console.log(stampId)
 </script>
 
 <template>

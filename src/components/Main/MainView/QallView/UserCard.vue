@@ -14,7 +14,7 @@ const iconImage = computed(() => buildUserIconPath(userIconFileId.value))
 </script>
 
 <template>
-  <div :class="$style.UserCard">
+  <div v-if="user" :class="$style.UserCard">
     <div :class="$style.OuterIcon">
       <img :src="iconImage" :class="$style.OuterImage" />
     </div>
@@ -39,6 +39,7 @@ const iconImage = computed(() => buildUserIconPath(userIconFileId.value))
 
 .InnerIcon {
   width: calc(100% / 3);
+  max-width: 128px;
   aspect-ratio: 1;
   background-size: cover;
   border-radius: 50%;

@@ -26,13 +26,11 @@ import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.w
 import {
   loadRnnoise as loadRnnoiseLib,
   loadSpeex as loadSpeexLib,
-  NoiseGateWorkletNode,
   RnnoiseWorkletNode,
   SpeexWorkletNode
 } from '@sapphi-red/web-noise-suppressor'
 import speexWasmPath from '@sapphi-red/web-noise-suppressor/speex.wasm?url'
 import speexWorkletPath from '@sapphi-red/web-noise-suppressor/speexWorklet.js?url'
-import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWorklet.js?url'
 
 type NoiseSuppressionType = 'rnnoise' | 'speex' | 'none'
 
@@ -263,7 +261,8 @@ async function leaveRoom() {
 const addMicTrack = async () => {
   let stream: MediaStream | undefined
 
-  const noiseSuppression=useRtcSettings().noiseSuppression.value as NoiseSuppressionType
+  const noiseSuppression = useRtcSettings().noiseSuppression
+    .value as NoiseSuppressionType
   try {
     if (!room.value?.localParticipant?.permissions?.canPublish) {
       throw new Error('権限がありません')
@@ -275,7 +274,7 @@ const addMicTrack = async () => {
 
     stream = await navigator.mediaDevices.getUserMedia({ audio: true })
     const source = audioContext.value.createMediaStreamSource(stream)
-    
+
     let lastNode: AudioNode = source
 
     if (noiseSuppression === 'rnnoise') {
@@ -283,7 +282,6 @@ const addMicTrack = async () => {
         loadRnnoiseWasmBinary(),
         audioContext.value?.audioWorklet.addModule(rnnoiseWorkletPath)
       ])
-      console.log("rnnoise process")
       const rnnoiseNode = new RnnoiseWorkletNode(audioContext.value, {
         wasmBinary: rnnoiseBinary,
         maxChannels: 2
@@ -321,14 +319,14 @@ const addMicTrack = async () => {
       dtx: false
     })
     isMicOn.value = true
-
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(e)
     // Cleanup
     stream?.getTracks().forEach(track => track.stop())
     if (audioContext.value) {
       await audioContext.value.close()
-      audioContext.value = undefined  
+      audioContext.value = undefined
     }
     addErrorToast('マイクの共有に失敗しました')
   }
@@ -352,6 +350,7 @@ const removeMicTrack = async () => {
     }
     // await room.value.localParticipant.setMicrophoneEnabled(false)
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(e)
     addErrorToast('マイクのミュートに失敗しました')
   }
