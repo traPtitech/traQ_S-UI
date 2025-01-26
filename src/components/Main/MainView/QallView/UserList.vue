@@ -4,9 +4,11 @@ import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.
 import { onMounted, ref } from 'vue'
 import ScreenShareComponent from './ScreenShareComponent.vue'
 import UserCard from './UserCard.vue'
+import { useUsersStore } from '/@/store/entities/users'
 
 const { tracksMap, screenShareTrackSidMap, screenShareTracks, selectedTrack } =
   useQall()
+const { findUserByName } = useUsersStore()
 
 const videoInputs = ref<MediaDeviceInfo[]>([])
 onMounted(async () => {
@@ -43,7 +45,8 @@ const selectedSid = ref<string>()
         selectedTrack.trackPublication?.kind === 'audio' &&
         !screenShareTrackSidMap
           .values()
-          ?.some?.(valueSid => valueSid === selectedSid)
+          ?.some?.(valueSid => valueSid === selectedSid) &&
+        findUserByName(selectedTrack.username)
       "
       :track-info="selectedTrack"
     />
@@ -76,7 +79,8 @@ const selectedSid = ref<string>()
       <div
         v-else-if="
           track.trackPublication?.kind === 'audio' &&
-          !screenShareTracks.some?.(([_, valueSid]) => valueSid === sid)
+          !screenShareTracks.some?.(([_, valueSid]) => valueSid === sid) &&
+          findUserByName(track.username)
         "
         :class="$style.card"
         @click="[selectedTrack, selectedSid] = [track, sid]"
