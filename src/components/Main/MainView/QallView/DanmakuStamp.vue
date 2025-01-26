@@ -57,5 +57,6 @@ onMounted(() => startAnimation())
   font-size: 32px;
   color: black;
   text-shadow: 1px 1px 2px white;
+  z-index: 300;
 }
 </style>

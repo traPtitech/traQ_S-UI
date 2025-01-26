@@ -105,7 +105,8 @@ const selectedSid = ref<string>()
   width: 192px;
 }
 .largeCard {
-  height: 50%;
-  width: 66%;
+  max-height: 100%;
+  width: 100%;
+  aspect-ratio: 16 / 9;
 }
 </style>

@@ -39,6 +39,7 @@ const iconImage = computed(() => buildUserIconPath(userIconFileId.value))
 
 .InnerIcon {
   width: calc(100% / 3);
+  max-width: 128px;
   aspect-ratio: 1;
   background-size: cover;
   border-radius: 50%;
