@@ -57,6 +57,20 @@ const handleScroll = () => {
     showToNewMessageButton.value = true
   }
 }
+
+const handleMessage = () => {
+  if (isMessageShow.value) {
+    isMessageShow.value = false
+    toNewMessage('smooth')
+  } else {
+    isMessageShow.value = true
+    nextTick(() => toNewMessage())
+  }
+}
+
+defineExpose({
+  handleMessage
+})
 </script>
 
 <template>
