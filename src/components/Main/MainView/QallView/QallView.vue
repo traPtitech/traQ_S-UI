@@ -70,7 +70,6 @@ const toggleVideo = async () => {
       isCameraOn.value = false
     }
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.error('Failed to toggle video:', err)
   }
 }
@@ -93,7 +92,6 @@ const toggleScreen = async () => {
       isScreenSharing.value = false
     }
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.error('Failed to toggle screen sharing:', err)
   }
 }
@@ -191,120 +189,98 @@ const showShareScreenSettingDetail = ref(false)
         :class="$style.closeButton"
         @click="isSubView = true"
       />
-      <UserList />
 
-      <div :class="$style.TrackContainer">
-        <div :class="$style.controlBar">
-          <div :class="$style.smallButtonGroup">
-            <div :class="$style.soundBoardButton">
-              <CallControlButtonSmall
-                icon="sound_detection_loud_sound"
-                :on-click="handleSound"
-              />
-              <ClickOutside @click-outside="showSoundBoard = false">
-                <SoundBoard v-if="showSoundBoard" />
-              </ClickOutside>
+      <!-- 縦並び用のラッパ -->
+      <div :class="$style.stackContainer">
+        <UserList :class="$style.userList" />
+
+        <div :class="$style.controlBarContainer">
+          <div :class="$style.controlBar">
+            <div :class="$style.smallButtonGroup">
+              <div :class="$style.soundBoardButton">
+                <CallControlButtonSmall
+                  icon="sound_detection_loud_sound"
+                  :on-click="handleSound"
+                />
+                <ClickOutside @click-outside="showSoundBoard = false">
+                  <SoundBoard v-if="showSoundBoard" />
+                </ClickOutside>
+              </div>
+              <div ref="reactionButton">
+                <CallControlButtonSmall
+                  icon="add_reaction"
+                  :on-click="handleReaction"
+                />
+              </div>
             </div>
-            <div ref="reactionButton">
-              <CallControlButtonSmall
-                icon="add_reaction"
-                :on-click="handleReaction"
+            <div :class="$style.verticalBar"></div>
+            <div :class="$style.buttonWithDetail">
+              <CallControlButton
+                :icon="screenShareIcon"
+                :is-on="isScreenSharing"
+                :on-click="toggleScreen"
+                :mdi="false"
+                :inverted="isScreenSharing"
+              />
+              <DetailButton @click="showShareScreenSettingDetail = true" />
+              <ScreenShareDetailSetting
+                :open="showShareScreenSettingDetail"
+                @add="isScreenSharing = true"
+                @close="showShareScreenSettingDetail = false"
               />
             </div>
-          </div>
-          <div :class="$style.verticalBar"></div>
-          <div :class="$style.buttonWithDetail">
+            <div :class="$style.buttonWithDetail">
+              <CallControlButton
+                :icon="cameraIcon"
+                :is-on="isCameraOn"
+                :on-click="toggleVideo"
+                :inverted="isCameraOn"
+              />
+              <DetailButton
+                :inverted="isCameraOn"
+                @click="showCameraDetailSetting = true"
+              />
+              <CameraDetailSetting
+                :open="showCameraDetailSetting"
+                :video-inputs="videoInputs"
+                @save="handleBackgroundSave"
+                @add="isCameraOn = true"
+                @close="showCameraDetailSetting = false"
+              />
+            </div>
             <CallControlButton
-              :icon="screenShareIcon"
-              :is-on="isScreenSharing"
-              :on-click="toggleScreen"
-              :mdi="false"
-              :inverted="isScreenSharing"
+              :icon="micIcon"
+              :is-on="isMicOn"
+              :on-click="toggleAudio"
+              :inverted="isMicOn"
             />
-            <DetailButton
-              @click="
-                () => {
-                  showShareScreenSettingDetail = true
-                }
-              "
-            />
-            <ScreenShareDetailSetting
-              :open="showShareScreenSettingDetail"
-              @add="
-                () => {
-                  isScreenSharing = true
-                }
-              "
-              @close="
-                () => {
-                  showShareScreenSettingDetail = false
-                }
-              "
-            />
-          </div>
-          <div :class="$style.buttonWithDetail">
             <CallControlButton
-              :icon="cameraIcon"
-              :is-on="isCameraOn"
-              :on-click="toggleVideo"
-              :inverted="isCameraOn"
+              icon="phone-hangup"
+              is-on
+              :on-click="leaveQall"
+              :on-background-color="'#F26451'"
             />
-            <DetailButton
-              :inverted="isCameraOn"
-              @click="
-                () => {
-                  showCameraDetailSetting = true
-                }
-              "
-            />
-            <CameraDetailSetting
-              :open="showCameraDetailSetting"
-              :video-inputs="videoInputs"
-              @save="handleBackgroundSave"
-              @add="
-                () => {
-                  isCameraOn = true
-                }
-              "
-              @close="
-                () => {
-                  showCameraDetailSetting = false
-                }
-              "
-            />
-          </div>
-          <CallControlButton
-            :icon="micIcon"
-            :is-on="isMicOn"
-            :on-click="toggleAudio"
-            :inverted="isMicOn"
-          />
-          <CallControlButton
-            icon="phone-hangup"
-            is-on
-            :on-click="leaveQall"
-            :on-background-color="'#F26451'"
-          />
-          <div :class="$style.verticalBar"></div>
-          <div :class="$style.smallButtonGroup">
-            <div :class="$style.participantsContainer">
-              <ClickOutside @click-outside="showParticipants = false">
-                <div v-if="showParticipants" :class="$style.participantsList">
-                  <div :class="$style.participantsContent">
-                    <participant-list
-                      v-for="participant in filteredParticipants"
-                      :key="participant.user.id"
-                      :participant="participant.user"
-                      :track-info="getParticipantTrackInfo(participant)!"
-                    />
+            <div :class="$style.verticalBar"></div>
+            <div :class="$style.smallButtonGroup">
+              <div :class="$style.participantsContainer">
+                <ClickOutside @click-outside="showParticipants = false">
+                  <div v-if="showParticipants" :class="$style.participantsList">
+                    <div :class="$style.participantsContent">
+                      <participant-list
+                        v-for="participant in filteredParticipants"
+                        :key="participant.user.id"
+                        :participant="participant.user"
+                        :track-info="getParticipantTrackInfo(participant)!"
+                      />
+                    </div>
                   </div>
-                </div>
-              </ClickOutside>
-              <CallControlButtonSmall
-                icon="account-multiple"
-                :on-click="handleGroup"
-                mdi
-              />
+                </ClickOutside>
+                <CallControlButtonSmall
+                  icon="account-multiple"
+                  :on-click="handleGroup"
+                  mdi
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -314,6 +290,58 @@ const showShareScreenSettingDetail = ref(false)
 </template>
 
 <style lang="scss" module>
+.Block {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.stackContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  height: 100%;
+}
+
+.userList {
+  flex-grow: 1;
+}
+
+.controlBarContainer {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  flex-grow: 0;
+  margin-bottom: 24px;
+}
+
+.controlBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.smallButtonGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.buttonWithDetail {
+  position: relative;
+  display: inline-block;
+}
+
+.soundBoardButton {
+  position: relative;
+}
+
 .participantsContainer {
   position: relative;
 }
@@ -340,59 +368,11 @@ const showShareScreenSettingDetail = ref(false)
   border-radius: 8px;
 }
 
-.TrackContainer {
-  height: fit-content;
-}
-
-.channelView {
-  position: absolute;
-  width: 30%;
-  right: 0;
-  bottom: 0;
-}
-
-.Block {
-  height: 100%;
-  height: 100%;
-}
-
-.Header {
-  font: {
-    size: 30px;
-    weight: bold;
-  }
-  color: green;
-  text-align: center;
-}
-
-.controlBar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-}
-
 .verticalBar {
   width: 1px;
   height: 64px;
   background-color: #ced6db;
   margin: 0 16px;
-}
-
-.smallButtonGroup {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.buttonWithDetail {
-  position: relative;
-  display: inline-block;
-}
-
-.soundBoardButton {
-  position: relative;
 }
 
 .closeButton {
