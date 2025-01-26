@@ -15,6 +15,7 @@ onMounted(async () => {
 })
 const selectedVideoInput = ref<MediaDeviceInfo>()
 const selectedSid = ref<string>()
+const showAllTracks = ref(false)
 </script>
 
 <template>
@@ -47,23 +48,57 @@ const selectedSid = ref<string>()
       "
       :track-info="selectedTrack"
     />
+    <div :class="$style.TrackContainer">
+      <template v-for="([sid, track], index) in tracksMap.entries()" :key="sid">
+        <div
+          v-if="index < 5"
+          :class="$style.card"
+          @click="[selectedTrack, selectedSid] = [track, sid]"
+        >
+          <VideoComponent
+            v-if="
+              track.trackPublication?.kind === 'video' &&
+              !screenShareTrackSidMap.has(sid)
+            "
+            :track-info="track"
+          />
+          <ScreenShareComponent
+            v-else-if="track.trackPublication?.kind === 'video'"
+            :track-info="track"
+            :audio-track-info="
+              tracksMap.get(screenShareTrackSidMap.get(sid) ?? '')
+            "
+          />
+          <UserCard
+            v-else-if="
+              track.trackPublication?.kind === 'audio' &&
+              !screenShareTracks.some?.(([_, valueSid]) => valueSid === sid)
+            "
+            :track-info="track"
+          />
+        </div>
+      </template>
+      <div v-if="tracksMap.size > 5" :class="$style.card">
+        <button @click="showAllTracks = true">+{{ tracksMap.size - 5 }}</button>
+      </div>
+    </div>
   </div>
-  <div :class="$style.TrackContainer">
+
+  <div v-else :class="$style.gridContainer">
     <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
       <div
         v-if="
           track.trackPublication?.kind === 'video' &&
           !screenShareTrackSidMap.has(sid)
         "
-        :class="$style.card"
+        :class="$style.smallCard"
         @click="[selectedTrack, selectedSid] = [track, sid]"
       >
         <VideoComponent :track-info="track" />
       </div>
-
       <div
         v-else-if="track.trackPublication?.kind === 'video'"
-        :class="$style.card"
+        :class="$style.smallCard"
         @click="[selectedTrack, selectedSid] = [track, sid]"
       >
         <ScreenShareComponent
@@ -78,7 +113,7 @@ const selectedSid = ref<string>()
           track.trackPublication?.kind === 'audio' &&
           !screenShareTracks.some?.(([_, valueSid]) => valueSid === sid)
         "
-        :class="$style.card"
+        :class="$style.smallCard"
         @click="[selectedTrack, selectedSid] = [track, sid]"
       >
         <UserCard :track-info="track" />
@@ -88,6 +123,30 @@ const selectedSid = ref<string>()
 </template>
 
 <style lang="scss" module>
+.largeCard {
+  height: 69%;
+  width: 92%;
+  position: absolute;
+  bottom: calc(300px + 24px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 192px);
+  grid-auto-rows: 108px;
+  gap: 8px;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+  margin: 0 auto;
+}
+
+.smallCard {
+  height: 108px;
+  width: 192px;
+}
+
 .TrackContainer {
   position: absolute;
   bottom: calc(100px + 24px);
@@ -99,16 +158,9 @@ const selectedSid = ref<string>()
   gap: 8px;
   align-self: stretch;
 }
+
 .card {
   height: 108px;
   width: 192px;
-}
-.largeCard {
-  height: 69%;
-  width: 92%;
-  position: absolute;
-  bottom: calc(300px + 24px);
-  left: 50%;
-  transform: translateX(-50%);
 }
 </style>
