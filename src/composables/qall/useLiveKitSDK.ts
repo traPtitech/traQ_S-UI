@@ -33,6 +33,7 @@ import {
 import speexWasmPath from '@sapphi-red/web-noise-suppressor/speex.wasm?url'
 import speexWorkletPath from '@sapphi-red/web-noise-suppressor/speexWorklet.js?url'
 import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWorklet.js?url'
+import { useRtcSettings } from '/@/store/app/rtcSettings'
 
 type NoiseSuppressionType = 'rnnoise' | 'speex' | 'none'
 
@@ -233,9 +234,10 @@ async function leaveRoom() {
   window.removeEventListener('beforeunload', leaveRoom)
 }
 
-const addMicTrack = async (noiseSuppression: NoiseSuppressionType = 'rnnoise') => {
+const addMicTrack = async () => {
   let stream: MediaStream | undefined
-  
+
+  const noiseSuppression=useRtcSettings().noiseSuppression.value as NoiseSuppressionType
   try {
     if (!room.value?.localParticipant?.permissions?.canPublish) {
       throw new Error('権限がありません')
