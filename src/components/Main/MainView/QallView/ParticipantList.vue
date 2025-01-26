@@ -5,10 +5,21 @@ import { useUserVolume } from '/@/store/app/userVolume'
 import { ref, watch, useCssModule, computed } from 'vue'
 import type { User } from '@traptitech/traq'
 
-const { participant, trackInfo } = defineProps<{
+// 追加: useQall をimportし、changeParticipantRoleを使う
+import { useQall } from '/@/composables/qall/useQall'
+
+const props = defineProps<{
   participant: User
   trackInfo: TrackInfo
+  roomId: string
+  isWebinar: boolean
+  iHavePermission: boolean // 自分が発言権限を持っているかどうか
+  participantCanPublish: boolean // 表示する相手の発言権限
 }>()
+
+const { participant, trackInfo, roomId, isWebinar, iHavePermission, participantCanPublish } = props
+
+const { changeParticipantRole } = useQall()
 
 const { getStore, setStore } = useUserVolume()
 
@@ -62,6 +73,28 @@ const volumeSliderClass = computed(() => ({
   [style.volumeSlider]: true,
   [style.muted]: isMuted.value
 }))
+
+/**
+ * 発言権限のトグル (チェックボックスの変更)
+ */
+const publishCheck = ref(participantCanPublish)
+
+const togglePublish = async () => {
+  // もし自分が権限を持ってなければ変更不可
+  if (!iHavePermission) return
+
+  publishCheck.value = !publishCheck.value
+  try {
+    await changeParticipantRole(roomId, [
+      {
+        identity: participant.name,  // name が identityとして識別されてる想定
+        canPublish: publishCheck.value
+      }
+    ])
+  } catch (e) {
+    console.error('Failed to change participant role:', e)
+  }
+}
 </script>
 
 <template>
@@ -69,16 +102,21 @@ const volumeSliderClass = computed(() => ({
     <div :class="$style.leftSide">
       <user-icon :size="40" :user-id="participant.id" />
       <span :class="$style.userName">{{ participant.displayName }}</span>
-      <!-- TODO: Qall: ミュートを実装する -->
-      <!-- <button :class="$style.micIconButton">
-        <a-icon v-if="isMuted" name="microphone-off" mdi />
-      </button> -->
+      <!-- (Optional) mic or speaker icon if needed -->
     </div>
+
     <div :class="$style.rightSide">
-      <!-- <button :class="$style.iconButton" @click="toggleMute(trackInfo)">
-        <a-icon v-if="isMuted" name="volume-off" :size="24" mdi />
-        <a-icon v-else name="volume-high" mdi :size="24" />
-      </button> -->
+      <!-- If isWebinar && iHavePermission, show a checkbox to toggle participant's canPublish -->
+      <div v-if="isWebinar && iHavePermission" :class="$style.checkboxContainer">
+        <input
+          type="checkbox"
+          :checked="publishCheck"
+          @change="togglePublish"
+        />
+        <label>発言権限</label>
+      </div>
+
+      <!-- volume slider -->
       <input
         v-model="volume"
         type="range"
@@ -128,12 +166,11 @@ const volumeSliderClass = computed(() => ({
   gap: 8px;
 }
 
-.iconButton {
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
+/* checkbox style */
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .volumeSlider {
