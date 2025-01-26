@@ -193,10 +193,39 @@ const postSoundboardPlay = async (soundId: string, roomName: string) => {
     const text = await res.text()
     throw new Error(`POST /soundboard/play failed: ${text}`)
   }
-  // 正常時に IngressInfo(ingressId, url, streamKey)が返る想定
   return await res.json()
 }
 
+/**
+ * PATCH /rooms/{roomId}/participants
+ * ルームでの発言権限を変更
+ *
+ * participants:
+ *   [{ identity: "xxx", canPublish: true }, ...]
+ */
+const changeParticipantRole = async (
+  roomId: string,
+  participants: Array<{ identity: string; canPublish: boolean }>
+): Promise<{
+  results: Array<{
+    participantId: string
+    status: 'success' | 'error'
+    errorMessage?: string
+  }>
+}> => {
+  const res = await qallFetch(`/api/rooms/${roomId}/participants`, {
+    method: 'PATCH',
+    body: JSON.stringify(participants)
+    // headers → デフォルト application/json
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`PATCH /rooms/${roomId}/participants failed: ${text}`)
+  }
+  return await res.json()
+}
+
+// その他既存のWebSocketなど
 const purifyRoomData = async (data: RoomsWithParticipants): Promise<Rooms> => {
   if (!data) return []
   await bothChannelsMapInitialFetchPromise.value
@@ -318,6 +347,7 @@ export const useQall = () => {
     getSoundboardList,
     postSoundboard,
     postSoundboardPlay,
+    changeParticipantRole,
     isMicOn,
     isCameraOn,
     isScreenSharing,
