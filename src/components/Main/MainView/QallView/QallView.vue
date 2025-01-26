@@ -193,7 +193,7 @@ const showShareScreenSettingDetail = ref(false)
       />
       <UserList />
 
-      <div :class="$style.TrackContainer">
+      <div :class="$style.controlBarContainer">
         <div :class="$style.controlBar">
           <div :class="$style.smallButtonGroup">
             <div :class="$style.soundBoardButton">
@@ -340,16 +340,11 @@ const showShareScreenSettingDetail = ref(false)
   border-radius: 8px;
 }
 
-.TrackContainer {
+.controlBarContainer {
   position: absolute;
   bottom: 24px; // 仮置き，メッセージの表示非表示に動的対応
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
 }
 
 .channelView {

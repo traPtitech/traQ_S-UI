@@ -89,8 +89,11 @@ const selectedSid = ref<string>()
 
 <style lang="scss" module>
 .TrackContainer {
+  position: absolute;
+  bottom: calc(100px + 24px);
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-
   justify-content: center;
   align-items: center;
   gap: 8px;
@@ -101,7 +104,11 @@ const selectedSid = ref<string>()
   width: 192px;
 }
 .largeCard {
-  height: 50%;
-  width: 66%;
+  height: 69%;
+  width: 92%;
+  position: absolute;
+  bottom: calc(300px + 24px);
+  left: 50%;
+  transform: translateX(-50%);
 }
 </style>
