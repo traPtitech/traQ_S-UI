@@ -204,22 +204,7 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
     await room.value.connect('wss://livekit.qall-dev.trapti.tech', token)
 
     if (room.value.localParticipant?.permissions?.canPublish) {
-      // publish local camera and mic tracks
-      await room.value.localParticipant.setMicrophoneEnabled(
-        true,
-        {
-          channelCount: 2,
-          voiceIsolation: true,
-          echoCancellation: true,
-          noiseSuppression: true
-        },
-        {
-          audioPreset: AudioPresets.musicHighQualityStereo,
-          forceStereo: true,
-          red: false,
-          dtx: false
-        }
-      )
+      await addMicTrack()
     }
 
     await room.value.localParticipant.setAttributes({})
@@ -252,7 +237,6 @@ const addMicTrack = async (noiseSuppression: NoiseSuppressionType = 'rnnoise') =
   let stream: MediaStream | undefined
   
   try {
-    addErrorToast(noiseSuppression);
     if (!room.value?.localParticipant?.permissions?.canPublish) {
       throw new Error('権限がありません')
     }
