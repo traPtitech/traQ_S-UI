@@ -17,56 +17,107 @@ onMounted(async () => {
 })
 const selectedVideoInput = ref<MediaDeviceInfo>()
 const selectedSid = ref<string>()
+const showAllTracks = ref(false)
 </script>
 
 <template>
   <div
     v-if="selectedTrack !== undefined"
     :key="selectedTrack.trackPublication?.trackSid"
-    :class="$style.largeCard"
+    :class="$style.parentContainer"
   >
-    <VideoComponent
-      v-if="
-        selectedTrack.trackPublication?.kind === 'video' &&
-        !screenShareTrackSidMap.has(selectedSid ?? '')
-      "
-      :track-info="selectedTrack"
-    />
-    <ScreenShareComponent
-      v-else-if="selectedTrack.trackPublication?.kind === 'video'"
-      :track-info="selectedTrack"
-      :audio-track-info="
-        tracksMap.get(screenShareTrackSidMap.get(selectedSid ?? '') ?? '')
-      "
-      not-mute
-    />
-    <UserCard
-      v-else-if="
-        selectedTrack.trackPublication?.kind === 'audio' &&
-        !screenShareTrackSidMap
-          .values()
-          ?.some?.(valueSid => valueSid === selectedSid) &&
-        findUserByName(selectedTrack.username)
-      "
-      :track-info="selectedTrack"
-    />
+    <div :class="$style.flexContainer">
+      <div :class="$style.largeCard">
+        <VideoComponent
+          v-if="
+            selectedTrack.trackPublication?.kind === 'video' &&
+            !screenShareTrackSidMap.has(selectedSid ?? '')
+          "
+          :track-info="selectedTrack"
+        />
+        <ScreenShareComponent
+          v-else-if="selectedTrack.trackPublication?.kind === 'video'"
+          :track-info="selectedTrack"
+          :audio-track-info="
+            tracksMap.get(screenShareTrackSidMap.get(selectedSid ?? '') ?? '')
+          "
+          not-mute
+        />
+        <UserCard
+          v-else-if="
+            selectedTrack.trackPublication?.kind === 'audio' &&
+            !screenShareTrackSidMap
+              .values()
+              ?.some?.(valueSid => valueSid === selectedSid) &&
+            findUserByName(selectedTrack.username)
+          "
+          :track-info="selectedTrack"
+        />
+      </div>
+
+      <div :class="$style.subViewContainer">
+        <template
+          v-for="([sid, track], index) in tracksMap.entries()"
+          :key="sid"
+        >
+          <div
+            v-if="index < 5"
+            :class="$style.card"
+            @click="[selectedTrack, selectedSid] = [track, sid]"
+          >
+            <VideoComponent
+              v-if="
+                track.trackPublication?.kind === 'video' &&
+                !screenShareTrackSidMap.has(sid)
+              "
+              :track-info="track"
+            />
+            <ScreenShareComponent
+              v-else-if="track.trackPublication?.kind === 'video'"
+              :track-info="track"
+              :audio-track-info="
+                tracksMap.get(screenShareTrackSidMap.get(sid) ?? '')
+              "
+            />
+            <UserCard
+              v-else-if="
+                track.trackPublication?.kind === 'audio' &&
+                !screenShareTracks.some?.(([_, valueSid]) => valueSid === sid)
+              "
+              :track-info="track"
+            />
+          </div>
+        </template>
+        <div v-if="tracksMap.size > 5" :class="$style.card">
+          <button
+            @click="
+              () => {
+                selectedTrack = undefined
+              }
+            "
+          >
+            +{{ tracksMap.size - 5 }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div :class="$style.TrackContainer">
+
+  <div v-else :class="$style.gridContainer">
     <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
       <div
         v-if="
           track.trackPublication?.kind === 'video' &&
           !screenShareTrackSidMap.has(sid)
         "
-        :class="$style.card"
+        :class="$style.smallCard"
         @click="[selectedTrack, selectedSid] = [track, sid]"
       >
         <VideoComponent :track-info="track" />
       </div>
-
       <div
         v-else-if="track.trackPublication?.kind === 'video'"
-        :class="$style.card"
+        :class="$style.smallCard"
         @click="[selectedTrack, selectedSid] = [track, sid]"
       >
         <ScreenShareComponent
@@ -82,7 +133,7 @@ const selectedSid = ref<string>()
           !screenShareTracks.some?.(([_, valueSid]) => valueSid === sid) &&
           findUserByName(track.username)
         "
-        :class="$style.card"
+        :class="$style.smallCard"
         @click="[selectedTrack, selectedSid] = [track, sid]"
       >
         <UserCard :track-info="track" />
@@ -90,16 +141,57 @@ const selectedSid = ref<string>()
     </template>
   </div>
 </template>
-
 <style lang="scss" module>
-.TrackContainer {
+.parentContainer {
   display: flex;
-
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  align-self: stretch;
+  gap: 4px;
+  height: 100%;
+  width: 100%;
 }
+
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 100%;
+  width: 100%;
+}
+
+.largeCard {
+  flex-grow: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.subViewContainer {
+  flex-grow: 0;
+  height: 108px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 192px);
+  grid-auto-rows: 108px;
+  gap: 8px;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+  margin: 0 auto;
+}
+
+.smallCard {
+  height: 108px;
+  width: 192px;
+}
+
 .card {
   height: 108px;
   width: 192px;
