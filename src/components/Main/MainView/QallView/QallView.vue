@@ -10,11 +10,14 @@ import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import ParticipantList from './ParticipantList.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import UserList from './UserList.vue'
+import { useModalStore } from '/@/store/ui/modal'
 import CameraDetailSetting from './CameraDetailSetting.vue'
 import ScreenShareDetailSetting from './ScreenShareDetailSetting.vue'
 import DetailButton from './DetailButton.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import QallMessageView from './QallMessageView.vue'
+
+const { pushModal } = useModalStore()
 
 const {
   tracksMap,
