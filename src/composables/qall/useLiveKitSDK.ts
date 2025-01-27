@@ -251,6 +251,9 @@ async function leaveRoom() {
   await room.value?.disconnect()
   await mixer.value?.playFileSource('qall_end')
 
+  await audioContext?.value?.close()
+  audioContext.value = undefined
+
   // Empty all variables
   room.value = undefined
   tracksMap.value.clear()
@@ -324,7 +327,7 @@ const addMicTrack = async () => {
 
     // Publish the processed stream
     await room.value.localParticipant.publishTrack(livekitAudioTrack, {
-      audioPreset: AudioPresets.musicHighQualityStereo,
+      audioPreset: AudioPresets.speech,
       forceStereo: true,
       red: false,
       dtx: false
@@ -351,10 +354,6 @@ const removeMicTrack = async () => {
     for (const [trackSid, trackInfo] of tracksMap.value) {
       if (trackInfo.isRemote) continue
       if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
-        if (audioContext.value) {
-          await audioContext.value.close()
-          audioContext.value = undefined
-        }
         await trackInfo.trackPublication?.track?.mute()
       }
     }
@@ -381,10 +380,6 @@ const toggleMicTrack = async () => {
     for (const [trackSid, trackInfo] of tracksMap.value) {
       if (trackInfo.isRemote) continue
       if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
-        if (audioContext.value) {
-          await audioContext.value.close()
-          audioContext.value = undefined
-        }
         await trackInfo.trackPublication?.track?.unmute()
       }
     }
