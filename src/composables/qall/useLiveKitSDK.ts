@@ -4,7 +4,8 @@ import {
   AudioPresets,
   createLocalScreenTracks,
   Room,
-  LocalVideoTrack
+  LocalVideoTrack,
+  LocalAudioTrack
 } from 'livekit-client'
 import type {
   RemoteTrack,
@@ -85,7 +86,7 @@ type CameraProcessor = {
 const room = ref<Room>()
 const audioContext = ref<AudioContext>()
 const isRnnoiseSupported = computed(() => !!audioContext.value)
-const speakerIdentity = ref<string[]>([])
+const speakerIdentitys = ref<{ identity: string; name?: string }[]>([])
 const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
 const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
 const screenShareTrackSidMap = ref<Map<string, string>>(new Map())
@@ -141,7 +142,7 @@ function handleLocalTrackPublished(
 
 function handleActiveSpeakerChange(speakers: Participant[]) {
   // show UI indicators when participant is speaking
-  speakerIdentity.value = speakers.map(s => s.identity)
+  speakerIdentitys.value = speakers
 }
 
 function handleDisconnect() {
@@ -264,8 +265,7 @@ async function leaveRoom() {
 const addMicTrack = async () => {
   let stream: MediaStream | undefined
 
-  const noiseSuppression = useRtcSettings().noiseSuppression
-    .value as NoiseSuppressionType
+  const { noiseSuppression, audioInputDeviceId } = useRtcSettings()
   try {
     if (!room.value?.localParticipant?.permissions?.canPublish) {
       throw new Error('権限がありません')
@@ -275,12 +275,21 @@ const addMicTrack = async () => {
       audioContext.value = new AudioContext()
     }
 
-    stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        deviceId: {
+          ideal: audioInputDeviceId.value
+        },
+        autoGainControl: true,
+        noiseSuppression: true,
+        echoCancellation: true
+      }
+    })
     const source = audioContext.value.createMediaStreamSource(stream)
 
     let lastNode: AudioNode = source
 
-    if (noiseSuppression === 'rnnoise') {
+    if (noiseSuppression.value === 'rnnoise') {
       const [rnnoiseBinary] = await Promise.all([
         loadRnnoiseWasmBinary(),
         audioContext.value?.audioWorklet.addModule(rnnoiseWorkletPath)
@@ -291,7 +300,7 @@ const addMicTrack = async () => {
       })
       source.connect(rnnoiseNode)
       lastNode = rnnoiseNode
-    } else if (noiseSuppression === 'speex') {
+    } else if (noiseSuppression.value === 'speex') {
       const [speexBinary] = await Promise.all([
         loadSpeexWasmBinary(),
         audioContext.value?.audioWorklet.addModule(speexWorkletPath)
@@ -313,9 +322,11 @@ const addMicTrack = async () => {
     }
 
     audioTrackId.value = audioTrack.id
+    const livekitAudioTrack = new LocalAudioTrack(audioTrack, undefined, false)
+    livekitAudioTrack.source = Track.Source.Microphone
 
     // Publish the processed stream
-    await room.value.localParticipant.publishTrack(audioTrack, {
+    await room.value.localParticipant.publishTrack(livekitAudioTrack, {
       audioPreset: AudioPresets.speech,
       forceStereo: true,
       red: false,
@@ -334,7 +345,6 @@ const addMicTrack = async () => {
     addErrorToast('マイクの共有に失敗しました')
   }
 }
-
 const removeMicTrack = async () => {
   try {
     if (!room.value) {
@@ -633,6 +643,7 @@ export const useLiveKitSDK = () => {
     tracksMap,
     screenShareTrackSidMap,
     screenShareTracks,
+    speakerIdentitys,
     isMicOn,
     qallMitt
   }
