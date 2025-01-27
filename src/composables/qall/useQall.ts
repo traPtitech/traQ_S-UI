@@ -58,6 +58,7 @@ const {
   tracksMap,
   screenShareTrackSidMap,
   screenShareTracks,
+  speakerIdentitys,
   isMicOn,
   qallMitt
 } = useLiveKitSDK()
@@ -321,6 +322,7 @@ export const useQall = () => {
     isMicOn,
     isCameraOn,
     isScreenSharing,
+    speakerIdentitys,
     selectedTrack
   }
 }

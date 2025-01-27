@@ -4,7 +4,8 @@ import {
   AudioPresets,
   createLocalScreenTracks,
   Room,
-  LocalVideoTrack
+  LocalVideoTrack,
+  LocalAudioTrack
 } from 'livekit-client'
 import type {
   RemoteTrack,
@@ -85,7 +86,7 @@ type CameraProcessor = {
 const room = ref<Room>()
 const audioContext = ref<AudioContext>()
 const isRnnoiseSupported = computed(() => !!audioContext.value)
-const speakerIdentity = ref<string[]>([])
+const speakerIdentitys = ref<{ identity: string; name?: string }[]>([])
 const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
 const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
 const screenShareTrackSidMap = ref<Map<string, string>>(new Map())
@@ -141,7 +142,7 @@ function handleLocalTrackPublished(
 
 function handleActiveSpeakerChange(speakers: Participant[]) {
   // show UI indicators when participant is speaking
-  speakerIdentity.value = speakers.map(s => s.identity)
+  speakerIdentitys.value = speakers
 }
 
 function handleDisconnect() {
@@ -275,7 +276,10 @@ const addMicTrack = async () => {
       audio: {
         deviceId: {
           ideal: audioInputDeviceId.value
-        }
+        },
+        autoGainControl: true,
+        noiseSuppression: true,
+        echoCancellation: true
       }
     })
     const source = audioContext.value.createMediaStreamSource(stream)
@@ -315,9 +319,11 @@ const addMicTrack = async () => {
     }
 
     audioTrackId.value = audioTrack.id
+    const livekitAudioTrack = new LocalAudioTrack(audioTrack, undefined, false)
+    livekitAudioTrack.source = Track.Source.Microphone
 
     // Publish the processed stream
-    await room.value.localParticipant.publishTrack(audioTrack, {
+    await room.value.localParticipant.publishTrack(livekitAudioTrack, {
       audioPreset: AudioPresets.musicHighQualityStereo,
       forceStereo: true,
       red: false,
@@ -336,7 +342,6 @@ const addMicTrack = async () => {
     addErrorToast('マイクの共有に失敗しました')
   }
 }
-
 const removeMicTrack = async () => {
   try {
     if (!room.value) {
@@ -643,6 +648,7 @@ export const useLiveKitSDK = () => {
     tracksMap,
     screenShareTrackSidMap,
     screenShareTracks,
+    speakerIdentitys,
     isMicOn,
     qallMitt
   }

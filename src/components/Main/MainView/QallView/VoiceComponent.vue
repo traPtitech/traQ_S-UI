@@ -5,7 +5,6 @@ import { useUsersStore } from '/@/store/entities/users'
 import { buildUserIconPath } from '/@/lib/apis'
 import AudioTrack from './AudioTrack.vue'
 import { useUserVolume } from '/@/store/app/userVolume'
-import UserCard from './UserCard.vue'
 const { trackInfo, isShow } = defineProps<{
   trackInfo: TrackInfo
   isShow?: boolean
@@ -29,14 +28,6 @@ const parseToFloat = (value: number | string): number => {
 </script>
 
 <template>
-  <div :class="isShow ? $style.container : []">
-    <UserCard :track-info="trackInfo" />
-    <AudioTrack :track-info="trackInfo" :volume="parseToFloat(volume)" />
-  </div>
+  <AudioTrack :track-info="trackInfo" :volume="parseToFloat(volume)" />
 </template>
-<style lang="scss" module>
-.container {
-  width: 100%;
-  height: 100%;
-}
-</style>
+<style lang="scss" module></style>

@@ -3,18 +3,26 @@ import { computed } from 'vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useUsersStore } from '/@/store/entities/users'
 import { buildUserIconPath } from '/@/lib/apis'
+import { useQall } from '/@/composables/qall/useQall'
 
 const { trackInfo } = defineProps<{
   trackInfo: TrackInfo
 }>()
+const { speakerIdentitys } = useQall()
 const { findUserByName } = useUsersStore()
 const user = computed(() => findUserByName(trackInfo.username))
 const userIconFileId = computed(() => user.value?.iconFileId ?? '')
 const iconImage = computed(() => buildUserIconPath(userIconFileId.value))
+const isSpeaking = computed(() => {
+  return (
+    user.value &&
+    speakerIdentitys.value.some(s => s.name === trackInfo.username)
+  )
+})
 </script>
 
 <template>
-  <div v-if="user" :class="$style.UserCard">
+  <div v-if="user" :class="$style.UserCard" :data-is-speaking="isSpeaking">
     <div :class="$style.OuterIcon">
       <img :src="iconImage" :class="$style.OuterImage" />
     </div>
@@ -23,6 +31,7 @@ const iconImage = computed(() => buildUserIconPath(userIconFileId.value))
     </div>
 
     <div :class="$style.NameLabel">{{ trackInfo.username }}</div>
+    <div v-show="isSpeaking" :class="$style.borderBox"></div>
   </div>
 </template>
 
@@ -35,6 +44,14 @@ const iconImage = computed(() => buildUserIconPath(userIconFileId.value))
   border-radius: 12px;
   pointer-events: none;
   user-select: none;
+  box-sizing: border-box;
+}
+
+.borderBox {
+  border: 2px solid $common-ui-qall;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
 }
 
 .InnerIcon {
