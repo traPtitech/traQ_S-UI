@@ -239,10 +239,7 @@ const toggleDanmaku = () => {
                 :on-click="toggleVideo"
                 :inverted="isCameraOn"
               />
-              <DetailButton
-                :inverted="isCameraOn"
-                @click="showCameraDetailSetting = true"
-              />
+              <DetailButton @click="showCameraDetailSetting = true" />
               <CameraDetailSetting
                 :open="showCameraDetailSetting"
                 :video-inputs="videoInputs"
