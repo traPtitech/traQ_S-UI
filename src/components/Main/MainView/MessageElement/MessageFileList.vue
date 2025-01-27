@@ -58,12 +58,7 @@ const showLargeImage = computed(() => fileMetaDataState.images.length === 1)
 .imageContainer {
   display: flex;
   flex-flow: row wrap;
-}
-.imageItem {
-  margin-bottom: 16px;
-  &:not(:last-child) {
-    margin-right: 16px;
-  }
+  gap: 16px;
 }
 .item {
   flex-shrink: 0;
