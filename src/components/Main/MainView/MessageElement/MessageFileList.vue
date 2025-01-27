@@ -7,7 +7,6 @@
         :channel-id="channelId"
         :file-id="meta.id"
         :is-large="showLargeImage"
-        :class="$style.imageItem"
       />
     </div>
     <message-file-list-video
@@ -61,7 +60,6 @@ const showLargeImage = computed(() => fileMetaDataState.images.length === 1)
   flex-flow: row wrap;
 }
 .imageItem {
-  flex-shrink: 0;
   margin-bottom: 16px;
   &:not(:last-child) {
     margin-right: 16px;
