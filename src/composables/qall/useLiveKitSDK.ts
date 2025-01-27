@@ -261,8 +261,7 @@ async function leaveRoom() {
 const addMicTrack = async () => {
   let stream: MediaStream | undefined
 
-  const noiseSuppression = useRtcSettings().noiseSuppression
-    .value as NoiseSuppressionType
+  const { noiseSuppression, audioInputDeviceId } = useRtcSettings()
   try {
     if (!room.value?.localParticipant?.permissions?.canPublish) {
       throw new Error('権限がありません')
@@ -272,12 +271,18 @@ const addMicTrack = async () => {
       audioContext.value = new AudioContext()
     }
 
-    stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        deviceId: {
+          ideal: audioInputDeviceId.value
+        }
+      }
+    })
     const source = audioContext.value.createMediaStreamSource(stream)
 
     let lastNode: AudioNode = source
 
-    if (noiseSuppression === 'rnnoise') {
+    if (noiseSuppression.value === 'rnnoise') {
       const [rnnoiseBinary] = await Promise.all([
         loadRnnoiseWasmBinary(),
         audioContext.value?.audioWorklet.addModule(rnnoiseWorkletPath)
@@ -288,7 +293,7 @@ const addMicTrack = async () => {
       })
       source.connect(rnnoiseNode)
       lastNode = rnnoiseNode
-    } else if (noiseSuppression === 'speex') {
+    } else if (noiseSuppression.value === 'speex') {
       const [speexBinary] = await Promise.all([
         loadSpeexWasmBinary(),
         audioContext.value?.audioWorklet.addModule(speexWorkletPath)
