@@ -4,7 +4,6 @@
       <channel-header :channel-id="channelId" />
     </template>
     <template #default>
-      <QallAudio />
       <QallView v-if="getQallingState(channelId) === 'mainView'" />
       <channel-view-content
         v-else
@@ -37,7 +36,6 @@ import usePinnedMessages from '/@/composables/message/usePinnedMessages'
 import useCurrentViewers from '/@/composables/useCurrentViewers'
 import { useQall } from '/@/composables/qall/useQall'
 import QallView from '../QallView/QallView.vue'
-import QallAudio from '../QallView/QallAudio.vue'
 
 const props = defineProps<{
   isReady: boolean
