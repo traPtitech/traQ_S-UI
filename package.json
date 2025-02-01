@@ -71,7 +71,7 @@
     "@typescript-eslint/parser": "^8.20.0",
     "@typescript/lib-dom": "npm:@types/web@^0.0.72",
     "@vitejs/plugin-vue": "^5.2.1",
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^3.0.4",
     "@vue/test-utils": "^2.4.6",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
