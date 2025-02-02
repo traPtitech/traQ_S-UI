@@ -10,7 +10,7 @@
       rows="1"
       :data-simple-padding="simplePadding"
       :data-shrink-to-one-line="shrinkToOneLine"
-      :data-disable-height-limit="disableHeightLimit"
+      :data-is-max-height-none="isMaxHeightNone"
       :data-is-mobile="isMobile"
       :data-is-firefox="firefoxFlag"
       data-testid="message-input-textarea"
@@ -34,18 +34,18 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
-import useSendKeyWatcher from './composables/useSendKeyWatcher'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
-import type { ChannelId } from '/@/types/entity-ids'
-import useWordSuggester from './composables/useWordSuggester'
-import useInsertText from '/@/composables/dom/useInsertText'
-import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
-import { isFirefox } from '/@/lib/dom/browser'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import { computed, ref } from 'vue'
 import usePaste from './composables/usePaste'
-import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
+import useSendKeyWatcher from './composables/useSendKeyWatcher'
+import useWordSuggester from './composables/useWordSuggester'
 import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
+import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
+import useInsertText from '/@/composables/dom/useInsertText'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
+import { isFirefox } from '/@/lib/dom/browser'
+import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{
@@ -54,7 +54,7 @@ const props = withDefaults(
     isPosting?: boolean
     simplePadding?: boolean
     shrinkToOneLine?: boolean
-    disableHeightLimit?: boolean
+    isMaxHeightNone?: boolean
   }>(),
   {
     modelValue: '',
@@ -62,7 +62,7 @@ const props = withDefaults(
     isPosting: false,
     simplePadding: false,
     shrinkToOneLine: false,
-    disableHeightLimit: false
+    isMaxHeightNone: false
   }
 )
 
@@ -165,7 +165,7 @@ $vertical-padding: 8px;
   padding: $vertical-padding 16px;
   // 左から、余白、スタンプパレットボタン、余白、送信ボタン、スクロールバー
   padding-right: calc(8px + 24px + 8px + 24px + var(--input-scrollbar-width));
-  &[data-disable-height-limit='false'] {
+  &[data-is-max-height-none='false'] {
     &[data-is-mobile='true'] {
       max-height: 70px;
     }
@@ -173,7 +173,7 @@ $vertical-padding: 8px;
       max-height: 160px;
     }
   }
-  &[data-disable-height-limit='true'] {
+  &[data-is-max-height-none='true'] {
     max-height: none;
   }
   &[readonly] {
