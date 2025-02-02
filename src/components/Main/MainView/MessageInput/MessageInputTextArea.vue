@@ -4,7 +4,7 @@
       ref="textareaAutosizeRef"
       v-model="value"
       :class="$style.textarea"
-      :style="style"
+      :style="textareaAutosizeStyle"
       :readonly="isPosting"
       placeholder="メッセージを入力"
       rows="1"
@@ -142,10 +142,23 @@ const onBlur = () => {
   emit('blur')
 }
 
+const textAreaAutoSizeMaxHeight = computed(() => {
+  if (props.isMaxHeightNone) {
+    return 'none'
+  }
+
+  if (isMobile.value) {
+    return props.isInputTextAreaExpanded ? '140px' : '70px'
+  } else {
+    return props.isInputTextAreaExpanded ? '320px' : '160px'
+  }
+})
+
 const scollbarWidth = getScrollbarWidth()
-const style = {
-  '--input-scrollbar-width': `${scollbarWidth}px`
-}
+const textareaAutosizeStyle = computed(() => ({
+  '--input-scrollbar-width': `${scollbarWidth}px`,
+  'max-height': textAreaAutoSizeMaxHeight.value
+}))
 
 const showIsInputTextAreaExpandedButton = defineModel<boolean>(
   'showIsInputTextAreaExpandedButton',
@@ -196,27 +209,6 @@ $vertical-padding: 8px;
   padding: $vertical-padding 16px;
   // 左から、余白、スタンプパレットボタン、余白、送信ボタン、スクロールバー
   padding-right: calc(8px + 24px + 8px + 24px + var(--input-scrollbar-width));
-  &[data-is-max-height-none='false'] {
-    &[data-is-mobile='true'] {
-      &[data-is-input-text-area-expanded='false'] {
-        max-height: 70px;
-      }
-      &[data-is-input-text-area-expanded='true'] {
-        max-height: 140px;
-      }
-    }
-    &[data-is-mobile='false'] {
-      &[data-is-input-text-area-expanded='false'] {
-        max-height: 160px;
-      }
-      &[data-is-input-text-area-expanded='true'] {
-        max-height: 320px;
-      }
-    }
-  }
-  &[data-is-max-height-none='true'] {
-    max-height: none;
-  }
   &[readonly] {
     @include color-ui-secondary-inactive;
     cursor: wait;
