@@ -21,7 +21,7 @@
       @focus="onFocus"
       @blur="onBlur"
       @paste="onPaste"
-      @resized="onResize"
+      @input="onInput"
     />
     <div :class="$style.over" />
     <dropdown-suggester
@@ -155,7 +155,7 @@ const showIsInputTextAreaExpandedButton = defineModel<boolean>(
   }
 )
 
-const onResize = () => {
+const onInput = () => {
   if (textareaRef.value) {
     const height = textareaRef.value.scrollHeight
     if (isMobile.value) {

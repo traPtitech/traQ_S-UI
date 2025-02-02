@@ -39,10 +39,12 @@ const emit = defineEmits<{
   (e: 'focus'): void
   (e: 'blur'): void
   (e: 'paste', _val: ClipboardEvent): void
-  (e: 'resized'): void
+  (e: 'input'): void
 }>()
 
-const { value, onInput } = useTextModelSyncer(props, emit)
+const { value, onInput } = useTextModelSyncer(props, emit, () => {
+  emit('input')
+})
 
 const textareaEle = ref<HTMLTextAreaElement | null>(null)
 
@@ -53,9 +55,6 @@ const focus = () => {
 onMounted(() => {
   if (textareaEle.value) {
     autosize(textareaEle.value)
-    textareaEle.value.addEventListener('autosize:resized', () => {
-      emit('resized')
-    })
   }
 })
 watch(toRef(props, 'modelValue'), async () => {
@@ -66,9 +65,6 @@ watch(toRef(props, 'modelValue'), async () => {
 })
 onBeforeUnmount(() => {
   if (textareaEle.value) {
-    textareaEle.value.removeEventListener('autosize:resized', () => {
-      emit('resized')
-    })
     autosize.destroy(textareaEle.value)
   }
 })
