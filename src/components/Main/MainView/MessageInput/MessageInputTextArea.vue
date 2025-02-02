@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import usePaste from './composables/usePaste'
 import useSendKeyWatcher from './composables/useSendKeyWatcher'
 import useWordSuggester from './composables/useWordSuggester'
@@ -165,15 +165,15 @@ const updateTextareaExpandButtonVisibility = () => {
   }
 }
 
-onMounted(() => {
-  updateTextareaExpandButtonVisibility()
-})
-
-watch(value, () => {
-  nextTick(() => {
-    updateTextareaExpandButtonVisibility()
-  })
-})
+watch(
+  value,
+  () => {
+    nextTick(() => {
+      updateTextareaExpandButtonVisibility()
+    })
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" module>
