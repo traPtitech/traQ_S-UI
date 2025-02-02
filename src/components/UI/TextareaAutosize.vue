@@ -18,8 +18,8 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref, toRef, watch, nextTick } from 'vue'
 import autosize from 'autosize'
+import { nextTick, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue'
 import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 
 const props = defineProps<{
@@ -39,6 +39,7 @@ const emit = defineEmits<{
   (e: 'focus'): void
   (e: 'blur'): void
   (e: 'paste', _val: ClipboardEvent): void
+  (e: 'resized'): void
 }>()
 
 const { value, onInput } = useTextModelSyncer(props, emit)
@@ -52,6 +53,9 @@ const focus = () => {
 onMounted(() => {
   if (textareaEle.value) {
     autosize(textareaEle.value)
+    textareaEle.value.addEventListener('autosize:resized', () => {
+      emit('resized')
+    })
   }
 })
 watch(toRef(props, 'modelValue'), async () => {
@@ -62,6 +66,9 @@ watch(toRef(props, 'modelValue'), async () => {
 })
 onBeforeUnmount(() => {
   if (textareaEle.value) {
+    textareaEle.value.removeEventListener('autosize:resized', () => {
+      emit('resized')
+    })
     autosize.destroy(textareaEle.value)
   }
 })

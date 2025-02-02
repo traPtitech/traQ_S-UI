@@ -21,6 +21,7 @@
       @focus="onFocus"
       @blur="onBlur"
       @paste="onPaste"
+      @resized="onResize"
     />
     <div :class="$style.over" />
     <dropdown-suggester
@@ -145,6 +146,24 @@ const onBlur = () => {
 const scollbarWidth = getScrollbarWidth()
 const style = {
   '--input-scrollbar-width': `${scollbarWidth}px`
+}
+
+const showIsInputTextAreaExpandedButton = defineModel<boolean>(
+  'showIsInputTextAreaExpandedButton',
+  {
+    default: false
+  }
+)
+
+const onResize = () => {
+  if (textareaRef.value) {
+    const height = textareaRef.value.scrollHeight
+    if (isMobile.value) {
+      showIsInputTextAreaExpandedButton.value = height >= 70
+    } else {
+      showIsInputTextAreaExpandedButton.value = height >= 160
+    }
+  }
 }
 </script>
 

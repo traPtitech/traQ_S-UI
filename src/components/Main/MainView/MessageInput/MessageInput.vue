@@ -38,6 +38,9 @@
       <message-input-text-area
         ref="textareaComponentRef"
         v-model="state.text"
+        v-model:show-is-input-text-area-expanded-button="
+          showIsInputTextAreaExpandedButton
+        "
         :channel-id="channelId"
         :is-posting="isPosting"
         :shrink-to-one-line="
@@ -114,7 +117,7 @@ const { channelsMap } = useChannelsStore()
 const isLeftControlsExpanded = ref(false)
 const isPreviewShown = ref(false)
 const isInputTextAreaExpanded = ref(true)
-const showIsInputTextAreaExpandedButton = ref(true)
+const showIsInputTextAreaExpandedButton = ref(false)
 
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
