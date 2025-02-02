@@ -42,9 +42,7 @@ const emit = defineEmits<{
   (e: 'input'): void
 }>()
 
-const { value, onInput } = useTextModelSyncer(props, emit, () => {
-  emit('input')
-})
+const { value, onInput } = useTextModelSyncer(props, emit)
 
 const textareaEle = ref<HTMLTextAreaElement | null>(null)
 

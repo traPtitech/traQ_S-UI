@@ -21,7 +21,6 @@
       @focus="onFocus"
       @blur="onBlur"
       @paste="onPaste"
-      @input="onInput"
     />
     <div :class="$style.over" />
     <dropdown-suggester
@@ -36,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import usePaste from './composables/usePaste'
 import useSendKeyWatcher from './composables/useSendKeyWatcher'
 import useWordSuggester from './composables/useWordSuggester'
@@ -155,7 +154,7 @@ const showIsInputTextAreaExpandedButton = defineModel<boolean>(
   }
 )
 
-const onInput = () => {
+const updateTextareaExpandButtonVisibility = () => {
   if (textareaRef.value) {
     const height = textareaRef.value.scrollHeight
     if (isMobile.value) {
@@ -165,6 +164,16 @@ const onInput = () => {
     }
   }
 }
+
+onMounted(() => {
+  updateTextareaExpandButtonVisibility()
+})
+
+watch(value, () => {
+  nextTick(() => {
+    updateTextareaExpandButtonVisibility()
+  })
+})
 </script>
 
 <style lang="scss" module>
