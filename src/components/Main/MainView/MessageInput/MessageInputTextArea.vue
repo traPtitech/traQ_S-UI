@@ -11,6 +11,7 @@
       :data-simple-padding="simplePadding"
       :data-shrink-to-one-line="shrinkToOneLine"
       :data-is-max-height-none="isMaxHeightNone"
+      :data-is-input-text-area-expanded="isInputTextAreaExpanded"
       :data-is-mobile="isMobile"
       :data-is-firefox="firefoxFlag"
       data-testid="message-input-textarea"
@@ -55,6 +56,7 @@ const props = withDefaults(
     simplePadding?: boolean
     shrinkToOneLine?: boolean
     isMaxHeightNone?: boolean
+    isInputTextAreaExpanded?: boolean
   }>(),
   {
     modelValue: '',
@@ -62,7 +64,8 @@ const props = withDefaults(
     isPosting: false,
     simplePadding: false,
     shrinkToOneLine: false,
-    isMaxHeightNone: false
+    isMaxHeightNone: false,
+    isInputTextAreaExpanded: false
   }
 )
 
@@ -167,10 +170,20 @@ $vertical-padding: 8px;
   padding-right: calc(8px + 24px + 8px + 24px + var(--input-scrollbar-width));
   &[data-is-max-height-none='false'] {
     &[data-is-mobile='true'] {
-      max-height: 70px;
+      &[data-is-input-text-area-expanded='false'] {
+        max-height: 70px;
+      }
+      &[data-is-input-text-area-expanded='true'] {
+        max-height: 140px;
+      }
     }
     &[data-is-mobile='false'] {
-      max-height: 160px;
+      &[data-is-input-text-area-expanded='false'] {
+        max-height: 160px;
+      }
+      &[data-is-input-text-area-expanded='true'] {
+        max-height: 320px;
+      }
     }
   }
   &[data-is-max-height-none='true'] {

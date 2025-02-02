@@ -26,8 +26,12 @@
     </div>
     <div v-else :class="$style.inputContainer">
       <message-input-left-controls
-        v-model:is-expanded="isLeftControlsExpanded"
+        v-model:is-left-controls-expanded="isLeftControlsExpanded"
         v-model:is-preview-shown="isPreviewShown"
+        v-model:is-input-text-area-expanded="isInputTextAreaExpanded"
+        v-model:show-is-input-text-area-expanded-button="
+          showIsInputTextAreaExpandedButton
+        "
         :class="$style.leftControls"
         @click-add-attachment="addAttachment"
       />
@@ -39,6 +43,7 @@
         :shrink-to-one-line="
           (forceMobileStyle || isMobile) && isLeftControlsExpanded
         "
+        :is-input-text-area-expanded="isInputTextAreaExpanded"
         @focus="onFocus"
         @blur="onBlur"
         @add-attachments="onAddAttachments"
@@ -58,30 +63,30 @@
 </template>
 
 <script lang="ts" setup>
-import MessageInputLeftControls from './MessageInputLeftControls.vue'
-import MessageInputPreview from './MessageInputPreview.vue'
-import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
-import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
-import MessageInputTextArea from './MessageInputTextArea.vue'
-import MessageInputRightControls from './MessageInputRightControls.vue'
-import MessageInputFileList from './MessageInputFileList.vue'
-import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed, ref, toRef, watch, watchEffect } from 'vue'
-import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
 import useAttachments from './composables/useAttachments'
 import useModifierKey from './composables/useModifierKey'
 import usePostMessage from './composables/usePostMessage'
+import MessageInputFileList from './MessageInputFileList.vue'
+import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
+import MessageInputLeftControls from './MessageInputLeftControls.vue'
+import MessageInputPreview from './MessageInputPreview.vue'
+import MessageInputRightControls from './MessageInputRightControls.vue'
+import MessageInputTextArea from './MessageInputTextArea.vue'
+import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
+import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
+import { $boolAttr } from '/@/bool-attr'
+import AIcon from '/@/components/UI/AIcon.vue'
 import useFocus from '/@/composables/dom/useFocus'
-import { useToastStore } from '/@/store/ui/toast'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useChannelsStore } from '/@/store/entities/channels'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
-import { $boolAttr } from '/@/bool-attr'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useToastStore } from '/@/store/ui/toast'
+import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId | DMChannelId
@@ -108,6 +113,8 @@ const { sendWithModifierKey } = useBrowserSettings()
 const { channelsMap } = useChannelsStore()
 const isLeftControlsExpanded = ref(false)
 const isPreviewShown = ref(false)
+const isInputTextAreaExpanded = ref(true)
+const showIsInputTextAreaExpandedButton = ref(true)
 
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
