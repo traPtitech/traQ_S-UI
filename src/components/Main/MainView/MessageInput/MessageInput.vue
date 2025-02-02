@@ -29,7 +29,7 @@
         v-model:is-left-controls-expanded="isLeftControlsExpanded"
         v-model:is-preview-shown="isPreviewShown"
         v-model:is-input-text-area-expanded="isInputTextAreaExpanded"
-        v-model:show-is-input-text-area-expanded-button="
+        :show-is-input-text-area-expanded-button="
           showIsInputTextAreaExpandedButton
         "
         :class="$style.leftControls"
