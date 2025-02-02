@@ -5,6 +5,7 @@
       v-model="value"
       :class="$style.textarea"
       :style="textareaAutosizeStyle"
+      :max-height="textAreaAutoSizeMaxHeight"
       :readonly="isPosting"
       placeholder="メッセージを入力"
       rows="1"

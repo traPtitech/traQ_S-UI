@@ -24,7 +24,7 @@ import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 
 const props = defineProps<{
   modelValue: string
-  maxHeight?: number
+  maxHeight?: string
   readonly?: boolean
   placeholder?: string
   rows?: string
@@ -54,7 +54,7 @@ onMounted(() => {
     autosize(textareaEle.value)
   }
 })
-watch(toRef(props, 'modelValue'), async () => {
+watch([toRef(props, 'modelValue'), toRef(props, 'maxHeight')], async () => {
   await nextTick()
   if (textareaEle.value) {
     autosize.update(textareaEle.value)
