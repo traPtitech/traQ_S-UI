@@ -39,7 +39,6 @@ const emit = defineEmits<{
   (e: 'focus'): void
   (e: 'blur'): void
   (e: 'paste', _val: ClipboardEvent): void
-  (e: 'input'): void
 }>()
 
 const { value, onInput } = useTextModelSyncer(props, emit)
