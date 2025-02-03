@@ -158,7 +158,7 @@ const textAreaAutoSizeMaxHeight = computed(() => {
 const scollbarWidth = getScrollbarWidth()
 const textareaAutosizeStyle = computed(() => ({
   '--input-scrollbar-width': `${scollbarWidth}px`,
-  'max-height': textAreaAutoSizeMaxHeight.value
+  '--max-height': textAreaAutoSizeMaxHeight.value
 }))
 
 const showIsInputTextAreaExpandedButton = defineModel<boolean>(
@@ -210,6 +210,7 @@ $vertical-padding: 8px;
   padding: $vertical-padding 16px;
   // 左から、余白、スタンプパレットボタン、余白、送信ボタン、スクロールバー
   padding-right: calc(8px + 24px + 8px + 24px + var(--input-scrollbar-width));
+  max-height: var(--max-height);
   &[readonly] {
     @include color-ui-secondary-inactive;
     cursor: wait;

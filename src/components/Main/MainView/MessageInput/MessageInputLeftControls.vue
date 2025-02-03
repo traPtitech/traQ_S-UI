@@ -1,8 +1,5 @@
 <template>
-  <div
-    :class="$style.outerContainer"
-    :style="outerContainerStyle"
-  >
+  <div :class="$style.outerContainer" :style="outerContainerStyle">
     <icon-button
       v-if="showIsInputTextAreaExpandedButton"
       :class="$style.button"
