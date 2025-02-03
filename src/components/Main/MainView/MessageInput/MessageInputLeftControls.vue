@@ -2,7 +2,7 @@
   <div :class="$style.outerContainer" :style="outerContainerStyle">
     <icon-button
       v-if="showTextAreaExpandButton"
-      :class="$style.button"
+      :class="$style.textAreaExpandButton"
       :icon-name="isInputTextAreaExpanded ? 'chevron-down' : 'chevron-up'"
       icon-mdi
       @click="toggleIsInputTextAreaExpanded"
@@ -80,7 +80,7 @@ const outerContainerStyle = computed(() => ({
   @include color-ui-secondary;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: end;
   justify-content: var(--justify-content);
 }
 .innerContainer {
@@ -96,5 +96,8 @@ const outerContainerStyle = computed(() => ({
   &:last-child:last-child {
     margin-right: 0;
   }
+}
+.textAreaExpandButton {
+  @include color-ui-secondary;
 }
 </style>
