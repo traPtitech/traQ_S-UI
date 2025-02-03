@@ -204,7 +204,6 @@ $radius: 4px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-end;
 
   &[data-is-archived] {
     @include color-ui-secondary-inactive;

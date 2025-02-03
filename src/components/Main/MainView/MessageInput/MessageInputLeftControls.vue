@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.outerContainer">
+  <div
+    :class="$style.outerContainer"
+    :style="outerContainerStyle"
+  >
     <icon-button
       v-if="showIsInputTextAreaExpandedButton"
       :class="$style.button"
@@ -67,6 +70,12 @@ const isPreviewShownValue = computed<boolean>({
     emit('update:isLeftControlsExpanded', false)
   }
 })
+
+const outerContainerStyle = computed(() => ({
+  '--justify-content': props.showIsInputTextAreaExpandedButton
+    ? 'space-between'
+    : 'flex-end'
+}))
 </script>
 
 <style lang="scss" module>
@@ -75,6 +84,7 @@ const isPreviewShownValue = computed<boolean>({
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: var(--justify-content);
 }
 .innerContainer {
   @include color-ui-secondary;
