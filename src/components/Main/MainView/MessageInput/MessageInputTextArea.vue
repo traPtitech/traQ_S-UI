@@ -166,8 +166,8 @@ const textareaAutosizeStyle = computed(() => ({
   '--max-height': textAreaAutoSizeMaxHeight.value
 }))
 
-const showIsInputTextAreaExpandedButton = defineModel<boolean>(
-  'showIsInputTextAreaExpandedButton',
+const showTextAreaExpandButton = defineModel<boolean>(
+  'showTextAreaExpandButton',
   {
     default: false
   }
@@ -176,7 +176,7 @@ const showIsInputTextAreaExpandedButton = defineModel<boolean>(
 const updateShowIsInputTextareaExpandButtonVisibility = () => {
   nextTick(() => {
     if (textareaRef.value) {
-      showIsInputTextAreaExpandedButton.value =
+      showTextAreaExpandButton.value =
         textareaRef.value.scrollHeight > textAreaAutoSizeMaxHeightShrunk.value
     }
   })

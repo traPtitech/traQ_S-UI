@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.outerContainer" :style="outerContainerStyle">
     <icon-button
-      v-if="showIsInputTextAreaExpandedButton"
+      v-if="showTextAreaExpandButton"
       :class="$style.button"
       :icon-name="isInputTextAreaExpanded ? 'chevron-down' : 'chevron-up'"
       icon-mdi
@@ -40,7 +40,7 @@ const props = defineProps<{
   isLeftControlsExpanded: boolean
   isPreviewShown: boolean
   isInputTextAreaExpanded: boolean
-  showIsInputTextAreaExpandedButton: boolean
+  showTextAreaExpandButton: boolean
 }>()
 
 const emit = defineEmits<{
@@ -69,7 +69,7 @@ const isPreviewShownValue = computed<boolean>({
 })
 
 const outerContainerStyle = computed(() => ({
-  '--justify-content': props.showIsInputTextAreaExpandedButton
+  '--justify-content': props.showTextAreaExpandButton
     ? 'space-between'
     : 'flex-end'
 }))

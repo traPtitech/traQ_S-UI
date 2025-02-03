@@ -29,18 +29,14 @@
         v-model:is-left-controls-expanded="isLeftControlsExpanded"
         v-model:is-preview-shown="isPreviewShown"
         v-model:is-input-text-area-expanded="isInputTextAreaExpanded"
-        :show-is-input-text-area-expanded-button="
-          showIsInputTextAreaExpandedButton
-        "
+        :show-text-area-expand-button="showTextAreaExpandButton"
         :class="$style.leftControls"
         @click-add-attachment="addAttachment"
       />
       <message-input-text-area
         ref="textareaComponentRef"
         v-model="state.text"
-        v-model:show-is-input-text-area-expanded-button="
-          showIsInputTextAreaExpandedButton
-        "
+        v-model:show-text-area-expand-button="showTextAreaExpandButton"
         :channel-id="channelId"
         :is-posting="isPosting"
         :shrink-to-one-line="
@@ -117,7 +113,7 @@ const { channelsMap } = useChannelsStore()
 const isLeftControlsExpanded = ref(false)
 const isPreviewShown = ref(false)
 const isInputTextAreaExpanded = ref(true)
-const showIsInputTextAreaExpandedButton = ref(false)
+const showTextAreaExpandButton = ref(false)
 
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
