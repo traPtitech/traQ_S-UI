@@ -22,6 +22,7 @@
       @focus="onFocus"
       @blur="onBlur"
       @paste="onPaste"
+      @autosize-updated="updateShowIsInputTextareaExpandButtonVisibility"
     />
     <div :class="$style.over" />
     <dropdown-suggester
@@ -78,6 +79,7 @@ const emit = defineEmits<{
   (e: 'postMessage'): void
   (e: 'modifierKeyDown'): void
   (e: 'modifierKeyUp'): void
+  (e: 'autosize-updated'): void
 }>()
 
 const firefoxFlag = isFirefox()
@@ -143,16 +145,19 @@ const onBlur = () => {
   emit('blur')
 }
 
+const textAreaAutoSizeMaxHeightShrunk = computed(() =>
+  isMobile.value ? 70 : 160
+)
+
 const textAreaAutoSizeMaxHeight = computed(() => {
   if (props.isMaxHeightNone) {
     return 'none'
   }
-
-  if (isMobile.value) {
-    return props.isInputTextAreaExpanded ? '140px' : '70px'
-  } else {
-    return props.isInputTextAreaExpanded ? '320px' : '160px'
-  }
+  return (
+    (props.isInputTextAreaExpanded
+      ? textAreaAutoSizeMaxHeightShrunk.value * 2
+      : textAreaAutoSizeMaxHeightShrunk.value) + 'px'
+  )
 })
 
 const scollbarWidth = getScrollbarWidth()
@@ -168,26 +173,18 @@ const showIsInputTextAreaExpandedButton = defineModel<boolean>(
   }
 )
 
-const updateTextareaExpandButtonVisibility = () => {
-  if (textareaRef.value) {
-    const height = textareaRef.value.scrollHeight
-    if (isMobile.value) {
-      showIsInputTextAreaExpandedButton.value = height >= 70
-    } else {
-      showIsInputTextAreaExpandedButton.value = height >= 160
+const updateShowIsInputTextareaExpandButtonVisibility = () => {
+  nextTick(() => {
+    if (textareaRef.value) {
+      showIsInputTextAreaExpandedButton.value =
+        textareaRef.value.scrollHeight > textAreaAutoSizeMaxHeightShrunk.value
     }
-  }
+  })
 }
 
-watch(
-  value,
-  () => {
-    nextTick(() => {
-      updateTextareaExpandButtonVisibility()
-    })
-  },
-  { immediate: true }
-)
+watch([value], updateShowIsInputTextareaExpandButtonVisibility, {
+  immediate: true
+})
 </script>
 
 <style lang="scss" module>

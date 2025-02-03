@@ -39,6 +39,7 @@ const emit = defineEmits<{
   (e: 'focus'): void
   (e: 'blur'): void
   (e: 'paste', _val: ClipboardEvent): void
+  (e: 'autosize-updated'): void
 }>()
 
 const { value, onInput } = useTextModelSyncer(props, emit)
@@ -52,6 +53,9 @@ const focus = () => {
 onMounted(() => {
   if (textareaEle.value) {
     autosize(textareaEle.value)
+    textareaEle.value.addEventListener('autosize:resized', () => {
+      emit('autosize-updated')
+    })
   }
 })
 watch([toRef(props, 'modelValue'), toRef(props, 'maxHeight')], async () => {
