@@ -183,10 +183,9 @@ watch(value, updateShowIsInputTextareaExpandButtonVisibility, {
   immediate: true
 })
 
-watch(
-  textAreaAutoSizeMaxHeight,
-  textareaAutosizeRef.value?.autosizeUpdateTextarea ?? (() => null)
-)
+watch(textAreaAutoSizeMaxHeight, () => {
+  textareaAutosizeRef.value?.autosizeUpdateTextarea()
+})
 </script>
 
 <style lang="scss" module>
