@@ -5,7 +5,6 @@
       v-model="value"
       :class="$style.textarea"
       :style="textareaAutosizeStyle"
-      :max-height="textAreaAutoSizeMaxHeight"
       :readonly="isPosting"
       placeholder="メッセージを入力"
       rows="1"
@@ -87,9 +86,7 @@ const firefoxFlag = isFirefox()
 const value = useModelValueSyncer(props, emit)
 const { isMobile } = useResponsiveStore()
 
-const textareaAutosizeRef = ref<{
-  $el: HTMLTextAreaElement
-}>()
+const textareaAutosizeRef = ref<InstanceType<typeof TextareaAutosize>>()
 const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 
 defineExpose({ textareaAutosizeRef })
@@ -182,9 +179,14 @@ const updateShowIsInputTextareaExpandButtonVisibility = () => {
   })
 }
 
-watch([value], updateShowIsInputTextareaExpandButtonVisibility, {
+watch(value, updateShowIsInputTextareaExpandButtonVisibility, {
   immediate: true
 })
+
+watch(
+  textAreaAutoSizeMaxHeight,
+  textareaAutosizeRef.value?.autosizeUpdateTextarea ?? (() => null)
+)
 </script>
 
 <style lang="scss" module>

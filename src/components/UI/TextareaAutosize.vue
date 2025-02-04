@@ -24,7 +24,6 @@ import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 
 const props = defineProps<{
   modelValue: string
-  maxHeight?: string
   readonly?: boolean
   placeholder?: string
   rows?: string
@@ -50,6 +49,13 @@ const focus = () => {
   textareaEle.value?.focus()
 }
 
+const autosizeUpdateTextarea = async () => {
+  await nextTick()
+  if (textareaEle.value) {
+    autosize.update(textareaEle.value)
+  }
+}
+
 onMounted(() => {
   if (textareaEle.value) {
     autosize(textareaEle.value)
@@ -58,12 +64,7 @@ onMounted(() => {
     })
   }
 })
-watch([toRef(props, 'modelValue'), toRef(props, 'maxHeight')], async () => {
-  await nextTick()
-  if (textareaEle.value) {
-    autosize.update(textareaEle.value)
-  }
-})
+watch([toRef(props, 'modelValue')], autosizeUpdateTextarea)
 onBeforeUnmount(() => {
   if (textareaEle.value) {
     autosize.destroy(textareaEle.value)
@@ -71,7 +72,8 @@ onBeforeUnmount(() => {
 })
 
 defineExpose({
-  focus
+  focus,
+  autosizeUpdateTextarea
 })
 </script>
 
