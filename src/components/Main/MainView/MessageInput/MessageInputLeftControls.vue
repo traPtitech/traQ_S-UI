@@ -67,6 +67,7 @@ const isPreviewShownValue = computed<boolean>({
   set(v) {
     emit('update:isPreviewShown', v)
     emit('update:isLeftControlsExpanded', false)
+    emit('toggleLeftControlsExpanded')
   }
 })
 
