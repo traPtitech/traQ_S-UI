@@ -225,7 +225,7 @@ $radius: 4px;
   }
 }
 .leftControls {
-  margin: 8px 8px 8px 0;
+  margin: 2px 8px 8px 0;
 }
 .rightControls {
   position: absolute;
