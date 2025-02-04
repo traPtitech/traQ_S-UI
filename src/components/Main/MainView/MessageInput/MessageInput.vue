@@ -32,6 +32,9 @@
         :show-text-area-expand-button="showTextAreaExpandButton"
         :class="$style.leftControls"
         @click-add-attachment="addAttachment"
+        @toggle-left-controls-expanded="
+          textareaComponentRef?.textareaAutosizeRef?.autosizeUpdateTextarea
+        "
       />
       <message-input-text-area
         ref="textareaComponentRef"
@@ -153,13 +156,11 @@ const showKeyGuide = computed(
     (sendWithModifierKey.value !== 'modifier' || canPostMessage.value)
 )
 
-const textareaComponentRef = ref<{
-  textareaAutosizeRef: { $el: HTMLTextAreaElement }
-}>()
+const textareaComponentRef = ref<InstanceType<typeof MessageInputTextArea>>()
 const containerEle = ref<HTMLDivElement>()
 const { toggleStampPicker } = useTextStampPickerInvoker(
   toRef(state, 'text'),
-  computed(() => textareaComponentRef.value?.textareaAutosizeRef.$el),
+  computed(() => textareaComponentRef.value?.textareaAutosizeRef?.$el),
   containerEle
 )
 

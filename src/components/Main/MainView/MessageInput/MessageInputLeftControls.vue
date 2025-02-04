@@ -48,11 +48,13 @@ const emit = defineEmits<{
   (e: 'update:isPreviewShown', _v: boolean): void
   (e: 'clickAddAttachment'): void
   (e: 'update:isInputTextAreaExpanded', _v: boolean): void
+  (e: 'toggleLeftControlsExpanded'): void
 }>()
 
 const { isMobile } = useResponsiveStore()
 const toggleLeftControlsExpanded = () => {
   emit('update:isLeftControlsExpanded', !props.isLeftControlsExpanded)
+  emit('toggleLeftControlsExpanded')
 }
 const toggleIsInputTextAreaExpanded = () => {
   emit('update:isInputTextAreaExpanded', !props.isInputTextAreaExpanded)
