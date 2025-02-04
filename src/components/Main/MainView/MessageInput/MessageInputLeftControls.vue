@@ -90,6 +90,7 @@ const outerContainerStyle = computed(() => ({
   display: flex;
 }
 .button {
+  @include color-ui-secondary;
   margin: 0 4px;
 
   &:first-child:first-child {
