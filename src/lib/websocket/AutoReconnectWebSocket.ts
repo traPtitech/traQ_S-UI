@@ -145,9 +145,8 @@ export default class AutoReconnectWebSocket {
 
     let count = 0
     while (!this.isOpen) {
-      count++
-
       const delay = this._getDelay(count)
+      count++
       await wait(delay)
 
       if (this.isOpen) break
