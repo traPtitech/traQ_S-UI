@@ -276,21 +276,21 @@ const isScreenSharing = ref(false)
 const selectedTrack = ref<TrackInfo>()
 
 export const useQall = () => {
-  const joinQall = (channelName: string, isWebinar: boolean = false) => {
+  const joinQall = async (channelName: string, isWebinar: boolean = false) => {
     if (callingChannel.value) {
-      leaveRoom()
+      await leaveRoom()
     }
     if (!myId.value) {
       addErrorToast('接続に失敗しました')
       return
     }
-    joinRoom(channelName, isWebinar)
+    await joinRoom(channelName, isWebinar)
 
     callingChannel.value = channelName
   }
   const leaveQall = async () => {
-    callingChannel.value = ''
     await leaveRoom()
+    callingChannel.value = ''
     isSubView.value = false
     selectedTrack.value = undefined
     isMicOn.value = true

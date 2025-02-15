@@ -80,7 +80,7 @@ const { isMobile } = useResponsiveStore()
 
 const { joinQall, callingChannel } = useQall()
 const isCallingHere = computed(() => callingChannel.value === props.channelId)
-const disabled = computed(() => !!callingChannel.value && !isCallingHere.value)
+const disabled = computed(() => !!isCallingHere.value)
 
 const { changeToNextSubscriptionLevel, currentChannelSubscription } =
   useChannelSubscriptionState(toRef(props, 'channelId'))
