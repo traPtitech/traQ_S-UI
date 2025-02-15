@@ -35,9 +35,10 @@ const props = defineProps<{
 const containerEle = ref<HTMLDivElement>()
 const stylePosition = computed(() => {
   if (!props.targetRect) return { display: 'none' }
+  const width = 340
   return {
     top: `${props.targetRect.top}px`,
-    left: `${props.targetRect.left + props.targetRect.width / 2 - 25}px`,
+    left: `min(calc(100% - ${width}px), ${props.targetRect.left}px)`,
     transform: 'translateY(-105%) translateX(-30%)'
   }
 })
@@ -67,10 +68,7 @@ const stylePosition = computed(() => {
   }
 }
 .stamp {
-  margin: {
-    right: 0.2rem;
-    bottom: 0.2rem;
-  }
+  margin: 0.2rem;
   display: flex;
 }
 
