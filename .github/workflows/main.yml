@@ -131,7 +131,9 @@ jobs:
         with:
           name: coverage
           path: ./coverage
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
   test-e2e:
     name: run test:e2e
     runs-on: ubuntu-latest

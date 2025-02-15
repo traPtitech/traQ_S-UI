@@ -17,20 +17,24 @@ export type StampSelectHandler = (stamp: SelectedStampData) => void
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const defaultSelectHandler = (_: SelectedStampData) => {}
 
-export type AlignmentPosition = `top-${'left' | 'right'}` | 'bottom-right'
+export type AlignmentPosition = `${'top' | 'bottom'}-${'left' | 'right'}`
 
 const MARGIN_BETWEEN = 4
 const getBottomLeftPosition = (rect: DOMRect) => ({
   x: rect.left,
   y: rect.bottom + MARGIN_BETWEEN
 })
+const getBottomRightPosition = (rect: DOMRect) => ({
+  x: rect.right,
+  y: rect.bottom + MARGIN_BETWEEN
+})
 const getTopRightPosition = (rect: DOMRect) => ({
   x: rect.right,
   y: rect.top - MARGIN_BETWEEN
 })
-const getBottomRightPosition = (rect: DOMRect) => ({
-  x: rect.right,
-  y: rect.bottom + MARGIN_BETWEEN
+const getTopLeftPosition = (rect: DOMRect) => ({
+  x: rect.left,
+  y: rect.top - MARGIN_BETWEEN
 })
 
 const getPositionFromAlignment = (
@@ -46,6 +50,8 @@ const getPositionFromAlignment = (
       return getBottomRightPosition(rect)
     case 'bottom-right':
       return getTopRightPosition(rect)
+    case 'bottom-left':
+      return getTopLeftPosition(rect)
   }
 }
 
@@ -88,7 +94,7 @@ export const useStampPicker = convertToRefsStore(useStampPickerPinia)
  */
 export const useStampPickerInvoker = (
   newSelectHandler: StampSelectHandler,
-  element: Ref<HTMLElement | undefined>,
+  element: Ref<HTMLElement | undefined | null>,
   argIsEffectEnabled: boolean,
   newAlignment: AlignmentPosition = 'top-right'
 ) => {

@@ -1,16 +1,11 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { useAppRtcStore } from '/@/store/app/rtc'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
-import { messageMitt } from '/@/store/entities/messages'
 import { parse } from '/@/lib/markdown/markdown'
 import { format } from '/@/lib/tts/format'
 import { embeddingOrigin } from '/@/lib/apis'
 import { watchEffect } from 'vue'
-import { useDomainRtcStore } from '/@/store/domain/rtc'
-import { useMeStore } from '/@/store/domain/me'
-import { useUsersStore } from '../entities/users'
 
 interface Speach {
   channelId: ChannelId
@@ -24,12 +19,7 @@ const MAX_SPEED_RATIO = 2
 const MAX_CHAR_COUNT = 140
 
 const useTtsPinia = defineStore('ui/tts', () => {
-  const appRtcStore = useAppRtcStore()
-  const domainRtcStore = useDomainRtcStore()
   const rtcSettings = useRtcSettings()
-  const meStore = useMeStore()
-  const usersStore = useUsersStore()
-
   let lastSpeachPromise = Promise.resolve()
   const queue: Speach[] = []
 
@@ -40,18 +30,6 @@ const useTtsPinia = defineStore('ui/tts', () => {
       return next ? speak(next) : Promise.resolve()
     })
   }
-
-  messageMitt.on('addMessage', ({ message }) => {
-    if (meStore.myId.value === message.userId) return
-
-    const userDisplayName =
-      usersStore.usersMap.value.get(message.userId)?.displayName ?? 'はてな'
-    addQueue({
-      channelId: message.channelId,
-      userDisplayName,
-      text: message.content
-    })
-  })
 
   // タブ閉じたときには止める
   window.addEventListener('pagehide', () => {
@@ -75,15 +53,6 @@ const useTtsPinia = defineStore('ui/tts', () => {
     return defaultRate * Math.min(Math.max(ratio, 1), MAX_SPEED_RATIO)
   }
 
-  const isNeeded = (channelId: ChannelId): boolean => {
-    if (!rtcSettings.isTtsEnabled.value) return false
-    if (!domainRtcStore.qallSession.value) return false
-    if (domainRtcStore.currentRTCState.value?.channelId !== channelId) {
-      return false
-    }
-    return appRtcStore.isCurrentDevice.value
-  }
-
   const createUtter = (text: string): SpeechSynthesisUtterance => {
     const utter = new SpeechSynthesisUtterance(text)
     const voice = speechSynthesis
@@ -99,9 +68,7 @@ const useTtsPinia = defineStore('ui/tts', () => {
     return utter
   }
 
-  const speak = async ({ channelId, userDisplayName, text }: Speach) => {
-    if (!isNeeded(channelId)) return
-
+  const speak = async ({ userDisplayName, text }: Speach) => {
     const tokens = await parse(text)
     let formatedText = format(tokens, embeddingOrigin)
 
@@ -130,17 +97,12 @@ const useTtsPinia = defineStore('ui/tts', () => {
   }
 
   watchEffect(() => {
-    if (!appRtcStore.isCurrentDevice.value) {
-      stop()
-    }
-  })
-  watchEffect(() => {
     if (!rtcSettings.isTtsEnabled) {
       stop()
     }
   })
 
-  return {}
+  return { addQueue }
 })
 
 export const useTts = convertToRefsStore(useTtsPinia)

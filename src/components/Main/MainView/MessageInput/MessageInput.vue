@@ -2,7 +2,7 @@
   <div
     ref="containerEle"
     :class="$style.container"
-    :data-is-mobile="$boolAttr(isMobile)"
+    :data-is-mobile="$boolAttr(forceMobileStyle || isMobile)"
   >
     <button
       v-if="showToNewMessageButton"
@@ -36,7 +36,9 @@
         v-model="state.text"
         :channel-id="channelId"
         :is-posting="isPosting"
-        :shrink-to-one-line="isMobile && isLeftControlsExpanded"
+        :shrink-to-one-line="
+          (forceMobileStyle || isMobile) && isLeftControlsExpanded
+        "
         @focus="onFocus"
         @blur="onBlur"
         @add-attachments="onAddAttachments"
@@ -85,6 +87,7 @@ const props = defineProps<{
   channelId: ChannelId | DMChannelId
   typingUsers: UserId[]
   showToNewMessageButton: boolean
+  forceMobileStyle?: boolean
 }>()
 const emit = defineEmits<{
   (e: 'clickToNewMessageButton'): void
