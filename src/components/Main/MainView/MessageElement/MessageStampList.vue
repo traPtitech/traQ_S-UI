@@ -17,6 +17,7 @@
         <div v-for="stamp in stampList" :key="stamp.id" :class="$style.stamp">
           <stamp-element
             :stamp="stamp"
+            :is-detail-shown="isDetailShown"
             @add-stamp="addStamp"
             @remove-stamp="removeStamp"
           />
