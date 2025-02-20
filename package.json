@@ -87,7 +87,7 @@
     "fonteditor-core": "^2.4.1",
     "jsdom": "^26.0.0",
     "patch-package": "^8.0.0",
-    "pinia": "^2.3.1",
+    "pinia": "^3.0.1",
     "postcss": "^8.5.1",
     "prettier": "^3.4.2",
     "rollup-plugin-brotli": "^3.1.0",
