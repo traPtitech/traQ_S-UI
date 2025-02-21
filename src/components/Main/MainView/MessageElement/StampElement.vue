@@ -1,9 +1,12 @@
 <template>
   <div
+    ref="stampRoot"
     :class="$style.body"
-    :title="tooltip"
+    :aria-label="tooltip"
     :data-include-me="$boolAttr(includeMe)"
     @click="onClick"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
   >
     <transition name="stamp-pressed" mode="out-in">
       <a-stamp
@@ -15,6 +18,12 @@
     </transition>
     <spin-number :value="stamp.sum" :class="$style.count" />
   </div>
+  <stamp-scaled-element
+    :class="$style.scaleReaction"
+    :show="isHovered && isLongHovered && !isDetailShown && !isMobile"
+    :stamp="stamp"
+    :target-rect="hoveredRect"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -22,11 +31,14 @@ import SpinNumber from '/@/components/UI/SpinNumber.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import { ref, computed, watch, onMounted } from 'vue'
 import { useStampsStore } from '/@/store/entities/stamps'
-import { useUsersStore } from '/@/store/entities/users'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageStampById } from '/@/lib/messageStampList'
+import StampScaledElement from './StampScaledElement.vue'
+import useHover from '/@/composables/dom/useHover'
 
 const props = defineProps<{
   stamp: MessageStampById
+  isDetailShown: boolean
 }>()
 
 const emit = defineEmits<{
@@ -34,8 +46,8 @@ const emit = defineEmits<{
   (e: 'removeStamp', _stampId: string): void
 }>()
 
+const { isMobile } = useResponsiveStore()
 const { stampsMap } = useStampsStore()
-const { usersMap } = useUsersStore()
 
 const stampName = computed(
   () => stampsMap.value.get(props.stamp.id)?.name ?? ''
@@ -43,10 +55,7 @@ const stampName = computed(
 
 const tooltip = computed(() =>
   [
-    `:${stampName.value}:`,
-    ...props.stamp.users.map(
-      u => `${usersMap.value.get(u.id)?.displayName ?? ''}(${u.count})`
-    )
+    `${stampName.value}, ${props.stamp.sum}件のリアクション, クリック／タップでリアクションを削除`
   ].join(' ')
 )
 
@@ -85,6 +94,28 @@ watch(
     isProgress.value = false
   }
 )
+
+const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const isLongHovered = ref(false)
+const stampRoot = ref<HTMLElement | null>(null)
+const hoveredRect = ref<DOMRect | undefined>(undefined)
+
+watch(isHovered, beginHover => {
+  if (beginHover) {
+    hoveredRect.value = stampRoot.value?.getBoundingClientRect() ?? undefined
+    hoverTimeout.value = setTimeout(() => {
+      isLongHovered.value = true
+    }, 500)
+  } else {
+    hoveredRect.value = undefined
+    if (hoverTimeout.value) {
+      clearTimeout(hoverTimeout.value)
+      hoverTimeout.value = null
+    }
+    isLongHovered.value = false
+  }
+})
 </script>
 
 <style lang="scss" module>
@@ -117,5 +148,19 @@ watch(
     left: 6px;
     right: 4px;
   }
+}
+
+.scaleReaction {
+  @include background-tertiary;
+  display: flex;
+  align-items: center;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  user-select: none;
+  overflow: visible;
+  contain: content;
+  position: absolute;
+  bottom: 105%;
+  z-index: $z-index-message-element-scaled-stamp;
 }
 </style>
