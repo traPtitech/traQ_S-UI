@@ -4,71 +4,31 @@
       <inline-markdown :class="$style.subtitle" :content="messageContent" />
     </template>
     <template #default>
-      <clip-folder-element
-        v-for="clipFolder in sortedClipFolders"
-        :key="clipFolder.id"
-        :folder-name="clipFolder.name"
-        :is-selected="isSelected.has(clipFolder.id)"
-        @click="toggleClip(clipFolder.id)"
-      />
+      <div>
+        <clip-folder-element
+          v-for="clipFolder in sortedClipFolders"
+          :key="clipFolder.id"
+          :folder-name="clipFolder.name"
+          :is-selected="isSelected.has(clipFolder.id)"
+          @click="toggleClip(clipFolder.id)"
+        />
+        <clip-folder-new @create-clip-folder="handleCreateClipFolder" />
+      </div>
     </template>
   </modal-frame>
 </template>
-
-<script lang="ts">
-import type { Ref } from 'vue'
-import { computed, ref } from 'vue'
-import apis from '/@/lib/apis'
-import type { MessageId, ClipFolderId } from '/@/types/entity-ids'
-import { useToastStore } from '/@/store/ui/toast'
-import type { AxiosError } from 'axios'
-import { useMessagesStore } from '/@/store/entities/messages'
-import useSortedClipFolders from '/@/composables/clips/useSortedClipFolders'
-
-const useCreateClip = (
-  props: { messageId: MessageId },
-  isSelected: Ref<Set<ClipFolderId>>
-) => {
-  const { addSuccessToast, addErrorToast } = useToastStore()
-
-  const createClip = async (clipFolderId: ClipFolderId) => {
-    try {
-      await apis.clipMessage(clipFolderId, {
-        messageId: props.messageId
-      })
-      isSelected.value.add(clipFolderId)
-      addSuccessToast('クリップフォルダに追加しました')
-    } catch (e) {
-      if ((e as AxiosError).response?.status === 409) {
-        isSelected.value.add(clipFolderId)
-        addErrorToast('すでに追加されています')
-        return
-      } else {
-        addErrorToast('追加に失敗しました')
-      }
-      throw e
-    }
-  }
-  const deleteClip = async (clipFolderId: ClipFolderId) => {
-    await apis.unclipMessage(clipFolderId, props.messageId)
-    isSelected.value.delete(clipFolderId)
-    addSuccessToast('クリップフォルダから削除しました')
-  }
-  const toggleClip = async (clipFolderId: ClipFolderId) => {
-    if (isSelected.value.has(clipFolderId)) {
-      await deleteClip(clipFolderId)
-    } else {
-      await createClip(clipFolderId)
-    }
-  }
-  return { toggleClip }
-}
-</script>
 
 <script lang="ts" setup>
 import ModalFrame from '../Common/ModalFrame.vue'
 import ClipFolderElement from './ClipFolderElement.vue'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { computed, ref } from 'vue'
+import apis from '/@/lib/apis'
+import type { ClipFolderId } from '/@/types/entity-ids'
+import { useMessagesStore } from '/@/store/entities/messages'
+import useSortedClipFolders from '/@/composables/clips/useSortedClipFolders'
+import { useCreateClip } from '/@/composables/clips/createClip'
+import ClipFolderNew from './ClipFolderNew.vue'
 
 const props = defineProps<{
   messageId: string
@@ -85,7 +45,11 @@ apis.getMessageClips(props.messageId).then(res => {
 })
 
 const messageContent = computed(() => message.value?.content ?? '')
-const { toggleClip } = useCreateClip(props, isSelected)
+const { toggleClip } = useCreateClip(props.messageId, isSelected)
+
+const handleCreateClipFolder = (newClipFolderId: ClipFolderId) => {
+  toggleClip(newClipFolderId)
+}
 </script>
 
 <style lang="scss" module>
@@ -104,5 +68,11 @@ const { toggleClip } = useCreateClip(props, isSelected)
   &:last-child {
     margin-bottom: 0;
   }
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
 }
 </style>
