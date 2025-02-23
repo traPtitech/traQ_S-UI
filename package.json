@@ -54,7 +54,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@pinia/testing": "^0.1.6",
+    "@pinia/testing": "^1.0.0",
     "@stylistic/eslint-plugin-ts": "^4.0.1",
     "@types/autosize": "^4.0.3",
     "@types/dom-screen-wake-lock": "^1.0.3",
