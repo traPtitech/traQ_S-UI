@@ -193,10 +193,7 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
     // pre-warm connection, this can be called as early as your page is loaded
     //room.prepareConnection("https://livekit-test.trap.show:39357", token);
     room.value = new Room({ dynacast: true, adaptiveStream: true })
-    await room.value.prepareConnection(
-      'wss://livekit.qall-dev.trapti.tech',
-      token
-    )
+    await room.value.prepareConnection('wss://livekit.qall.trap.jp', token)
 
     // set up event listeners
     room.value
@@ -215,7 +212,7 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
       .on(RoomEvent.ParticipantDisconnected, handleParticipantDisconnected)
 
     // connect to room
-    await room.value.connect('wss://livekit.qall-dev.trapti.tech', token)
+    await room.value.connect('wss://livekit.qall.trap.jp', token)
 
     if (room.value.localParticipant?.permissions?.canPublish) {
       await addMicTrack()
