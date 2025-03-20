@@ -176,27 +176,13 @@ function handleParticipantDisconnected(participant: Participant) {
 
 const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
   try {
-    const traQtoken = (await apis.getMyQRCode(true)).data
-    const res = await fetch(
-      `https://qall-microservice-for-livekit.trap.show/api/token?room=${roomName}&isWebinar=${isWebinar}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${traQtoken}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    )
-    const json = await res.json()
-    const token = json.token
+    const endpoint = (await apis.getQallEndpoints()).data.endpoint
+    const token = (await apis.getLiveKitToken(roomName, isWebinar)).data.token
 
     // pre-warm connection, this can be called as early as your page is loaded
     //room.prepareConnection("https://livekit-test.trap.show:39357", token);
     room.value = new Room({ dynacast: true, adaptiveStream: true })
-    await room.value.prepareConnection(
-      'wss://livekit.qall-dev.trapti.tech',
-      token
-    )
+    await room.value.prepareConnection(endpoint, token)
 
     // set up event listeners
     room.value
@@ -215,7 +201,7 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
       .on(RoomEvent.ParticipantDisconnected, handleParticipantDisconnected)
 
     // connect to room
-    await room.value.connect('wss://livekit.qall-dev.trapti.tech', token)
+    await room.value.connect(endpoint, token)
 
     if (room.value.localParticipant?.permissions?.canPublish) {
       await addMicTrack()
