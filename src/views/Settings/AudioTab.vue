@@ -80,10 +80,8 @@ import AStamp from '/@/components/UI/AStamp.vue'
 import { useToastStore } from '/@/store/ui/toast'
 
 // Qall関連のcomposableを利用
-import { useQall, type SoundboardItem } from '/@/composables/qall/useQall'
-
-// ◆ Qallの通信インターフェイスを取得
-const { getSoundboardList, postSoundboard, postSoundboardPlay } = useQall()
+import type { SoundboardItem } from '@traptitech/traq'
+import apis from '/@/lib/apis'
 
 // UI・状態
 const fileInput = ref<HTMLInputElement | null>(null)
@@ -143,7 +141,11 @@ const handleUpload = async () => {
   }
 
   try {
-    await postSoundboard(selectedFile.value, audioName.value, stampId.value) // 必須フィールドを送信
+    await apis.postSoundboard(
+      selectedFile.value,
+      audioName.value,
+      stampId.value
+    ) // 必須フィールドを送信
     addSuccessToast('アップロードが完了しました')
     await loadSoundboardList() // サウンド一覧を再取得
     resetUploadForm() // フォームリセット
@@ -166,7 +168,7 @@ const resetUploadForm = () => {
  */
 const loadSoundboardList = async () => {
   try {
-    const list = await getSoundboardList()
+    const list = (await apis.getSoundboardList()).data
     soundboardList.value = list
   } catch (e) {
     addErrorToast(`サウンド一覧の取得に失敗しました: ${String(e)}`)
