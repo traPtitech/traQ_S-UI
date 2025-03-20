@@ -86,7 +86,7 @@ type CameraProcessor = {
 const room = ref<Room>()
 const audioContext = ref<AudioContext>()
 const isRnnoiseSupported = computed(() => !!audioContext.value)
-const speakerIdentitys = ref<{ identity: string; name?: string }[]>([])
+const speakerIdentities = ref<{ identity: string; name?: string }[]>([])
 const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
 const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
 const screenShareTrackSidMap = ref<Map<string, string>>(new Map())
@@ -142,7 +142,7 @@ function handleLocalTrackPublished(
 
 function handleActiveSpeakerChange(speakers: Participant[]) {
   // show UI indicators when participant is speaking
-  speakerIdentitys.value = speakers
+  speakerIdentities.value = speakers
 }
 
 function handleDisconnect() {
@@ -643,7 +643,7 @@ export const useLiveKitSDK = () => {
     tracksMap,
     screenShareTrackSidMap,
     screenShareTracks,
-    speakerIdentitys,
+    speakerIdentities,
     isMicOn,
     qallMitt
   }

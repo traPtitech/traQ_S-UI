@@ -8,7 +8,7 @@ import { useQall } from '/@/composables/qall/useQall'
 const { trackInfo } = defineProps<{
   trackInfo: TrackInfo
 }>()
-const { speakerIdentitys } = useQall()
+const { speakerIdentities } = useQall()
 const { findUserByName } = useUsersStore()
 const user = computed(() => findUserByName(trackInfo.username))
 const userIconFileId = computed(() => user.value?.iconFileId ?? '')
@@ -16,7 +16,7 @@ const iconImage = computed(() => buildUserIconPath(userIconFileId.value))
 const isSpeaking = computed(() => {
   return (
     user.value &&
-    speakerIdentitys.value.some(s => s.name === trackInfo.username)
+    speakerIdentities.value.some(s => s.name === trackInfo.username)
   )
 })
 </script>
