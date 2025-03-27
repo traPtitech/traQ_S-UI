@@ -6,6 +6,7 @@
       :class="$style.element"
       :channel="channel"
       show-shortened-path
+      :show-star="props.showStar"
     >
       <channel-element-topic
         v-if="showTopic"
@@ -27,9 +28,11 @@ const props = withDefaults(
   defineProps<{
     channels: ReadonlyArray<Channel>
     showTopic?: boolean
+    showStar?: boolean
   }>(),
   {
-    showTopic: false
+    showTopic: false,
+    showStar: false
   }
 )
 
