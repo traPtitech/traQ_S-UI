@@ -6,30 +6,18 @@ import {
 import { useMeStore } from '/@/store/domain/me'
 import { useToastStore } from '/@/store/ui/toast'
 import type { LocalAudioTrack, LocalVideoTrack } from 'livekit-client'
-import AutoReconnectWebSocket from '/@/lib/websocket/AutoReconnectWebSocket'
-import type { Channel, User } from '@traptitech/traq'
+import type {
+  Channel,
+  QallRoomStateChangedEventRoomStatesInner,
+  User
+} from '@traptitech/traq'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 import { messageMitt } from '/@/store/entities/messages'
 import { useTts } from '/@/store/app/tts'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
-import apis from '/@/lib/apis'
-
-type RoomsWithParticipants =
-  | {
-      roomId: string
-      participants:
-        | {
-            identity: string
-            joinedAt: string
-            name: string
-            canPublish: boolean
-            attributes: { [key: string]: string }
-          }[]
-        | null
-      isWebinar: boolean
-    }[]
-  | null
+import { wsListener } from '/@/lib/websocket'
+import useMittListener from '../utils/useMittListener'
 
 type Participant = {
   user: User
@@ -45,6 +33,16 @@ type Room = {
 type Rooms = Room[]
 
 const rooms = ref<Rooms>([])
+
+useMittListener(
+  wsListener,
+  'QALL_ROOM_STATE_CHANGED',
+  async ({ roomStates }) => {
+    purifyRoomData(roomStates).then(
+      purifiedRooms => (rooms.value = purifiedRooms)
+    )
+  }
+)
 
 const {
   joinRoom,
@@ -71,7 +69,9 @@ const { addQueue } = useTts()
 const meStore = useMeStore()
 const rtcSettings = useRtcSettings()
 
-const purifyRoomData = async (data: RoomsWithParticipants): Promise<Rooms> => {
+const purifyRoomData = async (
+  data: QallRoomStateChangedEventRoomStatesInner[]
+): Promise<Rooms> => {
   if (!data) return []
   await bothChannelsMapInitialFetchPromise.value
   return data
@@ -84,11 +84,11 @@ const purifyRoomData = async (data: RoomsWithParticipants): Promise<Rooms> => {
             ?.map(p => ({
               joinedAt: p.joinedAt,
               user: findUserByName(p.identity.slice(0, -37)),
-              canPublish: p.canPublish ?? false,
-              attributes: p.attributes ?? {}
+              canPublish: p.canPublish,
+              attributes: p.attributes
             }))
             .filter((p): p is Participant => !!p.user) ?? [],
-        isWebinar: room.isWebinar ?? false
+        isWebinar: room.isWebinar
       }
     })
     .filter((room): room is Room => {
@@ -96,24 +96,6 @@ const purifyRoomData = async (data: RoomsWithParticipants): Promise<Rooms> => {
       return !room.channel.archived
     })
 }
-const ws = new AutoReconnectWebSocket(
-  (await apis.getQallEndpoints()).data.endpoint,
-  undefined,
-  {
-    maxReconnectionDelay: 3000,
-    minReconnectionDelay: 1000
-  }
-)
-ws.addEventListener('message', async event => {
-  try {
-    const data: RoomsWithParticipants = JSON.parse(event.detail as string)
-    rooms.value = await purifyRoomData(data)
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.warn('[WebSocket] Failed to parse: ', e)
-  }
-})
-ws.connect()
 
 const setSpeakerMute = (track: LocalAudioTrack, muted: boolean) => {
   setLocalTrackMute(track, muted)
