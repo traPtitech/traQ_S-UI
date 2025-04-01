@@ -83,7 +83,7 @@ const useLogin = () => {
           break
         case 'this account is currently suspended':
           state.error =
-            'このユーザーは凍結されています\n復旧を希望する場合はX @traPtitechのDMまたはaccounts@trap.jpまでご連絡ください'
+            'このユーザーは凍結されています\n復旧を希望する場合は https://trap.jp/request から再入部受付をしてください。'
           break
         case 'You have already logged in. Please logout once.':
           state.error = 'ログイン済みでした。リロードします'
