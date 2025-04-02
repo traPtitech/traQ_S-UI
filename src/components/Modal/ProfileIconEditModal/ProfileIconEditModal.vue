@@ -43,6 +43,8 @@ const useIconImageEdit = (iconImage: Ref<File>) => {
     if (!iconImage.value) return
     isEditing.value = true
     try {
+      // `maxSizeMB`に2以下の値を設定し、画像を2MB以下にしても400が返ってくる
+      // `maxWidthOrHeight: 1920`を設定すると、`maxSizeMB`を設定した場合より画像容量が大きい場合でも正常にアイコンが設定できる。
       const compressionOptions = {
         maxWidthOrHeight: 1920,
         useWebWorker: true
