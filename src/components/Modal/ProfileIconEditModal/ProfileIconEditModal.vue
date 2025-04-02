@@ -25,6 +25,7 @@ import FormButton from '/@/components/UI/FormButton.vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import { useModalStore } from '/@/store/ui/modal'
 import ImageUpload from '/@/components/Settings/ImageUpload.vue'
+import imageCompression from 'browser-image-compression'
 
 const props = defineProps<{
   file: File
@@ -42,7 +43,15 @@ const useIconImageEdit = (iconImage: Ref<File>) => {
     if (!iconImage.value) return
     isEditing.value = true
     try {
-      await apis.changeMyIcon(iconImage.value)
+      const compressionOptions = {
+        maxWidthOrHeight: 1920,
+        useWebWorker: true
+      }
+      const compressedImage = await imageCompression(
+        iconImage.value,
+        compressionOptions
+      )
+      await apis.changeMyIcon(compressedImage)
 
       addSuccessToast('アイコン画像を変更しました')
     } catch (e) {
