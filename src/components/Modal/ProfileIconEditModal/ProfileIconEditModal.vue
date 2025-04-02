@@ -43,8 +43,9 @@ const useIconImageEdit = (iconImage: Ref<File>) => {
     if (!iconImage.value) return
     isEditing.value = true
     try {
-      // `maxSizeMB`に2以下の値を設定し、画像を2MB以下にしても400が返ってくる
-      // `maxWidthOrHeight: 1920`を設定すると、`maxSizeMB`を設定した場合より画像容量が大きい場合でも正常にアイコンが設定できる。
+      // `PUT users/me/icon`は、swaggerでは2MBまでのpng, jpeg, gifとあるが、
+      // 実際にはそれに加えて2560*1600のピクセル数制限があるため、
+      // 2MBの制限に加えて`maxWidthOrHeight`の制約が必要になる。
       const compressionOptions = {
         maxSizeMB: 2,
         maxWidthOrHeight: 1920,
