@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = defineProps({
