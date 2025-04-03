@@ -9,8 +9,8 @@ const { trackInfo } = defineProps<{
   trackInfo: TrackInfo
 }>()
 const { speakerIdentities } = useQall()
-const { findUserByName } = useUsersStore()
-const user = computed(() => findUserByName(trackInfo.username))
+const { usersMap } = useUsersStore()
+const user = computed(() => usersMap.value.get(trackInfo.username))
 const userIconFileId = computed(() => user.value?.iconFileId ?? '')
 const iconImage = computed(() => buildUserIconPath(userIconFileId.value))
 const isSpeaking = computed(() => {
@@ -30,7 +30,7 @@ const isSpeaking = computed(() => {
       <img :src="iconImage" :class="$style.InnerImage" />
     </div>
 
-    <div :class="$style.NameLabel">{{ trackInfo.username }}</div>
+    <div :class="$style.NameLabel">{{ user.name }}</div>
     <div v-show="isSpeaking" :class="$style.borderBox"></div>
   </div>
 </template>
