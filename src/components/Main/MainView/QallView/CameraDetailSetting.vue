@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, onMounted, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
 import FormButton from '/@/components/UI/FormButton.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'

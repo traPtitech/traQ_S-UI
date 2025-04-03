@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
 import { useQall } from '/@/composables/qall/useQall'
 import FormButton from '/@/components/UI/FormButton.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
