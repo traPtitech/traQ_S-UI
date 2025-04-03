@@ -8,14 +8,21 @@ import type {
   StampPaletteId,
   TagId
 } from '/@/types/entity-ids'
-import type { ChannelViewer, MyChannelViewState } from '@traptitech/traq'
+import type {
+  ChannelViewer,
+  MyChannelViewState,
+  QallRoomStateChangedEvent,
+  QallSoundboardItemCreatedEvent,
+  QallSoundboardItemDeletedEvent
+} from '@traptitech/traq'
 import type { WebRTCUserStateSessions } from '/@/lib/apis'
 
 export type WebSocketEvent = UserEvent &
   ChannelEvent &
   MessageEvent &
   StampEvent &
-  ClipFolderEvent
+  ClipFolderEvent &
+  QallEvent
 
 /*
  * User
@@ -204,3 +211,12 @@ export type ClipFolderUpdatedEvent = ClipFolderIdBody
 export type ClipFolderDeletedEvent = ClipFolderIdBody
 export type ClipFolderMessageAddedEvent = ClipFolderIdAndMessageIdBody
 export type ClipFolderMessageDeletedEvent = ClipFolderIdAndMessageIdBody
+
+/*
+ * Qall
+ */
+type QallEvent = {
+  QALL_ROOM_STATE_CHANGED: QallRoomStateChangedEvent
+  QALL_SOUNDBOARD_ITEM_CREATED: QallSoundboardItemCreatedEvent
+  QALL_SOUNDBOARD_ITEM_DELETED: QallSoundboardItemDeletedEvent
+}
