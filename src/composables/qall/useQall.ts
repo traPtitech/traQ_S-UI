@@ -63,7 +63,7 @@ const {
 const { myId } = useMeStore()
 const { addErrorToast } = useToastStore()
 const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
-const { findUserByName, usersMap } = useUsersStore()
+const { usersMap } = useUsersStore()
 const { addQueue } = useTts()
 
 const meStore = useMeStore()
@@ -83,7 +83,7 @@ const purifyRoomData = async (
           room.participants
             ?.map(p => ({
               joinedAt: p.joinedAt,
-              user: findUserByName(p.identity.slice(0, -37)),
+              user: usersMap.value.get(p.identity.slice(0, -37)),
               canPublish: p.canPublish,
               attributes: p.attributes
             }))
