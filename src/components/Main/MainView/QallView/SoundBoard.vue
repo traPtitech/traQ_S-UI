@@ -3,20 +3,22 @@ import { onMounted, ref } from 'vue'
 import SoundBoardElement from './SoundBoardElement.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import { useToastStore } from '/@/store/ui/toast'
-import { useQall, type SoundboardItem } from '/@/composables/qall/useQall'
+import { useQall } from '/@/composables/qall/useQall'
+import type { SoundboardItem } from '@traptitech/traq'
+import apis from '/@/lib/apis'
 
 const searchQuery = ref('')
 
 const { addErrorToast, addSuccessToast } = useToastStore()
 
-const { getSoundboardList, postSoundboardPlay, callingChannel } = useQall()
+const { callingChannel } = useQall()
 const soundboardList = ref<SoundboardItem[]>([])
 /**
  * サウンド一覧を読み込み
  */
 const loadSoundboardList = async () => {
   try {
-    const list = await getSoundboardList()
+    const list = (await apis.getSoundboardList()).data
     soundboardList.value = list
   } catch (e) {
     addErrorToast(`サウンド一覧の取得に失敗しました: ${String(e)}`)
@@ -32,7 +34,12 @@ const handlePlaySound = async (soundId: string) => {
     return
   }
   try {
-    const result = await postSoundboardPlay(soundId, callingChannel.value)
+    const result = (
+      await apis.postSoundboardPlay({
+        soundId: soundId,
+        roomName: callingChannel.value
+      })
+    ).data
     // resultには ingressId 等が返る
     addSuccessToast(`サウンドを再生中 (IngressID: ${result.ingressId})`)
   } catch (e) {

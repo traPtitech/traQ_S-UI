@@ -29,7 +29,7 @@
     "@mdi/js": "^7.4.47",
     "@sapphi-red/web-noise-suppressor": "^0.3.5",
     "@shiguredo/virtual-background": "^2023.2.0",
-    "@traptitech/traq": "^3.20.1-1",
+    "@traptitech/traq": "^3.24.4-0",
     "@traptitech/traq-markdown-it": "^6.3.0",
     "autosize": "^6.0.1",
     "cropperjs": "^1.6.2",
@@ -108,7 +108,7 @@
     "workbox-strategies": "^7.3.0"
   },
   "engines": {
-    "node": "^20.15.0",
-    "npm": "^10.7.0"
+    "node": "^22.14.0",
+    "npm": "^10.9.0"
   }
 }

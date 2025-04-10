@@ -15,6 +15,7 @@ import ScreenShareDetailSetting from './ScreenShareDetailSetting.vue'
 import DetailButton from './DetailButton.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import QallMessageView from './QallMessageView.vue'
+import { useUsersStore } from '/@/store/entities/users'
 
 const {
   tracksMap,
@@ -33,6 +34,8 @@ const {
   isScreenSharing,
   isSubView
 } = useQall()
+
+const { usersMap } = useUsersStore()
 
 const micIcon = computed(() =>
   isMicOn.value ? 'microphone' : 'microphone-off'
@@ -146,7 +149,7 @@ const getParticipantTrackInfo = (participant: {
 }): TrackInfo | undefined => {
   for (const [, trackInfo] of tracksMap.value.entries()) {
     if (
-      trackInfo.username === participant.user.name &&
+      usersMap.value.get(trackInfo.username)?.name === participant.user.name &&
       trackInfo.trackPublication?.kind === 'audio' &&
       !screenShareTracks.value?.some?.(
         ([_, valueSid]) => valueSid === trackInfo.trackPublication?.trackSid
