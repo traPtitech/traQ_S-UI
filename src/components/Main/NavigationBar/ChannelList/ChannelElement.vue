@@ -14,6 +14,7 @@
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
+        :show-star="notificationState.isStarred && showStar"
         @mousedown.stop="onChannelHashClick"
         @keydown.enter="onChannelHashKeydownEnter"
         @mouseenter="onHashHovered"
@@ -89,6 +90,7 @@ const props = withDefaults(
     channel: ChannelTreeNode
     isOpened?: boolean
     showShortenedPath?: boolean
+    showStar?: boolean
   }>(),
   {
     isOpened: false,
