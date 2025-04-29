@@ -31,8 +31,15 @@ const channelNameSortFunction = (
   node1: ChannelTreeNode,
   node2: ChannelTreeNode
 ) => {
-  // sort by channel name
-  return compareStringInsensitive(node1.name, node2.name)
+  // sort by last ancestor name
+  const lastAncestorName1 =
+    node1.skippedAncestorNames?.[node1.skippedAncestorNames?.length - 1]
+  const lastAncestorName2 =
+    node2.skippedAncestorNames?.[node2.skippedAncestorNames?.length - 1]
+  return compareStringInsensitive(
+    lastAncestorName1 ?? node1.name,
+    lastAncestorName2 ?? node2.name
+  )
 }
 
 export const constructTree = (
