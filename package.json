@@ -67,7 +67,7 @@
     "@types/turndown": "^5.0.5",
     "@types/vue-select": "^3.16.8",
     "@types/webappsec-credential-management": "^0.6.9",
-    "@typescript-eslint/eslint-plugin": "^8.31.1",
+    "@typescript-eslint/eslint-plugin": "8.29.1",
     "@typescript-eslint/parser": "^8.31.1",
     "@typescript/lib-dom": "npm:@types/web@^0.0.72",
     "@vitejs/plugin-vue": "^5.2.3",
