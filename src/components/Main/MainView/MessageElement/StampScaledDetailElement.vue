@@ -1,57 +1,34 @@
 <template>
-  <div :class="$style.container">
-    {{ detailContents }}
-  </div>
+  <inline-markdown :content="detailContents" />
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useStampsStore } from '/@/store/entities/stamps'
-import type { StampUser, MessageStampById } from '/@/lib/messageStampList'
+import type { MessageStampById } from '/@/lib/messageStampList'
 import { useUsersStore } from '/@/store/entities/users'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
-const props = defineProps<{
-  stamp: MessageStampById
-}>()
+const props = defineProps<{ stamp: MessageStampById }>()
 
-const { stampsMap } = useStampsStore()
-
-const limitedUsers = computed(() => props.stamp.users.slice(0, 3))
+// 最大表示人数
+const maxUserCount = 100
+const limitedUsers = computed(() => props.stamp.users.slice(0, maxUserCount))
 const { usersMap } = useUsersStore()
 
-const stampName = computed(
-  () => stampsMap.value.get(props.stamp.id)?.name ?? ''
-)
-
-const isLastUser = (user: StampUser) =>
-  user === props.stamp.users[Math.min(props.stamp.users.length - 1, 2)]
-
-const isSecondLastUser = (user: StampUser) =>
-  user === props.stamp.users[Math.min(props.stamp.users.length - 2, 1)]
-
-const isOverLimitUser = (user: StampUser) =>
-  user === props.stamp.users[2] && props.stamp.users.length > 3
-
-const isOverLimitSecondUser = (user: StampUser) =>
-  user === props.stamp.users[1] && props.stamp.users.length > 3
-
 const detailContents = computed(() => {
-  let message = `:${stampName.value}: が `
-  limitedUsers.value.forEach((user, index) => {
-    message += `${usersMap.value.get(user.id)?.displayName ?? 'unknown'}`
-    message += user.count > 1 ? `(${user.count})` : ''
-    if (
-      (!isLastUser(user) && !isSecondLastUser(user)) ||
-      isOverLimitSecondUser(user)
-    ) {
-      message += '、'
-    } else if (isSecondLastUser(user) && !isOverLimitSecondUser(user)) {
-      message += 'と'
-    } else if (isOverLimitUser(user)) {
-      message += `と他${props.stamp.users.length - 3}人`
+  let message = ''
+  let userCount = 0
+  limitedUsers.value.forEach(user => {
+    for (let i = 0; i < user.count && userCount < maxUserCount; i++) {
+      message += `:@${usersMap.value.get(user.id)?.name ?? 'unknown'}: `
+      userCount++
     }
-    if (isLastUser(user)) {
-      message += 'にリアクションされました'
+    if (userCount === maxUserCount && props.stamp.sum - maxUserCount > 0) {
+      message += `と他${props.stamp.sum - maxUserCount}人`
+    }
+    if (userCount === Math.min(props.stamp.sum, maxUserCount)) {
+      message += 'がリアクションしました'
+      userCount++
     }
   })
   return message

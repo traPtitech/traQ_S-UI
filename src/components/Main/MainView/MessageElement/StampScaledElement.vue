@@ -7,15 +7,15 @@
       :style="stylePosition"
     >
       <transition name="scale-reaction">
-        <!-- sizeを46より大きくすると見切れる -->
         <a-stamp
           :key="stamp.id"
           :stamp-id="stamp.id"
-          :size="50"
+          :size="60"
           :class="$style.stamp"
           without-title
         />
       </transition>
+      <span :class="$style.stampname">{{ `:${stampName}:` }}</span>
       <stamp-detail-element :class="$style.detail" :stamp="stamp" />
     </div>
   </teleport>
@@ -25,6 +25,7 @@
 import { computed, ref } from 'vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import type { MessageStampById } from '/@/lib/messageStampList'
+import { useStampsStore } from '/@/store/entities/stamps'
 import StampDetailElement from './StampScaledDetailElement.vue'
 const props = defineProps<{
   stamp: MessageStampById
@@ -33,6 +34,10 @@ const props = defineProps<{
 }>()
 
 const containerEle = ref<HTMLDivElement>()
+const { stampsMap } = useStampsStore()
+const stampName = computed(
+  () => stampsMap.value.get(props.stamp.id)?.name ?? ''
+)
 const stylePosition = computed(() => {
   if (!props.targetRect) return { display: 'none' }
   const width = 340
@@ -48,15 +53,19 @@ const stylePosition = computed(() => {
 .scaleReaction {
   @include color-ui-tertiary;
   @include background-primary;
-  display: flex;
   border-radius: 4px;
   max-width: 500px;
-  align-items: center;
   contain: none;
-  flex-wrap: wrap;
   border: solid 2px $theme-ui-tertiary-default;
   position: absolute;
   animation: transformAnimation 0.15s ease-in;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    'stamp detail'
+    'stampname detail';
+  align-items: center;
 }
 
 @keyframes transformAnimation {
@@ -67,21 +76,30 @@ const stylePosition = computed(() => {
     transform: translateY(-105%) translateX(-30%);
   }
 }
+
 .stamp {
+  grid-area: stamp;
   margin: 0.2rem;
   display: flex;
+  justify-self: center;
+}
+
+.stampname {
+  grid-area: stampname;
+  color: var(--specific-count-text);
+  @include color-ui-primary;
+  margin: 0.2rem;
+  justify-self: center;
 }
 
 .detail {
+  grid-area: detail;
   color: var(--specific-count-text);
   @include color-ui-primary;
   flex: 1 1 0;
   min-width: 0;
   overflow: hidden;
   overflow: clip;
-  margin: {
-    left: 6px;
-    right: 4px;
-  }
+  margin: 0.2rem;
 }
 </style>
