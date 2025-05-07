@@ -129,6 +129,9 @@ export default defineConfig(({ command, mode }) => ({
     brotli()
   ],
   test: {
+    env: {
+      TZ: 'UTC'
+    },
     include: ['tests/unit/**/*.spec.ts'],
     globals: true,
     setupFiles: ['tests/unit/setup.ts', 'tests/unit/expectExtends.ts'],

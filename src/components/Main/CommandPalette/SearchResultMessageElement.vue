@@ -44,7 +44,7 @@
 <script lang="ts" setup>
 import type { DeepReadonly } from 'vue'
 import { computed, ref, shallowRef, watchEffect } from 'vue'
-import { getCreatedDate } from '/@/lib/basic/date'
+import { getDateRepresentation } from '/@/lib/basic/date'
 import type { MessageId } from '/@/types/entity-ids'
 import useChannelPath from '/@/composables/useChannelPath'
 import type { Message } from '@traptitech/traq'
@@ -92,7 +92,7 @@ const date = computed(() => {
   } else {
     _date = props.message.updatedAt
   }
-  return getCreatedDate(_date)
+  return getDateRepresentation(_date)
 })
 const { fetchFileMetaData } = useMessagesStore()
 

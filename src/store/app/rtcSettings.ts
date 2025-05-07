@@ -19,6 +19,7 @@ type State = {
   voicePitch: number
   voiceRate: number
   voiceVolume: number
+  isMute: boolean
 }
 
 const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
@@ -33,12 +34,13 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
     voiceName: '',
     voicePitch: 1,
     voiceRate: 1.2,
-    voiceVolume: 1
+    voiceVolume: 1,
+    isMute: false
   }
 
-  const [state, restoring, restoringPromise] = useIndexedDbValue(
+  const [state] = useIndexedDbValue(
     'store/app/rtcSettings',
-    2,
+    3,
     {
       // migrate from vuex
       1: async getStore => {
@@ -63,6 +65,12 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
         delete state?.isEchoCancellationEnabled
         delete state?.isNoiseReductionEnabled
         const setReq = store.put(state, key)
+        await promisifyRequest(setReq)
+      },
+
+      3: async getStore => {
+        const store = getStore()
+        const setReq = store.put({ isMute: false }, key)
         await promisifyRequest(setReq)
       }
     },

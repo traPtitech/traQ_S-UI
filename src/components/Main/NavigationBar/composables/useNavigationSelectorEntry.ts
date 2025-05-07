@@ -7,9 +7,10 @@ import type { ThemeClaim } from '/@/lib/styles'
 import { isDefined } from '/@/lib/basic/array'
 import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 import { useAudioController } from '/@/store/ui/audioController'
-import { useAppRtcStore } from '/@/store/app/rtc'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useQall } from '/@/composables/qall/useQall'
+import { useMainViewStore } from '/@/store/ui/mainView'
 
 export type NavigationSelectorEntry = {
   type: NavigationItemType
@@ -79,11 +80,12 @@ export const ephemeralItems: Record<
 }
 
 const useNavigationSelectorEntry = () => {
-  const { isCurrentDevice: hasActiveQallSession } = useAppRtcStore()
   const { unreadChannelsMap } = useSubscriptionStore()
   const { channelsMap, dmChannelsMap } = useChannelsStore()
   const { hasInputChannel } = useMessageInputStateStore()
   const { fileId } = useAudioController()
+  const { getQallingState } = useQall()
+  const { primaryView } = useMainViewStore()
 
   const unreadChannels = computed(() => [...unreadChannelsMap.value.values()])
   const notificationState = reactive({
@@ -96,6 +98,11 @@ const useNavigationSelectorEntry = () => {
   })
   const entries = computed(() => createItems(notificationState))
 
+  const hasActiveQallSession = computed(
+    () =>
+      primaryView.value.type === 'channel' &&
+      getQallingState(primaryView.value.channelId) === 'subView'
+  )
   const ephemeralEntries = computed(() =>
     [
       hasActiveQallSession.value ? ephemeralItems.qallController : undefined,

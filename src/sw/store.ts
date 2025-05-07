@@ -5,7 +5,7 @@ import { storeName, key } from '/@/composables/utils/useIndexedDbValue'
 
 export const getMeStore = async () => {
   try {
-    const openReq = indexedDB.open(`${dbPrefix}domain/me`)
+    const openReq = indexedDB.open(`${dbPrefix}store/domain/me`)
     const db = await promisifyRequest(openReq)
     const getReq: IDBRequest<IDBState> = db
       .transaction(storeName)
