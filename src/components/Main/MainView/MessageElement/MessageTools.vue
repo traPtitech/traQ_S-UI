@@ -85,8 +85,6 @@ import { computed, ref } from 'vue'
 import type { StampId, MessageId } from '/@/types/entity-ids'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import apis from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
 import useContextMenu from '/@/composables/useContextMenu'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { Stamp } from '@traptitech/traq'
@@ -95,6 +93,7 @@ import AStamp from '/@/components/UI/AStamp.vue'
 import MessageContextMenu from './MessageContextMenu.vue'
 import useToggle from '/@/composables/utils/useToggle'
 import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useStampUpdater } from '/@/lib/updater/stamp'
 
 const props = withDefaults(
   defineProps<{
@@ -108,8 +107,8 @@ const props = withDefaults(
   }
 )
 
-const { recentStampIds, upsertLocalStampHistory } = useStampHistory()
-const { addErrorToast } = useToastStore()
+const { recentStampIds } = useStampHistory()
+const { addStampOptimistically } = useStampUpdater()
 const { initialRecentStamps } = useStampsStore()
 
 const pushInitialRecentStampsIfNeeded = (
@@ -132,26 +131,13 @@ const recentStamps = computed(() => {
   pushInitialRecentStampsIfNeeded(initialRecentStamps.value, recents)
   return recents
 })
-const addStamp = async (stampId: StampId) => {
-  try {
-    await apis.addMessageStamp(props.messageId, stampId)
-  } catch {
-    addErrorToast('メッセージにスタンプを追加できませんでした')
-    return
-  }
-  upsertLocalStampHistory(stampId, new Date())
-}
+const addStamp = async (stampId: StampId) =>
+  addStampOptimistically(props.messageId, stampId)
 
 const containerEle = ref<HTMLDivElement>()
 const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
   useStampPickerInvoker(
-    async stampData => {
-      try {
-        await apis.addMessageStamp(props.messageId, stampData.id)
-      } catch {
-        addErrorToast('メッセージにスタンプを追加できませんでした')
-      }
-    },
+    async stampData => addStampOptimistically(props.messageId, stampData.id),
     containerEle,
     false
   )
