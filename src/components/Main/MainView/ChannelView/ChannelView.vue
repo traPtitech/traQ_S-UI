@@ -49,6 +49,5 @@ const pinnedMessages = usePinnedMessages(channelId)
 
 const { viewingUsers, inactiveViewingUsers, typingUsers } =
   useCurrentViewers(channelId)
-const { viewingUsers, typingUsers } = useCurrentViewers(channelId)
 const { getQallingState } = useQall()
 </script>
