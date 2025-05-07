@@ -9,6 +9,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import IconButton from '/@/components/UI/IconButton.vue'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -24,18 +25,30 @@ const {
   isReachedLatest,
   isLoading,
   lastLoadingDirection,
+  unreadSince,
   onLoadFormerMessagesRequest,
   onLoadLatterMessagesRequest
 } = useChannelMessageFetcher(scrollerEle, props)
+const { messagesMap } = useMessagesStore()
 
 const { channelsMap } = useChannelsStore()
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
 )
 
-const { unreadChannelsMap } = useSubscriptionStore()
-const resetIsReachedLatest = () => {
-  if (!unreadChannelsMap.value.get(props.channelId)) return
+const { unreadChannelsMap, deleteUnreadChannelWithSend } =
+  useSubscriptionStore()
+const onWindowViewd = () => {
+  const unread = unreadChannelsMap.value.get(props.channelId)
+  if (unread === undefined) return
+  //最後まで読み込まれている時は「ここから未読」の位置を修正し、未読を消す。
+  if (
+    unread.updatedAt ===
+    messagesMap.value.get(messageIds.value.at(-1) ?? '')?.createdAt
+  ) {
+    unreadSince.value = unread.since
+    deleteUnreadChannelWithSend(props.channelId)
+  }
   isReachedLatest.value = false
 }
 
@@ -91,7 +104,7 @@ const handleScroll = () => {
               @request-load-former="onLoadFormerMessagesRequest"
               @request-load-latter="onLoadLatterMessagesRequest"
               @scroll-passive="handleScroll"
-              @reset-is-reached-latest="resetIsReachedLatest"
+              @window-viewd="onWindowViewd"
             >
               <template
                 #default="{ messageId, onChangeHeight, onEntryMessageLoaded }"
