@@ -10,6 +10,17 @@
     />
     <title>traQ</title>
 
+    <style>
+      /*
+        ダークモード時のフラッシュを防ぐために、
+        テーマ読み込み前はcolor-schemeごとのbackground primaryを表示する
+      */
+      body {
+        color-scheme: light dark;
+        background-color: Canvas;
+      }
+    </style>
+
     <link href="/fonts/fonts.css" rel="stylesheet" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
@@ -34,7 +45,7 @@
       href="/img/icons/favicon-16x16.png"
     />
     <meta name="theme-color" content="#0D67EA" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="apple-mobile-web-app-title" content="traQ" />
     <link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png" />

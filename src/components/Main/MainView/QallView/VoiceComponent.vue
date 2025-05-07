@@ -14,8 +14,8 @@ const volume = computed<number | string>(
   () => getStore(trackInfo.username) ?? 1
 )
 
-const { findUserByName } = useUsersStore()
-const user = computed(() => findUserByName(trackInfo.username))
+const { usersMap } = useUsersStore()
+const user = computed(() => usersMap.value.get(trackInfo.username))
 const userIconFileId = computed(() => user.value?.iconFileId ?? '')
 const iconImage = computed(() => buildUserIconPath(userIconFileId.value))
 

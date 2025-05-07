@@ -12,6 +12,7 @@
         :class="$style.inputTextArea"
         :is-posting="isPostingAttachment"
         simple-padding
+        is-max-height-none
         @add-attachments="onAddAttachments"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
@@ -43,17 +44,17 @@
 </template>
 
 <script lang="ts">
+import type { AxiosProgressEvent } from 'axios'
 import type { Ref } from 'vue'
 import { computed, onMounted, ref } from 'vue'
-import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
-import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
-import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
-import { countLength } from '/@/lib/basic/string'
-import { useToastStore } from '/@/store/ui/toast'
-import { getResizedFile } from '/@/lib/resize'
 import useAttachments from '/@/components/Main/MainView/MessageInput/composables/useAttachments'
-import type { AxiosProgressEvent } from 'axios'
+import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
+import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
+import { countLength } from '/@/lib/basic/string'
+import { getResizedFile } from '/@/lib/resize'
+import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
+import { useToastStore } from '/@/store/ui/toast'
 
 const useEditMessage = (
   props: { messageId: string },
@@ -135,12 +136,12 @@ const useAttachmentsEditor = (
 </script>
 
 <script lang="ts" setup>
+import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 import MessageInputKeyGuide from '/@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
 import MessageInputTextArea from '/@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
-import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-import MessageInputUploadProgress from '/@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
+import MessageInputUploadProgress from '/@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 
 const props = defineProps<{
   rawContent: string
