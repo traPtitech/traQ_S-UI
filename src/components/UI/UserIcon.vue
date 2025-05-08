@@ -1,13 +1,14 @@
 <template>
   <div
     :role="isClickable ? 'button' : 'img'"
-    :class="[$style.container, isInactive && $style.transparent]"
+    :class="[$style.container]"
     :style="styles.container"
     @click.prevent.stop="openModal"
   >
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :size="indicatorSize" />
     </div>
+    <div v-if="isInactive" :class="$style.mask"></div>
   </div>
 </template>
 
@@ -111,7 +112,11 @@ const { isClickable, openModal } = useUserModalOpener(
   top: 0;
   right: 0;
 }
-.transparent {
+.mask {
+  @include background-primary;
+  width: 100%;
+  height: 100%;
+  border-radius: 100vw;
   opacity: 0.5;
 }
 </style>

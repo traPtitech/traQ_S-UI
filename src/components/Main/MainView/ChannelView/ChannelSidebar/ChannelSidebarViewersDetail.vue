@@ -1,6 +1,6 @@
 <template>
   <sidebar-content-container clickable title="閲覧者" @toggle="emit('toggle')">
-    <div v-for="user in users" :key="user.id" :class="$style.item">
+    <div v-for="user in viewers" :key="user.id" :class="$style.item">
       <user-icon :user-id="user.id" :size="32" />
       <div :class="$style.userName">{{ user.displayName }}</div>
     </div>
@@ -39,7 +39,7 @@ const emit = defineEmits<{
 }>()
 
 const { usersMap } = useUsersStore()
-const users = computed(() =>
+const viewers = computed(() =>
   props.viewerIds.map(id => usersMap.value.get(id)).filter(isDefined)
 )
 const inactiveUsers = computed(() =>
