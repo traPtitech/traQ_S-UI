@@ -1,13 +1,19 @@
 import type { FileInfo, Message, MessageStamp, Ogp } from '@traptitech/traq'
 import type { AxiosError } from 'axios'
 import mitt from 'mitt'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import apis from '/@/lib/apis'
 import { createSingleflight } from '/@/lib/basic/async'
 import { wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import type { ExternalUrl, FileId, MessageId } from '/@/types/entity-ids'
+import type {
+  ExternalUrl,
+  FileId,
+  MessageId,
+  StampId
+} from '/@/types/entity-ids'
+import { useMeStore } from '/@/store/domain/me'
 
 type MessageEventMap = {
   reconnect: void
@@ -17,6 +23,12 @@ type MessageEventMap = {
   changeMessagePinned: { message: Message; pinned: boolean }
 }
 
+type OptimisticStamp = {
+  type: 'add' | 'remove'
+  messageId: MessageId
+  stampId: StampId
+}
+
 export const messageMitt = mitt<MessageEventMap>()
 
 const getMessage = createSingleflight(apis.getMessage.bind(apis))
@@ -24,6 +36,8 @@ const getFileMeta = createSingleflight(apis.getFileMeta.bind(apis))
 const getOgp = createSingleflight(apis.getOgp.bind(apis))
 
 const useMessagesStorePinia = defineStore('entities/messages', () => {
+  const { myId } = useMeStore()
+
   /**
    * ここでは内容が更新されることのみを保障する
    * それぞれの方でメッセージIDの追加、削除の更新はする必要がある
@@ -131,6 +145,119 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     }
   }
 
+  const optimisticStamps: OptimisticStamp[] = []
+
+  const addOptimisticStamp = (stamp: OptimisticStamp) => {
+    optimisticStamps.push(stamp)
+  }
+
+  const removeOptimisticStamp = (stamp: OptimisticStamp): boolean => {
+    const index = optimisticStamps.findIndex(
+      s =>
+        s.type === stamp.type &&
+        s.messageId === stamp.messageId &&
+        s.stampId === stamp.stampId
+    )
+    if (index !== -1) {
+      optimisticStamps.splice(index, 1)
+      return true
+    }
+    return false
+  }
+
+  const addStampLocally = (messageId: MessageId, stampId: StampId) => {
+    if (myId.value === undefined) return
+
+    if (!messagesMap.value.has(messageId)) return
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const { stamps } = messagesMap.value.get(messageId)!
+
+    const currentCount =
+      stamps.find(
+        stamp => stamp.stampId === stampId && stamp.userId === myId.value
+      )?.count ?? 0
+
+    const newStamps =
+      currentCount > 0
+        ? // スタンプが既に押されている場合はカウントを増やす
+          stamps.map(stamp =>
+            stamp.stampId === stampId && stamp.userId === myId.value
+              ? {
+                  ...stamp,
+                  count: currentCount + 1,
+                  updatedAt: new Date().toISOString()
+                }
+              : stamp
+          )
+        : // スタンプが押されていない場合は新しく追加
+          [
+            ...stamps,
+            {
+              userId: myId.value,
+              stampId,
+              count: 1,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            }
+          ]
+    updateMessageStamps(messageId, newStamps)
+
+    addOptimisticStamp({ type: 'add', messageId, stampId })
+
+    return () => {
+      removeOptimisticStamp({ type: 'add', messageId, stampId })
+
+      if (!messagesMap.value.has(messageId)) return
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const { stamps } = messagesMap.value.get(messageId)!
+
+      const revertedStamps = stamps
+        .map(stamp =>
+          stamp.stampId === stampId && stamp.userId === myId.value
+            ? stamp.count > 1
+              ? { ...stamp, count: stamp.count - 1 }
+              : undefined
+            : stamp
+        )
+        .filter(stamp => !!stamp)
+      updateMessageStamps(messageId, revertedStamps)
+    }
+  }
+
+  const removeStampLocally = (messageId: MessageId, stampId: StampId) => {
+    if (myId.value === undefined) return
+
+    if (!messagesMap.value.has(messageId)) return
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const { stamps } = messagesMap.value.get(messageId)!
+
+    const index = stamps.findIndex(
+      stamp => stamp.stampId === stampId && stamp.userId === myId.value
+    )
+    const removingStamp = stamps[index]
+    const newStamps = stamps.filter((_, i) => i !== index)
+
+    updateMessageStamps(messageId, newStamps)
+
+    addOptimisticStamp({ type: 'remove', messageId, stampId })
+
+    return () => {
+      removeOptimisticStamp({ type: 'remove', messageId, stampId })
+
+      if (!messagesMap.value.has(messageId)) return
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const { stamps } = messagesMap.value.get(messageId)!
+
+      if (removingStamp === undefined) return
+      const revertedStamps = [...stamps, removingStamp]
+      updateMessageStamps(messageId, revertedStamps)
+    }
+  }
+
   wsListener.on('MESSAGE_CREATED', async ({ id, is_citing }) => {
     const message = await fetchMessage({ messageId: id })
     messageMitt.emit('addMessage', { message, isCiting: is_citing })
@@ -146,6 +273,13 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     deleteMessage(id)
   })
   wsListener.on('MESSAGE_STAMPED', e => {
+    const removed = removeOptimisticStamp({
+      type: 'add',
+      messageId: e.message_id,
+      stampId: e.stamp_id
+    })
+    if (removed) return
+
     const {
       message_id: messageId,
       user_id: userId,
@@ -180,6 +314,13 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     }
   })
   wsListener.on('MESSAGE_UNSTAMPED', e => {
+    const removed = removeOptimisticStamp({
+      type: 'remove',
+      messageId: e.message_id,
+      stampId: e.stamp_id
+    })
+    if (removed) return
+
     const { message_id: messageId, user_id: userId, stamp_id: stampId } = e
     if (!messagesMap.value.has(messageId)) return
 
@@ -210,14 +351,10 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     extendMessagesMap,
     fetchMessage,
     fetchFileMetaData,
-    fetchOgpData
+    fetchOgpData,
+    addStampLocally,
+    removeStampLocally
   }
 })
 
 export const useMessagesStore = convertToRefsStore(useMessagesStorePinia)
-
-if (import.meta.hot) {
-  import.meta.hot.accept(
-    acceptHMRUpdate(useMessagesStorePinia, import.meta.hot)
-  )
-}
