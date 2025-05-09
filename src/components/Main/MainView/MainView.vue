@@ -11,6 +11,8 @@
     </div>
     <div id="header" :class="$style.headerContainer"></div>
     <div :class="$style.layoutContainer" :data-layout="layout">
+      <QallAudio />
+
       <primary-view-selector :is-ready="isMounted" />
       <div id="sidebar-opener" :class="$style.hidden" />
       <secondary-view-selector v-if="layout !== 'single'" />
@@ -24,6 +26,7 @@ import { useMainViewStore } from '/@/store/ui/mainView'
 import PrimaryViewSelector from './PrimaryViewSelector.vue'
 import SecondaryViewSelector from './SecondaryViewSelector.vue'
 import { isIOSApp } from '/@/lib/dom/browser'
+import QallAudio from './QallView/QallAudio.vue'
 
 const iosAppFlag = isIOSApp(window)
 const iosAppDeprecatedMessage =

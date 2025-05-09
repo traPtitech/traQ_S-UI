@@ -25,6 +25,7 @@ import FormButton from '/@/components/UI/FormButton.vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import { useModalStore } from '/@/store/ui/modal'
 import ImageUpload from '/@/components/Settings/ImageUpload.vue'
+import imageCompression from 'browser-image-compression'
 
 const props = defineProps<{
   file: File
@@ -42,7 +43,19 @@ const useIconImageEdit = (iconImage: Ref<File>) => {
     if (!iconImage.value) return
     isEditing.value = true
     try {
-      await apis.changeMyIcon(iconImage.value)
+      // `PUT users/me/icon`は、swaggerでは2MBまでのpng, jpeg, gifとあるが、
+      // 実際にはそれに加えて2560*1600のピクセル数制限があるため、
+      // 2MBの制限に加えて`maxWidthOrHeight`の制約が必要になる。
+      const compressionOptions = {
+        maxSizeMB: 2,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true
+      }
+      const compressedImage = await imageCompression(
+        iconImage.value,
+        compressionOptions
+      )
+      await apis.changeMyIcon(compressedImage)
 
       addSuccessToast('アイコン画像を変更しました')
     } catch (e) {

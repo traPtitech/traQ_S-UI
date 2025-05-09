@@ -3,6 +3,7 @@
     <span :class="$style.name" :title="pathTooltip">
       {{ pathToShow }}
     </span>
+    <!-- デザインが確定したら消すか消さないか決める -->
     <template v-if="qallUserIds.length > 0">
       <a-icon :class="$style.qallIcon" :size="16" mdi name="phone-outline" />
       <user-icon-ellipsis-list
@@ -20,12 +21,14 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
-import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 import type { Channel } from '@traptitech/traq'
 import type { TypedProps } from './composables/usePath'
-import { usePath, useRTCState } from './composables/usePath'
+import { usePath } from './composables/usePath'
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
+import { useQall } from '/@/composables/qall/useQall'
+import { computed } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -41,7 +44,13 @@ const props = withDefaults(
 const typedProps = props as TypedProps
 
 const { pathToShow, pathTooltip } = usePath(typedProps)
-const { qallUserIds } = useRTCState(typedProps)
+const { rooms } = useQall()
+const qallUserIds = computed(
+  () =>
+    rooms.value
+      .find(room => room.channel.id === props.channel.id)
+      ?.participants.map(participant => participant.user.id) ?? []
+)
 </script>
 
 <style lang="scss" module>

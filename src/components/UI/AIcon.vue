@@ -3,7 +3,7 @@
     v-if="mdi"
     :width="size"
     :height="size"
-    viewBox="0 0 24 24"
+    :viewBox="`0 0 24 24`"
     v-bind="$attrs"
     role="img"
     :class="$style.icon"
@@ -15,7 +15,7 @@
     v-else
     :width="size"
     :height="size"
-    viewBox="0 0 24 24"
+    :viewBox="`0 0 ${size} ${size}`"
     v-bind="$attrs"
     role="img"
     :class="$style.icon"

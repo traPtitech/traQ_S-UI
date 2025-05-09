@@ -19,8 +19,9 @@
   $link-text-color: var(--markdown-embed-link-text),
   $link-background-color: var(--markdown-embed-link-background),
   $link-highlight-text-color: var(--markdown-embed-link-highlight-text),
-  $link-highlight-background-color:
-    var(--markdown-embed-link-highlight-background)
+  $link-highlight-background-color: var(
+      --markdown-embed-link-highlight-background
+    )
 );
 
 html[data-code-highlight='light'] {

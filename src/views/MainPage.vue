@@ -57,7 +57,6 @@ import useMainViewLayout from './composables/useMainViewLayout'
 import useRouteWatcher from './composables/useRouteWatcher'
 import useInitialFetch from './composables/useInitialFetch'
 import { useToastStore } from '/@/store/ui/toast'
-import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 
 const useStyles = (
@@ -72,19 +71,6 @@ const useStyles = (
       transform: `translateX(${sidebarPosition.value}px)`
     }))
   })
-
-const useDraftConfirmer = () => {
-  const { hasInputChannel } = useMessageInputStateStore()
-  window.addEventListener('beforeunload', event => {
-    if (hasInputChannel.value) {
-      const unloadMessage =
-        'このまま終了すると下書きが削除されます。本当に終了しますか？'
-      event.preventDefault()
-      event.returnValue = unloadMessage
-      return unloadMessage
-    }
-  })
-}
 
 const useCommandPaletteShortcutKey = () => {
   const { mode, openCommandPalette, closeCommandPalette } = useCommandPalette()
@@ -162,8 +148,6 @@ const { closeNav } = useNavigationController()
 const hideOuter = computed(
   () => isMobile.value && isNavCompletelyAppeared.value
 )
-
-useDraftConfirmer()
 
 const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
 useInitialFetch(() => {

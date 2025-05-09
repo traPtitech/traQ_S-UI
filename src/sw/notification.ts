@@ -88,6 +88,7 @@ export const setupNotification = async () => {
         // eslint-disable-next-line no-console
         console.warn('[sw] no store or me.detail found')
         data.body = `自分: ${event.reply}`
+        data.icon = ``
       }
 
       data.silent = true
