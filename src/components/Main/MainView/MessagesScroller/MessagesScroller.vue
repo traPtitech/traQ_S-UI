@@ -33,27 +33,27 @@
 </template>
 
 <script lang="ts">
+import { throttle } from 'throttle-debounce'
 import type { Ref } from 'vue'
 import {
-  watch,
-  reactive,
   computed,
+  nextTick,
   onMounted,
   onUnmounted,
-  nextTick,
-  shallowRef
+  reactive,
+  shallowRef,
+  watch
 } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import type { LoadingDirection } from './composables/useMessagesFetcher'
-import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
-import { throttle } from 'throttle-debounce'
-import { toggleSpoiler } from '/@/lib/markdown/spoiler'
-import { embeddingOrigin } from '/@/lib/apis'
 import { useRoute, useRouter } from 'vue-router'
-import { isMessageScrollerRoute, RouteName } from '/@/router'
+import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
+import type { LoadingDirection } from './composables/useMessagesFetcher'
 import { useOpenLink } from '/@/composables/useOpenLink'
-import { useMainViewStore } from '/@/store/ui/mainView'
+import { embeddingOrigin } from '/@/lib/apis'
+import { toggleSpoiler } from '/@/lib/markdown/spoiler'
+import { isMessageScrollerRoute, RouteName } from '/@/router'
 import { useStampsStore } from '/@/store/entities/stamps'
+import { useMainViewStore } from '/@/store/ui/mainView'
+import type { MessageId } from '/@/types/entity-ids'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -150,7 +150,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'requestLoadFormer'): void
   (e: 'requestLoadLatter'): void
-  (e: 'windowViewd'): void
+  (e: 'windowViewed'): void
   (e: 'scrollPassive'): void
 }>()
 
@@ -247,17 +247,17 @@ const requestLoadMessages = () => {
 const handleScroll = throttle(17, requestLoadMessages)
 
 const visibilitychangeListener = () => {
-  emit('windowViewd')
+  emit('windowViewed')
   if (document.visibilityState === 'visible') {
     nextTick(requestLoadMessages)
   }
 }
 const focusListener = () => {
-  emit('windowViewd')
+  emit('windowViewed')
   nextTick(requestLoadMessages)
 }
 const blurListener = () => {
-  emit('windowViewd')
+  emit('windowViewed')
 }
 onMounted(() => {
   document.addEventListener('visibilitychange', visibilitychangeListener)
