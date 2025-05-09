@@ -1,7 +1,7 @@
 <template>
-  <teleport to="#stamp-picker-popup">
+  <teleport to="#scaled-stamp-popup">
     <div
-      v-show="show"
+      v-if="show"
       ref="containerEle"
       :class="$style.scaleReaction"
       :style="stylePosition"

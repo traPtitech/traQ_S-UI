@@ -20,7 +20,7 @@
   </div>
   <stamp-scaled-element
     :class="$style.scaleReaction"
-    :show="isHovered && isLongHovered && !isDetailShown && !isMobile"
+    :show="isLongHovered && !isDetailShown && !isMobile"
     :stamp="stamp"
     :target-rect="hoveredRect"
   />
@@ -95,26 +95,14 @@ watch(
   }
 )
 
-const { isHovered, onMouseEnter, onMouseLeave } = useHover()
-const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
-const isLongHovered = ref(false)
+const { isLongHovered, onMouseEnter, onMouseLeave } = useHover()
 const stampRoot = ref<HTMLElement | null>(null)
 const hoveredRect = ref<DOMRect | undefined>(undefined)
 
-watch(isHovered, beginHover => {
-  if (beginHover) {
-    hoveredRect.value = stampRoot.value?.getBoundingClientRect() ?? undefined
-    hoverTimeout.value = setTimeout(() => {
-      isLongHovered.value = true
-    }, 500)
-  } else {
-    hoveredRect.value = undefined
-    if (hoverTimeout.value) {
-      clearTimeout(hoverTimeout.value)
-      hoverTimeout.value = null
-    }
-    isLongHovered.value = false
-  }
+watch(isLongHovered, beginHover => {
+  hoveredRect.value = beginHover
+    ? (stampRoot.value?.getBoundingClientRect() ?? undefined)
+    : undefined
 })
 </script>
 
