@@ -19,7 +19,7 @@
         :channel-id="channelId"
         :is-sidebar-opener-ready="isReady"
         :pinned-messages="pinnedMessages"
-        :viewing-users="viewingUsers"
+        :active-viewing-users="activeViewingUsers"
         :inactive-viewing-users="inactiveViewingUsers"
       />
     </template>
@@ -47,7 +47,7 @@ const props = defineProps<{
 const channelId = toRef(props, 'channelId')
 const pinnedMessages = usePinnedMessages(channelId)
 
-const { viewingUsers, inactiveViewingUsers, typingUsers } =
+const { activeViewingUsers, inactiveViewingUsers, typingUsers } =
   useCurrentViewers(channelId)
 const { getQallingState } = useQall()
 </script>

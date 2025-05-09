@@ -7,7 +7,7 @@
         </template>
         <template #content>
           <sidebar-content
-            :viewer-ids="viewingUsers"
+            :viewer-ids="activeViewingUsers"
             :inactive-viewer-ids="inactiveViewingUsers"
             :pinned-messages-count="pinnedMessages.length"
             @move-to-pinned="moveToPinnedPage"
@@ -28,7 +28,7 @@
     </template>
     <template #opener>
       <channel-sidebar-hidden
-        :viewer-ids="viewingUsers"
+        :viewer-ids="activeViewingUsers"
         :inactive-viewer-ids="inactiveViewingUsers"
         @open="openSidebar"
       />
@@ -53,7 +53,7 @@ defineProps<{
   userName: string
   isSidebarOpenerReady: boolean
   pinnedMessages: Pin[]
-  viewingUsers: UserId[]
+  activeViewingUsers: UserId[]
   inactiveViewingUsers: UserId[]
 }>()
 

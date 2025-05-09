@@ -14,9 +14,9 @@ const useCurrentViewers = (channelId: Ref<ChannelId>) => {
   const currentViewers = ref<ChannelViewer[]>([])
 
   /**
-   * チャンネルを見ている人(入力中、バックグラウンド表示中も含む)のIDの一覧(古い順)
+   * チャンネルを見ている人(入力中を含む、バックグラウンド表示を除く)のIDの一覧(古い順)
    */
-  const viewingUsers = computed(() =>
+  const activeViewingUsers = computed(() =>
     currentViewers.value
       .filter(
         v =>
@@ -50,7 +50,7 @@ const useCurrentViewers = (channelId: Ref<ChannelId>) => {
   })
   // NOTE: 再接続時にはCHANNEL_VIEWERS_CHANGEDが送られてくる
 
-  return { viewingUsers, typingUsers, inactiveViewingUsers }
+  return { activeViewingUsers, typingUsers, inactiveViewingUsers }
 }
 
 export default useCurrentViewers
