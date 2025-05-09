@@ -18,7 +18,7 @@ const useSettingsTitle = () => {
     return isSettingsRouteName(name) ? name : undefined
   })
   const title = computed(() =>
-    name.value ? navigationRouteNameTitleMap[name.value] ?? '' : ''
+    name.value ? (navigationRouteNameTitleMap[name.value] ?? '') : ''
   )
   return { title }
 }

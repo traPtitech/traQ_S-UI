@@ -2,10 +2,15 @@
  * https://github.com/traPtitech/traQ/blob/master/utils/message/replacer.goと同様
  */
 
-const mentionRegex =
-  /([@＠]([^\s@＠]{0,31}[^\s@＠:]))|(:[@＠]([^\s@＠]{0,31}[^\s@＠:]:))/g
+// URLの一部になっているときは置換しない (URLの正規表現は完全ではない)
+const urlRegexStr = '(?:https?://)?(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]+(?:/[^/]+)*/?'
+const urlStartRegex = new RegExp(`^${urlRegexStr}`)
+const mentionRegex = new RegExp(
+  `(${urlRegexStr})?([@＠]([^\\s@＠.]{0,31}[^\\s@＠:.]))\\.?|(:[@＠]([^\\s@＠.]{0,31}[^\\s@＠:.]:))\\.?`,
+  'g'
+)
 const userStartsRegex = /^[@＠]([a-zA-Z0-9_-]{1,32})/g
-const channelRegex = /[#＃]([a-zA-Z0-9_/-]+)/g
+const channelRegex = new RegExp(`(${urlRegexStr})?[#＃]([a-zA-Z0-9_/-]+)`, 'g')
 
 const backQuote = '`'
 const dollar = '$'
@@ -115,12 +120,18 @@ const replaceAll = (m: string, getters: Readonly<ReplaceGetters>) => {
 
 const replaceMention = (m: string, getters: Readonly<UserAndGroupGetters>) => {
   return m.replace(mentionRegex, s => {
+    const urlStart = s.match(urlStartRegex)
+    if (urlStart && urlStart.length !== 0) return s
     const isStartsWithColon = s.startsWith(':')
 
     // 始まりと終わりが:なものを除外
     if (isStartsWithColon && s.endsWith(':')) {
       return s
     }
+
+    // 終わりが.のものを除外
+    if (s.endsWith('.')) return s
+
     const sColonRemoved = isStartsWithColon ? s.slice(1) : s.slice(0)
 
     // .slice(1)は先頭の@および:@を消すため
@@ -155,6 +166,8 @@ const replaceMention = (m: string, getters: Readonly<UserAndGroupGetters>) => {
 
 const replaceChannel = (m: string, getter: Readonly<ChannelGetter>) => {
   return m.replace(channelRegex, s => {
+    const urlStart = s.match(urlStartRegex)
+    if (urlStart && urlStart.length !== 0) return s
     // .slice(1)は先頭の#を消すため
     // 小文字化はgetter内で行う
     const t = s.slice(1)

@@ -1,6 +1,5 @@
 import { ref } from 'vue'
 import useLoginCheck from './useLoginCheck'
-import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useUsersStore } from '/@/store/entities/users'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -11,6 +10,8 @@ import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
 import { useViewStatesStore } from '/@/store/domain/viewStates'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+
+// TODO: Qall
 
 const useInitialFetch_ = () => {
   const { fetchUsers } = useUsersStore()
@@ -23,7 +24,6 @@ const useInitialFetch_ = () => {
   const { fetchViewStates } = useViewStatesStore()
   const { fetchStampHistory } = useStampHistory()
   const { fetchStaredChannels } = useStaredChannels()
-  const { fetchRTCState } = useDomainRtcStore()
   return () => {
     // 初回fetch
     fetchUsers()
@@ -40,7 +40,6 @@ const useInitialFetch_ = () => {
 
     fetchStaredChannels()
     fetchClipFolders()
-    fetchRTCState()
   }
 }
 
