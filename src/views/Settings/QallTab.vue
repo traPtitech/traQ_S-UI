@@ -34,21 +34,21 @@
             />
             <p v-else>読み上げ音声の声の種類が取得できませんでした。</p>
             <form-input
-              v-model.number="state.voicePitch"
+              v-model="state.voicePitch"
               label="ピッチ"
               type="number"
               step="0.1"
               :class="$style.option"
             />
             <form-input
-              v-model.number="state.voiceRate"
+              v-model="state.voiceRate"
               label="速度"
               type="number"
               step="0.1"
               :class="$style.option"
             />
             <form-input
-              v-model.number="state.voiceVolume"
+              v-model="state.voiceVolume"
               label="音量"
               type="number"
               step="0.1"
@@ -64,6 +64,17 @@
             v-if="!fetchFailed && audioInputDevices.length > 0"
             v-model="state.audioInputDeviceId"
             :options="audioInputDeviceOptions"
+          />
+          <p v-else>デバイスが取得できませんでした。</p>
+        </div>
+      </section>
+      <section :class="$style.element">
+        <h3 :class="$style.heading">出力デバイス</h3>
+        <div>
+          <form-selector
+            v-if="!fetchFailed && audioOutputDevices.length"
+            v-model="state.audioOutputDeviceId"
+            :options="audioOutputDeviceOptions"
           />
           <p v-else>デバイスが取得できませんでした。</p>
         </div>
@@ -199,10 +210,17 @@ const formatMasterVolume = (v: number) =>
 
 const formatNoiseGateThreshold = (v: number) => `${v}dB`
 
-const { fetchFailed, audioInputDevices } = useDevicesInfo()
+const { fetchFailed, audioInputDevices, audioOutputDevices } = useDevicesInfo()
 
 const audioInputDeviceOptions = computed(() =>
   audioInputDevices.value.map(d => ({
+    key: d.label,
+    value: d.deviceId
+  }))
+)
+
+const audioOutputDeviceOptions = computed(() =>
+  audioOutputDevices.value.map(d => ({
     key: d.label,
     value: d.deviceId
   }))

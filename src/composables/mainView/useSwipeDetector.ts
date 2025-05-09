@@ -120,8 +120,8 @@ const useSwipeDetector = (isEnabled: Ref<boolean>) => {
     state.swipeDirection = !isHorizontalScroll
       ? 'none'
       : diffX > 0
-      ? 'right'
-      : 'left'
+        ? 'right'
+        : 'left'
   }
 
   const touchmoveHandler = (e: Readonly<TouchEvent>) => {

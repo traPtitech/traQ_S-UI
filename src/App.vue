@@ -17,14 +17,15 @@ import useHtmlDataset from '/@/composables/document/useHtmlDataset'
 import { useThemeVariables } from '/@/composables/document/useThemeVariables'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useAppRtcStore } from '/@/store/app/rtc'
 import { useTts } from '/@/store/app/tts'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 import useDocumentTitle from '/@/composables/document/useDocumentTitle'
 
 const useQallConfirmer = () => {
-  const { isCurrentDevice } = useAppRtcStore()
   window.addEventListener('beforeunload', event => {
+    // TODO: Qall
+    // ここは適切な変数を置く
+    const isCurrentDevice = computed(() => false)
     if (isCurrentDevice.value) {
       const unloadMessage = 'Qall中ですが本当に終了しますか？'
       event.preventDefault()

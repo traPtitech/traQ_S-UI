@@ -57,15 +57,8 @@ const onClickAdd = () => {
 const onClickDeleteAll = async () => {
   if (!confirm('本当に全メンバーを削除しますか？')) return
 
-  const ONCE = 10
   try {
-    for (let i = 0; i < Math.ceil(props.members.length / ONCE); i++) {
-      await Promise.all(
-        props.members
-          .slice(i * ONCE, (i + 1) * ONCE)
-          .map(m => apis.removeUserGroupMember(props.groupId, m.id))
-      )
-    }
+    apis.removeUserGroupMembers(props.groupId)
   } catch {
     addErrorToast('全メンバーの削除に失敗しました')
   }

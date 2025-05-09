@@ -106,6 +106,7 @@ const spinnerColor = computed(() => {
 .label {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   margin: 8px 32px;
   .container[data-is-loading] & {

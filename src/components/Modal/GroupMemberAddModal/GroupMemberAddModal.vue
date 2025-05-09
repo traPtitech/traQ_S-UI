@@ -51,13 +51,12 @@ const role = ref('')
 const isAdding = ref(false)
 const add = async () => {
   isAdding.value = true
+  const reqIds = Array.from(userIds.value)
   try {
-    for (const userId of userIds.value) {
-      await apis.addUserGroupMember(props.id, {
-        id: userId,
-        role: role.value
-      })
-    }
+    await apis.addUserGroupMember(
+      props.id,
+      reqIds.map(id => ({ id, role: role.value }))
+    )
   } catch {
     addErrorToast('グループメンバーの追加に失敗しました')
   }
