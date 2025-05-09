@@ -1,37 +1,49 @@
 <template>
-  <inline-markdown :content="detailContents" />
+  <div :class="$style.container">
+    <div v-for="userId in userIds" :key="userId" :class="$style.contents">
+      <user-icon :user-id="userId" :size="28" :class="$style.content" />
+    </div>
+    <div v-if="overflowCount[0]" :class="$style.content">
+      と他{{ overflowCount[1] }}人
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue'
 import type { MessageStampById } from '/@/lib/messageStampList'
-import { useUsersStore } from '/@/store/entities/users'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 const props = defineProps<{ stamp: MessageStampById }>()
 
 // 最大表示人数
-const maxUserCount = 100
-const limitedUsers = computed(() => props.stamp.users.slice(0, maxUserCount))
-const { usersMap } = useUsersStore()
+const maxUserCount = 32
 
-const detailContents = computed(() => {
-  let message = ''
+const userIds = computed(() => {
+  const userIds: string[] = []
   let userCount = 0
-  limitedUsers.value.forEach(user => {
-    for (let i = 0; i < user.count && userCount < maxUserCount; i++) {
-      message += `:@${usersMap.value.get(user.id)?.name ?? 'unknown'}: `
+  for (const user of props.stamp.users) {
+    for (let i = 0; i < user.count && userCount + i < maxUserCount; i++) {
+      userIds.push(user.id)
       userCount++
     }
-    if (userCount === maxUserCount && props.stamp.sum - maxUserCount > 0) {
-      message += `と他${props.stamp.sum - maxUserCount}人`
+    if (userCount >= maxUserCount) break
+  }
+  return userIds
+})
+
+const overflowCount = computed(() => {
+  const overflow: [boolean, number] = [false, 0]
+  let userCount = 0
+  for (const user of props.stamp.users) {
+    userCount += user.count
+    if (userCount > maxUserCount) {
+      overflow[0] = true
+      overflow[1] = props.stamp.sum - maxUserCount
+      break
     }
-    if (userCount === Math.min(props.stamp.sum, maxUserCount)) {
-      message += 'がリアクションしました'
-      userCount++
-    }
-  })
-  return message
+  }
+  return overflow
 })
 </script>
 

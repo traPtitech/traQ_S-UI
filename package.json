@@ -66,7 +66,7 @@
     "@types/serviceworker": "^0.0.133",
     "@types/throttle-debounce": "^5.0.2",
     "@types/turndown": "^5.0.5",
-    "@types/vue-select": "^2.5.0",
+    "@types/vue-select": "^3.16.8",
     "@types/webappsec-credential-management": "^0.6.9",
     "@typescript-eslint/eslint-plugin": "^8.29.1",
     "@typescript-eslint/parser": "^8.32.0",
