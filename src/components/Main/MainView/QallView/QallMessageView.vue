@@ -38,18 +38,9 @@ const isArchived = computed(
 
 const { unreadChannelsMap, deleteUnreadChannelWithSend } =
   useSubscriptionStore()
-const onWindowViewed = () => {
-  const unread = unreadChannelsMap.value.get(props.channelId)
-  if (unread === undefined) return
-  //最後まで読み込まれている時は「ここから未読」の位置を修正し、未読を消す。
-  if (
-    unread.updatedAt ===
-    messagesMap.value.get(messageIds.value.at(-1) ?? '')?.createdAt
-  ) {
-    unreadSince.value = unread.since
-    deleteUnreadChannelWithSend(props.channelId)
-  }
-  isReachedLatest.value = false
+
+const resetIsReachedLatest = () => {
+  if (!unreadChannelsMap.value.get(props.channelId)) return
 }
 
 const showToNewMessageButton = ref(false)
@@ -104,7 +95,7 @@ const handleScroll = () => {
               @request-load-former="onLoadFormerMessagesRequest"
               @request-load-latter="onLoadLatterMessagesRequest"
               @scroll-passive="handleScroll"
-              @window-viewed="onWindowViewed"
+              @reset-is-reached-latest="resetIsReachedLatest"
             >
               <template
                 #default="{ messageId, onChangeHeight, onEntryMessageLoaded }"
