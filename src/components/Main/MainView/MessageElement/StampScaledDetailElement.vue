@@ -4,7 +4,7 @@
       <user-icon :user-id="userId" :size="24" :class="$style.content" />
     </div>
     <div v-if="overflowCount[0]" :class="$style.overflowcount">
-      と他{{ overflowCount[1] }}人
+      +{{ overflowCount[1] }}
     </div>
   </div>
 </template>
@@ -44,7 +44,7 @@ const overflowCount = computed(() => {
     userCount += user.count
     if (userCount > maxUserCount) {
       overflow[0] = true
-      overflow[1] = props.stamp.sum - maxUserCount
+      overflow[1] = props.stamp.sum - maxUserCount + 2
       break
     }
   }
@@ -68,6 +68,6 @@ const overflowCount = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0.5rem;
+  padding-left: 0.2rem;
 }
 </style>

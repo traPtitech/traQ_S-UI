@@ -54,14 +54,15 @@ const stylePosition = computed(() => {
   @include color-ui-tertiary;
   @include background-primary;
   border-radius: 4px;
-  max-width: 49.6rem;
+  max-width: 30.3rem;
   contain: none;
   border: solid 2px $theme-ui-tertiary-default;
   position: absolute;
   animation: transformAnimation 0.15s ease-in;
   display: grid;
   flex: box;
-  gap: 0.5rem;
+  row-gap: 0.3rem;
+  column-gap: 0.5rem;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
   grid-template-areas:
