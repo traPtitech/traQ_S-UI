@@ -233,7 +233,6 @@ watch(
         state.height = newHeight
       }
     } else state.height = newHeight
-
   },
   { deep: true, flush: 'post' }
 )

@@ -50,7 +50,7 @@ const useMessageFetcher = (
    * @param fetch 取得する関数。データを返す
    * @param apply 適用する関数。表示チャンネル/クリップフォルダが変化していないときに実行される。fetchで返したデータを引数で受け取れる
    */
-  const runWithIdentifierCheck = async <T,>(
+  const runWithIdentifierCheck = async <T>(
     fetch: () => Promise<T>,
     apply: (result: T) => void | Promise<void>
   ) => {
