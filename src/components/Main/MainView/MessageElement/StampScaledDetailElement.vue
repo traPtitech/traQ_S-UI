@@ -27,10 +27,8 @@ const userIds = computed(() => {
       userIds.push(user.id)
       userCount++
     }
-    if (userCount >= maxUserCount + 1) {
-      userIds.pop()
-      userIds.pop()
-      userIds.pop()
+    if (userCount > maxUserCount) {
+      userIds.splice(maxUserCount - 2)
       break
     }
   }
