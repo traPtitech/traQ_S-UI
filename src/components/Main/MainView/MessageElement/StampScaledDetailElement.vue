@@ -1,7 +1,12 @@
 <template>
   <div :class="$style.container">
     <div v-for="userId in userIds" :key="userId" :class="$style.contents">
-      <user-icon :user-id="userId" :size="24" :class="$style.content" />
+      <user-icon
+        :user-id="userId"
+        :size="24"
+        :class="$style.content"
+        @click.capture="emit('click-user')"
+      />
     </div>
     <div v-if="overflowCount[0]" :class="$style.overflowcount">
       +{{ overflowCount[1] }}
@@ -15,6 +20,10 @@ import type { MessageStampById } from '/@/lib/messageStampList'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 
 const props = defineProps<{ stamp: MessageStampById }>()
+
+const emit = defineEmits<{
+  (e: 'click-user'): void
+}>()
 
 // 最大表示人数
 const maxUserCount = 30
