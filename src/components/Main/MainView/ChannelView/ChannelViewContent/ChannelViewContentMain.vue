@@ -12,7 +12,7 @@
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
       @scroll-passive="handleScroll"
-      @window-viewed="onWindowViewed"
+      @reset-is-reached-latest="resetIsReachedLatest"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
         <messages-scroller-separator
@@ -86,9 +86,6 @@ const {
   onLoadAroundMessagesRequest
 } = useChannelMessageFetcher(scrollerEle, props)
 
-const { unreadChannelsMap, deleteUnreadChannelWithSend } =
-  useSubscriptionStore()
-
 const { messagesMap } = useMessagesStore()
 const firstUnreadMessageId = computed(() => {
   if (!unreadSince.value) return ''
@@ -117,17 +114,9 @@ const messagePinnedUserMap = computed(
   () => new Map(props.pinnedMessages.map(pin => [pin.message.id, pin.userId]))
 )
 
-const onWindowViewed = () => {
-  const unread = unreadChannelsMap.value.get(props.channelId)
-  if (unread === undefined) return
-  //最後まで読み込まれている時は「ここから未読」の位置を修正し、未読を消す。
-  if (
-    unread.updatedAt ===
-    messagesMap.value.get(messageIds.value.at(-1) ?? '')?.createdAt
-  ) {
-    unreadSince.value = unread.since
-    deleteUnreadChannelWithSend(props.channelId)
-  }
+const { unreadChannelsMap } = useSubscriptionStore()
+const resetIsReachedLatest = () => {
+  if (!unreadChannelsMap.value.get(props.channelId)) return
   isReachedLatest.value = false
 }
 
