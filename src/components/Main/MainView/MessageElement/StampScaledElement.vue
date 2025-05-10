@@ -58,9 +58,7 @@ const stylePosition = computed(() => {
   contain: none;
   border: solid 2px $theme-ui-tertiary-default;
   position: absolute;
-  animation: transformAnimation 0.15s ease-in;
   display: grid;
-  flex: box;
   row-gap: 0.3rem;
   column-gap: 0.5rem;
   grid-template-columns: auto 1fr;
@@ -70,15 +68,6 @@ const stylePosition = computed(() => {
     'stamp detail';
   align-items: center;
   padding: 0.5rem;
-}
-
-@keyframes transformAnimation {
-  from {
-    transform: translateY(-125%) translateX(-30%);
-  }
-  to {
-    transform: translateY(-105%) translateX(-30%);
-  }
 }
 
 .stamp {
@@ -93,7 +82,6 @@ const stylePosition = computed(() => {
   grid-area: stampname;
   color: var(--specific-count-text);
   @include color-ui-primary;
-  justify-self: center;
 }
 
 .detail {
