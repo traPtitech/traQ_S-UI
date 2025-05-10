@@ -82,7 +82,6 @@ const stylePosition = computed(() => {
   grid-area: stampname;
   color: var(--specific-count-text);
   @include color-ui-primary;
-  //justify-self: center;
 }
 
 .detail {
