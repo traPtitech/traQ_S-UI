@@ -12,7 +12,7 @@
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
       @scroll-passive="handleScroll"
-      @reset-is-reached-latest="resetIsReachedLatest"
+      @window-viewed="onWindowViewed"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
         <messages-scroller-separator
@@ -46,23 +46,23 @@
 </template>
 
 <script lang="ts" setup>
-import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
-import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
-import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
-import { computed, ref, shallowRef } from 'vue'
-import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
-import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
-import { useChannelsStore } from '/@/store/entities/channels'
-import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
-import MessagesScrollerSeparator from '/@/components/Main/MainView/MessagesScroller/MessagesScrollerSeparator.vue'
-import { useMessagesStore } from '/@/store/entities/messages'
-import useDayDiffMessages from './composables/useDayDiffMessages'
-import { getFullDayString } from '/@/lib/basic/date'
 import type { Pin } from '@traptitech/traq'
+import { computed, ref, shallowRef } from 'vue'
 import { useRouter } from 'vue-router'
-import { constructChannelPath } from '/@/router'
+import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
+import useDayDiffMessages from './composables/useDayDiffMessages'
+import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
+import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
+import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
+import MessagesScrollerSeparator from '/@/components/Main/MainView/MessagesScroller/MessagesScrollerSeparator.vue'
+import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import useChannelPath from '/@/composables/useChannelPath'
+import { getFullDayString } from '/@/lib/basic/date'
+import { constructChannelPath } from '/@/router'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useMessagesStore } from '/@/store/entities/messages'
+import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -85,6 +85,9 @@ const {
   onLoadLatterMessagesRequest,
   onLoadAroundMessagesRequest
 } = useChannelMessageFetcher(scrollerEle, props)
+
+const { unreadChannelsMap, deleteUnreadChannelWithSend } =
+  useSubscriptionStore()
 
 const { messagesMap } = useMessagesStore()
 const firstUnreadMessageId = computed(() => {
@@ -114,9 +117,17 @@ const messagePinnedUserMap = computed(
   () => new Map(props.pinnedMessages.map(pin => [pin.message.id, pin.userId]))
 )
 
-const { unreadChannelsMap } = useSubscriptionStore()
-const resetIsReachedLatest = () => {
-  if (!unreadChannelsMap.value.get(props.channelId)) return
+const onWindowViewed = () => {
+  const unread = unreadChannelsMap.value.get(props.channelId)
+  if (unread === undefined) return
+  //最後まで読み込まれている時は「ここから未読」の位置を修正し、未読を消す。
+  if (
+    unread.updatedAt ===
+    messagesMap.value.get(messageIds.value.at(-1) ?? '')?.createdAt
+  ) {
+    unreadSince.value = unread.since
+    deleteUnreadChannelWithSend(props.channelId)
+  }
   isReachedLatest.value = false
 }
 

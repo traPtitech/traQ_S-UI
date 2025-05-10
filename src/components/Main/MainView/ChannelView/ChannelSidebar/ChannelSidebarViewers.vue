@@ -9,12 +9,14 @@
       direction="row"
       transition="fade-right"
       :user-ids="viewerIds"
+      :inactive-user-ids="inactiveViewerIds"
       @toggle="toggle"
     />
   </sidebar-content-container>
   <channel-sidebar-viewers-detail
     v-else
     :viewer-ids="viewerIds"
+    :inactive-viewer-ids="inactiveViewerIds"
     @toggle="toggle"
   />
 </template>
@@ -31,6 +33,7 @@ import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 const props = withDefaults(
   defineProps<{
     viewerIds?: readonly UserId[]
+    inactiveViewerIds?: readonly UserId[]
     modelValue: boolean
   }>(),
   {

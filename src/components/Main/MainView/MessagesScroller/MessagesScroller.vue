@@ -33,27 +33,27 @@
 </template>
 
 <script lang="ts">
+import { throttle } from 'throttle-debounce'
 import type { Ref } from 'vue'
 import {
-  watch,
-  reactive,
   computed,
+  nextTick,
   onMounted,
   onUnmounted,
-  nextTick,
-  shallowRef
+  reactive,
+  shallowRef,
+  watch
 } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import type { LoadingDirection } from './composables/useMessagesFetcher'
-import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
-import { throttle } from 'throttle-debounce'
-import { toggleSpoiler } from '/@/lib/markdown/spoiler'
-import { embeddingOrigin } from '/@/lib/apis'
 import { useRoute, useRouter } from 'vue-router'
-import { isMessageScrollerRoute, RouteName } from '/@/router'
+import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
+import type { LoadingDirection } from './composables/useMessagesFetcher'
 import { useOpenLink } from '/@/composables/useOpenLink'
-import { useMainViewStore } from '/@/store/ui/mainView'
+import { embeddingOrigin } from '/@/lib/apis'
+import { toggleSpoiler } from '/@/lib/markdown/spoiler'
+import { isMessageScrollerRoute, RouteName } from '/@/router'
 import { useStampsStore } from '/@/store/entities/stamps'
+import { useMainViewStore } from '/@/store/ui/mainView'
+import type { MessageId } from '/@/types/entity-ids'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -150,7 +150,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'requestLoadFormer'): void
   (e: 'requestLoadLatter'): void
-  (e: 'resetIsReachedLatest'): void
+  (e: 'windowViewed'): void
   (e: 'scrollPassive'): void
 }>()
 
@@ -191,22 +191,21 @@ watch(
   (ids, prevIds) => {
     if (!rootRef.value) return
     /* state.height の更新を忘れないようにすること */
-
     const newHeight = rootRef.value.scrollHeight
+    if (ids.length - prevIds.length === -1) {
+      // 削除された場合は何もしない
+      state.height = newHeight
+      return
+    }
     if (
       props.lastLoadingDirection === 'latest' ||
-      props.lastLoadingDirection === 'former'
+      props.lastLoadingDirection === 'former' ||
+      props.isReachedLatest
     ) {
-      if (ids.length - prevIds.length === -1) {
-        // 削除された場合は何もしない
-        state.height = newHeight
-        return
-      }
       // XXX: 追加時にここは0になる
       if (ids.length - prevIds.length === 0) {
         const scrollBottom =
           rootRef.value.scrollTop + rootRef.value.clientHeight
-
         // 一番下のメッセージあたりを見ているときに、
         // 新規に一つ追加された場合は一番下までスクロール
         if (state.height - 50 <= scrollBottom) {
@@ -217,11 +216,13 @@ watch(
         state.height = newHeight
         return
       }
-      rootRef.value.scrollTo({
-        top: newHeight - state.height
-      })
-    }
-    state.height = newHeight
+      //上に追加された時はスクロール位置を変更する。
+      if (props.lastLoadingDirection === 'former') {
+        rootRef.value.scrollTo({
+          top: newHeight - state.height
+        })
+      }
+    } else state.height = newHeight
   },
   { deep: true, flush: 'post' }
 )
@@ -246,16 +247,27 @@ const requestLoadMessages = () => {
 const handleScroll = throttle(17, requestLoadMessages)
 
 const visibilitychangeListener = () => {
+  emit('windowViewed')
   if (document.visibilityState === 'visible') {
-    requestLoadMessages()
+    nextTick(requestLoadMessages)
   }
-  emit('resetIsReachedLatest')
+}
+const focusListener = () => {
+  emit('windowViewed')
+  nextTick(requestLoadMessages)
+}
+const blurListener = () => {
+  emit('windowViewed')
 }
 onMounted(() => {
   document.addEventListener('visibilitychange', visibilitychangeListener)
+  window.addEventListener('focus', focusListener)
+  window.addEventListener('blur', blurListener)
 })
 onUnmounted(() => {
   document.removeEventListener('visibilitychange', visibilitychangeListener)
+  window.removeEventListener('focus', focusListener)
+  window.removeEventListener('blur', blurListener)
 })
 
 const { onClick } = useMarkdownInternalHandler()
