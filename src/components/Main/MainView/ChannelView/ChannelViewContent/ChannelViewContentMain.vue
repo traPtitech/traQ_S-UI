@@ -12,7 +12,7 @@
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
       @scroll-passive="handleScroll"
-      @window-viewed="onWindowViewed"
+      @reset-is-reached-latest="resetIsReachedLatest"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
         <messages-scroller-separator
@@ -117,10 +117,11 @@ const messagePinnedUserMap = computed(
   () => new Map(props.pinnedMessages.map(pin => [pin.message.id, pin.userId]))
 )
 
-const onWindowViewed = () => {
+const resetIsReachedLatest = () => {
   const unread = unreadChannelsMap.value.get(props.channelId)
   if (unread === undefined) return
   //最後まで読み込まれている時は「ここから未読」の位置を修正し、未読を消す。
+  //TODO: 関数名とやってることが違いすぎるので、どうにかする。今日はもう眠いので寝る。
   if (
     unread.updatedAt ===
     messagesMap.value.get(messageIds.value.at(-1) ?? '')?.createdAt
