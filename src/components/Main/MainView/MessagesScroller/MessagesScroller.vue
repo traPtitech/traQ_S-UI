@@ -221,6 +221,15 @@ watch(
         rootRef.value.scrollTo({
           top: newHeight - state.height
         })
+        state.height = newHeight
+      }
+
+      if (props.lastLoadingDirection === 'latest') {
+        // チャンネルを移動したとき、
+        rootRef.value.scrollTo({
+          top: newHeight
+        })
+        state.height = newHeight
       }
     } else state.height = newHeight
   },
