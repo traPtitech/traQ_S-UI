@@ -53,10 +53,9 @@ const stampName = computed(
   () => stampsMap.value.get(props.stamp.id)?.name ?? ''
 )
 
-const tooltip = computed(() =>
-  [
+const tooltip = computed(
+  () =>
     `${stampName.value}, ${props.stamp.sum}件のリアクション, クリック／タップでリアクションを削除`
-  ].join(' ')
 )
 
 const includeMe = computed(() => props.stamp.myCount > 0)
