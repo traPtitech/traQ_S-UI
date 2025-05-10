@@ -10,7 +10,7 @@
         <a-stamp
           :key="stamp.id"
           :stamp-id="stamp.id"
-          :size="104"
+          :size="48"
           :class="$style.stamp"
           without-title
         />
@@ -60,13 +60,15 @@ const stylePosition = computed(() => {
   position: absolute;
   animation: transformAnimation 0.15s ease-in;
   display: grid;
+  flex: box;
+  gap: 0.5rem;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
   grid-template-areas:
     'stamp stampname'
     'stamp detail';
   align-items: center;
-  margin: 0.5rem;
+  padding: 0.5rem;
 }
 
 @keyframes transformAnimation {
@@ -80,7 +82,6 @@ const stylePosition = computed(() => {
 
 .stamp {
   grid-area: stamp;
-  margin: 0.5rem;
   width: 6.5rem;
   height: 6.5rem;
   display: flex;
@@ -91,7 +92,6 @@ const stylePosition = computed(() => {
   grid-area: stampname;
   color: var(--specific-count-text);
   @include color-ui-primary;
-  margin: 0.5rem;
   justify-self: center;
 }
 
@@ -101,6 +101,5 @@ const stylePosition = computed(() => {
   @include color-ui-primary;
   overflow: hidden;
   overflow: clip;
-  margin: 0.5rem;
 }
 </style>

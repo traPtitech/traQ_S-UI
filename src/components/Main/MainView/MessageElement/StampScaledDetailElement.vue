@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div v-for="userId in userIds" :key="userId" :class="$style.contents">
-      <user-icon :user-id="userId" :size="40" :class="$style.content" />
+      <user-icon :user-id="userId" :size="24" :class="$style.content" />
     </div>
     <div v-if="overflowCount[0]" :class="$style.overflowcount">
       と他{{ overflowCount[1] }}人
