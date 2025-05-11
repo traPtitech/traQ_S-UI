@@ -20,7 +20,7 @@
   </div>
   <stamp-scaled-element
     :class="$style.scaleReaction"
-    :show="(isLongHovered || RemainScaled) && !isDetailShown && !isMobile"
+    :show="(isLongHovered || RemainScaled) && !isDetailShown && !isMobile && MouseHover"
     :stamp="stamp"
     :target-rect="hoveredRect"
     @scaled-hover="onScaledElementHover"
@@ -50,6 +50,13 @@ const emit = defineEmits<{
 
 const { isMobile } = useResponsiveStore()
 const { stampsMap } = useStampsStore()
+
+const MouseHover = ref(false)
+onMounted(() => {
+  MouseHover.value = window.matchMedia(
+    '(hover: hover) and (pointer: fine)'
+  ).matches
+})
 
 const stampName = computed(
   () => stampsMap.value.get(props.stamp.id)?.name ?? ''
