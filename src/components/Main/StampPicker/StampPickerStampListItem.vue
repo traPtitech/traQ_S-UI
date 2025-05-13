@@ -1,6 +1,10 @@
 <template>
   <transition name="stamp-pressed" mode="out-in">
-    <button @click="onClickStamp" @mouseenter="onStampHover">
+    <button
+      :class="$style.container"
+      @click="onClickStamp"
+      @mouseenter="onStampHover"
+    >
       <!-- keyにしてアニメーションが動くようにしている -->
       <a-stamp
         :key="pressedAnimationKey"
@@ -37,14 +41,21 @@ const onStampHover = () => {
 </script>
 
 <style lang="scss" module>
+.container {
+  border-radius: 4px;
+  border: solid 2px transparent;
+  &:focus-within {
+    border-color: $theme-accent-focus-default;
+  }
+  &:hover {
+    @include background-secondary;
+  }
+}
 .item {
   padding: 4px;
   cursor: pointer;
   user-select: none;
   content-visibility: auto;
   contain-intrinsic-size: 32px 32px;
-  &:hover {
-    @include background-secondary;
-  }
 }
 </style>
