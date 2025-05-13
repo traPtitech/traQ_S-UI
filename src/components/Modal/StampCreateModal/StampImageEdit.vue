@@ -15,13 +15,14 @@
 </template>
 
 <script lang="ts" setup>
+import imageCompression, { type Options } from 'browser-image-compression'
 import { ref, type Ref } from 'vue'
-import { formatResizeError } from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
+import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import { imageSize } from '/@/components/Settings/StampTab/imageSize'
 import FormButton from '/@/components/UI/FormButton.vue'
+import { formatResizeError } from '/@/lib/apis'
 import { useModalStore } from '/@/store/ui/modal'
-import ImageUpload from '/@/components/Settings/ImageUpload.vue'
+import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
   file: File
@@ -33,6 +34,17 @@ const emit = defineEmits<{
 const { popModal } = useModalStore()
 
 const stampImage = ref<File>(props.file)
+
+const compressStampImage = async () => {
+  const compressionOptions: Options = {
+    maxSizeMB: 1,
+    useWebWorker: true
+  }
+  stampImage.value = await imageCompression(
+    stampImage.value,
+    compressionOptions
+  )
+}
 
 const useCheckStamp = (stampImage: Ref<File>) => {
   const { addErrorToast } = useToastStore()
@@ -47,6 +59,7 @@ const useCheckStamp = (stampImage: Ref<File>) => {
         addErrorToast('画像が正方形ではありません。編集してください')
         return
       }
+      await compressStampImage()
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('画像の整形に失敗しました', e)

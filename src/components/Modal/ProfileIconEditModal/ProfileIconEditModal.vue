@@ -18,14 +18,14 @@
 </template>
 
 <script lang="ts" setup>
+import imageCompression, { type Options } from 'browser-image-compression'
 import { ref, type Ref } from 'vue'
-import apis, { formatResizeError } from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
-import FormButton from '/@/components/UI/FormButton.vue'
 import ModalFrame from '../Common/ModalFrame.vue'
-import { useModalStore } from '/@/store/ui/modal'
 import ImageUpload from '/@/components/Settings/ImageUpload.vue'
-import imageCompression from 'browser-image-compression'
+import FormButton from '/@/components/UI/FormButton.vue'
+import apis, { formatResizeError } from '/@/lib/apis'
+import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
   file: File
@@ -46,7 +46,7 @@ const useIconImageEdit = (iconImage: Ref<File>) => {
       // `PUT users/me/icon`は、swaggerでは2MBまでのpng, jpeg, gifとあるが、
       // 実際にはそれに加えて2560*1600のピクセル数制限があるため、
       // 2MBの制限に加えて`maxWidthOrHeight`の制約が必要になる。
-      const compressionOptions = {
+      const compressionOptions: Options = {
         maxSizeMB: 2,
         maxWidthOrHeight: 1920,
         useWebWorker: true
