@@ -1,15 +1,15 @@
 <template>
   <transition name="stamp-pressed" mode="out-in">
-    <!-- keyにしてアニメーションが動くようにしている -->
-    <a-stamp
-      :key="pressedAnimationKey"
-      :stamp-id="stamp.id"
-      :size="32"
-      :class="$style.item"
-      no-context-menu
-      @click="onClickStamp"
-      @mouseenter="onStampHover"
-    />
+    <button @click="onClickStamp" @mouseenter="onStampHover">
+      <!-- keyにしてアニメーションが動くようにしている -->
+      <a-stamp
+        :key="pressedAnimationKey"
+        :stamp-id="stamp.id"
+        :size="32"
+        :class="$style.item"
+        no-context-menu
+      />
+    </button>
   </transition>
 </template>
 
