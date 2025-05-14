@@ -157,17 +157,13 @@ const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
     false
   )
 
-const useShowClipCreateModal = (messageId: MessageId) => {
-  const { pushModal } = useModalStore()
-  const showClipCreateModal = () => {
-    pushModal({
-      type: 'clip-create',
-      messageId: messageId
-    })
-  }
-  return { showClipCreateModal }
+const { pushModal } = useModalStore()
+const showClipCreateModal = () => {
+  pushModal({
+    type: 'clip-create',
+    messageId: props.messageId
+  })
 }
-const { showClipCreateModal } = useShowClipCreateModal(props.messageId)
 
 const {
   position: contextMenuPosition,
