@@ -8,6 +8,13 @@
   >
     <template v-if="isMinimum">
       <a-icon
+        mdi
+        name="bookmark"
+        :size="28"
+        :class="$style.icon"
+        @click="showClipCreateModal"
+      />
+      <a-icon
         :class="$style.icon"
         :size="28"
         mdi
@@ -56,6 +63,13 @@
         </template>
         <a-icon
           mdi
+          name="bookmark"
+          :size="28"
+          :class="$style.icon"
+          @click="showClipCreateModal"
+        />
+        <a-icon
+          mdi
           name="emoticon-outline"
           :size="28"
           :class="$style.icon"
@@ -81,19 +95,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
-import type { StampId, MessageId } from '/@/types/entity-ids'
-import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
-import { useResponsiveStore } from '/@/store/ui/responsive'
-import useContextMenu from '/@/composables/useContextMenu'
-import { useStampsStore } from '/@/store/entities/stamps'
 import type { Stamp } from '@traptitech/traq'
+import { computed, ref } from 'vue'
+import MessageContextMenu from './MessageContextMenu.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
-import MessageContextMenu from './MessageContextMenu.vue'
+import useContextMenu from '/@/composables/useContextMenu'
 import useToggle from '/@/composables/utils/useToggle'
-import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampUpdater } from '/@/lib/updater/stamp'
+import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { useModalStore } from '/@/store/ui/modal'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+import type { MessageId, StampId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{
@@ -141,6 +156,18 @@ const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
     containerEle,
     false
   )
+
+const useShowClipCreateModal = (messageId: MessageId) => {
+  const { pushModal } = useModalStore()
+  const showClipCreateModal = () => {
+    pushModal({
+      type: 'clip-create',
+      messageId: messageId
+    })
+  }
+  return { showClipCreateModal }
+}
+const { showClipCreateModal } = useShowClipCreateModal(props.messageId)
 
 const {
   position: contextMenuPosition,
