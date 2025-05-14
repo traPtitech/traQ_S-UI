@@ -2,18 +2,16 @@
   <section>
     <new-stamp />
     <stamp-management />
-    <div :class="$style.element">
-      <h3 :class="$style.header">スタンプパレット</h3>
-      <p :class="$style.content">実装予定</p>
-    </div>
+    <stamp-palette-management />
   </section>
 </template>
 
 <script lang="ts" setup>
 import NewStamp from '/@/components/Settings/StampTab/NewStamp.vue'
 import StampManagement from '/@/components/Settings/StampTab/StampManagement.vue'
-import { useStampsStore } from '/@/store/entities/stamps'
+import StampPaletteManagement from '/@/components/Settings/StampTab/StampPalette/StampPaletteManagement.vue'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
 
 const { fetchStamps } = useStampsStore()
@@ -24,15 +22,3 @@ fetchStampPalettes()
 const { fetchUsers } = useUsersStore()
 fetchUsers()
 </script>
-
-<style lang="scss" module>
-.header {
-  margin-bottom: 8px;
-}
-.element {
-  margin: 24px 0;
-}
-.content {
-  margin-left: 12px;
-}
-</style>
