@@ -4,9 +4,44 @@
     ref="containerEle"
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
-    :data-is-minimum="$boolAttr(isMinimum)"
   >
-    <template v-if="isMinimum">
+    <transition v-if="!isMinimum" name="quick-reaction">
+      <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
+        <a-stamp
+          v-for="stamp in recentStamps"
+          :key="stamp"
+          :stamp-id="stamp"
+          :size="28"
+          :class="$style.stampListItem"
+          @click="addStamp(stamp)"
+        />
+        <span :class="$style.line" />
+      </div>
+    </transition>
+    <div
+      :class="$style.tools"
+      :data-hide-left-border="
+        $boolAttr((showQuickReaction || !isMobile) && !isMinimum)
+      "
+    >
+      <template v-if="!isMinimum && isMobile">
+        <a-icon
+          v-if="showQuickReaction"
+          mdi
+          name="chevron-right"
+          :size="28"
+          :class="$style.icon"
+          @click="toggleQuickReaction"
+        />
+        <a-icon
+          v-else
+          mdi
+          name="chevron-left"
+          :size="28"
+          :class="$style.icon"
+          @click="toggleQuickReaction"
+        />
+      </template>
       <a-icon
         mdi
         name="bookmark"
@@ -15,75 +50,21 @@
         @click="showClipCreateModal"
       />
       <a-icon
+        v-if="!isMinimum"
+        mdi
+        name="emoticon-outline"
+        :size="28"
+        :class="$style.icon"
+        @click="toggleStampPicker"
+      />
+      <a-icon
         :class="$style.icon"
         :size="28"
         mdi
         name="dots-horizontal"
         @click="onDotsClick"
       />
-    </template>
-    <template v-else>
-      <transition name="quick-reaction">
-        <div
-          v-if="showQuickReaction || !isMobile"
-          :class="$style.quickReaction"
-        >
-          <a-stamp
-            v-for="stamp in recentStamps"
-            :key="stamp"
-            :stamp-id="stamp"
-            :size="28"
-            :class="$style.stampListItem"
-            @click="addStamp(stamp)"
-          />
-          <span :class="$style.line" />
-        </div>
-      </transition>
-      <div
-        :class="$style.tools"
-        :data-hide-left-border="$boolAttr(showQuickReaction || !isMobile)"
-      >
-        <template v-if="isMobile">
-          <a-icon
-            v-if="showQuickReaction"
-            mdi
-            name="chevron-right"
-            :size="28"
-            :class="$style.icon"
-            @click="toggleQuickReaction"
-          />
-          <a-icon
-            v-else
-            mdi
-            name="chevron-left"
-            :size="28"
-            :class="$style.icon"
-            @click="toggleQuickReaction"
-          />
-        </template>
-        <a-icon
-          mdi
-          name="bookmark"
-          :size="28"
-          :class="$style.icon"
-          @click="showClipCreateModal"
-        />
-        <a-icon
-          mdi
-          name="emoticon-outline"
-          :size="28"
-          :class="$style.icon"
-          @click="toggleStampPicker"
-        />
-        <a-icon
-          :class="$style.icon"
-          :size="28"
-          mdi
-          name="dots-horizontal"
-          @click="onDotsClick"
-        />
-      </div>
-    </template>
+    </div>
     <message-context-menu
       v-if="contextMenuPosition"
       :position="contextMenuPosition"
@@ -194,9 +175,6 @@ const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
   contain: content;
   &:not([data-is-mobile]) {
     box-shadow: 0 1px 3px 0;
-  }
-  &[data-is-minimum] {
-    border: solid 2px $theme-ui-tertiary-default;
   }
 }
 
