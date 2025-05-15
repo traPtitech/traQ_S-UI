@@ -15,13 +15,14 @@
 </template>
 
 <script lang="ts" setup>
+import imageCompression, { type Options } from 'browser-image-compression'
 import { ref, type Ref } from 'vue'
-import { formatResizeError } from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
+import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import { imageSize } from '/@/components/Settings/StampTab/imageSize'
 import FormButton from '/@/components/UI/FormButton.vue'
+import { formatResizeError } from '/@/lib/apis'
 import { useModalStore } from '/@/store/ui/modal'
-import ImageUpload from '/@/components/Settings/ImageUpload.vue'
+import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
   file: File
@@ -33,6 +34,26 @@ const emit = defineEmits<{
 const { popModal } = useModalStore()
 
 const stampImage = ref<File>(props.file)
+
+const compressStampImage = async () => {
+  // jpeg, png, webp, bmp のみが`imageCompression`で圧縮できる
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp']
+  if (!allowedTypes.includes(stampImage.value.type)) {
+    return
+  }
+  // `POST /stamps`は、swaggerでは1MBまでのpng, jpeg, gifとあるが、
+  // 実際にはそれに加えて2560*1600のピクセル数制限があるため、
+  // 1MBの制限に加えて`maxWidthOrHeight`の制約が必要になる。
+  const compressionOptions: Options = {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 2000,
+    useWebWorker: true
+  }
+  stampImage.value = await imageCompression(
+    stampImage.value,
+    compressionOptions
+  )
+}
 
 const useCheckStamp = (stampImage: Ref<File>) => {
   const { addErrorToast } = useToastStore()
@@ -47,6 +68,7 @@ const useCheckStamp = (stampImage: Ref<File>) => {
         addErrorToast('画像が正方形ではありません。編集してください')
         return
       }
+      await compressStampImage()
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('画像の整形に失敗しました', e)
