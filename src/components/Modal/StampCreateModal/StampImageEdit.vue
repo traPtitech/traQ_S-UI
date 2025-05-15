@@ -36,8 +36,17 @@ const { popModal } = useModalStore()
 const stampImage = ref<File>(props.file)
 
 const compressStampImage = async () => {
+  // jpeg, png, webp, bmp のみが`imageCompression`で圧縮できる
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp']
+  if (!allowedTypes.includes(stampImage.value.type)) {
+    return
+  }
+  // `POST /stamps`は、swaggerでは1MBまでのpng, jpeg, gifとあるが、
+  // 実際にはそれに加えて2560*1600のピクセル数制限があるため、
+  // 1MBの制限に加えて`maxWidthOrHeight`の制約が必要になる。
   const compressionOptions: Options = {
     maxSizeMB: 1,
+    maxWidthOrHeight: 2000,
     useWebWorker: true
   }
   stampImage.value = await imageCompression(

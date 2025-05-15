@@ -46,7 +46,7 @@ const compressIconImage = async () => {
   // 2MBの制限に加えて`maxWidthOrHeight`の制約が必要になる。
   const compressionOptions: Options = {
     maxSizeMB: 2,
-    maxWidthOrHeight: 1920,
+    maxWidthOrHeight: 2000,
     useWebWorker: true
   }
   iconImage.value = await imageCompression(iconImage.value, compressionOptions)
