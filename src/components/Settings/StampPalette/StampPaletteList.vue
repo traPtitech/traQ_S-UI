@@ -13,9 +13,9 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+import StampPaletteCreateButton from './StampPaletteCreateButton.vue'
+import StampPaletteListItem from './StampPaletteListItem.vue'
 import { mockStampPalettes } from './stampPaletteMock'
-import StampPaletteCreateButton from '/@/components/Settings/StampTab/StampPalette/StampPaletteCreateButton.vue'
-import StampPaletteListItem from '/@/components/Settings/StampTab/StampPalette/StampPaletteListItem.vue'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 const { stampPalettesMap } = useStampPalettesStore()

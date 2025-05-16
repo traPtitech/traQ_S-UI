@@ -6,8 +6,8 @@
 </template>
 
 <script lang="ts" setup>
-import StampPaletteList from '/@/components/Settings/StampTab/StampPalette/StampPaletteList.vue'
-import StampPaletteManagementDescription from '/@/components/Settings/StampTab/StampPalette/StampPaletteManagementDescription.vue'
+import StampPaletteList from '/@/components/Settings/StampPalette/StampPaletteList.vue'
+import StampPaletteManagementDescription from '/@/components/Settings/StampPalette/StampPaletteManagementDescription.vue'
 </script>
 
 <style lang="scss" module>
