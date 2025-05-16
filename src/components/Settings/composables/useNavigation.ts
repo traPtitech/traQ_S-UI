@@ -1,7 +1,7 @@
-import type { SettingsRouteName } from '/@/router/settings'
 import { useRouter } from 'vue-router'
-import { RouteName } from '/@/router'
 import useClose from '/@/composables/useClose'
+import { RouteName } from '/@/router'
+import type { SettingsRouteName } from '/@/router/settings'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 
@@ -11,6 +11,7 @@ export type NavigationItemType =
   | 'browser'
   | 'qall'
   | 'stamp'
+  | 'stamp-palette'
   | 'theme'
   | 'audio'
 
@@ -21,6 +22,7 @@ export const navigationRouteNameTitleMap: Record<SettingsRouteName, string> = {
   settingsBrowser: 'ブラウザ',
   settingsQall: '通話 (Qall)',
   settingsStamp: 'スタンプ',
+  settingsStampPalette: 'スタンプパレット',
   settingsTheme: 'テーマ',
   settingsAudio: '音声'
 }
@@ -56,6 +58,11 @@ export const navigations: {
   {
     routeName: 'settingsStamp',
     iconName: 'emoticon-outline',
+    iconMdi: true
+  },
+  {
+    routeName: 'settingsStampPalette',
+    iconName: 'palette-outline',
     iconMdi: true
   },
   {

@@ -1,13 +1,13 @@
 <template>
   <div :class="$style.outerContainer">
-    <stamp-palette-management-header />
+    <stamp-palette-management-description />
     <stamp-palette-list />
   </div>
 </template>
 
 <script lang="ts" setup>
 import StampPaletteList from '/@/components/Settings/StampTab/StampPalette/StampPaletteList.vue'
-import StampPaletteManagementHeader from '/@/components/Settings/StampTab/StampPalette/StampPaletteManagementHeader.vue'
+import StampPaletteManagementDescription from '/@/components/Settings/StampTab/StampPalette/StampPaletteManagementDescription.vue'
 </script>
 
 <style lang="scss" module>

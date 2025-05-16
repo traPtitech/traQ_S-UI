@@ -2,14 +2,12 @@
   <section>
     <new-stamp />
     <stamp-management />
-    <stamp-palette-management />
   </section>
 </template>
 
 <script lang="ts" setup>
 import NewStamp from '/@/components/Settings/StampTab/NewStamp.vue'
 import StampManagement from '/@/components/Settings/StampTab/StampManagement.vue'
-import StampPaletteManagement from '/@/components/Settings/StampTab/StampPalette/StampPaletteManagement.vue'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'

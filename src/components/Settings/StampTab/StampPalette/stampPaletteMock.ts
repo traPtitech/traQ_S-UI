@@ -49,7 +49,7 @@ export const mockStampIds = ref([
 
 export const mockStampPalettes: StampPalette[] = [
   {
-    id: crypto.randomUUID(),
+    id: '1',
     name: 'mock1',
     stamps: mockStampIds.value,
     creatorId: mockUserId,
@@ -58,7 +58,7 @@ export const mockStampPalettes: StampPalette[] = [
     description: 'mock1'
   },
   {
-    id: crypto.randomUUID(),
+    id: '2',
     name: 'mock2',
     stamps: mockStampIds.value.slice(0, 15),
     creatorId: mockUserId,
@@ -67,7 +67,7 @@ export const mockStampPalettes: StampPalette[] = [
     description: 'mock2'
   },
   {
-    id: crypto.randomUUID(),
+    id: '3',
     name: 'mock3',
     stamps: mockStampIds.value.slice(0, 10),
     creatorId: mockUserId,
@@ -76,7 +76,7 @@ export const mockStampPalettes: StampPalette[] = [
     description: 'mock3'
   },
   {
-    id: crypto.randomUUID(),
+    id: '4',
     name: 'mock4',
     stamps: mockStampIds.value.slice(0, 5),
     creatorId: mockUserId,
