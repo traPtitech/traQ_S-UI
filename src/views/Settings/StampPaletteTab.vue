@@ -1,20 +1,25 @@
 <template>
-  <div :class="$style.outerContainer">
-    <stamp-palette-management-description />
-    <stamp-palette-list />
+  <div :class="$style.container">
+    <div :class="$style.text">
+      <p>traQのスタンプをまとめたパレットを作成できます。</p>
+      <p>スタンプパレットのアイコンはパレット先頭のスタンプが使用されます。</p>
+    </div>
+    <stamp-palette-list-tab />
   </div>
 </template>
 
 <script lang="ts" setup>
-import StampPaletteList from '/@/components/Settings/StampPalette/StampPaletteList.vue'
-import StampPaletteManagementDescription from '/@/components/Settings/StampPalette/StampPaletteManagementDescription.vue'
+import StampPaletteListTab from '/@/components/Settings/StampPalette/StampPaletteListTab.vue'
 </script>
 
 <style lang="scss" module>
-.outerContainer {
+.container {
   margin: 24px 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+.text {
+  margin-left: 12px;
 }
 </style>
