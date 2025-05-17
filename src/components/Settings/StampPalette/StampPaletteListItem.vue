@@ -2,11 +2,7 @@
   <div :class="$style.container">
     <stamp-palette-list-item-header :palette="palette" />
     <div :class="$style.stamps">
-      <div
-        v-for="stampId in palette.stamps"
-        :key="stampId"
-        :class="$style.stamps"
-      >
+      <div v-for="stampId in palette.stamps" :key="stampId">
         <a-stamp :stamp-id="stampId" />
       </div>
       <icon-button
