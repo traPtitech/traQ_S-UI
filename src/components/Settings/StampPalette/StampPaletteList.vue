@@ -1,6 +1,6 @@
 <template>
   <section :class="$style.container">
-    <h3>スタンプパレットの作成</h3>
+    <h3>パレット一覧</h3>
     <stamp-palette-create-link />
     <div :class="$style.stampPaletteList">
       <!-- FIXME: おそらくスタンプパレットのスタンプの総数が多い時に重くなる -->

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h3>スタンプパレットの編集</h3>
+    <h3>パレットの編集</h3>
     <div v-if="!stampPalette">
       <!-- TODO: デザインを整える -->
       <div>
