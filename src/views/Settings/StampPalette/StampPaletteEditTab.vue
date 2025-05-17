@@ -22,7 +22,7 @@ import StampPaletteEditor from '/@/components/Settings/StampPalette/StampPalette
 // import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { mockStampPalettesMap } from '/@/components/Settings/StampPalette/stampPaletteMock'
 
-const { paletteId: paletteId } = defineProps<{
+const { paletteId } = defineProps<{
   paletteId: string
 }>()
 
