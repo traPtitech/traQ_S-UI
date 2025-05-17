@@ -10,6 +10,13 @@
 
 <script lang="ts" setup>
 import StampPaletteListTab from '/@/components/Settings/StampPalette/StampPaletteListTab.vue'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import { useStampsStore } from '/@/store/entities/stamps'
+
+const { fetchStamps } = useStampsStore()
+fetchStamps()
+const { fetchStampPalettes } = useStampPalettesStore()
+fetchStampPalettes()
 </script>
 
 <style lang="scss" module>
