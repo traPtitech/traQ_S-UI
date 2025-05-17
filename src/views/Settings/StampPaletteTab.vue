@@ -4,12 +4,12 @@
       <p>traQのスタンプをまとめたパレットを作成できます。</p>
       <p>スタンプパレットのアイコンはパレット先頭のスタンプが使用されます。</p>
     </div>
-    <stamp-palette-list-tab />
+    <stamp-palette-list />
   </div>
 </template>
 
 <script lang="ts" setup>
-import StampPaletteListTab from '/@/components/Settings/StampPalette/StampPaletteListTab.vue'
+import StampPaletteList from '/@/components/Settings/StampPalette/StampPaletteList.vue'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
 

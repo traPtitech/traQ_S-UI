@@ -5,13 +5,13 @@
     icon="plus"
     mdi
     type="secondary"
-    @click="openStampPaletteCreateTab"
+    @click="openStampPaletteCreate"
   />
 </template>
 
 <script lang="ts" setup>
 import FormButton from '/@/components/UI/FormButton.vue'
-const openStampPaletteCreateTab = () => {
+const openStampPaletteCreate = () => {
   // TODO: implement open stamp palette create modal
 }
 </script>

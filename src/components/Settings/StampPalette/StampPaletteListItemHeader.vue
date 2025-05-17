@@ -5,7 +5,7 @@
       :class="$style.button"
       icon-name="pencil"
       icon-mdi
-      @click="openStampPaletteEditTab"
+      @click="openStampPaletteEdit"
     />
     <icon-button
       :class="$style.button"
@@ -27,7 +27,7 @@ const { palette } = defineProps<{
   palette: StampPalette
 }>()
 
-const openStampPaletteEditTab = () => {
+const openStampPaletteEdit = () => {
   // TODO: implement here
 }
 
