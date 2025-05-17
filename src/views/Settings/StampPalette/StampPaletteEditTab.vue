@@ -12,6 +12,7 @@
       <!-- TODO: 戻るボタンの実装 -->
     </div>
     <stamp-palette-editor v-else v-model="stampPalette" />
+    <!-- TODO: キャンセルボタン、保存ボタン、確定ボタンの実装 -->
   </section>
 </template>
 
