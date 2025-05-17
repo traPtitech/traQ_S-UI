@@ -11,7 +11,7 @@
       :class="$style.icon"
       icon-name="delete"
       icon-mdi
-      @click="deleteStampPalette"
+      @click="showStampPaletteDeleteToast"
     />
   </div>
   <p :class="$style.description">{{ palette.description }}</p>
@@ -22,23 +22,22 @@ import type { StampPalette } from '@traptitech/traq'
 import AIcon from '/@/components/UI/AIcon.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
-import apis from '/@/lib/apis'
 import { constructSettingsStampPaletteEditPath } from '/@/router/settingsStampPalette'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 const { palette } = defineProps<{
   palette: StampPalette
 }>()
 
+const { deleteStampPalette } = useStampPalettesStore()
 const { execWithToast } = useExecWithToast()
-const deleteStampPalette = async () => {
+const showStampPaletteDeleteToast = async () => {
   if (!confirm('本当にこのスタンプパレットを削除しますか？')) return
 
   execWithToast(
     'スタンプパレットを削除しました',
     'スタンプパレットの削除に失敗しました',
-    async () => {
-      await apis.deleteStampPalette(palette.id)
-    }
+    async () => await deleteStampPalette(palette.id)
   )
 }
 </script>

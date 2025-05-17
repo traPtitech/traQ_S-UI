@@ -13,6 +13,9 @@ import type { StampPaletteId } from '/@/types/entity-ids'
 
 const getStampPalette = createSingleflight(apis.getStampPalette.bind(apis))
 const getStampPalettes = createSingleflight(apis.getStampPalettes.bind(apis))
+const deleteStampPaletteSingleflight = createSingleflight(
+  apis.deleteStampPalette.bind(apis)
+)
 
 const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
   const stampPalettesMap = ref(new Map<StampPaletteId, StampPalette>())
@@ -64,6 +67,14 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
     return newStampPalettesMap
   }
 
+  const deleteStampPalette = async (stampPaletteId: StampPaletteId) => {
+    await deleteStampPaletteSingleflight(stampPaletteId)
+
+    if (stampPalettesMap.value.has(stampPaletteId)) {
+      stampPalettesMap.value.delete(stampPaletteId)
+    }
+  }
+
   wsListener.on('STAMP_PALETTE_CREATED', ({ id }) => {
     // eslint-disable-next-line no-console
     console.error('onStampPaletteCreated: Not implemented')
@@ -83,7 +94,8 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
   return {
     stampPalettesMap,
     nonEmptyStampPaletteIds,
-    fetchStampPalettes
+    fetchStampPalettes,
+    deleteStampPalette
   }
 })
 
