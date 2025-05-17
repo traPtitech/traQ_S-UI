@@ -1,5 +1,5 @@
 import type { StampPalette } from '@traptitech/traq'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 export const mockUserId = '671f2fbe-89cb-48fe-80dd-e51346ff41f6'
 
@@ -85,3 +85,11 @@ export const mockStampPalettes: StampPalette[] = [
     description: 'mock4'
   }
 ]
+
+export const mockStampPalettesMap = computed(() => {
+  const map = new Map<string, StampPalette>()
+  mockStampPalettes.forEach(palette => {
+    map.set(palette.id, palette)
+  })
+  return map
+})

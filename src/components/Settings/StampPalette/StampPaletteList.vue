@@ -1,7 +1,7 @@
 <template>
   <section :class="$style.container">
-    <h3>パレット一覧</h3>
-    <stamp-palette-create-button />
+    <h3>スタンプパレットの作成</h3>
+    <stamp-palette-create-link />
     <div :class="$style.stampPaletteList">
       <!-- FIXME: おそらくスタンプパレットのスタンプの総数が多い時に重くなる -->
       <div v-for="palette in stampPalettes" :key="palette.id">
@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import StampPaletteCreateButton from './StampPaletteCreateButton.vue'
+import StampPaletteCreateLink from './StampPaletteCreateLink.vue'
 import StampPaletteListItem from './StampPaletteListItem.vue'
 import { mockStampPalettes } from './stampPaletteMock'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'

@@ -2,6 +2,7 @@ import { useRouter } from 'vue-router'
 import useClose from '/@/composables/useClose'
 import { RouteName } from '/@/router'
 import type { SettingsRouteName } from '/@/router/settings'
+import type { SettingsStampPaletteRouteName } from '/@/router/settingsStampPalette'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 
@@ -16,13 +17,18 @@ export type NavigationItemType =
   | 'audio'
 
 // TODO: 言語系リソースの置き場所
-export const navigationRouteNameTitleMap: Record<SettingsRouteName, string> = {
+export const navigationRouteNameTitleMap: Record<
+  SettingsRouteName | SettingsStampPaletteRouteName,
+  string
+> = {
   settingsProfile: 'プロフィール',
   settingsSession: 'セッション',
   settingsBrowser: 'ブラウザ',
   settingsQall: '通話 (Qall)',
   settingsStamp: 'スタンプ',
   settingsStampPalette: 'スタンプパレット',
+  settingsStampPaletteCreate: 'スタンプパレット',
+  settingsStampPaletteEdit: 'スタンプパレット',
   settingsTheme: 'テーマ',
   settingsAudio: '音声'
 }

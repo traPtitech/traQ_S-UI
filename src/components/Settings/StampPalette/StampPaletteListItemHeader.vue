@@ -1,14 +1,14 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.name">{{ palette.name }}</div>
+    <router-link
+      :class="$style.link"
+      :to="constructSettingsStampPaletteEditPath(palette.id)"
+    >
+      <a-icon mdi name="pencil" />
+    </router-link>
     <icon-button
-      :class="$style.button"
-      icon-name="pencil"
-      icon-mdi
-      @click="openStampPaletteEdit"
-    />
-    <icon-button
-      :class="$style.button"
+      :class="$style.icon"
       icon-name="delete"
       icon-mdi
       @click="deleteStampPalette"
@@ -19,17 +19,15 @@
 
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
+import AIcon from '/@/components/UI/AIcon.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import apis from '/@/lib/apis'
+import { constructSettingsStampPaletteEditPath } from '/@/router/settingsStampPalette'
 
 const { palette } = defineProps<{
   palette: StampPalette
 }>()
-
-const openStampPaletteEdit = () => {
-  // TODO: implement here
-}
 
 const { execWithToast } = useExecWithToast()
 const deleteStampPalette = async () => {
@@ -59,7 +57,16 @@ const deleteStampPalette = async () => {
   border-radius: 4px;
   margin-right: 8px;
 }
-.button {
+.link {
+  @include color-ui-secondary;
+  display: flex;
+  padding: 4px;
+  border-radius: 4px;
+  &:hover {
+    @include background-primary;
+  }
+}
+.icon {
   @include color-ui-secondary;
   padding: 4px;
   border-radius: 4px;

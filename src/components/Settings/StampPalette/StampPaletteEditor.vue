@@ -1,4 +1,8 @@
-<template></template>
+<template>
+  <div>
+    <!-- TODO: スタンプパレットの編集画面の実装 -->
+  </div>
+</template>
 
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
