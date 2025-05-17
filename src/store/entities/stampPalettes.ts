@@ -1,18 +1,21 @@
 import type { StampPalette } from '@traptitech/traq'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { useTrueChangedPromise } from '/@/store/utils/promise'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import type { StampPaletteId } from '/@/types/entity-ids'
-import { createSingleflight } from '/@/lib/basic/async'
-import apis from '/@/lib/apis'
-import { wsListener } from '/@/lib/websocket'
 import type { CacheStrategy } from './utils'
 import { fetchWithCacheStrategy } from './utils'
+import apis from '/@/lib/apis'
+import { createSingleflight } from '/@/lib/basic/async'
 import { arrayToMap } from '/@/lib/basic/map'
+import { wsListener } from '/@/lib/websocket'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import { useTrueChangedPromise } from '/@/store/utils/promise'
+import type { StampPaletteId } from '/@/types/entity-ids'
 
-const getStampPlalette = createSingleflight(apis.getStampPalette.bind(apis))
-const getStampPlalettes = createSingleflight(apis.getStampPalettes.bind(apis))
+const getStampPalette = createSingleflight(apis.getStampPalette.bind(apis))
+const getStampPalettes = createSingleflight(apis.getStampPalettes.bind(apis))
+const deleteStampPaletteSingleflight = createSingleflight(
+  apis.deleteStampPalette.bind(apis)
+)
 
 const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
   const stampPalettesMap = ref(new Map<StampPaletteId, StampPalette>())
@@ -40,7 +43,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
       stampPaletteId,
       stampPalettesMapFetched.value,
       stampPalettesMapInitialFetchPromise.value,
-      getStampPlalette,
+      getStampPalette,
       stampPalette => {
         stampPalettesMap.value.set(stampPalette.id, stampPalette)
       }
@@ -55,13 +58,21 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
       return stampPalettesMap
     }
 
-    const [{ data: stampPalettes }, shared] = await getStampPlalettes()
+    const [{ data: stampPalettes }, shared] = await getStampPalettes()
     const newStampPalettesMap = arrayToMap(stampPalettes, 'id')
     if (!shared) {
       stampPalettesMap.value = newStampPalettesMap
       stampPalettesMapFetched.value = true
     }
     return newStampPalettesMap
+  }
+
+  const deleteStampPalette = async (stampPaletteId: StampPaletteId) => {
+    await deleteStampPaletteSingleflight(stampPaletteId)
+
+    if (stampPalettesMap.value.has(stampPaletteId)) {
+      stampPalettesMap.value.delete(stampPaletteId)
+    }
   }
 
   wsListener.on('STAMP_PALETTE_CREATED', ({ id }) => {
@@ -83,7 +94,8 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
   return {
     stampPalettesMap,
     nonEmptyStampPaletteIds,
-    fetchStampPalettes
+    fetchStampPalettes,
+    deleteStampPalette
   }
 })
 
