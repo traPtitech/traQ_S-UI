@@ -2,7 +2,7 @@
   <div
     :class="$style.container"
     :aria-selected="isActive"
-    @click="emit('click')"
+    @click="emit('click', $event)"
   >
     <div v-if="isActive" :class="$style.indicator"></div>
     <a-stamp
@@ -28,11 +28,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampPaletteId } from '/@/types/entity-ids'
 import type { StampSet } from './composables/useStampSetSelector'
-import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import type { StampPaletteId } from '/@/types/entity-ids'
 
 withDefaults(
   defineProps<{
@@ -45,7 +45,7 @@ withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'click'): void
+  (e: 'click', event: MouseEvent): void
 }>()
 
 const { stampPalettesMap } = useStampPalettesStore()
