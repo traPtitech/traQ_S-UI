@@ -18,14 +18,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, type Ref } from 'vue'
-import apis, { formatResizeError } from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
-import FormButton from '/@/components/UI/FormButton.vue'
-import ModalFrame from '../Common/ModalFrame.vue'
-import { useModalStore } from '/@/store/ui/modal'
-import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import imageCompression from 'browser-image-compression'
+import { ref, type Ref } from 'vue'
+import ModalFrame from '../Common/ModalFrame.vue'
+import ImageUpload from '/@/components/Settings/ImageUpload.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import apis, { formatResizeError } from '/@/lib/apis'
+import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
   file: File
@@ -35,6 +35,23 @@ const { clearModal } = useModalStore()
 
 const iconImage = ref<File>(props.file)
 
+const compressIconImage = async () => {
+  // jpeg, png, webp, bmp のみが`imageCompression`で圧縮できる
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp']
+  if (!allowedTypes.includes(iconImage.value.type)) {
+    return
+  }
+  // `PUT users/me/icon`は、swaggerでは2MBまでのpng, jpeg, gifとあるが、
+  // 実際にはそれに加えて2560*1600のピクセル数制限があるため、
+  // 2MBの制限に加えて`maxWidthOrHeight`の制約が必要になる。
+  const compressionOptions = {
+    maxSizeMB: 2,
+    maxWidthOrHeight: 1920,
+    useWebWorker: true
+  }
+  iconImage.value = await imageCompression(iconImage.value, compressionOptions)
+}
+
 const useIconImageEdit = (iconImage: Ref<File>) => {
   const { addSuccessToast, addErrorToast } = useToastStore()
   const isEditing = ref(false)
@@ -43,19 +60,8 @@ const useIconImageEdit = (iconImage: Ref<File>) => {
     if (!iconImage.value) return
     isEditing.value = true
     try {
-      // `PUT users/me/icon`は、swaggerでは2MBまでのpng, jpeg, gifとあるが、
-      // 実際にはそれに加えて2560*1600のピクセル数制限があるため、
-      // 2MBの制限に加えて`maxWidthOrHeight`の制約が必要になる。
-      const compressionOptions = {
-        maxSizeMB: 2,
-        maxWidthOrHeight: 1920,
-        useWebWorker: true
-      }
-      const compressedImage = await imageCompression(
-        iconImage.value,
-        compressionOptions
-      )
-      await apis.changeMyIcon(compressedImage)
+      await compressIconImage()
+      await apis.changeMyIcon(iconImage.value)
 
       addSuccessToast('アイコン画像を変更しました')
     } catch (e) {
