@@ -15,15 +15,13 @@
 import { computed } from 'vue'
 import StampPaletteCreateLink from './StampPaletteCreateLink.vue'
 import StampPaletteListItem from './StampPaletteListItem.vue'
-import { mockStampPalettes } from './stampPaletteMock'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 const { stampPalettesMap } = useStampPalettesStore()
 
 const stampPalettes = computed(() => {
   const palettes = [...stampPalettesMap.value.values()]
-  // FIXME: 開発中はモックデータを表示
-  return palettes.length > 0 ? palettes : mockStampPalettes
+  return palettes.length > 0 ? palettes : []
 })
 </script>
 
