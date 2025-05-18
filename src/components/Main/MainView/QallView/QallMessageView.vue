@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
-import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
-import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import { computed, nextTick, ref, shallowRef } from 'vue'
-import type { ChannelId, UserId } from '/@/types/entity-ids'
 import useChannelMessageFetcher from '../ChannelView/ChannelViewContent/composables/useChannelMessageFetcher'
-import { useChannelsStore } from '/@/store/entities/channels'
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
-import { useSubscriptionStore } from '/@/store/domain/subscription'
+import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
+import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
+import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useMessagesStore } from '/@/store/entities/messages'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -24,19 +25,22 @@ const {
   isReachedLatest,
   isLoading,
   lastLoadingDirection,
+  unreadSince,
   onLoadFormerMessagesRequest,
   onLoadLatterMessagesRequest
 } = useChannelMessageFetcher(scrollerEle, props)
+const { messagesMap } = useMessagesStore()
 
 const { channelsMap } = useChannelsStore()
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
 )
 
-const { unreadChannelsMap } = useSubscriptionStore()
+const { unreadChannelsMap, deleteUnreadChannelWithSend } =
+  useSubscriptionStore()
+
 const resetIsReachedLatest = () => {
   if (!unreadChannelsMap.value.get(props.channelId)) return
-  isReachedLatest.value = false
 }
 
 const showToNewMessageButton = ref(false)

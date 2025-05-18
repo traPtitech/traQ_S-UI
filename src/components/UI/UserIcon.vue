@@ -1,13 +1,14 @@
 <template>
   <div
     :role="isClickable ? 'button' : 'img'"
-    :class="$style.container"
+    :class="[$style.container]"
     :style="styles.container"
     @click.prevent.stop="openModal"
   >
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :size="indicatorSize" />
     </div>
+    <div v-if="isInactive" :class="$style.mask"></div>
   </div>
 </template>
 
@@ -42,12 +43,14 @@ const props = withDefaults(
     indicatorSize?: number
     preventModal?: boolean
     hasNotification?: boolean
+    isInactive?: boolean
   }>(),
   {
     size: 36,
     indicatorSize: 10,
     preventModal: false,
-    hasNotification: false
+    hasNotification: false,
+    isInactive: false
   }
 )
 
@@ -108,5 +111,12 @@ const { isClickable, openModal } = useUserModalOpener(
   position: absolute;
   top: 0;
   right: 0;
+}
+.mask {
+  @include background-primary;
+  width: 100%;
+  height: 100%;
+  border-radius: 100vw;
+  opacity: 0.5;
 }
 </style>
