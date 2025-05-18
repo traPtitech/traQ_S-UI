@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import imageCompression from 'browser-image-compression'
+import imageCompression, { type Options } from 'browser-image-compression'
 import { ref, type Ref } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ImageUpload from '/@/components/Settings/ImageUpload.vue'
@@ -44,9 +44,9 @@ const compressIconImage = async () => {
   // `PUT users/me/icon`は、swaggerでは2MBまでのpng, jpeg, gifとあるが、
   // 実際にはそれに加えて2560*1600のピクセル数制限があるため、
   // 2MBの制限に加えて`maxWidthOrHeight`の制約が必要になる。
-  const compressionOptions = {
+  const compressionOptions: Options = {
     maxSizeMB: 2,
-    maxWidthOrHeight: 1920,
+    maxWidthOrHeight: 2000,
     useWebWorker: true
   }
   iconImage.value = await imageCompression(iconImage.value, compressionOptions)
