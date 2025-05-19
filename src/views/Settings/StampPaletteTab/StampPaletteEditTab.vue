@@ -1,7 +1,7 @@
 <template>
   <section>
     <h3>パレットの編集</h3>
-    <div v-if="!editablePalette">
+    <div v-if="!editedPalette">
       <div>
         <p>スタンプパレットは存在しません。</p>
         <p>
@@ -9,7 +9,7 @@
         </p>
       </div>
     </div>
-    <stamp-palette-editor v-else v-model:palette="editablePalette" />
+    <stamp-palette-editor v-else v-model:palette="editedPalette" />
     <div :class="$style.buttons">
       <form-button label="キャンセル" @click="discardWithConfirm" />
       <form-button
@@ -48,24 +48,22 @@ const { execWithToast } = useExecWithToast()
 const { addInfoToast, addErrorToast } = useToastStore()
 
 const savedStampPalette = computed(() => stampPalettesMap.value.get(paletteId))
-const editablePalette = ref<StampPalette | null>(
-  savedStampPalette.value
-    ? JSON.parse(JSON.stringify(savedStampPalette.value))
-    : null
+const editedPalette = ref<StampPalette | null>(
+  savedStampPalette.value ? structuredClone(savedStampPalette.value) : null
 )
 
 const isSavable = computed(() => {
-  if (!editablePalette.value) return false
-  return editablePalette.value.name !== ''
+  if (!editedPalette.value) return false
+  return editedPalette.value.name !== ''
 })
 
 const isEdited = computed(() => {
-  if (!editablePalette.value || !savedStampPalette.value) return false
+  if (!editedPalette.value || !savedStampPalette.value) return false
   return (
-    editablePalette.value.name !== savedStampPalette.value.name ||
-    JSON.stringify(editablePalette.value.stamps) !==
+    editedPalette.value.name !== savedStampPalette.value.name ||
+    JSON.stringify(editedPalette.value.stamps) !==
       JSON.stringify(savedStampPalette.value.stamps) ||
-    editablePalette.value.description !== savedStampPalette.value.description
+    editedPalette.value.description !== savedStampPalette.value.description
   )
 })
 
@@ -79,11 +77,11 @@ const discardWithConfirm = () => {
 }
 
 const saveStampPalette = async () => {
-  if (!editablePalette.value) throw new Error('editablePalette is null')
-  await editStampPalette(editablePalette.value.id, {
-    name: editablePalette.value.name,
-    stamps: new Set(editablePalette.value.stamps),
-    description: editablePalette.value.description
+  if (!editedPalette.value) throw new Error('editedPalette is null')
+  await editStampPalette(editedPalette.value.id, {
+    name: editedPalette.value.name,
+    stamps: new Set(editedPalette.value.stamps),
+    description: editedPalette.value.description
   })
 }
 
