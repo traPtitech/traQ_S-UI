@@ -4,7 +4,11 @@
     <p :class="$style.sectionDescription">
       先頭のスタンプがアイコンとして使用されます
     </p>
-    <div ref="stampListRef" :class="$style.stampList">
+    <div
+      v-if="stampIdsModel.length !== 0"
+      ref="stampListRef"
+      :class="$style.stampList"
+    >
       <div
         v-for="stampId in stampIdsModel"
         :key="stampId"
@@ -15,19 +19,17 @@
         :data-id="stampId"
         @click="toggleStampSelection(stampId)"
       >
-        <AStamp :stamp-id="stampId" :size="32" />
+        <AStamp :stamp-id="stampId" :size="24" />
       </div>
-      <div v-if="stampIdsModel.length === 0" :class="$style.emptyState">
-        スタンプがありません
-      </div>
+      <IconButton
+        :disabled="selectedStampIds.length === 0"
+        icon-name="delete"
+        icon-mdi
+        :class="$style.deleteButton"
+        @click="removeSelectedStamps"
+      />
     </div>
-    <IconButton
-      :disabled="selectedStampIds.length === 0"
-      icon-name="delete"
-      icon-mdi
-      :class="$style.deleteButton"
-      @click="removeSelectedStamps"
-    />
+    <div v-else :class="$style.emptyState">スタンプがありません</div>
   </section>
 </template>
 
@@ -131,9 +133,8 @@ onUnmounted(() => {
 }
 
 .deleteButton {
-  display: block;
-  margin: 8px 8px 0 auto;
   @include color-ui-primary;
+  margin: auto 8px 8px auto;
 
   &[aria-disabled='true'] {
     @include color-ui-tertiary;
@@ -141,6 +142,7 @@ onUnmounted(() => {
 }
 
 .emptyState {
+  @include background-secondary;
   text-align: center;
   @include color-text-secondary;
   padding: 16px;
