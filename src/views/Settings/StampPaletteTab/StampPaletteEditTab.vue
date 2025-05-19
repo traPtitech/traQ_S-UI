@@ -30,7 +30,7 @@
 
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
-import { computed, ref } from 'vue'
+import { computed, ref, toRaw } from 'vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
 import {
   editStampPaletteWrapper,
@@ -54,7 +54,9 @@ const { addInfoToast, addErrorToast } = useToastStore()
 
 const savedStampPalette = computed(() => stampPalettesMap.value.get(paletteId))
 const editedStampPalette = ref<StampPalette | null>(
-  savedStampPalette.value ? structuredClone(savedStampPalette.value) : null
+  savedStampPalette.value
+    ? structuredClone(toRaw(savedStampPalette.value))
+    : null
 )
 
 const isPaletteValid = computed(() => {

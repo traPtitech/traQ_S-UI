@@ -117,7 +117,6 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   padding: 8px;
-  border: 1px solid transparent;
   border-radius: 4px;
   cursor: grab;
 
@@ -126,9 +125,7 @@ onUnmounted(() => {
   }
 
   &.selected {
-    @include background-accent-primary;
-    @include color-accent-primary;
-    border: 1px solid currentColor;
+    background: var(--specific-stamp-include-me-background);
   }
 }
 
