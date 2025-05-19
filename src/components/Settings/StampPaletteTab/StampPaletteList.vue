@@ -15,13 +15,16 @@
 import { computed } from 'vue'
 import StampPaletteCreateLink from './StampPaletteCreateLink.vue'
 import StampPaletteListItem from './StampPaletteListItem.vue'
+import { useMeStore } from '/@/store/domain/me'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 const { stampPalettesMap } = useStampPalettesStore()
+const { myId } = useMeStore()
 
 const stampPalettes = computed(() => {
-  const palettes = [...stampPalettesMap.value.values()]
-  return palettes.length > 0 ? palettes : []
+  return [...stampPalettesMap.value.values()].filter(
+    palette => palette.creatorId === myId.value
+  )
 })
 </script>
 
