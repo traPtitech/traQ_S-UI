@@ -88,10 +88,8 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" module>
-@use '/@/styles/mixins';
-
 .section {
-  @include mixins.background-primary;
+  @include background-primary;
   border-radius: 8px;
   padding: 16px 0;
 }
@@ -103,11 +101,11 @@ onUnmounted(() => {
 
 .sectionDescription {
   font-size: 14px;
-  @include mixins.color-text-secondary;
+  @include color-text-secondary;
 }
 
 .stampList {
-  @include mixins.background-secondary;
+  @include background-secondary;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -122,12 +120,12 @@ onUnmounted(() => {
   cursor: grab;
 
   &:hover {
-    @include mixins.background-tertiary;
+    @include background-tertiary;
   }
 
   &.selected {
-    @include mixins.background-accent-primary;
-    @include mixins.color-accent-primary;
+    @include background-accent-primary;
+    @include color-accent-primary;
     border: 1px solid currentColor;
   }
 }
@@ -135,16 +133,16 @@ onUnmounted(() => {
 .deleteButton {
   display: block;
   margin: 8px 8px 0 auto;
-  @include mixins.color-ui-primary;
+  @include color-ui-primary;
 
   &[aria-disabled='true'] {
-    @include mixins.color-ui-tertiary;
+    @include color-ui-tertiary;
   }
 }
 
 .emptyState {
   text-align: center;
-  @include mixins.color-text-secondary;
+  @include color-text-secondary;
   padding: 16px;
   border-radius: 4px;
   width: 100%;

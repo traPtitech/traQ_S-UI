@@ -145,10 +145,8 @@ const addStamp = (stampId: StampId) => {
 </script>
 
 <style lang="scss" module>
-@use '/@/styles/mixins';
-
 .section {
-  @include mixins.background-primary;
+  @include background-primary;
   border-radius: 8px;
   padding: 16px 0;
 }
@@ -174,11 +172,11 @@ const addStamp = (stampId: StampId) => {
   display: flex;
   align-items: center;
   padding: 8px;
-  @include mixins.background-secondary;
+  @include background-secondary;
   cursor: pointer;
 
   &:hover {
-    @include mixins.background-tertiary;
+    @include background-tertiary;
   }
 }
 
@@ -195,12 +193,12 @@ const addStamp = (stampId: StampId) => {
 }
 
 .iconButton {
-  @include mixins.color-ui-secondary;
+  @include color-ui-secondary;
 }
 
 .emptyState {
   text-align: center;
-  @include mixins.color-text-secondary;
+  @include color-text-secondary;
   padding: 16px;
   border-radius: 4px;
   width: 100%;
