@@ -1,7 +1,7 @@
 <template>
   <section>
     <h3>パレットの編集</h3>
-    <div v-if="!editedPalette">
+    <div v-if="!editedStampPalette">
       <div>
         <p>スタンプパレットは存在しません。</p>
         <p>
@@ -9,19 +9,19 @@
         </p>
       </div>
     </div>
-    <stamp-palette-editor v-else v-model:palette="editedPalette" />
+    <stamp-palette-editor v-else v-model:palette="editedStampPalette" />
     <div :class="$style.buttons">
       <form-button label="キャンセル" @click="discardWithConfirm" />
       <form-button
         label="保存"
         type="primary"
-        :disabled="!isSavable || !isEdited"
+        :disabled="!isPaletteValid || !isEdited"
         @click="saveWithToast"
       />
       <form-button
         label="確定"
         type="primary"
-        :disabled="!isSavable"
+        :disabled="!isPaletteValid"
         @click="finalizeWithToast"
       />
     </div>
@@ -32,6 +32,11 @@
 import type { StampPalette } from '@traptitech/traq'
 import { computed, ref } from 'vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
+import {
+  editStampPaletteWrapper,
+  isStampPaletteEdited,
+  isStampPaletteValid
+} from '/@/components/Settings/StampPaletteTab/utils'
 import FormButton from '/@/components/UI/FormButton.vue'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import router from '/@/router'
@@ -43,28 +48,23 @@ const { paletteId } = defineProps<{
   paletteId: StampPaletteId
 }>()
 
-const { stampPalettesMap, editStampPalette } = useStampPalettesStore()
+const { stampPalettesMap } = useStampPalettesStore()
 const { execWithToast } = useExecWithToast()
 const { addInfoToast, addErrorToast } = useToastStore()
 
 const savedStampPalette = computed(() => stampPalettesMap.value.get(paletteId))
-const editedPalette = ref<StampPalette | null>(
+const editedStampPalette = ref<StampPalette | null>(
   savedStampPalette.value ? structuredClone(savedStampPalette.value) : null
 )
 
-const isSavable = computed(() => {
-  if (!editedPalette.value) return false
-  return editedPalette.value.name !== ''
+const isPaletteValid = computed(() => {
+  if (!editedStampPalette.value) return false
+  return isStampPaletteValid(editedStampPalette.value)
 })
 
 const isEdited = computed(() => {
-  if (!editedPalette.value || !savedStampPalette.value) return false
-  return (
-    editedPalette.value.name !== savedStampPalette.value.name ||
-    JSON.stringify(editedPalette.value.stamps) !==
-      JSON.stringify(savedStampPalette.value.stamps) ||
-    editedPalette.value.description !== savedStampPalette.value.description
-  )
+  if (!editedStampPalette.value || !savedStampPalette.value) return false
+  return isStampPaletteEdited(editedStampPalette.value, savedStampPalette.value)
 })
 
 const discardWithConfirm = () => {
@@ -77,16 +77,12 @@ const discardWithConfirm = () => {
 }
 
 const saveStampPalette = async () => {
-  if (!editedPalette.value) throw new Error('editedPalette is null')
-  await editStampPalette(editedPalette.value.id, {
-    name: editedPalette.value.name,
-    stamps: new Set(editedPalette.value.stamps),
-    description: editedPalette.value.description
-  })
+  if (!editedStampPalette.value) throw new Error('editedStampPalette is null')
+  await editStampPaletteWrapper(editedStampPalette.value)
 }
 
 const saveWithToast = async () => {
-  if (!isSavable.value) {
+  if (!isPaletteValid.value) {
     addErrorToast('パレット名を入力してください')
     return
   }
@@ -98,7 +94,7 @@ const saveWithToast = async () => {
 }
 
 const finalizeWithToast = async () => {
-  if (!isSavable.value) {
+  if (!isPaletteValid.value) {
     addErrorToast('パレット名を入力してください')
     return
   }
