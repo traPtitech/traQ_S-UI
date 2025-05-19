@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.text">
+    <div>
       <p>traQのスタンプをまとめたパレットを作成できます。</p>
       <p>スタンプパレットのアイコンはパレット先頭のスタンプが使用されます。</p>
     </div>
@@ -34,8 +34,5 @@ fetchStampPalettes()
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-.text {
-  margin-left: 12px;
 }
 </style>
