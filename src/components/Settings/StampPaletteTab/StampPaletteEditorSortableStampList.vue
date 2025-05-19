@@ -134,7 +134,7 @@ onUnmounted(() => {
 
 .deleteButton {
   display: block;
-  margin: 8px auto 0;
+  margin: 8px 8px 0 auto;
   @include mixins.color-ui-primary;
 
   &[aria-disabled='true'] {
