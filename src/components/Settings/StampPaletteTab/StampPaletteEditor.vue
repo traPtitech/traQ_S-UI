@@ -5,14 +5,14 @@
       v-model:description="description"
     />
     <StampPaletteEditorSortableStampList v-model:stamp-ids="stamps" />
-    <StampPaletteAddStamp :current-stamp-ids="stamps" />
+    <StampPaletteEditorAddStamp :current-stamp-ids="stamps" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
 import { computed } from 'vue'
-import StampPaletteAddStamp from './StampPaletteAddStamp.vue'
+import StampPaletteEditorAddStamp from './StampPaletteEditorAddStamp.vue'
 import StampPaletteEditorBasicInfo from './StampPaletteEditorBasicInfo.vue'
 import StampPaletteEditorSortableStampList from './StampPaletteEditorSortableStampList.vue'
 import type { StampId } from '/@/types/entity-ids'
