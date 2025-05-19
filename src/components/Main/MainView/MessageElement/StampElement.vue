@@ -24,7 +24,7 @@
       (isLongHovered || RemainScaled) &&
       !isDetailShown &&
       !isMobile &&
-      MouseHover
+      !isTouchDevice
     "
     :stamp="stamp"
     :target-rect="hoveredRect"
@@ -53,15 +53,8 @@ const emit = defineEmits<{
   (e: 'removeStamp', _stampId: string): void
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile, isTouchDevice } = useResponsiveStore()
 const { stampsMap } = useStampsStore()
-
-const MouseHover = ref(false)
-onMounted(() => {
-  MouseHover.value = window.matchMedia(
-    '(hover: hover) and (pointer: fine)'
-  ).matches
-})
 
 const stampName = computed(
   () => stampsMap.value.get(props.stamp.id)?.name ?? ''
