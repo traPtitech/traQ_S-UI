@@ -15,9 +15,9 @@ const pathByRouteName = (routeName: SettingsStampPaletteRouteName) => {
 }
 
 const StampPaletteCreate = () =>
-  import('/@/views/Settings/StampPalette/StampPaletteCreateTab.vue')
+  import('/@/views/Settings/StampPaletteTab/StampPaletteCreateTab.vue')
 const StampPaletteEdit = () =>
-  import('/@/views/Settings/StampPalette/StampPaletteEditTab.vue')
+  import('/@/views/Settings/StampPaletteTab/StampPaletteEditTab.vue')
 
 const createRoute = (
   name: SettingsStampPaletteRouteName,

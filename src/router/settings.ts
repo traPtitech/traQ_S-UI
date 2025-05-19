@@ -53,7 +53,7 @@ const Browser = () => import('/@/views/Settings/BrowserTab.vue')
 const Qall = () => import('/@/views/Settings/QallTab.vue')
 const Stamp = () => import('/@/views/Settings/StampTab.vue')
 const StampPalette = () =>
-  import('/@/views/Settings/StampPalette/StampPaletteTab.vue')
+  import('/@/views/Settings/StampPaletteTab/StampPaletteTab.vue')
 const Theme = () => import('/@/views/Settings/ThemeTab.vue')
 const Audio = () => import('/@/views/Settings/AudioTab.vue')
 
