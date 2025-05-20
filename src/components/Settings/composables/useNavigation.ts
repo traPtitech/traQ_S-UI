@@ -28,7 +28,7 @@ export const navigationRouteNameTitleMap: Record<
   settingsStamp: 'スタンプ',
   settingsStampPalette: 'スタンプパレット',
   settingsStampPaletteCreate: 'スタンプパレット',
-  settingsStampPaletteEdit: 'スタンプパレット',
+  settingsStampPaletteDetail: 'スタンプパレット',
   settingsTheme: 'テーマ',
   settingsAudio: '音声'
 }

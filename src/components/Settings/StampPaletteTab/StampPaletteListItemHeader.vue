@@ -3,7 +3,7 @@
     <div :class="$style.name">{{ palette.name }}</div>
     <router-link
       :class="$style.link"
-      :to="constructSettingsStampPaletteEditPath(palette.id)"
+      :to="constructSettingsStampPaletteDetailPath(palette.id)"
     >
       <a-icon mdi name="pencil" />
     </router-link>
@@ -22,7 +22,7 @@ import type { StampPalette } from '@traptitech/traq'
 import AIcon from '/@/components/UI/AIcon.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
-import { constructSettingsStampPaletteEditPath } from '/@/router/settingsStampPalette'
+import { constructSettingsStampPaletteDetailPath } from '/@/router/settingsStampPalette'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 const { palette } = defineProps<{

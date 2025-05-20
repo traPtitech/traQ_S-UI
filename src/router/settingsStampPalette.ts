@@ -3,21 +3,21 @@ import type { RouteRecordRaw } from 'vue-router'
 
 export type SettingsStampPaletteRouteName =
   | 'settingsStampPaletteCreate'
-  | 'settingsStampPaletteEdit'
+  | 'settingsStampPaletteDetail'
 
 const pathByRouteName = (routeName: SettingsStampPaletteRouteName) => {
   switch (routeName) {
     case 'settingsStampPaletteCreate':
       return 'new'
-    case 'settingsStampPaletteEdit':
+    case 'settingsStampPaletteDetail':
       return ':paletteId'
   }
 }
 
 const StampPaletteCreate = () =>
   import('/@/views/Settings/StampPaletteTab/StampPaletteCreateTab.vue')
-const StampPaletteEdit = () =>
-  import('/@/views/Settings/StampPaletteTab/StampPaletteEditTab.vue')
+const StampPaletteDetail = () =>
+  import('/@/views/Settings/StampPaletteTab/StampPaletteDetailTab.vue')
 
 const createRoute = (
   name: SettingsStampPaletteRouteName,
@@ -35,10 +35,10 @@ const createRoute = (
 
 export const settingsStampPaletteRoutes: RouteRecordRaw[] = [
   createRoute('settingsStampPaletteCreate', StampPaletteCreate),
-  createRoute('settingsStampPaletteEdit', StampPaletteEdit, true)
+  createRoute('settingsStampPaletteDetail', StampPaletteDetail, true)
 ]
 
 export const constructSettingsStampPaletteCreatePath = () =>
   `/settings/stamp-palette/${pathByRouteName('settingsStampPaletteCreate')}`
-export const constructSettingsStampPaletteEditPath = (paletteId: string) =>
+export const constructSettingsStampPaletteDetailPath = (paletteId: string) =>
   `/settings/stamp-palette/${paletteId}`
