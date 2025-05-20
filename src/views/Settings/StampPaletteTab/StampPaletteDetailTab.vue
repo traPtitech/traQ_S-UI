@@ -5,7 +5,7 @@
       <StampPaletteDescription />
     </div>
     <div v-if="!isStampPaletteFetched"></div>
-    <div v-else-if="!editedStampPalette || !isMyPalette">
+    <div v-else-if="!stampPaletteToEdit || !isMyPalette">
       <div>
         <p>スタンプパレットは存在しません。</p>
         <p>
@@ -14,9 +14,9 @@
       </div>
     </div>
     <div v-else>
-      <stamp-palette-editor v-model:palette="editedStampPalette" />
+      <stamp-palette-editor v-model:palette="stampPaletteToEdit" />
       <StampPaletteActionButtons
-        :palette="editedStampPalette"
+        :palette="stampPaletteToEdit"
         :is-save-disabled="!hasPaletteUnsavedChanges"
         @save="saveWithToast"
         @finalize="finalizeWithToast"
@@ -53,7 +53,7 @@ const { addInfoToast, addErrorToast } = useToastStore()
 const { myId } = useMeStore()
 
 const savedStampPalette = computed(() => stampPalettesMap.value.get(paletteId))
-const editedStampPalette = ref<StampPalette | null>(null)
+const stampPaletteToEdit = ref<StampPalette | null>(null)
 
 const isMyPalette = computed(() => {
   if (!savedStampPalette.value) return false
@@ -63,15 +63,15 @@ const isStampPaletteFetched = ref(false)
 
 onBeforeMount(async () => {
   await fetchStampPalette({ stampPaletteId: paletteId })
-  editedStampPalette.value = structuredClone(
+  stampPaletteToEdit.value = structuredClone(
     toRaw(stampPalettesMap.value.get(paletteId)) ?? null
   )
   isStampPaletteFetched.value = true
 })
 
 const hasPaletteUnsavedChanges = computed(() => {
-  if (!editedStampPalette.value || !savedStampPalette.value) return false
-  return isStampPaletteEdited(editedStampPalette.value, savedStampPalette.value)
+  if (!stampPaletteToEdit.value || !savedStampPalette.value) return false
+  return isStampPaletteEdited(stampPaletteToEdit.value, savedStampPalette.value)
 })
 
 const discardWithConfirm = () => {
@@ -84,8 +84,8 @@ const discardWithConfirm = () => {
 }
 
 const saveStampPalette = async () => {
-  if (!editedStampPalette.value) throw new Error('editedStampPalette is null')
-  await editStampPaletteWrapper(editedStampPalette.value)
+  if (!stampPaletteToEdit.value) throw new Error('stampPaletteToEdit is null')
+  await editStampPaletteWrapper(stampPaletteToEdit.value)
 }
 
 const saveWithToast = async () => {
