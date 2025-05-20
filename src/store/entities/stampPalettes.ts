@@ -63,7 +63,6 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
         stampPalettesMap.value.set(stampPaletteId, normalizedPalette)
       }
     )
-    // Ensure the returned value is also normalized
     if (stampPalette) {
       return {
         ...stampPalette,
@@ -107,6 +106,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await createStampPaletteSingleflight(apiRequestPayload as any)
 
+    // レスポンスのStampPaletteはstampsが空配列の場合にnullになるバグがあるので、空配列をセットする
     const normalizedPalette = {
       ...createdStampPaletteFromApi,
       stamps: createdStampPaletteFromApi.stamps ?? []
@@ -144,7 +144,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
         paletteToUpdate.description = apiRequestPayload.description
       }
       if (apiRequestPayload.stamps) {
-        paletteToUpdate.stamps = apiRequestPayload.stamps
+        paletteToUpdate.stamps = apiRequestPayload.stamps ?? []
       }
       paletteToUpdate.updatedAt = new Date().toISOString()
       stampPalettesMap.value.set(stampPaletteId, paletteToUpdate)
