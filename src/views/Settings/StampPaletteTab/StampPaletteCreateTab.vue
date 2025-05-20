@@ -6,7 +6,11 @@
     </div>
     <stamp-palette-editor v-model:palette="newStampPalette" />
     <div :class="$style.buttons">
-      <form-button label="キャンセル" @click="discardWithConfirm" />
+      <form-button
+        label="キャンセル"
+        type="tertiary"
+        @click="discardWithConfirm"
+      />
       <form-button
         label="保存"
         type="primary"
