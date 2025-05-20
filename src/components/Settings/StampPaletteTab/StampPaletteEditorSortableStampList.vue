@@ -11,6 +11,7 @@
       ref="stampListRef"
       :class="$style.stampList"
     >
+      <!-- FIXME: スタンプの総数が多い時に重くなる -->
       <div
         v-for="stampId in stampIdsModel"
         :key="stampId"
