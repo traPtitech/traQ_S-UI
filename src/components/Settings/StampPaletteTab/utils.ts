@@ -3,6 +3,8 @@ import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 const { createStampPalette, editStampPalette } = useStampPalettesStore()
 
+export const STAMP_PALETTE_STAMPS_LIMIT = 200
+
 export const isStampPaletteEdited = (
   stampPalette: StampPalette,
   originalStampPalette: StampPalette
@@ -31,7 +33,7 @@ export const isStampPaletteNameValid = (stampPalette: StampPalette) => {
 }
 
 export const isStampPaletteStampsValid = (stampPalette: StampPalette) => {
-  return stampPalette.stamps.length <= 200
+  return stampPalette.stamps.length <= STAMP_PALETTE_STAMPS_LIMIT
 }
 
 export const isStampPaletteValid = (stampPalette: StampPalette) => {

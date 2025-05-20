@@ -39,7 +39,7 @@
         { [$style.limitOver]: isStampCountOverLimit }
       ]"
     >
-      {{ stampIdsModel.length }} / 200
+      {{ stampIdsModel.length }} / {{ STAMP_PALETTE_STAMPS_LIMIT }}
     </p>
   </section>
 </template>
@@ -47,6 +47,7 @@
 <script lang="ts" setup>
 import Sortable, { type SortableEvent } from 'sortablejs'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { STAMP_PALETTE_STAMPS_LIMIT } from './utils'
 import AStamp from '/@/components/UI/AStamp.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import type { StampId } from '/@/types/entity-ids'
@@ -54,7 +55,7 @@ import type { StampId } from '/@/types/entity-ids'
 const stampIdsModel = defineModel<StampId[]>('stamp-ids', { required: true })
 
 const isStampCountOverLimit = computed(() => {
-  return stampIdsModel.value.length > 200
+  return stampIdsModel.value.length > STAMP_PALETTE_STAMPS_LIMIT
 })
 
 const selectedStampIds = ref<StampId[]>([])
