@@ -15,7 +15,7 @@
       <form-button
         label="保存"
         type="primary"
-        :disabled="!isPaletteValid || !isEdited"
+        :disabled="!isPaletteValid || !hasPaletteUnsavedChanges"
         @click="saveWithToast"
       />
       <form-button
@@ -64,14 +64,14 @@ const isPaletteValid = computed(() => {
   return isStampPaletteValid(editedStampPalette.value)
 })
 
-const isEdited = computed(() => {
+const hasPaletteUnsavedChanges = computed(() => {
   if (!editedStampPalette.value || !savedStampPalette.value) return false
   return isStampPaletteEdited(editedStampPalette.value, savedStampPalette.value)
 })
 
 const discardWithConfirm = () => {
   if (
-    !isEdited.value ||
+    !hasPaletteUnsavedChanges.value ||
     window.confirm('未保存の編集内容が破棄されますが、よろしいですか？')
   ) {
     router.back()
@@ -100,7 +100,7 @@ const finalizeWithToast = async () => {
     addErrorToast('パレット名を入力してください')
     return
   }
-  if (!isEdited.value) {
+  if (!hasPaletteUnsavedChanges.value) {
     router.back()
     return
   }

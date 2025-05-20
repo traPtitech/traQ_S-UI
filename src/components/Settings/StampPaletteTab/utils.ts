@@ -26,8 +26,19 @@ export const isStampPaletteEdited = (
   return false
 }
 
-export const isStampPaletteValid = (stampPalette: StampPalette) => {
+const isStampPaletteNameValid = (stampPalette: StampPalette) => {
   return stampPalette.name !== ''
+}
+
+const isStampPaletteStampsValid = (stampPalette: StampPalette) => {
+  return stampPalette.stamps.length <= 200
+}
+
+export const isStampPaletteValid = (stampPalette: StampPalette) => {
+  return (
+    isStampPaletteNameValid(stampPalette) &&
+    isStampPaletteStampsValid(stampPalette)
+  )
 }
 
 export const editStampPaletteWrapper = async (stampPalette: StampPalette) => {
