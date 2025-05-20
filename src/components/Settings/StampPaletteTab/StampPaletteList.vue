@@ -1,7 +1,9 @@
 <template>
   <section :class="$style.section">
-    <h3>パレット一覧</h3>
-    <StampPaletteDescription />
+    <div :class="$style.sectionHeader">
+      <h3>パレット一覧</h3>
+      <StampPaletteDescription />
+    </div>
     <stamp-palette-create-link />
     <div :class="$style.stampPaletteList">
       <!-- FIXME: おそらくスタンプパレットのスタンプの総数が多い時に重くなる -->
@@ -35,6 +37,11 @@ const stampPalettes = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 .stampPaletteList {
   display: flex;
