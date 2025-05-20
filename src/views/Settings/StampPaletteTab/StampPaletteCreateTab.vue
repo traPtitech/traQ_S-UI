@@ -24,10 +24,10 @@ import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPale
 import {
   createStampPaletteWrapper,
   editStampPaletteWrapper,
+  goToSettingsStampPalette,
   isStampPaletteEdited
 } from '/@/components/Settings/StampPaletteTab/utils'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
-import router from '/@/router'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useToastStore } from '/@/store/ui/toast'
 import type { StampId, StampPaletteId } from '/@/types/entity-ids'
@@ -61,7 +61,7 @@ const discardWithConfirm = () => {
     !hasPaletteUnsavedChanges.value ||
     window.confirm('未保存の編集内容が破棄されますが、よろしいですか？')
   ) {
-    router.back()
+    goToSettingsStampPalette()
   }
 }
 
@@ -85,13 +85,13 @@ const saveWithToast = async () => {
 
 const finalizeWithToast = async () => {
   if (!hasPaletteUnsavedChanges.value) {
-    router.back()
+    goToSettingsStampPalette()
     return
   }
   try {
     await saveStampPalette()
     addInfoToast('スタンプパレットを保存しました')
-    router.back()
+    goToSettingsStampPalette()
   } catch (e) {
     addErrorToast('スタンプパレットの保存に失敗しました')
   }

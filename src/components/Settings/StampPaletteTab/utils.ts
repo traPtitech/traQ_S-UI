@@ -1,4 +1,6 @@
 import type { StampPalette } from '@traptitech/traq'
+import router from '/@/router'
+import { settingsStampPaletteRouteName } from '/@/router/settings'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 const { createStampPalette, editStampPalette } = useStampPalettesStore()
@@ -57,4 +59,8 @@ export const createStampPaletteWrapper = async (stampPalette: StampPalette) => {
     stamps: new Set(stampPalette.stamps),
     description: stampPalette.description
   })
+}
+
+export const goToSettingsStampPalette = () => {
+  router.push({ name: settingsStampPaletteRouteName })
 }
