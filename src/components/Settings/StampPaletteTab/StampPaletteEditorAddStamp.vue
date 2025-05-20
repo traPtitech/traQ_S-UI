@@ -37,6 +37,7 @@
 import { computed, onUnmounted, ref, watch } from 'vue'
 import StampPaletteEditorAddStampListItem from './StampPaletteEditorAddStampListItem.vue'
 import FilterInput from '/@/components/UI/FilterInput.vue'
+import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { StampId } from '/@/types/entity-ids'
 
@@ -47,8 +48,12 @@ const currentStampIds = defineModel<StampId[]>('current-stamp-ids', {
 })
 
 const { stampsMap, stampsMapFetched } = useStampsStore()
+const { recentStampIds, fetchStampHistory } = useStampHistory()
+
 const searchQuery = ref('')
 const displayCount = ref(ITEMS_PER_LOAD)
+
+fetchStampHistory()
 
 const _allFilteredAvailableStamps = computed(() => {
   if (!stampsMapFetched.value) {
@@ -56,16 +61,24 @@ const _allFilteredAvailableStamps = computed(() => {
   }
   const query = searchQuery.value.toLowerCase()
 
-  return Array.from(stampsMap.value.values()).filter(stamp => {
-    if (currentStampIds.value.includes(stamp.id)) {
-      return false
-    }
-    if (query === '') {
-      return true
-    }
-    const name = stamp.name.toLowerCase()
-    return query.length === 1 ? name === query : name.includes(query)
-  })
+  return [
+    ...recentStampIds.value,
+    ...[...stampsMap.value.keys()].filter(
+      stampId => !recentStampIds.value.includes(stampId)
+    )
+  ]
+    .map(id => stampsMap.value.get(id))
+    .filter(stamp => stamp !== undefined)
+    .filter(stamp => {
+      if (currentStampIds.value.includes(stamp.id)) {
+        return false
+      }
+      if (query === '') {
+        return true
+      }
+      const name = stamp.name.toLowerCase()
+      return query.length === 1 ? name === query : name.includes(query)
+    })
 })
 
 const filteredAvailableStamps = computed(() => {
