@@ -1,12 +1,12 @@
 import type { Ref } from 'vue'
 import { computed } from 'vue'
-import useStampFilter from './useStampFilter'
+import type { StampId } from '/@/types/entity-ids'
 import type { StampSet } from './useStampSetSelector'
+import useStampFilter from './useStampFilter'
 import { useStampCategory } from '/@/store/domain/stampCategory'
-import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
-import type { StampId } from '/@/types/entity-ids'
+import { useStampHistory } from '/@/store/domain/stampHistory'
 
 const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { traQStampCategory, unicodeStampCategories } = useStampCategory()
@@ -21,7 +21,7 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
     if (currentStampSet.value.type === 'palette') {
       const id = currentStampSet.value.id
       const stampPalette = stampPalettesMap.value.get(id)
-      return stampPalette ? Array.from(stampPalette.stamps) : []
+      return stampPalette?.stamps ?? []
     }
     if (currentStampSet.value.type === 'category') {
       const name = currentStampSet.value.id

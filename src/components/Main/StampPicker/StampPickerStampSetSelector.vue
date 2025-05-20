@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" @click.stop>
+  <div :class="$style.container">
     <div :class="$style.innerContainer">
       <stamp-picker-stamp-set-selector-item
         v-for="set in stampSets"
@@ -7,7 +7,7 @@
         :class="$style.item"
         :stamp-set="set"
         :is-active="currentStampSet.id === set.id"
-        @click="event => onStampSetSelect(set, event)"
+        @click="onStampSetSelect(set)"
       />
     </div>
   </div>
@@ -32,8 +32,7 @@ const emit = defineEmits<{
   (e: 'update:currentStampSet', _stampSet: StampSet): void
 }>()
 
-const onStampSetSelect = (stampSet: StampSet, event: MouseEvent) => {
-  event.stopPropagation()
+const onStampSetSelect = (stampSet: StampSet) => {
   emit('update:currentStampSet', stampSet)
 }
 </script>
