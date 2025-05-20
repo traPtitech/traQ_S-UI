@@ -7,18 +7,18 @@ const { createStampPalette, editStampPalette } = useStampPalettesStore()
 
 export const STAMP_PALETTE_STAMPS_LIMIT = 200
 
-export const isStampPaletteEdited = (
-  stampPalette: StampPalette,
-  originalStampPalette: StampPalette
+export const areStampPalettesDifferent = (
+  palette1: StampPalette,
+  palette2: StampPalette
 ) => {
-  if (stampPalette.name !== originalStampPalette.name) {
+  if (palette1.name !== palette2.name) {
     return true
   }
-  if (stampPalette.description !== originalStampPalette.description) {
+  if (palette1.description !== palette2.description) {
     return true
   }
-  const stamps1 = stampPalette.stamps
-  const stamps2 = originalStampPalette.stamps
+  const stamps1 = palette1.stamps
+  const stamps2 = palette2.stamps
   if (stamps1.length !== stamps2.length) {
     return true
   }

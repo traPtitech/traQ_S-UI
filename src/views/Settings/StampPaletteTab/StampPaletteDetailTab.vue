@@ -33,9 +33,9 @@ import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/St
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
 import {
+  areStampPalettesDifferent,
   editStampPaletteWrapper,
-  goToSettingsStampPalette,
-  isStampPaletteEdited
+  goToSettingsStampPalette
 } from '/@/components/Settings/StampPaletteTab/utils'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import { useMeStore } from '/@/store/domain/me'
@@ -71,7 +71,10 @@ onBeforeMount(async () => {
 
 const hasPaletteUnsavedChanges = computed(() => {
   if (!stampPaletteToEdit.value || !savedStampPalette.value) return false
-  return isStampPaletteEdited(stampPaletteToEdit.value, savedStampPalette.value)
+  return areStampPalettesDifferent(
+    stampPaletteToEdit.value,
+    savedStampPalette.value
+  )
 })
 
 const discardWithConfirm = () => {
