@@ -2,11 +2,12 @@
   <section :class="$style.section">
     <h3 :class="$style.sectionTitle">スタンプを追加</h3>
     <div ref="addStampListContainerRef" :class="$style.addStampListContainer">
-      <FilterInput v-model="searchQuery" placeholder="スタンプを検索" />
-      <div
-        v-if="filteredAvailableStamps.length > 0"
-        :class="$style.addStampList"
-      >
+      <FilterInput
+        v-model="searchQuery"
+        placeholder="スタンプを検索"
+        :class="$style.filterInput"
+      />
+      <div v-if="filteredAvailableStamps.length > 0">
         <div
           v-for="item in filteredAvailableStamps"
           :key="item.id"
@@ -157,22 +158,23 @@ const addStamp = (stampId: StampId) => {
 }
 
 .addStampListContainer {
+  @include background-secondary;
+  display: flex;
+  flex-direction: column;
   max-height: 400px;
   min-height: 400px;
   overflow-y: auto;
 }
 
-.addStampList {
-  display: flex;
-  flex-direction: column;
+.filterInput {
   border-radius: 4px;
+  padding: 8px;
 }
 
 .addStampListItem {
   display: flex;
   align-items: center;
   padding: 8px;
-  @include background-secondary;
   cursor: pointer;
 
   &:hover {
