@@ -141,6 +141,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
   return {
     stampPalettesMap,
     nonEmptyStampPaletteIds,
+    fetchStampPalette,
     fetchStampPalettes,
     createStampPalette,
     editStampPalette,
