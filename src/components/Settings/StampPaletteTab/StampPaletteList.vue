@@ -6,7 +6,6 @@
     </div>
     <stamp-palette-create-link />
     <div :class="$style.stampPaletteList">
-      <!-- FIXME: スタンプパレットのスタンプの総数が多い時に重くなる -->
       <div v-for="palette in stampPalettes" :key="palette.id">
         <stamp-palette-list-item :palette="palette" />
       </div>
