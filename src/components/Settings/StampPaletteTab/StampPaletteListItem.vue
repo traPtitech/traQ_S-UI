@@ -15,7 +15,7 @@ const { palette } = defineProps<{
   palette: StampPalette
 }>()
 
-const stamps = computed(() => palette.stamps ?? [])
+const stamps = computed(() => palette.stamps)
 </script>
 
 <style lang="scss" module>

@@ -36,7 +36,7 @@ const description = computed({
 })
 
 const stamps = computed({
-  get: () => stampPaletteModel.value.stamps ?? [],
+  get: () => stampPaletteModel.value.stamps,
   set: (val: StampId[]) => {
     stampPaletteModel.value = {
       ...stampPaletteModel.value,
