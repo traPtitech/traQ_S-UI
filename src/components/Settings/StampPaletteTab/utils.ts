@@ -26,11 +26,11 @@ export const isStampPaletteEdited = (
   return false
 }
 
-const isStampPaletteNameValid = (stampPalette: StampPalette) => {
+export const isStampPaletteNameValid = (stampPalette: StampPalette) => {
   return stampPalette.name !== ''
 }
 
-const isStampPaletteStampsValid = (stampPalette: StampPalette) => {
+export const isStampPaletteStampsValid = (stampPalette: StampPalette) => {
   return stampPalette.stamps.length <= 200
 }
 

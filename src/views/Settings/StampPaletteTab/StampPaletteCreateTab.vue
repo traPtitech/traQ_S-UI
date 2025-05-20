@@ -5,40 +5,27 @@
       <StampPaletteDescription />
     </div>
     <stamp-palette-editor v-model:palette="newStampPalette" />
-    <div :class="$style.buttons">
-      <form-button
-        label="キャンセル"
-        type="tertiary"
-        @click="discardWithConfirm"
-      />
-      <form-button
-        label="保存"
-        type="primary"
-        :disabled="!isPaletteValid || !hasPaletteUnsavedChanges"
-        @click="saveWithToast"
-      />
-      <form-button
-        label="確定"
-        type="primary"
-        :disabled="!isPaletteValid"
-        @click="finalizeWithToast"
-      />
-    </div>
+    <StampPaletteActionButtons
+      :palette="newStampPalette"
+      :is-save-disabled="!hasPaletteUnsavedChanges"
+      @save="saveWithToast"
+      @finalize="finalizeWithToast"
+      @cancel="discardWithConfirm"
+    />
   </section>
 </template>
 
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
 import { computed, ref } from 'vue'
+import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/StampPaletteActionButtons.vue'
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
 import {
   createStampPaletteWrapper,
   editStampPaletteWrapper,
-  isStampPaletteEdited,
-  isStampPaletteValid
+  isStampPaletteEdited
 } from '/@/components/Settings/StampPaletteTab/utils'
-import FormButton from '/@/components/UI/FormButton.vue'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import router from '/@/router'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
@@ -62,10 +49,6 @@ const newStampPalette = ref(structuredClone(emptyStampPalette))
 const savedStampPalette = computed(() =>
   stampPalettesMap.value.get(newStampPalette.value.id)
 )
-
-const isPaletteValid = computed(() => {
-  return isStampPaletteValid(newStampPalette.value)
-})
 
 const hasPaletteUnsavedChanges = computed(() => {
   if (!savedStampPalette.value)
@@ -93,10 +76,6 @@ const saveStampPalette = async () => {
 }
 
 const saveWithToast = async () => {
-  if (!isPaletteValid.value) {
-    addErrorToast('パレット名を入力してください')
-    return
-  }
   await execWithToast(
     'スタンプパレットを保存しました',
     'スタンプパレットの保存に失敗しました',
@@ -105,10 +84,6 @@ const saveWithToast = async () => {
 }
 
 const finalizeWithToast = async () => {
-  if (!isPaletteValid.value) {
-    addErrorToast('パレット名を入力してください')
-    return
-  }
   if (!hasPaletteUnsavedChanges.value) {
     router.back()
     return

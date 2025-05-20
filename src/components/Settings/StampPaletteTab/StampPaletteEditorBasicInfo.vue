@@ -2,7 +2,11 @@
   <div :class="$style.container">
     <label :class="$style.label">
       パレット名
-      <FormInput v-model="nameModel" :class="$style.form" />
+      <FormInput
+        v-model="nameModel"
+        :class="$style.form"
+        placeholder="パレット名は必須項目です"
+      />
     </label>
     <label :class="$style.label">
       説明

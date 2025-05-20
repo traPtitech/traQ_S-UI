@@ -33,17 +33,29 @@
       />
     </div>
     <div v-else :class="$style.emptyState">スタンプがありません</div>
+    <p
+      :class="[
+        $style.stampCount,
+        { [$style.limitOver]: isStampCountOverLimit }
+      ]"
+    >
+      {{ stampIdsModel.length }} / 200
+    </p>
   </section>
 </template>
 
 <script lang="ts" setup>
 import Sortable, { type SortableEvent } from 'sortablejs'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import type { StampId } from '/@/types/entity-ids'
 
 const stampIdsModel = defineModel<StampId[]>('stamp-ids', { required: true })
+
+const isStampCountOverLimit = computed(() => {
+  return stampIdsModel.value.length > 200
+})
 
 const selectedStampIds = ref<StampId[]>([])
 
@@ -75,11 +87,11 @@ onMounted(() => {
           event.oldDraggableIndex === undefined
         )
           return
-        const newStamps = [...stampIdsModel.value]
-        const movedItem = newStamps.splice(event.oldDraggableIndex, 1)[0]
-        if (movedItem === undefined) return
-        newStamps.splice(event.newDraggableIndex, 0, movedItem)
-        stampIdsModel.value = newStamps
+        const newStampIds = [...stampIdsModel.value]
+        const movedStampId = newStampIds.splice(event.oldDraggableIndex, 1)[0]
+        if (movedStampId === undefined) return
+        newStampIds.splice(event.newDraggableIndex, 0, movedStampId)
+        stampIdsModel.value = newStampIds
       }
     })
   }
@@ -154,5 +166,15 @@ onUnmounted(() => {
   padding: 8px;
   border-radius: 4px;
   width: 100%;
+}
+
+.stampCount {
+  @include color-ui-secondary;
+  @include size-body2;
+  text-align: right;
+}
+
+.limitOver {
+  color: $theme-accent-error-default;
 }
 </style>
