@@ -84,7 +84,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
     const apiRequestPayload = {
       name: postStampPaletteRequest.name,
       description: postStampPaletteRequest.description,
-      stamps: Array.from(postStampPaletteRequest.stamps ?? [])
+      stamps: Array.from(postStampPaletteRequest.stamps)
     }
     const [{ data: createdStampPalette }, shared] =
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -103,16 +103,30 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
     const apiRequestPayload = {
       name: patchStampPaletteRequest.name,
       description: patchStampPaletteRequest.description,
-      stamps: Array.from(patchStampPaletteRequest.stamps ?? [])
+      stamps: patchStampPaletteRequest.stamps
+        ? Array.from(patchStampPaletteRequest.stamps)
+        : undefined
     }
     const [_, shared] = await editStampPaletteSingleflight(
       stampPaletteId,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       apiRequestPayload as any
     )
-    // FIXME: `Apis.editStampPalette()`が戻り値を返すように仕様が変わったらそれを使う
-    if (!shared) {
-      await fetchStampPalette({ stampPaletteId, cacheStrategy: 'forceFetch' })
+    if (shared) return
+    const paletteToUpdate = stampPalettesMap.value.get(stampPaletteId)
+    if (paletteToUpdate) {
+      if (apiRequestPayload.name) {
+        paletteToUpdate.name = apiRequestPayload.name
+      }
+      if (apiRequestPayload.description) {
+        paletteToUpdate.description = apiRequestPayload.description
+      }
+      if (apiRequestPayload.stamps) {
+        paletteToUpdate.stamps = apiRequestPayload.stamps
+      }
+      paletteToUpdate.updatedAt = new Date().toISOString()
+      stampPalettesMap.value.set(stampPaletteId, paletteToUpdate)
+      fetchStampPalette({ stampPaletteId, cacheStrategy: 'forceFetch' })
     }
   }
 
