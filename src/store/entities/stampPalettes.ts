@@ -110,6 +110,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       apiRequestPayload as any
     )
+    // FIXME: `Apis.editStampPalette()`が戻り値を返すように仕様が変わったらそれを使う
     if (!shared) {
       await fetchStampPalette({ stampPaletteId, cacheStrategy: 'forceFetch' })
     }
