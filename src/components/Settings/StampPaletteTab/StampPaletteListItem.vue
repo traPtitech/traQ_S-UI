@@ -5,13 +5,6 @@
       <div v-for="stampId in palette.stamps" :key="stampId">
         <a-stamp :stamp-id="stampId" />
       </div>
-      <!-- TODO: addStampToStampPaletteを実装する -->
-      <!-- <icon-button
-        :class="$style.addButton"
-        icon-name="plus"
-        icon-mdi
-        @click="addStampToStampPalette"
-      /> -->
     </div>
   </div>
 </template>
@@ -20,15 +13,10 @@
 import type { StampPalette } from '@traptitech/traq'
 import StampPaletteListItemHeader from './StampPaletteListItemHeader.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
-// import IconButton from '/@/components/UI/IconButton.vue'
 
 const { palette } = defineProps<{
   palette: StampPalette
 }>()
-
-const addStampToStampPalette = async () => {
-  // TODO: implement add stamp to stamp palette
-}
 </script>
 
 <style lang="scss" module>
