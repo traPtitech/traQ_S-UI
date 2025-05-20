@@ -9,18 +9,12 @@
       />
       <div v-if="filteredAvailableStamps.length > 0">
         <div
-          v-for="item in filteredAvailableStamps"
-          :key="item.id"
+          v-for="stamp in filteredAvailableStamps"
+          :key="stamp.id"
           :class="$style.addStampListItem"
-          @click="addStamp(item.id)"
+          @click="addStamp(stamp.id)"
         >
-          <AStamp
-            :stamp-id="item.id"
-            :size="24"
-            :class="$style.stampImageInList"
-          />
-          <span :class="$style.stampNameContent">{{ item.name }}</span>
-          <IconButton icon-name="plus" icon-mdi :class="$style.iconButton" />
+          <StampPaletteEditorAddStampListItem :stamp="stamp" />
         </div>
         <div
           v-if="displayCount < _allFilteredAvailableStamps.length"
@@ -41,9 +35,8 @@
 
 <script lang="ts" setup>
 import { computed, onUnmounted, ref, watch } from 'vue'
-import AStamp from '/@/components/UI/AStamp.vue'
+import StampPaletteEditorAddStampListItem from './StampPaletteEditorAddStampListItem.vue'
 import FilterInput from '/@/components/UI/FilterInput.vue'
-import IconButton from '/@/components/UI/IconButton.vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { StampId } from '/@/types/entity-ids'
 
