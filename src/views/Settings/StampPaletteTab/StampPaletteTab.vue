@@ -1,9 +1,5 @@
 <template>
-  <div :class="$style.container">
-    <div>
-      <p>traQのスタンプをまとめたパレットを作成できます。</p>
-      <p>スタンプパレットのアイコンはパレット先頭のスタンプが使用されます。</p>
-    </div>
+  <div>
     <stamp-palette-list v-if="isPathStampPalette" />
     <router-view />
   </div>
@@ -28,11 +24,4 @@ const { fetchStampPalettes } = useStampPalettesStore()
 fetchStampPalettes()
 </script>
 
-<style lang="scss" module>
-.container {
-  margin: 24px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-</style>
+<style lang="scss" module></style>

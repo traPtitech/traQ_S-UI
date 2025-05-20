@@ -50,12 +50,6 @@ const stamps = computed({
 .container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-.buttons {
-  display: flex;
-  gap: 8px;
-  margin-top: 16px;
-  justify-content: flex-end;
+  gap: 12px;
 }
 </style>

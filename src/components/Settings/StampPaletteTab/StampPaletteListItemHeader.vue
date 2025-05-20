@@ -50,7 +50,7 @@ const showStampPaletteDeleteToast = async () => {
 }
 .name {
   @include background-primary;
-  font-size: 16px;
+  @include size-body1;
   font-weight: bold;
   padding: 4px 8px;
   border-radius: 4px;
@@ -75,5 +75,6 @@ const showStampPaletteDeleteToast = async () => {
 }
 .description {
   @include color-ui-secondary;
+  @include size-body2;
 }
 </style>

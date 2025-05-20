@@ -23,7 +23,7 @@ const descriptionModel = defineModel<string>('description', { required: true })
 .container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 }
 .label {
   display: flex;

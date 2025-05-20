@@ -1,8 +1,8 @@
 <template>
   <section :class="$style.section">
     <h3 :class="$style.sectionTitle">スタンプを追加</h3>
-    <FilterInput v-model="searchQuery" placeholder="スタンプを検索" />
     <div ref="addStampListContainerRef" :class="$style.addStampListContainer">
+      <FilterInput v-model="searchQuery" placeholder="スタンプを検索" />
       <div
         v-if="filteredAvailableStamps.length > 0"
         :class="$style.addStampList"
@@ -146,13 +146,13 @@ const addStamp = (stampId: StampId) => {
 
 <style lang="scss" module>
 .section {
-  @include background-primary;
-  border-radius: 8px;
-  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .sectionTitle {
-  font-size: 18px;
+  @include size-body1;
   font-weight: bold;
 }
 
@@ -187,7 +187,7 @@ const addStamp = (stampId: StampId) => {
 .stampNameContent {
   flex-grow: 1;
   margin-left: 8px;
-  font-size: 14px;
+  @include size-body2;
   word-break: break-all;
   white-space: normal;
 }

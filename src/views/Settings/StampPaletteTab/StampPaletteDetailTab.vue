@@ -1,6 +1,9 @@
 <template>
-  <section>
-    <h3>パレットの編集</h3>
+  <section :class="$style.section">
+    <div :class="$style.sectionHeader">
+      <h3>パレットの編集</h3>
+      <StampPaletteDescription />
+    </div>
     <div v-if="!editedStampPalette">
       <div>
         <p>スタンプパレットは存在しません。</p>
@@ -31,6 +34,7 @@
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
 import { computed, ref, toRaw } from 'vue'
+import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
 import {
   editStampPaletteWrapper,
@@ -115,6 +119,16 @@ const finalizeWithToast = async () => {
 </script>
 
 <style lang="scss" module>
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 .buttons {
   display: flex;
   gap: 8px;

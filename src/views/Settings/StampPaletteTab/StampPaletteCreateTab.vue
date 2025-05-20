@@ -1,6 +1,9 @@
 <template>
-  <section>
-    <h3>パレットの作成</h3>
+  <section :class="$style.section">
+    <div :class="$style.sectionHeader">
+      <h3>パレットの作成</h3>
+      <StampPaletteDescription />
+    </div>
     <stamp-palette-editor v-model:palette="newStampPalette" />
     <div :class="$style.buttons">
       <form-button label="キャンセル" @click="discardWithConfirm" />
@@ -23,6 +26,7 @@
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
 import { computed, ref } from 'vue'
+import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
 import {
   createStampPaletteWrapper,
@@ -116,6 +120,16 @@ const finalizeWithToast = async () => {
 </script>
 
 <style lang="scss" module>
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 .buttons {
   display: flex;
   gap: 8px;

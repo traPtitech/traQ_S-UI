@@ -1,9 +1,11 @@
 <template>
   <section :class="$style.section">
-    <h3 :class="$style.sectionTitle">スタンプを並び替え・削除</h3>
-    <p :class="$style.sectionDescription">
-      先頭のスタンプがアイコンとして使用されます
-    </p>
+    <div :class="$style.sectionHeader">
+      <h3 :class="$style.sectionTitle">スタンプを並び替え・削除</h3>
+      <p :class="$style.sectionDescription">
+        先頭のスタンプがアイコンとして使用されます
+      </p>
+    </div>
     <div
       v-if="stampIdsModel.length !== 0"
       ref="stampListRef"
@@ -91,18 +93,24 @@ onUnmounted(() => {
 
 <style lang="scss" module>
 .section {
-  @include background-primary;
-  border-radius: 8px;
-  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .sectionTitle {
-  font-size: 18px;
+  @include size-body1;
   font-weight: bold;
 }
 
 .sectionDescription {
-  font-size: 14px;
+  @include size-body2;
   @include color-text-secondary;
 }
 
@@ -142,7 +150,7 @@ onUnmounted(() => {
   @include background-secondary;
   text-align: center;
   @include color-text-secondary;
-  padding: 16px;
+  padding: 8px;
   border-radius: 4px;
   width: 100%;
 }
