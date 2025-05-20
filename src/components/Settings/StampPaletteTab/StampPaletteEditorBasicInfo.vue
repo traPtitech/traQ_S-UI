@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="$style.container">
     <label :class="$style.label">
       パレット名
       <FormInput v-model="nameModel" :class="$style.form" />
@@ -20,13 +20,20 @@ const descriptionModel = defineModel<string>('description', { required: true })
 </script>
 
 <style lang="scss" module>
-.label {
-  display: block;
-  font-weight: bold;
-  border-radius: 4px;
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-weight: bold;
+}
 .form {
   width: 100%;
+  border-radius: 4px;
+  font-weight: normal;
 }
 </style>
