@@ -2,7 +2,7 @@
   <section :class="$style.section">
     <div :class="$style.sectionHeader">
       <h3>パレット一覧</h3>
-      <StampPaletteDescription />
+      <stamp-palette-description />
     </div>
     <stamp-palette-create-link />
     <div :class="$style.stampPaletteList">

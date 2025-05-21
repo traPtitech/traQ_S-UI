@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.container">
-    <StampPaletteEditorBasicInfo
+    <stamp-palette-editor-basic-info
       v-model:name="name"
       v-model:description="description"
     />
-    <StampPaletteEditorSortableStampList v-model:stamp-ids="stamps" />
-    <StampPaletteEditorAddStamp :current-stamp-ids="stamps" />
+    <stamp-palette-editor-sortable-stamp-list v-model:stamp-ids="stamps" />
+    <stamp-palette-editor-add-stamp :current-stamp-ids="stamps" />
   </div>
 </template>
 

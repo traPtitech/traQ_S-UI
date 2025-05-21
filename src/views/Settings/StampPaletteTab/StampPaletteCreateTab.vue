@@ -2,10 +2,10 @@
   <section :class="$style.section">
     <div :class="$style.sectionHeader">
       <h3>パレットの作成</h3>
-      <StampPaletteDescription />
+      <stamp-palette-description />
     </div>
     <stamp-palette-editor v-model:palette="newStampPalette" />
-    <StampPaletteActionButtons
+    <stamp-palette-action-buttons
       :palette="newStampPalette"
       :is-save-disabled="!hasPaletteUnsavedChanges"
       @save="saveWithToast"
@@ -111,11 +111,5 @@ const finalizeWithToast = async () => {
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-.buttons {
-  display: flex;
-  gap: 8px;
-  margin-top: 16px;
-  justify-content: flex-end;
 }
 </style>

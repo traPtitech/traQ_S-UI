@@ -2,7 +2,7 @@
   <section :class="$style.section">
     <h3 :class="$style.sectionTitle">スタンプを追加</h3>
     <div ref="addStampListContainerRef" :class="$style.addStampListContainer">
-      <FilterInput
+      <filter-input
         v-model="searchQuery"
         placeholder="スタンプを検索"
         :class="$style.filterInput"
@@ -14,7 +14,7 @@
           :class="$style.addStampListItem"
           @click="addStamp(stamp.id)"
         >
-          <StampPaletteEditorAddStampListItem :stamp="stamp" />
+          <stamp-palette-editor-add-stamp-list-item :stamp="stamp" />
         </div>
         <div
           v-if="displayCount < _allFilteredAvailableStamps.length"

@@ -2,7 +2,7 @@
   <section :class="$style.section">
     <div :class="$style.sectionHeader">
       <h3>パレットの編集</h3>
-      <StampPaletteDescription />
+      <stamp-palette-description />
     </div>
     <div v-if="!isStampPaletteFetched"></div>
     <div v-else-if="!stampPaletteToEdit || !isMyPalette">
@@ -15,7 +15,7 @@
     </div>
     <div v-else>
       <stamp-palette-editor v-model:palette="stampPaletteToEdit" />
-      <StampPaletteActionButtons
+      <stamp-palette-action-buttons
         :palette="stampPaletteToEdit"
         :is-save-disabled="!hasPaletteUnsavedChanges"
         @save="saveWithToast"
@@ -124,11 +124,5 @@ const finalizeWithToast = async () => {
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-.buttons {
-  display: flex;
-  gap: 8px;
-  margin-top: 16px;
-  justify-content: flex-end;
 }
 </style>

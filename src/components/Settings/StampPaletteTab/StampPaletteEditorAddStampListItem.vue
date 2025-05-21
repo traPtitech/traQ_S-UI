@@ -1,7 +1,7 @@
 <template>
-  <AStamp :stamp-id="stamp.id" :size="24" :class="$style.stampImage" />
+  <a-stamp :stamp-id="stamp.id" :size="24" :class="$style.stampImage" />
   <span :class="$style.stampName">{{ stamp.name }}</span>
-  <IconButton icon-name="plus" icon-mdi :class="$style.iconButton" />
+  <icon-button icon-name="plus" icon-mdi :class="$style.iconButton" />
 </template>
 
 <script lang="ts" setup>

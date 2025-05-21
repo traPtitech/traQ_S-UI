@@ -22,9 +22,9 @@
         :data-id="stampId"
         @click="toggleStampSelection(stampId)"
       >
-        <AStamp :stamp-id="stampId" :size="24" />
+        <a-stamp :stamp-id="stampId" :size="24" />
       </div>
-      <IconButton
+      <icon-button
         :disabled="selectedStampIds.length === 0"
         icon-name="delete"
         icon-mdi

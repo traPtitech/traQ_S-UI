@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <label :class="$style.label">
       パレット名
-      <FormInput
+      <form-input
         v-model="nameModel"
         :class="$style.form"
         placeholder="パレット名は必須項目です"
@@ -10,7 +10,7 @@
     </label>
     <label :class="$style.label">
       説明
-      <FormTextArea v-model="descriptionModel" :class="$style.form" />
+      <form-text-area v-model="descriptionModel" :class="$style.form" />
     </label>
   </div>
 </template>
