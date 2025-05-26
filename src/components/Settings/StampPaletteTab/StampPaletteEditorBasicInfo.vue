@@ -4,13 +4,9 @@
       <p :class="$style.label">パレット名</p>
       <form-input
         v-model="nameModel"
-        :class="$style.form"
         placeholder="パレット名は必須項目です"
-      />
-      <stamp-palette-editor-limit-indicator
-        :current-count="nameModel.length"
-        :limit="STAMP_PALETTE_NAME_MAX_LENGTH"
-        :class="$style.limitIndicator"
+        :max-length="STAMP_PALETTE_NAME_MAX_LENGTH"
+        :class="$style.form"
       />
     </label>
     <label :class="$style.formGroup">
@@ -21,7 +17,6 @@
 </template>
 
 <script lang="ts" setup>
-import StampPaletteEditorLimitIndicator from './StampPaletteEditorLimitIndicator.vue'
 import { STAMP_PALETTE_NAME_MAX_LENGTH } from './utils'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
