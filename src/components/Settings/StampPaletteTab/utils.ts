@@ -6,6 +6,7 @@ import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 const { createStampPalette, editStampPalette } = useStampPalettesStore()
 
 export const STAMP_PALETTE_NAME_MAX_LENGTH = 30
+export const STAMP_PALETTE_DESCRIPTION_MAX_LENGTH = 1000
 export const STAMP_PALETTE_STAMPS_LIMIT = 200
 
 export const areStampPalettesDifferent = (
@@ -38,6 +39,10 @@ export const isStampPaletteNameValid = (stampPalette: StampPalette) => {
   )
 }
 
+export const isStampPaletteDescriptionValid = (stampPalette: StampPalette) => {
+  return stampPalette.description.length <= STAMP_PALETTE_DESCRIPTION_MAX_LENGTH
+}
+
 export const isStampPaletteStampsValid = (stampPalette: StampPalette) => {
   return stampPalette.stamps.length <= STAMP_PALETTE_STAMPS_LIMIT
 }
@@ -45,6 +50,7 @@ export const isStampPaletteStampsValid = (stampPalette: StampPalette) => {
 export const isStampPaletteValid = (stampPalette: StampPalette) => {
   return (
     isStampPaletteNameValid(stampPalette) &&
+    isStampPaletteDescriptionValid(stampPalette) &&
     isStampPaletteStampsValid(stampPalette)
   )
 }

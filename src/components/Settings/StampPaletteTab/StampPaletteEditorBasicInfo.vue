@@ -11,13 +11,20 @@
     </label>
     <label :class="$style.formGroup">
       <p :class="$style.label">説明</p>
-      <form-text-area v-model="descriptionModel" :class="$style.form" />
+      <form-text-area
+        v-model="descriptionModel"
+        :max-length="STAMP_PALETTE_DESCRIPTION_MAX_LENGTH"
+        :class="$style.form"
+      />
     </label>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { STAMP_PALETTE_NAME_MAX_LENGTH } from './utils'
+import {
+  STAMP_PALETTE_DESCRIPTION_MAX_LENGTH,
+  STAMP_PALETTE_NAME_MAX_LENGTH
+} from './utils'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
 
