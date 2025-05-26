@@ -42,7 +42,6 @@ const descriptionModel = defineModel<string>('description', { required: true })
 .form {
   width: 100%;
   border-radius: 4px;
-  font-weight: normal;
 }
 .limitIndicator {
   text-align: right;
