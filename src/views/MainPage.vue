@@ -36,7 +36,6 @@
         <div id="sidebar-mobile" :class="$style.sidebarPortal" />
       </div>
     </div>
-    <stamp-picker-container />
     <command-palette-container />
   </div>
 </template>
@@ -119,7 +118,6 @@ const NotFoundPage = defineAsyncComponent(
 import MainView from '/@/components/Main/MainView/MainView.vue'
 import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue'
 import NavigationBar from '/@/components/Main/NavigationBar/NavigationBar.vue'
-import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue'
 import useViewStateSender from './composables/useViewStateSender'
 
