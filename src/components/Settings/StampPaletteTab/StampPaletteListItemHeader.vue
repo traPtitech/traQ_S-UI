@@ -76,5 +76,6 @@ const showStampPaletteDeleteToast = async () => {
 .description {
   @include color-ui-secondary;
   @include size-body2;
+  white-space: pre-wrap;
 }
 </style>
