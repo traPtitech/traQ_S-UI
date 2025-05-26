@@ -20,7 +20,7 @@ const isLimitOver = computed(() => {
 <style lang="scss" module>
 .indicator {
   @include color-ui-secondary;
-  @include size-body2;
+  @include size-caption;
 }
 
 .limitOver {
