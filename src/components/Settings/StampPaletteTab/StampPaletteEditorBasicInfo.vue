@@ -29,6 +29,7 @@ const descriptionModel = defineModel<string>('description', { required: true })
 .container {
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 .formGroup {
   display: flex;
