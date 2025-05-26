@@ -79,6 +79,13 @@ const _allFilteredAvailableStamps = computed(() => {
       const name = stamp.name.toLowerCase()
       return query.length === 1 ? name === query : name.includes(query)
     })
+    .sort((stamp1, stamp2) => {
+      const name1 = stamp1.name.toLowerCase()
+      const name2 = stamp2.name.toLowerCase()
+      if (name1 < name2) return -1
+      if (name1 > name2) return 1
+      return 0
+    })
 })
 
 const filteredAvailableStamps = computed(() => {
