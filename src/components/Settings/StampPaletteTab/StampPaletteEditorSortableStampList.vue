@@ -33,30 +33,24 @@
       />
     </div>
     <div v-else :class="$style.emptyState">スタンプがありません</div>
-    <p
-      :class="[
-        $style.stampCount,
-        { [$style.limitOver]: isStampCountOverLimit }
-      ]"
-    >
-      {{ stampIdsModel.length }} / {{ STAMP_PALETTE_STAMPS_LIMIT }}
-    </p>
+    <stamp-palette-editor-limit-indicator
+      :current-count="stampIdsModel.length"
+      :limit="STAMP_PALETTE_STAMPS_LIMIT"
+      :class="$style.stampCount"
+    />
   </section>
 </template>
 
 <script lang="ts" setup>
 import Sortable, { type SortableEvent } from 'sortablejs'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { STAMP_PALETTE_STAMPS_LIMIT } from './utils'
 import AStamp from '/@/components/UI/AStamp.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import type { StampId } from '/@/types/entity-ids'
+import StampPaletteEditorLimitIndicator from './StampPaletteEditorLimitIndicator.vue'
 
 const stampIdsModel = defineModel<StampId[]>('stamp-ids', { required: true })
-
-const isStampCountOverLimit = computed(() => {
-  return stampIdsModel.value.length > STAMP_PALETTE_STAMPS_LIMIT
-})
 
 const selectedStampIds = ref<StampId[]>([])
 
@@ -171,12 +165,6 @@ onUnmounted(() => {
 }
 
 .stampCount {
-  @include color-ui-secondary;
-  @include size-body2;
   text-align: right;
-}
-
-.limitOver {
-  color: $theme-accent-error-default;
 }
 </style>
