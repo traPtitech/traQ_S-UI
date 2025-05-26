@@ -1,21 +1,28 @@
 <template>
   <div :class="$style.container">
-    <label :class="$style.label">
-      パレット名
+    <label :class="$style.formGroup">
+      <p :class="$style.label">パレット名</p>
       <form-input
         v-model="nameModel"
         :class="$style.form"
         placeholder="パレット名は必須項目です"
       />
+      <stamp-palette-editor-limit-indicator
+        :current-count="nameModel.length"
+        :limit="STAMP_PALETTE_NAME_MAX_LENGTH"
+        :class="$style.limitIndicator"
+      />
     </label>
-    <label :class="$style.label">
-      説明
+    <label :class="$style.formGroup">
+      <p :class="$style.label">説明</p>
       <form-text-area v-model="descriptionModel" :class="$style.form" />
     </label>
   </div>
 </template>
 
 <script lang="ts" setup>
+import StampPaletteEditorLimitIndicator from './StampPaletteEditorLimitIndicator.vue'
+import { STAMP_PALETTE_NAME_MAX_LENGTH } from './utils'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
 
@@ -27,17 +34,21 @@ const descriptionModel = defineModel<string>('description', { required: true })
 .container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
-.label {
+.formGroup {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+.label {
   font-weight: bold;
 }
 .form {
   width: 100%;
   border-radius: 4px;
   font-weight: normal;
+}
+.limitIndicator {
+  text-align: right;
 }
 </style>
