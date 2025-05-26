@@ -177,6 +177,7 @@ const addStamp = (stampId: StampId) => {
   max-height: 400px;
   min-height: 400px;
   overflow-y: auto;
+  border-radius: 4px;
 }
 
 .filterInput {
@@ -188,6 +189,7 @@ const addStamp = (stampId: StampId) => {
   display: flex;
   align-items: center;
   padding: 8px;
+  border-radius: 4px;
   cursor: pointer;
 
   &:hover {

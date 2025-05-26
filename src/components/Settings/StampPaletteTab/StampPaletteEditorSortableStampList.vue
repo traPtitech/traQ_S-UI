@@ -133,6 +133,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  border-radius: 4px;
 }
 
 .stampListItem {
