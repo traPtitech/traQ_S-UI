@@ -11,7 +11,10 @@
         :class="$style.filterInput"
         @update:model-value="resetDisplayCount"
       />
-      <div v-if="addableStampsSlice.length > 0">
+      <div
+        v-if="addableStampsSlice.length > 0"
+        :class="$style.addableStampList"
+      >
         <div
           v-for="stamp in addableStampsSlice"
           :key="stamp.id"
@@ -159,9 +162,9 @@ const addStamp = (stampId: StampId) => {
 }
 
 .addableStampListContainer {
-  @include background-secondary;
   display: flex;
   flex-direction: column;
+  gap: 8px;
   max-height: 400px;
   min-height: 400px;
   overflow-y: auto;
@@ -169,8 +172,14 @@ const addStamp = (stampId: StampId) => {
 }
 
 .filterInput {
+  @include background-secondary;
   border-radius: 4px;
   padding: 8px;
+}
+
+.addableStampList {
+  @include background-secondary;
+  border-radius: 4px;
 }
 
 .addableStampListItem {
