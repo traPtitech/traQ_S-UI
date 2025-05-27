@@ -55,6 +55,12 @@ const displayCount = ref(ITEMS_PER_LOAD)
 
 fetchStampHistory()
 
+const getStampsByIds = (ids: readonly StampId[]) => {
+  return ids
+    .map(id => stampsMap.value.get(id))
+    .filter(stamp => stamp !== undefined)
+}
+
 const _allFilteredAvailableStamps = computed(() => {
   if (!stampsMapFetched.value) {
     return []
@@ -62,30 +68,28 @@ const _allFilteredAvailableStamps = computed(() => {
   const query = searchQuery.value.toLowerCase()
 
   return [
-    ...recentStampIds.value,
-    ...[...stampsMap.value.keys()].filter(
-      stampId => !recentStampIds.value.includes(stampId)
-    )
-  ]
-    .map(id => stampsMap.value.get(id))
-    .filter(stamp => stamp !== undefined)
-    .filter(stamp => {
-      if (currentStampIds.value.includes(stamp.id)) {
-        return false
-      }
-      if (query === '') {
-        return true
-      }
-      const name = stamp.name.toLowerCase()
-      return query.length === 1 ? name === query : name.includes(query)
-    })
-    .sort((stamp1, stamp2) => {
+    ...getStampsByIds(recentStampIds.value),
+    ...getStampsByIds(
+      [...stampsMap.value.keys()].filter(
+        stampId => !recentStampIds.value.includes(stampId)
+      )
+    ).sort((stamp1, stamp2) => {
       const name1 = stamp1.name.toLowerCase()
       const name2 = stamp2.name.toLowerCase()
       if (name1 < name2) return -1
       if (name1 > name2) return 1
       return 0
     })
+  ].filter(stamp => {
+    if (currentStampIds.value.includes(stamp.id)) {
+      return false
+    }
+    if (query === '') {
+      return true
+    }
+    const name = stamp.name.toLowerCase()
+    return query.length === 1 ? name === query : name.includes(query)
+  })
 })
 
 const filteredAvailableStamps = computed(() => {
