@@ -60,19 +60,20 @@ const displayCount = ref(ITEMS_PER_LOAD)
 
 fetchStampHistory()
 
-const getStampsByIds = (ids: readonly StampId[]) => {
-  return ids
-    .map(id => stampsMap.value.get(id))
-    .filter(stamp => stamp !== undefined)
-}
-
 const allAddableStamps = computed(() => {
   if (!stampsMapFetched.value) {
     return []
   }
   return (
     filterState.query === ''
-      ? getStampsByIds(recentStampIds.value)
+      ? [
+          ...recentStampIds.value
+            .map(id => stampsMap.value.get(id))
+            .filter(stamp => stamp !== undefined),
+          ...filterState.filteredItems
+            .filter(stamp => !recentStampIds.value.includes(stamp.id))
+            .sort((a, b) => a.name.localeCompare(b.name))
+        ]
       : filterState.filteredItems
   ).filter(stamp => !currentStampIds.value.includes(stamp.id))
 })
