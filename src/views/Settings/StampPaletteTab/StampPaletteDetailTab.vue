@@ -62,7 +62,7 @@ const isMyPalette = computed(() => {
 })
 
 const stampPaletteFetchErrorMessage = ref('')
-const setStampPaletteFetchErrorFromStatusCode = (error: unknown) => {
+const setStampPaletteFetchErrorMessage = (error: unknown) => {
   if (!isAxiosError(error) || !error.response) {
     stampPaletteFetchErrorMessage.value =
       'スタンプパレットの取得に失敗しました。'
@@ -86,7 +86,7 @@ onBeforeMount(async () => {
   try {
     await fetchStampPalette({ stampPaletteId: paletteId })
   } catch (e: unknown) {
-    setStampPaletteFetchErrorFromStatusCode(e)
+    setStampPaletteFetchErrorMessage(e)
   } finally {
     stampPaletteToEdit.value = structuredClone(
       toRaw(stampPalettesMap.value.get(paletteId)) ?? null
