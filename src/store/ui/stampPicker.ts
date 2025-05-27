@@ -63,12 +63,20 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
     type: 'history',
     id: ''
   }
-  const [currentStampSet] = useIndexedDbValue<StampSet>(
+  const [state] = useIndexedDbValue<StampSet>(
     'store/ui/stampPicker/currentStampSet',
     1,
     {},
     initialStampSetValue
   )
+
+  const currentStampSet = computed({
+    get: () => state,
+    set: (newValue: StampSet) => {
+      state.id = newValue.id
+      state.type = newValue.type
+    }
+  })
 
   const isEffectEnabled = ref(false)
   const position = ref<Point>()
