@@ -32,7 +32,7 @@
         @click="removeSelectedStamps"
       />
     </div>
-    <div v-else :class="$style.emptyState">スタンプがありません</div>
+    <div v-else :class="$style.emptyState">スタンプを追加してください</div>
     <stamp-palette-editor-limit-indicator
       :current-count="stampIdsModel.length"
       :limit="STAMP_PALETTE_STAMPS_LIMIT"

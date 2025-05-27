@@ -44,7 +44,10 @@ export const isStampPaletteDescriptionValid = (stampPalette: StampPalette) => {
 }
 
 export const isStampPaletteStampsValid = (stampPalette: StampPalette) => {
-  return stampPalette.stamps.length <= STAMP_PALETTE_STAMPS_LIMIT
+  return (
+    0 < stampPalette.stamps.length &&
+    stampPalette.stamps.length <= STAMP_PALETTE_STAMPS_LIMIT
+  )
 }
 
 export const isStampPaletteValid = (stampPalette: StampPalette) => {
