@@ -43,7 +43,7 @@
 
 <script lang="ts" setup>
 import Sortable, { type SortableEvent } from 'sortablejs'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import StampPaletteEditorLimitIndicator from './StampPaletteEditorLimitIndicator.vue'
 import { STAMP_PALETTE_STAMPS_LIMIT } from './utils'
 import AStamp from '/@/components/UI/AStamp.vue'
@@ -72,31 +72,47 @@ const removeSelectedStamps = () => {
 const stampListRef = ref<HTMLElement | null>(null)
 let sortableInstance: Sortable | null = null
 
-onMounted(() => {
-  if (stampListRef.value) {
-    sortableInstance = Sortable.create(stampListRef.value, {
-      animation: 150,
-      onUpdate: (event: SortableEvent) => {
-        if (
-          event.newDraggableIndex === undefined ||
-          event.oldDraggableIndex === undefined
-        )
-          return
-        const newStampIds = [...stampIdsModel.value]
-        const movedStampId = newStampIds.splice(event.oldDraggableIndex, 1)[0]
-        if (movedStampId === undefined) return
-        newStampIds.splice(event.newDraggableIndex, 0, movedStampId)
-        stampIdsModel.value = newStampIds
-      }
-    })
-  }
-})
+const setupSortable = () => {
+  if (sortableInstance) return
+  if (!stampListRef.value) return
+  if (stampIdsModel.value.length === 0) return
 
-onUnmounted(() => {
+  sortableInstance = Sortable.create(stampListRef.value, {
+    animation: 150,
+    onUpdate: (event: SortableEvent) => {
+      if (
+        event.newDraggableIndex === undefined ||
+        event.oldDraggableIndex === undefined
+      )
+        return
+      const newStampIds = [...stampIdsModel.value]
+      const movedStampId = newStampIds.splice(event.oldDraggableIndex, 1)[0]
+      if (movedStampId === undefined) return
+      newStampIds.splice(event.newDraggableIndex, 0, movedStampId)
+      stampIdsModel.value = newStampIds
+    }
+  })
+}
+
+const destroySortableInstance = () => {
   if (sortableInstance) {
     sortableInstance.destroy()
+    sortableInstance = null
   }
-})
+}
+
+onMounted(setupSortable)
+onUnmounted(destroySortableInstance)
+watch(
+  () => stampIdsModel.value.length,
+  (newLength, oldLength) => {
+    if (newLength > 0 && oldLength === 0) {
+      nextTick(setupSortable)
+    } else if (newLength === 0 && oldLength > 0) {
+      destroySortableInstance()
+    }
+  }
+)
 </script>
 
 <style lang="scss" module>
