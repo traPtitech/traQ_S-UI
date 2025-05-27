@@ -1,10 +1,9 @@
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
-import { acceptHMRUpdate, defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from 'pinia'
 import { throttle } from 'throttle-debounce'
 import type { Ref } from 'vue'
 import { computed, ref, watch, watchEffect } from 'vue'
 import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 import type { Point } from '/@/lib/basic/point'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { StampId } from '/@/types/entity-ids'
@@ -58,18 +57,10 @@ const getPositionFromAlignment = (
 
 const useStampPickerPinia = defineStore('ui/stampPicker', () => {
   const selectHandler = ref<StampSelectHandler>(defaultSelectHandler)
-
-  const initialStampSetValue: StampSet = {
+  const currentStampSet = ref<StampSet>({
     type: 'history',
     id: ''
-  }
-  const [currentStampSet] = useIndexedDbValue<StampSet>(
-    'store/ui/stampPicker/currentStampSet',
-    1,
-    {},
-    initialStampSetValue
-  )
-
+  })
   const isEffectEnabled = ref(false)
   const position = ref<Point>()
   const alignment = ref<AlignmentPosition>('top-right')
