@@ -1,30 +1,33 @@
 <template>
   <section :class="$style.section">
     <h3 :class="$style.sectionTitle">スタンプを追加</h3>
-    <div ref="addStampListContainerRef" :class="$style.addStampListContainer">
+    <div
+      ref="addableStampListContainerRef"
+      :class="$style.addableStampListContainer"
+    >
       <filter-input
         v-model="filterState.query"
         placeholder="スタンプを検索"
         :class="$style.filterInput"
         @update:model-value="resetDisplayCount"
       />
-      <div v-if="filteredAvailableStamps.length > 0">
+      <div v-if="addableStampsSlice.length > 0">
         <div
-          v-for="stamp in filteredAvailableStamps"
+          v-for="stamp in addableStampsSlice"
           :key="stamp.id"
-          :class="$style.addStampListItem"
+          :class="$style.addableStampListItem"
           @click="addStamp(stamp.id)"
         >
           <stamp-palette-editor-add-stamp-list-item :stamp="stamp" />
         </div>
         <div
-          v-if="displayCount < _allFilteredAvailableStamps.length"
+          v-if="displayCount < allAddableStamps.length"
           ref="loadMoreTriggerRef"
           style="height: 1px"
         />
       </div>
       <div
-        v-else-if="_allFilteredAvailableStamps.length === 0 && stampsMapFetched"
+        v-else-if="allAddableStamps.length === 0 && stampsMapFetched"
         :class="$style.emptyState"
       >
         追加できるスタンプがありません
@@ -63,7 +66,7 @@ const getStampsByIds = (ids: readonly StampId[]) => {
     .filter(stamp => stamp !== undefined)
 }
 
-const _allFilteredAvailableStamps = computed(() => {
+const allAddableStamps = computed(() => {
   if (!stampsMapFetched.value) {
     return []
   }
@@ -74,12 +77,12 @@ const _allFilteredAvailableStamps = computed(() => {
   ).filter(stamp => !currentStampIds.value.includes(stamp.id))
 })
 
-const filteredAvailableStamps = computed(() => {
-  return _allFilteredAvailableStamps.value.slice(0, displayCount.value)
+const addableStampsSlice = computed(() => {
+  return allAddableStamps.value.slice(0, displayCount.value)
 })
 
 const loadMoreTriggerRef = ref<HTMLElement | null>(null)
-const addStampListContainerRef = ref<HTMLElement | null>(null)
+const addableStampListContainerRef = ref<HTMLElement | null>(null)
 let observer: IntersectionObserver | null = null
 
 const setupIntersectionObserver = () => {
@@ -87,9 +90,9 @@ const setupIntersectionObserver = () => {
     observer.disconnect()
   }
 
-  if (addStampListContainerRef.value && loadMoreTriggerRef.value) {
+  if (addableStampListContainerRef.value && loadMoreTriggerRef.value) {
     const options = {
-      root: addStampListContainerRef.value,
+      root: addableStampListContainerRef.value,
       rootMargin: '0px',
       threshold: 0.0
     }
@@ -103,7 +106,7 @@ const setupIntersectionObserver = () => {
 }
 
 const loadMoreStamps = () => {
-  if (displayCount.value < _allFilteredAvailableStamps.value.length) {
+  if (displayCount.value < allAddableStamps.value.length) {
     displayCount.value += ITEMS_PER_LOAD
   }
 }
@@ -116,7 +119,7 @@ watch(
   loadMoreTriggerRef,
   (currentLoadMoreTrigger, previousLoadMoreTrigger) => {
     if (currentLoadMoreTrigger) {
-      if (addStampListContainerRef.value) {
+      if (addableStampListContainerRef.value) {
         setupIntersectionObserver()
       }
     } else if (previousLoadMoreTrigger && !currentLoadMoreTrigger) {
@@ -154,7 +157,7 @@ const addStamp = (stampId: StampId) => {
   font-weight: bold;
 }
 
-.addStampListContainer {
+.addableStampListContainer {
   @include background-secondary;
   display: flex;
   flex-direction: column;
@@ -169,7 +172,7 @@ const addStamp = (stampId: StampId) => {
   padding: 8px;
 }
 
-.addStampListItem {
+.addableStampListItem {
   display: flex;
   align-items: center;
   padding: 8px;
