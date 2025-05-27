@@ -63,7 +63,7 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
     type: 'history',
     id: ''
   }
-  const [state] = useIndexedDbValue<StampSet>(
+  const [state] = useIndexedDbValue(
     'store/ui/stampPicker/currentStampSet',
     1,
     {},
