@@ -3,9 +3,10 @@
     <h3 :class="$style.sectionTitle">スタンプを追加</h3>
     <div ref="addStampListContainerRef" :class="$style.addStampListContainer">
       <filter-input
-        v-model="searchQuery"
+        v-model="filterState.query"
         placeholder="スタンプを検索"
         :class="$style.filterInput"
+        @update:model-value="resetDisplayCount"
       />
       <div v-if="filteredAvailableStamps.length > 0">
         <div
@@ -36,6 +37,7 @@
 <script lang="ts" setup>
 import { computed, onUnmounted, ref, watch } from 'vue'
 import StampPaletteEditorAddStampListItem from './StampPaletteEditorAddStampListItem.vue'
+import useStampFilter from '/@/components/Main/StampPicker/composables/useStampFilter'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampsStore } from '/@/store/entities/stamps'
@@ -49,8 +51,8 @@ const currentStampIds = defineModel<StampId[]>('current-stamp-ids', {
 
 const { stampsMap, stampsMapFetched } = useStampsStore()
 const { recentStampIds, fetchStampHistory } = useStampHistory()
+const { filterState } = useStampFilter()
 
-const searchQuery = ref('')
 const displayCount = ref(ITEMS_PER_LOAD)
 
 fetchStampHistory()
@@ -65,31 +67,11 @@ const _allFilteredAvailableStamps = computed(() => {
   if (!stampsMapFetched.value) {
     return []
   }
-  const query = searchQuery.value.toLowerCase()
-
-  return [
-    ...getStampsByIds(recentStampIds.value),
-    ...getStampsByIds(
-      [...stampsMap.value.keys()].filter(
-        stampId => !recentStampIds.value.includes(stampId)
-      )
-    ).sort((stamp1, stamp2) => {
-      const name1 = stamp1.name.toLowerCase()
-      const name2 = stamp2.name.toLowerCase()
-      if (name1 < name2) return -1
-      if (name1 > name2) return 1
-      return 0
-    })
-  ].filter(stamp => {
-    if (currentStampIds.value.includes(stamp.id)) {
-      return false
-    }
-    if (query === '') {
-      return true
-    }
-    const name = stamp.name.toLowerCase()
-    return query.length === 1 ? name === query : name.includes(query)
-  })
+  return (
+    filterState.query === ''
+      ? getStampsByIds(recentStampIds.value)
+      : filterState.filteredItems
+  ).filter(stamp => !currentStampIds.value.includes(stamp.id))
 })
 
 const filteredAvailableStamps = computed(() => {
@@ -129,8 +111,6 @@ const loadMoreStamps = () => {
 const resetDisplayCount = () => {
   displayCount.value = ITEMS_PER_LOAD
 }
-
-watch(searchQuery, resetDisplayCount)
 
 watch(
   loadMoreTriggerRef,
