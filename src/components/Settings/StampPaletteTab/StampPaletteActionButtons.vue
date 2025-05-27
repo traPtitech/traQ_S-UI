@@ -3,12 +3,6 @@
     <div :class="$style.buttons">
       <form-button label="キャンセル" type="tertiary" @click="emit('cancel')" />
       <form-button
-        label="保存"
-        type="primary"
-        :disabled="isSaveDisabled || !isPaletteValid"
-        @click="emit('save')"
-      />
-      <form-button
         label="確定"
         type="primary"
         :disabled="!isPaletteValid"
@@ -24,13 +18,11 @@ import { computed } from 'vue'
 import { isStampPaletteValid } from './utils'
 import FormButton from '/@/components/UI/FormButton.vue'
 
-const { palette, isSaveDisabled = false } = defineProps<{
+const { palette } = defineProps<{
   palette: StampPalette
-  isSaveDisabled?: boolean
 }>()
 
 const emit = defineEmits<{
-  (e: 'save'): void
   (e: 'finalize'): void
   (e: 'cancel'): void
 }>()

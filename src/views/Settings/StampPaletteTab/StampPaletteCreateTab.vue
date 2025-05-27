@@ -7,8 +7,6 @@
     <stamp-palette-editor v-model:palette="newStampPalette" />
     <stamp-palette-action-buttons
       :palette="newStampPalette"
-      :is-save-disabled="!hasPaletteUnsavedChanges"
-      @save="saveWithToast"
       @finalize="finalizeWithToast"
       @cancel="discardWithConfirm"
     />
@@ -24,16 +22,13 @@ import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPale
 import {
   areStampPalettesEqual,
   createStampPaletteWrapper,
-  editStampPaletteWrapper,
   goToSettingsStampPalette
 } from '/@/components/Settings/StampPaletteTab/utils'
-import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useToastStore } from '/@/store/ui/toast'
 import type { StampId, StampPaletteId } from '/@/types/entity-ids'
 
 const { stampPalettesMap } = useStampPalettesStore()
-const { execWithToast } = useExecWithToast()
 const { addInfoToast, addErrorToast } = useToastStore()
 
 const emptyStampPalette: StampPalette = {
@@ -65,31 +60,13 @@ const discardWithConfirm = () => {
   }
 }
 
-const saveStampPalette = async () => {
-  if (newStampPalette.value.id === '') {
-    newStampPalette.value = await createStampPaletteWrapper(
-      newStampPalette.value
-    )
-  } else {
-    await editStampPaletteWrapper(newStampPalette.value)
-  }
-}
-
-const saveWithToast = async () => {
-  await execWithToast(
-    'スタンプパレットを保存しました',
-    'スタンプパレットの保存に失敗しました',
-    saveStampPalette
-  )
-}
-
 const finalizeWithToast = async () => {
   if (!hasPaletteUnsavedChanges.value) {
     goToSettingsStampPalette()
     return
   }
   try {
-    await saveStampPalette()
+    await createStampPaletteWrapper(newStampPalette.value)
     addInfoToast('スタンプパレットを保存しました')
     goToSettingsStampPalette()
   } catch (e) {
