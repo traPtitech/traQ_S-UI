@@ -4,14 +4,14 @@
       <h3>パレットの編集</h3>
       <stamp-palette-description />
     </div>
-    <div v-if="!isStampPaletteFetched"></div>
-    <div v-else-if="!stampPaletteToEdit || !isMyPalette">
-      <div>
-        <p>スタンプパレットは存在しません。</p>
-        <p>
-          スタンプパレットは削除されたか、URLが間違っている可能性があります。
-        </p>
-      </div>
+    <div v-if="!isStampPaletteFetched">
+      <p>読み込み中...</p>
+    </div>
+    <div v-else-if="!stampPaletteToEdit">
+      <p>{{ stampPaletteFetchErrorMessage }}</p>
+    </div>
+    <div v-else-if="!isMyPalette">
+      <p>スタンプパレットの編集権限がありません。</p>
     </div>
     <div v-else>
       <stamp-palette-editor v-model:palette="stampPaletteToEdit" />
@@ -28,6 +28,7 @@
 
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
+import { isAxiosError } from 'axios'
 import { computed, onBeforeMount, ref, toRaw } from 'vue'
 import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/StampPaletteActionButtons.vue'
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
@@ -59,14 +60,39 @@ const isMyPalette = computed(() => {
   if (!savedStampPalette.value) return false
   return savedStampPalette.value.creatorId === myId.value
 })
+
+const stampPaletteFetchErrorMessage = ref('')
+const setStampPaletteFetchErrorFromStatusCode = (error: unknown) => {
+  if (!isAxiosError(error) || !error.response) {
+    stampPaletteFetchErrorMessage.value =
+      'スタンプパレットの取得に失敗しました。'
+    return
+  }
+  const status = error.response.status
+  if (status === 404) {
+    stampPaletteFetchErrorMessage.value =
+      'スタンプパレットが見つかりませんでした。削除されたか、URLが間違っている可能性があります。'
+  } else if (status === 401 || status === 403) {
+    stampPaletteFetchErrorMessage.value =
+      'このスタンプパレットを表示する権限がありません。'
+  } else {
+    stampPaletteFetchErrorMessage.value =
+      'スタンプパレットの取得に失敗しました。'
+  }
+}
 const isStampPaletteFetched = ref(false)
 
 onBeforeMount(async () => {
-  await fetchStampPalette({ stampPaletteId: paletteId })
-  stampPaletteToEdit.value = structuredClone(
-    toRaw(stampPalettesMap.value.get(paletteId)) ?? null
-  )
-  isStampPaletteFetched.value = true
+  try {
+    await fetchStampPalette({ stampPaletteId: paletteId })
+  } catch (e: unknown) {
+    setStampPaletteFetchErrorFromStatusCode(e)
+  } finally {
+    stampPaletteToEdit.value = structuredClone(
+      toRaw(stampPalettesMap.value.get(paletteId)) ?? null
+    )
+    isStampPaletteFetched.value = true
+  }
 })
 
 const hasPaletteUnsavedChanges = computed(() => {
