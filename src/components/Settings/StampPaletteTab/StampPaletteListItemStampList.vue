@@ -14,7 +14,7 @@
       />
       <button
         v-else
-        title="もっとみる"
+        title="さらに表示"
         :class="$style.toggleButton"
         @click="toggleExpand"
       >
