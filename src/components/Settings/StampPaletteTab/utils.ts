@@ -9,27 +9,27 @@ export const STAMP_PALETTE_NAME_MAX_LENGTH = 30
 export const STAMP_PALETTE_DESCRIPTION_MAX_LENGTH = 1000
 export const STAMP_PALETTE_STAMPS_LIMIT = 200
 
-export const areStampPalettesDifferent = (
+export const areStampPalettesEqual = (
   palette1: StampPalette,
   palette2: StampPalette
 ) => {
   if (palette1.name !== palette2.name) {
-    return true
+    return false
   }
   if (palette1.description !== palette2.description) {
-    return true
+    return false
   }
   const stamps1 = palette1.stamps
   const stamps2 = palette2.stamps
   if (stamps1.length !== stamps2.length) {
-    return true
+    return false
   }
   for (let i = 0; i < stamps1.length; i++) {
     if (stamps1[i] !== stamps2[i]) {
-      return true
+      return false
     }
   }
-  return false
+  return true
 }
 
 export const isStampPaletteNameValid = (stampPalette: StampPalette) => {

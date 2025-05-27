@@ -22,7 +22,7 @@ import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/St
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
 import {
-  areStampPalettesDifferent,
+  areStampPalettesEqual,
   createStampPaletteWrapper,
   editStampPaletteWrapper,
   goToSettingsStampPalette
@@ -52,11 +52,8 @@ const savedStampPalette = computed(() =>
 
 const hasPaletteUnsavedChanges = computed(() => {
   if (!savedStampPalette.value)
-    return areStampPalettesDifferent(newStampPalette.value, emptyStampPalette)
-  return areStampPalettesDifferent(
-    newStampPalette.value,
-    savedStampPalette.value
-  )
+    return !areStampPalettesEqual(newStampPalette.value, emptyStampPalette)
+  return !areStampPalettesEqual(newStampPalette.value, savedStampPalette.value)
 })
 
 const discardWithConfirm = () => {

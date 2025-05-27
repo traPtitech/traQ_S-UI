@@ -33,7 +33,7 @@ import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/St
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
 import {
-  areStampPalettesDifferent,
+  areStampPalettesEqual,
   editStampPaletteWrapper,
   goToSettingsStampPalette
 } from '/@/components/Settings/StampPaletteTab/utils'
@@ -71,7 +71,7 @@ onBeforeMount(async () => {
 
 const hasPaletteUnsavedChanges = computed(() => {
   if (!stampPaletteToEdit.value || !savedStampPalette.value) return false
-  return areStampPalettesDifferent(
+  return !areStampPalettesEqual(
     stampPaletteToEdit.value,
     savedStampPalette.value
   )
