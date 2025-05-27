@@ -7,6 +7,6 @@
 
 <style lang="scss" module>
 .description {
-  @include size-body2;
+  @include size-body1;
 }
 </style>
