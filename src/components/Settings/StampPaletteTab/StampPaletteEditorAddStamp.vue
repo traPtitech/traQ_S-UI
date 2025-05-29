@@ -1,16 +1,16 @@
 <template>
   <section :class="$style.section">
     <h3 :class="$style.sectionTitle">スタンプを追加</h3>
+    <filter-input
+      v-model="filterState.query"
+      placeholder="スタンプを検索"
+      :class="$style.filterInput"
+      @update:model-value="resetDisplayCount"
+    />
     <div
       ref="addableStampListContainerRef"
       :class="$style.addableStampListContainer"
     >
-      <filter-input
-        v-model="filterState.query"
-        placeholder="スタンプを検索"
-        :class="$style.filterInput"
-        @update:model-value="resetDisplayCount"
-      />
       <div
         v-if="addableStampsSlice.length > 0"
         :class="$style.addableStampList"
@@ -162,9 +162,7 @@ const addStamp = (stampId: StampId) => {
 }
 
 .addableStampListContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  @include background-secondary;
   max-height: 400px;
   min-height: 400px;
   overflow-y: auto;
@@ -178,7 +176,6 @@ const addStamp = (stampId: StampId) => {
 }
 
 .addableStampList {
-  @include background-secondary;
   border-radius: 4px;
 }
 
