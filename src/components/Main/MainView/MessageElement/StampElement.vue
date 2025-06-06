@@ -23,7 +23,6 @@
     :show="
       (isLongHovered || RemainScaled) &&
       !isDetailShown &&
-      !isMobile &&
       !isTouchDevice
     "
     :stamp="stamp"
@@ -53,7 +52,7 @@ const emit = defineEmits<{
   (e: 'removeStamp', _stampId: string): void
 }>()
 
-const { isMobile, isTouchDevice } = useResponsiveStore()
+const { isTouchDevice } = useResponsiveStore()
 const { stampsMap } = useStampsStore()
 
 const stampName = computed(
