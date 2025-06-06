@@ -44,7 +44,7 @@
       </template>
       <a-icon
         mdi
-        name="bookmark-outline"
+        name="bookmark"
         :size="28"
         :class="$style.icon"
         @click="showClipCreateModal"
