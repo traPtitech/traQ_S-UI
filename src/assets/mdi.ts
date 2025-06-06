@@ -65,6 +65,7 @@ import {
   mdiMusicNote,
   mdiNotebook,
   mdiOpenid,
+  mdiPaletteOutline,
   mdiPause,
   mdiPencil,
   mdiPencilOutline,
@@ -191,7 +192,8 @@ const mdi: MdiIconsMapping = {
   video: mdiVideo,
   'video-off': mdiVideoOff,
   'comment-outline': mdiCommentTextMultipleOutline,
-  'comment-off-outline': mdiCommentOffOutline
+  'comment-off-outline': mdiCommentOffOutline,
+  'palette-outline': mdiPaletteOutline
 }
 
 export default mdi

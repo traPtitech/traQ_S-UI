@@ -7,6 +7,7 @@
     </router-view>
     <modal-container />
     <toast-container />
+    <stamp-picker-container />
   </div>
 </template>
 
@@ -86,6 +87,7 @@ ${Object.entries(style.value)
 <script lang="ts" setup>
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
+import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 
 useTts()
 
