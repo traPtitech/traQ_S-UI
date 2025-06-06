@@ -6,7 +6,11 @@
 
 ## Verification Steps
 
-## ScreenShots
+## ScreenShots of UI Changes
+
+### Before
+
+### After
 
 ## Pre-PR Check-List
 
