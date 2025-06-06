@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <p :class="$style.title">スタンプを追加</p>
+    <h4>スタンプを追加</h4>
     <filter-input
       v-model="filterState.query"
       placeholder="スタンプを検索"
@@ -154,10 +154,6 @@ const addStamp = (stampId: StampId) => {
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-
-.title {
-  font-weight: bold;
 }
 
 .addableStampListContainer {

@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.header">
-      <p :class="$style.title">スタンプを並び替え・削除</p>
+      <h4>スタンプを並び替え・削除</h4>
       <p :class="$style.description">
         先頭のスタンプがアイコンとして使用されます
       </p>
@@ -126,10 +126,6 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-
-.title {
-  font-weight: bold;
 }
 
 .description {

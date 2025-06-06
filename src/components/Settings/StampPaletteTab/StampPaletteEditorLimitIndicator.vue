@@ -1,7 +1,7 @@
 <template>
-  <p :class="[$style.indicator, { [$style.limitOver]: isLimitOver }]">
+  <span :class="[$style.indicator, { [$style.limitOver]: isLimitOver }]">
     {{ currentCount }} / {{ limit }}
-  </p>
+  </span>
 </template>
 
 <script lang="ts" setup>

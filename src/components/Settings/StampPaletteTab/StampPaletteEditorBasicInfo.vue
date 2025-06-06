@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <label :class="$style.formGroup">
-      <p :class="$style.label">パレット名</p>
+      <span :class="$style.label">パレット名</span>
       <form-input
         v-model="nameModel"
         select-on-focus
@@ -11,7 +11,7 @@
       />
     </label>
     <label :class="$style.formGroup">
-      <p :class="$style.label">説明</p>
+      <span :class="$style.label">説明</span>
       <form-text-area
         v-model="descriptionModel"
         :max-length="STAMP_PALETTE_DESCRIPTION_MAX_LENGTH"
