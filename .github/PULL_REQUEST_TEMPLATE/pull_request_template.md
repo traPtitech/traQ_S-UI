@@ -1,8 +1,15 @@
 ## 概要
-<!-- For English speaker, please use template in bottom instead -->
 
 ## なぜこの PR を入れたいのか
 <!-- issue 番号だけでも OK / close: #123 とか fix: #123 の形で -->
+
+## 動作確認の手順
+
+## スクリーンショット
+
+### before
+
+### after
 
 ## PR を出す前の確認事項
 - [ ] （機能の追加なら）追加することの合意がチームで取れている
