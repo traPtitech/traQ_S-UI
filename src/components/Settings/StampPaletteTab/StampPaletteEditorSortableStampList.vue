@@ -1,8 +1,8 @@
 <template>
-  <section :class="$style.section">
-    <div :class="$style.sectionHeader">
-      <h3 :class="$style.sectionTitle">スタンプを並び替え・削除</h3>
-      <p :class="$style.sectionDescription">
+  <div :class="$style.container">
+    <div :class="$style.header">
+      <p :class="$style.title">スタンプを並び替え・削除</p>
+      <p :class="$style.description">
         先頭のスタンプがアイコンとして使用されます
       </p>
     </div>
@@ -38,7 +38,7 @@
       :limit="STAMP_PALETTE_STAMPS_LIMIT"
       :class="$style.stampCount"
     />
-  </section>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -116,24 +116,23 @@ watch(
 </script>
 
 <style lang="scss" module>
-.section {
+.container {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.sectionHeader {
+.header {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.sectionTitle {
-  @include size-body1;
+.title {
   font-weight: bold;
 }
 
-.sectionDescription {
+.description {
   @include size-body2;
   @include color-text-secondary;
 }

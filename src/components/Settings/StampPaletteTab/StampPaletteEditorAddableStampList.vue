@@ -1,6 +1,6 @@
 <template>
-  <section :class="$style.section">
-    <h3 :class="$style.sectionTitle">スタンプを追加</h3>
+  <div :class="$style.container">
+    <p :class="$style.title">スタンプを追加</p>
     <filter-input
       v-model="filterState.query"
       placeholder="スタンプを検索"
@@ -37,7 +37,7 @@
       </div>
       <div v-else :class="$style.emptyState">スタンプを読み込み中...</div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -150,14 +150,13 @@ const addStamp = (stampId: StampId) => {
 </script>
 
 <style lang="scss" module>
-.section {
+.container {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.sectionTitle {
-  @include size-body1;
+.title {
   font-weight: bold;
 }
 
