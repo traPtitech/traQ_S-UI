@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
 import { computed } from 'vue'
-import StampPaletteEditorAddStamp from './StampPaletteEditorAddStamp.vue'
+import StampPaletteEditorAddStamp from './StampPaletteEditorAddableStampList.vue'
 import StampPaletteEditorBasicInfo from './StampPaletteEditorBasicInfo.vue'
 import StampPaletteEditorSortableStampList from './StampPaletteEditorSortableStampList.vue'
 import type { StampId } from '/@/types/entity-ids'

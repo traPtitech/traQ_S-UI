@@ -42,7 +42,7 @@
 
 <script lang="ts" setup>
 import { computed, onUnmounted, ref, watch } from 'vue'
-import StampPaletteEditorAddStampListItem from './StampPaletteEditorAddStampListItem.vue'
+import StampPaletteEditorAddStampListItem from './StampPaletteEditorAddableStampListItem.vue'
 import useStampFilter from '/@/components/Main/StampPicker/composables/useStampFilter'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import { useStampHistory } from '/@/store/domain/stampHistory'
