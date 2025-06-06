@@ -4,6 +4,7 @@
       <p :class="$style.label">パレット名</p>
       <form-input
         v-model="nameModel"
+        select-on-focus
         placeholder="パレット名は必須項目です"
         :max-length="STAMP_PALETTE_NAME_MAX_LENGTH"
         :class="$style.form"

@@ -33,7 +33,7 @@ const { addInfoToast, addErrorToast } = useToastStore()
 
 const emptyStampPalette: StampPalette = {
   id: '' as StampPaletteId,
-  name: '',
+  name: 'パレット' + (stampPalettesMap.value.size + 1),
   stamps: [] as StampId[],
   creatorId: '',
   createdAt: '',
