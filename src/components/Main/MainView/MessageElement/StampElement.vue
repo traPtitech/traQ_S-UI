@@ -20,11 +20,7 @@
   </div>
   <stamp-scaled-element
     :class="$style.scaleReaction"
-    :show="
-      (isLongHovered || RemainScaled) &&
-      !isDetailShown &&
-      !isTouchDevice
-    "
+    :show="(isLongHovered || RemainScaled) && !isDetailShown && !isTouchDevice"
     :stamp="stamp"
     :target-rect="hoveredRect"
     @scaled-hover="onScaledElementHover"
