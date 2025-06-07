@@ -51,13 +51,6 @@
         @click="toggleStampPicker"
       />
       <a-icon
-        mdi
-        name="bookmark"
-        :size="28"
-        :class="$style.icon"
-        @click="showClipCreateModal"
-      />
-      <a-icon
         v-if="isMine"
         mdi
         name="pencil"
@@ -105,7 +98,6 @@ import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
-import { useModalStore } from '/@/store/ui/modal'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import type { MessageId, StampId } from '/@/types/entity-ids'
@@ -156,14 +148,6 @@ const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
     containerEle,
     false
   )
-
-const { pushModal } = useModalStore()
-const showClipCreateModal = () => {
-  pushModal({
-    type: 'clip-create',
-    messageId: props.messageId
-  })
-}
 
 const { messagesMap } = useMessagesStore()
 const { myId } = useMeStore()

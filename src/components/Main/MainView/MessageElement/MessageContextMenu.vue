@@ -15,6 +15,9 @@
       >
         ピン留め
       </span>
+      <span :class="$style.text" @click="withClose(showClipCreateModal)">
+        クリップ
+      </span>
       <span
         v-if="showWidgetCopyButton"
         :class="$style.text"
@@ -48,6 +51,7 @@ import type { Point } from '/@/lib/basic/point'
 import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
 import { useMeStore } from '/@/store/domain/me'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useModalStore } from '/@/store/ui/modal'
 import type { MessageId } from '/@/types/entity-ids'
 
 const useMessageChanger = (messageId: Ref<MessageId>) => {
@@ -77,6 +81,17 @@ const useCopyMd = (messageId: Ref<MessageId>) => {
     copyText(replacedContent, 'Markdown')
   }
   return { copyMd }
+}
+
+const useShowClipCreateModal = (messageId: Ref<MessageId>) => {
+  const { pushModal } = useModalStore()
+  const showClipCreateModal = () => {
+    pushModal({
+      type: 'clip-create',
+      messageId: messageId.value
+    })
+  }
+  return { showClipCreateModal }
 }
 </script>
 
@@ -113,6 +128,7 @@ const { copyEmbedded } = useCopyLink(messageId)
 const { copyMd } = useCopyMd(messageId)
 const { addPinned, removePinned } = usePinToggler(messageId)
 const { deleteMessage } = useMessageChanger(messageId)
+const { showClipCreateModal } = useShowClipCreateModal(messageId)
 
 const close = () => {
   emit('close')
