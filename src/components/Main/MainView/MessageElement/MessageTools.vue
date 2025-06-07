@@ -58,7 +58,6 @@
         @click="editMessage"
       />
       <a-icon
-        v-if="isMine"
         mdi
         name="link"
         :size="28"
