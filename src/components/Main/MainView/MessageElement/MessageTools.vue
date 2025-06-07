@@ -43,6 +43,14 @@
         />
       </template>
       <a-icon
+        v-if="!isMinimum"
+        mdi
+        name="emoticon-outline"
+        :size="28"
+        :class="$style.icon"
+        @click="toggleStampPicker"
+      />
+      <a-icon
         mdi
         name="bookmark"
         :size="28"
@@ -63,14 +71,6 @@
         :size="28"
         :class="$style.icon"
         @click="copyLink"
-      />
-      <a-icon
-        v-if="!isMinimum"
-        mdi
-        name="emoticon-outline"
-        :size="28"
-        :class="$style.icon"
-        @click="toggleStampPicker"
       />
       <a-icon
         :class="$style.icon"
