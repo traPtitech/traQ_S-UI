@@ -15,13 +15,6 @@
       >
         ピン留め
       </span>
-      <span
-        v-if="isMine && !isMinimum"
-        :class="$style.text"
-        @click="withClose(editMessage)"
-      >
-        編集
-      </span>
       <span :class="$style.text" @click="withClose(copyLink)">
         メッセージリンクをコピー
       </span>
@@ -58,16 +51,11 @@ import type { Point } from '/@/lib/basic/point'
 import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
 import { useMeStore } from '/@/store/domain/me'
 import { useMessagesStore } from '/@/store/entities/messages'
-import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 import type { MessageId } from '/@/types/entity-ids'
 
 const useMessageChanger = (messageId: Ref<MessageId>) => {
   const { execWithToast } = useExecWithToast()
-  const { editingMessageId } = useMessageEditingStateStore()
 
-  const editMessage = () => {
-    editingMessageId.value = messageId.value
-  }
   const deleteMessage = () => {
     if (!confirm('本当にメッセージを削除しますか？')) return
 
@@ -79,7 +67,7 @@ const useMessageChanger = (messageId: Ref<MessageId>) => {
       }
     )
   }
-  return { editMessage, deleteMessage }
+  return { deleteMessage }
 }
 
 const useCopyMd = (messageId: Ref<MessageId>) => {
@@ -127,7 +115,7 @@ const isMine = computed(
 const { copyLink, copyEmbedded } = useCopyLink(messageId)
 const { copyMd } = useCopyMd(messageId)
 const { addPinned, removePinned } = usePinToggler(messageId)
-const { editMessage, deleteMessage } = useMessageChanger(messageId)
+const { deleteMessage } = useMessageChanger(messageId)
 
 const close = () => {
   emit('close')

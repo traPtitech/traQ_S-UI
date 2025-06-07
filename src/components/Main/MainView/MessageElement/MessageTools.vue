@@ -50,6 +50,14 @@
         @click="showClipCreateModal"
       />
       <a-icon
+        v-if="isMine"
+        mdi
+        name="pencil"
+        :size="28"
+        :class="$style.icon"
+        @click="editMessage"
+      />
+      <a-icon
         v-if="!isMinimum"
         mdi
         name="emoticon-outline"
@@ -84,8 +92,11 @@ import AStamp from '/@/components/UI/AStamp.vue'
 import useContextMenu from '/@/composables/useContextMenu'
 import useToggle from '/@/composables/utils/useToggle'
 import { useStampUpdater } from '/@/lib/updater/stamp'
+import { useMeStore } from '/@/store/domain/me'
 import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useMessagesStore } from '/@/store/entities/messages'
 import { useStampsStore } from '/@/store/entities/stamps'
+import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 import { useModalStore } from '/@/store/ui/modal'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
@@ -144,6 +155,17 @@ const showClipCreateModal = () => {
     type: 'clip-create',
     messageId: props.messageId
   })
+}
+
+const { messagesMap } = useMessagesStore()
+const { myId } = useMeStore()
+const isMine = computed(
+  () => messagesMap.value.get(props.messageId)?.userId === myId.value
+)
+
+const { editingMessageId } = useMessageEditingStateStore()
+const editMessage = () => {
+  editingMessageId.value = props.messageId
 }
 
 const {
