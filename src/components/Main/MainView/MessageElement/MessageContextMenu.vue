@@ -19,16 +19,6 @@
         クリップ
       </span>
       <span
-        v-if="isMine && !isMinimum"
-        :class="$style.text"
-        @click="withClose(editMessage)"
-      >
-        編集
-      </span>
-      <span :class="$style.text" @click="withClose(copyLink)">
-        メッセージリンクをコピー
-      </span>
-      <span
         v-if="showWidgetCopyButton"
         :class="$style.text"
         @click="withClose(copyEmbedded)"
@@ -52,26 +42,21 @@
 <script lang="ts">
 import type { Ref } from 'vue'
 import { computed, toRef } from 'vue'
-import apis from '/@/lib/apis'
-import type { MessageId } from '/@/types/entity-ids'
-import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
-import type { Point } from '/@/lib/basic/point'
-import useExecWithToast from '/@/composables/toast/useExecWithToast'
-import usePinToggler from '/@/composables/contextMenu/usePinToggler'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
-import { useMeStore } from '/@/store/domain/me'
-import { useModalStore } from '/@/store/ui/modal'
-import { useMessagesStore } from '/@/store/entities/messages'
-import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
+import usePinToggler from '/@/composables/contextMenu/usePinToggler'
 import useCopyText from '/@/composables/toast/useCopyText'
+import useExecWithToast from '/@/composables/toast/useExecWithToast'
+import apis from '/@/lib/apis'
+import type { Point } from '/@/lib/basic/point'
+import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
+import { useMeStore } from '/@/store/domain/me'
+import { useMessagesStore } from '/@/store/entities/messages'
+import { useModalStore } from '/@/store/ui/modal'
+import type { MessageId } from '/@/types/entity-ids'
 
 const useMessageChanger = (messageId: Ref<MessageId>) => {
   const { execWithToast } = useExecWithToast()
-  const { editingMessageId } = useMessageEditingStateStore()
 
-  const editMessage = () => {
-    editingMessageId.value = messageId.value
-  }
   const deleteMessage = () => {
     if (!confirm('本当にメッセージを削除しますか？')) return
 
@@ -83,7 +68,7 @@ const useMessageChanger = (messageId: Ref<MessageId>) => {
       }
     )
   }
-  return { editMessage, deleteMessage }
+  return { deleteMessage }
 }
 
 const useCopyMd = (messageId: Ref<MessageId>) => {
@@ -139,10 +124,10 @@ const isMine = computed(
   () => messagesMap.value.get(messageId.value)?.userId === myId.value
 )
 
-const { copyLink, copyEmbedded } = useCopyLink(messageId)
+const { copyEmbedded } = useCopyLink(messageId)
 const { copyMd } = useCopyMd(messageId)
 const { addPinned, removePinned } = usePinToggler(messageId)
-const { editMessage, deleteMessage } = useMessageChanger(messageId)
+const { deleteMessage } = useMessageChanger(messageId)
 const { showClipCreateModal } = useShowClipCreateModal(messageId)
 
 const close = () => {
