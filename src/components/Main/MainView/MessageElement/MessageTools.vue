@@ -58,6 +58,14 @@
         @click="editMessage"
       />
       <a-icon
+        v-if="isMine"
+        mdi
+        name="link"
+        :size="28"
+        :class="$style.icon"
+        @click="copyLink"
+      />
+      <a-icon
         v-if="!isMinimum"
         mdi
         name="emoticon-outline"
@@ -85,10 +93,11 @@
 
 <script lang="ts" setup>
 import type { Stamp } from '@traptitech/traq'
-import { computed, ref } from 'vue'
+import { computed, ref, toRef } from 'vue'
 import MessageContextMenu from './MessageContextMenu.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
+import useCopyLink from '/@/composables/contextMenu/useCopyLink'
 import useContextMenu from '/@/composables/useContextMenu'
 import useToggle from '/@/composables/utils/useToggle'
 import { useStampUpdater } from '/@/lib/updater/stamp'
@@ -167,6 +176,8 @@ const { editingMessageId } = useMessageEditingStateStore()
 const editMessage = () => {
   editingMessageId.value = props.messageId
 }
+
+const { copyLink } = useCopyLink(toRef(props, 'messageId'))
 
 const {
   position: contextMenuPosition,

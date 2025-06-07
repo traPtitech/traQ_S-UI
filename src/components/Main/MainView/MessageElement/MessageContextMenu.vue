@@ -15,9 +15,6 @@
       >
         ピン留め
       </span>
-      <span :class="$style.text" @click="withClose(copyLink)">
-        メッセージリンクをコピー
-      </span>
       <span
         v-if="showWidgetCopyButton"
         :class="$style.text"
@@ -112,7 +109,7 @@ const isMine = computed(
   () => messagesMap.value.get(messageId.value)?.userId === myId.value
 )
 
-const { copyLink, copyEmbedded } = useCopyLink(messageId)
+const { copyEmbedded } = useCopyLink(messageId)
 const { copyMd } = useCopyMd(messageId)
 const { addPinned, removePinned } = usePinToggler(messageId)
 const { deleteMessage } = useMessageChanger(messageId)
