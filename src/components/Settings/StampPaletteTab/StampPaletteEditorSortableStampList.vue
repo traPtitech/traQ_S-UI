@@ -17,6 +17,7 @@
         :key="stampId"
         :class="[
           $style.stampListItem,
+          'js-sortable-item',
           { [$style.selected]: selectedStampIds.includes(stampId) }
         ]"
         :data-id="stampId"
@@ -79,6 +80,7 @@ const setupSortable = () => {
 
   sortableInstance = Sortable.create(stampListRef.value, {
     animation: 150,
+    draggable: '.js-sortable-item',
     onUpdate: (event: SortableEvent) => {
       if (
         event.newDraggableIndex === undefined ||
