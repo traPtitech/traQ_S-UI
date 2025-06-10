@@ -108,6 +108,13 @@ const discardWithConfirm = () => {
   }
 }
 
+const addSuccessToast = () => {
+  addInfoToast('スタンプパレットを保存しました')
+}
+const addFailureToast = () => {
+  addErrorToast('スタンプパレットの保存に失敗しました')
+}
+
 const finalizeWithToast = async () => {
   if (!hasPaletteUnsavedChanges.value) {
     goToSettingsStampPalette()
@@ -116,10 +123,10 @@ const finalizeWithToast = async () => {
   try {
     if (!stampPaletteToEdit.value) throw new Error('stampPaletteToEdit is null')
     await editStampPaletteWrapper(stampPaletteToEdit.value)
-    addInfoToast('スタンプパレットを保存しました')
+    addSuccessToast()
     goToSettingsStampPalette()
   } catch (e) {
-    addErrorToast('スタンプパレットの保存に失敗しました')
+    addFailureToast()
   }
 }
 
@@ -127,9 +134,9 @@ onUnmounted(async () => {
   if (!hasPaletteUnsavedChanges.value || !stampPaletteToEdit.value) return
   try {
     await editStampPaletteWrapper(stampPaletteToEdit.value)
-    addInfoToast('スタンプパレットを保存しました')
+    addSuccessToast()
   } catch (e) {
-    addErrorToast('スタンプパレットの保存に失敗しました')
+    addFailureToast()
   }
 })
 </script>
