@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
-import { computed, ref } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
 import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/StampPaletteActionButtons.vue'
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
@@ -73,6 +73,16 @@ const finalizeWithToast = async () => {
     addErrorToast('スタンプパレットの保存に失敗しました')
   }
 }
+
+onUnmounted(async () => {
+  if (!hasPaletteUnsavedChanges.value) return
+  try {
+    await createStampPaletteWrapper(newStampPalette.value)
+    addInfoToast('スタンプパレットを保存しました')
+  } catch (e) {
+    addErrorToast('スタンプパレットの保存に失敗しました')
+  }
+})
 </script>
 
 <style lang="scss" module>

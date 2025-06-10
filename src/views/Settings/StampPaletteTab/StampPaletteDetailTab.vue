@@ -27,7 +27,7 @@
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
 import { isAxiosError } from 'axios'
-import { computed, onBeforeMount, ref, toRaw } from 'vue'
+import { computed, onBeforeMount, onUnmounted, ref, toRaw } from 'vue'
 import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/StampPaletteActionButtons.vue'
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
@@ -122,6 +122,16 @@ const finalizeWithToast = async () => {
     addErrorToast('スタンプパレットの保存に失敗しました')
   }
 }
+
+onUnmounted(async () => {
+  if (!hasPaletteUnsavedChanges.value || !stampPaletteToEdit.value) return
+  try {
+    await editStampPaletteWrapper(stampPaletteToEdit.value)
+    addInfoToast('スタンプパレットを保存しました')
+  } catch (e) {
+    addErrorToast('スタンプパレットの保存に失敗しました')
+  }
+})
 </script>
 
 <style lang="scss" module>
