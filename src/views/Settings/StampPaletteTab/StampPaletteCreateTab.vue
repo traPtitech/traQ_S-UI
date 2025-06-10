@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/StampPaletteActionButtons.vue'
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
@@ -90,6 +90,21 @@ onBeforeUnmount(async () => {
   } catch (e) {
     addFailureToast()
   }
+})
+
+const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+  if (!hasPaletteUnsavedChanges.value) return
+  event.preventDefault()
+  event.returnValue = '未保存の編集内容があります。ページを離れますか？'
+  return '未保存の編集内容があります。ページを離れますか？'
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', handleBeforeUnload)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload)
 })
 </script>
 
