@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
-import { computed, onUnmounted, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/StampPaletteActionButtons.vue'
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
@@ -81,7 +81,7 @@ const finalizeWithToast = async () => {
   }
 }
 
-onUnmounted(async () => {
+onBeforeUnmount(async () => {
   if (!hasPaletteUnsavedChanges.value) return
   if (!window.confirm('未保存の編集内容を保存しますか？')) return
   try {
