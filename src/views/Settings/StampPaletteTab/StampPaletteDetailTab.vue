@@ -132,6 +132,7 @@ const finalizeWithToast = async () => {
 
 onUnmounted(async () => {
   if (!hasPaletteUnsavedChanges.value || !stampPaletteToEdit.value) return
+  if (!window.confirm('未保存の編集内容を保存しますか？')) return
   try {
     await editStampPaletteWrapper(stampPaletteToEdit.value)
     addSuccessToast()
