@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
-import { computed, onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/StampPaletteActionButtons.vue'
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
@@ -24,6 +24,7 @@ import {
   createStampPaletteWrapper,
   goToSettingsStampPalette
 } from '/@/components/Settings/StampPaletteTab/utils'
+import { useBeforeUnload } from '/@/composables/dom/useBeforeUnload'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useToastStore } from '/@/store/ui/toast'
 import type { StampId, StampPaletteId } from '/@/types/entity-ids'
@@ -92,20 +93,10 @@ onBeforeUnmount(async () => {
   }
 })
 
-const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-  if (!hasPaletteUnsavedChanges.value) return
-  event.preventDefault()
-  event.returnValue = '未保存の編集内容があります。ページを離れますか？'
-  return '未保存の編集内容があります。ページを離れますか？'
-}
-
-onMounted(() => {
-  window.addEventListener('beforeunload', handleBeforeUnload)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('beforeunload', handleBeforeUnload)
-})
+useBeforeUnload(
+  hasPaletteUnsavedChanges,
+  '未保存の編集内容があります。ページを離れますか？'
+)
 </script>
 
 <style lang="scss" module>
