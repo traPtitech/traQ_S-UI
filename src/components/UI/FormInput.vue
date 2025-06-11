@@ -24,6 +24,7 @@
         :step="step"
         @input="onInput"
         @change="onChange"
+        @focus="onFocus"
       />
       <span v-if="suffix" :class="$style.suffix" @click="focus">
         {{ suffix }}
@@ -51,12 +52,12 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted, shallowRef } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
-import { onMounted, shallowRef } from 'vue'
-import { randomString } from '/@/lib/basic/randomString'
-import useInput from '/@/composables/useInput'
 import useShowPassword from '/@/composables/dom/useShowPassword'
+import useInput from '/@/composables/useInput'
+import { randomString } from '/@/lib/basic/randomString'
 import { isTouchDevice } from '/@/lib/dom/browser'
 
 const props = withDefaults(
@@ -76,6 +77,7 @@ const props = withDefaults(
     maxLength?: number
     useChangeEvent?: boolean
     focusOnMount?: boolean
+    selectOnFocus?: boolean
   }>(),
   {
     type: 'text',
@@ -83,7 +85,8 @@ const props = withDefaults(
     onSecondary: false,
     placeholder: '',
     useChangeEvent: false,
-    focusOnMount: false
+    focusOnMount: false,
+    selectOnFocus: false
   }
 )
 
@@ -105,6 +108,12 @@ const onChange = (e: Event) => {
 const inputRef = shallowRef<HTMLInputElement | null>(null)
 const focus = () => {
   inputRef.value?.focus()
+}
+
+const onFocus = () => {
+  if (props.selectOnFocus) {
+    inputRef.value?.select()
+  }
 }
 
 const id = randomString()

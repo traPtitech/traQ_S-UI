@@ -20,9 +20,11 @@
   </div>
   <stamp-scaled-element
     :class="$style.scaleReaction"
-    :show="isLongHovered && !isDetailShown && !isMobile"
+    :show="(isLongHovered || RemainScaled) && !isDetailShown && !isTouchDevice"
     :stamp="stamp"
     :target-rect="hoveredRect"
+    @scaled-hover="onScaledElementHover"
+    @end-scaled-hover="leaveScaledElementHover"
   />
 </template>
 
@@ -46,7 +48,7 @@ const emit = defineEmits<{
   (e: 'removeStamp', _stampId: string): void
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isTouchDevice } = useResponsiveStore()
 const { stampsMap } = useStampsStore()
 
 const stampName = computed(
@@ -97,11 +99,35 @@ watch(
 const { isLongHovered, onMouseEnter, onMouseLeave } = useHover()
 const stampRoot = ref<HTMLElement | null>(null)
 const hoveredRect = ref<DOMRect | undefined>(undefined)
+const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const RemainScaled = ref(false)
+
+const onScaledElementHover = () => {
+  if (hoverTimeout.value) {
+    clearTimeout(hoverTimeout.value)
+  }
+  hoveredRect.value = stampRoot.value?.getBoundingClientRect()
+  RemainScaled.value = true
+}
+
+const leaveScaledElementHover = () => {
+  RemainScaled.value = false
+  hoveredRect.value = undefined
+}
 
 watch(isLongHovered, beginHover => {
-  hoveredRect.value = beginHover
-    ? (stampRoot.value?.getBoundingClientRect() ?? undefined)
-    : undefined
+  if (beginHover) {
+    if (hoverTimeout.value) {
+      clearTimeout(hoverTimeout.value)
+    }
+    RemainScaled.value = true
+    hoveredRect.value = stampRoot.value?.getBoundingClientRect()
+  } else {
+    hoverTimeout.value = setTimeout(() => {
+      RemainScaled.value = false
+      hoveredRect.value = undefined
+    }, 50)
+  }
 })
 </script>
 
