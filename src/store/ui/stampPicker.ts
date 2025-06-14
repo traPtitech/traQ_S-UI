@@ -6,6 +6,7 @@ import { computed, ref, watch, watchEffect } from 'vue'
 import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 import type { Point } from '/@/lib/basic/point'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { StampId } from '/@/types/entity-ids'
 
@@ -70,6 +71,7 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
     initialStampSetValue
   )
 
+  const { nonEmptyStampPaletteIds } = useStampPalettesStore()
   const currentStampSet = computed({
     get: () => state,
     set: (newValue: StampSet) => {
@@ -77,6 +79,14 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
       state.type = newValue.type
     }
   })
+
+  const validateCurrentStampSet = () => {
+    if (currentStampSet.value.type !== 'palette') return
+    if (!nonEmptyStampPaletteIds.value.includes(currentStampSet.value.id)) {
+      currentStampSet.value.type = 'history'
+      currentStampSet.value.id = ''
+    }
+  }
 
   const isEffectEnabled = ref(false)
   const position = ref<Point>()
@@ -93,6 +103,7 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
   return {
     selectHandler,
     currentStampSet,
+    validateCurrentStampSet,
     isEffectEnabled,
     position,
     alignment,

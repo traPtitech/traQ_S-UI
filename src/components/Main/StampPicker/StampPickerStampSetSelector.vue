@@ -14,10 +14,8 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
 import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue'
 import type { StampSet } from './composables/useStampSetSelector'
-import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 const currentStampSet = defineModel<StampSet>('currentStampSet', {
   required: true
@@ -36,18 +34,6 @@ withDefaults(
 const onStampSetSelect = (stampSet: StampSet) => {
   currentStampSet.value = stampSet
 }
-
-const { stampPalettesMap } = useStampPalettesStore()
-onMounted(() => {
-  if (
-    currentStampSet.value.type === 'palette' &&
-    currentStampSet.value.id &&
-    !stampPalettesMap.value.has(currentStampSet.value.id)
-  ) {
-    currentStampSet.value.id = ''
-    currentStampSet.value.type = 'history'
-  }
-})
 </script>
 
 <style lang="scss" module>
