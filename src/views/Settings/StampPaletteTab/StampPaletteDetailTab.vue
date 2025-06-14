@@ -132,7 +132,13 @@ const finalizeWithToast = async () => {
 }
 
 onBeforeUnmount(async () => {
-  if (!hasPaletteUnsavedChanges.value || !stampPaletteToEdit.value) return
+  if (
+    !hasPaletteUnsavedChanges.value ||
+    !stampPaletteToEdit.value ||
+    isConfirmed.value
+  )
+    return
+  isConfirmed.value = true
   if (!window.confirm('未保存の編集内容を保存しますか？')) return
   try {
     await editStampPaletteWrapper(stampPaletteToEdit.value)
@@ -144,7 +150,10 @@ onBeforeUnmount(async () => {
 
 useBeforeUnload(
   hasPaletteUnsavedChanges,
-  '未保存の編集内容があります。ページを離れますか？'
+  '未保存の編集内容があります。ページを離れますか？',
+  event => {
+    isConfirmed.value = true
+  }
 )
 </script>
 

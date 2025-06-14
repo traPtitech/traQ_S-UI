@@ -1,11 +1,15 @@
 import { onMounted, onUnmounted, type ComputedRef, type Ref } from 'vue'
 
 export const useBeforeUnload = (
-  enabled: Ref<boolean> | ComputedRef<boolean>,
-  message: string
+  isEnabled: Ref<boolean> | ComputedRef<boolean>,
+  message: string,
+  onBeforeUnload?: (event: BeforeUnloadEvent) => void
 ) => {
   const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-    if (!enabled.value) return
+    if (!isEnabled.value) return
+    if (onBeforeUnload) {
+      onBeforeUnload(event)
+    }
     event.preventDefault()
     event.returnValue = message
     return message

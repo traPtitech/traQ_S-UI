@@ -82,8 +82,11 @@ const finalizeWithToast = async () => {
   }
 }
 
+const isConfirmed = ref(false)
+
 onBeforeUnmount(async () => {
-  if (!hasPaletteUnsavedChanges.value) return
+  if (!hasPaletteUnsavedChanges.value || isConfirmed.value) return
+  isConfirmed.value = true
   if (!window.confirm('未保存の編集内容を保存しますか？')) return
   try {
     await createStampPaletteWrapper(newStampPalette.value)
@@ -94,8 +97,11 @@ onBeforeUnmount(async () => {
 })
 
 useBeforeUnload(
-  hasPaletteUnsavedChanges,
-  '未保存の編集内容があります。ページを離れますか？'
+  computed(() => hasPaletteUnsavedChanges.value && !isConfirmed.value),
+  '未保存の編集内容があります。ページを離れますか？',
+  event => {
+    isConfirmed.value = true
+  }
 )
 </script>
 
