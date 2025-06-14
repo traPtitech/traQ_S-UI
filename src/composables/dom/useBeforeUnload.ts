@@ -7,9 +7,7 @@ export const useBeforeUnload = (
 ) => {
   const handleBeforeUnload = (event: BeforeUnloadEvent) => {
     if (!isEnabled.value) return
-    if (onBeforeUnload) {
-      onBeforeUnload(event)
-    }
+    onBeforeUnload?.(event)
     event.preventDefault()
     event.returnValue = message
     return message
