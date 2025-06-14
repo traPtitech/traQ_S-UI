@@ -131,6 +131,8 @@ const finalizeWithToast = async () => {
   }
 }
 
+const isConfirmed = ref(false)
+
 onBeforeUnmount(async () => {
   if (
     !hasPaletteUnsavedChanges.value ||
