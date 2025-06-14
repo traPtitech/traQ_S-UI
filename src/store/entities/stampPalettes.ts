@@ -97,6 +97,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
     postStampPaletteRequest: PostStampPaletteRequest
   ): Promise<StampPalette> => {
     // FIXME: stampがSetだと400になるので、Arrayに変換
+    // issue: https://github.com/traPtitech/traQ_S-UI/issues/4612
     const apiRequestPayload = {
       name: postStampPaletteRequest.name,
       description: postStampPaletteRequest.description,
@@ -122,6 +123,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
     patchStampPaletteRequest: PatchStampPaletteRequest
   ) => {
     // FIXME: stampがSetだと400になるので、Arrayに変換
+    // issue: https://github.com/traPtitech/traQ_S-UI/issues/4612
     const apiRequestPayload = {
       name: patchStampPaletteRequest.name,
       description: patchStampPaletteRequest.description,
