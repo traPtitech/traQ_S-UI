@@ -129,6 +129,12 @@ export default [
     }
   },
   {
+    files: ['**/public/**/*.js', '**/build/**/*.js'],
+    rules: {
+      'no-undef': 'off'
+    }
+  },
+  {
     plugins: { cypress },
     files: ['**/tests/e2e/**/*.{js,cjs,jsx,ts,tsx}'],
     rules: { ...cypress.configs.recommended.rules }
