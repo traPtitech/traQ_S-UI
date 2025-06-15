@@ -50,8 +50,10 @@ const emit = defineEmits<{
 const { detail } = useMeStore()
 const { clearModal } = useModalStore()
 
+const trimExt = (filename: string) => filename.replace(/\.[^.]+$/, '')
+
 const imageUrl = computed(() => URL.createObjectURL(props.stampImage))
-const newStampName = ref('')
+const newStampName = ref(trimExt(props.stampImage.name))
 
 const useStampCreate = (newStampName: Ref<string>, stampImage: File) => {
   const { addSuccessToast, addErrorToast } = useToastStore()
