@@ -27,7 +27,7 @@
 <script lang="ts" setup>
 import type { StampPalette } from '@traptitech/traq'
 import { isAxiosError } from 'axios'
-import { computed, onBeforeMount, ref, toRaw } from 'vue'
+import { computed, onBeforeMount, onBeforeUnmount, ref, toRaw } from 'vue'
 import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/StampPaletteActionButtons.vue'
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
@@ -36,6 +36,7 @@ import {
   editStampPaletteWrapper,
   goToSettingsStampPalette
 } from '/@/components/Settings/StampPaletteTab/utils'
+import { useBeforeUnload } from '/@/composables/dom/useBeforeUnload'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useToastStore } from '/@/store/ui/toast'
@@ -108,6 +109,13 @@ const discardWithConfirm = () => {
   }
 }
 
+const addSuccessToast = () => {
+  addInfoToast('スタンプパレットを保存しました')
+}
+const addFailureToast = () => {
+  addErrorToast('スタンプパレットの保存に失敗しました')
+}
+
 const finalizeWithToast = async () => {
   if (!hasPaletteUnsavedChanges.value) {
     goToSettingsStampPalette()
@@ -116,12 +124,39 @@ const finalizeWithToast = async () => {
   try {
     if (!stampPaletteToEdit.value) throw new Error('stampPaletteToEdit is null')
     await editStampPaletteWrapper(stampPaletteToEdit.value)
-    addInfoToast('スタンプパレットを保存しました')
+    addSuccessToast()
     goToSettingsStampPalette()
   } catch (e) {
-    addErrorToast('スタンプパレットの保存に失敗しました')
+    addFailureToast()
   }
 }
+
+const isConfirmed = ref(false)
+
+onBeforeUnmount(async () => {
+  if (
+    !hasPaletteUnsavedChanges.value ||
+    !stampPaletteToEdit.value ||
+    isConfirmed.value
+  )
+    return
+  isConfirmed.value = true
+  if (!window.confirm('未保存の編集内容を保存しますか？')) return
+  try {
+    await editStampPaletteWrapper(stampPaletteToEdit.value)
+    addSuccessToast()
+  } catch (e) {
+    addFailureToast()
+  }
+})
+
+useBeforeUnload(
+  hasPaletteUnsavedChanges,
+  '未保存の編集内容があります。ページを離れますか？',
+  event => {
+    isConfirmed.value = true
+  }
+)
 </script>
 
 <style lang="scss" module>
