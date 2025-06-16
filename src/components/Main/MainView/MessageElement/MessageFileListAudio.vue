@@ -7,7 +7,9 @@
         :size="32"
         :disabled="cantPlay"
       />
-      <div :class="$style.title">{{ name }}</div>
+      <div :class="$style.title">
+        {{ name }}
+      </div>
       <div :class="$style.headerTools">
         <audio-player-time
           :class="$style.time"

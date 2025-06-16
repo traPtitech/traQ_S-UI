@@ -30,8 +30,10 @@ const isSpeaking = computed(() => {
       <img :src="iconImage" :class="$style.InnerImage" />
     </div>
 
-    <div :class="$style.NameLabel">{{ user.name }}</div>
-    <div v-show="isSpeaking" :class="$style.borderBox"></div>
+    <div :class="$style.NameLabel">
+      {{ user.name }}
+    </div>
+    <div v-show="isSpeaking" :class="$style.borderBox" />
   </div>
 </template>
 

@@ -6,10 +6,10 @@
         {{ subtitle }}
       </h3>
       <div :class="$style.control">
-        <slot name="control"></slot>
+        <slot name="control" />
       </div>
     </div>
-    <slot></slot>
+    <slot />
   </div>
 </template>
 

@@ -28,5 +28,5 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <video v-if="trackInfo.trackPublication" ref="videoElement"></video>
+  <video v-if="trackInfo.trackPublication" ref="videoElement" />
 </template>

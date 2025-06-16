@@ -31,7 +31,7 @@
       対応していないファイル形式でした
     </div>
   </div>
-  <div></div>
+  <div />
 </template>
 
 <script lang="ts" setup>

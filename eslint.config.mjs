@@ -6,6 +6,8 @@ import js from '@eslint/js'
 import { FlatCompat } from '@eslint/eslintrc'
 import stylisticTs from '@stylistic/eslint-plugin-ts'
 import cypress from 'eslint-plugin-cypress'
+import vueLint from 'eslint-plugin-vue'
+import prettier from 'eslint-config-prettier'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -22,10 +24,10 @@ export default [
   ...compat.extends(
     'eslint:recommended',
     './eslint-vue-ts-recommended.cjs',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:vue/vue3-recommended',
-    'prettier'
+    'plugin:@typescript-eslint/recommended'
   ),
+  ...vueLint.configs['flat/recommended'],
+  prettier,
   {
     plugins: {
       'unused-imports': unusedImports,
@@ -104,7 +106,6 @@ export default [
         }
       ],
 
-      'vue/v-on-function-call': 'error',
       'vue/no-template-target-blank': 'error',
       'vue/prefer-true-attribute-shorthand': 'error',
       '@typescript-eslint/no-non-null-assertion': 'warn',
@@ -125,6 +126,12 @@ export default [
 
     rules: {
       '@typescript-eslint/no-var-requires': 'off'
+    }
+  },
+  {
+    files: ['**/public/**/*.js', '**/build/**/*.js'],
+    rules: {
+      'no-undef': 'off'
     }
   },
   {

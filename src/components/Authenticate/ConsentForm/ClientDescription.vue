@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.name">{{ client.name }}</div>
+    <div :class="$style.name">
+      {{ client.name }}
+    </div>
     <div :class="$style.desc">
       <div :class="$style.descTitle">開発者</div>
       <div :class="$style.descContent">

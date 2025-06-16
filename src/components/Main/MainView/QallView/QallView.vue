@@ -219,7 +219,7 @@ const toggleDanmaku = () => {
                 />
               </div>
             </div>
-            <div :class="$style.verticalBar"></div>
+            <div :class="$style.verticalBar" />
             <div :class="$style.buttonWithDetail">
               <CallControlButton
                 :icon="screenShareIcon"
@@ -263,7 +263,7 @@ const toggleDanmaku = () => {
               :on-click="leaveQall"
               :on-background-color="'#F26451'"
             />
-            <div :class="$style.verticalBar"></div>
+            <div :class="$style.verticalBar" />
             <div :class="$style.smallButtonGroup">
               <div :class="$style.participantsContainer">
                 <ClickOutside @click-outside="showParticipants = false">

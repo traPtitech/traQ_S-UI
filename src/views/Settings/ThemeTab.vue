@@ -47,9 +47,13 @@
             :key="category"
             :class="$style.category"
           >
-            <h4 class>{{ category }}</h4>
+            <h4 class>
+              {{ category }}
+            </h4>
             <div v-for="(color, name) in val" :key="name" :class="$style.color">
-              <p :class="$style.name">{{ name }}</p>
+              <p :class="$style.name">
+                {{ name }}
+              </p>
               <!-- eslint-disable vue/valid-v-model -->
               <!-- TODO: 自動適用じゃなくてバリデーションしてから適用するようにする -->
               <form-input

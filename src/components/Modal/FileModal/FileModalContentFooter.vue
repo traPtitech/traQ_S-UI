@@ -7,7 +7,9 @@
       :class="$style.userName"
       :user-id="user?.id"
     />
-    <div :class="$style.createdAt">{{ createdAt }}</div>
+    <div :class="$style.createdAt">
+      {{ createdAt }}
+    </div>
   </div>
 </template>
 

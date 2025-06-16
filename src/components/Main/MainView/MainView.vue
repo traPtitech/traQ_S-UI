@@ -9,7 +9,7 @@
         }}</a>
       </div>
     </div>
-    <div id="header" :class="$style.headerContainer"></div>
+    <div id="header" :class="$style.headerContainer" />
     <div :class="$style.layoutContainer" :data-layout="layout">
       <QallAudio />
 
