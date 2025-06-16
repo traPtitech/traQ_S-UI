@@ -105,7 +105,6 @@ export default [
         }
       ],
 
-      'vue/v-on-handler-style': 'error',
       'vue/no-template-target-blank': 'error',
       'vue/prefer-true-attribute-shorthand': 'error',
       '@typescript-eslint/no-non-null-assertion': 'warn',
