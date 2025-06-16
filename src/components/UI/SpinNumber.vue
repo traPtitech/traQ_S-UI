@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.body">
-    <div :class="$style.dummy">{{ value }}</div>
+    <div :class="$style.dummy">
+      {{ value }}
+    </div>
     <transition :name="name">
       <div :key="state.val" :class="$style.number">
         {{ state.val }}

@@ -24,7 +24,9 @@
         @edit="onEdit(member.id)"
         @delete="onDelete(member.id)"
       >
-        <div :class="$style.role">{{ member.role }}</div>
+        <div :class="$style.role">
+          {{ member.role }}
+        </div>
       </group-user>
     </div>
   </div>

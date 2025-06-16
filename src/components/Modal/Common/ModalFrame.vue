@@ -9,7 +9,9 @@
         :return-button="returnButton"
       >
         <template #subtitle>
-          <template v-if="subtitle">{{ subtitle }}</template>
+          <template v-if="subtitle">
+            {{ subtitle }}
+          </template>
           <slot v-else name="subtitle" />
         </template>
       </common-modal-header>

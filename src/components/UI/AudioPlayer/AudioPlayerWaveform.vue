@@ -8,13 +8,13 @@
     @click.prevent="onClick"
   >
     <div :class="$style.waveformPlayedMask" :style="waveformWrapperStyle">
-      <div :class="$style.waveform" :style="waveformStyle"></div>
+      <div :class="$style.waveform" :style="waveformStyle" />
     </div>
     <div
       v-show="selectingPosition"
       :class="$style.selectingPosition"
       :style="selectingPositionStyle"
-    ></div>
+    />
   </div>
 </template>
 

@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.name">{{ palette.name }}</div>
+    <div :class="$style.name">
+      {{ palette.name }}
+    </div>
     <router-link
       :class="$style.link"
       :to="constructSettingsStampPaletteDetailPath(palette.id)"
@@ -14,7 +16,9 @@
       @click="showStampPaletteDeleteToast"
     />
   </div>
-  <p :class="$style.description">{{ palette.description }}</p>
+  <p :class="$style.description">
+    {{ palette.description }}
+  </p>
 </template>
 
 <script lang="ts" setup>

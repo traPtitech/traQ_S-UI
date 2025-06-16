@@ -23,7 +23,9 @@ const user = usersMap.value.get(trackInfo.username)
       Remove Video
     </button> -->
     <VideoTrack :track-info="trackInfo" :class="$style.video" />
-    <div :class="$style.NameLabel">{{ user?.name }}</div>
+    <div :class="$style.NameLabel">
+      {{ user?.name }}
+    </div>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <sidebar-content-container title="メンバー">
-    <empty-state v-if="isForceNotification">強制通知チャンネル</empty-state>
+    <empty-state v-if="isForceNotification"> 強制通知チャンネル </empty-state>
     <empty-state v-else-if="!subscribers">
       メンバーの取得に失敗しました
     </empty-state>
@@ -8,7 +8,7 @@
       v-else-if="subscribers.size > 0"
       :viewer-states="viewStates"
     />
-    <empty-state v-else>メンバーはいません</empty-state>
+    <empty-state v-else> メンバーはいません </empty-state>
   </sidebar-content-container>
 </template>
 

@@ -8,7 +8,7 @@
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :size="indicatorSize" />
     </div>
-    <div v-if="isInactive" :class="$style.mask"></div>
+    <div v-if="isInactive" :class="$style.mask" />
   </div>
 </template>
 

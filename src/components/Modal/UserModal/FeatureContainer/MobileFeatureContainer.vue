@@ -2,7 +2,9 @@
   <section :class="$style.feature">
     <user-icon :user-id="user.id" prevent-modal :size="48" />
     <div :class="$style.names">
-      <h1 :class="$style.displayName">{{ user.displayName }}</h1>
+      <h1 :class="$style.displayName">
+        {{ user.displayName }}
+      </h1>
       <div :class="$style.nameInfo">
         <span :class="$style.name">@{{ user.name }}</span>
         <online-indicator :user-id="user.id" has-text />

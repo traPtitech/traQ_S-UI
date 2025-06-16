@@ -43,7 +43,7 @@
             role="tabpanel"
           />
         </template>
-        <empty-state v-else>チャンネルがありません</empty-state>
+        <empty-state v-else> チャンネルがありません </empty-state>
       </template>
     </navigation-content-container>
   </div>
