@@ -15,7 +15,7 @@ updates:
           - '*prettier*'
       patches:
         update-types:
-          - "patch"
+          - 'patch'
   - package-ecosystem: docker
     directory: '/'
     schedule:
