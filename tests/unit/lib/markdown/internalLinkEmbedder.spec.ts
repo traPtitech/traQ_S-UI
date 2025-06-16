@@ -118,6 +118,22 @@ const specs: Spec[] = [
     '@a',
     '!{"type":"user","raw":"@a","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d44"}'
   ],
+  [
+    ':@takashi_trapo @takashi_trape',
+    ':!{"type":"group","raw":"@takashi_trapo","id":"dfabf0c9-5de0-46ee-9721-2525e8bb3d46"} !{"type":"user","raw":"@takashi_trape","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d46"}'
+  ],
+  [
+    ':@takashi_trap',
+    ':!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}'
+  ],
+  [
+    ':@takashi_trapああ',
+    ':!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}ああ'
+  ],
+  [
+    ':@takashi_trap:@takashi_trap',
+    ':@takashi_trap:!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}'
+  ],
   // must not embed cases
   ['https://example.com#a', 'https://example.com#a'],
   ['example.com/#a', 'example.com/#a'],
