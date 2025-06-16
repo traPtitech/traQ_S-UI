@@ -18,9 +18,15 @@
       :data-has-notification-on-child="$boolAttr(hasNotificationOnChild)"
       :data-is-inactive="$boolAttr(isInactive)"
     >
-      <a-icon name="hash" :class="$style.icon" />
+      <a-icon
+        name="hash"
+        :class="$style.icon"
+      />
     </div>
-    <div v-if="hasNotification" :class="$style.indicator">
+    <div
+      v-if="hasNotification"
+      :class="$style.indicator"
+    >
       <notification-indicator :border-width="2" />
     </div>
   </component>

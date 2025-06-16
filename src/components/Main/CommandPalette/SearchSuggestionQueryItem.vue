@@ -4,8 +4,12 @@
     :data-is-mobile="$boolAttr(isMobile)"
     @click="onClick"
   >
-    <p :class="$style.description">{{ description }}</p>
-    <p :class="$style.example">{{ example }}</p>
+    <p :class="$style.description">
+      {{ description }}
+    </p>
+    <p :class="$style.example">
+      {{ example }}
+    </p>
   </div>
 </template>
 

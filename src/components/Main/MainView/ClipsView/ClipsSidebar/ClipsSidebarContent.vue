@@ -1,6 +1,9 @@
 <template>
   <div :class="$style.container">
-    <sidebar-content-container title="名前" :class="$style.item">
+    <sidebar-content-container
+      title="名前"
+      :class="$style.item"
+    >
       <content-editor
         v-model="localName"
         v-model:is-editing="isNameEditing"
@@ -11,14 +14,20 @@
         </template>
       </content-editor>
     </sidebar-content-container>
-    <sidebar-content-container-foldable title="説明" :class="$style.item">
+    <sidebar-content-container-foldable
+      title="説明"
+      :class="$style.item"
+    >
       <content-editor
         v-model="localDescription"
         v-model:is-editing="isDescriptionEditing"
         :max-length="1000"
       >
         <template #default="slotProps">
-          <inline-markdown :content="slotProps.content" accept-action />
+          <inline-markdown
+            :content="slotProps.content"
+            accept-action
+          />
         </template>
       </content-editor>
     </sidebar-content-container-foldable>

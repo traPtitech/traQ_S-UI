@@ -1,6 +1,9 @@
 <template>
   <div>
-    <authenticate-header :class="$style.header" title="新規登録" />
+    <authenticate-header
+      :class="$style.header"
+      title="新規登録"
+    />
     <authenticate-input
       v-model="registerState.name"
       label="traQ ID"

@@ -1,15 +1,27 @@
 <template>
-  <div v-if="fetchingSearchResult" :class="$style.empty">
-    <loading-spinner :class="$style.spinner" color="ui-secondary" />
+  <div
+    v-if="fetchingSearchResult"
+    :class="$style.empty"
+  >
+    <loading-spinner
+      :class="$style.spinner"
+      color="ui-secondary"
+    />
   </div>
-  <div v-else-if="searchResult.length > 0" :class="$style.container">
+  <div
+    v-else-if="searchResult.length > 0"
+    :class="$style.container"
+  >
     <popup-selector
       v-model="currentSortKey"
       :items="selectorItems"
       :class="$style.sortSelector"
       small
     />
-    <div ref="resultListEle" :class="$style.resultList">
+    <div
+      ref="resultListEle"
+      :class="$style.resultList"
+    >
       <div
         v-for="message in searchResult"
         :key="message.id"
@@ -30,7 +42,10 @@
         :aria-hidden="currentPage <= 0"
         @click="jumpToPage(currentPage - 1)"
       >
-        <a-icon name="chevron-left" mdi /> 戻る
+        <a-icon
+          name="chevron-left"
+          mdi
+        /> 戻る
       </div>
       <span :class="$style.page">
         {{ currentPage + 1 }} / {{ pageCount }} ページ
@@ -41,11 +56,19 @@
         :aria-hidden="currentPage >= pageCount - 1"
         @click="jumpToPage(currentPage + 1)"
       >
-        次へ <a-icon name="chevron-right" mdi />
+        次へ <a-icon
+          name="chevron-right"
+          mdi
+        />
       </div>
     </div>
   </div>
-  <div v-else-if="queryEntered" :class="$style.empty">見つかりませんでした</div>
+  <div
+    v-else-if="queryEntered"
+    :class="$style.empty"
+  >
+    見つかりませんでした
+  </div>
 </template>
 
 <script lang="ts" setup>

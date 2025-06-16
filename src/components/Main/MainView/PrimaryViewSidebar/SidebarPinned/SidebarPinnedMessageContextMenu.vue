@@ -1,5 +1,8 @@
 <template>
-  <context-menu-container :position="position" @close="close">
+  <context-menu-container
+    :position="position"
+    @close="close"
+  >
     <div :class="$style.container">
       <span
         v-if="!isMinimum"
@@ -8,7 +11,10 @@
       >
         ピン留めを外す
       </span>
-      <span :class="$style.text" @click="withClose(copyLink)">
+      <span
+        :class="$style.text"
+        @click="withClose(copyLink)"
+      >
         リンクをコピー
       </span>
     </div>

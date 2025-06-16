@@ -1,5 +1,8 @@
 <template>
-  <sidebar-content-container v-if="viewStates.length > 0" title="参加BOT">
+  <sidebar-content-container
+    v-if="viewStates.length > 0"
+    title="参加BOT"
+  >
     <channel-sidebar-member-icons :viewer-states="viewStates" />
   </sidebar-content-container>
 </template>

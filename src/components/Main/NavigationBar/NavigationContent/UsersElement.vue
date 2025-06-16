@@ -1,5 +1,9 @@
 <template>
-  <optional-router-link :to="dmChannelPath" :class="$style.container" block>
+  <optional-router-link
+    :to="dmChannelPath"
+    :class="$style.container"
+    block
+  >
     <user-icon
       :class="$style.icon"
       :user-id="user.id"

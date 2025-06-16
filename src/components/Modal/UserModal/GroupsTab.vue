@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.groups">
-    <template v-if="isLoading">Now loading...</template>
+    <template v-if="isLoading">
+      Now loading...
+    </template>
     <template v-else>
       <ul :class="$style.list">
         <li
@@ -9,7 +11,11 @@
           :class="$style.group"
           @click="onGroupClick(group.id)"
         >
-          <a-icon name="group" :class="$style.icon" :size="20" />
+          <a-icon
+            name="group"
+            :class="$style.icon"
+            :size="20"
+          />
           {{ group.name }}
         </li>
       </ul>

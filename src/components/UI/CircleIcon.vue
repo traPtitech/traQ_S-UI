@@ -1,6 +1,14 @@
 <template>
-  <div :class="$style.circle" :style="iconStyle">
-    <a-icon :class="$style.icon" :name="name" :mdi="mdi" :size="size" />
+  <div
+    :class="$style.circle"
+    :style="iconStyle"
+  >
+    <a-icon
+      :class="$style.icon"
+      :name="name"
+      :mdi="mdi"
+      :size="size"
+    />
   </div>
 </template>
 

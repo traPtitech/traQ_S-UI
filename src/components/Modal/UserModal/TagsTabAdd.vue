@@ -6,15 +6,22 @@
         type="text"
         :class="$style.input"
         placeholder="タグを追加"
+      >
+      <length-count
+        :val="newTagName"
+        :max-length="30"
       />
-      <length-count :val="newTagName" :max-length="30" />
     </div>
     <button
       :class="$style.button"
       :disabled="newTagName.length === 0 || isExceeded || adding"
       @click="addTag"
     >
-      <a-icon name="plus" mdi :class="$style.icon" />
+      <a-icon
+        name="plus"
+        mdi
+        :class="$style.icon"
+      />
     </button>
   </div>
 </template>

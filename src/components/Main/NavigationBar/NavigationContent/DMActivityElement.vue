@@ -1,11 +1,21 @@
 <template>
-  <optional-router-link :class="$style.container" :to="dmChannelPath" block>
+  <optional-router-link
+    :class="$style.container"
+    :to="dmChannelPath"
+    block
+  >
     <div :class="$style.title">
-      <user-name :class="$style.name" :user="user" is-title />
+      <user-name
+        :class="$style.name"
+        :user="user"
+        is-title
+      />
       <notification-indicator :class="$style.indicator" />
     </div>
     <div :class="$style.separator" />
-    <div :class="$style.content">DMのため非表示</div>
+    <div :class="$style.content">
+      DMのため非表示
+    </div>
   </optional-router-link>
 </template>
 

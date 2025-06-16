@@ -1,6 +1,13 @@
 <template>
-  <div :class="$style.container" :aria-selected="isSelected">
-    <a-icon :class="$style.icon" mdi :name="iconName" />
+  <div
+    :class="$style.container"
+    :aria-selected="isSelected"
+  >
+    <a-icon
+      :class="$style.icon"
+      mdi
+      :name="iconName"
+    />
     <span>{{ folderName }}</span>
   </div>
 </template>

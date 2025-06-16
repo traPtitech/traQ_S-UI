@@ -1,6 +1,12 @@
 <template>
-  <div :class="$style.container" @click="openModal">
-    <a-icon name="user" :size="20" />
+  <div
+    :class="$style.container"
+    @click="openModal"
+  >
+    <a-icon
+      name="user"
+      :size="20"
+    />
     {{ displayName ?? 'unknown' }}
   </div>
 </template>

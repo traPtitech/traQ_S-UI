@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.container" :style="containerStyle">
+  <div
+    :class="$style.container"
+    :style="containerStyle"
+  >
     <img
       v-if="imageUrl.length > 0"
       :class="$style.img"
@@ -8,7 +11,7 @@
       :title="!withoutTitle ? name : undefined"
       draggable="false"
       @contextmenu="noContextMenu ? $event.preventDefault() : undefined"
-    />
+    >
   </div>
 </template>
 

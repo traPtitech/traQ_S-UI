@@ -11,7 +11,10 @@
       :max-length="30"
     />
     <div :class="$style.editButtonWrapper">
-      <form-button label="編集" @click="edit" />
+      <form-button
+        label="編集"
+        @click="edit"
+      />
     </div>
   </modal-frame>
 </template>

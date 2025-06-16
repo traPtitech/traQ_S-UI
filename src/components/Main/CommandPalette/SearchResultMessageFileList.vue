@@ -1,13 +1,19 @@
 <template>
   <div :class="$style.container">
-    <div v-if="fileMetaDataState.images.length > 0" :class="$style.list">
+    <div
+      v-if="fileMetaDataState.images.length > 0"
+      :class="$style.list"
+    >
       <search-result-message-image
         v-for="image in fileMetaDataState.images"
         :key="image.id"
         :file-id="image.id"
       />
     </div>
-    <div v-if="files.length > 0" :class="$style.list">
+    <div
+      v-if="files.length > 0"
+      :class="$style.list"
+    >
       <search-result-message-file
         v-for="file in files"
         :key="file.id"

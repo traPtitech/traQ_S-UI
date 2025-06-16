@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div v-if="parent" :class="$style.channel" data-is-parent>
+    <div
+      v-if="parent"
+      :class="$style.channel"
+      data-is-parent
+    >
       <channel-sidebar-relation-element
         :name="parent.name"
         :topic="parent.topic"
@@ -8,8 +12,14 @@
         :class="$style.element"
       />
     </div>
-    <div v-if="current" :class="$style.channel">
-      <template v-for="sibling in filteredSiblings" :key="sibling.id">
+    <div
+      v-if="current"
+      :class="$style.channel"
+    >
+      <template
+        v-for="sibling in filteredSiblings"
+        :key="sibling.id"
+      >
         <channel-sidebar-relation-element
           :name="sibling.name"
           :topic="sibling.topic"

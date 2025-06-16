@@ -2,7 +2,12 @@
   <modal-frame title="スタンプ編集">
     <div :class="$style.container">
       <div :class="$style.leftContainer">
-        <img :src="imageUrl" :class="$style.img" width="136" height="136" />
+        <img
+          :src="imageUrl"
+          :class="$style.img"
+          width="136"
+          height="136"
+        >
       </div>
       <div>
         <form-input
@@ -22,7 +27,11 @@
       </div>
     </div>
     <div :class="$style.buttonContainer">
-      <form-button label="キャンセル" type="tertiary" @click="cancel" />
+      <form-button
+        label="キャンセル"
+        type="tertiary"
+        @click="cancel"
+      />
       <form-button
         label="更新する"
         :disabled="!stampChanged || !isNameValid"

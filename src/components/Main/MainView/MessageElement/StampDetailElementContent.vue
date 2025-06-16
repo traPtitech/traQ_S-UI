@@ -1,7 +1,13 @@
 <template>
-  <div :class="$style.clickable" @click="openModal">
+  <div
+    :class="$style.clickable"
+    @click="openModal"
+  >
     {{ user?.displayName ?? 'unknown' }}
-    <span v-if="count > 1" :class="$style.numberWrap">
+    <span
+      v-if="count > 1"
+      :class="$style.numberWrap"
+    >
       <spin-number :value="count" />
     </span>
   </div>

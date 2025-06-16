@@ -1,6 +1,10 @@
 <template>
   <div>
-    <label v-if="label" :for="id" :class="$style.label">
+    <label
+      v-if="label"
+      :for="id"
+      :class="$style.label"
+    >
       {{ label }}
     </label>
     <!-- https://vue-select.org/api/props.html -->
@@ -14,7 +18,7 @@
       :clearable="false"
       :data-background="background"
       :class="$style.select"
-    ></v-select>
+    />
   </div>
 </template>
 

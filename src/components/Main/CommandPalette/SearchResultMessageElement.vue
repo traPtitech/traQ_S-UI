@@ -5,8 +5,15 @@
     :data-expanded="$boolAttr(expanded)"
     @click="onClick"
   >
-    <user-icon :class="$style.icon" :size="32" :user-id="message.userId" />
-    <div :class="$style.header" @click.stop="">
+    <user-icon
+      :class="$style.icon"
+      :size="32"
+      :user-id="message.userId"
+    />
+    <div
+      :class="$style.header"
+      @click.stop=""
+    >
       <span :class="$style.displayName">{{
         user?.displayName ?? 'Unknown'
       }}</span>
@@ -14,7 +21,10 @@
     </div>
     <div :class="$style.contentContainer">
       <div :class="$style.markdownWrapper">
-        <div ref="contentRef" :class="$style.markdownContainer">
+        <div
+          ref="contentRef"
+          :class="$style.markdownContainer"
+        >
           <markdown-content
             :content="renderedContent"
             @click="toggleSpoilerHandler"
@@ -25,7 +35,11 @@
           :class="$style.expandButton"
           @mousedown.stop="toggleExpanded"
         >
-          <a-icon name="arrow-expand-vertical" mdi :size="20" />全て表示
+          <a-icon
+            name="arrow-expand-vertical"
+            mdi
+            :size="20"
+          />全て表示
         </div>
       </div>
       <search-result-message-file-list

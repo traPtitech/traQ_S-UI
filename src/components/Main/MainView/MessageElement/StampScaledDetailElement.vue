@@ -1,6 +1,10 @@
 <template>
   <div :class="$style.container">
-    <div v-for="userId in userIds" :key="userId" :class="$style.contents">
+    <div
+      v-for="userId in userIds"
+      :key="userId"
+      :class="$style.contents"
+    >
       <user-icon
         :user-id="userId"
         :size="24"
@@ -8,7 +12,10 @@
         @click.capture="emit('click-user')"
       />
     </div>
-    <div v-if="overflowCount[0]" :class="$style.overflowcount">
+    <div
+      v-if="overflowCount[0]"
+      :class="$style.overflowcount"
+    >
       +{{ overflowCount[1] }}
     </div>
   </div>

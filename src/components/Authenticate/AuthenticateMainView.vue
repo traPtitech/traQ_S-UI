@@ -1,7 +1,13 @@
 <template>
-  <transition name="zoom" appear>
+  <transition
+    name="zoom"
+    appear
+  >
     <!-- https://github.com/vuejs/rfcs/blob/master/active-rfcs/0017-transition-as-root.md -->
-    <div v-if="shouldShow" :class="$style.container">
+    <div
+      v-if="shouldShow"
+      :class="$style.container"
+    >
       <authenticate-modal>
         <login-form
           v-if="type === 'login'"

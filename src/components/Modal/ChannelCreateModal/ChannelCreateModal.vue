@@ -1,5 +1,9 @@
 <template>
-  <modal-frame :title="title" :subtitle="subtitle" icon-name="hash">
+  <modal-frame
+    :title="title"
+    :subtitle="subtitle"
+    icon-name="hash"
+  >
     <form-selector
       v-if="parentChannelId === undefined"
       v-model="state.parentChannelId"

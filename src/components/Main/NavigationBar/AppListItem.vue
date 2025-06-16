@@ -5,8 +5,16 @@
     target="_blank"
     rel="noopener noreferrer"
   >
-    <span v-if="isSvg" :class="$style.icon" v-html="svgHtml"></span>
-    <img v-else :class="$style.icon" :src="`/img/services/${iconPath}`" />
+    <span
+      v-if="isSvg"
+      :class="$style.icon"
+      v-html="svgHtml"
+    />
+    <img
+      v-else
+      :class="$style.icon"
+      :src="`/img/services/${iconPath}`"
+    >
     <span :class="$style.label">{{ label }}</span>
   </a>
 </template>

@@ -1,7 +1,14 @@
 <template>
-  <li :key="token.id" :class="$style.wrap">
-    <div :class="$style.title">{{ token.clientName ?? '---' }}</div>
-    <div :class="$style.description">{{ token.clientDesc }}</div>
+  <li
+    :key="token.id"
+    :class="$style.wrap"
+  >
+    <div :class="$style.title">
+      {{ token.clientName ?? '---' }}
+    </div>
+    <div :class="$style.description">
+      {{ token.clientDesc }}
+    </div>
     <div :class="$style.details">
       <div :class="$style.developer">
         <template v-if="token.clientDeveloper">
@@ -14,11 +21,17 @@
           />
           @{{ token.clientDeveloper.name }}
         </template>
-        <template v-else>unknown</template>
+        <template v-else>
+          unknown
+        </template>
       </div>
       <time :datetime="issuedAtISO">{{ issuedAt }}</time>
       <div :class="$style.scopes">
-        <div v-for="scope in scopes" :key="scope" :class="$style.scope">
+        <div
+          v-for="scope in scopes"
+          :key="scope"
+          :class="$style.scope"
+        >
           {{ scope }}
         </div>
       </div>
@@ -29,7 +42,10 @@
         title="トークンを無効化"
         @click="emit('revoke')"
       >
-        <a-icon name="close" mdi />
+        <a-icon
+          name="close"
+          mdi
+        />
       </button>
     </div>
   </li>

@@ -8,11 +8,16 @@
           label="設定"
           @click="requestPermission"
         />
-        <p v-else>ブラウザや端末の設定から変更できます</p>
+        <p v-else>
+          ブラウザや端末の設定から変更できます
+        </p>
       </div>
     </div>
     <div>
-      <a-toggle :model-value="permission === 'granted'" disabled />
+      <a-toggle
+        :model-value="permission === 'granted'"
+        disabled
+      />
     </div>
   </div>
 </template>

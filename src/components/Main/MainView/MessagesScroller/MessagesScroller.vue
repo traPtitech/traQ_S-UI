@@ -20,7 +20,10 @@
         title="これ以上メッセージはありません"
         :class="$style.noMoreSeparator"
       />
-      <template v-for="messageId in messageIds" :key="messageId">
+      <template
+        v-for="messageId in messageIds"
+        :key="messageId"
+      >
         <slot
           :message-id="messageId"
           :on-change-height="onChangeHeight"
@@ -28,7 +31,7 @@
         />
       </template>
     </div>
-    <div :class="$style.bottomSpacer"></div>
+    <div :class="$style.bottomSpacer" />
   </div>
 </template>
 

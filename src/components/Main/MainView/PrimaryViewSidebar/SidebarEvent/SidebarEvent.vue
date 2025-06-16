@@ -12,7 +12,7 @@
   <sidebar-event-pinned-changed
     v-else-if="
       event.type === ChannelEventTypeEnum.PinAdded ||
-      event.type === ChannelEventTypeEnum.PinRemoved
+        event.type === ChannelEventTypeEnum.PinRemoved
     "
     :datetime="event.datetime"
     :details="event.detail"

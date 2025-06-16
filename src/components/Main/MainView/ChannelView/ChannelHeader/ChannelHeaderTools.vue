@@ -8,7 +8,10 @@
       :is-archived="channelState.archived"
       @click-more="togglePopupMenu"
     >
-      <click-outside v-if="isPopupMenuShown" @click-outside="closePopupMenu">
+      <click-outside
+        v-if="isPopupMenuShown"
+        @click-outside="closePopupMenu"
+      >
         <channel-header-tools-menu
           :class="$style.toolsMenu"
           :channel-id="channelId"

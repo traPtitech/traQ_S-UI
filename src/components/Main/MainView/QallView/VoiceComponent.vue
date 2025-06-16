@@ -28,6 +28,9 @@ const parseToFloat = (value: number | string): number => {
 </script>
 
 <template>
-  <AudioTrack :track-info="trackInfo" :volume="parseToFloat(volume)" />
+  <AudioTrack
+    :track-info="trackInfo"
+    :volume="parseToFloat(volume)"
+  />
 </template>
 <style lang="scss" module></style>

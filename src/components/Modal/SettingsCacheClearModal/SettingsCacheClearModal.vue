@@ -18,7 +18,11 @@
         </form-checkbox>
       </div>
       <div :class="$style.buttonContainer">
-        <form-button label="キャンセル" type="tertiary" @click="clearModal" />
+        <form-button
+          label="キャンセル"
+          type="tertiary"
+          @click="clearModal"
+        />
         <form-button
           label="削除する"
           type="secondary"

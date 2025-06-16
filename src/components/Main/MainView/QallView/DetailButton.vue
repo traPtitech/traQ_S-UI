@@ -14,8 +14,15 @@ function handleClick() {
 </script>
 
 <template>
-  <button :class="$style.detailButton" @click="handleClick">
-    <AIcon name="plus-circle" mdi :size="24" />
+  <button
+    :class="$style.detailButton"
+    @click="handleClick"
+  >
+    <AIcon
+      name="plus-circle"
+      mdi
+      :size="24"
+    />
   </button>
 </template>
 

@@ -1,11 +1,16 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.name">{{ palette.name }}</div>
+    <div :class="$style.name">
+      {{ palette.name }}
+    </div>
     <router-link
       :class="$style.link"
       :to="constructSettingsStampPaletteDetailPath(palette.id)"
     >
-      <a-icon mdi name="pencil" />
+      <a-icon
+        mdi
+        name="pencil"
+      />
     </router-link>
     <icon-button
       :class="$style.icon"
@@ -14,7 +19,9 @@
       @click="showStampPaletteDeleteToast"
     />
   </div>
-  <p :class="$style.description">{{ palette.description }}</p>
+  <p :class="$style.description">
+    {{ palette.description }}
+  </p>
 </template>
 
 <script lang="ts" setup>

@@ -1,5 +1,9 @@
 <template>
-  <div ref="containerRef" :class="$style.container" :aria-selected="isSelected">
+  <div
+    ref="containerRef"
+    :class="$style.container"
+    :aria-selected="isSelected"
+  >
     <dropdown-suggester-user-icon
       v-if="candidate.type === 'user'"
       :user-id="candidate.id"

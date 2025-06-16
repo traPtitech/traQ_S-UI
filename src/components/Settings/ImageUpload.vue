@@ -4,7 +4,10 @@
     :class="$style.cropper"
     :data-is-rounded="$boolAttr(rounded)"
   >
-    <img ref="imgEle" :src="originalImgUrl" />
+    <img
+      ref="imgEle"
+      :src="originalImgUrl"
+    >
   </div>
 </template>
 

@@ -1,5 +1,8 @@
 <template>
-  <router-link :to="fileLink" :class="$style.container">
+  <router-link
+    :to="fileLink"
+    :class="$style.container"
+  >
     <div :class="$style.header">
       <audio-player-play-button
         v-model:is-playing="isPlaying"
@@ -7,7 +10,9 @@
         :size="32"
         :disabled="cantPlay"
       />
-      <div :class="$style.title">{{ name }}</div>
+      <div :class="$style.title">
+        {{ name }}
+      </div>
       <div :class="$style.headerTools">
         <audio-player-time
           :class="$style.time"
@@ -48,8 +53,16 @@
       :class="$style.timeSlider"
       :duration="duration"
     />
-    <div v-if="!canShow" :class="$style.error">表示できない音楽です</div>
-    <div v-else-if="wasUnsupportedType" :class="$style.error">
+    <div
+      v-if="!canShow"
+      :class="$style.error"
+    >
+      表示できない音楽です
+    </div>
+    <div
+      v-else-if="wasUnsupportedType"
+      :class="$style.error"
+    >
       対応していないファイル形式でした
     </div>
   </router-link>

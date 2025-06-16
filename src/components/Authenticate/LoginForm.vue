@@ -37,10 +37,17 @@
         <span v-if="loginState.error">{{ loginState.error }}</span>
       </div>
       <div :class="$style.buttons">
-        <authenticate-button type="primary" label="ログイン" is-submit />
+        <authenticate-button
+          type="primary"
+          label="ログイン"
+          is-submit
+        />
       </div>
       <template v-if="externalLogin.size > 0">
-        <authenticate-separator label="または" :class="$style.separator" />
+        <authenticate-separator
+          label="または"
+          :class="$style.separator"
+        />
         <div :class="$style.exLoginButtons">
           <authenticate-button
             v-show="externalLogin.has('traQ')"

@@ -1,5 +1,8 @@
 <template>
-  <div v-if="isLoginCheckDone" :class="$style.container">
+  <div
+    v-if="isLoginCheckDone"
+    :class="$style.container"
+  >
     <mobile-setting-modal v-if="isMobile">
       <router-view />
     </mobile-setting-modal>
@@ -7,7 +10,7 @@
       <router-view />
     </desktop-setting-modal>
   </div>
-  <div v-else></div>
+  <div v-else />
 </template>
 
 <script lang="ts">

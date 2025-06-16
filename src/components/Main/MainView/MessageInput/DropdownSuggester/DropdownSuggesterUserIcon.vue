@@ -1,7 +1,14 @@
 <template>
   <div :class="$style.container">
-    <user-icon :user-id="userId" :size="24" />
-    <online-indicator :class="$style.indicator" :user-id="userId" :size="8" />
+    <user-icon
+      :user-id="userId"
+      :size="24"
+    />
+    <online-indicator
+      :class="$style.indicator"
+      :user-id="userId"
+      :size="8"
+    />
   </div>
 </template>
 

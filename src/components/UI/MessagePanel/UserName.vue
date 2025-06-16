@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.container" :data-is-title="$boolAttr(isTitle)">
+  <div
+    :class="$style.container"
+    :data-is-title="$boolAttr(isTitle)"
+  >
     <user-icon
       v-if="user"
       :class="$style.icon"

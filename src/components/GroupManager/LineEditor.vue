@@ -1,7 +1,12 @@
 <template>
   <div>
-    <div :class="$style.label">{{ label }}</div>
-    <div v-if="isEditing" :class="$style.inputWrapper">
+    <div :class="$style.label">
+      {{ label }}
+    </div>
+    <div
+      v-if="isEditing"
+      :class="$style.inputWrapper"
+    >
       <form-input
         ref="inputRef"
         v-model="localValue"
@@ -17,8 +22,14 @@
         @click="endEditing"
       />
     </div>
-    <div v-else :class="$style.valueWrapper">
-      <div :class="$style.value" :data-is-empty="localValue === ''">
+    <div
+      v-else
+      :class="$style.valueWrapper"
+    >
+      <div
+        :class="$style.value"
+        :data-is-empty="localValue === ''"
+      >
         {{ localValue || `${label}が設定されていません` }}
       </div>
       <a-icon

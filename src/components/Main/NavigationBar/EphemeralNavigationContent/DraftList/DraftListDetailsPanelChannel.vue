@@ -2,14 +2,21 @@
   <router-link :to="channelLink">
     <div :class="$style.container">
       <div :class="$style.state">
-        <a-icon v-if="hasAttachments" name="file" mdi :class="$style.icon" />
+        <a-icon
+          v-if="hasAttachments"
+          name="file"
+          mdi
+          :class="$style.icon"
+        />
         <div
           class="markdown-inline-body"
           :class="$style.text"
           v-html="renderedContent"
-        ></div>
+        />
       </div>
-      <div :class="$style.channelPath">{{ channelPath }}</div>
+      <div :class="$style.channelPath">
+        {{ channelPath }}
+      </div>
     </div>
   </router-link>
 </template>

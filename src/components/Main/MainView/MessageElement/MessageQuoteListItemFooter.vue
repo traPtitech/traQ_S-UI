@@ -6,7 +6,10 @@
       </router-link>
       - {{ date }}
     </span>
-    <router-link :class="$style.link" :to="messageLink">
+    <router-link
+      :class="$style.link"
+      :to="messageLink"
+    >
       メッセージへ
     </router-link>
   </div>

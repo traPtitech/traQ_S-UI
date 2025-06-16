@@ -33,7 +33,10 @@
         :style="styles.sidebarWrapper"
       >
         <!-- モバイル時はスワイプ表示するためここにportal表示 -->
-        <div id="sidebar-mobile" :class="$style.sidebarPortal" />
+        <div
+          id="sidebar-mobile"
+          :class="$style.sidebarPortal"
+        />
       </div>
     </div>
     <command-palette-container />

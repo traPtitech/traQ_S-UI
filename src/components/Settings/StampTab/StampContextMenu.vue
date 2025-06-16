@@ -1,19 +1,37 @@
 <template>
-  <context-menu-container :position="position" @close="close">
+  <context-menu-container
+    :position="position"
+    @close="close"
+  >
     <div :class="$style.container">
-      <button :class="$style.button" @click="updateStampImage">
-        <a-icon name="file-image" mdi />
+      <button
+        :class="$style.button"
+        @click="updateStampImage"
+      >
+        <a-icon
+          name="file-image"
+          mdi
+        />
         スタンプ画像を更新する
       </button>
-      <button :class="$style.button" @click="withClose(editStamp)">
-        <a-icon name="pencil-outline" mdi />
+      <button
+        :class="$style.button"
+        @click="withClose(editStamp)"
+      >
+        <a-icon
+          name="pencil-outline"
+          mdi
+        />
         スタンプを編集する
       </button>
       <button
         :class="[$style.button, $style.dangerButton]"
         @click="withClose(deleteStamp)"
       >
-        <a-icon name="delete" mdi />
+        <a-icon
+          name="delete"
+          mdi
+        />
         スタンプを削除する
       </button>
     </div>

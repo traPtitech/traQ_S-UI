@@ -1,6 +1,9 @@
 <template>
   <div :class="$style.container">
-    <scroll-loading-bar :class="$style.loadingBar" :show="isLoading" />
+    <scroll-loading-bar
+      :class="$style.loadingBar"
+      :show="isLoading"
+    />
     <messages-scroller
       ref="scrollerEle"
       :message-ids="messageIds"

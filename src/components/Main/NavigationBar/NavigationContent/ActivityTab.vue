@@ -15,7 +15,10 @@
         icon-mdi
       />
     </div>
-    <transition-group name="timeline" tag="div">
+    <transition-group
+      name="timeline"
+      tag="div"
+    >
       <template v-if="timeline.length > 0">
         <activity-element
           v-for="message in timeline"
@@ -25,7 +28,9 @@
           :message="message"
         />
       </template>
-      <empty-state v-else>メッセージがありません</empty-state>
+      <empty-state v-else>
+        メッセージがありません
+      </empty-state>
     </transition-group>
   </div>
 </template>

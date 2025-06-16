@@ -1,7 +1,11 @@
 <template>
   <div :class="$style.container">
     <transition-group name="toast-slide">
-      <a-toast v-for="toast in toasts" :key="toast.id" :toast="toast" />
+      <a-toast
+        v-for="toast in toasts"
+        :key="toast.id"
+        :toast="toast"
+      />
     </transition-group>
   </div>
 </template>

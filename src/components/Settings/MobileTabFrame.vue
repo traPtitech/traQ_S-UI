@@ -1,9 +1,18 @@
 <template>
   <section :class="$style.container">
     <div :class="$style.header">
-      <return-button :size="40" @click="showRoot" />
-      <tab-content-title :class="$style.title" is-mobile />
-      <close-button :size="36" @close="close" />
+      <return-button
+        :size="40"
+        @click="showRoot"
+      />
+      <tab-content-title
+        :class="$style.title"
+        is-mobile
+      />
+      <close-button
+        :size="36"
+        @close="close"
+      />
     </div>
     <div :class="$style.content">
       <slot />

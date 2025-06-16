@@ -1,8 +1,15 @@
 <template>
-  <router-link v-if="to" :to="to" :class="block ? $style.block : $style.inline">
+  <router-link
+    v-if="to"
+    :to="to"
+    :class="block ? $style.block : $style.inline"
+  >
     <slot />
   </router-link>
-  <div v-else :class="block ? $style.block : $style.inline">
+  <div
+    v-else
+    :class="block ? $style.block : $style.inline"
+  >
     <slot />
   </div>
 </template>

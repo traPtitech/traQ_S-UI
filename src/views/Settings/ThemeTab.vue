@@ -1,7 +1,9 @@
 <template>
   <section>
     <div :class="$style.element">
-      <h3 :class="$style.header">テーマ切り替え</h3>
+      <h3 :class="$style.header">
+        テーマ切り替え
+      </h3>
       <div>
         <form-radio
           v-model="state.type"
@@ -31,7 +33,9 @@
     </div>
     <div :class="$style.element">
       <div :class="$style.container">
-        <h3 :class="$style.header">カスタムテーマ</h3>
+        <h3 :class="$style.header">
+          カスタムテーマ
+        </h3>
         <edit-theme
           v-if="state.type === 'custom'"
           @change-theme="changeTheme"
@@ -47,9 +51,17 @@
             :key="category"
             :class="$style.category"
           >
-            <h4 class>{{ category }}</h4>
-            <div v-for="(color, name) in val" :key="name" :class="$style.color">
-              <p :class="$style.name">{{ name }}</p>
+            <h4 class>
+              {{ category }}
+            </h4>
+            <div
+              v-for="(color, name) in val"
+              :key="name"
+              :class="$style.color"
+            >
+              <p :class="$style.name">
+                {{ name }}
+              </p>
               <!-- eslint-disable vue/valid-v-model -->
               <!-- TODO: 自動適用じゃなくてバリデーションしてから適用するようにする -->
               <form-input
@@ -64,13 +76,15 @@
                   v-model="val[name as keyof typeof val] as string"
                   type="color"
                   :class="$style.colorInput"
-                />
+                >
               </div>
             </div>
           </div>
         </div>
       </template>
-      <p v-else>カスタムテーマが選択されていません</p>
+      <p v-else>
+        カスタムテーマが選択されていません
+      </p>
     </div>
     <div :class="$style.resetButtonContainer">
       <form-button

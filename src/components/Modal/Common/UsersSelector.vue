@@ -7,15 +7,27 @@
           @update:model-value="toggleAll"
         />
       </label>
-      <filter-input v-model="query" :class="$style.search" focus-on-mount />
+      <filter-input
+        v-model="query"
+        :class="$style.search"
+        focus-on-mount
+      />
     </div>
     <div :class="$style.list">
-      <label v-for="user in filteredUsers" :key="user.id" :class="$style.user">
+      <label
+        v-for="user in filteredUsers"
+        :key="user.id"
+        :class="$style.user"
+      >
         <form-checkbox-inner
           :model-value="modelValue.has(user.id)"
           @update:model-value="toggle(user.id)"
         />
-        <user-icon :user-id="user.id" prevent-modal :class="$style.userIcon" />
+        <user-icon
+          :user-id="user.id"
+          prevent-modal
+          :class="$style.userIcon"
+        />
         <div :class="$style.displayName">{{ user.displayName }}</div>
       </label>
     </div>

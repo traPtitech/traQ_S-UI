@@ -1,7 +1,15 @@
 <template>
   <div :class="$style.container">
-    <file-modal-content-header v-if="fileMeta" :file-id="fileMeta.id" />
-    <audio ref="audioEle" controls :src="fileRawPath" :class="$style.audio" />
+    <file-modal-content-header
+      v-if="fileMeta"
+      :file-id="fileMeta.id"
+    />
+    <audio
+      ref="audioEle"
+      controls
+      :src="fileRawPath"
+      :class="$style.audio"
+    />
     <audio-player-waveform
       v-if="fileWaveformPath"
       v-model:current-time="currentTime"
@@ -9,7 +17,10 @@
       :waveform-path="fileWaveformPath"
       :duration="duration"
     />
-    <file-modal-content-footer v-if="fileMeta" :file-id="fileMeta.id" />
+    <file-modal-content-footer
+      v-if="fileMeta"
+      :file-id="fileMeta.id"
+    />
   </div>
 </template>
 

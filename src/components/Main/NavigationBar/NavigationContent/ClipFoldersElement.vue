@@ -1,6 +1,13 @@
 <template>
-  <router-link :to="clipFolderPath" :class="$style.container">
-    <a-icon name="bookmark" mdi :class="$style.icon" />
+  <router-link
+    :to="clipFolderPath"
+    :class="$style.container"
+  >
+    <a-icon
+      name="bookmark"
+      mdi
+      :class="$style.icon"
+    />
     <span :class="$style.name">
       {{ clipFolder.name }}
     </span>

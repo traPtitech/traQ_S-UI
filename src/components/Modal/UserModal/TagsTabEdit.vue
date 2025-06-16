@@ -7,8 +7,16 @@
       :size="20"
       @click.stop="toggleTagState"
     />
-    <div v-else :class="$style.element">
-      <a-icon name="close" mdi :size="20" @click.stop="removeTag" />
+    <div
+      v-else
+      :class="$style.element"
+    >
+      <a-icon
+        name="close"
+        mdi
+        :size="20"
+        @click.stop="removeTag"
+      />
       <a-icon
         v-if="isMine"
         name="lock-open"

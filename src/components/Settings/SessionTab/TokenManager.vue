@@ -1,7 +1,12 @@
 <template>
   <section>
-    <h3 :class="$style.header">アクセスを許可しているアプリ</h3>
-    <ul v-if="tokensWithClientData.length > 0" :class="$style.content">
+    <h3 :class="$style.header">
+      アクセスを許可しているアプリ
+    </h3>
+    <ul
+      v-if="tokensWithClientData.length > 0"
+      :class="$style.content"
+    >
       <token-info
         v-for="token in tokensWithClientData"
         :key="token.id"
@@ -9,8 +14,12 @@
         @revoke="revokeToken(token.id)"
       />
     </ul>
-    <p v-else-if="!isLoading">アクセスを許可しているアプリはありません。</p>
-    <p v-else>Now loading...</p>
+    <p v-else-if="!isLoading">
+      アクセスを許可しているアプリはありません。
+    </p>
+    <p v-else>
+      Now loading...
+    </p>
   </section>
 </template>
 

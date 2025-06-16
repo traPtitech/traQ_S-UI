@@ -9,7 +9,10 @@ const { soundName, stampId } = defineProps<{
 <template>
   <div :class="$style.soundBoardContainer">
     <div>
-      <AStamp :stamp-id="stampId" :size="32" />
+      <AStamp
+        :stamp-id="stampId"
+        :size="32"
+      />
     </div>
     <div :class="$style.soundNameContainer">
       {{ soundName }}

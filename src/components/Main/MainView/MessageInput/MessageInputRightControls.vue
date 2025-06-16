@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
+  <div
+    :class="$style.container"
+    :data-is-mobile="$boolAttr(isMobile)"
+  >
     <message-input-insert-stamp-button @click="emit('clickStamp')" />
     <button
       :class="$style.sendButton"
@@ -9,7 +12,11 @@
       @click="onClickSendButton"
     >
       <transition name="post">
-        <a-icon v-if="!isPosting" mdi name="send" />
+        <a-icon
+          v-if="!isPosting"
+          mdi
+          name="send"
+        />
       </transition>
     </button>
   </div>

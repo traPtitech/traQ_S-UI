@@ -5,8 +5,14 @@
       :user="user"
       :detail="detail"
     />
-    <groups-tab v-if="currentNavigation === 'groups'" :detail="detail" />
-    <tags-tab v-if="currentNavigation === 'tags'" :detail="detail" />
+    <groups-tab
+      v-if="currentNavigation === 'groups'"
+      :detail="detail"
+    />
+    <tags-tab
+      v-if="currentNavigation === 'tags'"
+      :detail="detail"
+    />
   </section>
 </template>
 

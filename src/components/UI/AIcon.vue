@@ -8,7 +8,10 @@
     role="img"
     :class="$style.icon"
   >
-    <path :d="path" fill="currentColor" />
+    <path
+      :d="path"
+      fill="currentColor"
+    />
   </svg>
   <component
     :is="svgComponent"

@@ -1,7 +1,18 @@
 <template>
-  <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
-    <div :class="$style.viewport" :style="styles.viewportStyle">
-      <div ref="spacerRef" :class="$style.spacer" :style="styles.spacerStyle">
+  <div
+    ref="rootRef"
+    :class="$style.root"
+    @scroll.passive="handleScroll"
+  >
+    <div
+      :class="$style.viewport"
+      :style="styles.viewportStyle"
+    >
+      <div
+        ref="spacerRef"
+        :class="$style.spacer"
+        :style="styles.spacerStyle"
+      >
         <div
           v-for="(item, index) in data.visibleItems"
           :key="item[keyIndex]"

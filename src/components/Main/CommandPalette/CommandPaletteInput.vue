@@ -1,9 +1,20 @@
 <template>
-  <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
+  <div
+    :class="$style.container"
+    :data-is-mobile="$boolAttr(isMobile)"
+  >
     <div :class="$style.inputContainer">
       <div :class="$style.icon">
-        <a-icon v-if="mode === 'search'" mdi name="search" />
-        <a-icon v-else-if="mode === 'command'" mdi name="code-grater-than" />
+        <a-icon
+          v-if="mode === 'search'"
+          mdi
+          name="search"
+        />
+        <a-icon
+          v-else-if="mode === 'command'"
+          mdi
+          name="code-grater-than"
+        />
       </div>
       <input
         ref="inputRef"
@@ -12,7 +23,7 @@
         :placeholder="placeholder"
         @keydown.esc="onEsc"
         @keydown.enter="onEnter"
-      />
+      >
     </div>
     <close-button
       :class="$style.closeIcon"

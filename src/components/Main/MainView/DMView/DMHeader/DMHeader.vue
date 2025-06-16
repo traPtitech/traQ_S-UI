@@ -1,7 +1,10 @@
 <template>
   <primary-view-header>
     <template #header>
-      <primary-view-header-title :class="$style.header" :title="title" />
+      <primary-view-header-title
+        :class="$style.header"
+        :title="title"
+      />
     </template>
     <template #tools>
       <primary-view-header-tools-item

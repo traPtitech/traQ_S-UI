@@ -7,13 +7,20 @@
   >
     <template #header-control>
       <div>
-        <span v-if="count !== undefined" :class="$style.count">{{
+        <span
+          v-if="count !== undefined"
+          :class="$style.count"
+        >{{
           count
         }}</span>
-        <a-icon name="chevron-right" :class="$style.icon" mdi />
+        <a-icon
+          name="chevron-right"
+          :class="$style.icon"
+          mdi
+        />
       </div>
     </template>
-    <template #default></template>
+    <template #default />
   </sidebar-content-container>
 </template>
 

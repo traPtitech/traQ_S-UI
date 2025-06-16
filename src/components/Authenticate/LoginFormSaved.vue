@@ -1,7 +1,12 @@
 <template>
   <div :class="$style.user">
-    <img :src="saved.iconURL ?? undefined" :class="$style.userIcon" />
-    <p :class="$style.name">{{ saved.id }}</p>
+    <img
+      :src="saved.iconURL ?? undefined"
+      :class="$style.userIcon"
+    >
+    <p :class="$style.name">
+      {{ saved.id }}
+    </p>
   </div>
   <div :class="$style.buttons">
     <authenticate-button

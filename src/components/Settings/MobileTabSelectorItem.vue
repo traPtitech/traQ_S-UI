@@ -1,8 +1,20 @@
 <template>
-  <router-link :to="path" :class="$style.item">
-    <a-icon :name="iconName" :mdi="iconMdi" :size="size" />
+  <router-link
+    :to="path"
+    :class="$style.item"
+  >
+    <a-icon
+      :name="iconName"
+      :mdi="iconMdi"
+      :size="size"
+    />
     <span :class="$style.title">{{ title }}</span>
-    <a-icon :class="$style.chevron" name="chevron-right" mdi :size="size" />
+    <a-icon
+      :class="$style.chevron"
+      name="chevron-right"
+      mdi
+      :size="size"
+    />
   </router-link>
 </template>
 

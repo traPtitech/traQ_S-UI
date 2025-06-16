@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.preview" :data-is-mobile="isMobile">
+  <div
+    :class="$style.preview"
+    :data-is-mobile="isMobile"
+  >
     <markdown-content :content="previewRendered" />
     <div
       v-for="quoteMessage in quoteMessages"

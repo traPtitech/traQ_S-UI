@@ -77,12 +77,15 @@ const handleScroll = () => {
           :class="$style.loadingBar"
           :show="isLoading && isMessageShow"
         />
-        <transition name="fade-bottom" mode="out-in">
+        <transition
+          name="fade-bottom"
+          mode="out-in"
+        >
           <div
             v-if="isMessageShow"
             :class="$style.messageContainerBackgroundContainer"
           >
-            <div :class="$style.messageContainerBackground"></div>
+            <div :class="$style.messageContainerBackground" />
 
             <messages-scroller
               v-if="isMessageShow"
@@ -129,7 +132,7 @@ const handleScroll = () => {
           />
         </div>
       </div>
-      <slot name="default"></slot>
+      <slot name="default" />
     </div>
     <message-input
       :channel-id="channelId"

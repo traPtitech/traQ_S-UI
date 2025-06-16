@@ -33,7 +33,10 @@
       :class="$style.sidebarItem"
       :viewer-ids="viewerIds"
     />
-    <channel-sidebar-bots :channel-id="channelId" :class="$style.sidebarItem" />
+    <channel-sidebar-bots
+      :channel-id="channelId"
+      :class="$style.sidebarItem"
+    />
     <!--
     <channel-sidebar-edit :class="$style.edit" />
     -->

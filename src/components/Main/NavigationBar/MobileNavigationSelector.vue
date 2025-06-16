@@ -10,7 +10,10 @@
       :icon-name="item.iconName"
       @click="onNavigationItemClick(item.type)"
     />
-    <div v-if="showSeparator" :class="$style.separator" />
+    <div
+      v-if="showSeparator"
+      :class="$style.separator"
+    />
     <navigation-selector-item
       v-for="item in ephemeralEntries"
       :key="item.type"

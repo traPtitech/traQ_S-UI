@@ -1,6 +1,9 @@
 <template>
   <transition name="fade-top">
-    <div v-if="show" :class="$style.bar" />
+    <div
+      v-if="show"
+      :class="$style.bar"
+    />
   </transition>
 </template>
 

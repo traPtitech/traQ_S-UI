@@ -1,6 +1,15 @@
 <template>
-  <router-link :to="path" :class="$style.item" :aria-selected="isSelected">
-    <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
+  <router-link
+    :to="path"
+    :class="$style.item"
+    :aria-selected="isSelected"
+  >
+    <a-icon
+      :class="$style.icon"
+      :name="iconName"
+      :mdi="iconMdi"
+      :size="24"
+    />
     {{ title }}
   </router-link>
 </template>

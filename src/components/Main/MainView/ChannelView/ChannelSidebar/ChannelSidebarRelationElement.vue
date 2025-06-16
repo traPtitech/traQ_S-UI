@@ -11,7 +11,10 @@
         </span>
       </router-link>
     </div>
-    <div v-if="topic" :class="$style.topic">
+    <div
+      v-if="topic"
+      :class="$style.topic"
+    >
       <inline-markdown
         :class="$style.topic"
         :content="topic"

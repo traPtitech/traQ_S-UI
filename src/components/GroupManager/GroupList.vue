@@ -8,7 +8,10 @@
       :is-selected="selectedId === group.id"
       @select="onSelect"
     />
-    <div v-if="groups.length <= 0" :class="$style.notFound">
+    <div
+      v-if="groups.length <= 0"
+      :class="$style.notFound"
+    >
       自分が管理者になっているユーザーグループはありません
     </div>
   </div>

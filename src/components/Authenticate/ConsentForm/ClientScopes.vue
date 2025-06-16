@@ -1,6 +1,8 @@
 <template>
   <div>
-    <p :class="$style.title">許可される項目:</p>
+    <p :class="$style.title">
+      許可される項目:
+    </p>
     <ul :class="$style.list">
       <client-scope
         v-for="scope in scopes"

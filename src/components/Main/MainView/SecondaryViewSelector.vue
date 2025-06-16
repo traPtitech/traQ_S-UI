@@ -1,5 +1,8 @@
 <template>
-  <null-view v-if="secondaryView" :class="$style.secondary" />
+  <null-view
+    v-if="secondaryView"
+    :class="$style.secondary"
+  />
 </template>
 
 <script lang="ts" setup>

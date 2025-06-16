@@ -1,13 +1,21 @@
 <template>
   <div>
-    <label v-if="label" :for="id" :class="$style.label">
+    <label
+      v-if="label"
+      :for="id"
+      :class="$style.label"
+    >
       {{ label }}
     </label>
     <div
       :class="$style.inputContainer"
       :data-on-secondary="$boolAttr(onSecondary)"
     >
-      <span v-if="prefix" :class="$style.prefix" @click="focus">
+      <span
+        v-if="prefix"
+        :class="$style.prefix"
+        @click="focus"
+      >
         {{ prefix }}
       </span>
       <input
@@ -25,8 +33,12 @@
         @input="onInput"
         @change="onChange"
         @focus="onFocus"
-      />
-      <span v-if="suffix" :class="$style.suffix" @click="focus">
+      >
+      <span
+        v-if="suffix"
+        :class="$style.suffix"
+        @click="focus"
+      >
         {{ suffix }}
       </span>
       <length-count

@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.outerContainer" :style="outerContainerStyle">
+  <div
+    :class="$style.outerContainer"
+    :style="outerContainerStyle"
+  >
     <icon-button
       v-if="showTextAreaExpandButton"
       :class="$style.textAreaExpandButton"
@@ -7,7 +10,10 @@
       icon-mdi
       @click="toggleIsInputTextAreaExpanded"
     />
-    <div :class="$style.innerContainer" :data-is-mobile="$boolAttr(isMobile)">
+    <div
+      :class="$style.innerContainer"
+      :data-is-mobile="$boolAttr(isMobile)"
+    >
       <template v-if="!isMobile || isLeftControlsExpanded">
         <message-input-upload-button
           :class="$style.button"

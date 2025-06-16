@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.container" :data-is-white="$boolAttr(isWhite)">
+  <div
+    :class="$style.container"
+    :data-is-white="$boolAttr(isWhite)"
+  >
     <file-type-icon
       :type="fileType"
       :size="36"

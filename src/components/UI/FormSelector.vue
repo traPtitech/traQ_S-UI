@@ -1,13 +1,21 @@
 <template>
   <div>
-    <label v-if="label" :for="id" :class="$style.label">
+    <label
+      v-if="label"
+      :for="id"
+      :class="$style.label"
+    >
       {{ label }}
     </label>
     <div
       :class="$style.inputContainer"
       :data-on-secondary="$boolAttr(onSecondary)"
     >
-      <select :id="id" v-model="value" :class="$style.select">
+      <select
+        :id="id"
+        v-model="value"
+        :class="$style.select"
+      >
         <option
           v-for="option in options"
           :key="option.value ?? nullSymbol"

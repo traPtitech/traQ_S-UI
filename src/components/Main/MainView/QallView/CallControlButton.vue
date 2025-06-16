@@ -51,8 +51,18 @@ function handleClick() {
 </script>
 
 <template>
-  <button :class="buttonClass" :style="buttonStyle" @click="handleClick">
-    <AIcon v-if="icon" :name="icon" :mdi="mdi" :size="32" :class="iconClass" />
+  <button
+    :class="buttonClass"
+    :style="buttonStyle"
+    @click="handleClick"
+  >
+    <AIcon
+      v-if="icon"
+      :name="icon"
+      :mdi="mdi"
+      :size="32"
+      :class="iconClass"
+    />
   </button>
 </template>
 

@@ -1,6 +1,13 @@
 <template>
-  <group-list-group-edit v-if="isSelected" :group="group" />
-  <group-list-group-view v-else :group="group" @click-edit="onSelect" />
+  <group-list-group-edit
+    v-if="isSelected"
+    :group="group"
+  />
+  <group-list-group-view
+    v-else
+    :group="group"
+    @click-edit="onSelect"
+  />
 </template>
 
 <script lang="ts" setup>

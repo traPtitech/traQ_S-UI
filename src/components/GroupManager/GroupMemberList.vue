@@ -1,7 +1,9 @@
 <template>
   <div>
     <div :class="$style.header">
-      <div :class="$style.label">メンバー</div>
+      <div :class="$style.label">
+        メンバー
+      </div>
       <a-icon
         name="plus-circle-outline"
         mdi
@@ -24,7 +26,9 @@
         @edit="onEdit(member.id)"
         @delete="onDelete(member.id)"
       >
-        <div :class="$style.role">{{ member.role }}</div>
+        <div :class="$style.role">
+          {{ member.role }}
+        </div>
       </group-user>
     </div>
   </div>

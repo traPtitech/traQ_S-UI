@@ -6,7 +6,10 @@
     :user-id="details.userId"
     :datetime="datetime"
   >
-    <div :class="$style.newTopic" :data-is-empty="details.after === ''">
+    <div
+      :class="$style.newTopic"
+      :data-is-empty="details.after === ''"
+    >
       <inline-markdown
         :content="details.after !== '' ? details.after : '未設定'"
         accept-action

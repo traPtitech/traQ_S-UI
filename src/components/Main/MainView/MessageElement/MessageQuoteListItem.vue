@@ -1,5 +1,9 @@
 <template>
-  <div v-if="shouldShow" :class="$style.body" data-is-shown>
+  <div
+    v-if="shouldShow"
+    :class="$style.body"
+    data-is-shown
+  >
     <user-icon
       :class="$style.userIcon"
       :user-id="message.userId"
@@ -31,9 +35,15 @@
         @click="toggleFold"
       />
     </div>
-    <message-quote-list-item-footer :class="$style.footer" :message="message" />
+    <message-quote-list-item-footer
+      :class="$style.footer"
+      :message="message"
+    />
   </div>
-  <div v-else :class="$style.body">
+  <div
+    v-else
+    :class="$style.body"
+  >
     存在しないか表示できないメッセージの引用です
   </div>
 </template>

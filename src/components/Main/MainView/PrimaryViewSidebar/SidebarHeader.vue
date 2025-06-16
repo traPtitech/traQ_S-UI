@@ -6,7 +6,10 @@
       :name="iconName"
       :mdi="iconMdi"
     />
-    <span v-else-if="iconString" :class="$style.iconString">{{
+    <span
+      v-else-if="iconString"
+      :class="$style.iconString"
+    >{{
       iconString
     }}</span>
     <span :class="$style.text">{{ text }}</span>

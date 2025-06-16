@@ -1,11 +1,17 @@
 <template>
-  <click-outside stop @click-outside="clearModal">
+  <click-outside
+    stop
+    @click-outside="clearModal"
+  >
     <div
       v-if="fileMeta"
       :class="$style.fileContainer"
       :data-fullsize="$boolAttr(isFullsizeModal)"
     >
-      <file-modal-image v-if="fileType === 'image'" :file-id="fileMeta.id" />
+      <file-modal-image
+        v-if="fileType === 'image'"
+        :file-id="fileMeta.id"
+      />
       <file-modal-video
         v-else-if="fileType === 'video'"
         :file-id="fileMeta.id"
@@ -14,7 +20,10 @@
         v-else-if="fileType === 'audio'"
         :file-id="fileMeta.id"
       />
-      <file-modal-file v-else :file-id="fileMeta.id" />
+      <file-modal-file
+        v-else
+        :file-id="fileMeta.id"
+      />
     </div>
   </click-outside>
 </template>

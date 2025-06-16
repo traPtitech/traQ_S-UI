@@ -1,20 +1,35 @@
 <template>
   <div :class="$style.container">
-    <div v-if="iosAppFlag" :class="$style.iosAppIsDeprecated">
+    <div
+      v-if="iosAppFlag"
+      :class="$style.iosAppIsDeprecated"
+    >
       {{ iosAppDeprecatedMessage }}
       <div v-if="iosPwaInfoLink">
         PWA版について:
-        <a :href="iosPwaInfoLink" :class="$style.iosPwaInfoLink">{{
+        <a
+          :href="iosPwaInfoLink"
+          :class="$style.iosPwaInfoLink"
+        >{{
           iosPwaInfoLink
         }}</a>
       </div>
     </div>
-    <div id="header" :class="$style.headerContainer"></div>
-    <div :class="$style.layoutContainer" :data-layout="layout">
+    <div
+      id="header"
+      :class="$style.headerContainer"
+    />
+    <div
+      :class="$style.layoutContainer"
+      :data-layout="layout"
+    >
       <QallAudio />
 
       <primary-view-selector :is-ready="isMounted" />
-      <div id="sidebar-opener" :class="$style.hidden" />
+      <div
+        id="sidebar-opener"
+        :class="$style.hidden"
+      />
       <secondary-view-selector v-if="layout !== 'single'" />
     </div>
   </div>

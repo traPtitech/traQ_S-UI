@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.title">{{ title }}</div>
+    <div :class="$style.title">
+      {{ title }}
+    </div>
     <div
       v-if="description"
       :class="$style.description"
@@ -8,7 +10,10 @@
     >
       {{ description }}
     </div>
-    <div v-if="hostname.length > 0" :class="$style.hostname">
+    <div
+      v-if="hostname.length > 0"
+      :class="$style.hostname"
+    >
       {{ hostname }}
     </div>
   </div>

@@ -1,6 +1,9 @@
 <template>
   <div :class="$style.container">
-    <file-modal-content-header :file-id="fileId" :class="$style.header" />
+    <file-modal-content-header
+      :file-id="fileId"
+      :class="$style.header"
+    />
     <file-modal-content-footer :file-id="fileId" />
   </div>
 </template>

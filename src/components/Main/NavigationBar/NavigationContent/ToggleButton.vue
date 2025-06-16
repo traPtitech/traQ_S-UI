@@ -5,7 +5,12 @@
     :aria-pressed="modelValue"
     @click="toggle"
   >
-    <a-icon :size="22" :class="$style.icon" :name="iconName" :mdi="iconMdi" />
+    <a-icon
+      :size="22"
+      :class="$style.icon"
+      :name="iconName"
+      :mdi="iconMdi"
+    />
   </button>
 </template>
 

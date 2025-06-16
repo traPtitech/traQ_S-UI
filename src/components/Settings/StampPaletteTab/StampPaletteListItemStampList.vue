@@ -1,6 +1,9 @@
 <template>
   <div :class="$style.stamps">
-    <div v-for="stampId in stampsToShow" :key="stampId">
+    <div
+      v-for="stampId in stampsToShow"
+      :key="stampId"
+    >
       <a-stamp :stamp-id="stampId" />
     </div>
     <div v-if="needsToggle">

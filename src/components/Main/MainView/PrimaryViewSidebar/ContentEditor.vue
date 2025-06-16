@@ -6,9 +6,16 @@
         v-model="value"
         :class="$style.editor"
       />
-      <length-count :val="value" :max-length="maxLength" />
+      <length-count
+        :val="value"
+        :max-length="maxLength"
+      />
     </div>
-    <div v-else :class="$style.content" :data-is-empty="$boolAttr(isEmpty)">
+    <div
+      v-else
+      :class="$style.content"
+      :data-is-empty="$boolAttr(isEmpty)"
+    >
       <slot :content="content" />
     </div>
     <button
@@ -18,8 +25,18 @@
       :class="$style.button"
       @click="onButtonClick"
     >
-      <a-icon v-if="isEditingValue" :size="20" name="check" mdi />
-      <a-icon v-else :size="20" name="pencil-outline" mdi />
+      <a-icon
+        v-if="isEditingValue"
+        :size="20"
+        name="check"
+        mdi
+      />
+      <a-icon
+        v-else
+        :size="20"
+        name="pencil-outline"
+        mdi
+      />
     </button>
   </div>
 </template>

@@ -1,5 +1,8 @@
 <template>
-  <div v-if="!cantPlay" :class="$style.container">
+  <div
+    v-if="!cantPlay"
+    :class="$style.container"
+  >
     <audio-player-play-button
       v-model:is-playing="isPlaying"
       :class="$style.icon"
@@ -27,11 +30,14 @@
       :size="20"
       @click.prevent="startPictureInPicture"
     />
-    <div v-if="wasUnsupportedType" :class="$style.unsupportedError">
+    <div
+      v-if="wasUnsupportedType"
+      :class="$style.unsupportedError"
+    >
       対応していないファイル形式でした
     </div>
   </div>
-  <div></div>
+  <div />
 </template>
 
 <script lang="ts" setup>

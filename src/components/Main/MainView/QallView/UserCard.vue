@@ -22,16 +22,31 @@ const isSpeaking = computed(() => {
 </script>
 
 <template>
-  <div v-if="user" :class="$style.UserCard" :data-is-speaking="isSpeaking">
+  <div
+    v-if="user"
+    :class="$style.UserCard"
+    :data-is-speaking="isSpeaking"
+  >
     <div :class="$style.OuterIcon">
-      <img :src="iconImage" :class="$style.OuterImage" />
+      <img
+        :src="iconImage"
+        :class="$style.OuterImage"
+      >
     </div>
     <div :class="$style.InnerIcon">
-      <img :src="iconImage" :class="$style.InnerImage" />
+      <img
+        :src="iconImage"
+        :class="$style.InnerImage"
+      >
     </div>
 
-    <div :class="$style.NameLabel">{{ user.name }}</div>
-    <div v-show="isSpeaking" :class="$style.borderBox"></div>
+    <div :class="$style.NameLabel">
+      {{ user.name }}
+    </div>
+    <div
+      v-show="isSpeaking"
+      :class="$style.borderBox"
+    />
   </div>
 </template>
 

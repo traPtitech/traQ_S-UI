@@ -1,5 +1,8 @@
 <template>
-  <div v-if="show" :class="$style.container">
+  <div
+    v-if="show"
+    :class="$style.container"
+  >
     + Enterを押して{{ sendWithModifierKey === 'modifier' ? sendText : '改行' }}
   </div>
 </template>

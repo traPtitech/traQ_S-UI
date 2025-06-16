@@ -1,12 +1,20 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.header">
-      <h2 :class="$style.title">ユーザーグループ管理</h2>
-      <close-button :size="36" @close="close" />
+      <h2 :class="$style.title">
+        ユーザーグループ管理
+      </h2>
+      <close-button
+        :size="36"
+        @close="close"
+      />
     </div>
     <div :class="$style.content">
       <div :class="[$style.createButtonWrapper, $style.item]">
-        <form-button label="新規作成" @click="openGroupCreateModal" />
+        <form-button
+          label="新規作成"
+          @click="openGroupCreateModal"
+        />
       </div>
       <p :class="[$style.desc, $style.item]">
         自分が管理者になっているユーザーグループ一覧

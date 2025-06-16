@@ -1,5 +1,8 @@
 <template>
-  <h2 :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
+  <h2
+    :class="$style.container"
+    :data-is-mobile="$boolAttr(isMobile)"
+  >
     {{ title }}
   </h2>
 </template>

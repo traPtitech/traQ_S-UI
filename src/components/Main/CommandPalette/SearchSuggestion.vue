@@ -6,7 +6,9 @@
         @select="onSelectSuggestion(searchConfirmItem)"
       />
     </template>
-    <div :class="$style.header">検索オプション</div>
+    <div :class="$style.header">
+      検索オプション
+    </div>
     <search-suggestion-query-item
       v-for="suggestion in querySuggestions"
       :key="suggestion.insertQuery"
@@ -15,7 +17,9 @@
       @select="onSelectQuerySuggestion(suggestion.insertQuery)"
     />
     <template v-if="searchHistories.length > 0">
-      <div :class="$style.header">過去の検索</div>
+      <div :class="$style.header">
+        過去の検索
+      </div>
       <search-suggestion-history-item
         v-for="suggestion in searchHistories"
         :key="suggestion"

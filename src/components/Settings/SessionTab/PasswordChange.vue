@@ -1,6 +1,8 @@
 <template>
   <section>
-    <h3 :class="$style.header">パスワード変更</h3>
+    <h3 :class="$style.header">
+      パスワード変更
+    </h3>
     <p v-if="showChangeLink">
       パスワードの変更は
       <a
@@ -8,8 +10,7 @@
         :href="changeLink"
         rel="noopener noreferrer"
         target="_blank"
-        >{{ changeName }}</a
-      >
+      >{{ changeName }}</a>
       から可能です。
     </p>
     <template v-else>

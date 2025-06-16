@@ -75,22 +75,33 @@ const handleClose = () => {
 </script>
 
 <template>
-  <div v-if="open" :class="$style.popoverContainer">
+  <div
+    v-if="open"
+    :class="$style.popoverContainer"
+  >
     <ClickOutside @click-outside="handleClose">
       <div :class="$style.popoverContent">
         <div>
-          <h3 :class="$style.popoverTitle">カメラ設定</h3>
+          <h3 :class="$style.popoverTitle">
+            カメラ設定
+          </h3>
           <div :class="$style.formGroup">
             <div :class="$style.formItem">
-              <label for="camera-select" :class="$style.formItemLabel"
-                >カメラを選択</label
-              >
+              <label
+                for="camera-select"
+                :class="$style.formItemLabel"
+              >カメラを選択</label>
               <select
                 id="camera-select"
                 v-model="selectedCamera"
                 :class="$style.input"
               >
-                <option value="" disabled>選択してください</option>
+                <option
+                  value=""
+                  disabled
+                >
+                  選択してください
+                </option>
                 <option
                   v-for="device in videoInputs"
                   :key="device.deviceId"
@@ -110,8 +121,11 @@ const handleClose = () => {
                     v-model="backgroundType"
                     type="radio"
                     value="original"
-                  />
-                  <label for="original" :class="$style.radioLabel">
+                  >
+                  <label
+                    for="original"
+                    :class="$style.radioLabel"
+                  >
                     <span>何もしない</span>
                   </label>
                 </div>
@@ -121,8 +135,11 @@ const handleClose = () => {
                     v-model="backgroundType"
                     type="radio"
                     value="blur"
-                  />
-                  <label for="blur" :class="$style.radioLabel">
+                  >
+                  <label
+                    for="blur"
+                    :class="$style.radioLabel"
+                  >
                     <span>ぼかし</span>
                   </label>
                 </div>
@@ -132,8 +149,11 @@ const handleClose = () => {
                     v-model="backgroundType"
                     type="radio"
                     value="file"
-                  />
-                  <label for="file" :class="$style.radioLabel">
+                  >
+                  <label
+                    for="file"
+                    :class="$style.radioLabel"
+                  >
                     <span>ファイル</span>
                   </label>
                 </div>
@@ -143,25 +163,37 @@ const handleClose = () => {
                     v-model="backgroundType"
                     type="radio"
                     value="screen"
-                  />
-                  <label for="screen" :class="$style.radioLabel">
+                  >
+                  <label
+                    for="screen"
+                    :class="$style.radioLabel"
+                  >
                     <span>画面配信</span>
                   </label>
                 </div>
               </div>
             </div>
 
-            <div v-if="backgroundType === 'file'" :class="$style.formItem">
-              <button type="button" :class="$style.fileButton">
+            <div
+              v-if="backgroundType === 'file'"
+              :class="$style.formItem"
+            >
+              <button
+                type="button"
+                :class="$style.fileButton"
+              >
                 背景画像を選択
                 <input
                   type="file"
                   :class="$style.fileInput"
                   accept="image/*,video/*"
                   @change="handleFileChange"
-                />
+                >
               </button>
-              <p v-if="backgroundImage" :class="$style.fileName">
+              <p
+                v-if="backgroundImage"
+                :class="$style.fileName"
+              >
                 選択中: {{ backgroundImage.name }}
               </p>
             </div>

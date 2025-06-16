@@ -1,7 +1,9 @@
 <template>
   <div>
     <div :class="$style.header">
-      <div :class="$style.label">管理者</div>
+      <div :class="$style.label">
+        管理者
+      </div>
       <a-icon
         name="plus-circle-outline"
         mdi

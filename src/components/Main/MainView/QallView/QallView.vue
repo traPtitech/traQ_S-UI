@@ -188,7 +188,10 @@ const toggleDanmaku = () => {
 
 <template>
   <div :class="$style.Block">
-    <QallMessageView :channel-id="callingChannel" :typing-users="[]">
+    <QallMessageView
+      :channel-id="callingChannel"
+      :typing-users="[]"
+    >
       <DanmakuContainer v-if="showDanmaku" />
       <div :class="$style.iconContainer">
         <IconButton
@@ -196,7 +199,11 @@ const toggleDanmaku = () => {
           icon-mdi
           @click="toggleDanmaku"
         />
-        <IconButton icon-name="close" icon-mdi @click="isSubView = true" />
+        <IconButton
+          icon-name="close"
+          icon-mdi
+          @click="isSubView = true"
+        />
       </div>
       <div :class="$style.stackContainer">
         <UserList :class="$style.userList" />
@@ -219,7 +226,7 @@ const toggleDanmaku = () => {
                 />
               </div>
             </div>
-            <div :class="$style.verticalBar"></div>
+            <div :class="$style.verticalBar" />
             <div :class="$style.buttonWithDetail">
               <CallControlButton
                 :icon="screenShareIcon"
@@ -263,11 +270,14 @@ const toggleDanmaku = () => {
               :on-click="leaveQall"
               :on-background-color="'#F26451'"
             />
-            <div :class="$style.verticalBar"></div>
+            <div :class="$style.verticalBar" />
             <div :class="$style.smallButtonGroup">
               <div :class="$style.participantsContainer">
                 <ClickOutside @click-outside="showParticipants = false">
-                  <div v-if="showParticipants" :class="$style.participantsList">
+                  <div
+                    v-if="showParticipants"
+                    :class="$style.participantsList"
+                  >
                     <div :class="$style.participantsContent">
                       <participant-list
                         v-for="participant in filteredParticipants"

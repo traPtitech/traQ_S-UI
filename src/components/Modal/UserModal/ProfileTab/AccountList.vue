@@ -1,7 +1,10 @@
 <template>
   <section>
     <profile-header text="アカウント" />
-    <p v-if="showWikiPageLink" :class="$style.p">
+    <p
+      v-if="showWikiPageLink"
+      :class="$style.p"
+    >
       <circle-icon
         title="wiki"
         name="crowi"
@@ -14,10 +17,12 @@
         rel="noopener noreferrer"
         target="_blank"
         @click.stop=""
-        >{{ wikiPageName }}</a
-      >
+      >{{ wikiPageName }}</a>
     </p>
-    <p v-if="blogPageLink" :class="$style.p">
+    <p
+      v-if="blogPageLink"
+      :class="$style.p"
+    >
       <circle-icon
         title="ブログ"
         name="traP"
@@ -30,10 +35,12 @@
         rel="noopener noreferrer"
         target="_blank"
         @click.stop=""
-        >author/{{ name }}</a
-      >
+      >author/{{ name }}</a>
     </p>
-    <p v-if="twitterId !== ''" :class="$style.p">
+    <p
+      v-if="twitterId !== ''"
+      :class="$style.p"
+    >
       <circle-icon
         title="𝕏"
         name="x"
@@ -41,15 +48,16 @@
         :background="iconBackgroundColor"
         :class="$style.icon"
       />
-      <template v-if="twitterId === undefined">Now Loading...</template>
+      <template v-if="twitterId === undefined">
+        Now Loading...
+      </template>
       <template v-else>
         <a
           :href="twitterLink"
           rel="noopener noreferrer"
           target="_blank"
           @click.stop=""
-          >@{{ twitterId }}</a
-        >
+        >@{{ twitterId }}</a>
       </template>
     </p>
   </section>

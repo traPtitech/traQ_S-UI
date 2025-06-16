@@ -35,7 +35,12 @@
       >
         追加できるスタンプがありません
       </div>
-      <div v-else :class="$style.emptyState">スタンプを読み込み中...</div>
+      <div
+        v-else
+        :class="$style.emptyState"
+      >
+        スタンプを読み込み中...
+      </div>
     </div>
   </div>
 </template>

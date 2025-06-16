@@ -1,6 +1,8 @@
 <template>
   <section :class="$style.element">
-    <h3 :class="$style.header">スタンプ管理</h3>
+    <h3 :class="$style.header">
+      スタンプ管理
+    </h3>
     <div
       v-if="hasChannelEditPermission"
       role="tablist"
@@ -33,7 +35,9 @@
       :class="$style.content"
       role="tabpanel"
     >
-      <p v-if="myStamps.length === 0">所有しているスタンプはありません</p>
+      <p v-if="myStamps.length === 0">
+        所有しているスタンプはありません
+      </p>
       <stamp-item
         v-for="stamp in myStamps"
         v-else

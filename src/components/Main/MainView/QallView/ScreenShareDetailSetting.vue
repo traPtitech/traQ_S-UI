@@ -27,9 +27,14 @@ const handleClose = () => {
 
 <template>
   <ClickOutside @click-outside="handleClose">
-    <div v-if="open" :class="$style.popoverContainer">
+    <div
+      v-if="open"
+      :class="$style.popoverContainer"
+    >
       <div :class="$style.popoverContent">
-        <h3 :class="$style.popoverTitle">画面共有の設定</h3>
+        <h3 :class="$style.popoverTitle">
+          画面共有の設定
+        </h3>
         <div :class="$style.actions">
           <FormButton
             label="画面共有を追加"

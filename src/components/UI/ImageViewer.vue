@@ -1,6 +1,12 @@
 <template>
-  <div ref="containerEle" :class="$style.container">
-    <div :class="$style.imgContainer" :style="styles.imgContainer">
+  <div
+    ref="containerEle"
+    :class="$style.container"
+  >
+    <div
+      :class="$style.imgContainer"
+      :style="styles.imgContainer"
+    >
       <img
         ref="imgEle"
         :src="src"
@@ -8,7 +14,7 @@
         :class="$style.img"
         :style="styles.img"
         draggable="false"
-      />
+      >
     </div>
   </div>
 </template>

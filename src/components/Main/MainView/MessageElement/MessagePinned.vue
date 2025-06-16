@@ -1,6 +1,11 @@
 <template>
   <div :class="$style.container">
-    <a-icon name="pin" mdi :size="16" :class="$style.pin" />
+    <a-icon
+      name="pin"
+      mdi
+      :size="16"
+      :class="$style.pin"
+    />
     {{ userDisplayName }}さんがピン留めしました
   </div>
 </template>

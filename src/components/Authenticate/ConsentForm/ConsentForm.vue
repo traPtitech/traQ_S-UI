@@ -1,13 +1,19 @@
 <template>
   <div :class="$style.container">
-    <authenticate-header :class="$style.header" title="OAuth認可" />
+    <authenticate-header
+      :class="$style.header"
+      title="OAuth認可"
+    />
     <client-description
       v-if="client"
       :class="[$style.item, $style.clientDesc]"
       :client="client"
       :developer="developer"
     />
-    <p v-if="client" :class="$style.item">
+    <p
+      v-if="client"
+      :class="$style.item"
+    >
       {{ client.name }}がtraQアカウントへのアクセスを要求しています
     </p>
     <client-scopes :scopes="scopes" />

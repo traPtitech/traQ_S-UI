@@ -6,8 +6,12 @@
       :class="$style.radio"
       v-bind="$attrs"
       :value="inputValue"
-    />
-    <div :class="$style.pseudoRadio" role="radio" :aria-checked="isChecked">
+    >
+    <div
+      :class="$style.pseudoRadio"
+      role="radio"
+      :aria-checked="isChecked"
+    >
       <div :class="$style.pseudoRadioInner" />
     </div>
     {{ label }}
