@@ -7,6 +7,7 @@ import { FlatCompat } from '@eslint/eslintrc'
 import stylisticTs from '@stylistic/eslint-plugin-ts'
 import cypress from 'eslint-plugin-cypress'
 import vueLint from 'eslint-plugin-vue'
+import prettier from 'eslint-config-prettier'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -24,9 +25,9 @@ export default [
     'eslint:recommended',
     './eslint-vue-ts-recommended.cjs',
     'plugin:@typescript-eslint/recommended',
-    'prettier'
   ),
   ...vueLint.configs['flat/recommended'],
+  prettier,
   {
     plugins: {
       'unused-imports': unusedImports,
