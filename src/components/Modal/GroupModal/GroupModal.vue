@@ -15,10 +15,7 @@
       <div :class="$style.role">
         {{ user.role }}
       </div>
-      <div
-        v-if="user.isAdmin && !user.isMember"
-        :class="$style.nonMemberAdmin"
-      >
+      <div v-if="user.isAdmin && !user.isMember" :class="$style.nonMemberAdmin">
         グループ外管理者
       </div>
     </user-list-item>

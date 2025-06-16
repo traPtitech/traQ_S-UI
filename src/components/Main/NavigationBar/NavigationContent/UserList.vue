@@ -1,14 +1,7 @@
 <template>
   <navigation-content-container subtitle="ユーザーリスト">
-    <filter-input
-      v-model="query"
-      on-secondary
-      focus-on-mount
-    />
-    <div
-      v-if="query.length > 0"
-      :class="$style.list"
-    >
+    <filter-input v-model="query" on-secondary focus-on-mount />
+    <div v-if="query.length > 0" :class="$style.list">
       <users-element
         v-for="user in filteredItems"
         :key="user.id"

@@ -4,10 +4,7 @@
     :aria-selected="isActive"
     @click="emit('click')"
   >
-    <div
-      v-if="isActive"
-      :class="$style.indicator"
-    />
+    <div v-if="isActive" :class="$style.indicator" />
     <a-stamp
       v-if="stampSet.type === 'palette'"
       :stamp-id="pickThumbnail(stampSet.id)"

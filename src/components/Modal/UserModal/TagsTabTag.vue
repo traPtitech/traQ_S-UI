@@ -1,15 +1,7 @@
 <template>
-  <li
-    :class="$style.tag"
-    @click="onTagClick"
-  >
+  <li :class="$style.tag" @click="onTagClick">
     <div :class="$style.content">
-      <a-icon
-        name="tag"
-        mdi
-        :class="$style.icon"
-        :size="20"
-      />
+      <a-icon name="tag" mdi :class="$style.icon" :size="20" />
       <div :class="$style.text">
         {{ tag.tag }}
       </div>

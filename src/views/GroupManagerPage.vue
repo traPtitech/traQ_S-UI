@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="isLoginCheckDone"
-    :class="$style.container"
-  >
+  <div v-if="isLoginCheckDone" :class="$style.container">
     <mobile-group-manager v-if="isMobile" />
     <desktop-group-manager v-else />
   </div>

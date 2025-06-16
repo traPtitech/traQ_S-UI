@@ -1,8 +1,5 @@
 <template>
-  <context-menu-container
-    :position="position"
-    @close="close"
-  >
+  <context-menu-container :position="position" @close="close">
     <div :class="$style.container">
       <span
         v-if="isPinned && !isMinimum"
@@ -18,10 +15,7 @@
       >
         ピン留め
       </span>
-      <span
-        :class="$style.text"
-        @click="withClose(showClipCreateModal)"
-      >
+      <span :class="$style.text" @click="withClose(showClipCreateModal)">
         クリップ
       </span>
       <span
@@ -31,10 +25,7 @@
       >
         メッセージを埋め込む
       </span>
-      <span
-        :class="$style.text"
-        @click="withClose(copyMd)"
-      >
+      <span :class="$style.text" @click="withClose(copyMd)">
         Markdownをコピー
       </span>
       <span

@@ -1,8 +1,6 @@
 <template>
   <section>
-    <h3 :class="$style.header">
-      アカウント
-    </h3>
+    <h3 :class="$style.header">アカウント</h3>
     <div>
       <form-button
         label="ログアウト"

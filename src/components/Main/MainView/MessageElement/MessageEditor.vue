@@ -1,12 +1,6 @@
 <template>
-  <div
-    ref="containerEle"
-    :class="$style.container"
-  >
-    <message-input-key-guide
-      :show="isModifierKeyPressed"
-      is-edit
-    />
+  <div ref="containerEle" :class="$style.container">
+    <message-input-key-guide :show="isModifierKeyPressed" is-edit />
     <message-input-upload-progress
       v-if="isPostingAttachment"
       :progress="attachmentPostProgress"
@@ -39,11 +33,7 @@
       </div>
     </div>
     <div :class="$style.controls">
-      <form-button
-        label="キャンセル"
-        type="tertiary"
-        @click="cancel"
-      />
+      <form-button label="キャンセル" type="tertiary" @click="cancel" />
       <form-button
         label="OK"
         :disabled="isPostingAttachment"

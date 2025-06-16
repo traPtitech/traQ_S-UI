@@ -2,10 +2,7 @@
   <!-- TODO: 折り畳み -->
   <div>
     <div :class="$style.subtitleContainer">
-      <h3
-        v-if="subtitle && subtitle.length > 0"
-        :class="$style.subtitle"
-      >
+      <h3 v-if="subtitle && subtitle.length > 0" :class="$style.subtitle">
         {{ subtitle }}
       </h3>
       <div :class="$style.control">

@@ -1,8 +1,5 @@
 <template>
-  <modal-frame
-    title="グループ作成"
-    icon-name="group"
-  >
+  <modal-frame title="グループ作成" icon-name="group">
     <form-input
       v-model="name"
       :class="$style.item"
@@ -29,10 +26,7 @@
       自分自身をメンバーに追加する
     </form-checkbox>
     <div :class="$style.createButtonWrapper">
-      <form-button
-        label="作成"
-        @click="create"
-      />
+      <form-button label="作成" @click="create" />
     </div>
   </modal-frame>
 </template>

@@ -11,11 +11,7 @@
       :class="[$style.users, $style.item]"
     />
     <div :class="$style.addButtonWrapper">
-      <form-button
-        label="追加"
-        :loading="isAdding"
-        @click="add"
-      />
+      <form-button label="追加" :loading="isAdding" @click="add" />
     </div>
   </modal-frame>
 </template>

@@ -1,13 +1,8 @@
 <template>
   <div>
-    <h3 :class="$style.header">
-      キャッシュ
-    </h3>
+    <h3 :class="$style.header">キャッシュ</h3>
     <div>
-      <p
-        v-if="cacheData && cacheData.usage"
-        :class="$style.usage"
-      >
+      <p v-if="cacheData && cacheData.usage" :class="$style.usage">
         <span>{{ prettifyFileSize(cacheData.usage) }}</span>
       </p>
       <form-button

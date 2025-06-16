@@ -1,10 +1,6 @@
 <template>
   <div :class="$style.container">
-    <img
-      :class="$style.image"
-      :src="src"
-      :alt="name"
-    >
+    <img :class="$style.image" :src="src" :alt="name" />
   </div>
 </template>
 

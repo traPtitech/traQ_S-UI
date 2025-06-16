@@ -1,12 +1,6 @@
 <template>
-  <div
-    :class="$style.container"
-    :data-is-small="small"
-  >
-    <div
-      :class="$style.valueContainer"
-      @click="toggle"
-    >
+  <div :class="$style.container" :data-is-small="small">
+    <div :class="$style.valueContainer" @click="toggle">
       {{ currentItem?.title ?? '' }}
       <a-icon
         :class="$style.trailingIcon"
@@ -15,10 +9,7 @@
       />
     </div>
     <click-outside @click-outside="close">
-      <div
-        v-if="isOpen"
-        :class="$style.selectorContainer"
-      >
+      <div v-if="isOpen" :class="$style.selectorContainer">
         <div
           v-for="item in items"
           :key="item.value"

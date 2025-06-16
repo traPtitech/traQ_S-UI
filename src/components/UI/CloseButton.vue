@@ -4,15 +4,8 @@
     :data-react-hover="$boolAttr(reactHover)"
     :data-is-white="$boolAttr(isWhite)"
   >
-    <div
-      :class="$style.circle"
-      :style="circleStyle"
-      @click="emit('close')"
-    />
-    <span
-      v-if="withText"
-      :class="$style.text"
-    >閉じる</span>
+    <div :class="$style.circle" :style="circleStyle" @click="emit('close')" />
+    <span v-if="withText" :class="$style.text">閉じる</span>
   </button>
 </template>
 

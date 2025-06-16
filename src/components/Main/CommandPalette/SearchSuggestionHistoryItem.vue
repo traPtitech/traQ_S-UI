@@ -1,8 +1,5 @@
 <template>
-  <div
-    :class="$style.container"
-    @click="onClick"
-  >
+  <div :class="$style.container" @click="onClick">
     <span :class="$style.label">{{ label }}</span>
     <a-icon
       name="close"

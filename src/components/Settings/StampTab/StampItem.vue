@@ -1,15 +1,9 @@
 <template>
   <div :class="$style.container">
-    <img
-      :src="url"
-      :class="$style.stamp"
-      loading="lazy"
-    >
+    <img :src="url" :class="$style.stamp" loading="lazy" />
     <div :class="$style.innerContainer">
       <div :class="$style.textContainer">
-        <p :class="$style.stampName">
-          :{{ stamp.name }}:
-        </p>
+        <p :class="$style.stampName">:{{ stamp.name }}:</p>
         <p
           v-if="showCreator"
           :title="`@${creatorName}`"
@@ -18,14 +12,8 @@
           @{{ creatorName }}
         </p>
       </div>
-      <button
-        :class="$style.dotsButton"
-        @click="onDotsClick"
-      >
-        <a-icon
-          name="dots-horizontal"
-          mdi
-        />
+      <button :class="$style.dotsButton" @click="onDotsClick">
+        <a-icon name="dots-horizontal" mdi />
       </button>
     </div>
     <stamp-context-menu

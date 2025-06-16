@@ -5,10 +5,7 @@
     :class="[$style.container, isLoaded || $style.unload]"
   >
     <div :class="$style.overlay">
-      <message-file-list-item-content
-        :file-id="fileId"
-        is-white
-      />
+      <message-file-list-item-content :file-id="fileId" is-white />
     </div>
     <video
       ref="video"
@@ -20,12 +17,7 @@
       @canplay="onCanPlay"
     />
   </div>
-  <div
-    v-else
-    :class="$style.error"
-  >
-    表示できない動画です
-  </div>
+  <div v-else :class="$style.error">表示できない動画です</div>
 </template>
 
 <script lang="ts" setup>

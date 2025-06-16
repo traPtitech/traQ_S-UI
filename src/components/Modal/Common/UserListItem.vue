@@ -4,11 +4,7 @@
     :class="$style.container"
     @click.stop="openModal"
   >
-    <user-icon
-      :class="$style.icon"
-      :user-id="userId"
-      :size="36"
-    />
+    <user-icon :class="$style.icon" :user-id="userId" :size="36" />
     <div :class="$style.desc">
       <div :class="$style.displayName">
         <a-icon

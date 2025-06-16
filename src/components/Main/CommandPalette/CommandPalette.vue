@@ -4,15 +4,9 @@
     unable-while-modal-open
     @click-outside="closeCommandPalette"
   >
-    <div
-      :class="$style.container"
-      :data-is-mobile="$boolAttr(isMobile)"
-    >
+    <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
       <command-palette-input />
-      <hr
-        v-if="supplementalViewType"
-        :class="$style.separator"
-      >
+      <hr v-if="supplementalViewType" :class="$style.separator" />
       <search-result v-if="supplementalViewType === 'search-result'" />
       <search-suggestion
         v-else-if="supplementalViewType === 'search-suggestion'"

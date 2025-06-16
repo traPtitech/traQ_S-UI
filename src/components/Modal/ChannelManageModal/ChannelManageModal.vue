@@ -1,9 +1,5 @@
 <template>
-  <modal-frame
-    title="チャンネル管理"
-    :subtitle="subtitle"
-    icon-name="hash"
-  >
+  <modal-frame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
     <div :class="$style.container">
       <form-input
         v-model="manageState.name"
@@ -23,10 +19,7 @@
           :disabled="!canToggleArchive"
         />
       </label>
-      <p
-        v-if="!canToggleArchive"
-        :class="$style.cantToggleArchiveMessage"
-      >
+      <p v-if="!canToggleArchive" :class="$style.cantToggleArchiveMessage">
         このチャンネルはアーカイブチャンネルの子チャンネルなので、アーカイブ状態を解除できません。
       </p>
       <label :class="$style.toggle">

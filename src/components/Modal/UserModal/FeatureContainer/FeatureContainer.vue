@@ -1,14 +1,6 @@
 <template>
-  <mobile-feature-container
-    v-if="isMobile"
-    :user="user"
-    :detail="detail"
-  />
-  <desktop-feature-container
-    v-else
-    :user="user"
-    :detail="detail"
-  />
+  <mobile-feature-container v-if="isMobile" :user="user" :detail="detail" />
+  <desktop-feature-container v-else :user="user" :detail="detail" />
 </template>
 
 <script lang="ts" setup>

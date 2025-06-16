@@ -1,13 +1,6 @@
 <template>
-  <div
-    :class="$style.container"
-    :aria-disabled="disabled"
-  >
-    <a-icon
-      :mdi="iconMdi"
-      :name="iconName"
-      :size="size"
-    />
+  <div :class="$style.container" :aria-disabled="disabled">
+    <a-icon :mdi="iconMdi" :name="iconName" :size="size" />
   </div>
 </template>
 

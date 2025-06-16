@@ -10,7 +10,7 @@
           accept="audio/*"
           style="display: none"
           @change="handleFileSelect"
-        >
+        />
 
         <form-button
           label="音声ファイルを選択"
@@ -20,10 +20,7 @@
           @click="openFileDialog"
         />
       </div>
-      <div
-        v-if="selectedFile"
-        :class="$style.fileInfo"
-      >
+      <div v-if="selectedFile" :class="$style.fileInfo">
         <p>選択されたファイル: {{ selectedFile.name }}</p>
         <div :class="$style.nameInput">
           <label for="audioName">ファイル名: </label>
@@ -33,13 +30,9 @@
             type="text"
             placeholder="音声ファイルの名前を入力"
             required
-          >
+          />
         </div>
-        <AStamp
-          v-if="stampId"
-          :stamp-id="stampId"
-          :size="32"
-        />
+        <AStamp v-if="stampId" :stamp-id="stampId" :size="32" />
         <div ref="stampPickerButton">
           <form-button
             label="アイコンスタンプを選択"
@@ -59,10 +52,7 @@
     </div>
 
     <!-- サウンド一覧の表示 -->
-    <div
-      v-if="soundboardList.length"
-      :class="$style.listSection"
-    >
+    <div v-if="soundboardList.length" :class="$style.listSection">
       <h3>登録されている音声一覧</h3>
       <ul>
         <li
@@ -73,11 +63,7 @@
           <!-- 音声の名前表示 -->
           <span>{{ item.soundName }}</span>
           <!-- Stampアイコンなど表示したければ、stampIdとcreatorId等も表示 -->
-          <AStamp
-            v-if="item.stampId"
-            :stamp-id="item.stampId"
-            :size="20"
-          />
+          <AStamp v-if="item.stampId" :stamp-id="item.stampId" :size="20" />
         </li>
       </ul>
     </div>

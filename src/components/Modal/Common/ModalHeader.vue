@@ -1,9 +1,6 @@
 <template>
   <div :class="$style.container">
-    <modal-return-button
-      v-if="returnButton"
-      :class="$style.returnButton"
-    />
+    <modal-return-button v-if="returnButton" :class="$style.returnButton" />
     <div :class="$style.content">
       <h1 :class="$style.title">
         <a-icon
@@ -14,10 +11,7 @@
         />
         {{ title }}
       </h1>
-      <h2
-        :class="$style.subtitle"
-        :data-has-icon="$boolAttr(!iconName)"
-      >
+      <h2 :class="$style.subtitle" :data-has-icon="$boolAttr(!iconName)">
         <slot name="subtitle" />
       </h2>
     </div>

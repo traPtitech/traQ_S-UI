@@ -55,10 +55,7 @@ onMounted(() => {
 <template>
   <div :class="$style.soundBoard">
     <div>
-      <FormInput
-        v-model="searchQuery"
-        placeholder="検索"
-      />
+      <FormInput v-model="searchQuery" placeholder="検索" />
     </div>
     <div :class="$style.elementContainer">
       <SoundBoardElement

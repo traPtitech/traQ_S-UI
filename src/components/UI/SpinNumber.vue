@@ -4,10 +4,7 @@
       {{ value }}
     </div>
     <transition :name="name">
-      <div
-        :key="state.val"
-        :class="$style.number"
-      >
+      <div :key="state.val" :class="$style.number">
         {{ state.val }}
       </div>
     </transition>

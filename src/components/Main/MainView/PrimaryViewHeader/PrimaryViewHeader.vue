@@ -10,10 +10,7 @@
         <slot name="header" />
       </h2>
     </div>
-    <slot
-      :class="$style.tools"
-      name="tools"
-    />
+    <slot :class="$style.tools" name="tools" />
   </header>
 </template>
 

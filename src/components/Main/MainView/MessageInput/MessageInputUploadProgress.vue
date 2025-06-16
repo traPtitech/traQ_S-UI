@@ -1,9 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div
-      :class="$style.bar"
-      :style="style"
-    />
+    <div :class="$style.bar" :style="style" />
   </div>
 </template>
 

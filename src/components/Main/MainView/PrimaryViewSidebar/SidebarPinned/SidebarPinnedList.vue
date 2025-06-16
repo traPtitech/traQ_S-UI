@@ -6,10 +6,7 @@
       :message="message"
       :class="$style.item"
     />
-    <div
-      v-if="sortedMessages.length <= 0"
-      :class="$style.noPinned"
-    >
+    <div v-if="sortedMessages.length <= 0" :class="$style.noPinned">
       ピン留めされたメッセージはありません
     </div>
   </div>

@@ -1,8 +1,5 @@
 <template>
-  <inline-markdown
-    v-if="isShown && content"
-    :content="content"
-  />
+  <inline-markdown v-if="isShown && content" :content="content" />
 </template>
 
 <script lang="ts" setup>

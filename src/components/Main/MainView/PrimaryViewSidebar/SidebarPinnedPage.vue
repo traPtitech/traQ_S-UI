@@ -1,8 +1,5 @@
 <template>
-  <primary-view-sidebar-page
-    show-back-button
-    @back="emit('moveBack')"
-  >
+  <primary-view-sidebar-page show-back-button @back="emit('moveBack')">
     <template #header>
       <sidebar-header text="ピン留め" />
     </template>

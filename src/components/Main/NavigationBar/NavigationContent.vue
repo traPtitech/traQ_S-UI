@@ -1,10 +1,7 @@
 <template>
   <div :class="$style.container">
     <navigation-content-title :current-navigation="currentNavigation" />
-    <home-tab
-      v-if="currentNavigation === 'home'"
-      :class="$style.content"
-    />
+    <home-tab v-if="currentNavigation === 'home'" :class="$style.content" />
     <channels-tab
       v-if="currentNavigation === 'channels'"
       :class="$style.content"
@@ -16,10 +13,7 @@
         :class="$style.content"
       />
     </keep-alive>
-    <users-tab
-      v-if="currentNavigation === 'users'"
-      :class="$style.content"
-    />
+    <users-tab v-if="currentNavigation === 'users'" :class="$style.content" />
     <clip-folders-tab
       v-if="currentNavigation === 'clips'"
       :class="$style.content"

@@ -1,13 +1,7 @@
 <template>
   <div :class="$style.container">
-    <a-icon
-      :class="$style.icon"
-      name="music-note"
-      mdi
-    />
-    <div :class="$style.title">
-      音楽
-    </div>
+    <a-icon :class="$style.icon" name="music-note" mdi />
+    <div :class="$style.title">音楽</div>
   </div>
 </template>
 

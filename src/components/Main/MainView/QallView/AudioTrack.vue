@@ -42,10 +42,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <audio
-    :id="trackInfo.trackPublication?.trackSid"
-    ref="audioElement"
-  />
+  <audio :id="trackInfo.trackPublication?.trackSid" ref="audioElement" />
 </template>
 <style lang="scss" module>
 .UserCard {

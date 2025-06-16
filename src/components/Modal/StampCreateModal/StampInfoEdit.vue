@@ -2,12 +2,7 @@
   <div>
     <div :class="$style.container">
       <div :class="$style.leftContainer">
-        <img
-          :class="$style.img"
-          :src="imageUrl"
-          width="136"
-          height="136"
-        >
+        <img :class="$style.img" :src="imageUrl" width="136" height="136" />
       </div>
       <div>
         <form-input
@@ -20,17 +15,11 @@
           focus-on-mount
         />
         <label :class="$style.label">所有者</label>
-        <p :class="$style.creator">
-          @ {{ detail?.name }}
-        </p>
+        <p :class="$style.creator">@ {{ detail?.name }}</p>
       </div>
     </div>
     <div :class="$style.buttonContainer">
-      <form-button
-        label="戻る"
-        type="tertiary"
-        @click="back"
-      />
+      <form-button label="戻る" type="tertiary" @click="back" />
       <form-button
         label="登録する"
         :loading="isCreating"

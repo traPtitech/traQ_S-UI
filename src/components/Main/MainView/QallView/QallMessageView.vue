@@ -77,10 +77,7 @@ const handleScroll = () => {
           :class="$style.loadingBar"
           :show="isLoading && isMessageShow"
         />
-        <transition
-          name="fade-bottom"
-          mode="out-in"
-        >
+        <transition name="fade-bottom" mode="out-in">
           <div
             v-if="isMessageShow"
             :class="$style.messageContainerBackgroundContainer"

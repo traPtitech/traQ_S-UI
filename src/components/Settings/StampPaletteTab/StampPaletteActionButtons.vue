@@ -1,11 +1,7 @@
 <template>
   <div>
     <div :class="$style.buttons">
-      <form-button
-        label="キャンセル"
-        type="tertiary"
-        @click="emit('cancel')"
-      />
+      <form-button label="キャンセル" type="tertiary" @click="emit('cancel')" />
       <form-button
         label="確定"
         type="primary"

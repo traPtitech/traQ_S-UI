@@ -6,19 +6,13 @@
     block
   >
     <div :class="$style.titleWrapper">
-      <a-icon
-        :name="iconName"
-        :mdi="iconMdi"
-      />
+      <a-icon :name="iconName" :mdi="iconMdi" />
       <div :class="$style.title">
         {{ title }}
       </div>
     </div>
     <div :class="$style.header">
-      <user-icon
-        :user-id="userId"
-        :size="20"
-      />
+      <user-icon :user-id="userId" :size="20" />
       <div :class="$style.time">
         {{ timeString }}
       </div>

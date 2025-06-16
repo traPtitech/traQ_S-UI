@@ -1,13 +1,6 @@
 <template>
-  <div
-    v-if="user"
-    :class="$style.container"
-  >
-    <user-icon
-      :class="$style.userIcon"
-      :user-id="id"
-      prevent-modal
-    />
+  <div v-if="user" :class="$style.container">
+    <user-icon :class="$style.userIcon" :user-id="id" prevent-modal />
     <div :class="$style.content">
       <div :class="$style.displayName">
         {{ user.displayName }}

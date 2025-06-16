@@ -4,7 +4,7 @@
     type="checkbox"
     :class="$style.checkbox"
     v-bind="$attrs"
-  >
+  />
   <div
     :class="$style.pseudoCheckbox"
     role="checkbox"

@@ -1,22 +1,19 @@
 <template>
   <transition name="background-shadow">
-    <div
-      v-if="shouldShowModal && currentState"
-      :class="$style.container"
-    >
+    <div v-if="shouldShowModal && currentState" :class="$style.container">
       <component
         :is="component"
         v-if="component"
         :id="
           currentState.type === 'user' ||
-            currentState.type === 'tag' ||
-            currentState.type === 'group' ||
-            currentState.type === 'file' ||
-            currentState.type === 'channel-manage' ||
-            currentState.type === 'group-admin-add' ||
-            currentState.type === 'group-member-add' ||
-            currentState.type === 'settings-stamp-edit' ||
-            currentState.type === 'settings-stamp-image-edit'
+          currentState.type === 'tag' ||
+          currentState.type === 'group' ||
+          currentState.type === 'file' ||
+          currentState.type === 'channel-manage' ||
+          currentState.type === 'group-admin-add' ||
+          currentState.type === 'group-member-add' ||
+          currentState.type === 'settings-stamp-edit' ||
+          currentState.type === 'settings-stamp-image-edit'
             ? currentState.id
             : undefined
         "
@@ -48,8 +45,8 @@
         "
         :file="
           currentState.type === 'settings-stamp-create' ||
-            currentState.type === 'settings-stamp-image-edit' ||
-            currentState.type === 'settings-profile-icon-edit'
+          currentState.type === 'settings-stamp-image-edit' ||
+          currentState.type === 'settings-profile-icon-edit'
             ? currentState.file
             : undefined
         "

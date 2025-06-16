@@ -13,13 +13,8 @@ const handleSwitch = () => {
 </script>
 
 <template>
-  <div
-    :class="$style.UserCard"
-    @click="handleSwitch"
-  >
-    <div :class="$style.NumberDisplay">
-      +{{ number }}
-    </div>
+  <div :class="$style.UserCard" @click="handleSwitch">
+    <div :class="$style.NumberDisplay">+{{ number }}</div>
   </div>
 </template>
 

@@ -5,11 +5,7 @@
     :data-is-fold="isFold"
     @click="unfold"
   >
-    <div
-      ref="preWrapRef"
-      :class="wrapClass"
-      v-html="preContent.outerHTML"
-    />
+    <div ref="preWrapRef" :class="wrapClass" v-html="preContent.outerHTML" />
     <fold-button
       show-icon
       :is-fold="isFold"

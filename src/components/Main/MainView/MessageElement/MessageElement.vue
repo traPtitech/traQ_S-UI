@@ -21,10 +21,7 @@
       :message-id="messageId"
       :is-minimum="isArchived"
     />
-    <message-contents
-      :class="$style.messageContents"
-      :message-id="messageId"
-    />
+    <message-contents :class="$style.messageContents" :message-id="messageId" />
     <message-stamp-list
       :show-detail-button="isHovered || isMobile"
       :message-id="messageId"

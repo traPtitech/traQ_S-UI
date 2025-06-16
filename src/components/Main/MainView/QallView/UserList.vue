@@ -69,18 +69,12 @@ onUnmounted(() => {
     :class="$style.parentContainer"
   >
     <div :class="$style.flexContainer">
-      <div
-        ref="largeCardParent"
-        :class="$style.largeCardParent"
-      >
-        <div
-          ref="largeCard"
-          :class="$style.largeCard"
-        >
+      <div ref="largeCardParent" :class="$style.largeCardParent">
+        <div ref="largeCard" :class="$style.largeCard">
           <VideoComponent
             v-if="
               selectedTrack.trackPublication?.kind === 'video' &&
-                !screenShareTrackSidMap.has(selectedSid ?? '')
+              !screenShareTrackSidMap.has(selectedSid ?? '')
             "
             :track-info="selectedTrack"
           />
@@ -95,9 +89,9 @@ onUnmounted(() => {
           <UserCard
             v-else-if="
               selectedTrack.trackPublication?.kind === 'audio' &&
-                !screenShareTrackSidMap
-                  .values()
-                  ?.some?.(valueSid => valueSid === selectedSid)
+              !screenShareTrackSidMap
+                .values()
+                ?.some?.(valueSid => valueSid === selectedSid)
             "
             :track-info="selectedTrack"
           />
@@ -117,7 +111,7 @@ onUnmounted(() => {
             <VideoComponent
               v-if="
                 track.trackPublication?.kind === 'video' &&
-                  !screenShareTrackSidMap.has(sid)
+                !screenShareTrackSidMap.has(sid)
               "
               :track-info="track"
             />
@@ -131,16 +125,13 @@ onUnmounted(() => {
             <UserCard
               v-else-if="
                 track.trackPublication?.kind === 'audio' &&
-                  !screenShareTracks.some?.(([_, valueSid]) => valueSid === sid)
+                !screenShareTracks.some?.(([_, valueSid]) => valueSid === sid)
               "
               :track-info="track"
             />
           </div>
         </template>
-        <div
-          v-if="tracksMap.size > 5"
-          :class="$style.card"
-        >
+        <div v-if="tracksMap.size > 5" :class="$style.card">
           <UserSurplusCard
             :number="tracksMap.size - 5"
             @switch="
@@ -154,18 +145,12 @@ onUnmounted(() => {
     </div>
   </div>
 
-  <div
-    v-else
-    :class="$style.gridContainer"
-  >
-    <template
-      v-for="[sid, track] in tracksMap.entries()"
-      :key="sid"
-    >
+  <div v-else :class="$style.gridContainer">
+    <template v-for="[sid, track] in tracksMap.entries()" :key="sid">
       <div
         v-if="
           track.trackPublication?.kind === 'video' &&
-            !screenShareTrackSidMap.has(sid)
+          !screenShareTrackSidMap.has(sid)
         "
         :class="$style.smallCard"
         @click="[selectedTrack, selectedSid] = [track, sid]"
@@ -187,7 +172,7 @@ onUnmounted(() => {
       <div
         v-else-if="
           track.trackPublication?.kind === 'audio' &&
-            !screenShareTracks.some?.(([_, valueSid]) => valueSid === sid)
+          !screenShareTracks.some?.(([_, valueSid]) => valueSid === sid)
         "
         :class="$style.smallCard"
         @click="[selectedTrack, selectedSid] = [track, sid]"

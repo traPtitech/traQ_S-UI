@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="subscribers"
-    :class="$style.container"
-  >
+  <div v-if="subscribers" :class="$style.container">
     <filter-input v-model="query" />
     <div :class="$style.list">
       <user-notification-list-item
@@ -15,12 +12,7 @@
       />
     </div>
   </div>
-  <div
-    v-else
-    :class="$style.container"
-  >
-    通知状態の取得に失敗しました
-  </div>
+  <div v-else :class="$style.container">通知状態の取得に失敗しました</div>
 </template>
 
 <script lang="ts">

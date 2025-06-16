@@ -75,10 +75,7 @@ const { sparkle } = useDanmakuSparkle(showSparkle)
 </script>
 
 <template>
-  <div
-    ref="danmakuContainer"
-    :class="$style.danmakuContainer"
-  >
+  <div ref="danmakuContainer" :class="$style.danmakuContainer">
     <DanmakuComment
       v-for="comment in comments"
       :key="comment.id"

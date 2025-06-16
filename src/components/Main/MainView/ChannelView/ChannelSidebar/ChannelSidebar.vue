@@ -3,10 +3,7 @@
     <template #page>
       <primary-view-sidebar-page v-if="page === 'default'">
         <template #header>
-          <sidebar-header
-            icon-string="#"
-            :text="channelName"
-          />
+          <sidebar-header icon-string="#" :text="channelName" />
         </template>
         <template #content>
           <channel-sidebar-content

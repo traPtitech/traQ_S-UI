@@ -2,15 +2,8 @@
   <div>
     <navigation-content-container subtitle="チャンネルリスト">
       <template #control>
-        <button
-          :class="$style.button"
-          @click="onClickButton"
-        >
-          <a-icon
-            :size="20"
-            mdi
-            name="plus-circle-outline"
-          />
+        <button :class="$style.button" @click="onClickButton">
+          <a-icon :size="20" mdi name="plus-circle-outline" />
         </button>
       </template>
       <template #default>
@@ -39,11 +32,7 @@
               show-shortened-path
               role="tabpanel"
             />
-            <empty-state
-              v-else
-              :id="staredPanelId"
-              role="tabpanel"
-            >
+            <empty-state v-else :id="staredPanelId" role="tabpanel">
               お気に入りチャンネルはありません
             </empty-state>
           </template>
@@ -54,9 +43,7 @@
             role="tabpanel"
           />
         </template>
-        <empty-state v-else>
-          チャンネルがありません
-        </empty-state>
+        <empty-state v-else> チャンネルがありません </empty-state>
       </template>
     </navigation-content-container>
   </div>

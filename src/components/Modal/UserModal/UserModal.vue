@@ -1,12 +1,6 @@
 <template>
-  <click-outside
-    stop
-    @click-outside="clearModal"
-  >
-    <div
-      :class="$style.wrapper"
-      data-testid="usermodal"
-    >
+  <click-outside stop @click-outside="clearModal">
+    <div :class="$style.wrapper" data-testid="usermodal">
       <close-button
         :size="isMobile ? 24 : 32"
         :class="$style.close"
@@ -19,14 +13,8 @@
         :class="$style.icon"
         :style="styles.icon"
       />
-      <div
-        :class="$style.content"
-        :style="styles.content"
-      >
-        <feature-container
-          :user="user"
-          :detail="userDetail"
-        />
+      <div :class="$style.content" :style="styles.content">
+        <feature-container :user="user" :detail="userDetail" />
         <navigation-selector
           :current-navigation="currentNavigation"
           @navigation-change="onNavigationChange"

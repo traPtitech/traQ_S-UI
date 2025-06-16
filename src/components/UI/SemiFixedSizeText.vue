@@ -1,10 +1,7 @@
 <template>
   <div :class="$style.container">
     <span :class="$style.placeholder">{{ placeholder }}</span>
-    <span
-      :class="$style.actual"
-      :style="style"
-    >{{ actual }}</span>
+    <span :class="$style.actual" :style="style">{{ actual }}</span>
   </div>
 </template>
 

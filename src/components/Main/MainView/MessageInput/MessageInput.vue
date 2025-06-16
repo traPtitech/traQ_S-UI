@@ -9,42 +9,22 @@
       :class="$style.toNewMessageButton"
       @click="onClickToNewMessageButton"
     >
-      最新メッセージ<a-icon
-        name="arrow-down"
-        mdi
-      />
+      最新メッセージ<a-icon name="arrow-down" mdi />
     </button>
     <message-input-typing-users :typing-users="typingUsers" />
     <message-input-key-guide :show="showKeyGuide" />
-    <message-input-upload-progress
-      v-if="isPosting"
-      :progress="progress"
-    />
+    <message-input-upload-progress v-if="isPosting" :progress="progress" />
     <message-input-preview
       v-if="isPreviewShown && state.text !== ''"
       :class="$style.preview"
       :text="state.text"
     />
-    <message-input-file-list
-      :class="$style.fileList"
-      :channel-id="channelId"
-    />
-    <div
-      v-if="isArchived"
-      :class="$style.inputContainer"
-      data-is-archived
-    >
-      <a-icon
-        :class="$style.controls"
-        name="archive"
-        mdi
-      />
+    <message-input-file-list :class="$style.fileList" :channel-id="channelId" />
+    <div v-if="isArchived" :class="$style.inputContainer" data-is-archived>
+      <a-icon :class="$style.controls" name="archive" mdi />
       <div>アーカイブチャンネルのため、投稿できません</div>
     </div>
-    <div
-      v-else
-      :class="$style.inputContainer"
-    >
+    <div v-else :class="$style.inputContainer">
       <message-input-left-controls
         v-model:is-left-controls-expanded="isLeftControlsExpanded"
         v-model:is-preview-shown="isPreviewShown"

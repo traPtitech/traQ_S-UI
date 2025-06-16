@@ -1,9 +1,6 @@
 <template>
   <template v-if="shouldShowSidebar">
-    <teleport
-      :disabled="!isMobile"
-      to="#sidebar-mobile"
-    >
+    <teleport :disabled="!isMobile" to="#sidebar-mobile">
       <slot name="page" />
     </teleport>
   </template>

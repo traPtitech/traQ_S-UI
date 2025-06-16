@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="$style.container"
-    :style="containerStyle"
-    @click="showContent"
-  >
+  <div :class="$style.container" :style="containerStyle" @click="showContent">
     <iframe
       v-if="!previewUrl || isContentShown"
       :src="embeddedUrl"
@@ -13,17 +9,9 @@
       referrerpolicy="no-referrer"
     />
     <template v-else>
-      <img
-        :src="previewUrl"
-        :class="$style.image"
-      >
+      <img :src="previewUrl" :class="$style.image" />
       <div :class="$style.icon">
-        <a-icon
-          v-if="showPlayIcon"
-          mdi
-          name="play"
-          :size="32"
-        />
+        <a-icon v-if="showPlayIcon" mdi name="play" :size="32" />
       </div>
     </template>
   </div>

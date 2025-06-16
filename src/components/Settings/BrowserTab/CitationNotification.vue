@@ -7,10 +7,7 @@
       </p>
     </div>
     <div>
-      <a-toggle
-        :model-value="value"
-        @update:model-value="toggleSetting"
-      />
+      <a-toggle :model-value="value" @update:model-value="toggleSetting" />
     </div>
   </div>
 </template>

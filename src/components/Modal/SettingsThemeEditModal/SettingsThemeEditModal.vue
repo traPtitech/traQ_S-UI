@@ -1,19 +1,9 @@
 <template>
-  <modal-frame
-    title="カスタムテーマ"
-    icon-name=""
-  >
+  <modal-frame title="カスタムテーマ" icon-name="">
     <div :class="$style.content">
-      <textarea-autosize
-        v-model="editedTheme"
-        :class="$style.jsonField"
-      />
+      <textarea-autosize v-model="editedTheme" :class="$style.jsonField" />
       <div :class="$style.buttonContainer">
-        <form-button
-          label="キャンセル"
-          type="tertiary"
-          @click="clearModal"
-        />
+        <form-button label="キャンセル" type="tertiary" @click="clearModal" />
         <form-button
           label="更新する"
           :disabled="!isChanged"

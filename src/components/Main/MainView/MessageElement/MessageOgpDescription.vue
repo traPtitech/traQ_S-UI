@@ -10,10 +10,7 @@
     >
       {{ description }}
     </div>
-    <div
-      v-if="hostname.length > 0"
-      :class="$style.hostname"
-    >
+    <div v-if="hostname.length > 0" :class="$style.hostname">
       {{ hostname }}
     </div>
   </div>

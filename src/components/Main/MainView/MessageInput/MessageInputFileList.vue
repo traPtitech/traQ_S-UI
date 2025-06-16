@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="attachments.length > 0"
-    :class="$style.container"
-  >
+  <div v-if="attachments.length > 0" :class="$style.container">
     <message-input-file-list-item
       v-for="(attachment, i) in attachments"
       :key="i"

@@ -1,8 +1,5 @@
 <template>
-  <click-outside
-    stop
-    @click-outside="clearModal"
-  >
+  <click-outside stop @click-outside="clearModal">
     <div :class="$style.container">
       <common-modal-header
         :class="$style.header"
@@ -15,10 +12,7 @@
           <template v-if="subtitle">
             {{ subtitle }}
           </template>
-          <slot
-            v-else
-            name="subtitle"
-          />
+          <slot v-else name="subtitle" />
         </template>
       </common-modal-header>
       <div :class="$style.body">

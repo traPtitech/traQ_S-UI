@@ -1,10 +1,6 @@
 <template>
   <div :class="$style.container">
-    <user-icon
-      :class="$style.userIcon"
-      :user-id="message.userId"
-      :size="40"
-    />
+    <user-icon :class="$style.userIcon" :user-id="message.userId" :size="40" />
     <message-header
       :class="$style.messageHeader"
       :user-id="message.userId"
@@ -12,10 +8,7 @@
       :updated-at="message.updatedAt"
     />
     <div :class="$style.messageContents">
-      <markdown-content
-        v-show="!isEditing"
-        :content="renderedContent"
-      />
+      <markdown-content v-show="!isEditing" :content="renderedContent" />
       <message-editor
         v-if="isEditing"
         :raw-content="message.content"

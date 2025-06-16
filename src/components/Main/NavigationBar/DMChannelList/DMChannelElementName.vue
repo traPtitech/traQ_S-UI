@@ -1,9 +1,6 @@
 <template>
   <div :class="$style.container">
-    <span
-      :class="$style.name"
-      :title="name"
-    >
+    <span :class="$style.name" :title="name">
       {{ name }}
     </span>
   </div>

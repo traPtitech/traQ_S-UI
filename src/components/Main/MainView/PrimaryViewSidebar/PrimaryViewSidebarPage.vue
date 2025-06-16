@@ -10,10 +10,7 @@
         @click="emit('back')"
       />
       <slot name="header" />
-      <close-button
-        :size="28"
-        @close="closeSidebar"
-      />
+      <close-button :size="28" @close="closeSidebar" />
     </div>
     <div :class="$style.content">
       <slot name="content" />

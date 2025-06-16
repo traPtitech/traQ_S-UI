@@ -24,7 +24,7 @@ export default [
   ...compat.extends(
     'eslint:recommended',
     './eslint-vue-ts-recommended.cjs',
-    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended'
   ),
   ...vueLint.configs['flat/recommended'],
   prettier,

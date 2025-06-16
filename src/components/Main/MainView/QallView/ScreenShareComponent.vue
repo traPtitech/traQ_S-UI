@@ -15,10 +15,7 @@ const volume = ref(1)
 
 <template>
   <div :class="$style.container">
-    <VideoComponent
-      v-if="trackInfo.trackPublication"
-      :track-info="trackInfo"
-    />
+    <VideoComponent v-if="trackInfo.trackPublication" :track-info="trackInfo" />
     <AudioTrack
       v-if="notMute && trackInfo.isRemote && audioTrackInfo?.trackPublication"
       :track-info="audioTrackInfo"
@@ -31,7 +28,7 @@ const volume = ref(1)
       max="2"
       step="0.01"
       :class="$style.volume"
-    >
+    />
   </div>
 </template>
 

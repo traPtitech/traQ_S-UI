@@ -10,10 +10,7 @@
       @click-hash="toggleChildren"
     >
       <slide-down :is-open="childrenShownChannels.has(channel.id)">
-        <channel-tree
-          :class="$style.children"
-          :channels="channel.children"
-        />
+        <channel-tree :class="$style.children" :channels="channel.children" />
       </slide-down>
     </channel-element>
   </div>

@@ -9,15 +9,9 @@
   >
     <template v-if="message">
       <user-name :user="user" />
-      <render-content
-        :content="message?.content ?? ''"
-        line-clamp-content
-      />
+      <render-content :content="message?.content ?? ''" line-clamp-content />
     </template>
-    <div
-      v-else-if="message === null"
-      :class="$style.deletedMessage"
-    >
+    <div v-else-if="message === null" :class="$style.deletedMessage">
       削除されたメッセージ
     </div>
   </sidebar-event-frame>

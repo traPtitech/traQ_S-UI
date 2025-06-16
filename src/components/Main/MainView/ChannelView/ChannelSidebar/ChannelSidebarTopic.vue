@@ -6,10 +6,7 @@
       :max-length="500"
     >
       <template #default="slotProps">
-        <inline-markdown
-          :content="slotProps.content"
-          accept-action
-        />
+        <inline-markdown :content="slotProps.content" accept-action />
       </template>
     </content-editor>
   </sidebar-content-container-foldable>

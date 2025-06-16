@@ -1,10 +1,6 @@
 <template>
   <div :class="$style.container">
-    <share-target-component
-      :title="title"
-      :text="text"
-      :url="url"
-    />
+    <share-target-component :title="title" :text="text" :url="url" />
   </div>
 </template>
 

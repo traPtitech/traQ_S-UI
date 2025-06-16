@@ -1,11 +1,6 @@
 <template>
-  <div
-    :class="$style.container"
-    @click="onClick"
-  >
-    <div :class="$style.title">
-      traQ
-    </div>
+  <div :class="$style.container" @click="onClick">
+    <div :class="$style.title">traQ</div>
     <div>Client: v{{ clientVersion }}</div>
     <div>Server: {{ serverVersion ?? '-----' }}</div>
   </div>

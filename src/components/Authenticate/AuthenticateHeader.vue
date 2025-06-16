@@ -1,20 +1,11 @@
 <template>
   <div :class="$style.container">
-    <span
-      v-if="title"
-      :class="$style.logoWithTitle"
-    >
-      <img
-        :src="logoUrl"
-        :class="$style.logo"
-      >
+    <span v-if="title" :class="$style.logoWithTitle">
+      <img :src="logoUrl" :class="$style.logo" />
       <span :class="$style.title">{{ title }}</span>
     </span>
-    <div
-      v-else
-      :class="$style.fullLogo"
-    >
-      <img :src="logoUrl">
+    <div v-else :class="$style.fullLogo">
+      <img :src="logoUrl" />
       <logo-text :class="$style.fullLogoText" />
     </div>
   </div>

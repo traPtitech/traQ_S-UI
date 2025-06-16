@@ -5,14 +5,8 @@
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
   >
-    <transition
-      v-if="!isMinimum"
-      name="quick-reaction"
-    >
-      <div
-        v-if="showQuickReaction || !isMobile"
-        :class="$style.quickReaction"
-      >
+    <transition v-if="!isMinimum" name="quick-reaction">
+      <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
         <a-stamp
           v-for="stamp in recentStamps"
           :key="stamp"

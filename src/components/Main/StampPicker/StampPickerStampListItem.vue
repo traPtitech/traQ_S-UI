@@ -1,8 +1,5 @@
 <template>
-  <transition
-    name="stamp-pressed"
-    mode="out-in"
-  >
+  <transition name="stamp-pressed" mode="out-in">
     <!-- keyにしてアニメーションが動くようにしている -->
     <a-stamp
       :key="pressedAnimationKey"

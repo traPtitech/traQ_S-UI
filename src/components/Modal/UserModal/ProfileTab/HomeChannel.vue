@@ -2,26 +2,16 @@
   <section>
     <profile-header text="ホームチャンネル" />
     <p>
-      <a-icon
-        name="home"
-        mdi
-        :class="$style.icon"
-      />
-      <span
-        v-if="isLoading"
-        :class="$style.text"
-        aria-busy="true"
-      >[Now loading...]</span>
-      <span
-        v-else-if="isEmpty"
-        :class="$style.text"
-        data-is-empty
-      >[未設定]</span>
-      <span
-        v-else
-        :class="[$style.text, $style.channel]"
-        @mousedown="onClick"
-      >#{{ channelPath }}</span>
+      <a-icon name="home" mdi :class="$style.icon" />
+      <span v-if="isLoading" :class="$style.text" aria-busy="true"
+        >[Now loading...]</span
+      >
+      <span v-else-if="isEmpty" :class="$style.text" data-is-empty
+        >[未設定]</span
+      >
+      <span v-else :class="[$style.text, $style.channel]" @mousedown="onClick"
+        >#{{ channelPath }}</span
+      >
     </p>
   </section>
 </template>

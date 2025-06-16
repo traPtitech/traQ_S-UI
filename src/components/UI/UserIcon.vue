@@ -5,16 +5,10 @@
     :style="styles.container"
     @click.prevent.stop="openModal"
   >
-    <div
-      v-if="hasNotification"
-      :class="$style.indicator"
-    >
+    <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :size="indicatorSize" />
     </div>
-    <div
-      v-if="isInactive"
-      :class="$style.mask"
-    />
+    <div v-if="isInactive" :class="$style.mask" />
   </div>
 </template>
 

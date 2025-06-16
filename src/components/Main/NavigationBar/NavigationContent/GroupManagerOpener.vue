@@ -2,10 +2,7 @@
   <navigation-content-container subtitle="ユーザーグループ">
     <router-link to="/group-manager">
       <button :class="$style.button">
-        <a-icon
-          name="group"
-          :class="$style.icon"
-        />
+        <a-icon name="group" :class="$style.icon" />
         グループ管理
       </button>
     </router-link>

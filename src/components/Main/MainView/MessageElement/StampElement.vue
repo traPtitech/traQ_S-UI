@@ -8,10 +8,7 @@
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
-    <transition
-      name="stamp-pressed"
-      mode="out-in"
-    >
+    <transition name="stamp-pressed" mode="out-in">
       <a-stamp
         :key="pressAnimationKey"
         :stamp-id="stamp.id"
@@ -19,10 +16,7 @@
         without-title
       />
     </transition>
-    <spin-number
-      :value="stamp.sum"
-      :class="$style.count"
-    />
+    <spin-number :value="stamp.sum" :class="$style.count" />
   </div>
   <stamp-scaled-element
     :class="$style.scaleReaction"

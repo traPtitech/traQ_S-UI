@@ -2,15 +2,8 @@
   <div :class="$style.container">
     <navigation-content-container subtitle="クリップフォルダ">
       <template #control>
-        <button
-          :class="$style.button"
-          @click="onClickButton"
-        >
-          <a-icon
-            :size="20"
-            mdi
-            name="plus-circle-outline"
-          />
+        <button :class="$style.button" @click="onClickButton">
+          <a-icon :size="20" mdi name="plus-circle-outline" />
         </button>
       </template>
       <template #default>
@@ -22,9 +15,7 @@
             :class="$style.element"
           />
         </template>
-        <empty-state v-else>
-          クリップフォルダがありません
-        </empty-state>
+        <empty-state v-else> クリップフォルダがありません </empty-state>
       </template>
     </navigation-content-container>
   </div>

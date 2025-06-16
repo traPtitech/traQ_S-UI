@@ -13,14 +13,8 @@
       :message-id="messageId"
       is-minimum
     />
-    <message-contents
-      :class="$style.messageContents"
-      :message-id="messageId"
-    />
-    <message-quote-list-item-footer
-      :class="$style.footer"
-      :message="message"
-    />
+    <message-contents :class="$style.messageContents" :message-id="messageId" />
+    <message-quote-list-item-footer :class="$style.footer" :message="message" />
   </div>
 </template>
 

@@ -28,14 +28,8 @@
         v-if="!hideSubtitle"
         :class="[$style.subTitleContainer, $style.item]"
       >
-        <user-name
-          v-if="titleType === 'channel'"
-          :user="userState"
-        />
-        <channel-name
-          v-if="titleType === 'user'"
-          :path="path"
-        />
+        <user-name v-if="titleType === 'channel'" :user="userState" />
+        <channel-name v-if="titleType === 'user'" :path="path" />
         <a-icon
           v-if="message.createdAt !== message.updatedAt"
           :class="$style.editIcon"

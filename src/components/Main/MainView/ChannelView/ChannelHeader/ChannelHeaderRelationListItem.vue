@@ -1,12 +1,6 @@
 <template>
-  <router-link
-    :id="linkId"
-    :to="channelLink"
-    :class="$style.wrap"
-  >
-    <div :class="$style.channelName">
-      # {{ props.channel.name }}
-    </div>
+  <router-link :id="linkId" :to="channelLink" :class="$style.wrap">
+    <div :class="$style.channelName"># {{ props.channel.name }}</div>
     <div :class="[$style.topic, isTopicEmpty && $style.empty]">
       {{ topic }}
     </div>

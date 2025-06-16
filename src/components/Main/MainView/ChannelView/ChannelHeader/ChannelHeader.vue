@@ -7,10 +7,7 @@
           :key="channelId"
           :channel-id="channelId"
         />
-        <channel-header-topic
-          :class="$style.topic"
-          :channel-id="channelId"
-        />
+        <channel-header-topic :class="$style.topic" :channel-id="channelId" />
       </div>
     </template>
     <template #tools>

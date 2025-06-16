@@ -1,12 +1,6 @@
 <template>
-  <div
-    :class="$style.container"
-    role="tablist"
-  >
-    <popup-navigator
-      :class="$style.logo"
-      :title="`traQ ${VERSION}`"
-    />
+  <div :class="$style.container" role="tablist">
+    <popup-navigator :class="$style.logo" :title="`traQ ${VERSION}`" />
     <navigation-selector-item
       v-for="item in entries"
       :key="item.type"
@@ -17,10 +11,7 @@
       :icon-name="item.iconName"
       @click="onNavigationItemClick(item.type)"
     />
-    <div
-      v-if="showSeparator"
-      :class="$style.separator"
-    />
+    <div v-if="showSeparator" :class="$style.separator" />
     <navigation-selector-item
       v-for="item in ephemeralEntries"
       :key="item.type"

@@ -1,9 +1,6 @@
 <template>
   <div>
-    <label
-      :for="id"
-      :class="$style.title"
-    >{{ label }}</label>
+    <label :for="id" :class="$style.title">{{ label }}</label>
     <div :class="$style.container">
       <input
         :id="id"
@@ -15,7 +12,7 @@
         :autocapitalize="autocapitalize"
         :enterkeyhint="enterkeyhint"
         @input="onInput"
-      >
+      />
       <button
         v-if="type === 'password'"
         type="button"

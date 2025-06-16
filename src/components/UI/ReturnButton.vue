@@ -1,10 +1,5 @@
 <template>
-  <a-icon
-    :size="size"
-    mdi
-    name="chevron-left"
-    :class="$style.button"
-  />
+  <a-icon :size="size" mdi name="chevron-left" :class="$style.button" />
 </template>
 
 <script lang="ts" setup>

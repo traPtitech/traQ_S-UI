@@ -4,36 +4,19 @@
     ref="buttonEle"
     :class="$style.navigationButton"
   >
-    <a-icon
-      name="traQ"
-      :size="28"
-    />
+    <a-icon name="traQ" :size="28" />
     <teleport :to="`#${popupNavigatorId}`">
       <div
         v-show="isPopupNavigatorShown"
         :class="$style.popupNavigator"
         :style="popupStyle"
       >
-        <div
-          :class="$style.popupNavigatorItem"
-          @click="movePrev"
-        >
-          <a-icon
-            name="arrow-left"
-            mdi
-            :class="$style.icon"
-          />
+        <div :class="$style.popupNavigatorItem" @click="movePrev">
+          <a-icon name="arrow-left" mdi :class="$style.icon" />
           戻る
         </div>
-        <div
-          :class="$style.popupNavigatorItem"
-          @click="moveNext"
-        >
-          <a-icon
-            name="arrow-right"
-            mdi
-            :class="$style.icon"
-          />
+        <div :class="$style.popupNavigatorItem" @click="moveNext">
+          <a-icon name="arrow-right" mdi :class="$style.icon" />
           進む
         </div>
       </div>

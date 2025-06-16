@@ -1,9 +1,5 @@
 <template>
-  <a-icon
-    :name="iconData.name"
-    :mdi="iconData.mdi"
-    :size="size"
-  />
+  <a-icon :name="iconData.name" :mdi="iconData.mdi" :size="size" />
 </template>
 
 <script lang="ts" setup>

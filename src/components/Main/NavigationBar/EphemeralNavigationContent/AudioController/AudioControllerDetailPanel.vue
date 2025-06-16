@@ -10,10 +10,7 @@
         :duration="duration"
         show-background-on-hover
       />
-      <audio-player-time
-        :current-time="currentTime"
-        :duration="duration"
-      />
+      <audio-player-time :current-time="currentTime" :duration="duration" />
     </div>
     <div :class="$style.controls">
       <audio-player-play-button

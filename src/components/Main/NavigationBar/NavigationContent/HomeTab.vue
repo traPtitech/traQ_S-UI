@@ -5,15 +5,12 @@
       subtitle="ホームチャンネル"
       :class="$style.item"
     >
-      <channel-tree
-        :channels="homeChannelWithTree"
-        show-shortened-path
-      />
+      <channel-tree :channels="homeChannelWithTree" show-shortened-path />
     </navigation-content-container>
     <navigation-content-container
       v-if="
         dmChannelsWithNotification.length + channelsWithNotification.length !==
-          0
+        0
       "
       subtitle="未読"
       :class="$style.item"
@@ -21,17 +18,12 @@
       <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
       <channel-list :channels="channelsWithNotification" />
     </navigation-content-container>
-    <navigation-content-container
-      subtitle="チャンネル"
-      :class="$style.item"
-    >
+    <navigation-content-container subtitle="チャンネル" :class="$style.item">
       <channel-tree
         v-if="topLevelChannels.length > 0"
         :channels="topLevelChannels"
       />
-      <empty-state v-else>
-        購読していません
-      </empty-state>
+      <empty-state v-else> 購読していません </empty-state>
     </navigation-content-container>
     <navigation-content-container
       v-if="qallingChannels.length > 0"

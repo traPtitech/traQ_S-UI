@@ -4,12 +4,7 @@
     :data-on-secondary="$boolAttr(onSecondary)"
     @click="focus"
   >
-    <a-icon
-      mdi
-      name="search"
-      :size="18"
-      :class="$style.icon"
-    />
+    <a-icon mdi name="search" :size="18" :class="$style.icon" />
     <input
       ref="inputRef"
       :class="$style.input"
@@ -23,7 +18,7 @@
       @input="onInput"
       @keydown.esc.stop="reset"
       @keydown.enter="emit('enter')"
-    >
+    />
   </div>
 </template>
 

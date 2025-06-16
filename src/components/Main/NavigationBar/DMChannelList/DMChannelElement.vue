@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="user"
-    :class="$style.container"
-  >
+  <div v-if="user" :class="$style.container">
     <!-- チャンネル表示本体 -->
     <div
       :class="$style.channel"

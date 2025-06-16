@@ -3,10 +3,7 @@
     <h3 :class="$style.title">
       {{ title }}
     </h3>
-    <p
-      v-if="description"
-      :class="$style.description"
-    >
+    <p v-if="description" :class="$style.description">
       {{ description }}
     </p>
     <slot />

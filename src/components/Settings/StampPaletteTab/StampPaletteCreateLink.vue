@@ -3,10 +3,7 @@
     :to="constructSettingsStampPaletteCreatePath()"
     :class="$style.container"
   >
-    <a-icon
-      mdi
-      name="plus"
-    />
+    <a-icon mdi name="plus" />
     新規作成
   </router-link>
 </template>

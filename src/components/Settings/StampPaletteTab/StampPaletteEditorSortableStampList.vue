@@ -23,10 +23,7 @@
         :data-id="stampId"
         @click="toggleStampSelection(stampId)"
       >
-        <a-stamp
-          :stamp-id="stampId"
-          :size="24"
-        />
+        <a-stamp :stamp-id="stampId" :size="24" />
       </div>
       <icon-button
         :disabled="selectedStampIds.length === 0"
@@ -36,12 +33,7 @@
         @click="removeSelectedStamps"
       />
     </div>
-    <div
-      v-else
-      :class="$style.emptyState"
-    >
-      スタンプを追加してください
-    </div>
+    <div v-else :class="$style.emptyState">スタンプを追加してください</div>
     <stamp-palette-editor-limit-indicator
       :current-count="stampIdsModel.length"
       :limit="STAMP_PALETTE_STAMPS_LIMIT"

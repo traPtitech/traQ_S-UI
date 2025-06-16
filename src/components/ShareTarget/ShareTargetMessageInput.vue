@@ -1,13 +1,7 @@
 <template>
   <div :class="$style.container">
-    <label
-      :for="id"
-      :class="$style.label"
-    >メッセージ</label>
-    <div
-      ref="wrapperEle"
-      :class="$style.wrapper"
-    >
+    <label :for="id" :class="$style.label">メッセージ</label>
+    <div ref="wrapperEle" :class="$style.wrapper">
       <div :class="$style.inputContainer">
         <div :class="$style.inputWrapper">
           <textarea

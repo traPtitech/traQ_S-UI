@@ -19,10 +19,7 @@ const handleApply = () => {
 </script>
 
 <template>
-  <div
-    v-if="isOpen"
-    :class="$style.modal"
-  >
+  <div v-if="isOpen" :class="$style.modal">
     <div :class="$style.modalContent">
       <h3>背景設定</h3>
       <div :class="$style.modalBody">
@@ -33,7 +30,7 @@ const handleApply = () => {
               v-model="localBackgroundType"
               type="radio"
               value="original"
-            >
+            />
             <label for="original">オリジナル</label>
           </div>
           <div>
@@ -42,7 +39,7 @@ const handleApply = () => {
               v-model="localBackgroundType"
               type="radio"
               value="blur"
-            >
+            />
             <label for="blur">ぼかし</label>
           </div>
           <div>
@@ -51,7 +48,7 @@ const handleApply = () => {
               v-model="localBackgroundType"
               type="radio"
               value="file"
-            >
+            />
             <label for="file">画像</label>
           </div>
           <div>
@@ -60,15 +57,12 @@ const handleApply = () => {
               v-model="localBackgroundType"
               type="radio"
               value="screen"
-            >
+            />
             <label for="screen">画面共有</label>
           </div>
         </div>
 
-        <div
-          v-if="localBackgroundType === 'file'"
-          :class="$style.fileUpload"
-        >
+        <div v-if="localBackgroundType === 'file'" :class="$style.fileUpload">
           <input
             type="file"
             accept="image/*"
@@ -78,22 +72,14 @@ const handleApply = () => {
                 backgroundImage = target?.files?.[0]
               }
             "
-          >
+          />
         </div>
 
         <div :class="$style.modalButtons">
-          <button
-            :class="$style.cancelButton"
-            @click="onClose"
-          >
+          <button :class="$style.cancelButton" @click="onClose">
             キャンセル
           </button>
-          <button
-            :class="$style.applyButton"
-            @click="handleApply"
-          >
-            適用
-          </button>
+          <button :class="$style.applyButton" @click="handleApply">適用</button>
         </div>
       </div>
     </div>

@@ -1,10 +1,5 @@
 <template>
-  <a-icon
-    :class="$style.playIcon"
-    name="play"
-    mdi
-    :size="36"
-  />
+  <a-icon :class="$style.playIcon" name="play" mdi :size="36" />
 </template>
 
 <script lang="ts" setup>

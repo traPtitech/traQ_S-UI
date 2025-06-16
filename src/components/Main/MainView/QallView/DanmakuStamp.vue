@@ -41,14 +41,8 @@ onMounted(() => startAnimation())
 </script>
 
 <template>
-  <div
-    ref="danmakuRef"
-    :class="$style.danmaku"
-  >
-    <AStamp
-      :stamp-id="stampId"
-      :size="48"
-    />
+  <div ref="danmakuRef" :class="$style.danmaku">
+    <AStamp :stamp-id="stampId" :size="48" />
   </div>
 </template>
 

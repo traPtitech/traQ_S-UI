@@ -1,21 +1,13 @@
 <template>
-  <div
-    :class="$style.container"
-    :data-is-mobile="$boolAttr(isMobile)"
-  >
-    <authenticate-header
-      :class="$style.header"
-      title="シェア"
-    />
+  <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
+    <authenticate-header :class="$style.header" title="シェア" />
     <share-target-form
       v-if="!donePost"
       :class="$style.form"
       :default-text="defaultText"
       @post="onPost"
     />
-    <div v-else>
-      投稿しました。1秒後にウィンドウを閉じます。
-    </div>
+    <div v-else>投稿しました。1秒後にウィンドウを閉じます。</div>
   </div>
 </template>
 

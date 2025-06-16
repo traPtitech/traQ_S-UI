@@ -6,22 +6,12 @@
     :datetime="datetime"
   >
     <div v-if="details.on.length > 0">
-      <div :class="$style.label">
-        新しい購読者
-      </div>
-      <user-icon-ellipsis-list
-        direction="row"
-        :user-ids="details.on"
-      />
+      <div :class="$style.label">新しい購読者</div>
+      <user-icon-ellipsis-list direction="row" :user-ids="details.on" />
     </div>
     <div v-if="details.off.length > 0">
-      <div :class="$style.label">
-        解除した購読者
-      </div>
-      <user-icon-ellipsis-list
-        direction="row"
-        :user-ids="details.off"
-      />
+      <div :class="$style.label">解除した購読者</div>
+      <user-icon-ellipsis-list direction="row" :user-ids="details.off" />
     </div>
   </sidebar-event-frame>
 </template>

@@ -3,10 +3,7 @@
     <template #page>
       <primary-view-sidebar-page v-if="page === 'default'">
         <template #header>
-          <sidebar-header
-            icon-string="@"
-            :text="userName"
-          />
+          <sidebar-header icon-string="@" :text="userName" />
         </template>
         <template #content>
           <sidebar-content

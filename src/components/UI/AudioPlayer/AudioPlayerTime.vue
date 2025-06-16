@@ -5,9 +5,7 @@
       :actual="displayCurrentTime"
       :placeholder="displayTimeMaxText"
     />
-    <div :class="$style.slash">
-      /
-    </div>
+    <div :class="$style.slash">/</div>
     <semi-fixed-size-text
       :class="$style.time"
       :actual="displayDuration"

@@ -6,10 +6,7 @@
     </div>
     <stamp-palette-create-link />
     <div :class="$style.stampPaletteList">
-      <div
-        v-for="palette in stampPalettes"
-        :key="palette.id"
-      >
+      <div v-for="palette in stampPalettes" :key="palette.id">
         <stamp-palette-list-item :palette="palette" />
       </div>
     </div>

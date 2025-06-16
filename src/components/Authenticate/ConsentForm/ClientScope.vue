@@ -1,24 +1,12 @@
 <template>
-  <li
-    :class="$style.container"
-    :data-is-open="$boolAttr(isOpen)"
-  >
-    <div
-      :class="$style.name"
-      @click="toggleOpen"
-    >
+  <li :class="$style.container" :data-is-open="$boolAttr(isOpen)">
+    <div :class="$style.name" @click="toggleOpen">
       {{ scopeInfo.name }}
-      <a-icon
-        :class="$style.icon"
-        name="rounded-triangle"
-      />
+      <a-icon :class="$style.icon" name="rounded-triangle" />
     </div>
     <slide-down :is-open="isOpen">
       <ul :class="$style.permissions">
-        <li
-          v-for="permission in scopeInfo.permissions"
-          :key="permission"
-        >
+        <li v-for="permission in scopeInfo.permissions" :key="permission">
           {{ permission }}
         </li>
       </ul>

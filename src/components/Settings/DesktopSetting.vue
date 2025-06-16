@@ -4,12 +4,7 @@
     <desktop-tab-frame :class="$style.frame">
       <slot />
     </desktop-tab-frame>
-    <close-button
-      :class="$style.close"
-      with-text
-      :size="56"
-      @close="close"
-    />
+    <close-button :class="$style.close" with-text :size="56" @close="close" />
   </div>
 </template>
 

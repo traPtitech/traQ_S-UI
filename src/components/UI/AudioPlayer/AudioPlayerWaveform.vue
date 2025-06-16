@@ -7,14 +7,8 @@
     @mousemove="onMouseMove"
     @click.prevent="onClick"
   >
-    <div
-      :class="$style.waveformPlayedMask"
-      :style="waveformWrapperStyle"
-    >
-      <div
-        :class="$style.waveform"
-        :style="waveformStyle"
-      />
+    <div :class="$style.waveformPlayedMask" :style="waveformWrapperStyle">
+      <div :class="$style.waveform" :style="waveformStyle" />
     </div>
     <div
       v-show="selectingPosition"

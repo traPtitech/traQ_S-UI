@@ -9,19 +9,10 @@
     :class="$style.trigger"
     @click="toggle"
   >
-    <a-icon
-      :size="20"
-      name="rounded-triangle"
-      :class="$style.icon"
-    />
+    <a-icon :size="20" name="rounded-triangle" :class="$style.icon" />
   </button>
   <!-- NOTE: ボタンから Tab 移動した際に popup のはじめに飛べるように Focus を管理する -->
-  <div
-    v-if="isOpen"
-    ref="focusPopupRef"
-    tabindex="0"
-    @focus="focusPopup"
-  />
+  <div v-if="isOpen" ref="focusPopupRef" tabindex="0" @focus="focusPopup" />
   <channel-header-relation-popup
     v-if="isOpen"
     ref="popup"

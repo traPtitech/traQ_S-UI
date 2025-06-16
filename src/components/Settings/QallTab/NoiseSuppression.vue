@@ -1,8 +1,6 @@
 <template>
   <section>
-    <h3 :class="$style.heading">
-      ノイズ抑制
-    </h3>
+    <h3 :class="$style.heading">ノイズ抑制</h3>
     <template v-if="isAudioWorkletSupported">
       <form-radio
         v-model="noiseSuppressionValue"
@@ -23,9 +21,7 @@
         input-value="none"
       />
     </template>
-    <p v-else>
-      利用している端末が対応していません。
-    </p>
+    <p v-else>利用している端末が対応していません。</p>
   </section>
 </template>
 

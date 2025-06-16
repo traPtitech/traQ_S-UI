@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="isCommandPaletteShown"
-    :class="$style.container"
-  >
+  <div v-if="isCommandPaletteShown" :class="$style.container">
     <command-palette />
   </div>
 </template>

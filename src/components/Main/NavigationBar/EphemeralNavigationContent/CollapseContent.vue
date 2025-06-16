@@ -5,16 +5,9 @@
       :data-is-expanded="$boolAttr(isExpanded)"
       @click="toggleExpanded"
     >
-      <a-icon
-        :class="$style.expandIcon"
-        name="chevron-up"
-        mdi
-      />
+      <a-icon :class="$style.expandIcon" name="chevron-up" mdi />
     </div>
-    <div
-      :class="$style.list"
-      :data-is-expanded="$boolAttr(isExpanded)"
-    >
+    <div :class="$style.list" :data-is-expanded="$boolAttr(isExpanded)">
       <slot />
     </div>
   </div>

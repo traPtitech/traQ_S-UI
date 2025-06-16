@@ -1,21 +1,12 @@
 <template>
-  <div
-    :class="$style.wrap"
-    :data-show-expand-button="showExpandButton"
-  >
-    <div
-      v-if="isEmpty"
-      :class="$style.empty"
-    >
+  <div :class="$style.wrap" :data-show-expand-button="showExpandButton">
+    <div v-if="isEmpty" :class="$style.empty">
       {{ props.emptyMessage }}
     </div>
 
     <template v-else>
       <ul :class="$style.list">
-        <li
-          v-for="channel in displayedChannels"
-          :key="channel.id"
-        >
+        <li v-for="channel in displayedChannels" :key="channel.id">
           <channel-header-relation-list-item
             ref="listItemsRef"
             :channel="channel"

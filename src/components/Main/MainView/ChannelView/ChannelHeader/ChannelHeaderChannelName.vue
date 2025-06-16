@@ -7,24 +7,16 @@
     >
       #
     </router-link>
-    <span
-      v-else
-      :class="$style.currentHash"
-    >#</span>
-    <span
-      v-for="(ancestor, i) in ancestorsPath"
-      :key="i"
-    >
-      <router-link
-        :to="ancestor.link"
-        :class="$style.ancestor"
-      >{{
+    <span v-else :class="$style.currentHash">#</span>
+    <span v-for="(ancestor, i) in ancestorsPath" :key="i">
+      <router-link :to="ancestor.link" :class="$style.ancestor">{{
         isMobile ? ancestor.name[0] : ancestor.name
       }}</router-link>
       <span
         :class="$style.ancestorSeparator"
         :data-is-primary="$boolAttr(pathInfoList.length <= 1)"
-      >/</span>
+        >/</span
+      >
     </span>
     <span :class="$style.current">{{ currentChannelLastPath }}</span>
   </div>

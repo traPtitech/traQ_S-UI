@@ -1,9 +1,5 @@
 <template>
-  <button
-    ref="button"
-    role="tab"
-    :class="$style.button"
-  >
+  <button ref="button" role="tab" :class="$style.button">
     {{ props.label }}
   </button>
 </template>

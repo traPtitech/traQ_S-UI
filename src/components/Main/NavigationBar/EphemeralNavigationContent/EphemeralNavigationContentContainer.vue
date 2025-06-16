@@ -1,8 +1,5 @@
 <template>
-  <div
-    :class="$style.container"
-    :data-is-transparent="$boolAttr(transparent)"
-  >
+  <div :class="$style.container" :data-is-transparent="$boolAttr(transparent)">
     <slot />
   </div>
 </template>

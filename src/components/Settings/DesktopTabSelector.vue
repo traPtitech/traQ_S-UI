@@ -1,9 +1,7 @@
 <template>
   <section :class="$style.container">
     <div>
-      <h2 :class="$style.header">
-        設定
-      </h2>
+      <h2 :class="$style.header">設定</h2>
       <desktop-tab-selector-item
         v-for="navigation in navigations"
         :key="navigation.routeName"

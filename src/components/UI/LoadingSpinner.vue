@@ -1,8 +1,5 @@
 <template>
-  <div
-    :class="$style.spinnerContainer"
-    :data-color="color"
-  >
+  <div :class="$style.spinnerContainer" :data-color="color">
     <div :class="$style.spinner" />
   </div>
 </template>

@@ -35,10 +35,7 @@ const restoreMainView = () => {
 }
 </script>
 <template>
-  <div
-    :class="$style.container"
-    @click="restoreMainView"
-  >
+  <div :class="$style.container" @click="restoreMainView">
     <div
       v-if="
         track && typeof track[0] === 'string' && typeof track[1] === 'object'
@@ -52,7 +49,7 @@ const restoreMainView = () => {
       <ScreenShareComponent
         v-else-if="
           track[1].trackPublication?.kind === Track.Kind.Video &&
-            screenShareTrackSidMap.has(track[0] ?? '')
+          screenShareTrackSidMap.has(track[0] ?? '')
         "
         :track-info="track[1]"
         :audio-track-info="
@@ -65,9 +62,7 @@ const restoreMainView = () => {
       />
       <span v-else>Qallにもどる</span>
     </div>
-    <div v-else>
-      Qallにもどる
-    </div>
+    <div v-else>Qallにもどる</div>
   </div>
 </template>
 

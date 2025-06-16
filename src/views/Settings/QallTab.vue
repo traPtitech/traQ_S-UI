@@ -3,18 +3,13 @@
     <section :class="$style.element">
       <div :class="$style.enable">
         <section :class="$style.section">
-          <h3 :class="$style.heading">
-            RTC機能
-          </h3>
+          <h3 :class="$style.heading">RTC機能</h3>
           <p>
             通話などのRTC(リアルタイムコミュニケーション)機能を有効化します。
             マイクなどへのアクセス許可が必要です。
           </p>
         </section>
-        <a-toggle
-          v-model="state.isEnabled"
-          :class="$style.toggle"
-        />
+        <a-toggle v-model="state.isEnabled" :class="$style.toggle" />
       </div>
     </section>
     <template v-if="state.isEnabled">
@@ -22,22 +17,14 @@
         <div :class="$style.contents">
           <div :class="$style.enable">
             <section :class="$style.section">
-              <h3 :class="$style.heading">
-                メッセージの読み上げ
-              </h3>
+              <h3 :class="$style.heading">メッセージの読み上げ</h3>
               <p>
                 Qallしているチャンネルに投稿されたメッセージを読み上げます。
               </p>
             </section>
-            <a-toggle
-              v-model="state.isTtsEnabled"
-              :class="$style.toggle"
-            />
+            <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
           </div>
-          <div
-            v-if="state.isTtsEnabled"
-            :class="$style.contents"
-          >
+          <div v-if="state.isTtsEnabled" :class="$style.contents">
             <form-selector
               v-if="voiceOptions.length > 0"
               v-model="state.voiceName"
@@ -45,9 +32,7 @@
               :options="voiceOptions"
               :class="$style.option"
             />
-            <p v-else>
-              読み上げ音声の声の種類が取得できませんでした。
-            </p>
+            <p v-else>読み上げ音声の声の種類が取得できませんでした。</p>
             <form-input
               v-model="state.voicePitch"
               label="ピッチ"
@@ -73,39 +58,29 @@
         </div>
       </section>
       <section :class="$style.element">
-        <h3 :class="$style.heading">
-          入力デバイス
-        </h3>
+        <h3 :class="$style.heading">入力デバイス</h3>
         <div>
           <form-selector
             v-if="!fetchFailed && audioInputDevices.length > 0"
             v-model="state.audioInputDeviceId"
             :options="audioInputDeviceOptions"
           />
-          <p v-else>
-            デバイスが取得できませんでした。
-          </p>
+          <p v-else>デバイスが取得できませんでした。</p>
         </div>
       </section>
       <section :class="$style.element">
-        <h3 :class="$style.heading">
-          出力デバイス
-        </h3>
+        <h3 :class="$style.heading">出力デバイス</h3>
         <div>
           <form-selector
             v-if="!fetchFailed && audioOutputDevices.length"
             v-model="state.audioOutputDeviceId"
             :options="audioOutputDeviceOptions"
           />
-          <p v-else>
-            デバイスが取得できませんでした。
-          </p>
+          <p v-else>デバイスが取得できませんでした。</p>
         </div>
       </section>
       <section :class="$style.element">
-        <h3 :class="$style.heading">
-          マスターボリューム
-        </h3>
+        <h3 :class="$style.heading">マスターボリューム</h3>
         <form-range-with-value
           v-model="state.masterVolume"
           max-text="100%"
@@ -116,9 +91,7 @@
         />
       </section>
       <section :class="$style.element">
-        <h3 :class="$style.heading">
-          ノイズゲート
-        </h3>
+        <h3 :class="$style.heading">ノイズゲート</h3>
         <p>
           マイクに入力された音が指定した音量以下だった場合にミュートします。
           -100dBにすると無効になります。

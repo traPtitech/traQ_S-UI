@@ -1,16 +1,9 @@
 <template>
   <div :class="$style.wrapper">
-    <close-button
-      :class="$style.close"
-      with-text
-      :size="56"
-      @close="close"
-    />
+    <close-button :class="$style.close" with-text :size="56" @close="close" />
     <section :class="$style.container">
       <div :class="[$style.header, $style.item]">
-        <h2 :class="$style.title">
-          ユーザーグループ管理
-        </h2>
+        <h2 :class="$style.title">ユーザーグループ管理</h2>
         <form-button
           :class="$style.createButton"
           label="新規作成"

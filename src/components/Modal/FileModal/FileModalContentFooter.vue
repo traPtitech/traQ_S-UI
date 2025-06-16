@@ -1,12 +1,6 @@
 <template>
-  <div
-    :class="$style.container"
-    :data-is-white="$boolAttr(isWhite)"
-  >
-    <div
-      :class="$style.channelPath"
-      @mousedown="onClick"
-    >
+  <div :class="$style.container" :data-is-white="$boolAttr(isWhite)">
+    <div :class="$style.channelPath" @mousedown="onClick">
       {{ channelPath }}
     </div>
     <file-modal-content-footer-username

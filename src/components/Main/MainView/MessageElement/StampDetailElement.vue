@@ -3,20 +3,13 @@
     <div>
       {{ ':' + stampName + ': from ' }}
     </div>
-    <div
-      v-for="user in stamp.users"
-      :key="user.id"
-      :class="$style.contents"
-    >
+    <div v-for="user in stamp.users" :key="user.id" :class="$style.contents">
       <stamp-detail-element-content
         :user-id="user.id"
         :count="user.count"
         :class="$style.content"
       />
-      <span
-        v-if="!isLastUser(user)"
-        :class="$style.delimiter"
-      > / </span>
+      <span v-if="!isLastUser(user)" :class="$style.delimiter"> / </span>
     </div>
   </div>
 </template>

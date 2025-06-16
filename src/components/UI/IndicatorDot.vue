@@ -1,8 +1,5 @@
 <template>
-  <div
-    :class="$style.container"
-    :style="style"
-  />
+  <div :class="$style.container" :style="style" />
 </template>
 
 <script lang="ts" setup>

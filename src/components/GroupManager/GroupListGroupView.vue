@@ -4,10 +4,7 @@
       {{ group.name }}
     </div>
     <div :class="$style.adminList">
-      <a-icon
-        name="crown"
-        mdi
-      />
+      <a-icon name="crown" mdi />
       <user-icon-ellipsis-list
         direction="row"
         :user-ids="group.admins"

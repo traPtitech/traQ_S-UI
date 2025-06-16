@@ -1,9 +1,6 @@
 <template>
   <div :class="$style.container">
-    <inline-markdown
-      :content="topic"
-      :title="topic"
-    />
+    <inline-markdown :content="topic" :title="topic" />
   </div>
 </template>
 

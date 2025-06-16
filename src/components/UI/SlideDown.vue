@@ -6,10 +6,7 @@
     @before-leave="setCurrentHeight"
     @leave="unsetHeight"
   >
-    <div
-      v-if="isOpen"
-      :class="$style.wrapper"
-    >
+    <div v-if="isOpen" :class="$style.wrapper">
       <slot />
     </div>
   </transition>
