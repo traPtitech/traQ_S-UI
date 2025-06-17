@@ -22,6 +22,7 @@
       <form-button label="戻る" type="tertiary" @click="back" />
       <form-button
         label="登録する"
+        :disabled="!isNameValid"
         :loading="isCreating"
         :class="$style.form"
         @click="createStamp"
@@ -39,6 +40,7 @@ import FormButton from '/@/components/UI/FormButton.vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useModalStore } from '/@/store/ui/modal'
 import type { AxiosError } from 'axios'
+import { isValidStampName } from '/@/lib/validate'
 
 const props = defineProps<{
   stampImage: File
@@ -50,8 +52,12 @@ const emit = defineEmits<{
 const { detail } = useMeStore()
 const { clearModal } = useModalStore()
 
+const trimExt = (filename: string) => filename.replace(/\.[^.]+$/, '')
+
 const imageUrl = computed(() => URL.createObjectURL(props.stampImage))
-const newStampName = ref('')
+const newStampName = ref(trimExt(props.stampImage.name))
+
+const isNameValid = computed(() => isValidStampName(newStampName.value))
 
 const useStampCreate = (newStampName: Ref<string>, stampImage: File) => {
   const { addSuccessToast, addErrorToast } = useToastStore()
