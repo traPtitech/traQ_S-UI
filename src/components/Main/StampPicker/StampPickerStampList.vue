@@ -63,8 +63,7 @@ const onHoverStamp = (id: StampId) => {
 }
 
 .panel {
-  display: flex;
-  flex-flow: row wrap;
-  align-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(10, min-content);
 }
 </style>
