@@ -25,7 +25,6 @@ const value = useModelValueSyncer(props, emit)
 
 <style lang="scss" module>
 .container {
-  display: flex;
   align-items: center;
 }
 .input {
