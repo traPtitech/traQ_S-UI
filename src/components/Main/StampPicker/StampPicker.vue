@@ -145,8 +145,7 @@ onMounted(validateCurrentStampSet)
   margin-left: 8px;
 }
 .stampList {
-  padding: 0 4px;
-  padding-bottom: 12px;
+  padding-left: 4px;
 }
 .effectSelector {
   flex: 1 0;
