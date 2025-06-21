@@ -43,9 +43,8 @@ const onStampHover = () => {
 <style lang="scss" module>
 .container {
   border-radius: 4px;
-  border: solid 2px transparent;
   &:focus-within {
-    border-color: $theme-accent-focus-default;
+    box-shadow: inset 0 0 0 2px $theme-accent-focus-default;
   }
   &:hover {
     @include background-secondary;
