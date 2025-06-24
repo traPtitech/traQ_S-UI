@@ -184,5 +184,4 @@ watch(isLongHovered, beginHover => {
   bottom: 105%;
   z-index: $z-index-message-element-scaled-stamp;
 }
-
 </style>
