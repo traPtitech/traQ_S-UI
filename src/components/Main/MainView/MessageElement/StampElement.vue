@@ -38,6 +38,7 @@ import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageStampById } from '/@/lib/messageStampList'
 import StampScaledElement from './StampScaledElement.vue'
 import useHover from '/@/composables/dom/useHover'
+import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
   stamp: MessageStampById
@@ -52,6 +53,7 @@ const emit = defineEmits<{
 
 const { isTouchDevice } = useResponsiveStore()
 const { stampsMap } = useStampsStore()
+const { addErrorToast } = useToastStore()
 
 const stampName = computed(
   () => stampsMap.value.get(props.stamp.id)?.name ?? ''
@@ -85,7 +87,10 @@ const isProgress = ref(false)
 const onClick = () => {
   if (isProgress.value) return
 
-  if (props.isArchived) return
+  if (props.isArchived){
+    addErrorToast('アーカイブされたチャンネルではスタンプの追加 / 削除はできません')
+    return
+  }
 
   if (includeMe.value) {
     emit('removeStamp', props.stamp.id)
