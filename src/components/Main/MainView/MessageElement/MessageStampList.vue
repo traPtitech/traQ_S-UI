@@ -18,6 +18,7 @@
           <stamp-element
             :stamp="stamp"
             :is-detail-shown="isDetailShown"
+            :is-archived="isArchived"
             @add-stamp="addStamp"
             @remove-stamp="removeStamp"
           />

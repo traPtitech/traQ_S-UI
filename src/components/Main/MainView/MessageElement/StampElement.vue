@@ -4,6 +4,7 @@
     :class="$style.body"
     :aria-label="tooltip"
     :data-include-me="$boolAttr(includeMe)"
+    :data-is-archived="$boolAttr(isArchived)"
     @click="onClick"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
@@ -41,6 +42,7 @@ import useHover from '/@/composables/dom/useHover'
 const props = defineProps<{
   stamp: MessageStampById
   isDetailShown: boolean
+  isArchived: boolean
 }>()
 
 const emit = defineEmits<{
@@ -82,6 +84,9 @@ const isProgress = ref(false)
 
 const onClick = () => {
   if (isProgress.value) return
+
+  if (props.isArchived) return
+
   if (includeMe.value) {
     emit('removeStamp', props.stamp.id)
   } else {
@@ -144,6 +149,9 @@ watch(isLongHovered, beginHover => {
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   cursor: pointer;
+  &[data-is-archive] {
+    cursor: not-allowed;
+  }
   user-select: none;
   overflow: hidden;
   contain: content;
@@ -176,4 +184,5 @@ watch(isLongHovered, beginHover => {
   bottom: 105%;
   z-index: $z-index-message-element-scaled-stamp;
 }
+
 </style>

@@ -7,7 +7,6 @@ import apis from '/@/lib/apis'
 import { createSingleflight } from '/@/lib/basic/async'
 import { wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { useChannelsStore } from '/@/store/entities/channels'
 import type {
   ExternalUrl,
   FileId,
@@ -170,12 +169,6 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     if (myId.value === undefined) return
 
     if (!messagesMap.value.has(messageId)) return
-
-    const { channelsMap } = useChannelsStore()
-
-    const channelId = messagesMap.value.get(messageId)?.channelId ?? ""
-
-    if(channelsMap.value.get(channelId)?.archived) return
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { stamps } = messagesMap.value.get(messageId)!
