@@ -87,8 +87,10 @@ const isProgress = ref(false)
 const onClick = () => {
   if (isProgress.value) return
 
-  if (props.isArchived){
-    addErrorToast('アーカイブされたチャンネルではスタンプの追加 / 削除はできません')
+  if (props.isArchived) {
+    addErrorToast(
+      'アーカイブされたチャンネルではスタンプの追加 / 削除はできません'
+    )
     return
   }
 
