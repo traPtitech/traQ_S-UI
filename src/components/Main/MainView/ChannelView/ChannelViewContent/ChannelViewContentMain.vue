@@ -58,7 +58,7 @@ import MessagesScrollerSeparator from '/@/components/Main/MainView/MessagesScrol
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getFullDayString } from '/@/lib/basic/date'
-import { constructChannelPath } from '/@/router'
+import { constructChannelPath, constructChannelPathforDM } from '/@/router'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useMessagesStore } from '/@/store/entities/messages'
@@ -106,7 +106,7 @@ const createdDate = (id: MessageId) => {
   return getFullDayString(new Date(message.createdAt))
 }
 
-const { channelsMap } = useChannelsStore()
+const { channelsMap, dmChannelsMap } = useChannelsStore()
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
 )
@@ -123,10 +123,14 @@ const resetIsReachedLatest = () => {
 const showToNewMessageButton = ref(false)
 const { channelIdToPathString } = useChannelPath()
 const toNewMessage = () => {
-  if (props.entryMessageId) {
+  if (dmChannelsMap.value.has(props.channelId) && props.entryMessageId) {
+    const channelPath = channelIdToPathString(props.channelId)
+    router.replace(constructChannelPathforDM(channelPath))
+  } else if (props.entryMessageId) {
     const channelPath = channelIdToPathString(props.channelId)
     router.replace(constructChannelPath(channelPath))
   }
+
   if (scrollerEle.value === undefined) return
   scrollerEle.value.$el.scrollTo({
     top: scrollerEle.value.$el.scrollHeight
