@@ -12,9 +12,9 @@
 
 <script lang="ts" setup>
 import ProfileHeader from './ProfileHeader.vue'
-import MarkdownContent from '/@/components/UI/MarkdownContent.vue';
+import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import { computed, ref, watchEffect } from 'vue'
-import { render } from '/@/lib/markdown/markdown';
+import { render } from '/@/lib/markdown/markdown'
 
 const props = defineProps<{
   bio?: string
@@ -31,14 +31,11 @@ const content = computed(() => {
   return props.bio ?? ''
 })
 
-
 const previewRendered = ref('')
 watchEffect(async () => {
   const { renderedText } = await render(content.value)
   previewRendered.value = renderedText
 })
-
-
 </script>
 
 <style lang="scss" module>
