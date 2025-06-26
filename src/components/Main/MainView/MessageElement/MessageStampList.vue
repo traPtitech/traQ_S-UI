@@ -69,12 +69,7 @@ const props = withDefaults(
 const { myId } = useMeStore()
 const { stampsMap } = useStampsStore()
 const { addStampOptimistically, removeStampOptimistically } = useStampUpdater()
-const stampList = computed(() => {
-  const stamps = props.stamps.filter(stamp =>
-    stampsMap.value.has(stamp.stampId)
-  )
-  return createStampList(stamps, myId.value)
-})
+const stampList = computed(() => createStampList(props.stamps, myId.value))
 
 const { value: isDetailShown, toggle: toggleDetail } = useToggle(false)
 
