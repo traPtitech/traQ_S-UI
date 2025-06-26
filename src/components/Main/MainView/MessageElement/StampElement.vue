@@ -156,7 +156,7 @@ watch(isLongHovered, beginHover => {
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   cursor: pointer;
-  &[data-is-archive] {
+  &[data-is-archived] {
     cursor: not-allowed;
   }
   user-select: none;
