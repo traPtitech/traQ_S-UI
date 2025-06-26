@@ -19,7 +19,8 @@
     <section :class="$style.section">
       <h3 :class="$style.heading">ひとこと</h3>
       <div :class="$style.bioContainer">
-        <inline-markdown :content="state.bio" accept-action />
+        <!-- <inline-markdown :content="state.bio" accept-action /> -->
+         <markdown-content :content="previewRendered"/>
         <form-text-area v-model="state.bio" rows="2" :max-length="1000" />
       </div>
     </section>
@@ -53,7 +54,7 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { computed, reactive, ref, toRef } from 'vue'
+import { computed, reactive, ref, toRef, watchEffect } from 'vue'
 import type { UserDetail } from '@traptitech/traq'
 import apis, { formatResizeError } from '/@/lib/apis'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
@@ -137,7 +138,8 @@ import UserIcon from '/@/components/UI/UserIcon.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
+import { render } from '/@/lib/markdown/markdown';
 
 const { detail: detailMayBeUndefined } = useMeStore()
 
@@ -193,6 +195,12 @@ onBeforeRouteLeave(() => {
   if (!result) {
     return false
   }
+})
+
+const previewRendered = ref('')
+watchEffect(async () => {
+  const { renderedText } = await render(state.bio)
+  previewRendered.value = renderedText
 })
 </script>
 
