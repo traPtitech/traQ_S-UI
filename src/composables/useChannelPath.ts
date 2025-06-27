@@ -54,9 +54,20 @@ const useChannelPath = () => {
       return dmChannelIdToPathString(id, hashed)
     }
     const channels = channelIdToPath(id)
-    const formattedChannels = channels.slice(0, -1).map(c => c[0])
-    formattedChannels.push(channels.pop() ?? '')
-    return (hashed ? '#' : '') + formattedChannels.join('/')
+    if (channels.length >= 3){
+      const formattedChannels = channels.slice(0, -2).map(c => c[0])
+      formattedChannels.push(channels.pop() ?? '')
+      formattedChannels.push(channels.pop() ?? '')
+      return (hashed ? '#' : '') + formattedChannels.join('/')
+    } else if (channels.length == 2){
+      const formattedChannels = channels.slice(0, -1).map(c => c[0])
+      formattedChannels.push(channels.pop() ?? '')
+      return (hashed ? '#' : '') + formattedChannels.join('/')
+    } else if (channels.length == 1){
+      return (hashed ? '#' : '') + channels.join('/')
+    } else {
+      return hashed ? '#' : ''
+    }
   }
 
   const channelIdToLink = (id: ChannelId | DMChannelId) => {
