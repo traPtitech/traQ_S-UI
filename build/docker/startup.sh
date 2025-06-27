@@ -32,6 +32,21 @@ echo "Startup: set theme color to $THEME_COLOR"
 sed -i -e "s/#0D67EA/$THEME_COLOR/g" /usr/share/caddy/index.html
 
 ###
+# New Relic 設定
+###
+if [ -n "$NEW_RELIC_LICENSE_KEY" ] && [ -n "$NEW_RELIC_ACCOUNT_ID" ] && [ -n "$NEW_RELIC_TRUST_KEY" ] && [ -n "$NEW_RELIC_AGENT_ID" ] && [ -n "$NEW_RELIC_APPLICATION_ID" ]; then
+  echo "Startup: set up New Relic"
+  sed -i -e "s/LICENSE_KEY_PLACEHOLDER/$NEW_RELIC_LICENSE_KEY/" /usr/share/caddy/new-relic.js
+  sed -i -e "s/ACCOUNT_ID_PLACEHOLDER/$NEW_RELIC_ACCOUNT_ID/" /usr/share/caddy/new-relic.js
+  sed -i -e "s/TRUST_KEY_PLACEHOLDER/$NEW_RELIC_TRUST_KEY/" /usr/share/caddy/new-relic.js
+  sed -i -e "s/AGENT_ID_PLACEHOLDER/$NEW_RELIC_AGENT_ID/" /usr/share/caddy/new-relic.js
+  sed -i -e "s/APPLICATION_ID_PLACEHOLDER/$NEW_RELIC_APPLICATION_ID/" /usr/share/caddy/new-relic.js
+  sed -i -e "s/<!-- <script src=\"\/new-relic.js\"><\/script> -->/<script src=\"\/new-relic.js\"><\/script>/" /usr/share/caddy/index.html
+else
+  echo "Startup: New Relic is not configured"
+fi
+
+###
 # サーバー起動
 ###
 echo "Startup: start server"
