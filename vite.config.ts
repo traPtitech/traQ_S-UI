@@ -27,13 +27,13 @@ export default defineConfig(({ command, mode }) => ({
     port: 8080,
     proxy: {
       '/api/v3': {
-        target: "https://q.trap.jp",
+        target: DEV_SERVER_PROXY_HOST,
         changeOrigin: true,
         ws: true,
         agent: keepAliveAgent
       },
       '/api/auth': {
-        target: "https://q.trap.jp",
+        target: DEV_SERVER_PROXY_HOST,
         changeOrigin: true,
         ws: true,
         agent: keepAliveAgent
