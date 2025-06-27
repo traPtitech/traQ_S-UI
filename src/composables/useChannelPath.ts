@@ -5,10 +5,13 @@ import { channelIdToSimpleChannelPath as libChannelIdToSimpleChannelPath } from 
 import { channelPathToId } from '/@/lib/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '../store/entities/users'
+import { useChannelTree } from '/@/store/domain/channelTree'
+import { string } from 'zod'
 
 const useChannelPath = () => {
   const { channelsMap, dmChannelsMap } = useChannelsStore()
   const { usersMap } = useUsersStore()
+  const { topLevelChannels } = useChannelTree()
 
   const getUserNameByDMChannelId = (dmChannelId: DMChannelId) => {
     const dmChannel = dmChannelsMap.value.get(dmChannelId)
@@ -46,15 +49,47 @@ const useChannelPath = () => {
     return (hashed ? '#' : '') + channelIdToPath(id).join('/')
   }
 
+  const stringMinimaze = (
+    data : string[],
+    text : string
+  ): string => {
+    const index: number = data.indexOf(text);
+    if (index !== -1) {
+      data.splice(index, 1);
+    }
+    console.log(text,data)
+    for (var i=0;i < text.length;i++){
+      data = data.filter((word) => word[i] === text[i])
+      if (data.length === 0){
+        return text.slice(0,i+1)
+      }
+    }
+    return text;
+  }
+
   const channelIdToShortPathString = (
     id: ChannelId | DMChannelId,
     hashed = false
   ): string => {
+    const channelsSimple = channelIdToSimpleChannelPath(id)
+    const channelsId = channelsSimple.map((simpchan) =>  simpchan.id)
+    //const channelsName = channelsSimple.map((simpchan) =>  simpchan.name)
+    const channelsbrotherId = [topLevelChannels.value.map((x) => x.id)]
+    for (var i=1;i < channelsId.length;i++){
+      channelsbrotherId.push(channelsMap.value.get(channelsMap.value.get(channelsId[i]!)?.parentId!)?.children!)
+    }
+    const channelsbrothername = []
+    for (var i=0;i < channelsId.length;i++){
+      channelsbrothername.push(channelsbrotherId[i]?.filter((x) => !channelsMap.value.get(x)?.archived).map((x) => channelsMap.value.get(x)!.name))
+    }
     if (dmChannelsMap.value.has(id)) {
       return dmChannelIdToPathString(id, hashed)
     }
     const channels = channelIdToPath(id)
-    const formattedChannels = channels.slice(0, -1).map(c => c[0])
+    const formattedChannels = []
+    for (var i=0;i<channels.length-1;i++){
+        formattedChannels.push(stringMinimaze(channelsbrothername[i]!,channels[i]!))
+    }
     formattedChannels.push(channels.pop() ?? '')
     return (hashed ? '#' : '') + formattedChannels.join('/')
   }
