@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@pinia/testing": "^1.0.2",
-    "@stylistic/eslint-plugin-ts": "^4.4.1",
+    "@stylistic/eslint-plugin": "^4.4.1",
     "@types/autosize": "^4.0.3",
     "@types/dom-screen-wake-lock": "^1.0.3",
     "@types/katex": "^0.16.7",
