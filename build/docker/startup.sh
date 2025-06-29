@@ -41,7 +41,7 @@ if [ -n "$NEW_RELIC_LICENSE_KEY" ] && [ -n "$NEW_RELIC_ACCOUNT_ID" ] && [ -n "$N
   sed -i -e "s/TRUST_KEY_PLACEHOLDER/$NEW_RELIC_TRUST_KEY/g" /usr/share/caddy/new-relic.js
   sed -i -e "s/AGENT_ID_PLACEHOLDER/$NEW_RELIC_AGENT_ID/g" /usr/share/caddy/new-relic.js
   sed -i -e "s/APPLICATION_ID_PLACEHOLDER/$NEW_RELIC_APPLICATION_ID/g" /usr/share/caddy/new-relic.js
-  sed -i -e "s/<!-- <script src=\"\/new-relic-{hash}.js\"><\/script> -->/<script src=\"\/new-relic.js\"><\/script>/" /usr/share/caddy/index.html
+  sed -i -e "s/<!-- <script src=\"\/new-relic-{hash}.js\"><\/script> -->/<script src=\"\/new-relic-$CACHE_KEY.js\"><\/script>/" /usr/share/caddy/index.html
 else
   echo "Startup: New Relic is not configured"
 fi

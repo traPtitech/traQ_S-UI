@@ -4,7 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import js from '@eslint/js'
 import { FlatCompat } from '@eslint/eslintrc'
-import stylisticTs from '@stylistic/eslint-plugin-ts'
+import stylistic from '@stylistic/eslint-plugin'
 import cypress from 'eslint-plugin-cypress'
 import vueLint from 'eslint-plugin-vue'
 import prettier from 'eslint-config-prettier'
@@ -36,7 +36,7 @@ export default [
   {
     plugins: {
       'unused-imports': unusedImports,
-      '@stylistic/ts': stylisticTs
+      '@stylistic/ts': stylistic
     },
 
     linterOptions: {
