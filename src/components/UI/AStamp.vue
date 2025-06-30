@@ -33,7 +33,9 @@ const props = withDefaults(
 
 const { stampsMap } = useStampsStore()
 
-const name = computed(() => stampsMap.value.get(props.stampId)?.name ?? '')
+const name = computed(
+  () => stampsMap.value.get(props.stampId)?.name ?? 'unknown stamp'
+)
 const imageUrl = computed(() => {
   const fileId = stampsMap.value.get(props.stampId)?.fileId
   return fileId ? buildFilePath(fileId) : ''

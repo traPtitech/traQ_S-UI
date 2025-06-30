@@ -48,7 +48,7 @@ const emit = defineEmits<{
 const containerEle = ref<HTMLDivElement>()
 const { stampsMap } = useStampsStore()
 const stampName = computed(
-  () => stampsMap.value.get(props.stamp.id)?.name ?? ''
+  () => stampsMap.value.get(props.stamp.id)?.name ?? 'unknown stamp'
 )
 const stylePosition = computed(() => {
   if (!props.targetRect) return { display: 'none' }
