@@ -71,9 +71,10 @@ export default defineConfig(({ command, mode }) => ({
   css: {
     preprocessorOptions: {
       scss: {
+        api: 'modern-compiler',
         additionalData: `
           @use "sass:math";
-          @import "/@/styles/common.scss";
+          @use "/@/styles/common.scss" as *;
         `,
         charset: false
       }
@@ -128,6 +129,9 @@ export default defineConfig(({ command, mode }) => ({
     brotli()
   ],
   test: {
+    env: {
+      TZ: 'UTC'
+    },
     include: ['tests/unit/**/*.spec.ts'],
     globals: true,
     setupFiles: ['tests/unit/setup.ts', 'tests/unit/expectExtends.ts'],

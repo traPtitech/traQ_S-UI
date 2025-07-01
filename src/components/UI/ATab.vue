@@ -28,6 +28,7 @@ defineExpose({ focus })
   padding: 0.25rem 1rem;
   cursor: pointer;
   position: relative;
+  isolation: isolate;
   @include color-ui-secondary;
 
   &[aria-selected='true'] {

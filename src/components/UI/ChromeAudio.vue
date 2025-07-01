@@ -1,7 +1,7 @@
 <template>
   <div v-if="!cantPlay" :class="$style.container">
     <audio-player-play-button
-      v-model:isPlaying="isPlaying"
+      v-model:is-playing="isPlaying"
       :class="$style.icon"
       :size="20"
     />
@@ -31,7 +31,7 @@
       対応していないファイル形式でした
     </div>
   </div>
-  <div></div>
+  <div />
 </template>
 
 <script lang="ts" setup>

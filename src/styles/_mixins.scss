@@ -1,4 +1,5 @@
-@import './variables';
+@use 'variables';
+@forward 'variables';
 
 @mixin size-h1 {
   font-size: 1.5rem;
@@ -20,70 +21,70 @@
 }
 
 @mixin background-accent-primary {
-  background: $theme-accent-primary-background;
+  background: variables.$theme-accent-primary-background;
 }
 
 @mixin color-accent-primary {
-  color: $theme-accent-primary-default;
+  color: variables.$theme-accent-primary-default;
 }
 @mixin color-accent-primary-inactive {
-  color: $theme-accent-primary-inactive;
+  color: variables.$theme-accent-primary-inactive;
 }
 
 @mixin background-accent-error {
-  background: $theme-accent-error-default;
+  background: variables.$theme-accent-error-default;
 }
 
 @mixin background-primary {
-  background: $theme-background-primary-default;
+  background: variables.$theme-background-primary-default;
 }
 @mixin background-secondary {
-  background: $theme-background-secondary-default;
+  background: variables.$theme-background-secondary-default;
 }
 @mixin background-tertiary {
-  background: $theme-background-tertiary-default;
+  background: variables.$theme-background-tertiary-default;
 }
 
 @mixin color-ui-primary {
-  color: $theme-ui-primary-default;
+  color: variables.$theme-ui-primary-default;
 }
 @mixin color-ui-primary-inactive {
-  color: $theme-ui-primary-inactive;
+  color: variables.$theme-ui-primary-inactive;
 }
 @mixin color-ui-secondary {
-  color: $theme-ui-secondary-default;
+  color: variables.$theme-ui-secondary-default;
 }
 @mixin color-ui-secondary-inactive {
-  color: $theme-ui-secondary-inactive;
+  color: variables.$theme-ui-secondary-inactive;
 }
 @mixin color-ui-tertiary {
-  color: $theme-ui-tertiary-default;
+  color: variables.$theme-ui-tertiary-default;
 }
 
 @mixin color-text-primary {
-  color: $theme-text-primary-default;
+  color: variables.$theme-text-primary-default;
 }
 @mixin color-text-secondary {
-  color: $theme-text-secondary-default;
+  color: variables.$theme-text-secondary-default;
 }
 
 // -----
 
 @mixin color-common-text-white-primary {
-  color: $common-text-white-primary;
+  color: variables.$common-text-white-primary;
 }
 @mixin color-common-text-white-secondary {
-  color: $common-text-white-secondary;
+  color: variables.$common-text-white-secondary;
 }
 @mixin color-common-text-black {
-  color: $common-text-black;
+  color: variables.$common-text-black;
 }
 @mixin background-common-overlay {
-  background: $common-background-overlay;
+  background: variables.$common-background-overlay;
 }
 @mixin background-common-black {
-  background: $common-background-black;
+  background: variables.$common-background-black;
 }
 @mixin drop-shadow-default {
-  filter: $common-drop-shadow-default;
+  filter: variables.$common-drop-shadow-default;
 }

@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.title">{{ name }}</div>
+    <div :class="$style.title">
+      {{ name }}
+    </div>
     <div :class="$style.sliderContainer">
       <audio-player-time-slider
         v-model:current-time="currentTime"

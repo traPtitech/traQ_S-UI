@@ -6,8 +6,8 @@
     :aria-disabled="disabled"
     @click="toggle"
   >
-    <div :class="$style.bg"></div>
-    <div :class="$style.knob"></div>
+    <div :class="$style.bg" />
+    <div :class="$style.knob" />
   </div>
 </template>
 

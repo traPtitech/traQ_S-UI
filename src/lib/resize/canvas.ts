@@ -22,7 +22,9 @@ export const resetCanvas = (
   $canvas.width = width
   $canvas.height = height
   if ($img) {
-    $canvas.getContext('2d')?.drawImage($img, 0, 0)
+    $canvas
+      .getContext('2d')
+      ?.drawImage($img, 0, 0, $canvas.width, $canvas.height)
   }
 }
 

@@ -7,6 +7,7 @@
       :alt="name"
       :title="!withoutTitle ? name : undefined"
       draggable="false"
+      @contextmenu="noContextMenu ? $event.preventDefault() : undefined"
     />
   </div>
 </template>
@@ -22,6 +23,7 @@ const props = withDefaults(
     stampId: StampId
     size?: number
     withoutTitle?: boolean
+    noContextMenu?: boolean
   }>(),
   {
     size: 24,

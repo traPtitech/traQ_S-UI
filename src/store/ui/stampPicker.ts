@@ -1,10 +1,12 @@
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { throttle } from 'throttle-debounce'
 import type { Ref } from 'vue'
 import { computed, ref, watch, watchEffect } from 'vue'
 import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
+import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 import type { Point } from '/@/lib/basic/point'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { StampId } from '/@/types/entity-ids'
 
@@ -17,20 +19,24 @@ export type StampSelectHandler = (stamp: SelectedStampData) => void
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const defaultSelectHandler = (_: SelectedStampData) => {}
 
-export type AlignmentPosition = `top-${'left' | 'right'}` | 'bottom-right'
+export type AlignmentPosition = `${'top' | 'bottom'}-${'left' | 'right'}`
 
 const MARGIN_BETWEEN = 4
 const getBottomLeftPosition = (rect: DOMRect) => ({
   x: rect.left,
   y: rect.bottom + MARGIN_BETWEEN
 })
+const getBottomRightPosition = (rect: DOMRect) => ({
+  x: rect.right,
+  y: rect.bottom + MARGIN_BETWEEN
+})
 const getTopRightPosition = (rect: DOMRect) => ({
   x: rect.right,
   y: rect.top - MARGIN_BETWEEN
 })
-const getBottomRightPosition = (rect: DOMRect) => ({
-  x: rect.right,
-  y: rect.bottom + MARGIN_BETWEEN
+const getTopLeftPosition = (rect: DOMRect) => ({
+  x: rect.left,
+  y: rect.top - MARGIN_BETWEEN
 })
 
 const getPositionFromAlignment = (
@@ -46,15 +52,42 @@ const getPositionFromAlignment = (
       return getBottomRightPosition(rect)
     case 'bottom-right':
       return getTopRightPosition(rect)
+    case 'bottom-left':
+      return getTopLeftPosition(rect)
   }
 }
 
 const useStampPickerPinia = defineStore('ui/stampPicker', () => {
   const selectHandler = ref<StampSelectHandler>(defaultSelectHandler)
-  const currentStampSet = ref<StampSet>({
+
+  const initialStampSetValue: StampSet = {
     type: 'history',
     id: ''
+  }
+  const [state] = useIndexedDbValue(
+    'store/ui/stampPicker/currentStampSet',
+    1,
+    {},
+    initialStampSetValue
+  )
+
+  const { nonEmptyStampPaletteIds } = useStampPalettesStore()
+  const currentStampSet = computed({
+    get: () => state,
+    set: (newValue: StampSet) => {
+      state.id = newValue.id
+      state.type = newValue.type
+    }
   })
+
+  const validateCurrentStampSet = () => {
+    if (currentStampSet.value.type !== 'palette') return
+    if (!nonEmptyStampPaletteIds.value.includes(currentStampSet.value.id)) {
+      currentStampSet.value.type = 'history'
+      currentStampSet.value.id = ''
+    }
+  }
+
   const isEffectEnabled = ref(false)
   const position = ref<Point>()
   const alignment = ref<AlignmentPosition>('top-right')
@@ -70,6 +103,7 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
   return {
     selectHandler,
     currentStampSet,
+    validateCurrentStampSet,
     isEffectEnabled,
     position,
     alignment,
@@ -88,7 +122,7 @@ export const useStampPicker = convertToRefsStore(useStampPickerPinia)
  */
 export const useStampPickerInvoker = (
   newSelectHandler: StampSelectHandler,
-  element: Ref<HTMLElement | undefined>,
+  element: Ref<HTMLElement | undefined | null>,
   argIsEffectEnabled: boolean,
   newAlignment: AlignmentPosition = 'top-right'
 ) => {

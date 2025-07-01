@@ -30,7 +30,10 @@ import GradeBadge from './GradeBadge.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
 import type { UserId } from '/@/types/entity-ids'
-import { getDisplayDate, getFullDayWithTimeString } from '/@/lib/basic/date'
+import {
+  getDateRepresentation,
+  getFullDayWithTimeString
+} from '/@/lib/basic/date'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
@@ -49,7 +52,7 @@ if (user.value === undefined) {
 const createdDate = computed(() =>
   getFullDayWithTimeString(new Date(props.createdAt))
 )
-const date = computed(() => getDisplayDate(props.createdAt, props.updatedAt))
+const date = computed(() => getDateRepresentation(props.updatedAt))
 </script>
 
 <style lang="scss" module>

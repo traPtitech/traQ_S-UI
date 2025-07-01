@@ -7,7 +7,7 @@
       <router-view />
     </desktop-setting-modal>
   </div>
-  <div v-else></div>
+  <div v-else />
 </template>
 
 <script lang="ts">

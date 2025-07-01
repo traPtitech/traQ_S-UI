@@ -37,42 +37,65 @@
           @change-theme="changeTheme"
         />
       </div>
-      <div>
-        <template v-if="state.type === 'custom'">
-          <div :class="$style.setting">
-            <div
-              v-for="(val, category) in state.custom.basic"
-              :key="category"
-              :class="$style.category"
-            >
-              <h4 class>{{ category }}</h4>
-              <div
-                v-for="(color, name) in val"
-                :key="name"
-                :class="$style.color"
-              >
-                <p :class="$style.name">{{ name }}</p>
-                <!-- eslint-disable vue/valid-v-model -->
-                <!-- TODO: 自動適用じゃなくてバリデーションしてから適用するようにする -->
-                <form-input
-                  v-model="(val[name as keyof typeof val] as string)"
-                  use-change-event
-                  on-secondary
-                  :class="$style.input"
+    </div>
+
+    <div>
+      <template v-if="state.type === 'custom'">
+        <div :class="$style.setting">
+          <div
+            v-for="(val, category) in state.custom.basic"
+            :key="category"
+            :class="$style.category"
+          >
+            <h4 class>
+              {{ category }}
+            </h4>
+            <div v-for="(color, name) in val" :key="name" :class="$style.color">
+              <p :class="$style.name">
+                {{ name }}
+              </p>
+              <!-- eslint-disable vue/valid-v-model -->
+              <!-- TODO: 自動適用じゃなくてバリデーションしてから適用するようにする -->
+              <form-input
+                v-model="val[name as keyof typeof val] as string"
+                use-change-event
+                on-secondary
+                :class="$style.input"
+              />
+              <!-- eslint-enable vue/valid-v-model --->
+              <div>
+                <input
+                  v-model="val[name as keyof typeof val] as string"
+                  type="color"
+                  :class="$style.colorInput"
                 />
-                <!-- eslint-enable vue/valid-v-model -->
               </div>
             </div>
           </div>
-        </template>
-        <p v-else>カスタムテーマが選択されていません</p>
-      </div>
+        </div>
+      </template>
+      <p v-else>カスタムテーマが選択されていません</p>
+    </div>
+    <div :class="$style.resetButtonContainer">
+      <form-button
+        v-if="state.type === 'custom'"
+        type="tertiary"
+        label="ライトにリセット"
+        @click="resetToLight"
+      />
+      <form-button
+        v-if="state.type === 'custom'"
+        type="tertiary"
+        label="ダークにリセット"
+        @click="resetToDark"
+      />
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
 import EditTheme from '/@/components/Settings/ThemeTab/EditTheme.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import { reactive } from 'vue'
@@ -82,6 +105,13 @@ import { useThemeSettings } from '/@/store/app/themeSettings'
 const state = reactive(useThemeSettings())
 const changeTheme = (theme: Theme) => {
   state.custom = theme
+}
+
+const resetToLight = () => {
+  changeTheme(structuredClone(window.defaultLightTheme))
+}
+const resetToDark = () => {
+  changeTheme(structuredClone(window.defaultDarkTheme))
 }
 </script>
 
@@ -117,13 +147,22 @@ const changeTheme = (theme: Theme) => {
   .color {
     display: flex;
     margin: 4px 0;
+    gap: 0.5rem;
   }
   .name {
     @include color-ui-secondary;
-    margin-right: 8px;
   }
   .input {
     margin-left: auto;
   }
+}
+.resetButtonContainer {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+.colorInput {
+  width: 3rem;
+  height: 100%;
 }
 </style>

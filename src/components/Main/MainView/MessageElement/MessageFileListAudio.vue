@@ -2,12 +2,14 @@
   <router-link :to="fileLink" :class="$style.container">
     <div :class="$style.header">
       <audio-player-play-button
-        v-model:isPlaying="isPlaying"
+        v-model:is-playing="isPlaying"
         :class="$style.icon"
         :size="32"
         :disabled="cantPlay"
       />
-      <div :class="$style.title">{{ name }}</div>
+      <div :class="$style.title">
+        {{ name }}
+      </div>
       <div :class="$style.headerTools">
         <audio-player-time
           :class="$style.time"

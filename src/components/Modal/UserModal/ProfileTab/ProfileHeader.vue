@@ -1,5 +1,7 @@
 <template>
-  <h2 :class="$style.header">{{ text }}</h2>
+  <h2 :class="$style.header">
+    {{ text }}
+  </h2>
 </template>
 
 <script lang="ts" setup>

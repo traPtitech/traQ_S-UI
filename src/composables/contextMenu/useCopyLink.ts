@@ -9,12 +9,12 @@ const useCopyLink = (messageId: Ref<MessageId>) => {
 
   const copyLink = async () => {
     const link = `${embeddingOrigin}${constructMessagesPath(messageId.value)}`
-    await copyText(link)
+    await copyText(link, 'メッセージリンク')
   }
 
   const copyEmbedded = async () => {
     const link = `<iframe src="${embeddingOrigin}/widget/?type=message&id=${messageId.value}" scrolling="no" frameborder="no" width="600"></iframe>`
-    await copyText(link)
+    await copyText(link, '埋め込み')
   }
 
   return { copyLink, copyEmbedded }

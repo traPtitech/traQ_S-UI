@@ -14,7 +14,11 @@ export const toRawDeep = (value: any, map = new WeakMap()) => {
     return map.get(value)
   }
 
-  if (!Array.isArray(value) && !isPlainObject(value)) {
+  if (
+    !Array.isArray(value) &&
+    !isPlainObject(value) &&
+    !(value instanceof Map)
+  ) {
     return value
   }
 
@@ -25,6 +29,8 @@ export const toRawDeep = (value: any, map = new WeakMap()) => {
     for (let i = 0; i < newValue.length; i++) {
       newValue[i] = toRawDeep(newValue[i], map)
     }
+  } else if (newValue instanceof Map) {
+    newValue.forEach((v, k) => newValue.set(k, toRawDeep(v, map)))
   } else {
     for (const k of Object.keys(newValue)) {
       newValue[k] = toRawDeep(newValue[k], map)

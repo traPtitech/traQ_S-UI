@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div :class="$style.label">{{ label }}</div>
+    <div :class="$style.label">
+      {{ label }}
+    </div>
     <div v-if="isEditing" :class="$style.inputWrapper">
       <form-input
         ref="inputRef"
