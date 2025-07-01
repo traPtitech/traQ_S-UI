@@ -89,7 +89,6 @@ const useChannelPath = () => {
       let count = 0;
       let comfusable = false
       for (const element of parent_similar_brother) {
-        let array = channelsMap.value.get(element)?.children
         if (channelsMap.value.get(element)?.children!.length !== 0){
           for (const element_child of channelsMap.value.get(element)?.children!){
             if (channelsMap.value.get(element_child)!.name === channelsMap.value.get(child)!.name) {
