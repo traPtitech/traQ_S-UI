@@ -88,7 +88,7 @@ const useChannelPath = () => {
       const parent_similar_brother = parent_brother.filter((x) => channelsMap.value.get(x)!.name[0]! === channelsMap.value.get(parent)!.name[0])
       let count = 0;
       let comfusable = false
-      for (const element of parent_similar_brother) {
+      for (const element of parent_brother) {
         if (channelsMap.value.get(element)?.children!.length !== 0){
           for (const element_child of channelsMap.value.get(element)?.children!){
             if (channelsMap.value.get(element_child)!.name === channelsMap.value.get(child)!.name) {
@@ -112,27 +112,19 @@ const useChannelPath = () => {
         if (path.length <= maxPathLength){
           return (hashed ? '#' : '') + path
         } else {
-          console.log(path)
           formattedChannels[formattedChannels.length-2] = ""
           const nonParentPath = formattedChannels.join("/")
           const nonParentPathsLength = nonParentPath.length
-          console.log(nonParentPath)
           const N = Math.min(Math.max(maxPathLength - nonParentPathsLength,1),parent_name.length)
-          console.log(N)
           formattedChannels[formattedChannels.length-2] = parent_name.slice(0,N)
           const boundedPath = formattedChannels.join("/")
-          console.log(boundedPath)
           const parent_similar_brother_name = parent_similar_brother.map((x) => channelsMap.value.get(x)!.name)
           const shorted_parent_name = stringMinimaze(parent_similar_brother_name,parent_name)
           formattedChannels[formattedChannels.length-2] = shorted_parent_name
           const ShortedPath = formattedChannels.join("/")
-          console.log(ShortedPath)
-          console.log("xcvvvfgtewsgbi dnbp iugjipdsbzmgu svnmn uidgkjlsrevadar")
           if (N > shorted_parent_name.length){
-            console.log("bounded")
             return (hashed ? '#' : '') + boundedPath
           } else {
-            console.log("shorted")
             return (hashed ? '#' : '') + ShortedPath
           }
         }
@@ -142,7 +134,7 @@ const useChannelPath = () => {
         formattedChannels.push(child_name ?? '')
         return (hashed ? '#' : '') + formattedChannels.join("/")
       }
-    } else if (channels.length == 2){
+    } else if (channels.length === 2){
       const child_name = channels.pop() ?? ''
       const parent_name = channels.pop() ?? ''
       const confusable_parents : string[] = []
@@ -154,7 +146,7 @@ const useChannelPath = () => {
       }
       const shorted_parent = stringMinimaze(confusable_parents,parent_name)
       return (hashed ? '#' : '') + shorted_parent + "/" + child_name
-    } else if (channels.length == 1){
+    } else if (channels.length === 1){
       const path = channels[0]
       return (hashed ? '#' : '') + path
     } else {
