@@ -61,13 +61,16 @@ const id = randomString()
     @include background-primary;
   }
   border-radius: 4px;
-  height: 30px;
-  :global(.vs__dropdown-toggle),
+  // height: 35px;
   :global(.vs__selected-options),
   :global(.vs__actions),
   :global(.vs__selected),
   :global(.vs__search) {
     height: 100%;
+  }
+  :global(.vs__dropdown-toggle){
+    height: 100%;
+    align-items: center;
   }
 
   // Search Input
