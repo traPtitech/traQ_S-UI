@@ -124,11 +124,10 @@ const showToNewMessageButton = ref(false)
 const { channelIdToPathString } = useChannelPath()
 const toNewMessage = () => {
   if (props.entryMessageId) {
+    const channelPath = channelIdToPathString(props.channelId)
     if (dmChannelsMap.value.has(props.channelId)) {
-      const channelPath = channelIdToPathString(props.channelId)
       router.replace(constructUserPath(channelPath))
     } else {
-      const channelPath = channelIdToPathString(props.channelId)
       router.replace(constructChannelPath(channelPath))
     }
   }
