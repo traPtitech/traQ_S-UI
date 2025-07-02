@@ -67,6 +67,7 @@ const id = randomString()
   :global(.vs__selected),
   :global(.vs__search) {
     height: 100%;
+    margin: 2px 2px 0;
   }
   :global(.vs__dropdown-toggle) {
     height: 100%;
