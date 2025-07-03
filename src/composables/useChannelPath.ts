@@ -125,23 +125,24 @@ const useChannelPath = () => {
       return formattedChannels.join('/')
     }
     if (channelsId.length >= 2){
-      let channelIndex = channelsSimple.length-1 // その名前のいとこチャンネルがいないかを検査するべきチャンネルのindex
-      while (channelIndex > 0 && isHavingSameNameCousin(channelsId[channelIndex]!) && formattedChannels.join('/').length < maxPathLength){
-        formattedChannels[channelIndex-1] = channelsName[channelIndex-1]
-        channelIndex--;
+      let extendChannelIndex = channelsSimple.length-1 // その名前のいとこチャンネルがいないかを検査するべきチャンネルのindex
+      while (extendChannelIndex > 0 && isHavingSameNameCousin(channelsId[extendChannelIndex]!) && formattedChannels.join('/').length < maxPathLength){
+        formattedChannels[extendChannelIndex-1] = channelsName[extendChannelIndex-1]
+        extendChannelIndex--;
       }
       if (formattedChannels.join('/').length > maxPathLength){   //この先の処理をもっと続ける必要がある。頑張って省略処理を書く
-        //以降、channelIndexは、そのチャンネルをUniqueIniatalに変えるか検討するチャンネルのindexを指す
-        while (formattedChannels.join('/').length > maxPathLength && channelIndex < channelsSimple.length-2){
-          formattedChannels[channelIndex] = ChannelIdToUniqueInital(channelsId[channelIndex]!)
-          channelIndex++;
+        let shortenChannelIndex = extendChannelIndex;
+        while (formattedChannels.join('/').length > maxPathLength && shortenChannelIndex < channelsSimple.length-2){
+          formattedChannels[shortenChannelIndex] = ChannelIdToUniqueInital(channelsId[shortenChannelIndex]!)
+          shortenChannelIndex++;
         }
         if (formattedChannels.join('/').length <= maxPathLength){
           return (hashed ? '#' : '') + formattedChannels.join("/")
         }
-        while (formattedChannels.join('/').length > maxPathLength && channelIndex < channelsSimple.length-2){
-          formattedChannels[channelIndex] = channelsInit[channelIndex]
-          channelIndex++;
+        let replaceInitialChannelIndex = extendChannelIndex;
+        while (formattedChannels.join('/').length > maxPathLength && replaceInitialChannelIndex < channelsSimple.length-2){
+          formattedChannels[replaceInitialChannelIndex] = channelsInit[replaceInitialChannelIndex]
+          replaceInitialChannelIndex++;
         }
         return (hashed ? '#' : '') + formattedChannels.join("/")
       } else {  
