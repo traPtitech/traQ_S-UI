@@ -56,7 +56,7 @@ const { stampsMap } = useStampsStore()
 const { addErrorToast } = useToastStore()
 
 const stampName = computed(
-  () => stampsMap.value.get(props.stamp.id)?.name ?? ''
+  () => stampsMap.value.get(props.stamp.id)?.name ?? 'unknown stamp'
 )
 
 const tooltip = computed(
