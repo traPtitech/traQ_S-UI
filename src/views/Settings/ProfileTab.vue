@@ -19,7 +19,6 @@
     <section :class="$style.section">
       <h3 :class="$style.heading">ひとこと</h3>
       <div :class="$style.bioContainer">
-        <!-- <inline-markdown :content="state.bio" accept-action /> -->
         <markdown-content :content="previewRendered" />
         <form-text-area v-model="state.bio" rows="2" :max-length="1000" />
       </div>
