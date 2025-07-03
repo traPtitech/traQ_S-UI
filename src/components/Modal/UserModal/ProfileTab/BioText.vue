@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 import ProfileHeader from './ProfileHeader.vue'
-import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue';
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import { computed } from 'vue'
 
 const props = defineProps<{
