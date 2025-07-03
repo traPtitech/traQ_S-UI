@@ -5,10 +5,13 @@ import { channelIdToSimpleChannelPath as libChannelIdToSimpleChannelPath } from 
 import { channelPathToId } from '/@/lib/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '../store/entities/users'
+import { useChannelTree } from '/@/store/domain/channelTree'
 
 const useChannelPath = () => {
   const { channelsMap, dmChannelsMap } = useChannelsStore()
   const { usersMap } = useUsersStore()
+  const { topLevelChannels } = useChannelTree()
+
 
   const getUserNameByDMChannelId = (dmChannelId: DMChannelId) => {
     const dmChannel = dmChannelsMap.value.get(dmChannelId)
@@ -46,6 +49,63 @@ const useChannelPath = () => {
     return (hashed ? '#' : '') + channelIdToPath(id).join('/')
   }
 
+  const stringMinimazer = (  //引数を直接変更してるのなんとかしろや ← 何とかしてやったぞ過去の俺よ
+    data_ : string[],
+    text : string
+  ): string => {
+    const data = data_.concat()
+    const index: number = data.indexOf(text);
+    if (index !== -1) {
+      data.splice(index, 1);
+    }
+    for (let i=0;i < text.length;i++){
+      const data_filltered = data.filter((word) => word[i] === text[i])
+      if (data_filltered.length === 0){
+        return text.slice(0,i+1)
+      }
+    }
+    return text;
+  }
+
+  const channelIdToBrotherId = (
+    id : string
+  ): string[] => {
+    const parentId = channelsMap.value.get(id)?.parentId
+    if (parentId === null){
+      return topLevelChannels.value.map((c) => c.id)
+    } else if (parentId === undefined){
+      return [""]   // もはや言い訳のような返り値である。Asertionよりまし？
+    } else {
+      return channelsMap.value.get(parentId)?.children ?? [""]
+    }
+  }
+
+  const isHavingSameNameCousin = (
+    id : string
+  ): boolean => {
+    const selfName = channelsMap.value.get(id)?.name
+    const brothersId = channelIdToBrotherId(id).filter((c) => c !== id)
+    for (const brother of brothersId){
+      const brotherChildId = channelsMap.value.get(brother)?.children ?? []
+      for (const cousinId of brotherChildId){
+        const cousinName = channelsMap.value.get(cousinId)?.name
+        if (cousinName === selfName){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  const ChannelIdToUniqueInital = (
+    id : string
+  ): string => {
+    const selfName = channelsMap.value.get(id)?.name!
+    const brothersId = channelIdToBrotherId(id).filter((c) => c !== id)
+    const brothersName = brothersId.map((c) => channelsMap.value.get(c)?.name ?? "")
+    return stringMinimazer(brothersName,selfName)
+  }
+
   const channelIdToShortPathString = (
     id: ChannelId | DMChannelId,
     hashed = false
@@ -53,10 +113,45 @@ const useChannelPath = () => {
     if (dmChannelsMap.value.has(id)) {
       return dmChannelIdToPathString(id, hashed)
     }
-    const channels = channelIdToPath(id)
-    const formattedChannels = channels.slice(0, -1).map(c => c[0])
-    formattedChannels.push(channels.pop() ?? '')
-    return (hashed ? '#' : '') + formattedChannels.join('/')
+    const maxPathLength = 20
+    const channelsSimple = channelIdToSimpleChannelPath(id)
+    const channelsId = channelsSimple.map((simpchan) =>  simpchan.id)
+    const channelsName = channelsSimple.map((simpchan) =>  simpchan.name)
+    const channelsInit = channelsName.map((c) => c[0])
+    const formattedChannels = channelsInit.slice(0,-1)
+    formattedChannels.push(channelsName[channelsName.length-1])
+    if (formattedChannels.join('/').length >= maxPathLength){
+      return formattedChannels.join('/')
+    }
+    if (channelsId.length >= 2){
+      let channelIndex = channelsSimple.length-1 // その名前のいとこチャンネルがいないかを検査するべきチャンネルのindex
+      while (channelIndex > 0 && isHavingSameNameCousin(channelsId[channelIndex]!) && formattedChannels.join('/').length < maxPathLength){
+        formattedChannels[channelIndex-1] = channelsName[channelIndex-1]
+        channelIndex--;
+      }
+      if (formattedChannels.join('/').length > maxPathLength){   //この先の処理をもっと続ける必要がある。頑張って省略処理を書く
+        //以降、channelIndexは、そのチャンネルをUniqueIniatalに変えるか検討するチャンネルのindexを指す
+        while (formattedChannels.join('/').length > maxPathLength && channelIndex < channelsSimple.length-2){
+          formattedChannels[channelIndex] = ChannelIdToUniqueInital(channelsId[channelIndex]!)
+          channelIndex++;
+        }
+        if (formattedChannels.join('/').length <= maxPathLength){
+          return (hashed ? '#' : '') + formattedChannels.join("/")
+        }
+        while (formattedChannels.join('/').length > maxPathLength && channelIndex < channelsSimple.length-2){
+          formattedChannels[channelIndex] = channelsInit[channelIndex]
+          channelIndex++;
+        }
+        return (hashed ? '#' : '') + formattedChannels.join("/")
+      } else {  // ここの else は、if(channelIndex === 0 || !isHavingSameNameCousin(channelsId[channelIndex+1]!)) でいいかもしれないが、そうすると必ずreturnされる保証が自動的にはされないので悩みものである。
+        return (hashed ? '#' : '') + formattedChannels.join("/")
+      }
+    } else if (channelsId.length === 1){
+      const path = channelsName[0]
+      return (hashed ? '#' : '') + path
+    } else {
+      return hashed ? '#' : ''
+    }
   }
 
   const channelIdToLink = (id: ChannelId | DMChannelId) => {
