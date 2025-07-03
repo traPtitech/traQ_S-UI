@@ -50,17 +50,17 @@ const useChannelPath = () => {
   }
 
   const stringMinimazer = (  //引数を直接変更してるのなんとかしろや ← 何とかしてやったぞ過去の俺よ
-    data_ : string[],
+    data : string[],
     text : string
   ): string => {
-    const data = data_.concat()
-    const index: number = data.indexOf(text);
+    let data_ : string[] = data.concat()
+    const index: number = data_.indexOf(text);
     if (index !== -1) {
-      data.splice(index, 1);
+      data_.splice(index, 1);
     }
     for (let i=0;i < text.length;i++){
-      const data_filltered = data.filter((word) => word[i] === text[i])
-      if (data_filltered.length === 0){
+      data_ = data_.filter((word) => word[i] === text[i])
+      if (data_.length === 0){
         return text.slice(0,i+1)
       }
     }
@@ -72,11 +72,11 @@ const useChannelPath = () => {
   ): string[] => {
     const parentId = channelsMap.value.get(id)?.parentId
     if (parentId === null){
-      return topLevelChannels.value.map((c) => c.id)
+      return topLevelChannels.value.filter((c) => !c.archived).map((c) => c.id)
     } else if (parentId === undefined){
       return [""]   // もはや言い訳のような返り値である。Asertionよりまし？
     } else {
-      return channelsMap.value.get(parentId)?.children ?? [""]
+      return channelsMap.value.get(parentId)?.children.filter((c) => !channelsMap.value.get(c)?.archived) ?? [""]
     }
   }
 
@@ -84,8 +84,9 @@ const useChannelPath = () => {
     id : string
   ): boolean => {
     const selfName = channelsMap.value.get(id)?.name
-    const brothersId = channelIdToBrotherId(id).filter((c) => c !== id)
-    for (const brother of brothersId){
+    const parentId = channelsMap.value.get(id)?.parentId
+    const parentbrothersId = channelIdToBrotherId(parentId!).filter((c) => c !== parentId)
+    for (const brother of parentbrothersId){
       const brotherChildId = channelsMap.value.get(brother)?.children ?? []
       for (const cousinId of brotherChildId){
         const cousinName = channelsMap.value.get(cousinId)?.name
@@ -100,10 +101,10 @@ const useChannelPath = () => {
   const ChannelIdToUniqueInital = (
     id : string
   ): string => {
-    const selfName = channelsMap.value.get(id)?.name!
+    const selfName = channelsMap.value.get(id)?.name
     const brothersId = channelIdToBrotherId(id).filter((c) => c !== id)
     const brothersName = brothersId.map((c) => channelsMap.value.get(c)?.name ?? "")
-    return stringMinimazer(brothersName,selfName)
+    return stringMinimazer(brothersName,selfName!)
   }
 
   const channelIdToShortPathString = (
@@ -143,7 +144,7 @@ const useChannelPath = () => {
           channelIndex++;
         }
         return (hashed ? '#' : '') + formattedChannels.join("/")
-      } else {  // ここの else は、if(channelIndex === 0 || !isHavingSameNameCousin(channelsId[channelIndex+1]!)) でいいかもしれないが、そうすると必ずreturnされる保証が自動的にはされないので悩みものである。
+      } else {  
         return (hashed ? '#' : '') + formattedChannels.join("/")
       }
     } else if (channelsId.length === 1){
