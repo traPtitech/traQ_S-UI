@@ -144,6 +144,10 @@ const useChannelPath = () => {
           formattedChannels[replaceInitialChannelIndex] = channelsInit[replaceInitialChannelIndex]
           replaceInitialChannelIndex++;
         }
+        if (formattedChannels.join('/').length <= maxPathLength){
+          return (hashed ? '#' : '') + formattedChannels.join("/")
+        }
+        formattedChannels[channelsSimple.length-2] = ChannelIdToUniqueInital(channelsId[channelsSimple.length-2]!)
         return (hashed ? '#' : '') + formattedChannels.join("/")
       } else {  
         return (hashed ? '#' : '') + formattedChannels.join("/")
