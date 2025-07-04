@@ -10,6 +10,7 @@
     <link-buttons
       :home-channel-id="detail?.homeChannel"
       :user-name="user.name"
+      :class="$style.buttons"
       show-title
     />
   </section>
@@ -38,5 +39,8 @@ defineProps<{
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+.buttons {
+ margin: 8px 0;
 }
 </style>
