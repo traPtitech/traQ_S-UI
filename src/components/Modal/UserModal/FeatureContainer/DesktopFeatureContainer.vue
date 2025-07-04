@@ -41,6 +41,6 @@ defineProps<{
   gap: 2px;
 }
 .buttons {
- margin: 8px 0;
+  margin: 8px 0;
 }
 </style>

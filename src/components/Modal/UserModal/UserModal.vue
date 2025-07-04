@@ -1,7 +1,6 @@
 <template>
   <click-outside stop @click-outside="clearModal">
     <div :class="$style.wrapper" data-testid="usermodal">
-
       <link-button
         :class="$style.editProfile"
         icon-name="pencil"
@@ -84,9 +83,8 @@ const user = computed(() => usersMap.value.get(props.id)!)
 const { userDetail } = useUserDetail(props)
 
 const onEditProfileClick = async (event: MouseEvent) => {
-  openLinkAndClearModal(event, "/settings/profile")
+  openLinkAndClearModal(event, '/settings/profile')
 }
-
 </script>
 
 <style lang="scss" module>
@@ -145,7 +143,4 @@ const onEditProfileClick = async (event: MouseEvent) => {
     margin-right: 0;
   }
 }
-
-
-
 </style>
