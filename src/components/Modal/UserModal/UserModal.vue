@@ -1,6 +1,14 @@
 <template>
   <click-outside stop @click-outside="clearModal">
     <div :class="$style.wrapper" data-testid="usermodal">
+
+      <link-button
+        :class="$style.editProfile"
+        icon-name="pencil"
+        icon-mdi
+        @mousedown="onEditProfileClick"
+      />
+
       <close-button
         :size="isMobile ? 24 : 32"
         :class="$style.close"
@@ -43,6 +51,8 @@ import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
 import NavigationSelector from './NavigationSelector.vue'
 import NavigationContent from './NavigationContent.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
+import LinkButton from '/@/components/Modal/UserModal/FeatureContainer/LinkButton.vue'
+import { useOpenLinkAndClearModal } from '/@/components/Modal/composables/useOpenLinkFromModal'
 
 const props = defineProps<{
   id: UserId
@@ -51,6 +61,7 @@ const props = defineProps<{
 const { clearModal } = useModalStore()
 const { isMobile } = useResponsiveStore()
 const { usersMap } = useUsersStore()
+const { openLinkAndClearModal } = useOpenLinkAndClearModal()
 
 const iconSize = 160
 const styles = reactive({
@@ -71,6 +82,11 @@ const currentNavigation = toRef(navigationSelectorState, 'currentNavigation')
 const user = computed(() => usersMap.value.get(props.id)!)
 
 const { userDetail } = useUserDetail(props)
+
+const onEditProfileClick = async (event: MouseEvent) => {
+  openLinkAndClearModal(event, "/settings/profile")
+}
+
 </script>
 
 <style lang="scss" module>
@@ -95,6 +111,13 @@ const { userDetail } = useUserDetail(props)
   overflow: hidden;
 }
 
+.editProfile {
+  position: absolute;
+  top: 12px;
+  right: 56px;
+  z-index: $z-index-user-modal-header;
+}
+
 .close {
   position: absolute;
   top: 12px;
@@ -112,4 +135,17 @@ const { userDetail } = useUserDetail(props)
   margin: auto;
   border: 6px solid $theme-background-secondary-border;
 }
+
+.button {
+  margin: 8px 4px;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+
+
 </style>
