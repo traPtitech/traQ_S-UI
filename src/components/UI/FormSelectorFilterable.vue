@@ -61,7 +61,7 @@ const id = randomString()
     @include background-primary;
   }
   border-radius: 4px;
-  // height: 35px;
+  height: 30px;
   :global(.vs__selected-options),
   :global(.vs__actions),
   :global(.vs__selected),
