@@ -48,10 +48,7 @@ const useChannelPath = () => {
     return (hashed ? '#' : '') + channelIdToPath(id).join('/')
   }
 
-  const stringMinimazer = (
-    data: string[],
-    text: string
-  ): string => {
+  const stringMinimazer = (data: string[], text: string): string => {
     let data_: string[] = data.concat()
     const index: number = data_.indexOf(text)
     if (index !== -1) {
@@ -196,4 +193,3 @@ const useChannelPath = () => {
 }
 
 export default useChannelPath
-
