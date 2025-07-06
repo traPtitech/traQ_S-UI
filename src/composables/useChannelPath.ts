@@ -7,6 +7,8 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '../store/entities/users'
 import { useChannelTree } from '/@/store/domain/channelTree'
 
+const MAX_SHORT_PATH_LENGTH = 20
+
 const useChannelPath = () => {
   const { channelsMap, dmChannelsMap } = useChannelsStore()
   const { usersMap } = useUsersStore()
@@ -47,46 +49,64 @@ const useChannelPath = () => {
     if (dmChannelsMap.value.has(id)) return dmChannelIdToPathString(id, hashed)
     return (hashed ? '#' : '') + channelIdToPath(id).join('/')
   }
-
-  const stringMinimazer = (data: string[], text: string): string => {
-    let data_: string[] = data.concat()
-    const index: number = data_.indexOf(text)
-    if (index !== -1) {
-      data_.splice(index, 1)
-    }
-    for (let i = 0; i < text.length; i++) {
-      data_ = data_.filter(word => word[i] === text[i])
-      if (data_.length === 0) {
-        return text.slice(0, i + 1)
+  /**
+   * 文字列 target が、candidates の中で他の文字列と区別できるようになるために必要な最短の接頭辞を求める
+   */
+  const getShortestUniqueInitial = (
+    candidates: string[],
+    target: string
+  ): string => {
+    let restCandidates: string[] = candidates.filter(c => c !== target)
+    for (let i = 0; i < target.length; i++) {
+      restCandidates = restCandidates.filter(word => word[i] === target[i])
+      if (restCandidates.length === 0) {
+        return target.slice(0, i + 1)
       }
     }
-    return text
+    return target
   }
 
-  const channelIdToBrotherId = (id: string): string[] => {
-    const parentId = channelsMap.value.get(id)?.parentId
-    if (parentId === null) {
-      return topLevelChannels.value.filter(c => !c.archived).map(c => c.id)
-    } else if (parentId === undefined) {
+  /**
+   * Siblingは自分自身を含まない、アーカイブされていないチャンネルのみ返す
+   */
+  const channelIdToSiblingIds = (id: ChannelId): ChannelId[] => {
+    const self = channelsMap.value.get(id)
+    if (self === undefined) {
       return []
-    } else {
-      return (
-        channelsMap.value
-          .get(parentId)
-          ?.children.filter(c => !channelsMap.value.get(c)?.archived) ?? ['']
-      )
     }
+    if (self.parentId === null) {
+      return topLevelChannels.value
+        .filter(c => !c.archived && c.id !== id)
+        .map(c => c.id)
+    }
+    const parentChannel = channelsMap.value.get(self.parentId)
+    if (parentChannel === undefined) {
+      throw `channelIdToSiblingIds: No parents ${id}`
+    }
+    return (
+      parentChannel.children.filter(
+        c => !(channelsMap.value.get(c)?.archived ?? true) && c !== id
+      ) ?? []
+    )
   }
 
-  const isHavingSameNameCousin = (id: string): boolean => {
-    const selfName = channelsMap.value.get(id)?.name
-    const parentId = channelsMap.value.get(id)?.parentId
-    const parentbrothersId = channelIdToBrotherId(parentId ?? '').filter(
-      c => c !== parentId
-    )
-    for (const brother of parentbrothersId) {
-      const brotherChildId = channelsMap.value.get(brother)?.children ?? []
-      for (const cousinId of brotherChildId) {
+  /**
+   * (トップレベルチャンネルに使うとエラーを投げる)
+   */
+  const checkHavingSameNameCousin = (id: ChannelId): boolean => {
+    const self = channelsMap.value.get(id)
+    if (self === undefined) {
+      throw `checkHavingSameNameCousin: No channel: ${id}`
+    }
+    const selfName = self.name
+    const parentId = self.parentId
+    if (parentId === null) {
+      throw `checkHavingSameNameCousin: No parent channel: ${id}`
+    }
+    const parentSiblingIds = channelIdToSiblingIds(parentId)
+    for (const parentSiblingId of parentSiblingIds) {
+      const cousinIds = channelsMap.value.get(parentSiblingId)?.children ?? []
+      for (const cousinId of cousinIds) {
         const cousinName = channelsMap.value.get(cousinId)?.name
         if (cousinName === selfName) {
           return true
@@ -96,13 +116,16 @@ const useChannelPath = () => {
     return false
   }
 
-  const ChannelIdToUniqueInital = (id: string): string => {
+  const channelIdToUniqueInitial = (id: string): string => {
     const selfName = channelsMap.value.get(id)?.name
-    const brothersId = channelIdToBrotherId(id).filter(c => c !== id)
-    const brothersName = brothersId.map(
-      c => channelsMap.value.get(c)?.name ?? ''
-    )
-    return stringMinimazer(brothersName, selfName ?? '')
+    if (selfName === undefined) {
+      throw `ChannelIdToUniqueInitial: No Channel ${id}`
+    }
+    const SiblingIds = channelIdToSiblingIds(id)
+    const SiblingNames = SiblingIds.map(
+      c => channelsMap.value.get(c)?.name
+    ).filter(c => c !== undefined)
+    return getShortestUniqueInitial(SiblingNames, selfName)
   }
 
   const channelIdToShortPathString = (
@@ -112,66 +135,115 @@ const useChannelPath = () => {
     if (dmChannelsMap.value.has(id)) {
       return dmChannelIdToPathString(id, hashed)
     }
-    const maxPathLength = 20
-    const channelsSimple = channelIdToSimpleChannelPath(id)
-    const channelsId = channelsSimple.map(simpchan => simpchan.id)
-    const channelsName = channelsSimple.map(simpchan => simpchan.name)
-    const channelsInit = channelsName.map(c => c[0])
-    const formattedChannels = channelsInit.slice(0, -1)
-    formattedChannels.push(channelsName[channelsName.length - 1])
-    if (formattedChannels.join('/').length >= maxPathLength) {
-      return formattedChannels.join('/')
+
+    if (!channelsMap.value.has(id)) {
+      throw `channelIdToShortPathString: No channel: ${id}`
     }
-    if (channelsId.length >= 2) {
-      let extendChannelIndex = channelsSimple.length - 1 // その名前のいとこチャンネルがいないかを検査するべきチャンネルのindex
-      while (
-        extendChannelIndex > 0 &&
-        isHavingSameNameCousin(channelsId[extendChannelIndex] ?? '') &&
-        formattedChannels.join('/').length < maxPathLength
-      ) {
-        formattedChannels[extendChannelIndex - 1] =
-          channelsName[extendChannelIndex - 1]
-        extendChannelIndex--
-      }
-      if (formattedChannels.join('/').length > maxPathLength) {
-        let shortenChannelIndex = extendChannelIndex
-        while (
-          formattedChannels.join('/').length > maxPathLength &&
-          shortenChannelIndex < channelsSimple.length - 2
-        ) {
-          formattedChannels[shortenChannelIndex] = ChannelIdToUniqueInital(
-            channelsId[shortenChannelIndex] ?? ''
-          )
-          shortenChannelIndex++
-        }
-        if (formattedChannels.join('/').length <= maxPathLength) {
-          return (hashed ? '#' : '') + formattedChannels.join('/')
-        }
-        let replaceInitialChannelIndex = extendChannelIndex
-        while (
-          formattedChannels.join('/').length > maxPathLength &&
-          replaceInitialChannelIndex < channelsSimple.length - 2
-        ) {
-          formattedChannels[replaceInitialChannelIndex] =
-            channelsInit[replaceInitialChannelIndex]
-          replaceInitialChannelIndex++
-        }
-        if (formattedChannels.join('/').length <= maxPathLength) {
-          return (hashed ? '#' : '') + formattedChannels.join('/')
-        }
-        formattedChannels[channelsSimple.length - 2] = ChannelIdToUniqueInital(
-          channelsId[channelsSimple.length - 2] ?? ''
-        )
-        return (hashed ? '#' : '') + formattedChannels.join('/')
-      } else {
-        return (hashed ? '#' : '') + formattedChannels.join('/')
-      }
-    } else if (channelsId.length === 1) {
-      const path = channelsName[0]
-      return (hashed ? '#' : '') + path
-    } else {
+    const simpleChannels = channelIdToSimpleChannelPath(id)
+    const channelsLength = simpleChannels.length
+    if (channelsLength === 0) {
       return hashed ? '#' : ''
+    } else if (channelsLength === 1) {
+      const channelNames = simpleChannels.map(c => c.name)
+      const path = channelNames[0]
+      return (hashed ? '#' : '') + path
     }
+
+    const channelIds = simpleChannels.map(c => c.id)
+    const channelNames = simpleChannels.map(c => c.name)
+    const channelInitials = channelNames.map(c => c[0] ?? '')
+
+    // r/g/p/child
+    const primitiveChannels = [
+      ...channelInitials.slice(0, -1),
+      channelNames[channelsLength - 1] ?? ''
+    ]
+    if (primitiveChannels.join('/').length >= MAX_SHORT_PATH_LENGTH) {
+      return (hashed ? '#' : '') + primitiveChannels.join('/')
+    }
+
+    const expandChannels = (channels: string[]): string[] => {
+      const expandedChannels = channels.concat()
+      // その名前のいとこチャンネルがいないかを検査するべきチャンネルのindex
+      // いる場合はその一つ上を展開する
+      let checkChannelIndex = channelsLength - 1
+      while (
+        checkChannelIndex > 0 &&
+        checkHavingSameNameCousin(channelIds[checkChannelIndex] ?? '') &&
+        expandedChannels.join('/').length < MAX_SHORT_PATH_LENGTH
+      ) {
+        const indexParentName = channelNames[checkChannelIndex - 1]
+        if (indexParentName !== undefined) {
+          expandedChannels[checkChannelIndex - 1] = indexParentName
+        }
+        checkChannelIndex--
+      }
+      return expandedChannels
+    }
+
+    // r/grand-parent/parent/child
+    const expandedChannels = expandChannels(primitiveChannels)
+    if (expandedChannels.join('/').length <= MAX_SHORT_PATH_LENGTH) {
+      return (hashed ? '#' : '') + expandedChannels.join('/')
+    }
+
+    const cutChannels = (channels: string[]): string[] => {
+      const cuttedChannels = channels.concat()
+      // そのチャンネルを短縮するか判定するindex
+      let cutIndex = 0
+      while (
+        cuttedChannels.join('/').length > MAX_SHORT_PATH_LENGTH &&
+        cutIndex < channelsLength - 2
+      ) {
+        const indexUniqueInitial = channelIdToUniqueInitial(
+          channelIds[cutIndex] ?? ''
+        )
+        // expandされたチャンネルのみを対象にする
+        if ((cuttedChannels[cutIndex] ?? '').length >= 2) {
+          cuttedChannels[cutIndex] = indexUniqueInitial
+        }
+        cutIndex++
+      }
+      return cuttedChannels
+    }
+
+    // r/grand-/parent/child
+    const cuttedChannels = cutChannels(expandedChannels)
+    if (cuttedChannels.join('/').length <= MAX_SHORT_PATH_LENGTH) {
+      return (hashed ? '#' : '') + cuttedChannels.join('/')
+    }
+
+    const replaceInitialChannels = (channels: string[]): string[] => {
+      const replaceInitialChannels = channels.concat()
+      let replaceInitialIndex = 0
+      while (
+        replaceInitialChannels.join('/').length > MAX_SHORT_PATH_LENGTH &&
+        replaceInitialIndex < channelsLength - 2
+      ) {
+        const indexinitial = channelInitials[replaceInitialIndex]
+        if (indexinitial !== undefined) {
+          replaceInitialChannels[replaceInitialIndex] = indexinitial
+        }
+        replaceInitialIndex++
+      }
+      return replaceInitialChannels
+    }
+
+    // r/g/parent/child
+    const replacedInitialChannels = replaceInitialChannels(cuttedChannels)
+    if (replacedInitialChannels.join('/').length <= MAX_SHORT_PATH_LENGTH) {
+      return (hashed ? '#' : '') + replacedInitialChannels.join('/')
+    }
+
+    // r/g/pa/child
+    return (
+      (hashed ? '#' : '') +
+      [
+        ...replacedInitialChannels.slice(0, -2),
+        channelIdToUniqueInitial(channelIds[channelsLength - 2] ?? ''),
+        replacedInitialChannels[channelsLength - 1]
+      ].join('/')
+    )
   }
 
   const channelIdToLink = (id: ChannelId | DMChannelId) => {

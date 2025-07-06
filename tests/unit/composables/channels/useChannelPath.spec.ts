@@ -8,123 +8,201 @@ describe('useChannelPath', () => {
     createTestingPinia()
 
     const { channelsMap } = useChannelsStore()
-    const refinedChannels: Channel[] = channels.map(c => ({
-      ...c,
+    const refinedChannels: Channel[] = channels.map(channel => ({
+      ...channel,
       force: false,
       topic: '',
-      children: []
+      children: channels
+        .filter(child => child.parentId === channel.id)
+        .map(c => c.id)
     }))
     channelsMap.value = new Map(refinedChannels.map(c => [c.id, c]))
-    for (const c of channelsMap.value) {
-      if (c[1].parentId !== null) {
-        channelsMap.value.get(c[1].parentId)?.children.push(c[0])
+  })
+
+  test('channel tree', () => {
+    const topChannels = channels.filter(c => c.parentId === null)
+    type DumpedChannel = { name: string; children: DumpedChannel[] }
+    const dump = (channel: (typeof channels)[number]): DumpedChannel => ({
+      name: channel.name,
+      children: channels.filter(c => c.parentId === channel.id).map(dump)
+    })
+
+    const result = topChannels.map(dump)
+    expect(result).toEqual([
+      { name: 'event', children: [] },
+      {
+        name: 'gps',
+        children: [
+          {
+            name: 'times',
+            children: [
+              {
+                name: 'Naru_18',
+                children: [
+                  { name: 'sub', children: [] },
+                  { name: 'lec_jikkyo', children: [] },
+                  { name: 'yasao_ignore', children: [] },
+                  { name: 'ChildLongNameIsNotCut', children: [] }
+                ]
+              },
+              {
+                name: 'yasao',
+                children: [
+                  { name: 'sub', children: [] },
+                  { name: 'bot', children: [] },
+                  { name: 'yasao_ignore', children: [] }
+                ]
+              },
+              {
+                name: 'unsignedintger',
+                children: [
+                  { name: 'unsignedintger_sup', children: [] },
+                  { name: 'test', children: [] }
+                ]
+              },
+              {
+                name: 'unsignedintger2',
+                children: [
+                  { name: 'unsignedintger_sup', children: [] },
+                  { name: 'test', children: [] }
+                ]
+              },
+              {
+                name: 'ParentLongNameMayBeCut',
+                children: [{ name: 'sub', children: [] }]
+              }
+            ]
+          },
+          {
+            name: 'tips',
+            children: [
+              {
+                name: 'yasao',
+                children: [
+                  { name: 'sub', children: [] },
+                  { name: 'bot', children: [] }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'team',
+        children: [
+          {
+            name: 'SysAd_takenohito',
+            children: [
+              { name: 'random', children: [{ name: 'test', children: [] }] },
+              { name: 'randos', children: [{ name: 'test', children: [] }] }
+            ]
+          },
+          {
+            name: 'SysAd_cp20',
+            children: [
+              { name: 'random', children: [{ name: 'test', children: [] }] },
+              { name: 'randos', children: [{ name: 'test', children: [] }] }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'event',
+        children: [
+          {
+            name: 'hackathon',
+            children: [
+              {
+                name: '24_spring',
+                children: [
+                  { name: '01', children: [{ name: 'program', children: [] }] },
+                  { name: '02', children: [{ name: 'program', children: [] }] }
+                ]
+              },
+              {
+                name: '24_winter',
+                children: [
+                  { name: '01', children: [{ name: 'program', children: [] }] },
+                  { name: '02', children: [{ name: 'program', children: [] }] }
+                ]
+              }
+            ]
+          }
+        ]
       }
+    ])
+  })
+
+  test.each([
+    {
+      id: '442154db-b6c2-4941-801f-60fe14bae4e2',
+      expectedPath: ['gps', 'times', 'Naru_18', 'sub'],
+      expectedShort: 'g/t/Naru_18/sub'
+    },
+    {
+      id: '0d425611-823c-4177-933c-ec06c44ab347',
+      expectedPath: ['gps', 'times', 'Naru_18', 'lec_jikkyo'],
+      expectedShort: 'g/t/N/lec_jikkyo'
+    },
+    {
+      id: 'a76c14d0-259c-4d3c-aceb-9b82b3d82bce',
+      expectedPath: ['gps', 'times', 'Naru_18', 'ChildLongNameIsNotCut'],
+      expectedShort: 'g/t/N/ChildLongNameIsNotCut'
+    },
+    {
+      id: 'cad1904f-2f09-4330-aa22-69387e5e09c6',
+      expectedPath: ['gps', 'times', 'ParentLongNameMayBeCut', 'sub'],
+      expectedShort: 'g/t/P/sub'
+    },
+    {
+      id: '3de8179a-3b0a-4ac3-9876-f70d5b9a2628',
+      expectedPath: ['gps', 'times', 'yasao', 'sub'],
+      expectedShort: 'g/times/yasao/sub'
+    },
+    {
+      id: '6eebbc37-7025-4ced-be0d-581321e91c11',
+      expectedPath: ['gps', 'times', 'unsignedintger'],
+      expectedShort: 'g/t/unsignedintger'
+    },
+    {
+      id: '7ebe3c61-20cc-4a5e-8836-603162b273d4',
+      expectedPath: ['gps', 'times', 'unsignedintger', 'unsignedintger_sup'],
+      expectedShort: 'g/t/u/unsignedintger_sup'
+    },
+    {
+      id: '774374b6-ad61-4b0c-844e-7338412c7d85',
+      expectedPath: ['gps', 'times', 'unsignedintger2', 'test'],
+      expectedShort: 'g/t/unsignedintger2/test'
+    },
+    {
+      id: '1f83dc32-8db0-4237-8440-a0fb4fe52301',
+      expectedPath: ['event', 'hackathon', '24_spring', '02', 'program'],
+      expectedShort: 'e/h/24_s/02/program'
+    },
+    {
+      id: '254b4e17-049c-4c0c-a27b-57d37d9eb573',
+      expectedPath: ['gps', 'times', 'Naru_18', 'yasao_ignore'],
+      expectedShort: 'g/t/N/yasao_ignore'
+    },
+    {
+      id: 'bb9cfb69-1adc-404b-ad94-5d59ee34dca1',
+      expectedPath: ['gps', 'times', 'yasao', 'yasao_ignore'],
+      expectedShort: 'g/t/y/yasao_ignore'
+    },
+    {
+      id: '09fd79f0-4635-48d9-aae4-b986a452f592',
+      expectedPath: ['team', 'SysAd_cp20', 'random', 'test'],
+      expectedShort: 't/S/random/test'
     }
-  })
+  ])(
+    'channelIdToShortPathString: $expectedPath -> $expectedShort',
+    ({ id, expectedPath, expectedShort }) => {
+      const { channelIdToShortPathString, channelIdToPath } = useChannel()
 
-  test('channelIdToShortPathString', () => {
-    const { channelIdToShortPathString, channelIdToPath } = useChannel()
-
-    expect(channelIdToPath('442154db-b6c2-4941-801f-60fe14bae4e2')).toEqual([
-      'gps',
-      'times',
-      'Naru_18',
-      'sub'
-    ])
-    expect(
-      channelIdToShortPathString('442154db-b6c2-4941-801f-60fe14bae4e2')
-    ).toBe('g/t/Naru_18/sub')
-
-    expect(channelIdToPath('0d425611-823c-4177-933c-ec06c44ab347')).toEqual([
-      'gps',
-      'times',
-      'Naru_18',
-      'lec_jikkyo'
-    ])
-    expect(
-      channelIdToShortPathString('0d425611-823c-4177-933c-ec06c44ab347')
-    ).toBe('g/t/N/lec_jikkyo')
-
-    expect(channelIdToPath('a76c14d0-259c-4d3c-aceb-9b82b3d82bce')).toEqual([
-      'gps',
-      'times',
-      'Naru_18',
-      'ChildLongNameIsNotCut'
-    ])
-    expect(
-      channelIdToShortPathString('a76c14d0-259c-4d3c-aceb-9b82b3d82bce')
-    ).toBe('g/t/N/ChildLongNameIsNotCut')
-
-    expect(channelIdToPath('cad1904f-2f09-4330-aa22-69387e5e09c6')).toEqual([
-      'gps',
-      'times',
-      'ParentLongNameMayBeCut',
-      'sub'
-    ])
-    expect(
-      channelIdToShortPathString('cad1904f-2f09-4330-aa22-69387e5e09c6')
-    ).toBe('g/t/P/sub')
-
-    expect(channelIdToPath('3de8179a-3b0a-4ac3-9876-f70d5b9a2628')).toEqual([
-      'gps',
-      'times',
-      'yasao',
-      'sub'
-    ])
-    expect(
-      channelIdToShortPathString('3de8179a-3b0a-4ac3-9876-f70d5b9a2628')
-    ).toBe('g/times/yasao/sub')
-
-    expect(channelIdToPath('6eebbc37-7025-4ced-be0d-581321e91c11')).toEqual([
-      'gps',
-      'times',
-      'unsignedintger'
-    ])
-    expect(
-      channelIdToShortPathString('6eebbc37-7025-4ced-be0d-581321e91c11')
-    ).toBe('g/t/unsignedintger')
-
-    expect(channelIdToPath('7ebe3c61-20cc-4a5e-8836-603162b273d4')).toEqual([
-      'gps',
-      'times',
-      'unsignedintger',
-      'unsignedintger_sup'
-    ])
-    expect(
-      channelIdToShortPathString('7ebe3c61-20cc-4a5e-8836-603162b273d4')
-    ).toBe('g/t/u/unsignedintger_sup')
-
-    expect(channelIdToPath('774374b6-ad61-4b0c-844e-7338412c7d85')).toEqual([
-      'gps',
-      'times',
-      'unsignedintger2',
-      'test'
-    ])
-    expect(
-      channelIdToShortPathString('774374b6-ad61-4b0c-844e-7338412c7d85')
-    ).toBe('g/t/unsignedintger2/test')
-
-    expect(channelIdToPath('1f83dc32-8db0-4237-8440-a0fb4fe52301')).toEqual([
-      'event',
-      'hackathon',
-      '24_spring',
-      '02',
-      'program'
-    ])
-    expect(
-      channelIdToShortPathString('1f83dc32-8db0-4237-8440-a0fb4fe52301')
-    ).toBe('e/h/24_s/02/program')
-
-    expect(channelIdToPath('254b4e17-049c-4c0c-a27b-57d37d9eb573')).toEqual([
-      'gps',
-      'times',
-      'Naru_18',
-      'yasao_ignore'
-    ])
-    expect(
-      channelIdToShortPathString('254b4e17-049c-4c0c-a27b-57d37d9eb573')
-    ).toBe('g/t/N/yasao_ignore')
-  })
+      expect(channelIdToPath(id)).toEqual(expectedPath)
+      expect(channelIdToShortPathString(id)).toBe(expectedShort)
+    }
+  )
 })
 
 const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
@@ -277,6 +355,66 @@ const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
     name: 'team',
     archived: false,
     parentId: null
+  },
+  {
+    id: 'e4d49ad5-d617-492b-b15a-576f96a1d829',
+    name: 'SysAd_takenohito',
+    archived: false,
+    parentId: '17da19ef-2744-4550-8468-b01517db2905'
+  },
+  {
+    id: 'e5b022bd-56e6-4bfb-90a5-bd68addff1f0',
+    name: 'random',
+    archived: false,
+    parentId: 'e4d49ad5-d617-492b-b15a-576f96a1d829'
+  },
+  {
+    id: 'ef650f3b-e1e1-48b8-8bde-d08edd53aad3',
+    name: 'test',
+    archived: false,
+    parentId: 'e5b022bd-56e6-4bfb-90a5-bd68addff1f0'
+  },
+  {
+    id: 'eb018aba-08d1-460c-845a-59958550f2f6',
+    name: 'randos',
+    archived: false,
+    parentId: 'e4d49ad5-d617-492b-b15a-576f96a1d829'
+  },
+  {
+    id: 'a8403944-05e9-4621-9a4d-c73da8e35f6a',
+    name: 'test',
+    archived: false,
+    parentId: 'eb018aba-08d1-460c-845a-59958550f2f6'
+  },
+  {
+    id: '3400aba6-96c4-4994-ac8d-3e4fa8df941d',
+    name: 'SysAd_cp20',
+    archived: false,
+    parentId: '17da19ef-2744-4550-8468-b01517db2905'
+  },
+  {
+    id: '58a8c618-072a-4b4d-a79a-8a309b367535',
+    name: 'random',
+    archived: false,
+    parentId: '3400aba6-96c4-4994-ac8d-3e4fa8df941d'
+  },
+  {
+    id: '09fd79f0-4635-48d9-aae4-b986a452f592',
+    name: 'test',
+    archived: false,
+    parentId: '58a8c618-072a-4b4d-a79a-8a309b367535'
+  },
+  {
+    id: '06e40d93-7024-4cad-889c-9ff8a145110f',
+    name: 'randos',
+    archived: false,
+    parentId: '3400aba6-96c4-4994-ac8d-3e4fa8df941d'
+  },
+  {
+    id: '38fac331-ab8d-434f-9bae-2acc584da8a0',
+    name: 'test',
+    archived: false,
+    parentId: '06e40d93-7024-4cad-889c-9ff8a145110f'
   },
   {
     id: '734b0017-e1d3-4ef1-9200-d45f197b1df5',
