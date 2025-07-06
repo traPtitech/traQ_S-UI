@@ -49,7 +49,6 @@ const useChannelPath = () => {
   }
 
   const stringMinimazer = (
-    //引数を直接変更してるのなんとかしろや ← 何とかしてやったぞ過去の俺よ
     data: string[],
     text: string
   ): string => {
@@ -72,7 +71,7 @@ const useChannelPath = () => {
     if (parentId === null) {
       return topLevelChannels.value.filter(c => !c.archived).map(c => c.id)
     } else if (parentId === undefined) {
-      return [''] // もはや言い訳のような返り値である。Asertionよりまし？
+      return []
     } else {
       return (
         channelsMap.value
@@ -197,3 +196,4 @@ const useChannelPath = () => {
 }
 
 export default useChannelPath
+
