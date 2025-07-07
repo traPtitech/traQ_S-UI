@@ -64,6 +64,10 @@ const useStampCreate = (newStampName: Ref<string>, stampImage: File) => {
   const isCreating = ref(false)
 
   const createStamp = async () => {
+    if (!confirm(`本当に「:${newStampName.value}:」を作成しますか？（作成後のスタンプの削除はできません。）`)) {
+      return
+    }
+
     try {
       isCreating.value = true
       await apis.createStamp(newStampName.value, stampImage)
