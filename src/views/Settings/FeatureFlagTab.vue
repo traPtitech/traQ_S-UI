@@ -1,6 +1,6 @@
 <template>
-  <section :class="$style.featureFlagTab">
-    <div v-if="!restoring">
+  <section>
+    <div v-if="!restoring" :class="$style.flagList">
       <feature-flag
         v-for="[key, item] in Object.entries(featureFlags)"
         :key="key"
@@ -26,7 +26,7 @@ const { updateFeatureFlagStatus, featureFlags, restoring } =
 </script>
 
 <style lang="scss" module>
-.featureFlagTab {
+.flagList {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
