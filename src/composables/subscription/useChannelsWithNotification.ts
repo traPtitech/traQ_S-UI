@@ -11,10 +11,10 @@ const useChannelsWithNotification = () => {
   const { channelsMap, dmChannelsMap } = useChannelsStore()
   const starredChannelStore = useStaredChannels()
 
-  const mode = computed<'starred' | 'notified' | 'default'>(() => {
+  const mode = computed<'starred' | 'notified' | 'default' | 'both'>(() => {
     const { featureFlags } = useFeatureFlagSettings()
     if (featureFlags.value.flag_show_star_in_unread_channel_list.enabled) {
-      return 'starred'
+      return featureFlags.value.flag_show_notified_in_unread_channel_list.enabled ? 'both' : 'starred'
     }
     if (featureFlags.value.flag_show_notified_in_unread_channel_list.enabled) {
       return 'notified'
@@ -43,7 +43,7 @@ const useChannelsWithNotification = () => {
   )
 
   const noticeableChannels = computed(() => {
-    if (mode.value === 'starred') {
+    if (mode.value === 'starred' || mode.value === 'both') {
       const starred = channelsWithNotification.value.filter(channel =>
         starredChannelStore.staredChannelSet.value.has(channel.id)
       )
@@ -57,6 +57,24 @@ const useChannelsWithNotification = () => {
   })
 
   const unreadChannels = computed(() => {
+    if (mode.value === 'both') {
+      const noticeable = channelsWithUnreadMessage.value.filter(
+        channel =>
+          subscriptionMap.value.get(channel.id) === ChannelSubscribeLevel.notified
+      )
+      const starred = channelsWithUnreadMessage.value.filter(channel =>
+        starredChannelStore.staredChannelSet.value.has(channel.id)
+        && subscriptionMap.value.get(channel.id) !== ChannelSubscribeLevel.notified
+      )
+
+      const unread = channelsWithUnreadMessage.value.filter(
+        channel =>
+          subscriptionMap.value.get(channel.id) !==
+          ChannelSubscribeLevel.notified
+          && !starredChannelStore.staredChannelSet.value.has(channel.id)
+      )
+      return [...noticeable, ...starred, ...unread]
+    }
     if (mode.value === 'starred') {
       const starred = channelsWithUnreadMessage.value.filter(channel =>
         starredChannelStore.staredChannelSet.value.has(channel.id)
