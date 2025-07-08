@@ -27,7 +27,7 @@ export const featureFlagDescriptions = {
     title: 'フラグテスト・サンプル用',
     description: '「提供終了日」の表記がひらがなになります。',
     defaultValue: true,
-    endAt: new Date('2025-07-31')
+    endAt: new Date('2025-07-31T23:59:59+09:00')
   }
 } as const satisfies Record<string, FeatureFlagDescription>
 
