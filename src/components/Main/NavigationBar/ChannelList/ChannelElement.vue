@@ -14,7 +14,13 @@
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
-        :show-star="notificationState.isStarred && showStar"
+        :icon-name="
+          showStar && notificationState.isStarred
+            ? 'star-outline'
+            : showNotified && notificationState.hasNotification
+              ? 'notified'
+              : 'hash'
+        "
         @mousedown.stop="onChannelHashClick"
         @keydown.enter="onChannelHashKeydownEnter"
         @mouseenter="onHashHovered"
@@ -91,6 +97,7 @@ const props = withDefaults(
     isOpened?: boolean
     showShortenedPath?: boolean
     showStar?: boolean
+    showNotified?: boolean
   }>(),
   {
     isOpened: false,
