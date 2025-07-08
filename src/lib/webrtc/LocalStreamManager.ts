@@ -38,7 +38,7 @@ export type NoiseSuppressionType = (typeof noiseSuppressionTypes)[number]
 export const isNoiseSuppressionType = (
   value: string
 ): value is NoiseSuppressionType => {
-  return noiseSuppressionTypes.includes(value as NoiseSuppressionType)
+  return (noiseSuppressionTypes as readonly string[]).includes(value)
 }
 
 type Options = {

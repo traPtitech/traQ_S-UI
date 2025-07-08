@@ -23,7 +23,7 @@ export const sendKeys = ['modifier', 'none'] as const
 export type SendKey = (typeof sendKeys)[number]
 
 export const isSendKey = (value: string): value is SendKey => {
-  return sendKeys.includes(value as SendKey)
+  return (sendKeys as readonly string[]).includes(value)
 }
 
 export interface SendKeys {
