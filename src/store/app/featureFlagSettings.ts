@@ -30,7 +30,7 @@ export const featureFlagDescriptions = {
     title: '未読画面でお気に入りを優先表示',
     description:
       '未読チャンネル一覧でお気に入りチャンネルを優先的に表示するようにします。通知付きチャンネルの優先表示とは併用できません。',
-    defaultValue: false,
+    defaultValue: true,
     endAt: new Date('2025-08-20T23:59:59+09:00')
   },
   flag_show_notified_in_unread_channel_list: {
