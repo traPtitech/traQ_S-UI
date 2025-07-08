@@ -23,7 +23,7 @@ export const featureFlagDescriptions = {
   flag_test: {
     title: 'フラグテスト・サンプル用',
     description: '「提供終了日」の表記がひらがなになります。',
-    defaultValue: true,
+    defaultValue: false,
     endAt: new Date('2025-07-31T23:59:59+09:00')
   },
   flag_show_star_in_unread_channel_list: {
