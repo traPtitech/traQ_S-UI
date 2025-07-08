@@ -25,6 +25,18 @@ export const featureFlagDescriptions = {
     description: '「提供終了日」の表記がひらがなになります。',
     defaultValue: true,
     endAt: new Date('2025-07-31T23:59:59+09:00')
+  },
+  flag_show_star_in_unread_channel_list: {
+    title: '未読画面でお気に入りを優先表示',
+    description: '未読チャンネル一覧でお気に入りチャンネルを優先的に表示するようにします。通知付きチャンネルの優先表示とは併用できません。',
+    defaultValue: false,
+    endAt: new Date('2025-08-20T23:59:59+09:00')
+  },
+  flag_show_star_in_noticeable_channel_list: {
+    title: '未読画面で通知付きチャンネルを優先表示',
+    description: '未読チャンネル一覧で通知付きチャンネルを優先的に表示するようにします。お気に入りチャンネルの優先表示とは併用できません。',
+    defaultValue: false,
+    endAt: new Date('2025-08-20T23:59:59+09:00')
   }
 } as const satisfies Record<string, FeatureFlagDescription>
 
@@ -74,6 +86,12 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
     enabled: boolean
   ) => {
     await restoringPromise.value
+    if (flag === 'flag_show_star_in_unread_channel_list' && enabled) {
+      state.status.set('flag_show_star_in_noticeable_channel_list', false)
+    }
+    if (flag === 'flag_show_star_in_noticeable_channel_list' && enabled) {
+      state.status.set('flag_show_star_in_unread_channel_list', false)
+    }
     state.status.set(flag, enabled)
   }
 
