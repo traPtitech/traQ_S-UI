@@ -19,31 +19,24 @@
 </template>
 
 <script lang="ts" setup>
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
-import { randomString } from '/@/lib/basic/randomString'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
+import { randomString } from '/@/lib/basic/randomString'
 
 type Option = { key: string; value: string | null }
 type Background = 'primary' | 'secondary'
 const props = withDefaults(
   defineProps<{
-    modelValue?: string | null
     background?: Background
     options: Array<Option>
     label?: string
   }>(),
   {
-    modelValue: '',
     background: 'secondary'
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: string | null): void
-}>()
-
-const selectedOptionValue = useModelValueSyncer(props, emit)
+const selectedOptionValue = defineModel<string | null>({ default: '' })
 const id = randomString()
 </script>
 
