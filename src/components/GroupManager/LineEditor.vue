@@ -23,8 +23,8 @@
       />
     </div>
     <div v-else :class="$style.valueWrapper">
-      <div :class="$style.value" :data-is-empty="(localValue as string) === ''">
-        {{ (localValue as string) || `${label}が設定されていません` }}
+      <div :class="$style.value" :data-is-empty="localValue === ''">
+        {{ localValue || `${label}が設定されていません` }}
       </div>
       <a-icon
         name="pencil-outline"
