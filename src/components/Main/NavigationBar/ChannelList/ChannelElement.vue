@@ -17,7 +17,9 @@
         :icon-name="
           showStar && notificationState.isStarred
             ? 'star-outline'
-            : showNotified && notificationState.subscriptionLevel === ChannelSubscribeLevel.notified
+            : showNotified &&
+                notificationState.subscriptionLevel ===
+                  ChannelSubscribeLevel.notified
               ? 'notified'
               : 'hash'
         "

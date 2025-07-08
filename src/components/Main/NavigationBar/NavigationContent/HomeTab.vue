@@ -26,7 +26,9 @@
         <channel-list :channels="unreadChannels" show-star />
       </navigation-content-container>
     </div>
-    <div v-else-if="featureFlags.flag_show_notified_in_unread_channel_list.enabled">
+    <div
+      v-else-if="featureFlags.flag_show_notified_in_unread_channel_list.enabled"
+    >
       <navigation-content-container
         v-if="
           dmChannelsWithNotification.length + noticeableChannels.length !== 0
