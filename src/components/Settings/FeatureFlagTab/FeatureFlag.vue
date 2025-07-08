@@ -3,11 +3,8 @@
     <div :class="$style.description">
       <h3>{{ props.title }}</h3>
       <p>{{ props.description }}</p>
-      <h4 v-if="FlagStatus['flag_test']">ていきょうしゅうりょうび</h4>
-      <h4 v-else>提供終了日</h4>
-      <p>
-        {{ props.endAt.toLocaleDateString() }}
-      </p>
+      <p v-if="FlagStatus['flag_test']"><strong>ていきょうしゅうりょうび</strong>: {{ props.endAt.toLocaleDateString() }}</p>
+      <p v-else><strong>提供終了日</strong>: {{ props.endAt.toLocaleDateString() }}</p>
     </div>
     <div>
       <a-toggle v-model="value" :disabled="props.endAt < new Date()" />
