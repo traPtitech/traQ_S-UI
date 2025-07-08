@@ -28,15 +28,14 @@
 import { ref, type Ref } from 'vue'
 import ATab from '/@/components/UI/ATab.vue'
 
-const props = defineProps<{
-  isStared: boolean
+defineProps<{
   allPanelId: string
   staredPanelId: string
 }>()
 
-const emit = defineEmits<{
-  (e: 'update:isStared', v: boolean): void
-}>()
+const isStared = defineModel<boolean>('isStared', {
+  required: true
+})
 
 const allTabRef = ref<InstanceType<typeof ATab> | null>(null)
 const staredTabRef = ref<InstanceType<typeof ATab> | null>(null)
@@ -51,7 +50,7 @@ const tabNameRefs: Record<
 }
 
 const onKeydown = (e: KeyboardEvent) => {
-  const index = props.isStared ? 1 : 0
+  const index = isStared.value ? 1 : 0
 
   let nextIndex: number
   if (e.key === 'ArrowLeft') {
@@ -65,15 +64,15 @@ const onKeydown = (e: KeyboardEvent) => {
   nextIndex = (nextIndex + tabNames.length) % tabNames.length
 
   const nextTabName = tabNames[nextIndex] ?? tabNames[index]
-  emit('update:isStared', tabNames[nextIndex] === 'stared')
+  isStared.value = tabNames[nextIndex] === 'stared'
   tabNameRefs[nextTabName].value?.focus()
 }
 
 const selectStarFilter = () => {
-  emit('update:isStared', true)
+  isStared.value = true
 }
 const unselectStarFilter = () => {
-  emit('update:isStared', false)
+  isStared.value = false
 }
 </script>
 

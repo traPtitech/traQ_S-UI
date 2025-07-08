@@ -36,37 +36,44 @@ import MessageInputUploadButton from './MessageInputUploadButton.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
+const isLeftControlsExpanded = defineModel<boolean>('isLeftControlsExpanded', {
+  required: true
+})
+const isPreviewShown = defineModel<boolean>('isPreviewShown', {
+  required: true
+})
+const isInputTextAreaExpanded = defineModel<boolean>(
+  'isInputTextAreaExpanded',
+  {
+    required: true
+  }
+)
+
 const props = defineProps<{
-  isLeftControlsExpanded: boolean
-  isPreviewShown: boolean
-  isInputTextAreaExpanded: boolean
   showTextAreaExpandButton: boolean
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:isLeftControlsExpanded', _v: boolean): void
-  (e: 'update:isPreviewShown', _v: boolean): void
   (e: 'clickAddAttachment'): void
-  (e: 'update:isInputTextAreaExpanded', _v: boolean): void
   (e: 'toggleLeftControlsExpanded'): void
 }>()
 
 const { isMobile } = useResponsiveStore()
 const toggleLeftControlsExpanded = () => {
-  emit('update:isLeftControlsExpanded', !props.isLeftControlsExpanded)
+  isLeftControlsExpanded.value = !isLeftControlsExpanded.value
   emit('toggleLeftControlsExpanded')
 }
 const toggleIsInputTextAreaExpanded = () => {
-  emit('update:isInputTextAreaExpanded', !props.isInputTextAreaExpanded)
+  isInputTextAreaExpanded.value = !isInputTextAreaExpanded.value
 }
 
 const isPreviewShownValue = computed<boolean>({
   get() {
-    return props.isPreviewShown
+    return isPreviewShown.value
   },
   set(v) {
-    emit('update:isPreviewShown', v)
-    emit('update:isLeftControlsExpanded', false)
+    isPreviewShown.value = v
+    isLeftControlsExpanded.value = false
     emit('toggleLeftControlsExpanded')
   }
 })

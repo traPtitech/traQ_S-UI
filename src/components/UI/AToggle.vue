@@ -14,23 +14,19 @@
 <script lang="ts" setup>
 const props = withDefaults(
   defineProps<{
-    modelValue?: boolean
     disabled?: boolean
   }>(),
   {
-    modelValue: false,
     disabled: false
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: boolean): void
-}>()
+const modelValue = defineModel<boolean>({ default: false })
 
 const toggle = () => {
   if (props.disabled) return
 
-  emit('update:modelValue', !props.modelValue)
+  modelValue.value = !modelValue.value
 }
 </script>
 

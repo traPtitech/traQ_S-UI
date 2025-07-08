@@ -46,28 +46,24 @@ export type PopupSelectorItem = {
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string
     items: PopupSelectorItem[]
     small?: boolean
   }>(),
   {
-    modelValue: '',
     small: false
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: string): void
-}>()
+const modelValue = defineModel<string>({ default: '' })
 
 const { value: isOpen, toggle, close } = useToggle()
 
 const onClick = (item: PopupSelectorItem) => {
-  emit('update:modelValue', item.value)
+  modelValue.value = item.value
   close()
 }
 const currentItem = computed(() =>
-  props.items.find(item => item.value === props.modelValue)
+  props.items.find(item => item.value === modelValue.value)
 )
 </script>
 

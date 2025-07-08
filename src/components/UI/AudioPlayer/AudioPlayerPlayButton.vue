@@ -12,9 +12,8 @@
 <script lang="ts" setup>
 import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    isPlaying: boolean
     size: number
     disabled?: boolean
   }>(),
@@ -23,11 +22,9 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:isPlaying', _val: boolean): void
-}>()
+const isPlaying = defineModel<boolean>('isPlaying', { required: true })
 
 const toggle = () => {
-  emit('update:isPlaying', !props.isPlaying)
+  isPlaying.value = !isPlaying.value
 }
 </script>
