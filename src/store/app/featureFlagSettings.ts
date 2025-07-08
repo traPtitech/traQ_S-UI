@@ -45,17 +45,7 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
   const [state, restoring, restoringPromise] = useIndexedDbValue(
     'store/app/featureFlagSettings',
     1,
-    {
-      // migrate from vuex
-      1: async getStore => {
-        const vuexStore = await getVuexData()
-        if (!vuexStore) return
-        if (!isObjectAndHasKey(vuexStore, 'app')) return
-        if (!isObjectAndHasKey(vuexStore.app, 'featureFlagSettings')) return
-        const addReq = getStore().add(vuexStore.app.featureFlagSettings, 'key')
-        await promisifyRequest(addReq)
-      }
-    },
+    {},
     initialValue
   )
 
