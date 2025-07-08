@@ -42,7 +42,18 @@ categoryMap['regional'] = {
 }
 
 const unicodeTable = {}
-const altNameTable = {}
+const altNameTable = {
+  0: 'zero',
+  1: 'one',
+  2: 'two',
+  3: 'three',
+  4: 'four',
+  5: 'five',
+  6: 'six',
+  7: 'seven',
+  8: 'eight',
+  9: 'nine'
+}
 Object.entries(emojis).forEach(([key, e]) => {
   if (e.category === 'modifier') return
   if (e.name.endsWith('skin tone')) return

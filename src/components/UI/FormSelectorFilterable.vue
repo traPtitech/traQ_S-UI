@@ -14,7 +14,7 @@
       :clearable="false"
       :data-background="background"
       :class="$style.select"
-    ></v-select>
+    />
   </div>
 </template>
 
@@ -62,12 +62,16 @@ const id = randomString()
   }
   border-radius: 4px;
   height: 30px;
-  :global(.vs__dropdown-toggle),
   :global(.vs__selected-options),
   :global(.vs__actions),
   :global(.vs__selected),
   :global(.vs__search) {
     height: 100%;
+    margin: 2px 2px 0;
+  }
+  :global(.vs__dropdown-toggle) {
+    height: 100%;
+    align-items: center;
   }
 
   // Search Input

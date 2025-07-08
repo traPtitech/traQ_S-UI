@@ -28,11 +28,13 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'click'): void
+  (f: 'clickItem'): void
 }>()
 
 const onClick = () => {
   if (props.disabled) return
   emit('click')
+  emit('clickItem')
 }
 </script>
 

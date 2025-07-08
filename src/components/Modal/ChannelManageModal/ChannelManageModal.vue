@@ -1,33 +1,38 @@
 <template>
   <modal-frame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
-    <form-input
-      v-model="manageState.name"
-      label="チャンネル名"
-      :max-length="20"
-      focus-on-mount
-    />
-    <form-selector
-      v-model="manageState.parent"
-      label="親チャンネル"
-      :options="channelOptions"
-    />
-    <label :class="$style.toggle">
-      アーカイブ
-      <a-toggle v-model="manageState.archived" :disabled="!canToggleArchive" />
-    </label>
-    <p v-if="!canToggleArchive" :class="$style.cantToggleArchiveMessage">
-      このチャンネルはアーカイブチャンネルの子チャンネルなので、アーカイブ状態を解除できません。
-    </p>
-    <label :class="$style.toggle">
-      強制通知
-      <a-toggle v-model="manageState.force" />
-    </label>
-    <form-button
-      label="変更"
-      :disabled="!isManageEnabled"
-      :class="$style.button"
-      @click="manageChannel"
-    />
+    <div :class="$style.container">
+      <form-input
+        v-model="manageState.name"
+        label="チャンネル名"
+        :max-length="20"
+        focus-on-mount
+      />
+      <form-selector
+        v-model="manageState.parent"
+        label="親チャンネル"
+        :options="channelOptions"
+      />
+      <label :class="$style.toggle">
+        アーカイブ
+        <a-toggle
+          v-model="manageState.archived"
+          :disabled="!canToggleArchive"
+        />
+      </label>
+      <p v-if="!canToggleArchive" :class="$style.cantToggleArchiveMessage">
+        このチャンネルはアーカイブチャンネルの子チャンネルなので、アーカイブ状態を解除できません。
+      </p>
+      <label :class="$style.toggle">
+        強制通知
+        <a-toggle v-model="manageState.force" />
+      </label>
+      <form-button
+        label="変更"
+        :disabled="!isManageEnabled"
+        :class="$style.button"
+        @click="manageChannel"
+      />
+    </div>
   </modal-frame>
 </template>
 
@@ -150,6 +155,10 @@ const canToggleArchive = computed(
 </script>
 
 <style lang="scss" module>
+.container {
+  display: grid;
+  gap: 16px;
+}
 .input {
   margin-bottom: 16px;
   width: 100%;
@@ -163,5 +172,7 @@ const canToggleArchive = computed(
 }
 .toggle {
   @include color-ui-primary;
+  margin-bottom: 4px;
+  display: block;
 }
 </style>

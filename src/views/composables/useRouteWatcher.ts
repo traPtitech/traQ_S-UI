@@ -276,7 +276,7 @@ const useRouteWatcher = () => {
       !!history.state?.modalState[0]?.relatedRoute
     isOnInitialModalRoute.value = isOnInitialModalRouteValue
 
-    if (state.isInitialView && !isOnInitialModalRoute) {
+    if (state.isInitialView && !isOnInitialModalRouteValue) {
       // 初回表示かつモーダルを表示する必要がない状態なので、stateをクリア
       clearModalState()
     }

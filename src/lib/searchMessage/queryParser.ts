@@ -31,8 +31,8 @@ export type SearchMessageQueryObject = {
   after?: string
   before?: string
   in?: string
-  to?: string
-  from?: string
+  to?: Array<string>
+  from?: Array<string>
   citation?: string
   bot?: boolean
   hasUrl?: boolean

@@ -4,11 +4,14 @@
  * @param key Recordのキーにしたいオブジェクトのキー
  */
 export const reduceToRecord = <T>(array: readonly T[], key: keyof T) =>
-  array.reduce((acc, cur) => {
-    const ck = cur[key]
-    if (typeof ck !== 'string') return acc
-    return Object.assign(acc, { [ck]: cur })
-  }, {} as Record<string, T>)
+  array.reduce(
+    (acc, cur) => {
+      const ck = cur[key]
+      if (typeof ck !== 'string') return acc
+      return Object.assign(acc, { [ck]: cur })
+    },
+    {} as Record<string, T>
+  )
 
 /**
  * オブジェクトの配列から重複を許す特定のキーを用いたRecordを生成する
@@ -16,16 +19,19 @@ export const reduceToRecord = <T>(array: readonly T[], key: keyof T) =>
  * @param key Recordのキーにしたいオブジェクトのキー
  */
 export const reduceToRecordOfArray = <T>(array: readonly T[], key: keyof T) =>
-  array.reduce((acc, cur) => {
-    const ck = cur[key]
-    if (typeof ck !== 'string') return acc
-    if (Object.prototype.hasOwnProperty.call(acc, ck)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      acc[ck]!.push(cur)
-      return acc
-    }
-    return Object.assign(acc, { [ck]: [cur] })
-  }, {} as Record<string, T[]>)
+  array.reduce(
+    (acc, cur) => {
+      const ck = cur[key]
+      if (typeof ck !== 'string') return acc
+      if (Object.prototype.hasOwnProperty.call(acc, ck)) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        acc[ck]!.push(cur)
+        return acc
+      }
+      return Object.assign(acc, { [ck]: [cur] })
+    },
+    {} as Record<string, T[]>
+  )
 
 export const formatSnakeKeysToCamelShallow = (
   obj: Record<string, unknown>

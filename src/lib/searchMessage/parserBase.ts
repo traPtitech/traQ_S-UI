@@ -1,6 +1,8 @@
 // 実際のフィルタに依存しない関数群
 import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 
+const dateOnlyFormRegex = /^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$/
+
 /*
  * クエリは次のようにパースされる:
  *
@@ -137,7 +139,11 @@ export type FilterParser<T extends string, V> = (
 export const dateParser = <T extends string>(
   extracted: ExtractedFilter<T>
 ): Date | undefined => {
-  const date = new Date(extracted.body)
+  // date-only form から date-time form に直して地方時を指定する
+  const dateQuery = dateOnlyFormRegex.test(extracted.body)
+    ? extracted.body + 'T00:00:00.000'
+    : extracted.body
+  const date = new Date(dateQuery)
   if (Number.isNaN(date.getTime())) {
     return undefined
   }

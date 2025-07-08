@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.tags">
-    <template v-if="detail === undefined">Now loading...</template>
+    <template v-if="detail === undefined"> Now loading... </template>
     <template v-else>
       <ul :class="$style.list">
         <tags-tab-tag

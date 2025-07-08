@@ -9,7 +9,7 @@
         v-model="roundedVolume"
         :disabled="disabled"
         tooltip="none"
-        @click.prevent
+        is-click-prevent
       />
     </div>
     <a-icon
@@ -57,6 +57,8 @@ const toggleVolume = () => {
 </script>
 
 <style lang="scss" module>
+@use 'sass:meta';
+
 $afterVolumeSliderWidth: 48px;
 
 .volume {
@@ -71,22 +73,31 @@ $afterVolumeSliderWidth: 48px;
   }
 
   :global {
-    $dotBgColor: #1e1e1e;
+    @include meta.load-css(
+      'vue-slider-component/lib/theme/default.scss',
+      $with: (
+        dotBgColor: #1e1e1e,
 
-    $bgColor: #b7b9ba;
-    $themeColor: #585859;
-
-    @import 'vue-slider-component/lib/theme/default.scss';
+        bgColor: #b7b9ba,
+        themeColor: #585859
+      )
+    );
   }
 }
 .volumeSlider {
-  transition: width ease 0.3s, margin ease 0.3s, opacity ease 0.25s;
+  transition:
+    width ease 0.3s,
+    margin ease 0.3s,
+    opacity ease 0.25s;
   width: 0;
   opacity: 0;
   margin: auto 0;
   .volume[data-keep-expanded='true'] &,
   .volume:hover & {
-    transition: width ease 0.3s, margin ease 0.3s, opacity ease 0.25s;
+    transition:
+      width ease 0.3s,
+      margin ease 0.3s,
+      opacity ease 0.25s;
     width: $afterVolumeSliderWidth;
     opacity: 1;
     margin: auto 8px;

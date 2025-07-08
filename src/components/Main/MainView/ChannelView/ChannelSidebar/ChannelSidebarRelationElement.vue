@@ -4,12 +4,12 @@
       :class="$style.channelNameContainer"
       :data-is-current="$boolAttr(isCurrent)"
     >
-      <span :data-is-current="$boolAttr(isCurrent)" :class="$style.channelHash">
-        #
-      </span>
-      <span>
-        <router-link :to="isCurrent ? '' : link">{{ name }}</router-link>
-      </span>
+      <router-link :to="isCurrent ? '' : link">
+        <span :class="$style.channelHash"> # </span>
+        <span>
+          {{ name }}
+        </span>
+      </router-link>
     </div>
     <div v-if="topic" :class="$style.topic">
       <inline-markdown

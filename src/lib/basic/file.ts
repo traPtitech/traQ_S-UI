@@ -59,6 +59,6 @@ const sizePrefix = ['', 'K', 'M', 'G']
 
 /** byteを適当にKBなどに直す */
 export const prettifyFileSize = (byte: number) => {
-  const s = Math.floor(Math.log10(byte) / 3)
+  const s = byte ? Math.floor(Math.log10(byte) / 3) : 0
   return `${Math.round((byte / 1000 ** s) * 100) / 100}${sizePrefix[s]}B`
 }

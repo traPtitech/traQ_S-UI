@@ -7,6 +7,7 @@
       :alt="name"
       :title="!withoutTitle ? name : undefined"
       draggable="false"
+      @contextmenu="noContextMenu ? $event.preventDefault() : undefined"
     />
   </div>
 </template>
@@ -22,6 +23,7 @@ const props = withDefaults(
     stampId: StampId
     size?: number
     withoutTitle?: boolean
+    noContextMenu?: boolean
   }>(),
   {
     size: 24,
@@ -31,7 +33,9 @@ const props = withDefaults(
 
 const { stampsMap } = useStampsStore()
 
-const name = computed(() => stampsMap.value.get(props.stampId)?.name ?? '')
+const name = computed(
+  () => stampsMap.value.get(props.stampId)?.name ?? 'unknown stamp'
+)
 const imageUrl = computed(() => {
   const fileId = stampsMap.value.get(props.stampId)?.fileId
   return fileId ? buildFilePath(fileId) : ''

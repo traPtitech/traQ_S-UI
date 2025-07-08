@@ -3,6 +3,7 @@
     <channel-sidebar-viewers
       v-model="isViewersDetailOpen"
       :viewer-ids="viewerIds"
+      :inactive-viewer-ids="inactiveViewerIds"
       :class="$style.sidebarItem"
     />
     <channel-sidebar-qall
@@ -49,13 +50,15 @@ import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
 import ChannelSidebarQall from './ChannelSidebarQall.vue'
 import ChannelSidebarBots from './ChannelSidebarBots.vue'
 import type { UserId, ChannelId } from '/@/types/entity-ids'
-import { useQallSession } from './composables/useChannelRTCSession'
 import { useModelSyncer } from '/@/composables/useModelSyncer'
+import { useQall } from '/@/composables/qall/useQall'
+import { computed } from 'vue'
 
 const props = withDefaults(
   defineProps<{
     channelId: ChannelId
     viewerIds: readonly UserId[]
+    inactiveViewerIds: readonly UserId[]
     pinnedMessagesCount?: number
     isViewersDetailOpen: boolean
   }>(),
@@ -70,7 +73,14 @@ const emit = defineEmits<{
   (e: 'update:isViewersDetailOpen', value: boolean): void
 }>()
 
-const { sessionUserIds: qallUserIds } = useQallSession(props)
+const { rooms: roomWithParticipants } = useQall()
+
+const qallUserIds = computed(
+  () =>
+    roomWithParticipants.value
+      .find(room => room.channel.id === props.channelId)
+      ?.participants?.map(participant => participant.user.id) ?? []
+)
 
 const isViewersDetailOpen = useModelSyncer(props, emit, 'isViewersDetailOpen')
 </script>

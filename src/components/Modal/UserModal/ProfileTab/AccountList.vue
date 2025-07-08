@@ -41,7 +41,7 @@
         :background="iconBackgroundColor"
         :class="$style.icon"
       />
-      <template v-if="twitterId === undefined">Now Loading...</template>
+      <template v-if="twitterId === undefined"> Now Loading... </template>
       <template v-else>
         <a
           :href="twitterLink"

@@ -2,7 +2,7 @@
   <div
     ref="containerEle"
     :class="$style.container"
-    :data-is-mobile="$boolAttr(isMobile)"
+    :data-is-mobile="$boolAttr(forceMobileStyle || isMobile)"
   >
     <button
       v-if="showToNewMessageButton"
@@ -26,17 +26,26 @@
     </div>
     <div v-else :class="$style.inputContainer">
       <message-input-left-controls
-        v-model:is-expanded="isLeftControlsExpanded"
+        v-model:is-left-controls-expanded="isLeftControlsExpanded"
         v-model:is-preview-shown="isPreviewShown"
+        v-model:is-input-text-area-expanded="isInputTextAreaExpanded"
+        :show-text-area-expand-button="showTextAreaExpandButton"
         :class="$style.leftControls"
         @click-add-attachment="addAttachment"
+        @toggle-left-controls-expanded="
+          textareaComponentRef?.textareaAutosizeRef?.autosizeUpdateTextarea
+        "
       />
       <message-input-text-area
         ref="textareaComponentRef"
         v-model="state.text"
+        v-model:show-text-area-expand-button="showTextAreaExpandButton"
         :channel-id="channelId"
         :is-posting="isPosting"
-        :shrink-to-one-line="isMobile && isLeftControlsExpanded"
+        :shrink-to-one-line="
+          (forceMobileStyle || isMobile) && isLeftControlsExpanded
+        "
+        :is-input-text-area-expanded="isInputTextAreaExpanded"
         @focus="onFocus"
         @blur="onBlur"
         @add-attachments="onAddAttachments"
@@ -56,35 +65,36 @@
 </template>
 
 <script lang="ts" setup>
-import MessageInputLeftControls from './MessageInputLeftControls.vue'
-import MessageInputPreview from './MessageInputPreview.vue'
-import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
-import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
-import MessageInputTextArea from './MessageInputTextArea.vue'
-import MessageInputRightControls from './MessageInputRightControls.vue'
-import MessageInputFileList from './MessageInputFileList.vue'
-import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed, ref, toRef, watch, watchEffect } from 'vue'
-import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
 import useAttachments from './composables/useAttachments'
 import useModifierKey from './composables/useModifierKey'
 import usePostMessage from './composables/usePostMessage'
+import MessageInputFileList from './MessageInputFileList.vue'
+import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
+import MessageInputLeftControls from './MessageInputLeftControls.vue'
+import MessageInputPreview from './MessageInputPreview.vue'
+import MessageInputRightControls from './MessageInputRightControls.vue'
+import MessageInputTextArea from './MessageInputTextArea.vue'
+import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
+import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
+import { $boolAttr } from '/@/bool-attr'
+import AIcon from '/@/components/UI/AIcon.vue'
 import useFocus from '/@/composables/dom/useFocus'
-import { useToastStore } from '/@/store/ui/toast'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useChannelsStore } from '/@/store/entities/channels'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
-import { $boolAttr } from '/@/bool-attr'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useToastStore } from '/@/store/ui/toast'
+import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId | DMChannelId
   typingUsers: UserId[]
   showToNewMessageButton: boolean
+  forceMobileStyle?: boolean
 }>()
 const emit = defineEmits<{
   (e: 'clickToNewMessageButton'): void
@@ -105,6 +115,8 @@ const { sendWithModifierKey } = useBrowserSettings()
 const { channelsMap } = useChannelsStore()
 const isLeftControlsExpanded = ref(false)
 const isPreviewShown = ref(false)
+const isInputTextAreaExpanded = ref(true)
+const showTextAreaExpandButton = ref(false)
 
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
@@ -144,13 +156,11 @@ const showKeyGuide = computed(
     (sendWithModifierKey.value !== 'modifier' || canPostMessage.value)
 )
 
-const textareaComponentRef = ref<{
-  textareaAutosizeRef: { $el: HTMLTextAreaElement }
-}>()
+const textareaComponentRef = ref<InstanceType<typeof MessageInputTextArea>>()
 const containerEle = ref<HTMLDivElement>()
 const { toggleStampPicker } = useTextStampPickerInvoker(
   toRef(state, 'text'),
-  computed(() => textareaComponentRef.value?.textareaAutosizeRef.$el),
+  computed(() => textareaComponentRef.value?.textareaAutosizeRef?.$el),
   containerEle
 )
 
@@ -191,7 +201,6 @@ $radius: 4px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-end;
 
   &[data-is-archived] {
     @include color-ui-secondary-inactive;
@@ -216,7 +225,7 @@ $radius: 4px;
   }
 }
 .leftControls {
-  margin: 8px 8px 8px 0;
+  margin: 2px 8px 8px 0;
 }
 .rightControls {
   position: absolute;

@@ -14,6 +14,7 @@
           :channel-id="channelId"
           :show-notification-setting-btn="!channelState.forced"
           :is-archived="channelState.archived"
+          @click-item="closePopupMenu"
         />
       </click-outside>
     </channel-header-tools-list>

@@ -41,20 +41,34 @@ export const getDateRepresentationWithoutSameDate = (
   return timeString
 }
 
-export const getDisplayDate = (createdAt: string, updatedAt: string) => {
-  const createdDate = new Date(createdAt)
-  if (createdAt === updatedAt) {
-    return getTimeString(createdDate)
-  } else {
-    const updatedDate = new Date(updatedAt)
-    return getDateRepresentationWithoutSameDate(updatedDate, createdDate)
+export const getDateRepresentation = (date: Readonly<Date> | string) => {
+  const displayDate = new Date(date)
+  if (Number.isNaN(displayDate.getTime())) {
+    return ''
   }
-}
+  const today = new Date()
+  const timeString = getTimeString(displayDate)
+  const yesterday = new Date(today.getTime() - 1000 * 60 * 60 * 24)
 
-export const getCreatedDate = (createdAt: string) => {
-  const createdDate = new Date(createdAt)
-  const now = new Date()
-  return getDateRepresentationWithoutSameDate(createdDate, now)
+  if (
+    displayDate.getFullYear() === today.getFullYear() &&
+    displayDate.getMonth() === today.getMonth() &&
+    displayDate.getDate() === today.getDate()
+  ) {
+    return '今日' + ' ' + timeString
+  }
+  if (
+    displayDate.getFullYear() === yesterday.getFullYear() &&
+    displayDate.getMonth() === yesterday.getMonth() &&
+    displayDate.getDate() === yesterday.getDate()
+  ) {
+    return '昨日' + ' ' + timeString
+  }
+  if (displayDate.getFullYear() === today.getFullYear()) {
+    return getDayString(displayDate) + ' ' + timeString
+  } else {
+    return getFullDayString(displayDate) + ' ' + timeString
+  }
 }
 
 export const compareDate = (date1: Date, date2: Date, inverse = false) => {

@@ -15,7 +15,7 @@
             :class="$style.element"
           />
         </template>
-        <empty-state v-else>クリップフォルダがありません</empty-state>
+        <empty-state v-else> クリップフォルダがありません </empty-state>
       </template>
     </navigation-content-container>
   </div>

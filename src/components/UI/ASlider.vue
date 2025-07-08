@@ -1,5 +1,18 @@
 <template>
   <vue-slider
+    v-if="isClickPrevent"
+    v-model="value"
+    :min="min"
+    :max="max"
+    :disabled="disabled"
+    :interval="interval"
+    :tooltip="tooltip"
+    :tooltip-formatter="tooltipFormatter"
+    :dot-size="12"
+    @click.prevent
+  />
+  <vue-slider
+    v-else
     v-model="value"
     :min="min"
     :max="max"
@@ -29,12 +42,14 @@ const props = withDefaults(
     tooltipFormatter?: TooltipFormatter
     tooltip?: TooltipProp
     interval?: number
+    isClickPrevent?: boolean
   }>(),
   {
     disabled: false,
     min: 0,
     max: 100,
-    tooltip: 'active'
+    tooltip: 'active',
+    isClickPrevent: false
   }
 )
 
@@ -46,13 +61,13 @@ const value = useModelValueSyncer(props, emit)
 </script>
 
 <style lang="scss">
-$dotBgColor: $theme-ui-secondary-default;
-$dotShadow: none;
+@use 'vue-slider-component/lib/theme/default.scss' with (
+  $dotBgColor: $theme-ui-secondary-default,
+  $dotShadow: none,
 
-$bgColor: var(--specific-slider-background);
-$themeColor: $theme-ui-secondary-default;
+  $bgColor: var(--specific-slider-background),
+  $themeColor: $theme-ui-secondary-default,
 
-$tooltipBgColor: $theme-ui-secondary-default;
-
-@import 'vue-slider-component/lib/theme/default.scss';
+  $tooltipBgColor: $theme-ui-secondary-default
+);
 </style>

@@ -48,25 +48,30 @@
 </template>
 
 <script lang="ts" setup>
-import ClickOutside from '/@/components/UI/ClickOutside'
-import FilterInput from '/@/components/UI/FilterInput.vue'
-import StampPickerStampList from './StampPickerStampList.vue'
-import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
-import type { StampId } from '/@/types/entity-ids'
-import useStampList from './composables/useStampList'
-import useStampSetSelector from './composables/useStampSetSelector'
+import { onMounted, ref } from 'vue'
 import useEffectSelector from './composables/useEffectSelector'
+import useStampList from './composables/useStampList'
 import useStampPreselector from './composables/useStampPreselector'
+import useStampSetSelector from './composables/useStampSetSelector'
 import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
 import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
 import StampPickerPreview from './StampPickerPreview.vue'
-import { useStampPicker } from '/@/store/ui/stampPicker'
-import { ref } from 'vue'
+import StampPickerStampList from './StampPickerStampList.vue'
+import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
+import ClickOutside from '/@/components/UI/ClickOutside'
+import FilterInput from '/@/components/UI/FilterInput.vue'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useStampPicker } from '/@/store/ui/stampPicker'
+import type { StampId } from '/@/types/entity-ids'
 
-const { selectHandler, isEffectEnabled, currentStampSet, closeStampPicker } =
-  useStampPicker()
+const {
+  selectHandler,
+  isEffectEnabled,
+  currentStampSet,
+  validateCurrentStampSet,
+  closeStampPicker
+} = useStampPicker()
 const { upsertLocalStampHistory } = useStampHistory()
 const { isMobile } = useResponsiveStore()
 
@@ -108,6 +113,8 @@ const onFilterEnter = () => {
   if (!firstStamp) return
   onInputStamp(firstStamp.id)
 }
+
+onMounted(validateCurrentStampSet)
 </script>
 
 <style lang="scss" module>
@@ -138,8 +145,7 @@ const onFilterEnter = () => {
   margin-left: 8px;
 }
 .stampList {
-  padding: 0 4px;
-  padding-bottom: 12px;
+  padding-left: 4px;
 }
 .effectSelector {
   flex: 1 0;

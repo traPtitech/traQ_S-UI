@@ -9,7 +9,9 @@
         :return-button="returnButton"
       >
         <template #subtitle>
-          <template v-if="subtitle">{{ subtitle }}</template>
+          <template v-if="subtitle">
+            {{ subtitle }}
+          </template>
           <slot v-else name="subtitle" />
         </template>
       </common-modal-header>
@@ -28,7 +30,7 @@ import { useModalStore } from '/@/store/ui/modal'
 withDefaults(
   defineProps<{
     iconMdi?: boolean
-    iconName: string
+    iconName?: string
     title: string
     subtitle?: string
     returnButton?: boolean
@@ -64,7 +66,7 @@ const { clearModal } = useModalStore()
 }
 .body {
   width: 100%;
-  padding: 16px 24px;
+  padding: 16px;
   overflow: {
     x: hidden;
     y: auto;

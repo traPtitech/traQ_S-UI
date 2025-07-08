@@ -37,11 +37,11 @@ const { isMobile } = useResponsiveStore()
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  gap: 4px;
 }
 
 .icon {
   @include color-ui-secondary;
-  margin-right: 4px;
   vertical-align: bottom;
 }
 </style>

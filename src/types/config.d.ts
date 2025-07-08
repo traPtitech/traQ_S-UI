@@ -120,6 +120,5 @@ export type Config = Readonly<{
 }>
 
 declare global {
-  // eslint-disable-next-line no-var
   var traQConfig: Config
 }

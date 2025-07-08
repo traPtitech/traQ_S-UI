@@ -36,7 +36,6 @@
         <div id="sidebar-mobile" :class="$style.sidebarPortal" />
       </div>
     </div>
-    <stamp-picker-container />
     <command-palette-container />
   </div>
 </template>
@@ -57,7 +56,6 @@ import useMainViewLayout from './composables/useMainViewLayout'
 import useRouteWatcher from './composables/useRouteWatcher'
 import useInitialFetch from './composables/useInitialFetch'
 import { useToastStore } from '/@/store/ui/toast'
-import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 
 const useStyles = (
@@ -72,19 +70,6 @@ const useStyles = (
       transform: `translateX(${sidebarPosition.value}px)`
     }))
   })
-
-const useDraftConfirmer = () => {
-  const { hasInputChannel } = useMessageInputStateStore()
-  window.addEventListener('beforeunload', event => {
-    if (hasInputChannel.value) {
-      const unloadMessage =
-        'このまま終了すると下書きが削除されます。本当に終了しますか？'
-      event.preventDefault()
-      event.returnValue = unloadMessage
-      return unloadMessage
-    }
-  })
-}
 
 const useCommandPaletteShortcutKey = () => {
   const { mode, openCommandPalette, closeCommandPalette } = useCommandPalette()
@@ -133,7 +118,6 @@ const NotFoundPage = defineAsyncComponent(
 import MainView from '/@/components/Main/MainView/MainView.vue'
 import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue'
 import NavigationBar from '/@/components/Main/NavigationBar/NavigationBar.vue'
-import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue'
 import useViewStateSender from './composables/useViewStateSender'
 
@@ -162,8 +146,6 @@ const { closeNav } = useNavigationController()
 const hideOuter = computed(
   () => isMobile.value && isNavCompletelyAppeared.value
 )
-
-useDraftConfirmer()
 
 const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
 useInitialFetch(() => {

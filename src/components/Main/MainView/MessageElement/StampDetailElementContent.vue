@@ -1,7 +1,7 @@
 <template>
-  <div :class="$style.container" @click="openModal">
+  <div :class="$style.clickable" @click="openModal">
     {{ user?.displayName ?? 'unknown' }}
-    <span :class="$style.numberWrap">
+    <span v-if="count > 1" :class="$style.numberWrap">
       <spin-number :value="count" />
     </span>
   </div>
@@ -26,9 +26,10 @@ const { openModal } = useUserModalOpener(toRef(props, 'userId'))
 </script>
 
 <style lang="scss" module>
-.container {
+.clickable {
   display: flex;
   cursor: pointer;
+  gap: 2px;
 }
 .numberWrap {
   display: flex;

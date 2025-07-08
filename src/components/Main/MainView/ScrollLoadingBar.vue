@@ -17,11 +17,8 @@ withDefaults(
 
 <style lang="scss" module>
 .bar {
-  background: linear-gradient(
-      0,
-      $theme-ui-primary-default,
-      $theme-ui-primary-default
-    ),
+  background:
+    linear-gradient(0, $theme-ui-primary-default, $theme-ui-primary-default),
     linear-gradient(45deg, #ccc, #444, #ccc);
   background-blend-mode: color;
   background-size: 400% 100%;

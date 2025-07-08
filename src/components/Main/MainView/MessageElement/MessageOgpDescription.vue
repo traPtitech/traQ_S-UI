@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.title">{{ title }}</div>
+    <div :class="$style.title">
+      {{ title }}
+    </div>
     <div
       v-if="description"
       :class="$style.description"
