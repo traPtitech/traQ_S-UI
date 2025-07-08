@@ -29,12 +29,10 @@ import { computed, nextTick, ref } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
-import { useModelSyncer } from '/@/composables/useModelSyncer'
 import { countLength } from '/@/lib/basic/string'
 
 const props = withDefaults(
   defineProps<{
-    isEditing: boolean
     fallbackValue?: string
     maxLength?: number
   }>(),
@@ -43,12 +41,8 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:isEditing', val: boolean): void
-}>()
-
 const modelValue = defineModel<string | undefined>({ required: true })
-const isEditingValue = useModelSyncer(props, emit, 'isEditing')
+const isEditingValue = defineModel<boolean>('isEditing', { required: true })
 
 const textareaRef = ref<InstanceType<typeof TextareaAutosize> | null>(null)
 
