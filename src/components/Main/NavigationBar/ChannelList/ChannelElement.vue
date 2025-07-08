@@ -14,15 +14,7 @@
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
-        :icon-name="
-          showStar && notificationState.isStarred
-            ? 'star-outline'
-            : showNotified &&
-                notificationState.subscriptionLevel ===
-                  ChannelSubscribeLevel.notified
-              ? 'notified'
-              : 'hash'
-        "
+        :icon-name="iconName"
         @mousedown.stop="onChannelHashClick"
         @keydown.enter="onChannelHashKeydownEnter"
         @mouseenter="onHashHovered"
@@ -162,6 +154,16 @@ const onHashHoveredLeave = () => {
 const isChannelBgHovered = computed(
   () => isHovered.value && !(hasChildren.value && isHashHovered.value)
 )
+
+const iconName = computed(() => {
+  if (props.showStar && notificationState.isStarred) {
+    return 'star-outline'
+  }
+  if (props.showNotified && notificationState.subscriptionLevel === ChannelSubscribeLevel.notified) {
+    return 'notified'
+  }
+  return 'hash'
+})
 </script>
 
 <style lang="scss" module>
