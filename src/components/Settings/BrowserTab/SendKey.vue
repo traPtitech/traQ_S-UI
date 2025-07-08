@@ -28,16 +28,15 @@
 
 <script lang="ts" setup>
 import FormRadio from '/@/components/UI/FormRadio.vue'
-import type { SendKey } from '/@/store/app/browserSettings'
+import { isSendKey, type SendKey } from '/@/store/app/browserSettings'
 
 const sendWithModifierKeyValue = defineModel<SendKey>('sendWithModifierKey', {
   required: true
 })
 
 const updateSendWithModifierKeyValue = (val: string) => {
-  if (val === 'modifier' || val === 'none') {
-    sendWithModifierKeyValue.value = val as SendKey
-  }
+  if (!isSendKey(val)) return
+  sendWithModifierKeyValue.value = val as SendKey
 }
 </script>
 
