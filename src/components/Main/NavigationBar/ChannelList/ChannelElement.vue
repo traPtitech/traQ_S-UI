@@ -6,7 +6,7 @@
   >
     <!-- チャンネル表示本体 -->
     <div :class="$style.channelContainer">
-      <channel-element-hash
+      <channel-element-icon
         :class="$style.channelHash"
         :has-child="hasChildren"
         :is-selected="isSelected"
@@ -73,7 +73,7 @@ import type { ChannelId } from '/@/types/entity-ids'
 import useHover from '/@/composables/dom/useHover'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
 import { useMainViewStore } from '/@/store/ui/mainView'
-import ChannelElementHash from './ChannelElementHash.vue'
+import ChannelElementIcon from './ChannelElementIcon.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 import ChannelElementName from './ChannelElementName.vue'
 import useNotificationState from '../composables/useNotificationState'
