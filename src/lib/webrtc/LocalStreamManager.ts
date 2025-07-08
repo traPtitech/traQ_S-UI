@@ -5,14 +5,14 @@ import {
   RnnoiseWorkletNode,
   SpeexWorkletNode
 } from '@sapphi-red/web-noise-suppressor'
-import type ExtendedAudioContext from './ExtendedAudioContext'
-import { getUserAudio } from './userMedia'
+import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWorklet.js?url'
 import rnnoiseWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise.wasm?url'
 import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.wasm?url'
 import rnnoiseWorkletPath from '@sapphi-red/web-noise-suppressor/rnnoiseWorklet.js?url'
 import speexWasmPath from '@sapphi-red/web-noise-suppressor/speex.wasm?url'
 import speexWorkletPath from '@sapphi-red/web-noise-suppressor/speexWorklet.js?url'
-import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWorklet.js?url'
+import type ExtendedAudioContext from './ExtendedAudioContext'
+import { getUserAudio } from './userMedia'
 
 let rnnoiseWasmBinary: ArrayBuffer | undefined
 const loadRnnoiseWasmBinary = async () => {
@@ -32,6 +32,18 @@ const loadSpeexWasmBinary = async () => {
 }
 
 export type NoiseSuppressionType = 'rnnoise' | 'speex' | 'none'
+
+export const noiseSuppressionTypes = [
+  'rnnoise',
+  'speex',
+  'none'
+] as const satisfies readonly NoiseSuppressionType[]
+
+export const isNoiseSuppressionType = (
+  value: string
+): value is NoiseSuppressionType => {
+  return noiseSuppressionTypes.includes(value as NoiseSuppressionType)
+}
 
 type Options = {
   /**

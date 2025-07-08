@@ -21,18 +21,6 @@ export const useModelSyncer = <
   return value
 }
 
-export const useModelValueSyncer = <
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  P extends { modelValue: any },
-  E extends (n: `update:modelValue`, val: P['modelValue']) => void
->(
-  props: P,
-  emit: E,
-  onUpdate?: (val: P['modelValue']) => void
-) => {
-  return useModelSyncer(props, emit, 'modelValue', onUpdate)
-}
-
 type ToSyncedRefs<T> = { [KK in keyof T]: WritableComputedRef<T[KK]> }
 
 export const useModelObjectSyncer = <
