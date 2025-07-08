@@ -3,11 +3,24 @@ import { isDefined } from '/@/lib/basic/array'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
 const useChannelsWithNotification = () => {
-  const { unreadChannelsMap } = useSubscriptionStore()
+  const { unreadChannelsMap, subscriptionMap } = useSubscriptionStore()
   const { channelsMap, dmChannelsMap } = useChannelsStore()
   const starredChannelStore = useStaredChannels()
+
+  const mode = computed<'starred' | 'notified' | 'default'>(() => {
+    const { featureFlags } = useFeatureFlagSettings()
+    if (featureFlags.value.flag_show_star_in_unread_channel_list.enabled) {
+      return 'starred'
+    }
+    if (featureFlags.value.flag_show_notified_in_unread_channel_list.enabled) {
+      return 'notified'
+    }
+    return 'default'
+  })
 
   const sortedUnreadChannels = computed(() =>
     [...unreadChannelsMap.value.values()].sort((a, b) => {
@@ -30,23 +43,44 @@ const useChannelsWithNotification = () => {
   )
 
   const noticeableChannels = computed(() => {
-    const starred = channelsWithNotification.value.filter(channel =>
-      starredChannelStore.staredChannelSet.value.has(channel.id)
-    )
-    const notStarred = channelsWithNotification.value.filter(
-      channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
-    )
-    return [...starred, ...notStarred]
+    if (mode.value === 'starred') {
+      const starred = channelsWithNotification.value.filter(channel =>
+        starredChannelStore.staredChannelSet.value.has(channel.id)
+      )
+      const notStarred = channelsWithNotification.value.filter(
+        channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
+      )
+      return [...starred, ...notStarred]
+    }
+
+    return channelsWithNotification.value
   })
 
   const unreadChannels = computed(() => {
-    const starred = channelsWithUnreadMessage.value.filter(channel =>
-      starredChannelStore.staredChannelSet.value.has(channel.id)
-    )
-    const notStarred = channelsWithUnreadMessage.value.filter(
-      channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
-    )
-    return [...starred, ...notStarred]
+    if (mode.value === 'starred') {
+      const starred = channelsWithUnreadMessage.value.filter(channel =>
+        starredChannelStore.staredChannelSet.value.has(channel.id)
+      )
+      const notStarred = channelsWithUnreadMessage.value.filter(
+        channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
+      )
+      return [...starred, ...notStarred]
+    }
+    if (mode.value === 'notified') {
+      const noticeable = channelsWithUnreadMessage.value.filter(
+        channel =>
+          subscriptionMap.value.get(channel.id) ===
+          ChannelSubscribeLevel.notified
+      )
+      const unread = channelsWithUnreadMessage.value.filter(
+        channel =>
+          subscriptionMap.value.get(channel.id) !==
+          ChannelSubscribeLevel.notified
+      )
+      return [...noticeable, ...unread]
+    }
+
+    return channelsWithUnreadMessage.value
   })
 
   const dmChannelsWithNotification = computed(() =>

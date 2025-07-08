@@ -17,7 +17,7 @@
         :icon-name="
           showStar && notificationState.isStarred
             ? 'star-outline'
-            : showNotified && notificationState.hasNotification
+            : showNotified && notificationState.subscriptionLevel === ChannelSubscribeLevel.notified
               ? 'notified'
               : 'hash'
         "
@@ -86,6 +86,7 @@ import useNotificationState from '../composables/useNotificationState'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useChannelPath from '/@/composables/useChannelPath'
 import useFocus from '/@/composables/dom/useFocus'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 import {
   usePath,
   type TypedProps

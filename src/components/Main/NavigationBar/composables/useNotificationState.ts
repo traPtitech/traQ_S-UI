@@ -4,11 +4,12 @@ import { deepSome } from '/@/lib/basic/tree'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import type { ChannelId } from '/@/types/entity-ids'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 const useNotificationState = <T extends { id: ChannelId; children: T[] }>(
   channelTree: Ref<{ id: ChannelId; children?: T[] }>
 ) => {
-  const { unreadChannelsMap } = useSubscriptionStore()
+  const { unreadChannelsMap, subscriptionMap } = useSubscriptionStore()
   const unreadChannel = computed(() =>
     unreadChannelsMap.value.get(channelTree.value.id)
   )
@@ -29,6 +30,11 @@ const useNotificationState = <T extends { id: ChannelId; children: T[] }>(
         starredChannelStore.staredChannelSet.value.has(
           unreadChannel.value.channelId
         )
+    ),
+    subscriptionLevel: computed(
+      () =>
+        subscriptionMap.value.get(channelTree.value.id) ??
+        ChannelSubscribeLevel.none
     )
   })
   return notificationState

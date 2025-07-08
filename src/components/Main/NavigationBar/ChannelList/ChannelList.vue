@@ -34,7 +34,7 @@ const props = withDefaults(
   }>(),
   {
     showTopic: false,
-    showStar: false,
+    showStar: false
   }
 )
 
