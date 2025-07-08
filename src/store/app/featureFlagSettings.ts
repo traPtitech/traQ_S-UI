@@ -23,8 +23,22 @@ export const featureFlagDescriptions = {
   flag_test: {
     title: 'フラグテスト・サンプル用',
     description: '「提供終了日」の表記がひらがなになります。',
-    defaultValue: true,
+    defaultValue: false,
     endAt: new Date('2025-07-31T23:59:59+09:00')
+  },
+  flag_show_star_in_unread_channel_list: {
+    title: '未読画面でお気に入りを優先表示',
+    description:
+      '未読チャンネル一覧でお気に入りチャンネルを優先的に表示するようにします。',
+    defaultValue: true,
+    endAt: new Date('2025-08-20T23:59:59+09:00')
+  },
+  flag_show_notified_in_unread_channel_list: {
+    title: '未読画面で通知付きチャンネルを優先表示',
+    description:
+      '未読チャンネル一覧で通知付きチャンネルを優先的に表示するようにします。',
+    defaultValue: false,
+    endAt: new Date('2025-08-20T23:59:59+09:00')
   }
 } as const satisfies Record<string, FeatureFlagDescription>
 

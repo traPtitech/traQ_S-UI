@@ -18,7 +18,7 @@
       :data-has-notification-on-child="$boolAttr(hasNotificationOnChild)"
       :data-is-inactive="$boolAttr(isInactive)"
     >
-      <a-icon name="hash" :class="$style.icon" />
+      <a-icon :name="iconName" :class="$style.icon" />
     </div>
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :border-width="2" />
@@ -38,6 +38,7 @@ withDefaults(
     isOpened?: boolean
     hasNotification?: boolean
     hasNotificationOnChild?: boolean
+    iconName?: 'hash' | 'star-outline' | 'notified'
   }>(),
   {
     hasChild: false,
@@ -45,7 +46,8 @@ withDefaults(
     isInactive: false,
     isOpened: false,
     hasNotification: false,
-    hasNotificationOnChild: false
+    hasNotificationOnChild: false,
+    iconName: 'hash'
   }
 )
 </script>

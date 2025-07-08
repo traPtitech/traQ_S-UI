@@ -6,7 +6,7 @@
   >
     <!-- チャンネル表示本体 -->
     <div :class="$style.channelContainer">
-      <channel-element-hash
+      <channel-element-icon
         :class="$style.channelHash"
         :has-child="hasChildren"
         :is-selected="isSelected"
@@ -14,6 +14,7 @@
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
+        :icon-name="iconName"
         @mousedown.stop="onChannelHashClick"
         @keydown.enter="onChannelHashKeydownEnter"
         @mouseenter="onHashHovered"
@@ -72,13 +73,14 @@ import type { ChannelId } from '/@/types/entity-ids'
 import useHover from '/@/composables/dom/useHover'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
 import { useMainViewStore } from '/@/store/ui/mainView'
-import ChannelElementHash from './ChannelElementHash.vue'
+import ChannelElementIcon from './ChannelElementIcon.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 import ChannelElementName from './ChannelElementName.vue'
 import useNotificationState from '../composables/useNotificationState'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useChannelPath from '/@/composables/useChannelPath'
 import useFocus from '/@/composables/dom/useFocus'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 import {
   usePath,
   type TypedProps
@@ -89,6 +91,8 @@ const props = withDefaults(
     channel: ChannelTreeNode
     isOpened?: boolean
     showShortenedPath?: boolean
+    showStar?: boolean
+    showNotified?: boolean
   }>(),
   {
     isOpened: false,
@@ -150,6 +154,19 @@ const onHashHoveredLeave = () => {
 const isChannelBgHovered = computed(
   () => isHovered.value && !(hasChildren.value && isHashHovered.value)
 )
+
+const iconName = computed(() => {
+  if (props.showStar && notificationState.isStarred) {
+    return 'star-outline'
+  }
+  if (
+    props.showNotified &&
+    notificationState.subscriptionLevel === ChannelSubscribeLevel.notified
+  ) {
+    return 'notified'
+  }
+  return 'hash'
+})
 </script>
 
 <style lang="scss" module>
