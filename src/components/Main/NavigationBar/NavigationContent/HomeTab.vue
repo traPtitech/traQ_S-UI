@@ -10,29 +10,25 @@
     <navigation-content-container
       v-if="
         dmChannelsWithNotification.length +
-          starredChannelsWithNoticeable.length +
-          notStarredChannelsWithNoticeable.length !==
+          noticeableChannels.length !==
         0
       "
       subtitle="メンション"
       :class="$style.item"
     >
       <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
-      <channel-list :channels="starredChannelsWithNoticeable" show-star />
-      <channel-list :channels="notStarredChannelsWithNoticeable" />
+      <channel-list :channels="noticeableChannels" show-star />
     </navigation-content-container>
     <navigation-content-container
       v-if="
         dmChannelsWithNotification.length +
-          starredChannelsWithUnreadMessage.length +
-          notStarredChannelsWithUnreadMessage.length !==
+          unreadChannels.length !==
         0
       "
       subtitle="未読"
       :class="$style.item"
     >
-      <channel-list :channels="starredChannelsWithUnreadMessage" show-star />
-      <channel-list :channels="notStarredChannelsWithUnreadMessage" />
+      <channel-list :channels="unreadChannels" show-star />
     </navigation-content-container>
     <navigation-content-container subtitle="チャンネル" :class="$style.item">
       <channel-tree
@@ -82,10 +78,8 @@ const homeChannelWithTree = computed(() => {
 })
 
 const {
-  starredChannelsWithNoticeable,
-  notStarredChannelsWithNoticeable,
-  starredChannelsWithUnreadMessage,
-  notStarredChannelsWithUnreadMessage,
+  noticeableChannels,
+  unreadChannels,
   dmChannelsWithNotification
 } = useChannelsWithNotification()
 

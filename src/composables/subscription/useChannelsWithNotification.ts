@@ -29,29 +29,25 @@ const useChannelsWithNotification = () => {
       .filter(isDefined)
   )
 
-  const starredChannelsWithNoticeable = computed(() =>
-    channelsWithNotification.value.filter(channel =>
+  const noticeableChannels = computed(() => {
+    const starred = channelsWithNotification.value.filter(channel =>
       starredChannelStore.staredChannelSet.value.has(channel.id)
     )
-  )
-
-  const notStarredChannelsWithNoticeable = computed(() =>
-    channelsWithNotification.value.filter(
+    const notStarred = channelsWithNotification.value.filter(
       channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
     )
-  )
+    return [...starred, ...notStarred]
+  })
 
-  const starredChannelsWithUnreadMessage = computed(() =>
-    channelsWithUnreadMessage.value.filter(channel =>
+  const unreadChannels = computed(() => {
+    const starred = channelsWithUnreadMessage.value.filter(channel =>
       starredChannelStore.staredChannelSet.value.has(channel.id)
     )
-  )
-
-  const notStarredChannelsWithUnreadMessage = computed(() =>
-    channelsWithUnreadMessage.value.filter(
+    const notStarred = channelsWithUnreadMessage.value.filter(
       channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
     )
-  )
+    return [...starred, ...notStarred]
+  })
 
   const dmChannelsWithNotification = computed(() =>
     sortedUnreadChannels.value
@@ -60,10 +56,8 @@ const useChannelsWithNotification = () => {
   )
 
   return {
-    starredChannelsWithNoticeable,
-    notStarredChannelsWithNoticeable,
-    starredChannelsWithUnreadMessage,
-    notStarredChannelsWithUnreadMessage,
+    noticeableChannels,
+    unreadChannels,
     dmChannelsWithNotification
   }
 }
