@@ -3,6 +3,7 @@
     <channel-sidebar-viewers
       v-model="isViewersDetailOpen"
       :viewer-ids="viewerIds"
+      :inactive-viewer-ids="inactiveViewerIds"
       :class="$style.item"
     />
     <channel-sidebar-pinned
@@ -27,6 +28,7 @@ import { ref } from 'vue'
 withDefaults(
   defineProps<{
     viewerIds: readonly UserId[]
+    inactiveViewerIds?: readonly UserId[]
     pinnedMessagesCount?: number
   }>(),
   {

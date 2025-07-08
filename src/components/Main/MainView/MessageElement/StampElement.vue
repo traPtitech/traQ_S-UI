@@ -1,9 +1,13 @@
 <template>
   <div
+    ref="stampRoot"
     :class="$style.body"
-    :title="tooltip"
+    :aria-label="tooltip"
     :data-include-me="$boolAttr(includeMe)"
+    :data-is-archived="$boolAttr(isArchived)"
     @click="onClick"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
   >
     <transition name="stamp-pressed" mode="out-in">
       <a-stamp
@@ -15,6 +19,14 @@
     </transition>
     <spin-number :value="stamp.sum" :class="$style.count" />
   </div>
+  <stamp-scaled-element
+    :class="$style.scaleReaction"
+    :show="(isLongHovered || RemainScaled) && !isDetailShown && !isTouchDevice"
+    :stamp="stamp"
+    :target-rect="hoveredRect"
+    @scaled-hover="onScaledElementHover"
+    @end-scaled-hover="leaveScaledElementHover"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -22,11 +34,16 @@ import SpinNumber from '/@/components/UI/SpinNumber.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import { ref, computed, watch, onMounted } from 'vue'
 import { useStampsStore } from '/@/store/entities/stamps'
-import { useUsersStore } from '/@/store/entities/users'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageStampById } from '/@/lib/messageStampList'
+import StampScaledElement from './StampScaledElement.vue'
+import useHover from '/@/composables/dom/useHover'
+import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
   stamp: MessageStampById
+  isDetailShown: boolean
+  isArchived: boolean
 }>()
 
 const emit = defineEmits<{
@@ -34,20 +51,17 @@ const emit = defineEmits<{
   (e: 'removeStamp', _stampId: string): void
 }>()
 
+const { isTouchDevice } = useResponsiveStore()
 const { stampsMap } = useStampsStore()
-const { usersMap } = useUsersStore()
+const { addErrorToast } = useToastStore()
 
 const stampName = computed(
-  () => stampsMap.value.get(props.stamp.id)?.name ?? ''
+  () => stampsMap.value.get(props.stamp.id)?.name ?? 'unknown stamp'
 )
 
-const tooltip = computed(() =>
-  [
-    `:${stampName.value}:`,
-    ...props.stamp.users.map(
-      u => `${usersMap.value.get(u.id)?.displayName ?? ''}(${u.count})`
-    )
-  ].join(' ')
+const tooltip = computed(
+  () =>
+    `${stampName.value}, ${props.stamp.sum}件のリアクション, クリック／タップでリアクションを削除`
 )
 
 const includeMe = computed(() => props.stamp.myCount > 0)
@@ -72,6 +86,14 @@ const isProgress = ref(false)
 
 const onClick = () => {
   if (isProgress.value) return
+
+  if (props.isArchived) {
+    addErrorToast(
+      'アーカイブされたチャンネルではスタンプの追加 / 削除はできません'
+    )
+    return
+  }
+
   if (includeMe.value) {
     emit('removeStamp', props.stamp.id)
   } else {
@@ -85,6 +107,40 @@ watch(
     isProgress.value = false
   }
 )
+
+const { isLongHovered, onMouseEnter, onMouseLeave } = useHover()
+const stampRoot = ref<HTMLElement | null>(null)
+const hoveredRect = ref<DOMRect | undefined>(undefined)
+const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const RemainScaled = ref(false)
+
+const onScaledElementHover = () => {
+  if (hoverTimeout.value) {
+    clearTimeout(hoverTimeout.value)
+  }
+  hoveredRect.value = stampRoot.value?.getBoundingClientRect()
+  RemainScaled.value = true
+}
+
+const leaveScaledElementHover = () => {
+  RemainScaled.value = false
+  hoveredRect.value = undefined
+}
+
+watch(isLongHovered, beginHover => {
+  if (beginHover) {
+    if (hoverTimeout.value) {
+      clearTimeout(hoverTimeout.value)
+    }
+    RemainScaled.value = true
+    hoveredRect.value = stampRoot.value?.getBoundingClientRect()
+  } else {
+    hoverTimeout.value = setTimeout(() => {
+      RemainScaled.value = false
+      hoveredRect.value = undefined
+    }, 50)
+  }
+})
 </script>
 
 <style lang="scss" module>
@@ -100,6 +156,9 @@ watch(
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   cursor: pointer;
+  &[data-is-archived] {
+    cursor: not-allowed;
+  }
   user-select: none;
   overflow: hidden;
   contain: content;
@@ -117,5 +176,19 @@ watch(
     left: 6px;
     right: 4px;
   }
+}
+
+.scaleReaction {
+  @include background-tertiary;
+  display: flex;
+  align-items: center;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  user-select: none;
+  overflow: visible;
+  contain: content;
+  position: absolute;
+  bottom: 105%;
+  z-index: $z-index-message-element-scaled-stamp;
 }
 </style>

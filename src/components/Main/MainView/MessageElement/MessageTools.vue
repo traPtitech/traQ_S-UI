@@ -4,9 +4,67 @@
     ref="containerEle"
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
-    :data-is-minimum="$boolAttr(isMinimum)"
   >
-    <template v-if="isMinimum">
+    <transition v-if="!isMinimum" name="quick-reaction">
+      <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
+        <a-stamp
+          v-for="stamp in recentStamps"
+          :key="stamp"
+          :stamp-id="stamp"
+          :size="28"
+          :class="$style.stampListItem"
+          @click="addStamp(stamp)"
+        />
+        <span :class="$style.line" />
+      </div>
+    </transition>
+    <div
+      :class="$style.tools"
+      :data-hide-left-border="
+        $boolAttr((showQuickReaction || !isMobile) && !isMinimum)
+      "
+    >
+      <template v-if="!isMinimum && isMobile">
+        <a-icon
+          v-if="showQuickReaction"
+          mdi
+          name="chevron-right"
+          :size="28"
+          :class="$style.icon"
+          @click="toggleQuickReaction"
+        />
+        <a-icon
+          v-else
+          mdi
+          name="chevron-left"
+          :size="28"
+          :class="$style.icon"
+          @click="toggleQuickReaction"
+        />
+      </template>
+      <a-icon
+        v-if="!isMinimum"
+        mdi
+        name="emoticon-outline"
+        :size="28"
+        :class="$style.icon"
+        @click="toggleStampPicker"
+      />
+      <a-icon
+        v-if="isMine"
+        mdi
+        name="pencil"
+        :size="28"
+        :class="$style.icon"
+        @click="editMessage"
+      />
+      <a-icon
+        mdi
+        name="link"
+        :size="28"
+        :class="$style.icon"
+        @click="copyLink"
+      />
       <a-icon
         :class="$style.icon"
         :size="28"
@@ -14,62 +72,7 @@
         name="dots-horizontal"
         @click="onDotsClick"
       />
-    </template>
-    <template v-else>
-      <transition name="quick-reaction">
-        <div
-          v-if="showQuickReaction || !isMobile"
-          :class="$style.quickReaction"
-        >
-          <a-stamp
-            v-for="stamp in recentStamps"
-            :key="stamp"
-            :stamp-id="stamp"
-            :size="28"
-            :class="$style.stampListItem"
-            @click="addStamp(stamp)"
-          />
-          <span :class="$style.line" />
-        </div>
-      </transition>
-      <div
-        :class="$style.tools"
-        :data-hide-left-border="$boolAttr(showQuickReaction || !isMobile)"
-      >
-        <template v-if="isMobile">
-          <a-icon
-            v-if="showQuickReaction"
-            mdi
-            name="chevron-right"
-            :size="28"
-            :class="$style.icon"
-            @click="toggleQuickReaction"
-          />
-          <a-icon
-            v-else
-            mdi
-            name="chevron-left"
-            :size="28"
-            :class="$style.icon"
-            @click="toggleQuickReaction"
-          />
-        </template>
-        <a-icon
-          mdi
-          name="emoticon-outline"
-          :size="28"
-          :class="$style.icon"
-          @click="toggleStampPicker"
-        />
-        <a-icon
-          :class="$style.icon"
-          :size="28"
-          mdi
-          name="dots-horizontal"
-          @click="onDotsClick"
-        />
-      </div>
-    </template>
+    </div>
     <message-context-menu
       v-if="contextMenuPosition"
       :position="contextMenuPosition"
@@ -81,20 +84,23 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
-import type { StampId, MessageId } from '/@/types/entity-ids'
-import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
-import { useResponsiveStore } from '/@/store/ui/responsive'
-import apis from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
-import useContextMenu from '/@/composables/useContextMenu'
-import { useStampsStore } from '/@/store/entities/stamps'
 import type { Stamp } from '@traptitech/traq'
+import { computed, ref, toRef } from 'vue'
+import MessageContextMenu from './MessageContextMenu.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
-import MessageContextMenu from './MessageContextMenu.vue'
+import useCopyLink from '/@/composables/contextMenu/useCopyLink'
+import useContextMenu from '/@/composables/useContextMenu'
 import useToggle from '/@/composables/utils/useToggle'
+import { useStampUpdater } from '/@/lib/updater/stamp'
+import { useMeStore } from '/@/store/domain/me'
 import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useMessagesStore } from '/@/store/entities/messages'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+import type { MessageId, StampId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{
@@ -108,8 +114,8 @@ const props = withDefaults(
   }
 )
 
-const { recentStampIds, upsertLocalStampHistory } = useStampHistory()
-const { addErrorToast } = useToastStore()
+const { recentStampIds } = useStampHistory()
+const { addStampOptimistically } = useStampUpdater()
 const { initialRecentStamps } = useStampsStore()
 
 const pushInitialRecentStampsIfNeeded = (
@@ -132,29 +138,29 @@ const recentStamps = computed(() => {
   pushInitialRecentStampsIfNeeded(initialRecentStamps.value, recents)
   return recents
 })
-const addStamp = async (stampId: StampId) => {
-  try {
-    await apis.addMessageStamp(props.messageId, stampId)
-  } catch {
-    addErrorToast('メッセージにスタンプを追加できませんでした')
-    return
-  }
-  upsertLocalStampHistory(stampId, new Date())
-}
+const addStamp = async (stampId: StampId) =>
+  addStampOptimistically(props.messageId, stampId)
 
 const containerEle = ref<HTMLDivElement>()
 const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
   useStampPickerInvoker(
-    async stampData => {
-      try {
-        await apis.addMessageStamp(props.messageId, stampData.id)
-      } catch {
-        addErrorToast('メッセージにスタンプを追加できませんでした')
-      }
-    },
+    async stampData => addStampOptimistically(props.messageId, stampData.id),
     containerEle,
     false
   )
+
+const { messagesMap } = useMessagesStore()
+const { myId } = useMeStore()
+const isMine = computed(
+  () => messagesMap.value.get(props.messageId)?.userId === myId.value
+)
+
+const { editingMessageId } = useMessageEditingStateStore()
+const editMessage = () => {
+  editingMessageId.value = props.messageId
+}
+
+const { copyLink } = useCopyLink(toRef(props, 'messageId'))
 
 const {
   position: contextMenuPosition,
@@ -185,9 +191,6 @@ const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
   contain: content;
   &:not([data-is-mobile]) {
     box-shadow: 0 1px 3px 0;
-  }
-  &[data-is-minimum] {
-    border: solid 2px $theme-ui-tertiary-default;
   }
 }
 

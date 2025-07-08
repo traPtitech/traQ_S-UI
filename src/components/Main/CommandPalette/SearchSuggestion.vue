@@ -34,8 +34,15 @@ import type { SuggestionItem } from './SearchSuggestionItem.vue'
 import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
 import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
 import SearchSuggestionItem from './SearchSuggestionItem.vue'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
-const querySuggestions = [
+const emit = defineEmits<{
+  (e: 'queryInsert'): void
+}>()
+
+const { isMobile } = useResponsiveStore()
+
+const querySuggestions = computed(() => [
   {
     insertQuery: 'in:',
     description: 'チャンネル名を指定',
@@ -54,18 +61,18 @@ const querySuggestions = [
   {
     insertQuery: 'before:',
     description: '特定の日時以前のメッセージ',
-    example: 'before:2020-01-23, before:2020-01-23T00:00'
+    example: `before:2020-01-23${
+      !isMobile.value ? ', before:2020-01-23T00:00' : ''
+    }`
   },
   {
     insertQuery: 'after:',
     description: '特定の日時以降のメッセージ',
-    example: 'after:2020-01-23, after:2020-01-23T00:00'
+    example: `after:2020-01-23${
+      !isMobile.value ? ', after:2020-01-23T00:00' : ''
+    }`
   }
-]
-
-const emit = defineEmits<{
-  (e: 'queryInsert'): void
-}>()
+])
 
 const { currentInput, searchHistories, settleQuery, removeSearchHistory } =
   useCommandPalette()

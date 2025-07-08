@@ -17,6 +17,8 @@
         <div v-for="stamp in stampList" :key="stamp.id" :class="$style.stamp">
           <stamp-element
             :stamp="stamp"
+            :is-detail-shown="isDetailShown"
+            :is-archived="isArchived"
             @add-stamp="addStamp"
             @remove-stamp="removeStamp"
           />
@@ -42,9 +44,7 @@
 import { computed, ref } from 'vue'
 import type { MessageStamp } from '@traptitech/traq'
 import type { StampId } from '/@/types/entity-ids'
-import apis from '/@/lib/apis'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
-import { useToastStore } from '/@/store/ui/toast'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
 import StampElement from './StampElement.vue'
@@ -52,7 +52,7 @@ import StampDetailElement from './StampDetailElement.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import useToggle from '/@/composables/utils/useToggle'
 import { createStampList } from '/@/lib/messageStampList'
-import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useStampUpdater } from '/@/lib/updater/stamp'
 
 const props = withDefaults(
   defineProps<{
@@ -68,40 +68,20 @@ const props = withDefaults(
 )
 
 const { myId } = useMeStore()
-const { upsertLocalStampHistory } = useStampHistory()
 const { stampsMap } = useStampsStore()
-const { addErrorToast } = useToastStore()
-const stampList = computed(() => {
-  const stamps = props.stamps.filter(stamp =>
-    stampsMap.value.has(stamp.stampId)
-  )
-  return createStampList(stamps, myId.value)
-})
+const { addStampOptimistically, removeStampOptimistically } = useStampUpdater()
+const stampList = computed(() => createStampList(props.stamps, myId.value))
 
 const { value: isDetailShown, toggle: toggleDetail } = useToggle(false)
 
-const addStamp = async (stampId: StampId) => {
-  try {
-    await apis.addMessageStamp(props.messageId, stampId)
-  } catch {
-    addErrorToast('メッセージにスタンプを追加できませんでした')
-    return
-  }
-  upsertLocalStampHistory(stampId, new Date())
-}
-const removeStamp = async (stampId: StampId) => {
-  await apis.removeMessageStamp(props.messageId, stampId)
-}
+const addStamp = (stampId: StampId) =>
+  addStampOptimistically(props.messageId, stampId)
+const removeStamp = (stampId: StampId) =>
+  removeStampOptimistically(props.messageId, stampId)
 
 const listEle = ref<HTMLDivElement>()
 const { toggleStampPicker } = useStampPickerInvoker(
-  async stampData => {
-    try {
-      await apis.addMessageStamp(props.messageId, stampData.id)
-    } catch {
-      addErrorToast('メッセージにスタンプを追加できませんでした')
-    }
-  },
+  async stampData => addStampOptimistically(props.messageId, stampData.id),
   listEle,
   false,
   'top-left'

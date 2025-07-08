@@ -20,7 +20,7 @@ const style = computed(() => {
   if (alignment.value === 'top-left') {
     return {
       top: `min(calc(100% - ${height + margin}px), ${position.value.y}px)`,
-      left: `${position.value.x}px`
+      left: `min(calc(100% - ${width}px), ${position.value.x}px)`
     }
   }
 
@@ -33,6 +33,14 @@ const style = computed(() => {
       top: `min(calc(100% - ${height + margin}px), ${position.value.y}px)`,
       left,
       transform: 'translateX(-100%)'
+    }
+  }
+  if (alignment.value === 'bottom-left') {
+    return {
+      bottom: `min(calc(100% - ${height + margin}px), calc(100% - ${
+        position.value.y
+      }px))`,
+      left: `min(calc(100% - ${width}px), ${position.value.x}px)`
     }
   }
   if (alignment.value === 'bottom-right') {

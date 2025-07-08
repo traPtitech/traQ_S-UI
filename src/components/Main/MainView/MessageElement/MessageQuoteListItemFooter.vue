@@ -16,7 +16,7 @@
 import { computed } from 'vue'
 import type { Message } from '@traptitech/traq'
 import useChannelPath from '/@/composables/useChannelPath'
-import { getCreatedDate } from '/@/lib/basic/date'
+import { getDateRepresentation } from '/@/lib/basic/date'
 import { constructMessagesPath } from '/@/router'
 
 const props = defineProps<{
@@ -32,7 +32,7 @@ const channelLink = computed(() =>
   props.message ? channelIdToLink(props.message.channelId) : ''
 )
 const date = computed(() =>
-  props.message ? getCreatedDate(props.message.createdAt) : ''
+  props.message ? getDateRepresentation(props.message.createdAt) : ''
 )
 const messageLink = computed(() =>
   props.message ? constructMessagesPath(props.message.id) : ''

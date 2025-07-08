@@ -1,3 +1,5 @@
+import 'vitest'
+
 interface CustomMatchers {
   /**
    * 順番を無視して配列の内容が一致するかチェックする
@@ -5,12 +7,11 @@ interface CustomMatchers {
   toStrictEqualArrayIgnoringOrder(expected: unknown[]): void
 }
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Vi {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface JestAssertion extends CustomMatchers {}
-  }
+declare module 'vitest' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-empty-object-type
+  interface AsymmetricMatchersContaining extends CustomMatchers {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-empty-object-type
+  interface Assertion extends CustomMatchers {}
 }
 
 expect.extend({

@@ -54,6 +54,7 @@ const {
 
 <style lang="scss" module>
 .container {
+  flex-shrink: 0;
   position: relative;
   width: 240px;
   max-width: 100%;
@@ -73,6 +74,7 @@ const {
   }
 }
 .largeContainer {
+  flex-shrink: 0;
   position: relative;
   display: flex;
   border-radius: 6px;

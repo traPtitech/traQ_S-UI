@@ -10,6 +10,8 @@ import util from 'util'
 import esbuild from 'esbuild'
 import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
 import browserslist from 'browserslist'
+import { Buffer } from 'node:buffer'
+import process from 'process'
 
 const brotliCompress = util.promisify(zlib.brotliCompress)
 

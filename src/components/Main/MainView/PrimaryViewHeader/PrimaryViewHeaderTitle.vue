@@ -6,7 +6,9 @@
       :name="iconName"
       :mdi="iconMdi"
     />
-    <h1 :class="$style.title">{{ title }}</h1>
+    <h1 :class="$style.title">
+      {{ title }}
+    </h1>
   </div>
 </template>
 

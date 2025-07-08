@@ -17,9 +17,12 @@
 import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue'
 import type { StampSet } from './composables/useStampSetSelector'
 
+const currentStampSet = defineModel<StampSet>('currentStampSet', {
+  required: true
+})
+
 withDefaults(
   defineProps<{
-    currentStampSet: StampSet
     stampSets: StampSet[]
     foldedStampSets?: StampSet[]
   }>(),
@@ -28,12 +31,8 @@ withDefaults(
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:currentStampSet', _stampSet: StampSet): void
-}>()
-
 const onStampSetSelect = (stampSet: StampSet) => {
-  emit('update:currentStampSet', stampSet)
+  currentStampSet.value = stampSet
 }
 </script>
 
@@ -41,12 +40,12 @@ const onStampSetSelect = (stampSet: StampSet) => {
 .container {
   @include background-secondary;
   position: relative;
-  height: 36px;
+  height: fit-content;
 }
 .innerContainer {
   display: flex;
   align-items: center;
-  height: 100%;
+  height: fit-content;
   overflow-x: scroll;
   &::-webkit-scrollbar {
     display: none;

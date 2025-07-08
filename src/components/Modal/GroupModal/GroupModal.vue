@@ -12,7 +12,9 @@
       :is-admin="user.isAdmin"
       :class="$style.item"
     >
-      <div :class="$style.role">{{ user.role }}</div>
+      <div :class="$style.role">
+        {{ user.role }}
+      </div>
       <div v-if="user.isAdmin && !user.isMember" :class="$style.nonMemberAdmin">
         グループ外管理者
       </div>

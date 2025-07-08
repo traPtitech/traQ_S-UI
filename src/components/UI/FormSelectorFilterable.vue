@@ -14,7 +14,7 @@
       :clearable="false"
       :data-background="background"
       :class="$style.select"
-    ></v-select>
+    />
   </div>
 </template>
 
