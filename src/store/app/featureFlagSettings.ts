@@ -2,9 +2,6 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed } from 'vue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
-import { getVuexData } from '/@/store/utils/migrateFromVuex'
-import { isObjectAndHasKey } from '/@/lib/basic/object'
-import { promisifyRequest } from 'idb-keyval'
 
 type FeatureFlagDescription = {
   title: string

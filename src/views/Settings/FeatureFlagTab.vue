@@ -8,7 +8,9 @@
         :description="item.description"
         :model-value="item.enabled"
         :end-at="item.endAt"
-        @update:model-value="(v: boolean) => updateFeatureFlagStatus(key as FeatureFlagKey, v)"
+        @update:model-value="
+          (v: boolean) => updateFeatureFlagStatus(key as FeatureFlagKey, v)
+        "
       />
     </div>
     <div v-else>
@@ -18,7 +20,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useFeatureFlagSettings, type FeatureFlagKey } from '/@/store/app/featureFlagSettings'
+import {
+  useFeatureFlagSettings,
+  type FeatureFlagKey
+} from '/@/store/app/featureFlagSettings'
 import FeatureFlag from '/@/components/Settings/FeatureFlagTab/FeatureFlag.vue'
 
 const { updateFeatureFlagStatus, featureFlags, restoring } =
