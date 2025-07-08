@@ -3,7 +3,7 @@
     <div :class="$style.description">
       <h3>{{ props.title }}</h3>
       <p>{{ props.description }}</p>
-      <p v-if="FlagStatus['flag_test']"><strong>ていきょうしゅうりょうび</strong>: {{ props.endAt.toLocaleDateString() }}</p>
+      <p v-if="featureFlags.flag_test.enabled"><strong>ていきょうしゅうりょうび</strong>: {{ props.endAt.toLocaleDateString() }}</p>
       <p v-else><strong>提供終了日</strong>: {{ props.endAt.toLocaleDateString() }}</p>
     </div>
     <div>
@@ -17,7 +17,7 @@ import AToggle from '/@/components/UI/AToggle.vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
-const { FlagStatus } = useFeatureFlagSettings()
+const { featureFlags } = useFeatureFlagSettings()
 
 const props = defineProps<{
   title: string

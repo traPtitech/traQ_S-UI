@@ -6,12 +6,6 @@ import { getVuexData } from '/@/store/utils/migrateFromVuex'
 import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { promisifyRequest } from 'idb-keyval'
 
-type FeatureFlagKey = 'flag_test'
-
-type State = {
-  status: Map<FeatureFlagKey, boolean | undefined>
-}
-
 type FeatureFlagDescription = {
   title: string
   description: string
@@ -28,16 +22,19 @@ export type FeatureFlag = FeatureFlagDescription & { enabled: boolean }
   - 仮ルールなので必要に応じて変えてほしいです
 */
 
-export const featureFlagDescriptions: Record<
-  FeatureFlagKey,
-  FeatureFlagDescription
-> = {
+export const featureFlagDescriptions = {
   flag_test: {
     title: 'フラグテスト・サンプル用',
     description: '「提供終了日」の表記がひらがなになります。',
     defaultValue: true,
     endAt: new Date('2025-07-31')
   }
+} as const satisfies Record<string, FeatureFlagDescription>
+
+export type FeatureFlagKey = keyof typeof featureFlagDescriptions
+
+type State = {
+  status: Map<FeatureFlagKey, boolean | undefined>
 }
 
 const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
@@ -70,29 +67,19 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
     return state.status.get(flag) ?? featureFlag.defaultValue
   }
 
-  const FeatureFlags = computed(() => {
-    const res: Map<FeatureFlagKey, FeatureFlag> = new Map()
-    Object.entries(featureFlagDescriptions).forEach(([flag, featureFlag]) => {
-      res.set(flag as FeatureFlagKey, {
-        title: featureFlag.title,
-        description: featureFlag.description,
-        defaultValue: featureFlag.defaultValue,
-        endAt: featureFlag.endAt,
-        enabled: isFlagEnabled(flag as FeatureFlagKey)
-      })
-    })
-    return res
-  })
-
-  const FlagStatus = computed(() => {
-    const res: Record<FeatureFlagKey, boolean> = {} as Record<
-      FeatureFlagKey,
-      boolean
-    >
-    Object.entries(featureFlagDescriptions).forEach(([flag, featureFlag]) => {
-      res[flag as FeatureFlagKey] = isFlagEnabled(flag as FeatureFlagKey)
-    })
-    return res
+  const featureFlags = computed(() => {
+    return Object.fromEntries(
+      Object.entries(featureFlagDescriptions).map(([flag, featureFlag]) => [
+        flag,
+        {
+          title: featureFlag.title,
+          description: featureFlag.description,
+          defaultValue: featureFlag.defaultValue,
+          endAt: featureFlag.endAt,
+          enabled: isFlagEnabled(flag as FeatureFlagKey)
+        }
+      ])
+    ) as Record<FeatureFlagKey, FeatureFlag>
   })
 
   const updateFeatureFlagStatus = async (
@@ -105,8 +92,7 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
 
   return {
     updateFeatureFlagStatus,
-    FeatureFlags,
-    FlagStatus,
+    featureFlags,
     restoring
   }
 })

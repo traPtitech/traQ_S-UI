@@ -2,13 +2,13 @@
   <section :class="$style.featureFlagTab">
     <div v-if="!restoring">
       <feature-flag
-        v-for="[key, item] in FeatureFlags"
+        v-for="[key, item] in Object.entries(featureFlags)"
         :key="key"
         :title="item.title"
         :description="item.description"
-        :model-value="FlagStatus[key]"
+        :model-value="item.enabled"
         :end-at="item.endAt"
-        @update:model-value="(v: boolean) => updateFeatureFlagStatus(key, v)"
+        @update:model-value="(v: boolean) => updateFeatureFlagStatus(key as FeatureFlagKey, v)"
       />
     </div>
     <div v-else>
@@ -18,10 +18,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
+import { useFeatureFlagSettings, type FeatureFlagKey } from '/@/store/app/featureFlagSettings'
 import FeatureFlag from '/@/components/Settings/FeatureFlagTab/FeatureFlag.vue'
 
-const { updateFeatureFlagStatus, FeatureFlags, FlagStatus, restoring } =
+const { updateFeatureFlagStatus, featureFlags, restoring } =
   useFeatureFlagSettings()
 </script>
 
