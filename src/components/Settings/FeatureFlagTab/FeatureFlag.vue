@@ -19,7 +19,6 @@
 
 <script lang="ts" setup>
 import AToggle from '/@/components/UI/AToggle.vue'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
 const { featureFlags } = useFeatureFlagSettings()
@@ -27,15 +26,12 @@ const { featureFlags } = useFeatureFlagSettings()
 const props = defineProps<{
   title: string
   description: string
-  modelValue: boolean
   endAt: Date
 }>()
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: boolean): void
-}>()
-
-const value = useModelValueSyncer(props, emit)
+const value = defineModel<boolean>({
+  required: true
+})
 </script>
 
 <style lang="scss" module>
