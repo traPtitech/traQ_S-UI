@@ -15,6 +15,7 @@ export type NavigationItemType =
   | 'stamp-palette'
   | 'theme'
   | 'audio'
+  | 'feature-flag'
 
 // TODO: 言語系リソースの置き場所
 export const navigationRouteNameTitleMap: Record<
@@ -30,7 +31,8 @@ export const navigationRouteNameTitleMap: Record<
   settingsStampPaletteCreate: 'スタンプパレット',
   settingsStampPaletteDetail: 'スタンプパレット',
   settingsTheme: 'テーマ',
-  settingsAudio: '音声'
+  settingsAudio: '音声',
+  settingsFeatureFlag: '実験的機能'
 }
 
 export const navigations: {
@@ -79,6 +81,11 @@ export const navigations: {
   {
     routeName: 'settingsAudio',
     iconName: 'volume-high',
+    iconMdi: true
+  },
+  {
+    routeName: 'settingsFeatureFlag',
+    iconName: 'code-braces',
     iconMdi: true
   }
 ]
