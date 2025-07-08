@@ -7,27 +7,11 @@
     >
       <channel-tree :channels="homeChannelWithTree" show-shortened-path />
     </navigation-content-container>
-    <div v-if="featureFlags.flag_show_star_in_unread_channel_list.enabled">
-      <navigation-content-container
-        v-if="
-          dmChannelsWithNotification.length + noticeableChannels.length !== 0
-        "
-        subtitle="メンション"
-        :class="$style.item"
-      >
-        <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
-        <channel-list :channels="noticeableChannels" show-star />
-      </navigation-content-container>
-      <navigation-content-container
-        v-if="dmChannelsWithNotification.length + unreadChannels.length !== 0"
-        subtitle="未読"
-        :class="$style.item"
-      >
-        <channel-list :channels="unreadChannels" show-star />
-      </navigation-content-container>
-    </div>
     <div
-      v-else-if="featureFlags.flag_show_notified_in_unread_channel_list.enabled"
+      v-if="
+        featureFlags.flag_show_star_in_unread_channel_list.enabled ||
+        featureFlags.flag_show_notified_in_unread_channel_list.enabled
+      "
     >
       <navigation-content-container
         v-if="
@@ -37,14 +21,27 @@
         :class="$style.item"
       >
         <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
-        <channel-list :channels="noticeableChannels" />
+        <channel-list
+          :channels="noticeableChannels"
+          :show-star="
+            featureFlags.flag_show_star_in_unread_channel_list.enabled
+          "
+        />
       </navigation-content-container>
       <navigation-content-container
         v-if="dmChannelsWithNotification.length + unreadChannels.length !== 0"
         subtitle="未読"
         :class="$style.item"
       >
-        <channel-list :channels="unreadChannels" show-notified />
+        <channel-list
+          :channels="unreadChannels"
+          :show-star="
+            featureFlags.flag_show_star_in_unread_channel_list.enabled
+          "
+          :show-notified="
+            featureFlags.flag_show_notified_in_unread_channel_list.enabled
+          "
+        />
       </navigation-content-container>
     </div>
     <div v-else>
