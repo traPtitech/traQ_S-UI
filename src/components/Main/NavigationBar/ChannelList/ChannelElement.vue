@@ -159,7 +159,10 @@ const iconName = computed(() => {
   if (props.showStar && notificationState.isStarred) {
     return 'star-outline'
   }
-  if (props.showNotified && notificationState.subscriptionLevel === ChannelSubscribeLevel.notified) {
+  if (
+    props.showNotified &&
+    notificationState.subscriptionLevel === ChannelSubscribeLevel.notified
+  ) {
     return 'notified'
   }
   return 'hash'
