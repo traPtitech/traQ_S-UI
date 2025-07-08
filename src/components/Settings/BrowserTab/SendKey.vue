@@ -6,9 +6,10 @@
       :class="$style.radio"
     >
       <form-radio
-        v-model="sendWithModifierKeyValue"
+        :model-value="sendWithModifierKeyValue"
         label="修飾キー+Enterで送信 / Enterで改行"
         input-value="modifier"
+        @update:model-value="updateSendWithModifierKeyValue"
       />
     </div>
     <div
@@ -16,32 +17,28 @@
       :class="$style.radio"
     >
       <form-radio
-        v-model="sendWithModifierKeyValue"
+        :model-value="sendWithModifierKeyValue"
         label="Enterで送信 / 修飾キー+Enterで改行"
         input-value="none"
+        @update:model-value="updateSendWithModifierKeyValue"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { SendKey } from '/@/store/app/browserSettings'
-import { useModelSyncer } from '/@/composables/useModelSyncer'
 import FormRadio from '/@/components/UI/FormRadio.vue'
+import type { SendKey } from '/@/store/app/browserSettings'
 
-const props = defineProps<{
-  sendWithModifierKey: SendKey
-}>()
+const sendWithModifierKeyValue = defineModel<SendKey>('sendWithModifierKey', {
+  required: true
+})
 
-const emit = defineEmits<{
-  (e: 'update:sendWithModifierKey', _val: SendKey): void
-}>()
-
-const sendWithModifierKeyValue = useModelSyncer(
-  props,
-  emit,
-  'sendWithModifierKey'
-)
+const updateSendWithModifierKeyValue = (val: string) => {
+  if (val === 'modifier' || val === 'none') {
+    sendWithModifierKeyValue.value = val as SendKey
+  }
+}
 </script>
 
 <style lang="scss" module>
