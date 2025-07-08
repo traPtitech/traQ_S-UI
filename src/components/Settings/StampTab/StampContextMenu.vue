@@ -53,7 +53,7 @@ const canDeleteStamp = computed(() => {
   if (detail.value?.permissions.includes(UserPermission.DeleteStamp)) {
     return true
   }
-  
+
   if (!detail.value?.permissions.includes(UserPermission.DeleteMyStamp)) {
     return false
   }
@@ -62,7 +62,7 @@ const canDeleteStamp = computed(() => {
   if (!stamp) {
     return false
   }
-  
+
   return stamp.creatorId === myId.value
 })
 
