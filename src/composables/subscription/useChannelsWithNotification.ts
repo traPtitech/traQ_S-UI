@@ -14,7 +14,10 @@ const useChannelsWithNotification = () => {
   const mode = computed<'starred' | 'notified' | 'default' | 'both'>(() => {
     const { featureFlags } = useFeatureFlagSettings()
     if (featureFlags.value.flag_show_star_in_unread_channel_list.enabled) {
-      return featureFlags.value.flag_show_notified_in_unread_channel_list.enabled ? 'both' : 'starred'
+      return featureFlags.value.flag_show_notified_in_unread_channel_list
+        .enabled
+        ? 'both'
+        : 'starred'
     }
     if (featureFlags.value.flag_show_notified_in_unread_channel_list.enabled) {
       return 'notified'
@@ -60,18 +63,21 @@ const useChannelsWithNotification = () => {
     if (mode.value === 'both') {
       const noticeable = channelsWithUnreadMessage.value.filter(
         channel =>
-          subscriptionMap.value.get(channel.id) === ChannelSubscribeLevel.notified
+          subscriptionMap.value.get(channel.id) ===
+          ChannelSubscribeLevel.notified
       )
-      const starred = channelsWithUnreadMessage.value.filter(channel =>
-        starredChannelStore.staredChannelSet.value.has(channel.id)
-        && subscriptionMap.value.get(channel.id) !== ChannelSubscribeLevel.notified
+      const starred = channelsWithUnreadMessage.value.filter(
+        channel =>
+          starredChannelStore.staredChannelSet.value.has(channel.id) &&
+          subscriptionMap.value.get(channel.id) !==
+            ChannelSubscribeLevel.notified
       )
 
       const unread = channelsWithUnreadMessage.value.filter(
         channel =>
           subscriptionMap.value.get(channel.id) !==
-          ChannelSubscribeLevel.notified
-          && !starredChannelStore.staredChannelSet.value.has(channel.id)
+            ChannelSubscribeLevel.notified &&
+          !starredChannelStore.staredChannelSet.value.has(channel.id)
       )
       return [...noticeable, ...starred, ...unread]
     }
