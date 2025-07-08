@@ -39,9 +39,8 @@ const noiseSuppressionValue = defineModel<NoiseSuppressionType>({
 })
 
 const updateNoiseSuppressionValue = (val: string) => {
-  if (isNoiseSuppressionType(val)) {
-    noiseSuppressionValue.value = val
-  }
+  if (!isNoiseSuppressionType(val)) return
+  noiseSuppressionValue.value = val
 }
 
 const isAudioWorkletSupported = checkAudioWorkletSupport()
