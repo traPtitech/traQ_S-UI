@@ -134,7 +134,11 @@ export default defineConfig(({ command, mode }) => ({
     },
     include: ['tests/unit/**/*.spec.ts'],
     globals: true,
-    setupFiles: ['tests/unit/setup.ts', 'tests/unit/expectExtends.ts'],
+    setupFiles: [
+      'tests/unit/setup.ts',
+      'tests/unit/expectExtends.ts',
+      'fake-indexeddb/auto'
+    ],
     environment: 'jsdom',
     reporters: process.env.CI ? new GithubActionsReporter() : 'default',
     coverage: {
