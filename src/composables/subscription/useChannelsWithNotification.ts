@@ -48,10 +48,10 @@ const useChannelsWithNotification = () => {
   const noticeableChannels = computed(() => {
     if (mode.value === 'starred' || mode.value === 'both') {
       const starred = channelsWithNotification.value.filter(channel =>
-        starredChannelStore.staredChannelSet.value.has(channel.id)
+        starredChannelStore.isChannelOrAncestorStarred(channel.id)
       )
       const notStarred = channelsWithNotification.value.filter(
-        channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
+        channel => !starredChannelStore.isChannelOrAncestorStarred(channel.id)
       )
       return [...starred, ...notStarred]
     }
@@ -68,25 +68,25 @@ const useChannelsWithNotification = () => {
       )
       const starred = channelsWithUnreadMessage.value.filter(
         channel =>
-          starredChannelStore.staredChannelSet.value.has(channel.id) &&
+          starredChannelStore.isChannelOrAncestorStarred(channel.id) &&
           subscriptionMap.value.get(channel.id) !==
-            ChannelSubscribeLevel.notified
+          ChannelSubscribeLevel.notified
       )
 
       const unread = channelsWithUnreadMessage.value.filter(
         channel =>
           subscriptionMap.value.get(channel.id) !==
-            ChannelSubscribeLevel.notified &&
-          !starredChannelStore.staredChannelSet.value.has(channel.id)
+          ChannelSubscribeLevel.notified &&
+          !starredChannelStore.isChannelOrAncestorStarred(channel.id)
       )
       return [...noticeable, ...starred, ...unread]
     }
     if (mode.value === 'starred') {
       const starred = channelsWithUnreadMessage.value.filter(channel =>
-        starredChannelStore.staredChannelSet.value.has(channel.id)
+        starredChannelStore.isChannelOrAncestorStarred(channel.id)
       )
       const notStarred = channelsWithUnreadMessage.value.filter(
-        channel => !starredChannelStore.staredChannelSet.value.has(channel.id)
+        channel => !starredChannelStore.isChannelOrAncestorStarred(channel.id)
       )
       return [...starred, ...notStarred]
     }

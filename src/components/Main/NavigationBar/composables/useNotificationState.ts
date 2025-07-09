@@ -5,33 +5,18 @@ import { useSubscriptionStore } from '/@/store/domain/subscription'
 import type { ChannelId } from '/@/types/entity-ids'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
-import { useChannelsStore } from '/@/store/entities/channels'
 
 const useNotificationState = <T extends { id: ChannelId; children: T[] }>(
   channelTree: Ref<{ id: ChannelId; children?: T[] }>
 ) => {
   const { unreadChannelsMap, subscriptionMap } = useSubscriptionStore()
-  const { channelsMap } = useChannelsStore()
   const unreadChannel = computed(() =>
     unreadChannelsMap.value.get(channelTree.value.id)
   )
   const starredChannelStore = useStaredChannels()
 
   const isStarred = computed(() => {
-    const checkChannelIsStarred = (channelId: string): boolean => {
-      if (starredChannelStore.staredChannelSet.value.has(channelId)) {
-        return true
-      }
-
-      const channel = channelsMap.value.get(channelId)
-      if (!channel?.parentId) {
-        return false
-      }
-
-      return checkChannelIsStarred(channel.parentId)
-    }
-
-    return checkChannelIsStarred(channelTree.value.id)
+    return starredChannelStore.isChannelOrAncestorStarred(channelTree.value.id)
   })
 
   const notificationState = reactive({
