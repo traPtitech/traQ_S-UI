@@ -2,6 +2,7 @@
   <click-outside stop @click-outside="clearModal">
     <div :class="$style.wrapper" data-testid="usermodal">
       <link-button
+        v-if="isThisMyProfile"
         :class="$style.editProfile"
         icon-name="pencil"
         icon-mdi
@@ -52,6 +53,7 @@ import NavigationContent from './NavigationContent.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import LinkButton from '/@/components/Modal/UserModal/FeatureContainer/LinkButton.vue'
 import { useOpenLinkAndClearModal } from '/@/components/Modal/composables/useOpenLinkFromModal'
+import { useMeStore } from '/@/store/domain/me'
 
 const props = defineProps<{
   id: UserId
@@ -85,6 +87,10 @@ const { userDetail } = useUserDetail(props)
 const onEditProfileClick = async (event: MouseEvent) => {
   openLinkAndClearModal(event, '/settings/profile')
 }
+
+const { myId } = useMeStore()
+
+const isThisMyProfile = computed(() => props.id === myId.value)
 </script>
 
 <style lang="scss" module>
