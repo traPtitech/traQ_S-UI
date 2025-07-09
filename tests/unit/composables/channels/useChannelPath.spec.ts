@@ -37,33 +37,33 @@ describe('useChannelPath', () => {
             name: 'times',
             children: [
               {
-                name: 'Naru_18',
+                name: 'traPer1',
                 children: [
                   { name: 'sub', children: [] },
                   { name: 'lec_jikkyo', children: [] },
-                  { name: 'yasao_ignore', children: [] },
+                  { name: 'user1_ignore', children: [] },
                   { name: 'ChildLongNameIsNotCut', children: [] }
                 ]
               },
               {
-                name: 'yasao',
+                name: 'user1',
                 children: [
                   { name: 'sub', children: [] },
                   { name: 'bot', children: [] },
-                  { name: 'yasao_ignore', children: [] }
+                  { name: 'user1_ignore', children: [] }
                 ]
               },
               {
-                name: 'unsignedintger',
+                name: 'LongNametraPer',
                 children: [
-                  { name: 'unsignedintger_sup', children: [] },
+                  { name: 'LongNametraPer_sup', children: [] },
                   { name: 'test', children: [] }
                 ]
               },
               {
-                name: 'unsignedintger2',
+                name: 'LongNametraPer2',
                 children: [
-                  { name: 'unsignedintger_sup', children: [] },
+                  { name: 'LongNametraPer_sup', children: [] },
                   { name: 'test', children: [] }
                 ]
               },
@@ -77,7 +77,7 @@ describe('useChannelPath', () => {
             name: 'tips',
             children: [
               {
-                name: 'yasao',
+                name: 'user1',
                 children: [
                   { name: 'sub', children: [] },
                   { name: 'bot', children: [] }
@@ -136,18 +136,18 @@ describe('useChannelPath', () => {
   test.each([
     {
       id: '442154db-b6c2-4941-801f-60fe14bae4e2',
-      expectedPath: ['gps', 'times', 'Naru_18', 'sub'],
-      expectedShort: 'g/t/Naru_18/sub'
+      expectedPath: ['gps', 'times', 'traPer1', 'sub'],
+      expectedShort: 'g/t/traPer1/sub'
     },
     {
       id: '0d425611-823c-4177-933c-ec06c44ab347',
-      expectedPath: ['gps', 'times', 'Naru_18', 'lec_jikkyo'],
-      expectedShort: 'g/t/N/lec_jikkyo'
+      expectedPath: ['gps', 'times', 'traPer1', 'lec_jikkyo'],
+      expectedShort: 'g/t/t/lec_jikkyo'
     },
     {
       id: 'a76c14d0-259c-4d3c-aceb-9b82b3d82bce',
-      expectedPath: ['gps', 'times', 'Naru_18', 'ChildLongNameIsNotCut'],
-      expectedShort: 'g/t/N/ChildLongNameIsNotCut'
+      expectedPath: ['gps', 'times', 'traPer1', 'ChildLongNameIsNotCut'],
+      expectedShort: 'g/t/t/ChildLongNameIsNotCut'
     },
     {
       id: 'cad1904f-2f09-4330-aa22-69387e5e09c6',
@@ -156,23 +156,23 @@ describe('useChannelPath', () => {
     },
     {
       id: '3de8179a-3b0a-4ac3-9876-f70d5b9a2628',
-      expectedPath: ['gps', 'times', 'yasao', 'sub'],
-      expectedShort: 'g/times/yasao/sub'
+      expectedPath: ['gps', 'times', 'user1', 'sub'],
+      expectedShort: 'g/times/user1/sub'
     },
     {
       id: '6eebbc37-7025-4ced-be0d-581321e91c11',
-      expectedPath: ['gps', 'times', 'unsignedintger'],
-      expectedShort: 'g/t/unsignedintger'
+      expectedPath: ['gps', 'times', 'LongNametraPer'],
+      expectedShort: 'g/t/LongNametraPer'
     },
     {
       id: '7ebe3c61-20cc-4a5e-8836-603162b273d4',
-      expectedPath: ['gps', 'times', 'unsignedintger', 'unsignedintger_sup'],
-      expectedShort: 'g/t/u/unsignedintger_sup'
+      expectedPath: ['gps', 'times', 'LongNametraPer', 'LongNametraPer_sup'],
+      expectedShort: 'g/t/L/LongNametraPer_sup'
     },
     {
       id: '774374b6-ad61-4b0c-844e-7338412c7d85',
-      expectedPath: ['gps', 'times', 'unsignedintger2', 'test'],
-      expectedShort: 'g/t/unsignedintger2/test'
+      expectedPath: ['gps', 'times', 'LongNametraPer2', 'test'],
+      expectedShort: 'g/t/LongNametraPer2/test'
     },
     {
       id: '1f83dc32-8db0-4237-8440-a0fb4fe52301',
@@ -181,13 +181,13 @@ describe('useChannelPath', () => {
     },
     {
       id: '254b4e17-049c-4c0c-a27b-57d37d9eb573',
-      expectedPath: ['gps', 'times', 'Naru_18', 'yasao_ignore'],
-      expectedShort: 'g/t/N/yasao_ignore'
+      expectedPath: ['gps', 'times', 'traPer1', 'user1_ignore'],
+      expectedShort: 'g/t/t/user1_ignore'
     },
     {
       id: 'bb9cfb69-1adc-404b-ad94-5d59ee34dca1',
-      expectedPath: ['gps', 'times', 'yasao', 'yasao_ignore'],
-      expectedShort: 'g/t/y/yasao_ignore'
+      expectedPath: ['gps', 'times', 'user1', 'user1_ignore'],
+      expectedShort: 'g/t/u/user1_ignore'
     },
     {
       id: '09fd79f0-4635-48d9-aae4-b986a452f592',
@@ -226,7 +226,7 @@ const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
   },
   {
     id: '26f396b1-2233-4e2f-b217-a3fb511a4bf4',
-    name: 'Naru_18',
+    name: 'traPer1',
     archived: false,
     parentId: '220832c7-9e86-40e6-bf84-b3bb28eb7c3c'
   },
@@ -244,7 +244,7 @@ const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
   },
   {
     id: '254b4e17-049c-4c0c-a27b-57d37d9eb573',
-    name: 'yasao_ignore',
+    name: 'user1_ignore',
     archived: false,
     parentId: '26f396b1-2233-4e2f-b217-a3fb511a4bf4'
   },
@@ -256,7 +256,7 @@ const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
   },
   {
     id: '2b287559-12a5-4a95-a420-ee08aad2208c',
-    name: 'yasao',
+    name: 'user1',
     archived: false,
     parentId: '220832c7-9e86-40e6-bf84-b3bb28eb7c3c'
   },
@@ -274,19 +274,19 @@ const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
   },
   {
     id: 'bb9cfb69-1adc-404b-ad94-5d59ee34dca1',
-    name: 'yasao_ignore',
+    name: 'user1_ignore',
     archived: true,
     parentId: '2b287559-12a5-4a95-a420-ee08aad2208c'
   },
   {
     id: '6eebbc37-7025-4ced-be0d-581321e91c11',
-    name: 'unsignedintger',
+    name: 'LongNametraPer',
     archived: false,
     parentId: '220832c7-9e86-40e6-bf84-b3bb28eb7c3c'
   },
   {
     id: '7ebe3c61-20cc-4a5e-8836-603162b273d4',
-    name: 'unsignedintger_sup',
+    name: 'LongNametraPer_sup',
     archived: false,
     parentId: '6eebbc37-7025-4ced-be0d-581321e91c11'
   },
@@ -298,13 +298,13 @@ const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
   },
   {
     id: '5d9210f0-9809-474d-bfbb-287cd05a7fd5',
-    name: 'unsignedintger2',
+    name: 'LongNametraPer2',
     archived: false,
     parentId: '220832c7-9e86-40e6-bf84-b3bb28eb7c3c'
   },
   {
     id: '23c816cd-6239-411c-a2ef-a7dcd94430bd',
-    name: 'unsignedintger_sup',
+    name: 'LongNametraPer_sup',
     archived: false,
     parentId: '5d9210f0-9809-474d-bfbb-287cd05a7fd5'
   },
@@ -334,7 +334,7 @@ const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
   },
   {
     id: '268e5380-fbd3-4d97-846f-d15cf7f101ce',
-    name: 'yasao',
+    name: 'user1',
     archived: false,
     parentId: 'f56e6d34-1f8b-4065-85b9-b85d8762daaf'
   },
