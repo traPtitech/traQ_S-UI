@@ -9,6 +9,10 @@
           ? 'チャンネルツリーを閉じる'
           : undefined
     "
+    @mousedown.stop="onChannelIconClick"
+    @keydown.enter="onChannelIconKeydownEnter"
+    @mouseenter="onIconHovered"
+    @mouseleave="onIconHoveredLeave"
   >
     <div
       :class="$style.hash"
@@ -30,7 +34,7 @@
 import AIcon from '/@/components/UI/AIcon.vue'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     hasChild?: boolean
     isSelected?: boolean
@@ -50,6 +54,28 @@ withDefaults(
     iconName: 'hash'
   }
 )
+
+const emit = defineEmits<{
+  (e: 'click', event: KeyboardEvent | MouseEvent): void
+  (e: 'mouseenter'): void
+  (e: 'mouseleave'): void
+}>()
+
+const onChannelIconKeydownEnter = (e: KeyboardEvent) => {
+  if (props.hasChild) {
+    emit('click', e)
+  }
+}
+const onChannelIconClick = (e: MouseEvent) => {
+  emit('click', e)
+}
+
+const onIconHovered = () => {
+  emit('mouseenter')
+}
+const onIconHoveredLeave = () => {
+  emit('mouseleave')
+}
 </script>
 
 <style lang="scss" module>
