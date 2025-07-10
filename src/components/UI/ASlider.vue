@@ -1,7 +1,7 @@
 <template>
   <vue-slider
     v-if="isClickPrevent"
-    v-model="value"
+    v-model="modelValue"
     :min="min"
     :max="max"
     :disabled="disabled"
@@ -13,7 +13,7 @@
   />
   <vue-slider
     v-else
-    v-model="value"
+    v-model="modelValue"
     :min="min"
     :max="max"
     :disabled="disabled"
@@ -27,15 +27,15 @@
 <script lang="ts" setup>
 import type { TooltipFormatter, TooltipProp } from 'vue-slider-component'
 import _VueSlider from 'vue-slider-component'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
 // 厳密な型がついていないのでanyにする
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const VueSlider = _VueSlider as any
 
-const props = withDefaults(
+const modelValue = defineModel<number>({ required: true })
+
+withDefaults(
   defineProps<{
-    modelValue: number
     disabled?: boolean
     min?: number
     max?: number
@@ -52,12 +52,6 @@ const props = withDefaults(
     isClickPrevent: false
   }
 )
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: number): void
-}>()
-
-const value = useModelValueSyncer(props, emit)
 </script>
 
 <style lang="scss">

@@ -1,26 +1,28 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.input">
-      <filter-input v-model="value" on-secondary disable-ime focus-on-mount />
+      <filter-input
+        v-model="modelValue"
+        on-secondary
+        disable-ime
+        focus-on-mount
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import FilterInput from '/@/components/UI/FilterInput.vue'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-const props = defineProps<{
-  modelValue: string
+const modelValue = defineModel<string>({ required: true })
+
+defineProps<{
   isStarred: boolean
 }>()
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', v: string): void
+defineEmits<{
   (e: 'update:isStarred', v: boolean): void
 }>()
-
-const value = useModelValueSyncer(props, emit)
 </script>
 
 <style lang="scss" module>

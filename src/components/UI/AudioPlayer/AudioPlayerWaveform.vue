@@ -19,16 +19,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef } from 'vue'
 import { throttle } from 'throttle-debounce'
+import { computed, ref, shallowRef } from 'vue'
 import useHover from '/@/composables/dom/useHover'
+
+const currentTime = defineModel<number>('currentTime', { required: true })
 
 const props = defineProps<{
   waveformPath: string
   duration: number
 }>()
-
-const currentTime = defineModel<number>('currentTime', { required: true })
 
 const playedPercentage = computed(() =>
   props.duration === 0 ? 0 : (currentTime.value / props.duration) * 100
