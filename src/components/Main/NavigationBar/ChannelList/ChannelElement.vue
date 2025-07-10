@@ -118,6 +118,7 @@ const onClickIcon = (e: KeyboardEvent | MouseEvent) => {
     (!hasChildren.value || e.button !== LEFT_CLICK_BUTTON)
   ) {
     openChannel(e)
+    return
   }
   emit('clickHash', props.channel.id)
 }
