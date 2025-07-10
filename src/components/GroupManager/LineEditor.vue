@@ -44,7 +44,7 @@ import FormInput from '/@/components/UI/FormInput.vue'
 import useLocalInput from '/@/composables/utils/useLocalInput'
 import useToggle from '/@/composables/utils/useToggle'
 
-const props = defineProps<{
+defineProps<{
   label: string
   maxLength?: number
 }>()

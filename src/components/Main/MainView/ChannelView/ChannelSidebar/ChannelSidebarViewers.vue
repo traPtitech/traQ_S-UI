@@ -29,7 +29,7 @@ import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import useToggle from '/@/composables/utils/useToggle'
 import type { UserId } from '/@/types/entity-ids'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     viewerIds?: readonly UserId[]
     inactiveViewerIds?: readonly UserId[]
