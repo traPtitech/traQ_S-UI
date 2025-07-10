@@ -9,12 +9,12 @@
       <template #default>
         <channel-filter
           v-model="query"
-          v-model:is-stared="filterStarChannel"
+          v-model:is-starred="filterStarChannel"
           :class="$style.filter"
         />
         <channel-list-selector
           v-if="query.length === 0"
-          v-model:is-stared="filterStarChannel"
+          v-model:is-starred="filterStarChannel"
           :all-panel-id="allPanelId"
           :stared-panel-id="staredPanelId"
         />
@@ -51,25 +51,25 @@
 
 <script lang="ts" setup>
 import { computed, toRaw } from 'vue'
-import useChannelFilter from './composables/useChannelFilter'
-import { useModalStore } from '/@/store/ui/modal'
-import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useChannelTree } from '/@/store/domain/channelTree'
-import { useChannelsStore } from '/@/store/entities/channels'
-import ChannelList from '../ChannelList/ChannelList.vue'
-import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
+import ChannelList from '../ChannelList/ChannelList.vue'
+import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
+import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
+import useChannelFilter from './composables/useChannelFilter'
+import useStaredChannelDescendants from './composables/useStaredChannelDescendants'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
-import { filterTrees } from '/@/lib/basic/tree'
-import { constructTreeFromIds } from '/@/lib/channelTree'
-import type { ChannelTreeNode } from '/@/lib/channelTree'
-import useStaredChannelDescendants from './composables/useStaredChannelDescendants'
-import { useStaredChannels } from '/@/store/domain/staredChannels'
 import useChannelPath from '/@/composables/useChannelPath'
-import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
 import { randomString } from '/@/lib/basic/randomString'
+import { filterTrees } from '/@/lib/basic/tree'
+import type { ChannelTreeNode } from '/@/lib/channelTree'
+import { constructTreeFromIds } from '/@/lib/channelTree'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useChannelTree } from '/@/store/domain/channelTree'
+import { useStaredChannels } from '/@/store/domain/staredChannels'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useModalStore } from '/@/store/ui/modal'
 
 const { pushModal } = useModalStore()
 

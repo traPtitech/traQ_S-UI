@@ -17,11 +17,11 @@ import FilterInput from '/@/components/UI/FilterInput.vue'
 const modelValue = defineModel<string>({ required: true })
 
 defineProps<{
-  isStared: boolean
+  isStarred: boolean
 }>()
 
 defineEmits<{
-  (e: 'update:isStared', v: boolean): void
+  (e: 'update:isStarred', v: boolean): void
 }>()
 </script>
 
