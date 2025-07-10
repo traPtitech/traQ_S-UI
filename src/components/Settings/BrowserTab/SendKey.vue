@@ -36,7 +36,7 @@ const sendWithModifierKeyValue = defineModel<SendKey>('sendWithModifierKey', {
 
 const updateSendWithModifierKeyValue = (val: string) => {
   if (!isSendKey(val)) return
-  sendWithModifierKeyValue.value = val as SendKey
+  sendWithModifierKeyValue.value = val
 }
 </script>
 
