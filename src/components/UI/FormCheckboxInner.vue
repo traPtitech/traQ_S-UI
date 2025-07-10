@@ -17,7 +17,7 @@
 <script lang="ts" setup>
 const modelValue = defineModel<boolean>({ default: false })
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     onSecondary?: boolean
   }>(),

@@ -26,7 +26,7 @@ import { randomString } from '/@/lib/basic/randomString'
 
 const modelValue = defineModel<string | null>({ default: '' })
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     onSecondary?: boolean
     options: Array<{ key: string; value: string | null }>
