@@ -12,12 +12,12 @@ import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
 const props = defineProps<{
   modelValue: string
-  isStared: boolean
+  isStarred: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', v: string): void
-  (e: 'update:isStared', v: boolean): void
+  (e: 'update:isStarred', v: boolean): void
 }>()
 
 const value = useModelValueSyncer(props, emit)

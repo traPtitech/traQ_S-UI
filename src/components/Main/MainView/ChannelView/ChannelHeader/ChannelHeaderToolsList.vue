@@ -22,7 +22,7 @@
       />
     </template>
     <header-tools-item
-      v-if="isStared"
+      v-if="isStarred"
       :class="$style.starIcon"
       data-is-stared
       icon-name="star"
@@ -49,24 +49,24 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRef } from 'vue'
-import useChannelSubscriptionState from '/@/composables/subscription/useChannelSubscriptionState'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
+import { computed, toRef } from 'vue'
+import useStarChannel from './composables/useStarChannel'
+import HeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
+import { useQall } from '/@/composables/qall/useQall'
+import useChannelSubscriptionState from '/@/composables/subscription/useChannelSubscriptionState'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { ChannelId } from '/@/types/entity-ids'
-import HeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
-import useStarChannel from './composables/useStarChannel'
-import { useQall } from '/@/composables/qall/useQall'
 
 const props = withDefaults(
   defineProps<{
     channelId: ChannelId
-    isStared?: boolean
+    isStarred?: boolean
     isForcedChannel?: boolean
     isArchived?: boolean
   }>(),
   {
-    isStared: false,
+    isStarred: false,
     isForcedChannel: false,
     isArchived: false
   }
