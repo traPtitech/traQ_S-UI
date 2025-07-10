@@ -19,11 +19,16 @@
           :stared-panel-id="staredPanelId"
         />
         <template v-if="topLevelChannels.length > 0">
-          <channel-list
-            v-if="query.length > 0"
-            :channels="filteredChannels"
-            show-topic
-          />
+          <template v-if="query.length > 0">
+            <channel-list :channels="shownFilteredChannels" show-topic />
+            <form-button
+              v-if="!isChannelsExpanded"
+              :class="$style.expandButton"
+              type="tertiary"
+              label="全て表示"
+              @click="expandChannels"
+            />
+          </template>
           <template v-else-if="filterStarChannel">
             <channel-tree-component
               v-if="staredChannels.length > 0"
@@ -50,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRaw } from 'vue'
+import { computed, ref, toRaw, watch } from 'vue'
 import useChannelFilter from './composables/useChannelFilter'
 import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
@@ -63,13 +68,14 @@ import NavigationContentContainer from '/@/components/Main/NavigationBar/Navigat
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import { filterTrees } from '/@/lib/basic/tree'
-import { constructTreeFromIds } from '/@/lib/channelTree'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
+import { constructTreeFromIds } from '/@/lib/channelTree'
 import useStaredChannelDescendants from './composables/useStaredChannelDescendants'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
 import useChannelPath from '/@/composables/useChannelPath'
 import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
 import { randomString } from '/@/lib/basic/randomString'
+import FormButton from '/@/components/UI/FormButton.vue'
 
 const { pushModal } = useModalStore()
 
@@ -117,6 +123,27 @@ const channelListForFilter = computed(() =>
 )
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
 
+const INITIAL_CHANNEL_DISPLAY_LIMIT = 10
+const isChannelsExpanded = ref(false)
+watch(
+  () => query.value,
+  () => {
+    isChannelsExpanded.value =
+      filteredChannels.value.length <= INITIAL_CHANNEL_DISPLAY_LIMIT
+  }
+)
+const expandChannels = () => {
+  isChannelsExpanded.value = true
+}
+const shownFilteredChannels = computed(() =>
+  filteredChannels.value.slice(
+    0,
+    isChannelsExpanded.value
+      ? filteredChannels.value.length
+      : INITIAL_CHANNEL_DISPLAY_LIMIT
+  )
+)
+
 const onClickButton = () => {
   pushModal({
     type: 'channel-create'
@@ -131,6 +158,7 @@ const staredPanelId = randomString()
 .filter {
   margin-bottom: 16px;
 }
+
 .button {
   @include color-ui-secondary-inactive;
   padding-right: 16px;
@@ -139,5 +167,10 @@ const staredPanelId = randomString()
   &:focus {
     @include color-ui-secondary;
   }
+}
+
+.expandButton {
+  margin-top: 0.5rem;
+  width: 100%;
 }
 </style>
