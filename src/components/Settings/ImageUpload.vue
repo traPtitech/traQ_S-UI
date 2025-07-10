@@ -14,6 +14,8 @@ import 'cropperjs/dist/cropper.css'
 import { onUnmounted, ref, shallowRef, watchEffect } from 'vue'
 import useObjectURL from '/@/composables/dom/useObjectURL'
 
+const modelValue = defineModel<File | undefined>({ required: true })
+
 withDefaults(
   defineProps<{
     rounded?: boolean
@@ -40,8 +42,6 @@ const cropperDefaultOptions = {
   autoCrop: true,
   dragMode: 'move' as const
 } as const
-
-const modelValue = defineModel<File | undefined>({ required: true })
 
 const originalImg = ref<File | undefined>(modelValue.value)
 const originalImgUrl = useObjectURL(originalImg)

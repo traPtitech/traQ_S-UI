@@ -53,6 +53,10 @@ import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
 import { useQall } from '/@/composables/qall/useQall'
 import type { ChannelId, UserId } from '/@/types/entity-ids'
 
+const isViewersDetailOpen = defineModel<boolean>('isViewersDetailOpen', {
+  required: true
+})
+
 const props = withDefaults(
   defineProps<{
     channelId: ChannelId
@@ -78,10 +82,6 @@ const qallUserIds = computed(
       .find(room => room.channel.id === props.channelId)
       ?.participants?.map(participant => participant.user.id) ?? []
 )
-
-const isViewersDetailOpen = defineModel<boolean>('isViewersDetailOpen', {
-  required: true
-})
 </script>
 
 <style lang="scss" module>

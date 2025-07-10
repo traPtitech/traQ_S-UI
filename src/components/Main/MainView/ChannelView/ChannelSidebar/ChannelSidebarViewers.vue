@@ -29,6 +29,8 @@ import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import useToggle from '/@/composables/utils/useToggle'
 import type { UserId } from '/@/types/entity-ids'
 
+const modelValue = defineModel<boolean>({ required: true })
+
 withDefaults(
   defineProps<{
     viewerIds?: readonly UserId[]
@@ -38,8 +40,6 @@ withDefaults(
     viewerIds: () => []
   }
 )
-
-const modelValue = defineModel<boolean>({ required: true })
 
 const { value: isDetailOpen, toggle, close } = useToggle(modelValue)
 

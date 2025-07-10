@@ -24,6 +24,8 @@
 <script lang="ts" setup>
 import { randomString } from '/@/lib/basic/randomString'
 
+const modelValue = defineModel<string | null>({ default: '' })
+
 const props = withDefaults(
   defineProps<{
     onSecondary?: boolean
@@ -37,7 +39,6 @@ const props = withDefaults(
 
 const nullSymbol = Symbol('null')
 
-const modelValue = defineModel<string | null>({ default: '' })
 const id = randomString()
 </script>
 

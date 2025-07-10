@@ -32,6 +32,8 @@ import _VueSlider from 'vue-slider-component'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const VueSlider = _VueSlider as any
 
+const modelValue = defineModel<number>({ required: true })
+
 withDefaults(
   defineProps<{
     disabled?: boolean
@@ -50,8 +52,6 @@ withDefaults(
     isClickPrevent: false
   }
 )
-
-const modelValue = defineModel<number>({ required: true })
 </script>
 
 <style lang="scss">

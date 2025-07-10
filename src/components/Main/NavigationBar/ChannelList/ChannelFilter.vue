@@ -14,6 +14,8 @@
 <script lang="ts" setup>
 import FilterInput from '/@/components/UI/FilterInput.vue'
 
+const modelValue = defineModel<string>({ required: true })
+
 const props = defineProps<{
   isStared: boolean
 }>()
@@ -21,8 +23,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:isStared', v: boolean): void
 }>()
-
-const modelValue = defineModel<string>({ required: true })
 </script>
 
 <style lang="scss" module>

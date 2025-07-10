@@ -15,6 +15,8 @@
 </template>
 
 <script lang="ts" setup>
+const modelValue = defineModel<boolean>({ default: false })
+
 const props = withDefaults(
   defineProps<{
     onSecondary?: boolean
@@ -23,8 +25,6 @@ const props = withDefaults(
     onSecondary: false
   }
 )
-
-const modelValue = defineModel<boolean>({ default: false })
 </script>
 
 <style lang="scss" module>

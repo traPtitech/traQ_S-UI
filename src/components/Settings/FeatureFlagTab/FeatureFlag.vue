@@ -23,15 +23,15 @@ import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
 const { featureFlags } = useFeatureFlagSettings()
 
+const value = defineModel<boolean>({
+  required: true
+})
+
 const props = defineProps<{
   title: string
   description: string
   endAt: Date
 }>()
-
-const value = defineModel<boolean>({
-  required: true
-})
 </script>
 
 <style lang="scss" module>

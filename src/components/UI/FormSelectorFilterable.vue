@@ -23,6 +23,8 @@ import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 import { randomString } from '/@/lib/basic/randomString'
 
+const selectedOptionValue = defineModel<string | null>({ default: '' })
+
 type Option = { key: string; value: string | null }
 type Background = 'primary' | 'secondary'
 const props = withDefaults(
@@ -35,8 +37,6 @@ const props = withDefaults(
     background: 'secondary'
   }
 )
-
-const selectedOptionValue = defineModel<string | null>({ default: '' })
 const id = randomString()
 </script>
 

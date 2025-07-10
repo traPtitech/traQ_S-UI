@@ -48,6 +48,14 @@ import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { ChannelId } from '/@/types/entity-ids'
 
+const modelValue = defineModel<string>({ default: '' })
+const showTextAreaExpandButton = defineModel<boolean>(
+  'showTextAreaExpandButton',
+  {
+    default: false
+  }
+)
+
 const props = withDefaults(
   defineProps<{
     channelId?: ChannelId
@@ -79,7 +87,6 @@ const emit = defineEmits<{
 
 const firefoxFlag = isFirefox()
 
-const modelValue = defineModel<string>({ default: '' })
 const { isMobile } = useResponsiveStore()
 
 const textareaAutosizeRef = ref<InstanceType<typeof TextareaAutosize>>()
@@ -158,13 +165,6 @@ const textareaAutosizeStyle = computed(() => ({
   '--input-scrollbar-width': `${scollbarWidth}px`,
   '--max-height': textAreaAutoSizeMaxHeight.value
 }))
-
-const showTextAreaExpandButton = defineModel<boolean>(
-  'showTextAreaExpandButton',
-  {
-    default: false
-  }
-)
 
 const updateShowIsInputTextareaExpandButtonVisibility = () => {
   nextTick(() => {

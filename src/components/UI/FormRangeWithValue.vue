@@ -23,6 +23,8 @@ import { computed } from 'vue'
 import SemiFixedSizeText from './SemiFixedSizeText.vue'
 import ASlider from '/@/components/UI/ASlider.vue'
 
+const modelValue = defineModel<number>({ required: true })
+
 const props = withDefaults(
   defineProps<{
     maxText: string
@@ -36,8 +38,6 @@ const props = withDefaults(
     disabled: false
   }
 )
-
-const modelValue = defineModel<number>({ required: true })
 
 const showValue = computed(() => props.format(modelValue.value))
 </script>

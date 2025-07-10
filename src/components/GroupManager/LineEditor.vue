@@ -44,6 +44,8 @@ import FormInput from '/@/components/UI/FormInput.vue'
 import useLocalInput from '/@/composables/utils/useLocalInput'
 import useToggle from '/@/composables/utils/useToggle'
 
+const remoteValue = defineModel<string>({ required: true })
+
 defineProps<{
   label: string
   maxLength?: number
@@ -51,7 +53,6 @@ defineProps<{
 
 const inputRef = ref<InstanceType<typeof FormInput> | null>(null)
 
-const remoteValue = defineModel<string>({ required: true })
 const { localValue, isEditing } = useLocalInput(
   remoteValue,
   newValue => {
