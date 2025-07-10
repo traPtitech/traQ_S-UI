@@ -24,9 +24,9 @@
 
 <script lang="ts">
 import { computed } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
-import useTextFilter from '/@/composables/utils/useTextFilter'
 import useUserList from '/@/composables/users/useUserList'
+import useTextFilter from '/@/composables/utils/useTextFilter'
+import type { UserId } from '/@/types/entity-ids'
 
 const useUserFilter = (props: { excludeIds: UserId[] }) => {
   const userList = useUserList(
@@ -60,27 +60,24 @@ const useUserFilter = (props: { excludeIds: UserId[] }) => {
 </script>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import FormCheckboxInner from '/@/components/UI/FormCheckboxInner.vue'
 import FilterInput from '/@/components/UI/FilterInput.vue'
+import FormCheckboxInner from '/@/components/UI/FormCheckboxInner.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+
+const modelValue = defineModel<Set<UserId>>({ required: true })
 
 const props = defineProps<{
-  modelValue: Set<UserId>
   excludeIds: UserId[]
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: Set<UserId>): void
 }>()
 
 const { query, filteredUsers } = useUserFilter(props)
 
 const isAllChecked = computed(() =>
-  filteredUsers.value.every(user => props.modelValue.has(user.id))
+  filteredUsers.value.every(user => modelValue.value.has(user.id))
 )
 
 const toggleAll = () => {
-  const newModelValue = new Set(props.modelValue)
+  const newModelValue = new Set(modelValue.value)
   if (isAllChecked.value) {
     for (const user of filteredUsers.value) {
       newModelValue.delete(user.id)
@@ -90,17 +87,17 @@ const toggleAll = () => {
       newModelValue.add(user.id)
     }
   }
-  emit('update:modelValue', newModelValue)
+  modelValue.value = newModelValue
 }
 
 const toggle = (id: string) => {
-  const newModelValue = new Set(props.modelValue)
+  const newModelValue = new Set(modelValue.value)
   if (newModelValue.has(id)) {
     newModelValue.delete(id)
   } else {
     newModelValue.add(id)
   }
-  emit('update:modelValue', newModelValue)
+  modelValue.value = newModelValue
 }
 </script>
 

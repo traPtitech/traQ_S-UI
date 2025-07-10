@@ -20,35 +20,29 @@
 
 <script lang="ts" setup>
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
-import { sizeEffectSet, animeEffectSet } from '/@/lib/markdown/effects'
 import StampPickerEffectSelectorItem from './StampPickerEffectSelectorItem.vue'
+import { animeEffectSet, sizeEffectSet } from '/@/lib/markdown/effects'
 
-const props = defineProps<{
-  sizeEffect: SizeEffect | undefined
-  animeEffects: AnimeEffect[]
-}>()
-
-const emit = defineEmits<{
-  (n: 'update:sizeEffect', sizeEffect: SizeEffect | undefined): void
-  (n: 'update:animeEffects', animeEffects: AnimeEffect[]): void
-}>()
+const sizeEffect = defineModel<SizeEffect | undefined>('sizeEffect', {
+  required: true
+})
+const animeEffects = defineModel<AnimeEffect[]>('animeEffects', {
+  required: true
+})
 
 const animeEffectsWithoutAlias = [...animeEffectSet].filter(
   e => e !== 'conga' && e !== 'conga-inv'
 )
 
 const updateSizeEffect = (e: SizeEffect) => {
-  emit('update:sizeEffect', props.sizeEffect === e ? undefined : e)
+  sizeEffect.value = sizeEffect.value === e ? undefined : e
 }
 const updateAnimeEffect = (e: AnimeEffect) => {
-  if (!props.animeEffects.includes(e)) {
-    emit('update:animeEffects', [...props.animeEffects, e])
+  if (!animeEffects.value.includes(e)) {
+    animeEffects.value = [...animeEffects.value, e]
     return
   }
-  emit(
-    'update:animeEffects',
-    props.animeEffects.filter(ae => ae !== e)
-  )
+  animeEffects.value = animeEffects.value.filter(ae => ae !== e)
 }
 </script>
 

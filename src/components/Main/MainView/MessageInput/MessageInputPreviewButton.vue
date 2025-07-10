@@ -11,16 +11,10 @@
 <script lang="ts" setup>
 import IconButton from '/@/components/UI/IconButton.vue'
 
-const props = defineProps<{
-  modelValue: boolean
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', _v: boolean): void
-}>()
+const modelValue = defineModel<boolean>({ required: true })
 
 const toggle = () => {
-  emit('update:modelValue', !props.modelValue)
+  modelValue.value = !modelValue.value
 }
 </script>
 

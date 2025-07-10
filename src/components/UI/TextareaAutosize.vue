@@ -1,7 +1,7 @@
 <template>
   <textarea
     ref="textareaEle"
-    :value="value"
+    :value="modelValue"
     :class="$style.textarea"
     :readonly="readonly"
     :placeholder="placeholder"
@@ -19,11 +19,14 @@
 
 <script lang="ts" setup>
 import autosize from 'autosize'
-import { nextTick, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue'
-import useTextModelSyncer from '/@/composables/useTextModelSyncer'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import useOnInput from '/@/composables/useOnInput'
 
-const props = defineProps<{
-  modelValue: string
+const modelValue = defineModel<string>({
+  required: true
+})
+
+defineProps<{
   readonly?: boolean
   placeholder?: string
   rows?: string
@@ -31,7 +34,6 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', _val: string): void
   (e: 'beforeInput', _val: Event): void
   (e: 'keydown', _val: KeyboardEvent): void
   (e: 'keyup', _val: KeyboardEvent): void
@@ -41,7 +43,7 @@ const emit = defineEmits<{
   (e: 'autosize-updated'): void
 }>()
 
-const { value, onInput } = useTextModelSyncer(props, emit)
+const onInput = useOnInput(modelValue)
 
 const textareaEle = ref<HTMLTextAreaElement | null>(null)
 
@@ -64,7 +66,7 @@ onMounted(() => {
     })
   }
 })
-watch([toRef(props, 'modelValue')], autosizeUpdateTextarea)
+watch([modelValue], autosizeUpdateTextarea)
 onBeforeUnmount(() => {
   if (textareaEle.value) {
     autosize.destroy(textareaEle.value)

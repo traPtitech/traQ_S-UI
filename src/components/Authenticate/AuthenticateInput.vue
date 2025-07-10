@@ -5,7 +5,7 @@
       <input
         :id="id"
         :class="$style.input"
-        :value="value"
+        :value="modelValue"
         :type="typeWithShown"
         :autofocus="autofocus"
         :autocomplete="autocomplete"
@@ -32,13 +32,14 @@
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
-import { randomString } from '/@/lib/basic/randomString'
 import useShowPassword from '/@/composables/dom/useShowPassword'
-import useTextModelSyncer from '/@/composables/useTextModelSyncer'
+import useOnInput from '/@/composables/useOnInput'
+import { randomString } from '/@/lib/basic/randomString'
+
+const modelValue = defineModel<string>({ default: '' })
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string
     label?: string
     type?: 'text' | 'password'
     autocomplete?: string
@@ -47,7 +48,6 @@ const props = withDefaults(
     enterkeyhint?: string
   }>(),
   {
-    modelValue: '',
     label: '',
     type: 'text' as const,
     autofocus: false,
@@ -55,11 +55,7 @@ const props = withDefaults(
   }
 )
 
-const emits = defineEmits<{
-  (v: 'update:modelValue', val: string): void
-}>()
-
-const { value, onInput } = useTextModelSyncer(props, emits)
+const onInput = useOnInput(modelValue)
 
 const id = randomString()
 
