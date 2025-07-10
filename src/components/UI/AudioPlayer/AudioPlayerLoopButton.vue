@@ -11,7 +11,7 @@
 <script lang="ts" setup>
 import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     size: number
     disabled?: boolean
