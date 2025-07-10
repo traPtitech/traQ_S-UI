@@ -53,6 +53,7 @@
 
 <script lang="ts" setup>
 import { onMounted, shallowRef } from 'vue'
+import { defaultProps, type Props } from './FormInputProps'
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import useShowPassword from '/@/composables/dom/useShowPassword'
@@ -60,35 +61,7 @@ import useInput from '/@/composables/useInput'
 import { randomString } from '/@/lib/basic/randomString'
 import { isTouchDevice } from '/@/lib/dom/browser'
 
-const props = withDefaults(
-  defineProps<{
-    type?: string
-    modelValue?: string | number
-    onSecondary?: boolean
-    placeholder?: string
-    name?: string
-    autocomplete?: string
-    label?: string
-    prefix?: string
-    suffix?: string
-    min?: string
-    max?: string
-    step?: string
-    maxLength?: number
-    useChangeEvent?: boolean
-    focusOnMount?: boolean
-    selectOnFocus?: boolean
-  }>(),
-  {
-    type: 'text',
-    modelValue: '',
-    onSecondary: false,
-    placeholder: '',
-    useChangeEvent: false,
-    focusOnMount: false,
-    selectOnFocus: false
-  }
-)
+const props = withDefaults(defineProps<Props>(), defaultProps)
 
 const emit = defineEmits<{
   (e: 'update:modelValue', _val: string | number): void

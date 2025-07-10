@@ -4,15 +4,12 @@
       {{ label }}
     </div>
     <div v-if="isEditing" :class="$style.inputWrapper">
-      <form-input
+      <form-input-text
         ref="inputRef"
-        :model-value="localValue as string"
+        v-model="localValue"
         :class="$style.input"
         :max-length="maxLength"
         on-secondary
-        @update:model-value="
-          (val: string | number) => (localValue = val as string)
-        "
       />
       <a-icon
         name="check"
@@ -40,7 +37,7 @@
 <script lang="ts" setup>
 import { nextTick, ref } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
+import FormInputText from '/@/components/UI/FormInputText.vue'
 import useLocalInput from '/@/composables/utils/useLocalInput'
 import useToggle from '/@/composables/utils/useToggle'
 
@@ -51,7 +48,7 @@ defineProps<{
   maxLength?: number
 }>()
 
-const inputRef = ref<InstanceType<typeof FormInput> | null>(null)
+const inputRef = ref<InstanceType<typeof FormInputText> | null>(null)
 
 const { localValue, isEditing } = useLocalInput(
   remoteValue,
