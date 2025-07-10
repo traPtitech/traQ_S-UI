@@ -14,7 +14,7 @@ import 'cropperjs/dist/cropper.css'
 import { onUnmounted, ref, shallowRef, watchEffect } from 'vue'
 import useObjectURL from '/@/composables/dom/useObjectURL'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     rounded?: boolean
   }>(),

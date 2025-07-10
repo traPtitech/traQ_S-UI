@@ -32,7 +32,7 @@ import _VueSlider from 'vue-slider-component'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const VueSlider = _VueSlider as any
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     disabled?: boolean
     min?: number
