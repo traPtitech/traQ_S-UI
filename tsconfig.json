@@ -30,7 +30,8 @@
   },
   "vueCompilerOptions": {
     "strictTemplates": true,
-    "fallthroughAttributes": true
+    "fallthroughAttributes": true,
+    "strictVModel": false
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "public/**/*.js"],
   "exclude": ["node_modules"]
