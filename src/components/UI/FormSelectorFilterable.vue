@@ -27,7 +27,7 @@ const selectedOptionValue = defineModel<string | null>({ default: '' })
 
 type Option = { key: string; value: string | null }
 type Background = 'primary' | 'secondary'
-const props = withDefaults(
+withDefaults(
   defineProps<{
     background?: Background
     options: Array<Option>
@@ -37,6 +37,7 @@ const props = withDefaults(
     background: 'secondary'
   }
 )
+
 const id = randomString()
 </script>
 

@@ -54,9 +54,6 @@ const props = withDefaults(
 const style = computed(() => ({ maxHeight: props.maxHeight }))
 
 const inputRef = shallowRef<HTMLInputElement | null>(null)
-const focus = () => {
-  inputRef.value?.focus()
-}
 
 const id = randomString()
 </script>
