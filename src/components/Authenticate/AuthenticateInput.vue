@@ -36,6 +36,8 @@ import useShowPassword from '/@/composables/dom/useShowPassword'
 import useOnInput from '/@/composables/useOnInput'
 import { randomString } from '/@/lib/basic/randomString'
 
+const modelValue = defineModel<string>({ default: '' })
+
 const props = withDefaults(
   defineProps<{
     label?: string
@@ -52,8 +54,6 @@ const props = withDefaults(
     autocapitalize: 'off'
   }
 )
-
-const modelValue = defineModel<string>({ default: '' })
 
 const onInput = useOnInput(modelValue)
 

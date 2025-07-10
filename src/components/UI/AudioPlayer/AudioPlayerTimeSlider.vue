@@ -19,6 +19,8 @@
 import { computed } from 'vue'
 import ASlider from '/@/components/UI/ASlider.vue'
 
+const currentTime = defineModel<number>('currentTime', { required: true })
+
 const props = withDefaults(
   defineProps<{
     duration: number
@@ -28,8 +30,6 @@ const props = withDefaults(
     showBackgroundOnHover: false
   }
 )
-
-const currentTime = defineModel<number>('currentTime', { required: true })
 
 const roundedCurrentTime = computed({
   get() {

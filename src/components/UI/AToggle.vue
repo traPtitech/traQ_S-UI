@@ -12,6 +12,8 @@
 </template>
 
 <script lang="ts" setup>
+const modelValue = defineModel<boolean>({ default: false })
+
 const props = withDefaults(
   defineProps<{
     disabled?: boolean
@@ -20,8 +22,6 @@ const props = withDefaults(
     disabled: false
   }
 )
-
-const modelValue = defineModel<boolean>({ default: false })
 
 const toggle = () => {
   if (props.disabled) return

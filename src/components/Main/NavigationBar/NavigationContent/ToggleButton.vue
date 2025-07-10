@@ -12,6 +12,8 @@
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 
+const modelValue = defineModel<boolean>({ default: false })
+
 withDefaults(
   defineProps<{
     iconName: string
@@ -22,8 +24,6 @@ withDefaults(
     iconMdi: false
   }
 )
-
-const modelValue = defineModel<boolean>({ default: false })
 
 const toggle = () => {
   modelValue.value = !modelValue.value

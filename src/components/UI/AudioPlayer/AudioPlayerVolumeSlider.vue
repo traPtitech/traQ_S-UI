@@ -27,6 +27,8 @@ import { computed } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import ASlider from '/@/components/UI/ASlider.vue'
 
+const volume = defineModel<number>('volume', { required: true })
+
 withDefaults(
   defineProps<{
     keepExpanded?: boolean
@@ -37,8 +39,6 @@ withDefaults(
     disabled: false
   }
 )
-
-const volume = defineModel<number>('volume', { required: true })
 
 const roundedVolume = computed({
   get() {

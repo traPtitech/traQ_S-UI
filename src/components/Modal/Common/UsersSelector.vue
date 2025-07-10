@@ -64,11 +64,11 @@ import FilterInput from '/@/components/UI/FilterInput.vue'
 import FormCheckboxInner from '/@/components/UI/FormCheckboxInner.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 
+const modelValue = defineModel<Set<UserId>>({ required: true })
+
 const props = defineProps<{
   excludeIds: UserId[]
 }>()
-
-const modelValue = defineModel<Set<UserId>>({ required: true })
 
 const { query, filteredUsers } = useUserFilter(props)
 

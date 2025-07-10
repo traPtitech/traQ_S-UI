@@ -11,6 +11,8 @@
 <script lang="ts" setup>
 import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
+const loop = defineModel<boolean>('loop', { required: true })
+
 withDefaults(
   defineProps<{
     size: number
@@ -20,8 +22,6 @@ withDefaults(
     disabled: false
   }
 )
-
-const loop = defineModel<boolean>('loop', { required: true })
 
 const toggle = () => {
   loop.value = !loop.value

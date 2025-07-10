@@ -28,14 +28,14 @@
 import { ref, type Ref } from 'vue'
 import ATab from '/@/components/UI/ATab.vue'
 
+const isStared = defineModel<boolean>('isStared', {
+  required: true
+})
+
 defineProps<{
   allPanelId: string
   staredPanelId: string
 }>()
-
-const isStared = defineModel<boolean>('isStared', {
-  required: true
-})
 
 const allTabRef = ref<InstanceType<typeof ATab> | null>(null)
 const staredTabRef = ref<InstanceType<typeof ATab> | null>(null)

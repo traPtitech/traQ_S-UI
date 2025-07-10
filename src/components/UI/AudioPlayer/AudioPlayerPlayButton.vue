@@ -12,6 +12,8 @@
 <script lang="ts" setup>
 import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
+const isPlaying = defineModel<boolean>('isPlaying', { required: true })
+
 withDefaults(
   defineProps<{
     size: number
@@ -21,8 +23,6 @@ withDefaults(
     disabled: false
   }
 )
-
-const isPlaying = defineModel<boolean>('isPlaying', { required: true })
 
 const toggle = () => {
   isPlaying.value = !isPlaying.value

@@ -37,6 +37,8 @@ import AIcon from './AIcon.vue'
 import ClickOutside from './ClickOutside'
 import useToggle from '/@/composables/utils/useToggle'
 
+const modelValue = defineModel<string>({ default: '' })
+
 export type PopupSelectorItem = {
   value: string
   title: string
@@ -53,8 +55,6 @@ const props = withDefaults(
     small: false
   }
 )
-
-const modelValue = defineModel<string>({ default: '' })
 
 const { value: isOpen, toggle, close } = useToggle()
 
