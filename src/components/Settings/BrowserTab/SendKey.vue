@@ -6,10 +6,9 @@
       :class="$style.radio"
     >
       <form-radio
-        :model-value="sendWithModifierKeyValue"
+        v-model="sendWithModifierKeyString"
         label="修飾キー+Enterで送信 / Enterで改行"
         input-value="modifier"
-        @update:model-value="updateSendWithModifierKeyValue"
       />
     </div>
     <div
@@ -17,16 +16,16 @@
       :class="$style.radio"
     >
       <form-radio
-        :model-value="sendWithModifierKeyValue"
+        v-model="sendWithModifierKeyString"
         label="Enterで送信 / 修飾キー+Enterで改行"
         input-value="none"
-        @update:model-value="updateSendWithModifierKeyValue"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import { isSendKey, type SendKey } from '/@/store/app/browserSettings'
 
@@ -34,10 +33,14 @@ const sendWithModifierKeyValue = defineModel<SendKey>('sendWithModifierKey', {
   required: true
 })
 
-const updateSendWithModifierKeyValue = (val: string) => {
-  if (!isSendKey(val)) return
-  sendWithModifierKeyValue.value = val
-}
+const sendWithModifierKeyString = computed<string>({
+  get: () => sendWithModifierKeyValue.value,
+  set: newValue => {
+    if (isSendKey(newValue)) {
+      sendWithModifierKeyValue.value = newValue
+    }
+  }
+})
 </script>
 
 <style lang="scss" module>
