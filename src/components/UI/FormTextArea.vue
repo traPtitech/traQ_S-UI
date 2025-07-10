@@ -32,6 +32,8 @@ import LengthCount from '/@/components/UI/LengthCount.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import { randomString } from '/@/lib/basic/randomString'
 
+const modelValue = defineModel<string>({ default: '' })
+
 const props = withDefaults(
   defineProps<{
     onSecondary?: boolean
@@ -48,8 +50,6 @@ const props = withDefaults(
     rows: '1'
   }
 )
-
-const modelValue = defineModel<string>({ default: '' })
 
 const style = computed(() => ({ maxHeight: props.maxHeight }))
 

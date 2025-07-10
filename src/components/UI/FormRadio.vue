@@ -17,6 +17,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 
+const modelValue = defineModel<string>({ default: '' })
+
 const props = withDefaults(
   defineProps<{
     inputValue?: string
@@ -30,7 +32,6 @@ const props = withDefaults(
   }
 )
 
-const modelValue = defineModel<string>({ default: '' })
 const isChecked = computed(() => props.inputValue === modelValue.value)
 </script>
 
