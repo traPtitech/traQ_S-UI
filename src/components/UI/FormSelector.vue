@@ -7,7 +7,7 @@
       :class="$style.inputContainer"
       :data-on-secondary="$boolAttr(onSecondary)"
     >
-      <select :id="id" v-model="value" :class="$style.select">
+      <select :id="id" v-model="modelValue" :class="$style.select">
         <option
           v-for="option in options"
           :key="option.value ?? nullSymbol"
@@ -23,28 +23,22 @@
 
 <script lang="ts" setup>
 import { randomString } from '/@/lib/basic/randomString'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-const props = withDefaults(
+const modelValue = defineModel<string | null>({ default: '' })
+
+withDefaults(
   defineProps<{
-    modelValue?: string | null
     onSecondary?: boolean
     options: Array<{ key: string; value: string | null }>
     label?: string
   }>(),
   {
-    modelValue: '',
     onSecondary: false
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: string | null): void
-}>()
-
 const nullSymbol = Symbol('null')
 
-const value = useModelValueSyncer(props, emit)
 const id = randomString()
 </script>
 

@@ -41,18 +41,21 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelSidebarTopic from './ChannelSidebarTopic.vue'
-import ChannelSidebarPinned from './ChannelSidebarPinned.vue'
-import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
-import ChannelSidebarMember from './ChannelSidebarMember.vue'
-import ChannelSidebarEvents from './ChannelSidebarEvents.vue'
-import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
-import ChannelSidebarQall from './ChannelSidebarQall.vue'
-import ChannelSidebarBots from './ChannelSidebarBots.vue'
-import type { UserId, ChannelId } from '/@/types/entity-ids'
-import { useModelSyncer } from '/@/composables/useModelSyncer'
-import { useQall } from '/@/composables/qall/useQall'
 import { computed } from 'vue'
+import ChannelSidebarBots from './ChannelSidebarBots.vue'
+import ChannelSidebarEvents from './ChannelSidebarEvents.vue'
+import ChannelSidebarMember from './ChannelSidebarMember.vue'
+import ChannelSidebarPinned from './ChannelSidebarPinned.vue'
+import ChannelSidebarQall from './ChannelSidebarQall.vue'
+import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
+import ChannelSidebarTopic from './ChannelSidebarTopic.vue'
+import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
+import { useQall } from '/@/composables/qall/useQall'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
+
+const isViewersDetailOpen = defineModel<boolean>('isViewersDetailOpen', {
+  required: true
+})
 
 const props = withDefaults(
   defineProps<{
@@ -60,7 +63,6 @@ const props = withDefaults(
     viewerIds: readonly UserId[]
     inactiveViewerIds: readonly UserId[]
     pinnedMessagesCount?: number
-    isViewersDetailOpen: boolean
   }>(),
   {
     pinnedMessagesCount: 0
@@ -70,7 +72,6 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'moveToPinned'): void
   (e: 'moveToEvents'): void
-  (e: 'update:isViewersDetailOpen', value: boolean): void
 }>()
 
 const { rooms: roomWithParticipants } = useQall()
@@ -81,8 +82,6 @@ const qallUserIds = computed(
       .find(room => room.channel.id === props.channelId)
       ?.participants?.map(participant => participant.user.id) ?? []
 )
-
-const isViewersDetailOpen = useModelSyncer(props, emit, 'isViewersDetailOpen')
 </script>
 
 <style lang="scss" module>

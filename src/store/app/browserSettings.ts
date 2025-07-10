@@ -1,12 +1,12 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { computed, toRefs } from 'vue'
-import { replacePrefix } from '/@/lib/basic/string'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
-import { channelTreeMitt } from '/@/store/domain/channelTree'
-import { getVuexData } from '/@/store/utils/migrateFromVuex'
-import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { promisifyRequest } from 'idb-keyval'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+import { computed, toRefs } from 'vue'
+import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import { isObjectAndHasKey } from '/@/lib/basic/object'
+import { replacePrefix } from '/@/lib/basic/string'
+import { channelTreeMitt } from '/@/store/domain/channelTree'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import { getVuexData } from '/@/store/utils/migrateFromVuex'
 
 type State = {
   openMode: OpenMode
@@ -19,7 +19,13 @@ type State = {
   filterStarChannel: boolean
 }
 
-export type SendKey = 'modifier' | 'none'
+export const sendKeys = ['modifier', 'none'] as const
+export type SendKey = (typeof sendKeys)[number]
+
+export const isSendKey = (value: string): value is SendKey => {
+  return (sendKeys as readonly string[]).includes(value)
+}
+
 export interface SendKeys {
   /**
    * Windows: Alt, Mac: ⌥(Option)

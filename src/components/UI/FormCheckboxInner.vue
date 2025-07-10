@@ -1,6 +1,6 @@
 <template>
   <input
-    v-model="value"
+    v-model="modelValue"
     type="checkbox"
     :class="$style.checkbox"
     v-bind="$attrs"
@@ -15,24 +15,16 @@
 </template>
 
 <script lang="ts" setup>
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
+const modelValue = defineModel<boolean>({ default: false })
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    modelValue?: boolean
     onSecondary?: boolean
   }>(),
   {
-    modelValue: false,
     onSecondary: false
   }
 )
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: boolean): void
-}>()
-
-const value = useModelValueSyncer(props, emit)
 </script>
 
 <style lang="scss" module>

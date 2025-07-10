@@ -9,25 +9,21 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watchEffect, shallowRef, onUnmounted } from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
+import { onUnmounted, ref, shallowRef, watchEffect } from 'vue'
 import useObjectURL from '/@/composables/dom/useObjectURL'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-const props = withDefaults(
+const modelValue = defineModel<File | undefined>({ required: true })
+
+withDefaults(
   defineProps<{
-    modelValue: File | undefined
     rounded?: boolean
   }>(),
   {
     rounded: false
   }
 )
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', _file: File | undefined): void
-}>()
 
 // スタンプ編集用の設定
 const cropperGifOptions = {
@@ -47,9 +43,7 @@ const cropperDefaultOptions = {
   dragMode: 'move' as const
 } as const
 
-const value = useModelValueSyncer(props, emit)
-
-const originalImg = ref<File | undefined>(props.modelValue)
+const originalImg = ref<File | undefined>(modelValue.value)
 const originalImgUrl = useObjectURL(originalImg)
 
 let cropper: Cropper | undefined
@@ -60,7 +54,7 @@ const updateImgView = () => {
     if (cropper) cropper.destroy()
     return
   }
-  emit('update:modelValue', originalImg.value)
+  modelValue.value = originalImg.value
 
   if (!imgEle.value) return
 
@@ -73,11 +67,9 @@ const updateImgView = () => {
           cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
             if (!blob) return
 
-            emit(
-              'update:modelValue',
+            modelValue.value =
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               new File([blob], originalImg.value!.name, { type: blob.type })
-            )
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           }, originalImg.value!.type)
         },
@@ -85,11 +77,9 @@ const updateImgView = () => {
           cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
             if (!blob) return
 
-            emit(
-              'update:modelValue',
+            modelValue.value =
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               new File([blob], originalImg.value!.name, { type: blob.type })
-            )
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           }, originalImg.value!.type)
         }
@@ -103,7 +93,7 @@ const updateImgView = () => {
 watchEffect(updateImgView)
 
 watchEffect(() => {
-  if (!value.value) {
+  if (!modelValue.value) {
     originalImg.value = undefined
   }
 })

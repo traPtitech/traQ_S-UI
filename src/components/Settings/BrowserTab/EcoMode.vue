@@ -7,24 +7,15 @@
       </p>
     </div>
     <div>
-      <a-toggle v-model="value" />
+      <a-toggle v-model="modelValue" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import AToggle from '/@/components/UI/AToggle.vue'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-const props = defineProps<{
-  modelValue: boolean
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: boolean): void
-}>()
-
-const value = useModelValueSyncer(props, emit)
+const modelValue = defineModel<boolean>({ required: true })
 </script>
 
 <style lang="scss" module>

@@ -1,11 +1,11 @@
-import type { ComputedRef, WritableComputedRef } from 'vue'
-import { ref, computed, watch } from 'vue'
-import getCaretPosition from '/@/lib/dom/caretPosition'
-import type { Target } from '/@/lib/suggestion'
-import { getCurrentWord } from '/@/lib/suggestion'
+import type { ComputedRef, Ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { Word } from './useWordSuggestionList'
 import useWordSuggesterList from './useWordSuggestionList'
 import useInsertText from '/@/composables/dom/useInsertText'
+import getCaretPosition from '/@/lib/dom/caretPosition'
+import type { Target } from '/@/lib/suggestion'
+import { getCurrentWord } from '/@/lib/suggestion'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 
 export type WordOrConfirmedPart =
@@ -23,7 +23,7 @@ const MIN_LENGTH = 3
 
 const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
-  value: WritableComputedRef<string>
+  value: Ref<string>
 ) => {
   const { upsertLocalStampHistory } = useStampHistory()
 
