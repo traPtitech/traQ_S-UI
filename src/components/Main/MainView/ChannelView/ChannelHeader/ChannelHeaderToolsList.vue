@@ -24,7 +24,7 @@
     <header-tools-item
       v-if="isStarred"
       :class="$style.starIcon"
-      data-is-stared
+      data-is-starred
       icon-name="star"
       tooltip="お気に入りから外す"
       @click="unstarChannel"
@@ -162,7 +162,7 @@ const { starChannel, unstarChannel } = useStarChannel(props)
 }
 .starIcon {
   transition: transform 0.1s;
-  &[data-is-stared] {
+  &[data-is-starred] {
     animation: spinAndPress 0.5s;
   }
   &:hover {

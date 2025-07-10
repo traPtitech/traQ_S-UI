@@ -4,7 +4,7 @@
       :class="$style.tools"
       :channel-id="channelId"
       :is-forced-channel="channelState.forced"
-      :is-stared="channelState.stared"
+      :is-starred="channelState.stared"
       :is-archived="channelState.archived"
       @click-more="togglePopupMenu"
     >
@@ -22,12 +22,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { ChannelId } from '/@/types/entity-ids'
-import useChannelState from './composables/useChannelState'
-import ClickOutside from '/@/components/UI/ClickOutside'
 import ChannelHeaderToolsList from './ChannelHeaderToolsList.vue'
 import ChannelHeaderToolsMenu from './ChannelHeaderToolsMenu.vue'
+import useChannelState from './composables/useChannelState'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import useToggle from '/@/composables/utils/useToggle'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId
