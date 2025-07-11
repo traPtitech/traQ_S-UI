@@ -7,7 +7,7 @@
     <!-- チャンネル表示本体 -->
     <div :class="$style.channelContainer">
       <channel-element-icon
-        :class="$style.channelHash"
+        :class="$style.channelIcon"
         :has-child="hasChildren"
         :is-selected="isSelected"
         :is-opened="isOpened"
@@ -15,10 +15,9 @@
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
         :icon-name="iconName"
-        @mousedown.stop="onChannelHashClick"
-        @keydown.enter="onChannelHashKeydownEnter"
-        @mouseenter="onHashHovered"
-        @mouseleave="onHashHoveredLeave"
+        @click.stop="onClickIcon"
+        @mouseenter="onIconHovered"
+        @mouseleave="onIconHoveredLeave"
       />
       <router-link
         v-slot="{ href, navigate }"
@@ -113,17 +112,15 @@ const isSelected = computed(
     props.channel.id === primaryView.value.channelId
 )
 
-const onChannelHashKeydownEnter = () => {
-  if (hasChildren.value) {
-    emit('clickHash', props.channel.id)
-  }
-}
-const onChannelHashClick = (e: MouseEvent) => {
-  if (hasChildren.value && e.button === LEFT_CLICK_BUTTON) {
-    emit('clickHash', props.channel.id)
-  } else {
+const onClickIcon = (e: KeyboardEvent | MouseEvent) => {
+  if (
+    e instanceof MouseEvent &&
+    (!hasChildren.value || e.button !== LEFT_CLICK_BUTTON)
+  ) {
     openChannel(e)
+    return
   }
+  emit('clickHash', props.channel.id)
 }
 
 const { openLink } = useOpenLink()
@@ -139,20 +136,20 @@ const notificationState = useNotificationState(toRef(props, 'channel'))
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 const { isFocused, onFocus, onBlur } = useFocus()
 const {
-  isHovered: isHashHovered,
-  onMouseEnter: onHashMouseEnter,
-  onMouseLeave: onHashMouseLeave
+  isHovered: isIconHovered,
+  onMouseEnter: onIconMouseEnter,
+  onMouseLeave: onIconMouseLeave
 } = useHover()
-const onHashHovered = () => {
-  onHashMouseEnter()
+const onIconHovered = () => {
+  onIconMouseEnter()
   onMouseEnter()
 }
-const onHashHoveredLeave = () => {
-  onHashMouseLeave()
+const onIconHoveredLeave = () => {
+  onIconMouseLeave()
   onMouseLeave()
 }
 const isChannelBgHovered = computed(
-  () => isHovered.value && !(hasChildren.value && isHashHovered.value)
+  () => isHovered.value && !(hasChildren.value && isIconHovered.value)
 )
 
 const iconName = computed(() => {
@@ -208,7 +205,7 @@ $bgLeftShift: 8px;
   margin-left: $bgLeftShift;
   width: calc(100% - $bgLeftShift);
 }
-.channelHash {
+.channelIcon {
   flex-shrink: 0;
   cursor: pointer;
   position: absolute;

@@ -32,10 +32,7 @@
     <div :class="$style.element">
       <div :class="$style.container">
         <h3 :class="$style.header">カスタムテーマ</h3>
-        <edit-theme
-          v-if="state.type === 'custom'"
-          @change-theme="changeTheme"
-        />
+        <edit-theme v-if="state.type === 'custom'" />
       </div>
     </div>
 
