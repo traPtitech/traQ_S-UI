@@ -60,10 +60,11 @@ import useInput from '/@/composables/useInput'
 import { randomString } from '/@/lib/basic/randomString'
 import { isTouchDevice } from '/@/lib/dom/browser'
 
+const modelValue = defineModel<string | number>({ default: '' })
+
 const props = withDefaults(
   defineProps<{
     type?: string
-    modelValue?: string | number
     onSecondary?: boolean
     placeholder?: string
     name?: string
@@ -81,7 +82,6 @@ const props = withDefaults(
   }>(),
   {
     type: 'text',
-    modelValue: '',
     onSecondary: false,
     placeholder: '',
     useChangeEvent: false,
@@ -90,11 +90,7 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: string | number): void
-}>()
-
-const { onInput: onInputInternal } = useInput(emit, 'update:modelValue')
+const { onInput: onInputInternal } = useInput(modelValue)
 
 const onInput = (e: Event) => {
   if (props.useChangeEvent) return

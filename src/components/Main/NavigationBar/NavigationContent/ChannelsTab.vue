@@ -7,11 +7,7 @@
         </button>
       </template>
       <template #default>
-        <channel-filter
-          v-model="query"
-          v-model:is-starred="filterStarChannel"
-          :class="$style.filter"
-        />
+        <channel-filter v-model="query" :class="$style.filter" />
         <channel-list-selector
           v-if="query.length === 0"
           v-model:is-starred="filterStarChannel"

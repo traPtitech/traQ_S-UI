@@ -1,11 +1,10 @@
+import type { Ref } from 'vue'
+
 type InputElement = HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
 
-const useInput = <EventName extends string = 'input-value'>(
-  emit: (name: EventName, value: string | number) => void,
-  eventName: EventName
-) => {
+const useInput = (modelValue: Ref<string | number>) => {
   const onInput = (event: Event) =>
-    emit(eventName, (event.target as InputElement).value)
+    (modelValue.value = (event.target as InputElement).value)
   return {
     onInput
   }
