@@ -15,6 +15,10 @@ const useNotificationState = <T extends { id: ChannelId; children: T[] }>(
   )
   const starredChannelStore = useStaredChannels()
 
+  const isStarred = computed(() => {
+    return starredChannelStore.isChannelOrAncestorStarred(channelTree.value.id)
+  })
+
   const notificationState = reactive({
     hasNotification: computed(() => !!unreadChannel.value),
     hasNotificationOnChild: computed(() => {
@@ -24,13 +28,7 @@ const useNotificationState = <T extends { id: ChannelId; children: T[] }>(
     }),
     unreadCount: computed(() => unreadChannel.value?.count),
     isNoticeable: computed(() => unreadChannel.value?.noticeable),
-    isStarred: computed(
-      () =>
-        !!unreadChannel.value &&
-        starredChannelStore.staredChannelSet.value.has(
-          unreadChannel.value.channelId
-        )
-    ),
+    isStarred,
     subscriptionLevel: computed(
       () =>
         subscriptionMap.value.get(channelTree.value.id) ??
