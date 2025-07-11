@@ -33,10 +33,7 @@ const previewText = computed(() => {
 
   const stampName = stampsMap.value.get(props.stampId)?.name ?? ''
 
-  return constructStampString(
-    stampName, 
-    props.sizeEffect, 
-    props.animeEffects)
+  return constructStampString(stampName, props.sizeEffect, props.animeEffects)
 })
 
 const rendered = ref('')
