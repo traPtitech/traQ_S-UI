@@ -25,21 +25,18 @@ const props = defineProps<{
 }>()
 
 const { stampsMap } = useStampsStore()
-const stampName = computed(() => {
-  if (!props.stampId) {
-    return ''
-  }
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return stampsMap.value.get(props.stampId)!.name
-})
 
 const previewText = computed(() => {
   if (!props.stampId) {
     return ''
   }
 
+  const stampName = stampsMap.value.get(props.stampId)?.name ?? ''
+
+
   return constructStampString(
-    stampName.value,
+
+    stampName,
     props.sizeEffect,
     props.animeEffects
   )
