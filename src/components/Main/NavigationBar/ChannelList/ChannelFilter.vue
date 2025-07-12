@@ -15,14 +15,6 @@
 import FilterInput from '/@/components/UI/FilterInput.vue'
 
 const modelValue = defineModel<string>({ required: true })
-
-defineProps<{
-  isStarred: boolean
-}>()
-
-defineEmits<{
-  (e: 'update:isStarred', v: boolean): void
-}>()
 </script>
 
 <style lang="scss" module>

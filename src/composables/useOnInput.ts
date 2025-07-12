@@ -1,8 +1,7 @@
 import { type Ref } from 'vue'
 
-const useOnInput = (modelValue: Ref<string>) => (e: Event) => {
-  const text = (e.target as HTMLInputElement | HTMLTextAreaElement).value
-  modelValue.value = text
+const useOnInput = (modelValue: Ref<string | number>) => (e: Event) => {
+  modelValue.value = (e.target as HTMLInputElement | HTMLTextAreaElement).value
 }
 
 export default useOnInput
