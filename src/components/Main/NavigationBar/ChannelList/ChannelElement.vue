@@ -156,14 +156,14 @@ const isChannelBgHovered = computed(
 )
 
 const iconName = computed(() => {
-  if (props.showStar && notificationState.isStarred) {
-    return 'star-outline'
-  }
   if (
     props.showNotified &&
     notificationState.subscriptionLevel === ChannelSubscribeLevel.notified
   ) {
     return 'notified'
+  }
+  if (props.showStar && notificationState.isStarred) {
+    return 'star-outline'
   }
   return 'hash'
 })
