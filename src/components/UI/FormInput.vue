@@ -56,7 +56,7 @@ import { onMounted, shallowRef } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import useShowPassword from '/@/composables/dom/useShowPassword'
-import useInput from '/@/composables/useInput'
+import useOnInput from '/@/composables/useOnInput'
 import { randomString } from '/@/lib/basic/randomString'
 import { isTouchDevice } from '/@/lib/dom/browser'
 
@@ -90,7 +90,7 @@ const props = withDefaults(
   }
 )
 
-const { onInput: onInputInternal } = useInput(modelValue)
+const onInputInternal = useOnInput(modelValue)
 
 const onInput = (e: Event) => {
   if (props.useChangeEvent) return
