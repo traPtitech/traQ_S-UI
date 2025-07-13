@@ -248,10 +248,12 @@ const useChannelPath = () => {
     )
   }
 
-  const memoizedChannelIdToPathString = memoizeWithPurge(channelIdToPathString)
+  const memoizedChannelIdToShortPathString = memoizeWithPurge(
+    channelIdToShortPathString
+  )
 
   watch(channelsMap, () => {
-    memoizedChannelIdToPathString.purge()
+    memoizedChannelIdToShortPathString.purge()
   })
 
   const channelIdToLink = (id: ChannelId | DMChannelId) => {
@@ -267,7 +269,7 @@ const useChannelPath = () => {
     channelIdToPath,
     channelIdToSimpleChannelPath,
     channelIdToPathString,
-    channelIdToShortPathString: memoizedChannelIdToPathString.memoized,
+    channelIdToShortPathString: memoizedChannelIdToShortPathString.memoized,
     channelIdToLink
   }
 }
