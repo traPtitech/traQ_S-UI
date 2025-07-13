@@ -6,6 +6,8 @@ import { channelPathToId } from '/@/lib/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '../store/entities/users'
 import { useChannelTree } from '/@/store/domain/channelTree'
+import { memoizeWithPurge } from '/@/lib/memoize'
+import { watch } from 'vue'
 
 const MAX_SHORT_PATH_LENGTH = 20
 
@@ -246,6 +248,12 @@ const useChannelPath = () => {
     )
   }
 
+  const memoizedChannelIdToPathString = memoizeWithPurge(channelIdToPathString)
+
+  watch(channelsMap, () => {
+    memoizedChannelIdToPathString.purge()
+  })
+
   const channelIdToLink = (id: ChannelId | DMChannelId) => {
     const pathString = channelIdToPathString(id, false)
     if (dmChannelsMap.value.has(id)) {
@@ -259,7 +267,7 @@ const useChannelPath = () => {
     channelIdToPath,
     channelIdToSimpleChannelPath,
     channelIdToPathString,
-    channelIdToShortPathString,
+    channelIdToShortPathString: memoizedChannelIdToPathString.memoized,
     channelIdToLink
   }
 }
