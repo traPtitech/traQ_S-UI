@@ -96,6 +96,24 @@ const useMessageFetcher = (
     )
   }
 
+  const onLoadLatestMessagesRequest = async () => {
+    isLoading.value = true
+
+    await runWithIdentifierCheck(
+      async () => {
+        const newMessageIds = await fetchFormerMessages(isReachedEnd)
+        await renderMessageFromIds(newMessageIds)
+        return newMessageIds
+      },
+      newMessageIds => {
+        isLoading.value = false
+        isInitialLoad.value = false
+        lastLoadingDirection.value = 'latest'
+        messageIds.value = [...new Set([...newMessageIds, ...messageIds.value])]
+      }
+    )
+  }
+
   const onLoadLatterMessagesRequest = async () => {
     if (!fetchLatterMessages || isReachedLatest.value) {
       return
@@ -191,7 +209,7 @@ const useMessageFetcher = (
       onLoadAroundMessagesRequest(props.entryMessageId)
     } else {
       isReachedLatest.value = true
-      onLoadFormerMessagesRequest()
+      onLoadLatestMessagesRequest()
     }
   }
 
