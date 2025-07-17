@@ -6,7 +6,7 @@ import { useStampsStore } from '/@/store/entities/stamps'
 
 const emojiAltnameTable = import('/@/assets/emoji_altname_table.json')
 
-type AltName = string & { nominalTyping: symbol }
+type AltName = string & { readonly nominalTyping: unique symbol }
 
 const useStampFilter = () => {
   const { stampsMap } = useStampsStore()
