@@ -153,7 +153,7 @@ onBeforeUnmount(async () => {
 useBeforeUnload(
   hasPaletteUnsavedChanges,
   '未保存の編集内容があります。ページを離れますか？',
-  () => {
+  _event => {
     isConfirmed.value = true
   }
 )

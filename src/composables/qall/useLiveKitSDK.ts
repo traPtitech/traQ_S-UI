@@ -107,14 +107,18 @@ function handleTrackSubscribed(
 
 function handleTrackUnsubscribed(
   _track: RemoteTrack,
-  publication: RemoteTrackPublication
+  publication: RemoteTrackPublication,
+  _participant: RemoteParticipant
 ) {
   // remove tracks from all attached elements
   tracksMap.value.delete(publication.trackSid)
   screenShareTrackSidMap.value.delete(publication.trackSid)
 }
 
-function handleLocalTrackUnpublished(publication: LocalTrackPublication) {
+function handleLocalTrackUnpublished(
+  publication: LocalTrackPublication,
+  _participant: LocalParticipant
+) {
   // when local tracks are ended, update UI to remove them from rendering
   tracksMap.value.delete(publication.trackSid)
   screenShareTrackSidMap.value.delete(publication.trackSid)
@@ -150,17 +154,20 @@ function handleDataReceived(payload: Uint8Array<ArrayBufferLike>) {
   }
 }
 
-function handleParticipantAttributesChanged(changed: Record<string, string>) {
+function handleParticipantAttributesChanged(
+  changed: Record<string, string>,
+  _participant: Participant
+) {
   Object.keys(changed).forEach(key =>
     screenShareTrackSidMap.value.set(key, changed[key] ?? '')
   )
 }
 
-function handleParticipantConnected() {
+function handleParticipantConnected(_participant: Participant) {
   mixer.value?.playFileSource('qall_joined')
 }
 
-function handleParticipantDisconnected() {
+function handleParticipantDisconnected(_participant: Participant) {
   mixer.value?.playFileSource('qall_left')
 }
 
@@ -327,7 +334,7 @@ const removeMicTrack = async () => {
       addErrorToast('ルームが存在しません')
       return
     }
-    for (const [_, trackInfo] of tracksMap.value) {
+    for (const [_trackSid, trackInfo] of tracksMap.value) {
       if (trackInfo.isRemote) continue
       if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
         await trackInfo.trackPublication?.track?.mute()
@@ -353,7 +360,7 @@ const toggleMicTrack = async () => {
       addErrorToast('ルームが存在しません')
       return
     }
-    for (const [_, trackInfo] of tracksMap.value) {
+    for (const [_trackSid, trackInfo] of tracksMap.value) {
       if (trackInfo.isRemote) continue
       if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
         await trackInfo.trackPublication?.track?.unmute()

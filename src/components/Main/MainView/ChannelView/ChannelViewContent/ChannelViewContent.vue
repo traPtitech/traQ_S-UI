@@ -60,7 +60,7 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
       }
     }
   }
-  const onDragStart = () => {
+  const onDragStart = (_event: DragEvent) => {
     isDragStartInside.value = true
   }
 

@@ -323,7 +323,7 @@ const useImageViewer = (
     rewriteCenterDiffWithClamp(newCenterDiff)
   })
 
-  useMouseWheel(containerEle, e => {
+  useMouseWheel(containerEle, (e, _point) => {
     const deltaXScale = WHEEL_SCALE_DELTAX.get(e.deltaMode)
     const deltaYScale = WHEEL_SCALE_DELTAY.get(e.deltaMode)
     if (deltaXScale === undefined || deltaYScale === undefined) return
@@ -388,7 +388,7 @@ const useImageViewer = (
       }
       rewriteCenterDiffWithClamp(newCenterDiff)
     },
-    (newDistance, firstDistance, newMidPoint, firstMidPoint) => {
+    (newDistance, firstDistance, newMidPoint, firstMidPoint, _rotateAngle) => {
       if (containerEle.value) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const beforeScale = firstState!.zoomRatio
