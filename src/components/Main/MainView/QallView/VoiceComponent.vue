@@ -3,11 +3,13 @@ import { computed } from 'vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import AudioTrack from './AudioTrack.vue'
 import { useUserVolume } from '/@/store/app/userVolume'
+
 const { trackInfo } = defineProps<{
   trackInfo: TrackInfo
-  isShow?: boolean
 }>()
+
 const { getStore } = useUserVolume()
+
 const volume = computed<number | string>(
   () => getStore(trackInfo.username) ?? 1
 )
