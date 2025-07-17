@@ -88,7 +88,6 @@ const components: Record<ModalStateType, Component> = {
   group: GroupModal,
   'channel-create': ChannelCreateModal,
   file: FileModal,
-  // qrcode: QRCodeModal,
   'clip-create': ClipCreateModal,
   'clip-folder-create': ClipFolderCreateModal,
   'channel-manage': ChannelManageModal,
