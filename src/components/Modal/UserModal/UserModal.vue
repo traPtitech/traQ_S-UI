@@ -1,11 +1,12 @@
 <template>
   <click-outside stop @click-outside="clearModal">
     <div :class="$style.wrapper" data-testid="usermodal">
-      <link-button
+      <edit-button
         v-if="isThisMyProfile"
         :class="$style.editProfile"
         icon-name="pencil"
         icon-mdi
+        :size="isMobile ? 24 : 32"
         @mousedown="onEditProfileClick"
       />
 
@@ -51,6 +52,7 @@ import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
 import NavigationSelector from './NavigationSelector.vue'
 import NavigationContent from './NavigationContent.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
+import EditButton from '/@/components/UI/EditButton.vue'
 import LinkButton from '/@/components/Modal/UserModal/FeatureContainer/LinkButton.vue'
 import { useOpenLinkAndClearModal } from '/@/components/Modal/composables/useOpenLinkFromModal'
 import { useMeStore } from '/@/store/domain/me'
