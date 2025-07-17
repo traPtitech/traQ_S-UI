@@ -81,7 +81,14 @@ export default [
       ],
 
       '@typescript-eslint/consistent-type-imports': 'error',
-      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          varsIgnorePattern: '^_',
+          argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_'
+        }
+      ],
       'unused-imports/no-unused-imports': 'warn',
       'unused-imports/no-unused-vars': 'off',
       'vue/require-default-prop': 'off',

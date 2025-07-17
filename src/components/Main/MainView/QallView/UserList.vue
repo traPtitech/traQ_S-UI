@@ -14,9 +14,7 @@ onMounted(async () => {
   const devices = await navigator.mediaDevices.enumerateDevices()
   videoInputs.value = devices.filter(d => d.kind === 'videoinput')
 })
-const selectedVideoInput = ref<MediaDeviceInfo>()
 const selectedSid = ref<string>()
-const showAllTracks = ref(false)
 
 const largeCard = useTemplateRef<HTMLDivElement>('largeCard')
 const largeCardParent = useTemplateRef<HTMLDivElement>('largeCardParent')

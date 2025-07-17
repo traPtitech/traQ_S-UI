@@ -68,8 +68,7 @@ const {
   moveToDefaultPage,
   moveToPinnedPage,
   moveToEventsPage,
-  openSidebar,
-  closeSidebar
+  openSidebar
 } = useChannelSidebarCommon()
 
 const channelName = computed(

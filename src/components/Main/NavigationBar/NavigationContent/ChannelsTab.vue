@@ -52,7 +52,6 @@ import ChannelList from '../ChannelList/ChannelList.vue'
 import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
 import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
 import useChannelFilter from './composables/useChannelFilter'
-import useStaredChannelDescendants from './composables/useStaredChannelDescendants'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
@@ -107,7 +106,6 @@ const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
 }
 
 const { filterStarChannel } = useBrowserSettings()
-const staredChannelDescendantList = useStaredChannelDescendants()
 const channelListForFilter = computed(() =>
   [...channelsMap.value.values()].filter(channel => !channel.archived)
 )

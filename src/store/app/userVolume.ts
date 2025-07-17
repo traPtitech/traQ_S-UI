@@ -10,7 +10,7 @@ const useUserVolumePinia = defineStore('store/app/userVolume', () => {
     userVolumeMap: new Map<string, number>()
   }
 
-  const [_state, restoring, restoringPromise] = useIndexedDbValue(
+  const [_state, _restoring, restoringPromise] = useIndexedDbValue(
     'store/app/userVolume',
     1,
     {

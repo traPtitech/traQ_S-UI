@@ -57,7 +57,7 @@ import SidebarEventArchiveChanged from './SidebarEventArchiveChanged.vue'
 import SidebarEventForcedNotificationChanged from './SidebarEventForcedNotificationChanged.vue'
 import SidebarEventChildCreated from './SidebarEventChildCreated.vue'
 
-const props = defineProps<{
+defineProps<{
   event: ParsedChannelEvent
 }>()
 </script>

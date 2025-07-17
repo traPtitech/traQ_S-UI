@@ -94,7 +94,7 @@ const useRouteWatcher = () => {
         channelId: id,
         entryMessageId: getFirstQuery(route.query['message']) ?? undefined
       })
-    } catch (e) {
+    } catch (_) {
       state.view = 'not-found'
       return
     }
@@ -170,7 +170,7 @@ const useRouteWatcher = () => {
       channelPath = openChannelPath.value
       try {
         channelId = channelPathToId(channelPath.split('/'), channelTree.value)
-      } catch (e) {
+      } catch (_) {
         state.view = 'not-found'
         return
       }

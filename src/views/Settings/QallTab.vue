@@ -126,7 +126,7 @@ const useDevicesInfo = () => {
   const fetchDeviceList = async () => {
     try {
       devices.value = await navigator.mediaDevices.enumerateDevices()
-    } catch (e) {
+    } catch (_) {
       fetchFailed.value = true
     }
     if (devices.value.length === 0 || devices.value[0]?.label === '') {
