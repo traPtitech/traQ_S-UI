@@ -53,7 +53,7 @@ const { openGroupCreateModal } = useGroupCreateModalOpener()
   margin: 0 auto;
 }
 .item {
-  margin: 24px 0;
+  margin: 24px 0px;
   &:first-child {
     margin-top: 0;
   }
@@ -81,6 +81,6 @@ const { openGroupCreateModal } = useGroupCreateModalOpener()
   @include color-ui-secondary;
 }
 .list {
-  padding: 0 16px;
+  padding: 0px 16px 50px 16px;
 }
 </style>
