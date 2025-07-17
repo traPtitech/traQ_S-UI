@@ -92,7 +92,6 @@ export type Config = Readonly<{
    * QRコード表示ボタンの有効化
    * 省略時は`false`
    */
-  showQrCodeButton?: boolean
   /**
    * 大きなファイルサイズのファイルを送信した際に表示される補足メッセージ
    * `%s`の部分には「画像」または「ファイル」が入る

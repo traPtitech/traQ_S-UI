@@ -16,7 +16,6 @@ export type ModalStateType =
   | 'file'
   | 'tag'
   | 'channel-create'
-  | 'qrcode'
   | 'clip-create'
   | 'clip-folder-create'
   | 'channel-manage'
@@ -38,7 +37,6 @@ export type ModalState =
   | GroupModalState
   | TagModalState
   | ChannelCreateModalState
-  | QrCodeModalState
   | ClipCreateModalState
   | ClipFolderCreateModalState
   | ChannelManageModalState
@@ -98,9 +96,7 @@ interface ChannelCreateModalState extends BaseModalState {
   parentChannelId?: ChannelId
 }
 
-interface QrCodeModalState extends BaseModalState {
-  type: 'qrcode'
-}
+
 
 interface ClipCreateModalState extends BaseModalState {
   type: 'clip-create'
