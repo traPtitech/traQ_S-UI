@@ -8,7 +8,6 @@ import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
-import { useMessagesStore } from '/@/store/entities/messages'
 import type { ChannelId, UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
@@ -25,19 +24,16 @@ const {
   isReachedLatest,
   isLoading,
   lastLoadingDirection,
-  unreadSince,
   onLoadFormerMessagesRequest,
   onLoadLatterMessagesRequest
 } = useChannelMessageFetcher(scrollerEle, props)
-const { messagesMap } = useMessagesStore()
 
 const { channelsMap } = useChannelsStore()
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
 )
 
-const { unreadChannelsMap, deleteUnreadChannelWithSend } =
-  useSubscriptionStore()
+const { unreadChannelsMap } = useSubscriptionStore()
 
 const resetIsReachedLatest = () => {
   if (!unreadChannelsMap.value.get(props.channelId)) return

@@ -46,7 +46,6 @@ import type { MessageStamp } from '@traptitech/traq'
 import type { StampId } from '/@/types/entity-ids'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import { useMeStore } from '/@/store/domain/me'
-import { useStampsStore } from '/@/store/entities/stamps'
 import StampElement from './StampElement.vue'
 import StampDetailElement from './StampDetailElement.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
@@ -68,7 +67,6 @@ const props = withDefaults(
 )
 
 const { myId } = useMeStore()
-const { stampsMap } = useStampsStore()
 const { addStampOptimistically, removeStampOptimistically } = useStampUpdater()
 const stampList = computed(() => createStampList(props.stamps, myId.value))
 

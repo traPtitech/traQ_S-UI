@@ -17,7 +17,7 @@ import autoprefixer from 'autoprefixer'
 
 const keepAliveAgent = new HttpsAgent({ keepAlive: true })
 
-export default defineConfig(({ command, mode }) => ({
+export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       '/@': path.resolve(__dirname, 'src')

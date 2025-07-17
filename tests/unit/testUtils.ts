@@ -1,13 +1,7 @@
 import { createApp } from 'vue'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type Options = {}
-
 export const withSetup =
-  <A extends readonly unknown[], R>(
-    composable: (...args: A) => R,
-    options: Options = {}
-  ) =>
+  <A extends readonly unknown[], R>(composable: (...args: A) => R) =>
   (...args: A) => {
     let result!: R
     const app = createApp({

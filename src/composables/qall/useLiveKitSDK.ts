@@ -83,7 +83,6 @@ type CameraProcessor = {
 
 const room = ref<Room>()
 const audioContext = ref<AudioContext>()
-const isRnnoiseSupported = computed(() => !!audioContext.value)
 const speakerIdentities = ref<{ identity: string; name?: string }[]>([])
 const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
 const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
@@ -107,19 +106,15 @@ function handleTrackSubscribed(
 }
 
 function handleTrackUnsubscribed(
-  track: RemoteTrack,
-  publication: RemoteTrackPublication,
-  participant: RemoteParticipant
+  _track: RemoteTrack,
+  publication: RemoteTrackPublication
 ) {
   // remove tracks from all attached elements
   tracksMap.value.delete(publication.trackSid)
   screenShareTrackSidMap.value.delete(publication.trackSid)
 }
 
-function handleLocalTrackUnpublished(
-  publication: LocalTrackPublication,
-  participant: LocalParticipant
-) {
+function handleLocalTrackUnpublished(publication: LocalTrackPublication) {
   // when local tracks are ended, update UI to remove them from rendering
   tracksMap.value.delete(publication.trackSid)
   screenShareTrackSidMap.value.delete(publication.trackSid)
@@ -155,20 +150,17 @@ function handleDataReceived(payload: Uint8Array<ArrayBufferLike>) {
   }
 }
 
-function handleParticipantAttributesChanged(
-  changed: Record<string, string>,
-  participant: Participant
-) {
+function handleParticipantAttributesChanged(changed: Record<string, string>) {
   Object.keys(changed).forEach(key =>
     screenShareTrackSidMap.value.set(key, changed[key] ?? '')
   )
 }
 
-function handleParticipantConnected(participant: Participant) {
+function handleParticipantConnected() {
   mixer.value?.playFileSource('qall_joined')
 }
 
-function handleParticipantDisconnected(participant: Participant) {
+function handleParticipantDisconnected() {
   mixer.value?.playFileSource('qall_left')
 }
 
@@ -335,7 +327,7 @@ const removeMicTrack = async () => {
       addErrorToast('ルームが存在しません')
       return
     }
-    for (const [trackSid, trackInfo] of tracksMap.value) {
+    for (const [_, trackInfo] of tracksMap.value) {
       if (trackInfo.isRemote) continue
       if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
         await trackInfo.trackPublication?.track?.mute()
@@ -361,7 +353,7 @@ const toggleMicTrack = async () => {
       addErrorToast('ルームが存在しません')
       return
     }
-    for (const [trackSid, trackInfo] of tracksMap.value) {
+    for (const [_, trackInfo] of tracksMap.value) {
       if (trackInfo.isRemote) continue
       if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
         await trackInfo.trackPublication?.track?.unmute()

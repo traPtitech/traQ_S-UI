@@ -5,7 +5,7 @@ import {
 } from '/@/composables/qall/useLiveKitSDK'
 import { useMeStore } from '/@/store/domain/me'
 import { useToastStore } from '/@/store/ui/toast'
-import type { LocalAudioTrack, LocalVideoTrack } from 'livekit-client'
+import type { LocalAudioTrack } from 'livekit-client'
 import type {
   Channel,
   QallRoomStateChangedEventRoomStatesInner,
@@ -98,10 +98,6 @@ const purifyRoomData = async (
 }
 
 const setSpeakerMute = (track: LocalAudioTrack, muted: boolean) => {
-  setLocalTrackMute(track, muted)
-}
-
-const setVideoMute = (track: LocalVideoTrack, muted: boolean) => {
   setLocalTrackMute(track, muted)
 }
 

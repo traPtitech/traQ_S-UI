@@ -80,7 +80,7 @@ const useTtsPinia = defineStore('ui/tts', () => {
     speechSynthesis.speak(utter)
 
     return new Promise<void>(resolve => {
-      const endFunc = (e: SpeechSynthesisEvent) => {
+      const endFunc = () => {
         utter.removeEventListener('end', endFunc)
         utter.removeEventListener('error', endFunc)
         resolve()
