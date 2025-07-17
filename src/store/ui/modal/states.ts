@@ -96,8 +96,6 @@ interface ChannelCreateModalState extends BaseModalState {
   parentChannelId?: ChannelId
 }
 
-
-
 interface ClipCreateModalState extends BaseModalState {
   type: 'clip-create'
   messageId: MessageId
