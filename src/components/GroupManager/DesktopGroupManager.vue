@@ -53,7 +53,7 @@ const { openGroupCreateModal } = useGroupCreateModalOpener()
   margin: 0 auto;
 }
 .item {
-  margin: 24px 0px;
+  margin: 24px 0;
   &:first-child {
     margin-top: 0;
   }
