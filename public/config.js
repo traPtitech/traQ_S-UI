@@ -117,7 +117,6 @@
       changeName: 'traPortal'
     },
     isRootChannelSelectableAsParentChannel: false,
-    showQrCodeButton: true,
     tooLargeFileMessage: '大きい%sの共有にはDriveを使用してください',
     showWidgetCopyButton: true,
     inlineReplyDisableChannels: [
