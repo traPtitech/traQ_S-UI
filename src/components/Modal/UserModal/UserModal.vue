@@ -2,7 +2,7 @@
   <click-outside stop @click-outside="clearModal">
     <div :class="$style.wrapper" data-testid="usermodal">
       <div :class="$style.topButtons">
-        <edit-button
+        <user-modal-edit-button
           v-if="isThisMyProfile"
           :class="[$style.editProfile, { [$style.mobile]: isMobile }]"
           icon-name="pencil"
@@ -39,21 +39,21 @@
 
 <script lang="ts" setup>
 import { computed, reactive, toRef } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
 import { useNavigation } from './composables/useNavigation'
 import useUserDetail from './composables/useUserDetail'
+import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
+import NavigationContent from './NavigationContent.vue'
+import NavigationSelector from './NavigationSelector.vue'
+import UserModalEditButton from './UserModalEditButton.vue'
+import { useOpenLinkAndClearModal } from '/@/components/Modal/composables/useOpenLinkFromModal'
+import ClickOutside from '/@/components/UI/ClickOutside'
+import CloseButton from '/@/components/UI/CloseButton.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import { useMeStore } from '/@/store/domain/me'
+import { useUsersStore } from '/@/store/entities/users'
 import { useModalStore } from '/@/store/ui/modal'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import { useUsersStore } from '/@/store/entities/users'
-import ClickOutside from '/@/components/UI/ClickOutside'
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
-import NavigationSelector from './NavigationSelector.vue'
-import NavigationContent from './NavigationContent.vue'
-import CloseButton from '/@/components/UI/CloseButton.vue'
-import EditButton from './EditButton.vue'
-import { useOpenLinkAndClearModal } from '/@/components/Modal/composables/useOpenLinkFromModal'
-import { useMeStore } from '/@/store/domain/me'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   id: UserId
