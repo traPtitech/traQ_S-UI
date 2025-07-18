@@ -1,7 +1,7 @@
 <template>
   <section data-testid="usermodal-bio">
     <profile-header text="ひとこと" />
-    <inline-markdown
+    <markdown-preview
       :class="$style.bio"
       :aria-busy="isLoading"
       :data-is-empty="$boolAttr(isEmpty)"
@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 import ProfileHeader from './ProfileHeader.vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import { computed } from 'vue'
 
 const props = defineProps<{
@@ -35,7 +35,6 @@ const content = computed(() => {
 <style lang="scss" module>
 .bio {
   @include color-ui-primary;
-  white-space: pre-line;
   &[aria-busy='true'],
   &[data-is-empty] {
     @include color-ui-tertiary;
