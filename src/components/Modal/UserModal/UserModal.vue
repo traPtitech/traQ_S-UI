@@ -1,20 +1,19 @@
 <template>
   <click-outside stop @click-outside="clearModal">
     <div :class="$style.wrapper" data-testid="usermodal">
-      <edit-button
-        v-if="isThisMyProfile"
-        :class="$style.editProfile"
-        icon-name="pencil"
-        icon-mdi
-        :size="isMobile ? 24 : 32"
-        @mousedown="onEditProfileClick"
-      />
+      <div :class="$style.topButtons">
+        <edit-button
+          v-if="isThisMyProfile"
+          :class="[$style.editProfile, { [$style.mobile]: isMobile }]"
+          icon-name="pencil"
+          icon-mdi
+          :size="isMobile ? 24 : 32"
+          @mousedown="onEditProfileClick"
+        />
 
-      <close-button
-        :size="isMobile ? 24 : 32"
-        :class="$style.close"
-        @close="clearModal"
-      />
+        <close-button :size="isMobile ? 24 : 32" @close="clearModal" />
+      </div>
+
       <user-icon
         v-if="!isMobile"
         :user-id="id"
@@ -52,8 +51,7 @@ import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
 import NavigationSelector from './NavigationSelector.vue'
 import NavigationContent from './NavigationContent.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
-import EditButton from '/@/components/UI/EditButton.vue'
-import LinkButton from '/@/components/Modal/UserModal/FeatureContainer/LinkButton.vue'
+import EditButton from './EditButton.vue'
 import { useOpenLinkAndClearModal } from '/@/components/Modal/composables/useOpenLinkFromModal'
 import { useMeStore } from '/@/store/domain/me'
 
@@ -117,18 +115,23 @@ const isThisMyProfile = computed(() => props.id === myId.value)
   overflow: hidden;
 }
 
-.editProfile {
-  position: absolute;
-  top: 12px;
-  right: 56px;
-  z-index: $z-index-user-modal-header;
-}
-
-.close {
+.topButtons {
   position: absolute;
   top: 12px;
   right: 12px;
   z-index: $z-index-user-modal-header;
+  vertical-align: top;
+}
+
+.editProfile {
+  position: relative;
+  right: 12px;
+  vertical-align: top;
+
+  &.mobile {
+    right: 8px;
+    vertical-align: top;
+  }
 }
 
 .icon {
@@ -140,15 +143,5 @@ const isThisMyProfile = computed(() => props.id === myId.value)
   z-index: $z-index-user-modal-header;
   margin: auto;
   border: 6px solid $theme-background-secondary-border;
-}
-
-.button {
-  margin: 8px 4px;
-  &:first-child {
-    margin-left: 0;
-  }
-  &:last-child {
-    margin-right: 0;
-  }
 }
 </style>

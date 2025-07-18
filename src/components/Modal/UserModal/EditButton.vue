@@ -13,7 +13,6 @@
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import { computed } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -33,15 +32,6 @@ const props = withDefaults(
 )
 
 const { isMobile } = useResponsiveStore()
-
-const circleStyle = computed(() => ({
-  borderWidth: `${props.borderWidth}px`,
-  width: `${props.size}px`,
-  height: `${props.size}px`,
-  '--innerSize': `${props.innerSize}px`,
-  '--iconWidth': `${props.iconWidth}px`
-}))
-
 </script>
 
 <style lang="scss" module>
@@ -53,7 +43,6 @@ const circleStyle = computed(() => ({
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
 }
 
 .icon {
