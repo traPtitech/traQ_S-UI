@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import { render } from '/@/lib/markdown/markdown'
+import { render, renderInline } from '/@/lib/markdown/markdown'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { computed, nextTick, ref, watchEffect } from 'vue'
 import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
@@ -18,6 +18,7 @@ const props = withDefaults(
   defineProps<{
     content?: string
     acceptAction?: boolean
+    inline?: boolean
   }>(),
   {
     content: '',
@@ -30,7 +31,11 @@ const emit = defineEmits<{
 
 const rendered = ref<MarkdownRenderResult>()
 watchEffect(async () => {
-  rendered.value = await render(props.content)
+  if (props.inline) {
+    rendered.value = await renderInline(props.content)
+  } else {
+    rendered.value = await render(props.content)
+  }
   await nextTick()
   emit('render')
 })
