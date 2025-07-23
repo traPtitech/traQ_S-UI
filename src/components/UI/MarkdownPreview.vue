@@ -22,7 +22,8 @@ const props = withDefaults(
   }>(),
   {
     content: '',
-    acceptAction: false
+    acceptAction: false,
+    inline: false
   }
 )
 const emit = defineEmits<{

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 
 const { markdown } = defineProps<{
   markdown: string
@@ -36,7 +36,7 @@ const startAnimation = () => {
 
 <template>
   <div ref="danmakuRef" :class="$style.danmaku">
-    <InlineMarkdown :content="markdown" @render="startAnimation" />
+    <MarkdownPreview :content="markdown" @render="startAnimation" inline/>
   </div>
 </template>
 

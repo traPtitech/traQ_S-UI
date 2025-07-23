@@ -1,16 +1,17 @@
 <template>
   <div v-if="topic" :class="$style.container">
-    <inline-markdown
+    <markdown-preview
       :class="$style.topic"
       :content="topic"
       :title="topic"
       accept-action
+      inline
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import { computed } from 'vue'
 import type { ChannelId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
