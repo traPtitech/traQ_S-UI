@@ -7,9 +7,11 @@
           class="markdown-inline-body"
           :class="$style.text"
           v-html="renderedContent"
-        ></div>
+        />
       </div>
-      <div :class="$style.channelPath">{{ channelPath }}</div>
+      <div :class="$style.channelPath">
+        {{ channelPath }}
+      </div>
     </div>
   </router-link>
 </template>

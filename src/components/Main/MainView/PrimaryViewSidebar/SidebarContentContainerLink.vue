@@ -13,7 +13,7 @@
         <a-icon name="chevron-right" :class="$style.icon" mdi />
       </div>
     </template>
-    <template #default></template>
+    <template #default />
   </sidebar-content-container>
 </template>
 

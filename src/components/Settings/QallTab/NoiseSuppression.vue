@@ -3,22 +3,25 @@
     <h3 :class="$style.heading">ノイズ抑制</h3>
     <template v-if="isAudioWorkletSupported">
       <form-radio
-        v-model="noiseSuppressionValue"
+        :model-value="noiseSuppressionValue"
         :class="$style.input"
         label="Rnnoise"
         input-value="rnnoise"
+        @update:model-value="updateNoiseSuppressionValue"
       />
       <form-radio
-        v-model="noiseSuppressionValue"
+        :model-value="noiseSuppressionValue"
         :class="$style.input"
         label="Speex"
         input-value="speex"
+        @update:model-value="updateNoiseSuppressionValue"
       />
       <form-radio
-        v-model="noiseSuppressionValue"
+        :model-value="noiseSuppressionValue"
         :class="$style.input"
         label="無効"
         input-value="none"
+        @update:model-value="updateNoiseSuppressionValue"
       />
     </template>
     <p v-else>利用している端末が対応していません。</p>
@@ -27,19 +30,18 @@
 
 <script lang="ts" setup>
 import FormRadio from '/@/components/UI/FormRadio.vue'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
-import type { NoiseSuppressionType } from '/@/lib/webrtc/LocalStreamManager'
 import { checkAudioWorkletSupport } from '/@/lib/dom/browser'
+import type { NoiseSuppressionType } from '/@/lib/webrtc/LocalStreamManager'
+import { isNoiseSuppressionType } from '/@/lib/webrtc/LocalStreamManager'
 
-const props = defineProps<{
-  modelValue: NoiseSuppressionType
-}>()
+const noiseSuppressionValue = defineModel<NoiseSuppressionType>({
+  required: true
+})
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: NoiseSuppressionType): void
-}>()
-
-const noiseSuppressionValue = useModelValueSyncer(props, emit)
+const updateNoiseSuppressionValue = (val: string) => {
+  if (!isNoiseSuppressionType(val)) return
+  noiseSuppressionValue.value = val
+}
 
 const isAudioWorkletSupported = checkAudioWorkletSupport()
 </script>

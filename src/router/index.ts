@@ -126,7 +126,7 @@ const router = createRouter({
   history: routerHistory,
   routes
 })
-router.beforeEach((to, from) => {
+router.beforeEach((to, _from) => {
   // trailing slashを消す
   if (to.path !== '/' && to.path.endsWith('/')) {
     return to.path.slice(0, -1)

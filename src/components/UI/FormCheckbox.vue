@@ -1,28 +1,14 @@
 <template>
   <label :class="$style.checkbox">
-    <form-checkbox-inner v-model="value" />
-    <slot></slot>
+    <form-checkbox-inner v-model="modelValue" />
+    <slot />
   </label>
 </template>
 
 <script lang="ts" setup>
 import FormCheckboxInner from './FormCheckboxInner.vue'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-const props = withDefaults(
-  defineProps<{
-    modelValue?: boolean
-  }>(),
-  {
-    modelValue: false
-  }
-)
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: boolean): void
-}>()
-
-const value = useModelValueSyncer(props, emit)
+const modelValue = defineModel<boolean>({ default: false })
 </script>
 
 <style lang="scss" module>

@@ -1,13 +1,18 @@
 <template>
   <div>
-    <div :class="$style.label">{{ label }}</div>
+    <div :class="$style.label">
+      {{ label }}
+    </div>
     <div v-if="isEditing" :class="$style.inputWrapper">
       <form-input
         ref="inputRef"
-        v-model="localValue"
+        :model-value="localValue as string"
         :class="$style.input"
         :max-length="maxLength"
         on-secondary
+        @update:model-value="
+          (val: string | number) => (localValue = val as string)
+        "
       />
       <a-icon
         name="check"
@@ -33,26 +38,21 @@
 </template>
 
 <script lang="ts" setup>
-import FormInput from '/@/components/UI/FormInput.vue'
+import { nextTick, ref } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
+import FormInput from '/@/components/UI/FormInput.vue'
 import useLocalInput from '/@/composables/utils/useLocalInput'
 import useToggle from '/@/composables/utils/useToggle'
-import { ref, nextTick } from 'vue'
 
-const props = defineProps<{
+const remoteValue = defineModel<string>({ required: true })
+
+defineProps<{
   label: string
-  modelValue: string
   maxLength?: number
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', _value: string): void
 }>()
 
 const inputRef = ref<InstanceType<typeof FormInput> | null>(null)
 
-const remoteValue = useModelValueSyncer(props, emit)
 const { localValue, isEditing } = useLocalInput(
   remoteValue,
   newValue => {

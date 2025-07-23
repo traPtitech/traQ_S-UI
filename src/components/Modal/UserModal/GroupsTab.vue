@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.groups">
-    <template v-if="isLoading">Now loading...</template>
+    <template v-if="isLoading"> Now loading... </template>
     <template v-else>
       <ul :class="$style.list">
         <li

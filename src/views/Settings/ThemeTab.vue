@@ -32,10 +32,7 @@
     <div :class="$style.element">
       <div :class="$style.container">
         <h3 :class="$style.header">カスタムテーマ</h3>
-        <edit-theme
-          v-if="state.type === 'custom'"
-          @change-theme="changeTheme"
-        />
+        <edit-theme v-if="state.type === 'custom'" />
       </div>
     </div>
 
@@ -47,9 +44,13 @@
             :key="category"
             :class="$style.category"
           >
-            <h4 class>{{ category }}</h4>
+            <h4 class>
+              {{ category }}
+            </h4>
             <div v-for="(color, name) in val" :key="name" :class="$style.color">
-              <p :class="$style.name">{{ name }}</p>
+              <p :class="$style.name">
+                {{ name }}
+              </p>
               <!-- eslint-disable vue/valid-v-model -->
               <!-- TODO: 自動適用じゃなくてバリデーションしてから適用するようにする -->
               <form-input

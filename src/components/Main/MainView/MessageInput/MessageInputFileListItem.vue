@@ -11,7 +11,9 @@
     />
     <div v-else :class="$style.fileContainer">
       <file-type-icon :type="attachment.type" />
-      <div :class="$style.fileName">{{ attachment.file.name }}</div>
+      <div :class="$style.fileName">
+        {{ attachment.file.name }}
+      </div>
     </div>
   </div>
 </template>

@@ -9,6 +9,10 @@
           ? 'チャンネルツリーを閉じる'
           : undefined
     "
+    @mousedown.stop="onChannelIconClick"
+    @keydown.enter="onChannelIconKeydownEnter"
+    @mouseenter="onIconHovered"
+    @mouseleave="onIconHoveredLeave"
   >
     <div
       :class="$style.hash"
@@ -18,7 +22,7 @@
       :data-has-notification-on-child="$boolAttr(hasNotificationOnChild)"
       :data-is-inactive="$boolAttr(isInactive)"
     >
-      <a-icon name="hash" :class="$style.icon" />
+      <a-icon :name="iconName" :class="$style.icon" />
     </div>
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :border-width="2" />
@@ -30,7 +34,7 @@
 import AIcon from '/@/components/UI/AIcon.vue'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     hasChild?: boolean
     isSelected?: boolean
@@ -38,6 +42,7 @@ withDefaults(
     isOpened?: boolean
     hasNotification?: boolean
     hasNotificationOnChild?: boolean
+    iconName?: 'hash' | 'star-outline' | 'notified'
   }>(),
   {
     hasChild: false,
@@ -45,9 +50,32 @@ withDefaults(
     isInactive: false,
     isOpened: false,
     hasNotification: false,
-    hasNotificationOnChild: false
+    hasNotificationOnChild: false,
+    iconName: 'hash'
   }
 )
+
+const emit = defineEmits<{
+  (e: 'click', event: KeyboardEvent | MouseEvent): void
+  (e: 'mouseenter'): void
+  (e: 'mouseleave'): void
+}>()
+
+const onChannelIconKeydownEnter = (e: KeyboardEvent) => {
+  if (props.hasChild) {
+    emit('click', e)
+  }
+}
+const onChannelIconClick = (e: MouseEvent) => {
+  emit('click', e)
+}
+
+const onIconHovered = () => {
+  emit('mouseenter')
+}
+const onIconHoveredLeave = () => {
+  emit('mouseleave')
+}
 </script>
 
 <style lang="scss" module>

@@ -1,12 +1,12 @@
 <template>
   <div :class="$style.container">
-    <div v-if="isEditingValue && value !== undefined">
+    <div v-if="isEditingValue && modelValue !== undefined">
       <textarea-autosize
         ref="textareaRef"
-        v-model="value"
+        v-model="modelValue"
         :class="$style.editor"
       />
-      <length-count :val="value" :max-length="maxLength" />
+      <length-count :val="modelValue" :max-length="maxLength" />
     </div>
     <div v-else :class="$style.content" :data-is-empty="$boolAttr(isEmpty)">
       <slot :content="content" />
@@ -25,20 +25,14 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, nextTick, ref } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
-import { computed, nextTick, ref } from 'vue'
 import { countLength } from '/@/lib/basic/string'
-import {
-  useModelSyncer,
-  useModelValueSyncer
-} from '/@/composables/useModelSyncer'
 
 const props = withDefaults(
   defineProps<{
-    modelValue: string | undefined
-    isEditing: boolean
     fallbackValue?: string
     maxLength?: number
   }>(),
@@ -47,22 +41,19 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:isEditing', val: boolean): void
-  (e: 'update:modelValue', val: string | undefined): void
-}>()
-
-const value = useModelValueSyncer(props, emit)
-const isEditingValue = useModelSyncer(props, emit, 'isEditing')
+const modelValue = defineModel<string | undefined>({ required: true })
+const isEditingValue = defineModel<boolean>('isEditing', { required: true })
 
 const textareaRef = ref<InstanceType<typeof TextareaAutosize> | null>(null)
 
 const content = computed(() => {
-  if (value.value === '') return props.fallbackValue
-  if (value.value === undefined) return 'ロード中'
-  return value.value
+  if (modelValue.value === '') return props.fallbackValue
+  if (modelValue.value === undefined) return 'ロード中'
+  return modelValue.value
 })
-const isEmpty = computed(() => value.value === '' || value.value === undefined)
+const isEmpty = computed(
+  () => modelValue.value === '' || modelValue.value === undefined
+)
 const onButtonClick = async () => {
   isEditingValue.value = !isEditingValue.value
   await nextTick()
@@ -72,7 +63,8 @@ const onButtonClick = async () => {
 }
 
 const isExceeded = computed(
-  () => !!(props.maxLength && countLength(value.value ?? '') > props.maxLength)
+  () =>
+    !!(props.maxLength && countLength(modelValue.value ?? '') > props.maxLength)
 )
 </script>
 

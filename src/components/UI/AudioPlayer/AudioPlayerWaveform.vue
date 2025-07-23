@@ -8,33 +8,30 @@
     @click.prevent="onClick"
   >
     <div :class="$style.waveformPlayedMask" :style="waveformWrapperStyle">
-      <div :class="$style.waveform" :style="waveformStyle"></div>
+      <div :class="$style.waveform" :style="waveformStyle" />
     </div>
     <div
       v-show="selectingPosition"
       :class="$style.selectingPosition"
       :style="selectingPositionStyle"
-    ></div>
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef } from 'vue'
 import { throttle } from 'throttle-debounce'
+import { computed, ref, shallowRef } from 'vue'
 import useHover from '/@/composables/dom/useHover'
+
+const currentTime = defineModel<number>('currentTime', { required: true })
 
 const props = defineProps<{
   waveformPath: string
-  currentTime: number
   duration: number
 }>()
 
-const emit = defineEmits<{
-  (e: 'update:currentTime', _val: number): void
-}>()
-
 const playedPercentage = computed(() =>
-  props.duration === 0 ? 0 : (props.currentTime / props.duration) * 100
+  props.duration === 0 ? 0 : (currentTime.value / props.duration) * 100
 )
 const waveformStyle = computed(() => {
   const value = `url(${props.waveformPath})`
@@ -72,7 +69,7 @@ const onClick = (e: MouseEvent) => {
   const waveformRect = waveformEle.value.getBoundingClientRect()
   const left = e.pageX - waveformRect.left
   const newCurrentTime = props.duration * (left / waveformRect.width)
-  emit('update:currentTime', newCurrentTime)
+  currentTime.value = newCurrentTime
 }
 </script>
 

@@ -35,6 +35,7 @@ interface NonDangerType extends Type {
 }
 interface DangerType extends Type {
   type?: 'primary' | 'secondary'
+  // eslint-disable-next-line vue/no-required-prop-with-default
   isDanger: true
 }
 

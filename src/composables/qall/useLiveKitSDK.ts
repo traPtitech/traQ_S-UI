@@ -1,39 +1,40 @@
 import {
-  Track,
-  RoomEvent,
-  AudioPresets,
-  createLocalScreenTracks,
-  Room,
-  LocalVideoTrack,
-  LocalAudioTrack
-} from 'livekit-client'
-import type {
-  RemoteTrack,
-  RemoteTrackPublication,
-  RemoteParticipant,
-  LocalTrackPublication,
-  LocalParticipant,
-  Participant,
-  LocalTrack
-} from 'livekit-client'
-import { computed, ref, type Ref } from 'vue'
-import { useToastStore } from '/@/store/ui/toast'
-import apis from '/@/lib/apis'
-import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
-import mitt from 'mitt'
-import rnnoiseWorkletPath from '@sapphi-red/web-noise-suppressor/rnnoiseWorklet.js?url'
-import rnnoiseWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise.wasm?url'
-import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.wasm?url'
-import {
   loadRnnoise as loadRnnoiseLib,
   loadSpeex as loadSpeexLib,
   RnnoiseWorkletNode,
   SpeexWorkletNode
 } from '@sapphi-red/web-noise-suppressor'
+import rnnoiseWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise.wasm?url'
+import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.wasm?url'
+import rnnoiseWorkletPath from '@sapphi-red/web-noise-suppressor/rnnoiseWorklet.js?url'
 import speexWasmPath from '@sapphi-red/web-noise-suppressor/speex.wasm?url'
 import speexWorkletPath from '@sapphi-red/web-noise-suppressor/speexWorklet.js?url'
-
-type NoiseSuppressionType = 'rnnoise' | 'speex' | 'none'
+import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
+import type {
+  LocalParticipant,
+  LocalTrack,
+  LocalTrackPublication,
+  Participant,
+  RemoteParticipant,
+  RemoteTrack,
+  RemoteTrackPublication
+} from 'livekit-client'
+import {
+  AudioPresets,
+  createLocalScreenTracks,
+  LocalAudioTrack,
+  LocalVideoTrack,
+  Room,
+  RoomEvent,
+  Track
+} from 'livekit-client'
+import mitt from 'mitt'
+import { computed, ref, type Ref } from 'vue'
+import apis from '/@/lib/apis'
+import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
+import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'
+import { useRtcSettings } from '/@/store/app/rtcSettings'
+import { useToastStore } from '/@/store/ui/toast'
 
 let speexWasmBinary: ArrayBuffer | undefined
 const loadSpeexWasmBinary = async () => {
@@ -51,9 +52,6 @@ const loadRnnoiseWasmBinary = async () => {
   })
   return rnnoiseWasmBinary
 }
-import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'
-import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
-import { useRtcSettings } from '/@/store/app/rtcSettings'
 
 const virtualBackgroundAssetsPath =
   'https://cdn.jsdelivr.net/npm/@shiguredo/virtual-background@latest/dist'
@@ -85,7 +83,6 @@ type CameraProcessor = {
 
 const room = ref<Room>()
 const audioContext = ref<AudioContext>()
-const isRnnoiseSupported = computed(() => !!audioContext.value)
 const speakerIdentities = ref<{ identity: string; name?: string }[]>([])
 const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
 const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
@@ -109,9 +106,9 @@ function handleTrackSubscribed(
 }
 
 function handleTrackUnsubscribed(
-  track: RemoteTrack,
+  _track: RemoteTrack,
   publication: RemoteTrackPublication,
-  participant: RemoteParticipant
+  _participant: RemoteParticipant
 ) {
   // remove tracks from all attached elements
   tracksMap.value.delete(publication.trackSid)
@@ -120,7 +117,7 @@ function handleTrackUnsubscribed(
 
 function handleLocalTrackUnpublished(
   publication: LocalTrackPublication,
-  participant: LocalParticipant
+  _participant: LocalParticipant
 ) {
   // when local tracks are ended, update UI to remove them from rendering
   tracksMap.value.delete(publication.trackSid)
@@ -159,18 +156,18 @@ function handleDataReceived(payload: Uint8Array<ArrayBufferLike>) {
 
 function handleParticipantAttributesChanged(
   changed: Record<string, string>,
-  participant: Participant
+  _participant: Participant
 ) {
   Object.keys(changed).forEach(key =>
     screenShareTrackSidMap.value.set(key, changed[key] ?? '')
   )
 }
 
-function handleParticipantConnected(participant: Participant) {
+function handleParticipantConnected(_participant: Participant) {
   mixer.value?.playFileSource('qall_joined')
 }
 
-function handleParticipantDisconnected(participant: Participant) {
+function handleParticipantDisconnected(_participant: Participant) {
   mixer.value?.playFileSource('qall_left')
 }
 
@@ -337,7 +334,7 @@ const removeMicTrack = async () => {
       addErrorToast('ルームが存在しません')
       return
     }
-    for (const [trackSid, trackInfo] of tracksMap.value) {
+    for (const [_trackSid, trackInfo] of tracksMap.value) {
       if (trackInfo.isRemote) continue
       if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
         await trackInfo.trackPublication?.track?.mute()
@@ -363,7 +360,7 @@ const toggleMicTrack = async () => {
       addErrorToast('ルームが存在しません')
       return
     }
-    for (const [trackSid, trackInfo] of tracksMap.value) {
+    for (const [_trackSid, trackInfo] of tracksMap.value) {
       if (trackInfo.isRemote) continue
       if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
         await trackInfo.trackPublication?.track?.unmute()

@@ -3,7 +3,7 @@
     <mobile-group-manager v-if="isMobile" />
     <desktop-group-manager v-else />
   </div>
-  <div v-else></div>
+  <div v-else />
 </template>
 
 <script lang="ts" setup>

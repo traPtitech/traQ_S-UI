@@ -4,6 +4,7 @@
     :class="$style.body"
     :aria-label="tooltip"
     :data-include-me="$boolAttr(includeMe)"
+    :data-is-archived="$boolAttr(isArchived)"
     @click="onClick"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
@@ -20,9 +21,11 @@
   </div>
   <stamp-scaled-element
     :class="$style.scaleReaction"
-    :show="isLongHovered && !isDetailShown && !isMobile"
+    :show="(isLongHovered || RemainScaled) && !isDetailShown && !isTouchDevice"
     :stamp="stamp"
     :target-rect="hoveredRect"
+    @scaled-hover="onScaledElementHover"
+    @end-scaled-hover="leaveScaledElementHover"
   />
 </template>
 
@@ -35,10 +38,12 @@ import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageStampById } from '/@/lib/messageStampList'
 import StampScaledElement from './StampScaledElement.vue'
 import useHover from '/@/composables/dom/useHover'
+import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
   stamp: MessageStampById
   isDetailShown: boolean
+  isArchived: boolean
 }>()
 
 const emit = defineEmits<{
@@ -46,11 +51,12 @@ const emit = defineEmits<{
   (e: 'removeStamp', _stampId: string): void
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isTouchDevice } = useResponsiveStore()
 const { stampsMap } = useStampsStore()
+const { addErrorToast } = useToastStore()
 
 const stampName = computed(
-  () => stampsMap.value.get(props.stamp.id)?.name ?? ''
+  () => stampsMap.value.get(props.stamp.id)?.name ?? 'unknown stamp'
 )
 
 const tooltip = computed(
@@ -80,6 +86,14 @@ const isProgress = ref(false)
 
 const onClick = () => {
   if (isProgress.value) return
+
+  if (props.isArchived) {
+    addErrorToast(
+      'アーカイブされたチャンネルではスタンプの追加 / 削除はできません'
+    )
+    return
+  }
+
   if (includeMe.value) {
     emit('removeStamp', props.stamp.id)
   } else {
@@ -97,11 +111,35 @@ watch(
 const { isLongHovered, onMouseEnter, onMouseLeave } = useHover()
 const stampRoot = ref<HTMLElement | null>(null)
 const hoveredRect = ref<DOMRect | undefined>(undefined)
+const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const RemainScaled = ref(false)
+
+const onScaledElementHover = () => {
+  if (hoverTimeout.value) {
+    clearTimeout(hoverTimeout.value)
+  }
+  hoveredRect.value = stampRoot.value?.getBoundingClientRect()
+  RemainScaled.value = true
+}
+
+const leaveScaledElementHover = () => {
+  RemainScaled.value = false
+  hoveredRect.value = undefined
+}
 
 watch(isLongHovered, beginHover => {
-  hoveredRect.value = beginHover
-    ? (stampRoot.value?.getBoundingClientRect() ?? undefined)
-    : undefined
+  if (beginHover) {
+    if (hoverTimeout.value) {
+      clearTimeout(hoverTimeout.value)
+    }
+    RemainScaled.value = true
+    hoveredRect.value = stampRoot.value?.getBoundingClientRect()
+  } else {
+    hoverTimeout.value = setTimeout(() => {
+      RemainScaled.value = false
+      hoveredRect.value = undefined
+    }, 50)
+  }
 })
 </script>
 
@@ -118,6 +156,9 @@ watch(isLongHovered, beginHover => {
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   cursor: pointer;
+  &[data-is-archived] {
+    cursor: not-allowed;
+  }
   user-select: none;
   overflow: hidden;
   contain: content;

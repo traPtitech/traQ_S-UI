@@ -6,9 +6,8 @@
     <desktop-setting-modal v-else>
       <router-view />
     </desktop-setting-modal>
-    <StampPickerContainer />
   </div>
-  <div v-else></div>
+  <div v-else />
 </template>
 
 <script lang="ts">
@@ -19,7 +18,6 @@ import { RouteName } from '/@/router'
 import { defaultSettingsName } from '/@/router/settings'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useLoginCheck from './composables/useLoginCheck'
-import StampPickerContainer from '../components/Main/StampPicker/StampPickerContainer.vue'
 
 const useSettingsRootPathWatcher = (
   isMobile: Ref<boolean>,

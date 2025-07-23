@@ -10,7 +10,7 @@
       <textarea-autosize
         :id="id"
         ref="inputRef"
-        v-model="value"
+        v-model="modelValue"
         :class="$style.input"
         :name="name"
         :placeholder="placeholder"
@@ -27,15 +27,15 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, shallowRef } from 'vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
-import { computed, shallowRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
+
+const modelValue = defineModel<string>({ default: '' })
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string
     onSecondary?: boolean
     placeholder?: string
     name?: string
@@ -45,25 +45,15 @@ const props = withDefaults(
     rows?: string
   }>(),
   {
-    modelValue: '',
     onSecondary: false,
     placeholder: '',
     rows: '1'
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: string): void
-}>()
-
-const value = useModelValueSyncer(props, emit)
-
 const style = computed(() => ({ maxHeight: props.maxHeight }))
 
 const inputRef = shallowRef<HTMLInputElement | null>(null)
-const focus = () => {
-  inputRef.value?.focus()
-}
 
 const id = randomString()
 </script>

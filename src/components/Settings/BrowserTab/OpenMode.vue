@@ -23,21 +23,10 @@
 <script lang="ts" setup>
 import AToggle from '/@/components/UI/AToggle.vue'
 import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
-import type { OpenMode } from '/@/store/app/browserSettings'
-import useChannelPath from '/@/composables/useChannelPath'
 import useChannelOptions from '/@/composables/useChannelOptions'
-import { useModelSyncer } from '/@/composables/useModelSyncer'
+import useChannelPath from '/@/composables/useChannelPath'
+import type { OpenMode } from '/@/store/app/browserSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
-
-const props = defineProps<{
-  openMode: OpenMode
-  openChannelName: string
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:openMode', _val: string): void
-  (e: 'update:openChannelName', _val: string): void
-}>()
 
 const { fetchChannels } = useChannelsStore()
 // 起動時チャンネルの選択に必要
@@ -45,8 +34,10 @@ fetchChannels()
 
 const { channelIdToPathString } = useChannelPath()
 
-const openModeValue = useModelSyncer(props, emit, 'openMode')
-const openChannelNameValue = useModelSyncer(props, emit, 'openChannelName')
+const openModeValue = defineModel<OpenMode>('openMode', { required: true })
+const openChannelNameValue = defineModel<string | null>('openChannelName', {
+  required: true
+})
 
 const toggleOpenMode = () => {
   if (openModeValue.value === 'lastOpen') {

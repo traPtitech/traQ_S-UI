@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <textarea-autosize
       ref="textareaAutosizeRef"
-      v-model="value"
+      v-model="modelValue"
       :class="$style.textarea"
       :style="textareaAutosizeStyle"
       :readonly="isPosting"
@@ -43,15 +43,21 @@ import useWordSuggester from './composables/useWordSuggester'
 import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import useInsertText from '/@/composables/dom/useInsertText'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import { isFirefox } from '/@/lib/dom/browser'
 import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { ChannelId } from '/@/types/entity-ids'
 
+const modelValue = defineModel<string>({ default: '' })
+const showTextAreaExpandButton = defineModel<boolean>(
+  'showTextAreaExpandButton',
+  {
+    default: false
+  }
+)
+
 const props = withDefaults(
   defineProps<{
-    modelValue?: string
     channelId?: ChannelId
     isPosting?: boolean
     simplePadding?: boolean
@@ -60,7 +66,6 @@ const props = withDefaults(
     isInputTextAreaExpanded?: boolean
   }>(),
   {
-    modelValue: '',
     channelId: '',
     isPosting: false,
     simplePadding: false,
@@ -71,7 +76,6 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'update:modelValue'): void
   (e: 'focus'): void
   (e: 'blur'): void
   (e: 'addAttachments', _files: File[]): void
@@ -83,7 +87,6 @@ const emit = defineEmits<{
 
 const firefoxFlag = isFirefox()
 
-const value = useModelValueSyncer(props, emit)
 const { isMobile } = useResponsiveStore()
 
 const textareaAutosizeRef = ref<InstanceType<typeof TextareaAutosize>>()
@@ -104,7 +107,7 @@ const {
   selectedCandidateIndex,
   confirmedPart,
   onSelect
-} = useWordSuggester(textareaRef, value)
+} = useWordSuggester(textareaRef, modelValue)
 
 const {
   onBeforeInput,
@@ -163,13 +166,6 @@ const textareaAutosizeStyle = computed(() => ({
   '--max-height': textAreaAutoSizeMaxHeight.value
 }))
 
-const showTextAreaExpandButton = defineModel<boolean>(
-  'showTextAreaExpandButton',
-  {
-    default: false
-  }
-)
-
 const updateShowIsInputTextareaExpandButtonVisibility = () => {
   nextTick(() => {
     if (textareaRef.value) {
@@ -179,7 +175,7 @@ const updateShowIsInputTextareaExpandButtonVisibility = () => {
   })
 }
 
-watch(value, updateShowIsInputTextareaExpandButtonVisibility, {
+watch(modelValue, updateShowIsInputTextareaExpandButtonVisibility, {
   immediate: true
 })
 

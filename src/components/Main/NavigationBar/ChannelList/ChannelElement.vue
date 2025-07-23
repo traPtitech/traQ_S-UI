@@ -6,18 +6,18 @@
   >
     <!-- チャンネル表示本体 -->
     <div :class="$style.channelContainer">
-      <channel-element-hash
-        :class="$style.channelHash"
+      <channel-element-icon
+        :class="$style.channelIcon"
         :has-child="hasChildren"
         :is-selected="isSelected"
         :is-opened="isOpened"
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
-        @mousedown.stop="onChannelHashClick"
-        @keydown.enter="onChannelHashKeydownEnter"
-        @mouseenter="onHashHovered"
-        @mouseleave="onHashHoveredLeave"
+        :icon-name="iconName"
+        @click.stop="onClickIcon"
+        @mouseenter="onIconHovered"
+        @mouseleave="onIconHoveredLeave"
       />
       <router-link
         v-slot="{ href, navigate }"
@@ -72,13 +72,14 @@ import type { ChannelId } from '/@/types/entity-ids'
 import useHover from '/@/composables/dom/useHover'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
 import { useMainViewStore } from '/@/store/ui/mainView'
-import ChannelElementHash from './ChannelElementHash.vue'
+import ChannelElementIcon from './ChannelElementIcon.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 import ChannelElementName from './ChannelElementName.vue'
 import useNotificationState from '../composables/useNotificationState'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useChannelPath from '/@/composables/useChannelPath'
 import useFocus from '/@/composables/dom/useFocus'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 import {
   usePath,
   type TypedProps
@@ -89,6 +90,8 @@ const props = withDefaults(
     channel: ChannelTreeNode
     isOpened?: boolean
     showShortenedPath?: boolean
+    showStar?: boolean
+    showNotified?: boolean
   }>(),
   {
     isOpened: false,
@@ -109,17 +112,15 @@ const isSelected = computed(
     props.channel.id === primaryView.value.channelId
 )
 
-const onChannelHashKeydownEnter = () => {
-  if (hasChildren.value) {
-    emit('clickHash', props.channel.id)
-  }
-}
-const onChannelHashClick = (e: MouseEvent) => {
-  if (hasChildren.value && e.button === LEFT_CLICK_BUTTON) {
-    emit('clickHash', props.channel.id)
-  } else {
+const onClickIcon = (e: KeyboardEvent | MouseEvent) => {
+  if (
+    e instanceof MouseEvent &&
+    (!hasChildren.value || e.button !== LEFT_CLICK_BUTTON)
+  ) {
     openChannel(e)
+    return
   }
+  emit('clickHash', props.channel.id)
 }
 
 const { openLink } = useOpenLink()
@@ -135,21 +136,34 @@ const notificationState = useNotificationState(toRef(props, 'channel'))
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 const { isFocused, onFocus, onBlur } = useFocus()
 const {
-  isHovered: isHashHovered,
-  onMouseEnter: onHashMouseEnter,
-  onMouseLeave: onHashMouseLeave
+  isHovered: isIconHovered,
+  onMouseEnter: onIconMouseEnter,
+  onMouseLeave: onIconMouseLeave
 } = useHover()
-const onHashHovered = () => {
-  onHashMouseEnter()
+const onIconHovered = () => {
+  onIconMouseEnter()
   onMouseEnter()
 }
-const onHashHoveredLeave = () => {
-  onHashMouseLeave()
+const onIconHoveredLeave = () => {
+  onIconMouseLeave()
   onMouseLeave()
 }
 const isChannelBgHovered = computed(
-  () => isHovered.value && !(hasChildren.value && isHashHovered.value)
+  () => isHovered.value && !(hasChildren.value && isIconHovered.value)
 )
+
+const iconName = computed(() => {
+  if (
+    props.showNotified &&
+    notificationState.subscriptionLevel === ChannelSubscribeLevel.notified
+  ) {
+    return 'notified'
+  }
+  if (props.showStar && notificationState.isStarred) {
+    return 'star-outline'
+  }
+  return 'hash'
+})
 </script>
 
 <style lang="scss" module>
@@ -191,7 +205,7 @@ $bgLeftShift: 8px;
   margin-left: $bgLeftShift;
   width: calc(100% - $bgLeftShift);
 }
-.channelHash {
+.channelIcon {
   flex-shrink: 0;
   cursor: pointer;
   position: absolute;

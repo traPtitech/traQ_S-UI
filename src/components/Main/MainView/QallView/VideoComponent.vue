@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useQall } from '/@/composables/qall/useQall'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import VideoTrack from './VideoTrack.vue'
 import { useUsersStore } from '/@/store/entities/users'
@@ -8,7 +7,6 @@ const { trackInfo } = defineProps<{
   trackInfo: TrackInfo
 }>()
 
-const { removeVideoTrack } = useQall()
 const { usersMap } = useUsersStore()
 
 const user = usersMap.value.get(trackInfo.username)
@@ -23,7 +21,9 @@ const user = usersMap.value.get(trackInfo.username)
       Remove Video
     </button> -->
     <VideoTrack :track-info="trackInfo" :class="$style.video" />
-    <div :class="$style.NameLabel">{{ user?.name }}</div>
+    <div :class="$style.NameLabel">
+      {{ user?.name }}
+    </div>
   </div>
 </template>
 

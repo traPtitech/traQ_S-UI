@@ -25,7 +25,7 @@
           :message="message"
         />
       </template>
-      <empty-state v-else>メッセージがありません</empty-state>
+      <empty-state v-else> メッセージがありません </empty-state>
     </transition-group>
   </div>
 </template>

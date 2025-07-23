@@ -14,7 +14,6 @@ import type { StampId } from '/@/types/entity-ids'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
 import { computed, ref, watchEffect } from 'vue'
-import type { Stamp } from '@traptitech/traq'
 import { constructStampString } from '/@/lib/markdown/constructStampString'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import { render } from '/@/lib/markdown/markdown'
@@ -26,23 +25,23 @@ const props = defineProps<{
 }>()
 
 const { stampsMap } = useStampsStore()
-const stampName = computed(() => {
-  if (!props.stampId) {
-    return (
-      (stampsMap.value.values().next().value as Stamp | undefined)?.name ??
-      'missing'
-    )
-  }
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return stampsMap.value.get(props.stampId)!.name
-})
 
-const previewText = computed(() =>
-  constructStampString(stampName.value, props.sizeEffect, props.animeEffects)
-)
+const previewText = computed(() => {
+  if (!props.stampId) {
+    return ''
+  }
+
+  const stampName = stampsMap.value.get(props.stampId)?.name ?? ''
+
+  return constructStampString(stampName, props.sizeEffect, props.animeEffects)
+})
 
 const rendered = ref('')
 watchEffect(async () => {
+  if (!props.stampId) {
+    rendered.value = ''
+    return
+  }
   rendered.value = (await render(previewText.value)).renderedText
 })
 </script>

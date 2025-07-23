@@ -4,7 +4,10 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import js from '@eslint/js'
 import { FlatCompat } from '@eslint/eslintrc'
-import stylisticTs from '@stylistic/eslint-plugin-ts'
+import stylistic from '@stylistic/eslint-plugin'
+import cypress from 'eslint-plugin-cypress'
+import vueLint from 'eslint-plugin-vue'
+import prettier from 'eslint-config-prettier'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -16,19 +19,24 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['**/coverage', '**/dist', '**/node_modules']
+    ignores: [
+      '**/coverage',
+      '**/dist',
+      '**/node_modules',
+      'public/new-relic.js'
+    ]
   },
   ...compat.extends(
     'eslint:recommended',
     './eslint-vue-ts-recommended.cjs',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:vue/vue3-recommended',
-    'prettier'
+    'plugin:@typescript-eslint/recommended'
   ),
+  ...vueLint.configs['flat/recommended'],
+  prettier,
   {
     plugins: {
       'unused-imports': unusedImports,
-      '@stylistic/ts': stylisticTs
+      '@stylistic/ts': stylistic
     },
 
     linterOptions: {
@@ -73,7 +81,14 @@ export default [
       ],
 
       '@typescript-eslint/consistent-type-imports': 'error',
-      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          varsIgnorePattern: '^_',
+          argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_'
+        }
+      ],
       'unused-imports/no-unused-imports': 'warn',
       'unused-imports/no-unused-vars': 'off',
       'vue/require-default-prop': 'off',
@@ -103,7 +118,6 @@ export default [
         }
       ],
 
-      'vue/v-on-function-call': 'error',
       'vue/no-template-target-blank': 'error',
       'vue/prefer-true-attribute-shorthand': 'error',
       '@typescript-eslint/no-non-null-assertion': 'warn',
@@ -126,10 +140,17 @@ export default [
       '@typescript-eslint/no-var-requires': 'off'
     }
   },
-  ...compat.extends('plugin:cypress/recommended').map(config => ({
-    ...config,
-    files: ['**/tests/e2e/**/*.{js,cjs,jsx,ts,tsx}']
-  })),
+  {
+    files: ['**/public/**/*.js', '**/build/**/*.js'],
+    rules: {
+      'no-undef': 'off'
+    }
+  },
+  {
+    plugins: { cypress },
+    files: ['**/tests/e2e/**/*.{js,cjs,jsx,ts,tsx}'],
+    rules: { ...cypress.configs.recommended.rules }
+  },
   {
     files: ['**/tests/e2e/**/*.{js,cjs,jsx,ts,tsx}'],
 

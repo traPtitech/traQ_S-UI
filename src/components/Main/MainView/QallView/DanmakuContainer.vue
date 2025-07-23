@@ -10,7 +10,7 @@ import { useQall } from '/@/composables/qall/useQall'
 import { messageMitt } from '/@/store/entities/messages'
 import useMittListener from '/@/composables/utils/useMittListener'
 
-const { callingChannel, publishData, qallMitt } = useQall()
+const { callingChannel, qallMitt } = useQall()
 
 const comments = ref<{ id: string; markdown: string }[]>([])
 const stamps = ref<{ id: string; stampId: string }[]>([])

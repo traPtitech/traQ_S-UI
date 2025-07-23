@@ -4,8 +4,9 @@
       v-if="ancestorsPath[0]"
       :to="ancestorsPath[0].link"
       :class="$style.ancestorHash"
-      >#</router-link
     >
+      #
+    </router-link>
     <span v-else :class="$style.currentHash">#</span>
     <span v-for="(ancestor, i) in ancestorsPath" :key="i">
       <router-link :to="ancestor.link" :class="$style.ancestor">{{

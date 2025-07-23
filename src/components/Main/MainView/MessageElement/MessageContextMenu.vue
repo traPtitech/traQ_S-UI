@@ -52,18 +52,18 @@
 <script lang="ts">
 import type { Ref } from 'vue'
 import { computed, toRef } from 'vue'
-import apis from '/@/lib/apis'
-import type { MessageId } from '/@/types/entity-ids'
-import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
-import type { Point } from '/@/lib/basic/point'
-import useExecWithToast from '/@/composables/toast/useExecWithToast'
-import usePinToggler from '/@/composables/contextMenu/usePinToggler'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
+import usePinToggler from '/@/composables/contextMenu/usePinToggler'
+import useCopyText from '/@/composables/toast/useCopyText'
+import useExecWithToast from '/@/composables/toast/useExecWithToast'
+import apis from '/@/lib/apis'
+import type { Point } from '/@/lib/basic/point'
+import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
 import { useMeStore } from '/@/store/domain/me'
-import { useModalStore } from '/@/store/ui/modal'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
-import useCopyText from '/@/composables/toast/useCopyText'
+import { useModalStore } from '/@/store/ui/modal'
+import type { MessageId } from '/@/types/entity-ids'
 
 const useMessageChanger = (messageId: Ref<MessageId>) => {
   const { execWithToast } = useExecWithToast()

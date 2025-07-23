@@ -49,7 +49,7 @@ const toggleAudio = async () => {
   try {
     toggleMicMute()
     isMicOn.value = !isMicOn.value
-  } catch (err) {}
+  } catch (_) {}
 }
 
 const toggleVideo = async () => {
@@ -103,13 +103,13 @@ const handleSound = () => {
 }
 
 const reactionButton = useTemplateRef<HTMLDivElement>('reactionButton')
-const { openStampPicker, closeStampPicker } = useStampPickerInvoker(
+const { openStampPicker } = useStampPickerInvoker(
   async stampData => {
     try {
       await publishData({ type: 'stamp', message: stampData.id })
       qallMitt.emit('pushStamp', stampData.id)
       openStampPicker()
-    } catch (e) {}
+    } catch (_) {}
   },
   reactionButton,
   false,
@@ -219,7 +219,7 @@ const toggleDanmaku = () => {
                 />
               </div>
             </div>
-            <div :class="$style.verticalBar"></div>
+            <div :class="$style.verticalBar" />
             <div :class="$style.buttonWithDetail">
               <CallControlButton
                 :icon="screenShareIcon"
@@ -263,7 +263,7 @@ const toggleDanmaku = () => {
               :on-click="leaveQall"
               :on-background-color="'#F26451'"
             />
-            <div :class="$style.verticalBar"></div>
+            <div :class="$style.verticalBar" />
             <div :class="$style.smallButtonGroup">
               <div :class="$style.participantsContainer">
                 <ClickOutside @click-outside="showParticipants = false">

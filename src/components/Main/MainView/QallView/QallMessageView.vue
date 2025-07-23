@@ -9,7 +9,6 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import IconButton from '/@/components/UI/IconButton.vue'
-import { useMessagesStore } from '/@/store/entities/messages'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -25,19 +24,16 @@ const {
   isReachedLatest,
   isLoading,
   lastLoadingDirection,
-  unreadSince,
   onLoadFormerMessagesRequest,
   onLoadLatterMessagesRequest
 } = useChannelMessageFetcher(scrollerEle, props)
-const { messagesMap } = useMessagesStore()
 
 const { channelsMap } = useChannelsStore()
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
 )
 
-const { unreadChannelsMap, deleteUnreadChannelWithSend } =
-  useSubscriptionStore()
+const { unreadChannelsMap } = useSubscriptionStore()
 
 const resetIsReachedLatest = () => {
   if (!unreadChannelsMap.value.get(props.channelId)) return
@@ -82,7 +78,7 @@ const handleScroll = () => {
             v-if="isMessageShow"
             :class="$style.messageContainerBackgroundContainer"
           >
-            <div :class="$style.messageContainerBackground"></div>
+            <div :class="$style.messageContainerBackground" />
 
             <messages-scroller
               v-if="isMessageShow"
@@ -129,7 +125,7 @@ const handleScroll = () => {
           />
         </div>
       </div>
-      <slot name="default"></slot>
+      <slot name="default" />
     </div>
     <message-input
       :channel-id="channelId"

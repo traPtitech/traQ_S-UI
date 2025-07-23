@@ -1,23 +1,23 @@
 <template>
   <div :class="$style.container">
     <h3>修飾キーとして利用するキー</h3>
-    <div :class="$style.checkbox" :data-is-checked="shift">
-      <form-checkbox v-model="shift">
+    <div :class="$style.checkbox" :data-is-checked="modelValue.shift">
+      <form-checkbox v-model="modelValue.shift">
         {{ getModifierKeyName('shift') }}
       </form-checkbox>
     </div>
-    <div :class="$style.checkbox" :data-is-checked="alt">
-      <form-checkbox v-model="alt">
+    <div :class="$style.checkbox" :data-is-checked="modelValue.alt">
+      <form-checkbox v-model="modelValue.alt">
         {{ getModifierKeyName('alt') }}
       </form-checkbox>
     </div>
-    <div :class="$style.checkbox" :data-is-checked="ctrl">
-      <form-checkbox v-model="ctrl">
+    <div :class="$style.checkbox" :data-is-checked="modelValue.ctrl">
+      <form-checkbox v-model="modelValue.ctrl">
         {{ getModifierKeyName('ctrl') }}
       </form-checkbox>
     </div>
-    <div :class="$style.checkbox" :data-is-checked="macCtrl">
-      <form-checkbox v-if="macFlag" v-model="macCtrl">
+    <div :class="$style.checkbox" :data-is-checked="modelValue.macCtrl">
+      <form-checkbox v-if="macFlag" v-model="modelValue.macCtrl">
         {{ getModifierKeyName('macCtrl') }}
       </form-checkbox>
     </div>
@@ -25,18 +25,11 @@
 </template>
 
 <script setup lang="ts">
-import type { SendKeys } from '/@/store/app/browserSettings'
-import { isMac } from '/@/lib/dom/browser'
-import { useModelObjectSyncer } from '/@/composables/useModelSyncer'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
+import { isMac } from '/@/lib/dom/browser'
+import type { SendKeys } from '/@/store/app/browserSettings'
 
-const props = defineProps<{
-  modifierKey: SendKeys
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:modifierKey', _val: SendKeys): void
-}>()
+const modelValue = defineModel<SendKeys>('modifierKey', { required: true })
 
 const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
   alt: 'Alt',
@@ -50,12 +43,6 @@ const macModifierKeyTable: Record<keyof SendKeys, string> = {
   shift: 'Shift',
   macCtrl: 'Ctrl'
 }
-
-const { shift, alt, ctrl, macCtrl } = useModelObjectSyncer(
-  props,
-  emit,
-  'modifierKey'
-)
 
 const macFlag = isMac()
 const getModifierKeyName = (key: keyof SendKeys) => {

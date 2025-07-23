@@ -28,7 +28,7 @@
         />
       </template>
     </div>
-    <div :class="$style.bottomSpacer"></div>
+    <div :class="$style.bottomSpacer" />
   </div>
 </template>
 

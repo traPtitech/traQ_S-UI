@@ -1,10 +1,12 @@
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { throttle } from 'throttle-debounce'
 import type { Ref } from 'vue'
 import { computed, ref, watch, watchEffect } from 'vue'
 import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
+import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 import type { Point } from '/@/lib/basic/point'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { StampId } from '/@/types/entity-ids'
 
@@ -57,10 +59,35 @@ const getPositionFromAlignment = (
 
 const useStampPickerPinia = defineStore('ui/stampPicker', () => {
   const selectHandler = ref<StampSelectHandler>(defaultSelectHandler)
-  const currentStampSet = ref<StampSet>({
+
+  const initialStampSetValue: StampSet = {
     type: 'history',
     id: ''
+  }
+  const [state] = useIndexedDbValue(
+    'store/ui/stampPicker/currentStampSet',
+    1,
+    {},
+    initialStampSetValue
+  )
+
+  const { nonEmptyStampPaletteIds } = useStampPalettesStore()
+  const currentStampSet = computed({
+    get: () => state,
+    set: (newValue: StampSet) => {
+      state.id = newValue.id
+      state.type = newValue.type
+    }
   })
+
+  const validateCurrentStampSet = () => {
+    if (currentStampSet.value.type !== 'palette') return
+    if (!nonEmptyStampPaletteIds.value.includes(currentStampSet.value.id)) {
+      currentStampSet.value.type = 'history'
+      currentStampSet.value.id = ''
+    }
+  }
+
   const isEffectEnabled = ref(false)
   const position = ref<Point>()
   const alignment = ref<AlignmentPosition>('top-right')
@@ -76,6 +103,7 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
   return {
     selectHandler,
     currentStampSet,
+    validateCurrentStampSet,
     isEffectEnabled,
     position,
     alignment,

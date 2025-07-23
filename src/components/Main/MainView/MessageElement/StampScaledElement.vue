@@ -1,10 +1,12 @@
 <template>
   <teleport to="#scaled-stamp-popup">
     <div
-      v-if="show"
+      v-if="show || isHovered"
       ref="containerEle"
       :class="$style.scaleReaction"
       :style="stylePosition"
+      @mouseenter="onMouseEnter"
+      @mouseleave="onMouseLeave"
     >
       <transition name="scale-reaction">
         <a-stamp
@@ -16,13 +18,18 @@
         />
       </transition>
       <span :class="$style.stampname">{{ `:${stampName}:` }}</span>
-      <stamp-detail-element :class="$style.detail" :stamp="stamp" />
+      <stamp-detail-element
+        :class="$style.detail"
+        :stamp="stamp"
+        @click-user="emit('end-scaled-hover')"
+      />
     </div>
   </teleport>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import useHover from '/@/composables/dom/useHover'
 import AStamp from '/@/components/UI/AStamp.vue'
 import type { MessageStampById } from '/@/lib/messageStampList'
 import { useStampsStore } from '/@/store/entities/stamps'
@@ -33,10 +40,15 @@ const props = defineProps<{
   targetRect?: DOMRect
 }>()
 
+const emit = defineEmits<{
+  (e: 'scaled-hover'): void
+  (e: 'end-scaled-hover'): void
+}>()
+
 const containerEle = ref<HTMLDivElement>()
 const { stampsMap } = useStampsStore()
 const stampName = computed(
-  () => stampsMap.value.get(props.stamp.id)?.name ?? ''
+  () => stampsMap.value.get(props.stamp.id)?.name ?? 'unknown stamp'
 )
 const stylePosition = computed(() => {
   if (!props.targetRect) return { display: 'none' }
@@ -45,6 +57,15 @@ const stylePosition = computed(() => {
     top: `${props.targetRect.top}px`,
     left: `min(calc(100% - ${width}px), ${props.targetRect.left}px)`,
     transform: 'translateY(-105%) translateX(-30%)'
+  }
+})
+
+const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+watch(isHovered, newIsHovered => {
+  if (newIsHovered) {
+    emit('scaled-hover')
+  } else {
+    emit('end-scaled-hover')
   }
 })
 </script>
