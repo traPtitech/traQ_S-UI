@@ -18,8 +18,8 @@
         :max-length="1000"
       >
         <template #default="slotProps">
-          <markdown-preview :content="slotProps.content" accept-action  inline/>
-        </template> 
+          <markdown-preview :content="slotProps.content" accept-action inline />
+        </template>
       </content-editor>
     </sidebar-content-container-foldable>
     <div :class="$style.item">

@@ -36,7 +36,7 @@ const startAnimation = () => {
 
 <template>
   <div ref="danmakuRef" :class="$style.danmaku">
-    <MarkdownPreview :content="markdown" @render="startAnimation" inline/>
+    <MarkdownPreview :content="markdown" inline @render="startAnimation" />
   </div>
 </template>
 

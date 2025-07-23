@@ -1,7 +1,11 @@
 <template>
   <modal-frame title="クリップ" icon-mdi icon-name="bookmark">
     <template #subtitle>
-      <markdown-preview :class="$style.subtitle" :content="messageContent" inline />
+      <markdown-preview
+        :class="$style.subtitle"
+        :content="messageContent"
+        inline
+      />
     </template>
     <template #default>
       <clip-folder-element
