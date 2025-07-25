@@ -1,5 +1,14 @@
 <template>
+  <span
+    v-if="props"
+    class="markdown-inline-body"
+    :class="$style.content"
+    :data-accept-action="acceptAction"
+    @click="toggleSpoilerHandler"
+    v-html="renderedContent"
+  />
   <div
+    v-else
     class="markdown-body"
     :class="$style.content"
     :data-accept-action="acceptAction"
