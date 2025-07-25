@@ -1,9 +1,9 @@
 <template>
-  <inline-markdown v-if="isShown && content" :content="content" />
+  <markdown-preview v-if="isShown && content" :content="content" inline />
 </template>
 
 <script lang="ts" setup>
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import { computed } from 'vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 

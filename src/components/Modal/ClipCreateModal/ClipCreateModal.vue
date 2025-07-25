@@ -1,7 +1,11 @@
 <template>
   <modal-frame title="クリップ" icon-mdi icon-name="bookmark">
     <template #subtitle>
-      <inline-markdown :class="$style.subtitle" :content="messageContent" />
+      <markdown-preview
+        :class="$style.subtitle"
+        :content="messageContent"
+        inline
+      />
     </template>
     <template #default>
       <clip-folder-element
@@ -68,7 +72,7 @@ const useCreateClip = (
 <script lang="ts" setup>
 import ModalFrame from '../Common/ModalFrame.vue'
 import ClipFolderElement from './ClipFolderElement.vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 
 const props = defineProps<{
   messageId: string

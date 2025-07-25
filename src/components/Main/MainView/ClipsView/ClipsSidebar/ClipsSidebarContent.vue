@@ -18,7 +18,7 @@
         :max-length="1000"
       >
         <template #default="slotProps">
-          <inline-markdown :content="slotProps.content" accept-action />
+          <markdown-preview :content="slotProps.content" accept-action inline />
         </template>
       </content-editor>
     </sidebar-content-container-foldable>
@@ -47,7 +47,7 @@ import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSide
 import SidebarContentContainerFoldable from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerFoldable.vue'
 import ContentEditor from '/@/components/Main/MainView/PrimaryViewSidebar/ContentEditor.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import useLocalInput from '/@/composables/utils/useLocalInput'
 
 const props = defineProps<{
