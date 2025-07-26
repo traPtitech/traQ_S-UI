@@ -20,7 +20,8 @@ type MessageEventMap = {
   addMessage: { message: Message; isCiting: boolean }
   updateMessage: Message
   deleteMessage: MessageId
-  changeMessagePinned: { message: Message; pinned: boolean }
+  pinMessage: Message
+  unpinMessage: MessageId
 }
 
 type OptimisticStamp = {
@@ -79,12 +80,21 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     if (!message) return
     message.stamps = stamps
   }
-  const setMessagePinnedState = (messageId: MessageId, pinned: boolean) => {
+  const pinMessage = (messageId: MessageId) => {
     const message = messagesMap.value.get(messageId)
     if (!message) return
-    message.pinned = pinned
+    message.pinned = true
 
-    messageMitt.emit('changeMessagePinned', { message, pinned })
+    messageMitt.emit('pinMessage', message)
+  }
+
+  const unpinMessage = (messageId: MessageId) => {
+    const message = messagesMap.value.get(messageId)
+    if (message) {
+      message.pinned = false
+    }
+
+    messageMitt.emit('unpinMessage', messageId)
   }
 
   /*
@@ -334,10 +344,10 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     updateMessageStamps(messageId, newStamps)
   })
   wsListener.on('MESSAGE_PINNED', ({ message_id }) => {
-    setMessagePinnedState(message_id, true)
+    pinMessage(message_id)
   })
   wsListener.on('MESSAGE_UNPINNED', ({ message_id }) => {
-    setMessagePinnedState(message_id, false)
+    unpinMessage(message_id)
   })
   // reconnect時のメッセージの再取得処理はそれぞれの方で行う
   wsListener.on('reconnect', () => {
