@@ -217,11 +217,22 @@ watch(
         state.height = newHeight
         return
       }
-      rootRef.value.scrollTo({
-        top: newHeight - state.height
-      })
-    }
-    state.height = newHeight
+      //上に追加された時はスクロール位置を変更する。
+      if (props.lastLoadingDirection === 'former') {
+        rootRef.value.scrollTo({
+          top: newHeight - state.height
+        })
+        state.height = newHeight
+      }
+
+      if (props.lastLoadingDirection === 'latest') {
+        // チャンネルを移動したとき、
+        rootRef.value.scrollTo({
+          top: newHeight
+        })
+        state.height = newHeight
+      }
+    } else state.height = newHeight
   },
   { deep: true, flush: 'post' }
 )
