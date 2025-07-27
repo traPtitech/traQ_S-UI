@@ -1,7 +1,6 @@
 import { computed } from 'vue'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useOpenLink } from '/@/composables/useOpenLink'
-import { useModalStore } from '/@/store/ui/modal'
 import useToggle from '/@/composables/utils/useToggle'
 
 interface Tool {
@@ -20,10 +19,8 @@ const useToolBox = () => {
     toggle: toggleServices
   } = useToggle(false)
   const { openLink } = useOpenLink()
-  const { pushModal } = useModalStore()
 
   const { openCommandPalette } = useCommandPalette()
-  const openQrCodeModal = () => pushModal({ type: 'qrcode' })
   const openSettings = (e: MouseEvent) => {
     openLink(e, '/settings')
   }
@@ -42,13 +39,6 @@ const useToolBox = () => {
         iconName: 'apps',
         iconMdi: true,
         onClick: toggleServices
-      })
-    }
-    if (window.traQConfig.showQrCodeButton) {
-      tools.push({
-        iconName: 'qrcode',
-        iconMdi: true,
-        onClick: openQrCodeModal
       })
     }
     tools.push({
