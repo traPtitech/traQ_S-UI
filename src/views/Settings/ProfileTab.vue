@@ -19,7 +19,7 @@
     <section :class="$style.section">
       <h3 :class="$style.heading">ひとこと</h3>
       <div :class="$style.bioContainer">
-        <inline-markdown :content="state.bio" accept-action />
+        <markdown-preview :content="state.bio" accept-action />
         <form-text-area v-model="state.bio" rows="2" :max-length="1000" />
       </div>
     </section>
@@ -137,7 +137,7 @@ import UserIcon from '/@/components/UI/UserIcon.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 
 const { detail: detailMayBeUndefined } = useMeStore()
 
