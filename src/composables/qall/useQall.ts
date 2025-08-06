@@ -136,7 +136,8 @@ export const useQall = () => {
     const attemptJoin = async () => {
       try {
         if (callingChannel.value) {
-          await leaveRoom()
+          await leaveQall()
+          return
         }
         if (!myId.value) {
           addErrorToast('接続に失敗しました')
