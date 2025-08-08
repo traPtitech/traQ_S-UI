@@ -9,8 +9,8 @@
     </navigation-content-container>
     <div
       v-if="
-        featureFlags.flag_show_star_in_unread_channel_list.enabled ||
-        featureFlags.flag_show_notified_in_unread_channel_list.enabled
+        prioritizeStarredChannel ||
+        prioritizeNotifiedChannel
       "
     >
       <navigation-content-container
@@ -24,7 +24,7 @@
         <channel-list
           :channels="noticeableChannels"
           :show-star="
-            featureFlags.flag_show_star_in_unread_channel_list.enabled
+            prioritizeStarredChannel
           "
         />
       </navigation-content-container>
@@ -36,10 +36,10 @@
         <channel-list
           :channels="unreadChannels"
           :show-star="
-            featureFlags.flag_show_star_in_unread_channel_list.enabled
+            prioritizeStarredChannel
           "
           :show-notified="
-            featureFlags.flag_show_notified_in_unread_channel_list.enabled
+            prioritizeNotifiedChannel
           "
         />
       </navigation-content-container>
@@ -56,7 +56,7 @@
         :class="$style.item"
       >
         <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
-        <channel-list :channels="noticeableChannels" />
+        <channel-list :channels="noticeableChannels"/>
         <channel-list :channels="unreadChannels" />
       </navigation-content-container>
     </div>
@@ -91,13 +91,13 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import useChannelsWithNotification from '/@/composables/subscription/useChannelsWithNotification'
 import { filterTrees } from '/@/lib/basic/tree'
 import { useQall } from '/@/composables/qall/useQall'
-import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const { homeChannelTree } = useChannelTree()
 const { detail } = useMeStore()
 const { channelsMap } = useChannelsStore()
 const { rooms: roomWithParticipants } = useQall()
-const { featureFlags } = useFeatureFlagSettings()
+const { prioritizeNotifiedChannel, prioritizeStarredChannel } = useBrowserSettings()
 
 const homeChannelWithTree = computed(() => {
   if (!detail.value?.homeChannel) return []
