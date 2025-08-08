@@ -15,6 +15,8 @@ type State = {
   sendWithModifierKey: SendKey
   modifierKey: SendKeys
   ecoMode: boolean
+  prioritizeStarredChannel: boolean
+  prioritizeNotifiedChannel: boolean
   activityMode: ActivityMode
   filterStarChannel: boolean
 }
@@ -58,6 +60,8 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     sendWithModifierKey: 'modifier',
     modifierKey: { alt: true, ctrl: true, shift: true, macCtrl: true },
     ecoMode: false,
+    prioritizeStarredChannel: true,
+    prioritizeNotifiedChannel: true,
     activityMode: { all: false, perChannel: false },
     filterStarChannel: false
   }
