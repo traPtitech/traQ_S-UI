@@ -4,7 +4,7 @@ import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
-import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const useChannelsWithNotification = () => {
   const { unreadChannelsMap, subscriptionMap } = useSubscriptionStore()
@@ -12,14 +12,12 @@ const useChannelsWithNotification = () => {
   const starredChannelStore = useStaredChannels()
 
   const mode = computed<'starred' | 'notified' | 'default' | 'both'>(() => {
-    const { featureFlags } = useFeatureFlagSettings()
-    if (featureFlags.value.flag_show_star_in_unread_channel_list.enabled) {
-      return featureFlags.value.flag_show_notified_in_unread_channel_list
-        .enabled
-        ? 'both'
-        : 'starred'
+    const { prioritizeNotifiedChannel, prioritizeStarredChannel } =
+      useBrowserSettings()
+    if (prioritizeStarredChannel.value) {
+      return prioritizeNotifiedChannel.value ? 'both' : 'starred'
     }
-    if (featureFlags.value.flag_show_notified_in_unread_channel_list.enabled) {
+    if (prioritizeNotifiedChannel.value) {
       return 'notified'
     }
     return 'default'
