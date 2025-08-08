@@ -7,12 +7,7 @@
     >
       <channel-tree :channels="homeChannelWithTree" show-shortened-path />
     </navigation-content-container>
-    <div
-      v-if="
-        prioritizeStarredChannel ||
-        prioritizeNotifiedChannel
-      "
-    >
+    <div>
       <navigation-content-container
         v-if="
           dmChannelsWithNotification.length + noticeableChannels.length !== 0
@@ -42,22 +37,6 @@
             prioritizeNotifiedChannel
           "
         />
-      </navigation-content-container>
-    </div>
-    <div v-else>
-      <navigation-content-container
-        v-if="
-          dmChannelsWithNotification.length +
-            noticeableChannels.length +
-            unreadChannels.length !==
-          0
-        "
-        subtitle="未読"
-        :class="$style.item"
-      >
-        <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
-        <channel-list :channels="noticeableChannels"/>
-        <channel-list :channels="unreadChannels" />
       </navigation-content-container>
     </div>
     <navigation-content-container subtitle="チャンネル" :class="$style.item">
