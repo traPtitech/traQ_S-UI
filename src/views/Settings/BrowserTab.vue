@@ -7,6 +7,8 @@
       v-model:open-mode="state.openMode"
       v-model:open-channel-name="state.openChannelName"
     />
+    <prioritize-starred-channel v-model="state.prioritizeStarredChannel" />
+    <prioritize-notified-channel v-model="state.prioritizeNotifiedChannel" />
     <send-key v-model:send-with-modifier-key="state.sendWithModifierKey" />
     <modifier-keys v-model:modifier-key="state.modifierKey" />
     <cache-manager />
@@ -20,6 +22,8 @@ import CacheManager from '/@/components/Settings/BrowserTab/CacheManager.vue'
 import OpenMode from '/@/components/Settings/BrowserTab/OpenMode.vue'
 import SendKey from '/@/components/Settings/BrowserTab/SendKey.vue'
 import EcoMode from '/@/components/Settings/BrowserTab/EcoMode.vue'
+import PrioritizeNotifiedChannel from '/@/components/Settings/BrowserTab/PrioritizeNotifiedChannel.vue'
+import PrioritizeStarredChannel from '/@/components/Settings/BrowserTab/PrioritizeStarredChannel.vue'
 import { reactive } from 'vue'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import ModifierKeys from '/@/components/Settings/BrowserTab/ModifierKeys.vue'
