@@ -25,7 +25,7 @@ export const featureFlagDescriptions = {
     description: '「提供終了日」の表記がひらがなになります。',
     defaultValue: false,
     endAt: new Date('2025-07-31T23:59:59+09:00')
-  },
+  }
 } as const satisfies Record<string, FeatureFlagDescription>
 
 export type FeatureFlagKey = keyof typeof featureFlagDescriptions

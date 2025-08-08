@@ -12,7 +12,8 @@ const useChannelsWithNotification = () => {
   const starredChannelStore = useStaredChannels()
 
   const mode = computed<'starred' | 'notified' | 'default' | 'both'>(() => {
-    const { prioritizeNotifiedChannel, prioritizeStarredChannel } = useBrowserSettings()
+    const { prioritizeNotifiedChannel, prioritizeStarredChannel } =
+      useBrowserSettings()
     if (prioritizeStarredChannel.value) {
       return prioritizeNotifiedChannel.value ? 'both' : 'starred'
     }

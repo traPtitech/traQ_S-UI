@@ -18,9 +18,7 @@
         <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
         <channel-list
           :channels="noticeableChannels"
-          :show-star="
-            prioritizeStarredChannel
-          "
+          :show-star="prioritizeStarredChannel"
         />
       </navigation-content-container>
       <navigation-content-container
@@ -30,12 +28,8 @@
       >
         <channel-list
           :channels="unreadChannels"
-          :show-star="
-            prioritizeStarredChannel
-          "
-          :show-notified="
-            prioritizeNotifiedChannel
-          "
+          :show-star="prioritizeStarredChannel"
+          :show-notified="prioritizeNotifiedChannel"
         />
       </navigation-content-container>
     </div>
@@ -76,7 +70,8 @@ const { homeChannelTree } = useChannelTree()
 const { detail } = useMeStore()
 const { channelsMap } = useChannelsStore()
 const { rooms: roomWithParticipants } = useQall()
-const { prioritizeNotifiedChannel, prioritizeStarredChannel } = useBrowserSettings()
+const { prioritizeNotifiedChannel, prioritizeStarredChannel } =
+  useBrowserSettings()
 
 const homeChannelWithTree = computed(() => {
   if (!detail.value?.homeChannel) return []
