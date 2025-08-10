@@ -13,8 +13,7 @@
       <UserIcon
         v-if="!isMobile"
         :user-id="id"
-        prevent-modal
-        is-user-modal
+        :prevent-modal="false"
         :class="$style.icon"
         :style="styles.icon"
       />
