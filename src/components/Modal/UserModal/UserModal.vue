@@ -14,6 +14,7 @@
         v-if="!isMobile"
         :user-id="id"
         prevent-modal
+        is-user-modal
         :class="$style.icon"
         :style="styles.icon"
       />
