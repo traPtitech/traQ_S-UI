@@ -25,15 +25,38 @@
   </div>
 </template>
 
+<script lang="ts">
+import { ref, onMounted, onUnmounted, watchEffect } from 'vue'
+import { getDateRepresentation } from '/@/lib/basic/date'
+
+const useDateRepresentation = (updatedAt: string) => {
+  const dateTimeout = ref<ReturnType<typeof setTimeout>>()
+  const date = ref<string>('')
+  watchEffect(() => {
+    date.value = getDateRepresentation(updatedAt)
+  })
+  const subscribeDateChange = () => {
+    const now = new Date()
+    const tomorrow = new Date()
+    tomorrow.setDate(now.getDate() + 1)
+    tomorrow.setHours(0, 0, 0, 0)
+    dateTimeout.value = setTimeout(() => {
+      date.value = getDateRepresentation(updatedAt)
+      subscribeDateChange()
+    }, tomorrow.getTime() - now.getTime())
+  }
+  onMounted(() => subscribeDateChange())
+  onUnmounted(() => clearTimeout(dateTimeout.value))
+  return date
+}
+</script>
+
 <script lang="ts" setup>
 import GradeBadge from './GradeBadge.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
 import type { UserId } from '/@/types/entity-ids'
-import {
-  getDateRepresentation,
-  getFullDayWithTimeString
-} from '/@/lib/basic/date'
+import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
@@ -52,7 +75,7 @@ if (user.value === undefined) {
 const createdDate = computed(() =>
   getFullDayWithTimeString(new Date(props.createdAt))
 )
-const date = computed(() => getDateRepresentation(props.updatedAt))
+const date = useDateRepresentation(props.updatedAt)
 </script>
 
 <style lang="scss" module>
