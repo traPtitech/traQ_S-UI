@@ -22,7 +22,7 @@
         />
       </navigation-content-container>
       <navigation-content-container
-        v-if="dmChannelsWithNotification.length + unreadChannels.length !== 0"
+        v-if="unreadChannels.length > 0"
         subtitle="未読"
         :class="$style.item"
       >
