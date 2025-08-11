@@ -1,10 +1,8 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.description">
-      <h3>未読画面で通知付きチャンネルを優先表示</h3>
-      <p>
-        未読チャンネル一覧で通知付きチャンネルを優先的に表示するようにします。
-      </p>
+      <h3>{{ title }}</h3>
+      <p>{{ description }}</p>
     </div>
     <div>
       <a-toggle v-model="modelValue" />
@@ -15,6 +13,11 @@
 <script lang="ts" setup>
 import AToggle from '/@/components/UI/AToggle.vue'
 
+const props = defineProps<{
+  title: string
+  description: string
+}>()
+const { title, description } = props
 const modelValue = defineModel<boolean>({ required: true })
 </script>
 

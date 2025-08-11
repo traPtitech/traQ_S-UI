@@ -7,8 +7,16 @@
       v-model:open-mode="state.openMode"
       v-model:open-channel-name="state.openChannelName"
     />
-    <prioritize-starred-channel v-model="state.prioritizeStarredChannel" />
-    <prioritize-notified-channel v-model="state.prioritizeNotifiedChannel" />
+    <prioritize-channel-toggle
+      v-model="state.prioritizeStarredChannel"
+      title="未読画面でお気に入りを優先表示"
+      description="未読チャンネル一覧でお気に入りチャンネルを優先的に表示するようにします。"
+    />
+    <prioritize-channel-toggle
+      v-model="state.prioritizeNotifiedChannel"
+      title="未読画面で通知を優先表示"
+      description="未読チャンネル一覧で通知チャンネルを優先的に表示するようにします。"
+    />
     <send-key v-model:send-with-modifier-key="state.sendWithModifierKey" />
     <modifier-keys v-model:modifier-key="state.modifierKey" />
     <cache-manager />
@@ -22,8 +30,7 @@ import CacheManager from '/@/components/Settings/BrowserTab/CacheManager.vue'
 import OpenMode from '/@/components/Settings/BrowserTab/OpenMode.vue'
 import SendKey from '/@/components/Settings/BrowserTab/SendKey.vue'
 import EcoMode from '/@/components/Settings/BrowserTab/EcoMode.vue'
-import PrioritizeNotifiedChannel from '/@/components/Settings/BrowserTab/PrioritizeNotifiedChannel.vue'
-import PrioritizeStarredChannel from '/@/components/Settings/BrowserTab/PrioritizeStarredChannel.vue'
+import PrioritizeChannelToggle from '/@/components/Settings/BrowserTab/PrioritizeChannelToggle.vue'
 import { reactive } from 'vue'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import ModifierKeys from '/@/components/Settings/BrowserTab/ModifierKeys.vue'
