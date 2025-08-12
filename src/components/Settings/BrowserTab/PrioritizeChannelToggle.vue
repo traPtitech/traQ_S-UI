@@ -13,11 +13,11 @@
 <script lang="ts" setup>
 import AToggle from '/@/components/UI/AToggle.vue'
 
-const props = defineProps<{
+const { title, description } = defineProps<{
   title: string
   description: string
 }>()
-const { title, description } = props
+
 const modelValue = defineModel<boolean>({ required: true })
 </script>
 
