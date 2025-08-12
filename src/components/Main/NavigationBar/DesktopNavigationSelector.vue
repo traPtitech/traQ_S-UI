@@ -40,6 +40,7 @@ import {
 import type { EphemeralNavigationSelectorEntry } from './composables/useNavigationSelectorEntry'
 import useNavigationSelectorEntry from './composables/useNavigationSelectorEntry'
 import { VERSION } from '/@/lib/define'
+import { useNavigationResizer } from '/@/composables/dom/useNavigationResizer'
 
 withDefaults(
   defineProps<{
@@ -58,11 +59,23 @@ const emit = defineEmits<{
   (e: 'ephemeralEntryAdd', _entry: EphemeralNavigationSelectorEntry): void
 }>()
 
-const { onNavigationItemClick } = useNavigationSelectorItem(emit)
-const { onNavigationItemClick: onEphemeralNavigationItemClick } =
+const { onNavigationItemClick: onNavigationItemClickImpl } =
+  useNavigationSelectorItem(emit)
+const { onNavigationItemClick: onEphemeralNavigationItemClickImpl } =
   useEphemeralNavigationSelectorItem(emit)
 const { entries, ephemeralEntries } = useNavigationSelectorEntry()
 const showSeparator = computed(() => ephemeralEntries.value.length > 0)
+const { restoreNavigationWidth } = useNavigationResizer()
+
+const onNavigationItemClick = (item: NavigationItemType) => {
+  onNavigationItemClickImpl(item)
+  restoreNavigationWidth()
+}
+
+const onEphemeralNavigationItemClick = (item: EphemeralNavigationItemType) => {
+  onEphemeralNavigationItemClickImpl(item)
+  restoreNavigationWidth()
+}
 
 watch(ephemeralEntries, (entries, prevEntries) => {
   prevEntries
