@@ -19,11 +19,12 @@
       />
       <desktop-tool-box />
     </div>
-    <div :class="$style.navigations">
+    <div
+      :style="{ width: `${navigationWidth}px` }"
+      :class="[$style.navigations, { [$style.hidden]: isNavigationClosed }]"
+    >
       <navigation-content
         :current-navigation="navigationSelectorState.currentNavigation"
-        :style="{ width: `${navigationWidth}px` }"
-        :class="{ [$style.hidden]: isNavigationClosed }"
       />
       <transition name="fade-bottom">
         <ephemeral-navigation-content
