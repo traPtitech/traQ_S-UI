@@ -42,7 +42,7 @@ import useNavigationSelectorEntry from './composables/useNavigationSelectorEntry
 import { VERSION } from '/@/lib/define'
 import { useNavigationResizer } from '/@/composables/dom/useNavigationResizer'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     currentNavigation?: NavigationItemType
     currentEphemeralNavigation?: EphemeralNavigationItemType
@@ -67,17 +67,31 @@ const { onNavigationItemClick: onEphemeralNavigationItemClickImpl } =
   useEphemeralNavigationSelectorItem(emit)
 const { entries, ephemeralEntries } = useNavigationSelectorEntry()
 const showSeparator = computed(() => ephemeralEntries.value.length > 0)
-const { restoreNavigationWidth } = useNavigationResizer()
+const { isNavigationClosed, restoreNavigationWidth } = useNavigationResizer()
 
 const onNavigationItemClick = (item: NavigationItemType) => {
   onNavigationItemClickImpl(item)
   restoreNavigationWidth()
 }
 
+let previousEphemeralNavigation: EphemeralNavigationItemType | null = null
+
 const onEphemeralNavigationItemClick = (item: EphemeralNavigationItemType) => {
+  previousEphemeralNavigation = null
   onEphemeralNavigationItemClickImpl(item)
   restoreNavigationWidth()
 }
+
+watch(isNavigationClosed, closed => {
+  if (closed) {
+    if (!props.currentEphemeralNavigation) return
+    previousEphemeralNavigation = props.currentEphemeralNavigation
+  } else {
+    if (!previousEphemeralNavigation) return
+  }
+
+  onEphemeralNavigationItemClickImpl(previousEphemeralNavigation)
+})
 
 watch(ephemeralEntries, (entries, prevEntries) => {
   prevEntries
