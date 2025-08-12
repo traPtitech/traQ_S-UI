@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref, useTemplateRef } from 'vue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 
@@ -7,9 +7,14 @@ type State = {
   navigationWidth: number
 }
 
+export const MIN_NAVIGATION_WIDTH = 200
+export const DEFAULT_NAVIGATION_WIDTH = 260
+export const NAVIGATION_CLOSING_THRESHOLD = MIN_NAVIGATION_WIDTH * 0.4
+export const MAX_NAVIGATION_WIDTH_RATIO = 0.5
+
 const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
   const initialValue: State = {
-    navigationWidth: 260
+    navigationWidth: DEFAULT_NAVIGATION_WIDTH
   }
 
   const [state, _restoring, restoringPromise] = useIndexedDbValue(
@@ -19,7 +24,12 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
     initialValue
   )
 
-  const navigationWidth = ref(initialValue.navigationWidth)
+  const navigationRef = useTemplateRef<HTMLDivElement>('navigations')
+  const navigationLeft = computed(() => {
+    return navigationRef.value?.getBoundingClientRect().left ?? 0
+  })
+
+  const navigationWidth = ref(state.navigationWidth)
 
   const saveNavigationWidth = () => {
     state.navigationWidth = navigationWidth.value
@@ -34,6 +44,7 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
   })
 
   return {
+    navigationLeft,
     navigationWidth,
     saveNavigationWidth,
     restoreNavigationWidth

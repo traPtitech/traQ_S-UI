@@ -1,24 +1,29 @@
 import { ref, onUnmounted, computed } from 'vue'
-import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
+import {
+  useNavigationLayoutStore,
+  MIN_NAVIGATION_WIDTH,
+  MAX_NAVIGATION_WIDTH_RATIO,
+  NAVIGATION_CLOSING_THRESHOLD
+} from '/@/store/ui/navigationLayout'
 import { createAnimationFrameController } from '/@/lib/dom/animationFrame'
 import useInnerWindowSize from './useInnerWindowSize'
 
 export const useNavigationResizer = () => {
-  const MIN_NAVIGATION_WIDTH = 200
-  const MAX_NAVIGATION_WIDTH_RATIO = 0.5
-  const NAVIGATION_CLOSING_RATIO = 0.5
-
   const animationFrame = createAnimationFrameController()
 
-  const { width: innerWidth } = useInnerWindowSize()
+  const { width: windowWidth } = useInnerWindowSize({ width: Infinity })
 
-  const { navigationWidth, saveNavigationWidth, restoreNavigationWidth } =
-    useNavigationLayoutStore()
+  const {
+    navigationWidth,
+    saveNavigationWidth,
+    restoreNavigationWidth,
+    navigationLeft
+  } = useNavigationLayoutStore()
 
   const clampWidth = (width: number) => {
     return Math.min(
       Math.max(width, MIN_NAVIGATION_WIDTH),
-      innerWidth.value * MAX_NAVIGATION_WIDTH_RATIO
+      windowWidth.value * MAX_NAVIGATION_WIDTH_RATIO
     )
   }
 
@@ -35,8 +40,6 @@ export const useNavigationResizer = () => {
   })
 
   const isResizing = ref(false)
-  let startX: number = 0
-  let startWidth: number = 0
 
   const restoreWidth = () => {
     if (navigationWidth.value > 0) return
@@ -55,8 +58,6 @@ export const useNavigationResizer = () => {
 
   const onMouseDown = (e: MouseEvent) => {
     isResizing.value = true
-    startX = e.clientX
-    startWidth = clampedNavigationWidth.value
 
     document.body.style.cursor = 'e-resize'
     document.body.style.userSelect = 'none'
@@ -71,13 +72,12 @@ export const useNavigationResizer = () => {
     if (!isResizing.value) return
 
     animationFrame.request(() => {
-      const deltaX = e.clientX - startX
-      const newWidth = startWidth + deltaX
+      const width = e.clientX - navigationLeft.value
 
-      if (e.clientX <= MIN_NAVIGATION_WIDTH * NAVIGATION_CLOSING_RATIO) {
+      if (width <= NAVIGATION_CLOSING_THRESHOLD) {
         navigationWidth.value = 0
       } else {
-        setNavigationWidth(newWidth)
+        setNavigationWidth(width)
       }
     })
 
