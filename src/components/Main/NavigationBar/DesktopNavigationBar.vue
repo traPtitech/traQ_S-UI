@@ -102,11 +102,11 @@ $ephemeralNavigationMinHeight: 64px;
   scrollbar-width: none;
 }
 .resizer {
-  width: 2px;
+  width: 3px;
   height: 100%;
   position: absolute;
   z-index: $z-index-sidebar;
-  right: 0;
+  right: -1px;
   top: 0;
   background-color: transparent;
   cursor: e-resize;
@@ -123,8 +123,8 @@ $ephemeralNavigationMinHeight: 64px;
   &::before {
     content: '';
     position: absolute;
-    left: -8px;
-    right: -8px;
+    left: -2px;
+    right: -12px;
     top: 0;
     bottom: 0;
     background-color: transparent;
