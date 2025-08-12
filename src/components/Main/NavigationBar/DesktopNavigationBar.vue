@@ -111,12 +111,16 @@ $ephemeralNavigationMinHeight: 64px;
   background-color: transparent;
   cursor: e-resize;
 
+  transition: background-color 125ms linear;
+
   &:hover {
     background-color: $theme-accent-focus-default;
+    transition: background-color 0.1s ease-out;
   }
 
   &:active {
     background-color: $theme-accent-primary-default;
+    transition: background-color 0.1s ease-out;
   }
 
   // ヒット領域を拡張
