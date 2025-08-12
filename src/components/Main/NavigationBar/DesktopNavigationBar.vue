@@ -20,6 +20,7 @@
       <DesktopToolBox />
     </div>
     <div
+      ref="navigations"
       :style="{ width: `${navigationWidth}px` }"
       :class="[$style.navigations, { [$style.hidden]: isNavigationClosed }]"
     >
