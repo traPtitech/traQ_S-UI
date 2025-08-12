@@ -15,8 +15,8 @@
     </div>
     <div :class="$style.navigations">
       <NavigationContent
-        :class="$style.navigation"
         :current-navigation="navigationSelectorState.currentNavigation"
+        :style="{ width: `${navigationWidth}px` }"
       />
       <transition name="fade-bottom">
         <EphemeralNavigationContent
@@ -28,6 +28,7 @@
         />
       </transition>
     </div>
+    <div :class="$style.resizer" @mousedown="startResizing" />
   </div>
 </template>
 
@@ -37,6 +38,7 @@ import EphemeralNavigationContent from '/@/components/Main/NavigationBar/Ephemer
 import DesktopNavigationSelector from '/@/components/Main/NavigationBar/DesktopNavigationSelector.vue'
 import DesktopToolBox from '/@/components/Main/NavigationBar/DesktopToolBox.vue'
 import useNavigation from './composables/useNavigation'
+import { useNavigationResizer } from '/@/composables/dom/useNavigationResizer'
 
 const {
   navigationSelectorState,
@@ -46,6 +48,8 @@ const {
   onEphemeralEntryRemove,
   onEphemeralEntryAdd
 } = useNavigation()
+
+const { startResizing, navigationWidth } = useNavigationResizer()
 </script>
 
 <style lang="scss" module>
@@ -54,8 +58,9 @@ $ephemeralNavigationMinHeight: 64px;
 
 .container {
   @include color-ui-primary;
+  position: relative;
   display: flex;
-  width: 100%;
+  width: fit-content;
   height: 100%;
   background: var(--specific-navigation-bar-desktop-background);
 }
@@ -76,12 +81,38 @@ $ephemeralNavigationMinHeight: 64px;
   min-width: 0;
   flex: 1;
 }
-.navigation {
-  width: 100%;
-}
 .ephemeralNavigation {
   width: #{calc(100% - #{$ephemeralNavigationSideMargin * 2})};
   margin: 0 $ephemeralNavigationSideMargin;
   flex: 0 1 $ephemeralNavigationMinHeight;
+}
+.resizer {
+  width: 2px;
+  height: 100%;
+  position: absolute;
+  z-index: $z-index-sidebar;
+  right: 0;
+  top: 0;
+  background-color: transparent;
+  cursor: e-resize;
+
+  &:hover {
+    background-color: $theme-accent-focus-default;
+  }
+
+  &:active {
+    background-color: $theme-accent-primary-default;
+  }
+
+  // ヒット領域を拡張
+  &::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    right: -8px;
+    top: 0;
+    bottom: 0;
+    background-color: transparent;
+  }
 }
 </style>
