@@ -30,6 +30,10 @@ export const useNavigationResizer = () => {
     return clampWidth(navigationWidth.value)
   })
 
+  const isNavigationClosed = computed(() => {
+    return navigationWidth.value === 0
+  })
+
   const isResizing = ref(false)
   let startX: number = 0
   let startWidth: number = 0
@@ -93,6 +97,7 @@ export const useNavigationResizer = () => {
 
   return {
     isNavigationResizing: isResizing,
+    isNavigationClosed,
     navigationWidth: clampedNavigationWidth,
     restoreNavigationWidth: restoreWidth,
     startResizing: onMouseDown

@@ -1,6 +1,11 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.selector">
+    <div
+      :class="[
+        $style.selector,
+        { [$style.scrollbarHidden]: isNavigationClosed }
+      ]"
+    >
       <DesktopNavigationSelector
         :current-navigation="navigationSelectorState.currentNavigation"
         :current-ephemeral-navigation="
@@ -17,6 +22,7 @@
       <NavigationContent
         :current-navigation="navigationSelectorState.currentNavigation"
         :style="{ width: `${navigationWidth}px` }"
+        :class="{ [$style.hidden]: isNavigationClosed }"
       />
       <transition name="fade-bottom">
         <EphemeralNavigationContent
@@ -49,7 +55,8 @@ const {
   onEphemeralEntryAdd
 } = useNavigation()
 
-const { startResizing, navigationWidth } = useNavigationResizer()
+const { isNavigationClosed, startResizing, navigationWidth } =
+  useNavigationResizer()
 </script>
 
 <style lang="scss" module>
@@ -85,6 +92,12 @@ $ephemeralNavigationMinHeight: 64px;
   width: #{calc(100% - #{$ephemeralNavigationSideMargin * 2})};
   margin: 0 $ephemeralNavigationSideMargin;
   flex: 0 1 $ephemeralNavigationMinHeight;
+}
+.hidden {
+  display: none;
+}
+.scrollbarHidden {
+  scrollbar-width: none;
 }
 .resizer {
   width: 2px;
