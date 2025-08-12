@@ -5,7 +5,7 @@
       v-for="item in entries"
       :key="item.type"
       :class="$style.item"
-      :is-selected="currentNavigation === item.type"
+      :is-selected="showCurrent && currentNavigation === item.type"
       :has-notification="item.hasNotification"
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
@@ -16,7 +16,7 @@
       v-for="item in ephemeralEntries"
       :key="item.type"
       :class="$style.item"
-      :is-selected="currentEphemeralNavigation === item.type"
+      :is-selected="showCurrent && currentEphemeralNavigation === item.type"
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
       :color-claim="item.colorClaim"
@@ -46,9 +46,11 @@ withDefaults(
   defineProps<{
     currentNavigation?: NavigationItemType
     currentEphemeralNavigation?: EphemeralNavigationItemType
+    showCurrent?: boolean
   }>(),
   {
-    currentNavigation: 'home' as const
+    currentNavigation: 'home' as const,
+    showCurrent: true as const
   }
 )
 

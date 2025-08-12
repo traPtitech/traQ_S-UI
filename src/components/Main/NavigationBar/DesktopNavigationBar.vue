@@ -11,6 +11,7 @@
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
         "
+        :show-current="!isNavigationClosed"
         @navigation-change="onNavigationChange"
         @ephemeral-navigation-change="onEphemeralNavigationChange"
         @ephemeral-entry-remove="onEphemeralEntryRemove"
