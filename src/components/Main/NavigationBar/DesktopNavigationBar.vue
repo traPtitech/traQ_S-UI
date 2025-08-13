@@ -20,7 +20,7 @@
       <DesktopToolBox />
     </div>
     <div
-      ref="navigations"
+      ref="navigationRef"
       :style="{ width: `${navigationWidth}px` }"
       :class="[$style.navigations, { [$style.hidden]: isNavigationClosed }]"
     >
@@ -48,6 +48,7 @@ import DesktopNavigationSelector from '/@/components/Main/NavigationBar/DesktopN
 import DesktopToolBox from '/@/components/Main/NavigationBar/DesktopToolBox.vue'
 import useNavigation from './composables/useNavigation'
 import { useNavigationResizer } from '/@/composables/dom/useNavigationResizer'
+import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
 
 const {
   navigationSelectorState,
@@ -57,6 +58,8 @@ const {
   onEphemeralEntryRemove,
   onEphemeralEntryAdd
 } = useNavigation()
+
+const { navigationRef } = useNavigationLayoutStore()
 
 const { isNavigationClosed, startResizing, navigationWidth } =
   useNavigationResizer()
