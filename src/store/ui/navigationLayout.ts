@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { computed, onMounted, ref, useTemplateRef } from 'vue'
+import { computed, onMounted, ref, shallowRef } from 'vue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 
@@ -24,7 +24,7 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
     initialValue
   )
 
-  const navigationRef = useTemplateRef<HTMLDivElement>('navigations')
+  const navigationRef = shallowRef<HTMLDivElement>()
   const navigationLeft = ref(0)
 
   const updateNavigationLeft = () => {
@@ -51,6 +51,7 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
   })
 
   return {
+    navigationRef,
     navigationLeft,
     navigationWidth,
     isNavigationClosed,
