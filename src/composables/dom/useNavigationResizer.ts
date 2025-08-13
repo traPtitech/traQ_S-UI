@@ -15,9 +15,11 @@ export const useNavigationResizer = () => {
 
   const {
     navigationWidth,
+    isNavigationClosed,
     saveNavigationWidth,
     restoreNavigationWidth,
-    navigationLeft
+    navigationLeft,
+    updateNavigationLeft
   } = useNavigationLayoutStore()
 
   const clampWidth = (width: number) => {
@@ -33,10 +35,6 @@ export const useNavigationResizer = () => {
 
   const clampedNavigationWidth = computed(() => {
     return clampWidth(navigationWidth.value)
-  })
-
-  const isNavigationClosed = computed(() => {
-    return navigationWidth.value === 0
   })
 
   const isResizing = ref(false)
@@ -58,6 +56,8 @@ export const useNavigationResizer = () => {
 
   const onMouseDown = (e: MouseEvent) => {
     isResizing.value = true
+
+    if (!isNavigationClosed.value) updateNavigationLeft()
 
     document.body.style.cursor = 'e-resize'
     document.body.style.userSelect = 'none'

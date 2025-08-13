@@ -25,11 +25,18 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
   )
 
   const navigationRef = useTemplateRef<HTMLDivElement>('navigations')
-  const navigationLeft = computed(() => {
-    return navigationRef.value?.getBoundingClientRect().left ?? 0
-  })
+  const navigationLeft = ref(0)
+
+  const updateNavigationLeft = () => {
+    navigationLeft.value =
+      navigationRef.value?.getBoundingClientRect().left ?? 0
+  }
 
   const navigationWidth = ref(state.navigationWidth)
+
+  const isNavigationClosed = computed(() => {
+    return navigationWidth.value === 0
+  })
 
   const saveNavigationWidth = () => {
     state.navigationWidth = navigationWidth.value
@@ -46,8 +53,10 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
   return {
     navigationLeft,
     navigationWidth,
+    isNavigationClosed,
     saveNavigationWidth,
-    restoreNavigationWidth
+    restoreNavigationWidth,
+    updateNavigationLeft
   }
 })
 
