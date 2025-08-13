@@ -65,16 +65,14 @@ const {
   onEphemeralEntryAdd
 } = useNavigation()
 
-const { navigationRef, resizerRef: navigationResizerRef } =
-  useNavigationLayoutStore()
-
 const {
   isNavigationClosed,
-  onDragStart,
-  onDragging,
-  onDragEnd,
-  navigationWidth
-} = useNavigationResizer()
+  navigationRef,
+  resizerRef: navigationResizerRef
+} = useNavigationLayoutStore()
+
+const { onDragStart, onDragging, onDragEnd, navigationWidth } =
+  useNavigationResizer()
 </script>
 
 <style lang="scss" module>

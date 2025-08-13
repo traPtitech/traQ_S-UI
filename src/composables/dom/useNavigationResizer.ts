@@ -21,7 +21,6 @@ export const useNavigationResizer = () => {
     navigationWidth,
     isNavigationClosed,
     saveNavigationWidth,
-    restoreNavigationWidth,
     navigationLeft,
     updateNavigationLeft
   } = useNavigationLayoutStore()
@@ -43,11 +42,6 @@ export const useNavigationResizer = () => {
 
   const isResizing = ref(false)
   let pointerId: null | number = null
-
-  const restoreWidth = () => {
-    if (navigationWidth.value > 0) return
-    restoreNavigationWidth()
-  }
 
   const cleanup = () => {
     animationFrame.cancel()
@@ -102,9 +96,7 @@ export const useNavigationResizer = () => {
 
   return {
     isNavigationResizing: isResizing,
-    isNavigationClosed,
     navigationWidth: clampedNavigationWidth,
-    restoreNavigationWidth: restoreWidth,
     onDragStart,
     onDragging,
     onDragEnd
