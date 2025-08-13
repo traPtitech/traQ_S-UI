@@ -40,7 +40,7 @@ import {
 import type { EphemeralNavigationSelectorEntry } from './composables/useNavigationSelectorEntry'
 import useNavigationSelectorEntry from './composables/useNavigationSelectorEntry'
 import { VERSION } from '/@/lib/define'
-import { useNavigationResizer } from '/@/composables/dom/useNavigationResizer'
+import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
 
 const props = withDefaults(
   defineProps<{
@@ -67,7 +67,8 @@ const { onNavigationItemClick: onEphemeralNavigationItemClickImpl } =
   useEphemeralNavigationSelectorItem(emit)
 const { entries, ephemeralEntries } = useNavigationSelectorEntry()
 const showSeparator = computed(() => ephemeralEntries.value.length > 0)
-const { isNavigationClosed, restoreNavigationWidth } = useNavigationResizer()
+const { isNavigationClosed, restoreNavigationWidth } =
+  useNavigationLayoutStore()
 
 const onNavigationItemClick = (item: NavigationItemType) => {
   onNavigationItemClickImpl(item)
