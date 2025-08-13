@@ -11,7 +11,10 @@ import useInnerWindowSize from './useInnerWindowSize'
 export const useNavigationResizer = () => {
   const animationFrame = createAnimationFrameController()
 
-  const { width: windowWidth } = useInnerWindowSize({ width: Infinity })
+  const { width: windowWidth } = useInnerWindowSize(
+    { width: Infinity },
+    { delay: 8 }
+  )
 
   const {
     navigationWidth,
