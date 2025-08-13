@@ -66,7 +66,7 @@ const containerStyle = computed(() => ({
   }
   &[aria-selected='true']::after,
   &:hover::after,
-  &:focus::after {
+  &:active::after {
     opacity: 0.1;
   }
 }
