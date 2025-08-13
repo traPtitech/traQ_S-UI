@@ -9,7 +9,7 @@
       <user-icon
         v-if="!isMobile"
         :user-id="id"
-        prevent-modal
+        :prevent-modal="false"
         :class="$style.icon"
         :style="styles.icon"
       />
