@@ -37,7 +37,13 @@
         />
       </transition>
     </div>
-    <div :class="$style.resizer" @mousedown="startResizing" />
+    <div
+      ref="navigationResizerRef"
+      :class="$style.resizer"
+      @pointerdown="onDragStart"
+      @pointermove="onDragging"
+      @pointerup="onDragEnd"
+    />
   </div>
 </template>
 
@@ -59,10 +65,16 @@ const {
   onEphemeralEntryAdd
 } = useNavigation()
 
-const { navigationRef } = useNavigationLayoutStore()
+const { navigationRef, resizerRef: navigationResizerRef } =
+  useNavigationLayoutStore()
 
-const { isNavigationClosed, startResizing, navigationWidth } =
-  useNavigationResizer()
+const {
+  isNavigationClosed,
+  onDragStart,
+  onDragging,
+  onDragEnd,
+  navigationWidth
+} = useNavigationResizer()
 </script>
 
 <style lang="scss" module>
