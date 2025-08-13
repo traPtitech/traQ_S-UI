@@ -25,6 +25,8 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
   )
 
   const navigationRef = shallowRef<HTMLDivElement>()
+  const resizerRef = shallowRef<HTMLDivElement>()
+
   const navigationLeft = ref(0)
 
   const updateNavigationLeft = () => {
@@ -52,6 +54,7 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
 
   return {
     navigationRef,
+    resizerRef,
     navigationLeft,
     navigationWidth,
     isNavigationClosed,

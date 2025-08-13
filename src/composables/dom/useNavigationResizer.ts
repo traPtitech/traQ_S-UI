@@ -14,6 +14,7 @@ export const useNavigationResizer = () => {
   const { width: windowWidth } = useInnerWindowSize({ width: Infinity })
 
   const {
+    resizerRef,
     navigationWidth,
     isNavigationClosed,
     saveNavigationWidth,
@@ -38,6 +39,7 @@ export const useNavigationResizer = () => {
   })
 
   const isResizing = ref(false)
+  let pointerId: null | number = null
 
   const restoreWidth = () => {
     if (navigationWidth.value > 0) return
@@ -50,11 +52,11 @@ export const useNavigationResizer = () => {
     document.body.style.cursor = ''
     document.body.style.userSelect = ''
 
-    document.removeEventListener('mousemove', onMouseMove)
-    document.removeEventListener('mouseup', onMouseUp)
+    if (!pointerId || !resizerRef.value?.hasPointerCapture(pointerId)) return
+    resizerRef.value?.releasePointerCapture(pointerId)
   }
 
-  const onMouseDown = (e: MouseEvent) => {
+  const onDragStart = (e: PointerEvent) => {
     isResizing.value = true
 
     if (!isNavigationClosed.value) updateNavigationLeft()
@@ -62,13 +64,13 @@ export const useNavigationResizer = () => {
     document.body.style.cursor = 'e-resize'
     document.body.style.userSelect = 'none'
 
-    document.addEventListener('mousemove', onMouseMove)
-    document.addEventListener('mouseup', onMouseUp)
+    pointerId = e.pointerId
+    resizerRef.value?.setPointerCapture(pointerId)
 
     e.preventDefault()
   }
 
-  const onMouseMove = (e: MouseEvent) => {
+  const onDragging = (e: PointerEvent) => {
     if (!isResizing.value) return
 
     animationFrame.request(() => {
@@ -84,7 +86,7 @@ export const useNavigationResizer = () => {
     e.preventDefault()
   }
 
-  const onMouseUp = () => {
+  const onDragEnd = () => {
     if (!isResizing.value) return
 
     if (navigationWidth.value > 0) saveNavigationWidth()
@@ -100,6 +102,8 @@ export const useNavigationResizer = () => {
     isNavigationClosed,
     navigationWidth: clampedNavigationWidth,
     restoreNavigationWidth: restoreWidth,
-    startResizing: onMouseDown
+    onDragStart,
+    onDragging,
+    onDragEnd
   }
 }
