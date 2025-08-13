@@ -1,17 +1,25 @@
+import { debounce } from 'throttle-debounce'
 import { ref, onMounted, onUnmounted } from 'vue'
 
-export const useInnerWindowSize = (fallback?: {
-  width?: number
-  height?: number
-}) => {
+type Option = {
+  delay?: number
+}
+
+export const useInnerWindowSize = (
+  fallback?: {
+    width?: number
+    height?: number
+  },
+  { delay = 64 }: Option = {}
+) => {
   const width = ref<number>(fallback?.width ?? NaN)
   const height = ref<number>(fallback?.height ?? NaN)
 
-  const updateSize = () => {
+  const updateSize = debounce(delay, () => {
     if (typeof window === 'undefined') return
     width.value = window.innerWidth
     height.value = window.innerHeight
-  }
+  })
 
   onMounted(() => {
     updateSize()
