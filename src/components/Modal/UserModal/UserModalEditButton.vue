@@ -32,10 +32,8 @@ const props = withDefaults(
 
 const { isMobile } = useResponsiveStore()
 
-const iconSize = computed(() =>
-(isMobile.value ? 20 : 24))
-const buttonSize = computed(() =>
-iconSize.value + (isMobile.value ? 4 : 8))
+const iconSize = computed(() => (isMobile.value ? 20 : 24))
+const buttonSize = computed(() => iconSize.value + (isMobile.value ? 4 : 8))
 </script>
 
 <style lang="scss" module>

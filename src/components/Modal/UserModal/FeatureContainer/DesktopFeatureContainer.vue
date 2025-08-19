@@ -50,7 +50,6 @@ defineProps<{
   margin: 8px 0;
 }
 .displayName {
-width: 80%
+  width: 80%;
 }
-
 </style>

@@ -122,9 +122,8 @@ const isThisMyProfile = computed(() => props.id === myId.value)
   z-index: $z-index-user-modal-header;
   display: flex;
   flex-direction: column;
-  gap: 8px
+  gap: 8px;
 }
-
 
 .icon {
   background-color: $theme-background-secondary-border;
