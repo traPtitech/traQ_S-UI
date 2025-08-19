@@ -1,7 +1,7 @@
 <template>
   <section :class="$style.feature">
-    <div>
-      <h1>{{ user.displayName }}</h1>
+    <div :class="$style.infoContainer">
+      <h1 :class="$style.displayName">{{ user.displayName }}</h1>
       <div :class="$style.onlineContainer">
         <p>@{{ user.name }}</p>
         <online-indicator :user-id="user.id" has-text />
@@ -33,7 +33,13 @@ defineProps<{
   text-align: center;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 1rem;
+}
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .onlineContainer {
   display: flex;
@@ -43,4 +49,8 @@ defineProps<{
 .buttons {
   margin: 8px 0;
 }
+.displayName {
+width: 80%
+}
+
 </style>
