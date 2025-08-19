@@ -31,5 +31,7 @@ function handleClick() {
   background-color: $theme-background-primary-default;
   width: 24px;
   height: 24px;
+  @include color-ui-primary;
+  @include background-tertiary;
 }
 </style>
