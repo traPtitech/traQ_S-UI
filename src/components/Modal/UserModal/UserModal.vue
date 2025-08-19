@@ -6,10 +6,6 @@
 
         <user-modal-edit-button
           v-if="isThisMyProfile"
-          :class="[$style.editProfile, { [$style.mobile]: isMobile }]"
-          icon-name="pencil"
-          icon-mdi
-          :size="isMobile ? 24 : 32"
           @mousedown="onEditProfileClick"
         />
       </div>
