@@ -197,7 +197,12 @@ const toggleDanmaku = () => {
           :class="$style.closeButton"
           @click="toggleDanmaku"
         />
-        <IconButton icon-name="close" icon-mdi :class="$style.closeButton" @click="isSubView = true" />
+        <IconButton
+          icon-name="close"
+          icon-mdi
+          :class="$style.closeButton"
+          @click="isSubView = true"
+        />
       </div>
       <div :class="$style.stackContainer">
         <UserList :class="$style.userList" />
