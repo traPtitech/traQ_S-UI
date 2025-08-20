@@ -19,6 +19,12 @@ const buttonSize = computed(() => iconSize.value + (isMobile.value ? 4 : 8))
 .button {
   @include color-ui-secondary;
   @include background-primary;
+  background-color: transparent;
+  border: solid $theme-ui-secondary-default;
+  opacity: 0.5;
+  &:hover {
+    opacity: 1;
+  }
   padding: 4px 4px;
   border-radius: 50%;
   cursor: pointer;
