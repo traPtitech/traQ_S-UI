@@ -20,7 +20,7 @@ const buttonSize = computed(() => iconSize.value + (isMobile.value ? 4 : 8))
   @include color-ui-secondary;
   @include background-primary;
   background-color: transparent;
-  border: solid $theme-ui-secondary-default;
+  border: 2px solid $theme-ui-secondary-default;
   opacity: 0.5;
   &:hover {
     opacity: 1;
