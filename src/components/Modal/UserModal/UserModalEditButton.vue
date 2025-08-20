@@ -19,9 +19,9 @@ const buttonSize = computed(() => iconSize.value + (isMobile.value ? 4 : 8))
 .button {
   @include color-ui-secondary;
   @include background-primary;
-  background-color: transparent;
+  background-color: $theme-ui-secondary-default;
   border: 2px solid $theme-ui-secondary-default;
-  opacity: 0.5;
+  opacity: 0.6;
   &:hover {
     opacity: 1;
   }
@@ -36,6 +36,7 @@ const buttonSize = computed(() => iconSize.value + (isMobile.value ? 4 : 8))
 
 .icon {
   @include color-ui-secondary;
+  color: white;
   vertical-align: bottom;
 }
 </style>
