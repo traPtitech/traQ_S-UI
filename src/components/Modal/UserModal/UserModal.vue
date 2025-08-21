@@ -140,7 +140,7 @@ const isThisMyProfile = computed(() => props.id === myId.value)
   border: 6px solid $theme-background-secondary-border;
 }
 
-:global([data-testid='usermodal']) .icon[role='button'] {
+.icon[role='button'] {
   cursor: default;
 }
 
