@@ -36,6 +36,7 @@
 
 <script lang="ts" setup>
 import { nextTick, ref } from 'vue'
+import type { ComponentExposed } from 'vue-component-type-helpers'
 import AIcon from '/@/components/UI/AIcon.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import useLocalInput from '/@/composables/utils/useLocalInput'
@@ -48,7 +49,7 @@ defineProps<{
   maxLength?: number
 }>()
 
-const inputRef = ref<{ focus: () => void } | null>(null)
+const inputRef = ref<ComponentExposed<typeof FormInput> | null>(null)
 
 const { localValue, isEditing } = useLocalInput(
   remoteValue,
