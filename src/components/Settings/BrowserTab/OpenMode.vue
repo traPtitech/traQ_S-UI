@@ -35,7 +35,7 @@ fetchChannels()
 const { channelIdToPathString } = useChannelPath()
 
 const openModeValue = defineModel<OpenMode>('openMode', { required: true })
-const openChannelNameValue = defineModel<string | null>('openChannelName', {
+const openChannelNameValue = defineModel<string>('openChannelName', {
   required: true
 })
 

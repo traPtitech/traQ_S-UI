@@ -31,7 +31,7 @@
   "vueCompilerOptions": {
     "strictTemplates": true,
     "fallthroughAttributes": true,
-    "strictVModel": false
+    "strictVModel": true
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "public/**/*.js"],
   "exclude": ["node_modules"]

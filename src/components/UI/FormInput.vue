@@ -51,7 +51,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends string | number">
 import { onMounted, shallowRef } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
@@ -60,7 +60,7 @@ import useOnInput from '/@/composables/useOnInput'
 import { randomString } from '/@/lib/basic/randomString'
 import { isTouchDevice } from '/@/lib/dom/browser'
 
-const modelValue = defineModel<string | number>({ default: '' })
+const modelValue = defineModel<T>({ required: true })
 
 const props = withDefaults(
   defineProps<{

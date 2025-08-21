@@ -37,19 +37,19 @@
 </template>
 
 <script lang="ts">
+import type { PatchChannelRequest } from '@traptitech/traq'
 import type { Ref } from 'vue'
 import { computed, reactive } from 'vue'
-import useChannelPath from '/@/composables/useChannelPath'
-import apis from '/@/lib/apis'
-import type { PatchChannelRequest } from '@traptitech/traq'
-import { nullUuid } from '/@/lib/basic/uuid'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import useChannelOptions from '/@/composables/useChannelOptions'
-import { isValidChannelName } from '/@/lib/validate'
+import useChannelPath from '/@/composables/useChannelPath'
+import apis from '/@/lib/apis'
+import { nullUuid } from '/@/lib/basic/uuid'
 import { canCreateChildChannel } from '/@/lib/channel'
-import { useToastStore } from '/@/store/ui/toast'
-import { useModalStore } from '/@/store/ui/modal'
+import { isValidChannelName } from '/@/lib/validate'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
 
 const useManageChannel = (
   props: { id: string },
@@ -90,10 +90,10 @@ const useManageChannel = (
 
 <script lang="ts" setup>
 import ModalFrame from '../Common/ModalFrame.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
 import AToggle from '/@/components/UI/AToggle.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
 
 const props = defineProps<{
   id: string
