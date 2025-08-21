@@ -21,10 +21,10 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends string | null">
 import { randomString } from '/@/lib/basic/randomString'
 
-const modelValue = defineModel<string | null>({ default: '' })
+const modelValue = defineModel<T>({ required: true })
 
 withDefaults(
   defineProps<{
