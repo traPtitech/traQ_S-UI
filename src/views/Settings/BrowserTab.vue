@@ -24,16 +24,16 @@
 </template>
 
 <script lang="ts" setup>
-import NotificationState from '/@/components/Settings/BrowserTab/NotificationState.vue'
-import CitationNotification from '/@/components/Settings/BrowserTab/CitationNotification.vue'
-import CacheManager from '/@/components/Settings/BrowserTab/CacheManager.vue'
-import OpenMode from '/@/components/Settings/BrowserTab/OpenMode.vue'
-import SendKey from '/@/components/Settings/BrowserTab/SendKey.vue'
-import EcoMode from '/@/components/Settings/BrowserTab/EcoMode.vue'
-import PrioritizeChannelToggle from '/@/components/Settings/BrowserTab/PrioritizeChannelToggle.vue'
 import { reactive } from 'vue'
-import { useBrowserSettings } from '/@/store/app/browserSettings'
+import CacheManager from '/@/components/Settings/BrowserTab/CacheManager.vue'
+import CitationNotification from '/@/components/Settings/BrowserTab/CitationNotification.vue'
+import EcoMode from '/@/components/Settings/BrowserTab/EcoMode.vue'
 import ModifierKeys from '/@/components/Settings/BrowserTab/ModifierKeys.vue'
+import NotificationState from '/@/components/Settings/BrowserTab/NotificationState.vue'
+import OpenMode from '/@/components/Settings/BrowserTab/OpenMode.vue'
+import PrioritizeChannelToggle from '/@/components/Settings/BrowserTab/PrioritizeChannelToggle.vue'
+import SendKey from '/@/components/Settings/BrowserTab/SendKey.vue'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const state = reactive(useBrowserSettings())
 </script>
