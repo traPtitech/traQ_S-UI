@@ -15,7 +15,7 @@
     <prioritize-channel-toggle
       v-model="state.prioritizeNotifiedChannel"
       title="未読画面で通知を優先表示"
-      description="未読チャンネル一覧で通知チャンネルを優先的に表示するようにします。"
+      description="未読チャンネル一覧で通知オンのチャンネルを優先的に表示するようにします。"
     />
     <send-key v-model:send-with-modifier-key="state.sendWithModifierKey" />
     <modifier-keys v-model:modifier-key="state.modifierKey" />
