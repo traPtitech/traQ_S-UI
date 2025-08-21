@@ -31,24 +31,26 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
+export type PopupSelectorItem<U extends PropertyKey | undefined> = {
+  value: U
+  title: string
+  iconName?: string
+  iconMdi?: boolean
+}
+</script>
+
+<script lang="ts" setup generic="T extends PropertyKey | undefined">
 import { computed } from 'vue'
 import AIcon from './AIcon.vue'
 import ClickOutside from './ClickOutside'
 import useToggle from '/@/composables/utils/useToggle'
 
-const modelValue = defineModel<string>({ default: '' })
-
-export type PopupSelectorItem = {
-  value: string
-  title: string
-  iconName?: string
-  iconMdi?: boolean
-}
+const modelValue = defineModel<T>()
 
 const props = withDefaults(
   defineProps<{
-    items: PopupSelectorItem[]
+    items: PopupSelectorItem<T>[]
     small?: boolean
   }>(),
   {
@@ -58,7 +60,7 @@ const props = withDefaults(
 
 const { value: isOpen, toggle, close } = useToggle()
 
-const onClick = (item: PopupSelectorItem) => {
+const onClick = (item: PopupSelectorItem<T>) => {
   modelValue.value = item.value
   close()
 }

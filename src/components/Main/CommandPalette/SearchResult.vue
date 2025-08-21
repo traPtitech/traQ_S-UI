@@ -63,7 +63,8 @@ import { constructMessagesPath } from '/@/router'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import type { MessageId } from '/@/types/entity-ids'
 
-const selectorItems: PopupSelectorItem[] & { value: SearchMessageSortKey }[] = [
+const selectorItems: PopupSelectorItem<SearchMessageSortKey>[] &
+  { value: SearchMessageSortKey }[] = [
   { value: 'createdAt', title: '新しい順' },
   { value: '-createdAt', title: '古い順' },
   { value: 'updatedAt', title: '最近更新された順' }
