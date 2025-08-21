@@ -6,13 +6,10 @@
     <div v-if="isEditing" :class="$style.inputWrapper">
       <form-input
         ref="inputRef"
-        :model-value="localValue as string"
+        v-model="localValue"
         :class="$style.input"
         :max-length="maxLength"
         on-secondary
-        @update:model-value="
-          (val: string | number) => (localValue = val as string)
-        "
       />
       <a-icon
         name="check"
