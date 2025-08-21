@@ -48,7 +48,7 @@ defineProps<{
   maxLength?: number
 }>()
 
-const inputRef = ref<InstanceType<typeof FormInput> | null>(null)
+const inputRef = ref<{ focus: () => void } | null>(null)
 
 const { localValue, isEditing } = useLocalInput(
   remoteValue,
