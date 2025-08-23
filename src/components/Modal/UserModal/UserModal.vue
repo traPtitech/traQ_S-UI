@@ -2,11 +2,11 @@
   <click-outside stop @click-outside="clearModal">
     <div :class="$style.wrapper" data-testid="usermodal">
       <div :class="$style.topButtons">
-        <close-button :size="isMobile ? 24 : 32" @close="clearModal" />
         <user-modal-edit-button
           v-if="isThisMyProfile"
           @mousedown="onEditProfileClick"
         />
+        <close-button :size="isMobile ? 24 : 32" @close="clearModal" />
       </div>
 
       <user-icon
@@ -115,8 +115,8 @@ const isThisMyProfile = computed(() => props.id === myId.value)
   top: 12px;
   right: 12px;
   z-index: $z-index-user-modal-header;
+  justify-content: flex-end;
   display: flex;
-  flex-direction: column;
   gap: 8px;
 }
 
