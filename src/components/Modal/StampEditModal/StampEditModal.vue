@@ -35,22 +35,22 @@
 </template>
 
 <script lang="ts" setup>
+import type { Stamp } from '@traptitech/traq'
+import type { AxiosError } from 'axios'
 import type { Ref } from 'vue'
 import { computed, reactive, ref } from 'vue'
-import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
-import type { Stamp } from '@traptitech/traq'
+import ModalFrame from '../Common/ModalFrame.vue'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
-import { isValidStampName } from '/@/lib/validate'
-import { useToastStore } from '/@/store/ui/toast'
+import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
 import useUserList from '/@/composables/users/useUserList'
+import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
+import { isValidStampName } from '/@/lib/validate'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
 import type { StampId } from '/@/types/entity-ids'
-import ModalFrame from '../Common/ModalFrame.vue'
-import type { AxiosError } from 'axios'
 
 type StampEditState = Pick<Stamp, 'name' | 'creatorId'>
 

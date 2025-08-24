@@ -14,13 +14,13 @@
 
 <script lang="ts" setup>
 import { computed, watch } from 'vue'
-import apis from '/@/lib/apis'
-import type { ChannelId } from '/@/types/entity-ids'
-import { useChannelsStore } from '/@/store/entities/channels'
-import SidebarContentContainerFoldable from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerFoldable.vue'
 import ContentEditor from '/@/components/Main/MainView/PrimaryViewSidebar/ContentEditor.vue'
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerFoldable.vue'
 import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import useLocalInput from '/@/composables/utils/useLocalInput'
+import apis from '/@/lib/apis'
+import { useChannelsStore } from '/@/store/entities/channels'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId

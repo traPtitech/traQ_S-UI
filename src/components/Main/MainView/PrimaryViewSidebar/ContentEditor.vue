@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div v-if="isEditingValue && modelValue !== undefined">
+    <div v-if="isEditingValue && !props.isLoading">
       <textarea-autosize
         ref="textareaRef"
         v-model="modelValue"
@@ -35,25 +35,25 @@ const props = withDefaults(
   defineProps<{
     fallbackValue?: string
     maxLength?: number
+    isLoading?: boolean
   }>(),
   {
-    fallbackValue: '未設定'
+    fallbackValue: '未設定',
+    isLoading: false
   }
 )
 
-const modelValue = defineModel<string | undefined>({ required: true })
+const modelValue = defineModel<string>({ required: true })
 const isEditingValue = defineModel<boolean>('isEditing', { required: true })
 
 const textareaRef = ref<InstanceType<typeof TextareaAutosize> | null>(null)
 
 const content = computed(() => {
   if (modelValue.value === '') return props.fallbackValue
-  if (modelValue.value === undefined) return 'ロード中'
+  if (props.isLoading) return 'ロード中'
   return modelValue.value
 })
-const isEmpty = computed(
-  () => modelValue.value === '' || modelValue.value === undefined
-)
+const isEmpty = computed(() => modelValue.value === '' || props.isLoading)
 const onButtonClick = async () => {
   isEditingValue.value = !isEditingValue.value
   await nextTick()
@@ -63,8 +63,7 @@ const onButtonClick = async () => {
 }
 
 const isExceeded = computed(
-  () =>
-    !!(props.maxLength && countLength(modelValue.value ?? '') > props.maxLength)
+  () => !!(props.maxLength && countLength(modelValue.value) > props.maxLength)
 )
 </script>
 

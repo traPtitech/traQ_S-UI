@@ -80,8 +80,8 @@ const usePasswordChange = (state: State, isValid: Ref<boolean>) => {
 </script>
 
 <script lang="ts" setup>
-import FormInput from '/@/components/UI/FormInput.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
 
 const { changeLink, changeName } = window.traQConfig.auth ?? {}
 const showChangeLink = changeLink !== undefined && changeName !== undefined

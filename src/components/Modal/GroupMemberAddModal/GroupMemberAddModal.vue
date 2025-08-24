@@ -22,16 +22,16 @@
 </template>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
-import UsersSelector from '../Common/UsersSelector.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
 import { computed, ref } from 'vue'
+import ModalFrame from '../Common/ModalFrame.vue'
+import UsersSelector from '../Common/UsersSelector.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
 import apis from '/@/lib/apis'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useModalStore } from '/@/store/ui/modal'
 import { useToastStore } from '/@/store/ui/toast'
 import type { UserGroupId, UserId } from '/@/types/entity-ids'
-import { useModalStore } from '/@/store/ui/modal'
-import { useGroupsStore } from '/@/store/entities/groups'
 
 const props = defineProps<{
   id: UserGroupId
