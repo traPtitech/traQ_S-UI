@@ -3,6 +3,7 @@
     <div :class="$style.wrapper" data-testid="usermodal">
       <div :class="$style.topButtons">
         <user-modal-edit-button
+          :size="isMobile ? 24 : 32"
           v-if="isThisMyProfile"
           @mousedown="onEditProfileClick"
         />

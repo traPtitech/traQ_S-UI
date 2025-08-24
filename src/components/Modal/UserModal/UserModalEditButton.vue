@@ -10,28 +10,28 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const { isMobile } = useResponsiveStore()
+const props = defineProps<{
+  size: number
+}>()
 
-const iconSize = computed(() => (isMobile.value ? 20 : 24))
-const buttonSize = computed(() => iconSize.value + (isMobile.value ? 4 : 8))
+const iconSize = computed(() => props.size - (isMobile.value ? 4 : 8))
 </script>
 
 <style lang="scss" module>
 .button {
   @include color-ui-secondary;
-  @include background-primary;
-  background-color: transparent;
   border: 2px solid $theme-ui-secondary-default;
   opacity: 0.5;
   &:hover {
     opacity: 1;
   }
-  padding: 4px 4px;
+  padding: 4px;
   border-radius: 50%;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  width: v-bind('`${buttonSize}px`');
-  height: v-bind('`${buttonSize}px`');
+  width: v-bind('`${$props.size}px`');
+  height: v-bind('`${$props.size}px`');
 }
 
 .icon {
