@@ -85,7 +85,7 @@ export const navigations: {
   },
   {
     routeName: 'settingsFeatureFlag',
-    iconName: 'code-braces',
+    iconName: 'test-tube',
     iconMdi: true
   }
 ]
