@@ -57,7 +57,7 @@ const useViewStateSender = () => {
     }
     changeViewState(currentChannelId.value, ChannelViewState.None)
   }
-  const focusListeiner = () => {
+  const focusListener = () => {
     if (!currentChannelId.value) {
       changeViewState(null)
       return
@@ -65,7 +65,7 @@ const useViewStateSender = () => {
     changeViewState(currentChannelId.value, state.value)
   }
 
-  const blurListeiner = () => {
+  const blurListener = () => {
     if (!currentChannelId.value) {
       changeViewState(null)
       return
@@ -75,13 +75,13 @@ const useViewStateSender = () => {
 
   onMounted(() => {
     document.addEventListener('visibilitychange', visibilitychangeListener)
-    window.addEventListener('focus', focusListeiner)
-    window.addEventListener('blur', blurListeiner)
+    window.addEventListener('focus', focusListener)
+    window.addEventListener('blur', blurListener)
   })
   onUnmounted(() => {
     document.removeEventListener('visibilitychange', visibilitychangeListener)
-    window.removeEventListener('focus', focusListeiner)
-    window.removeEventListener('blur', blurListeiner)
+    window.removeEventListener('focus', focusListener)
+    window.removeEventListener('blur', blurListener)
   })
 }
 

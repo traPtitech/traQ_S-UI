@@ -84,12 +84,12 @@
       },
       {
         label: 'traPortfolio',
-        iconPath: 'traP.svg',
+        iconPath: 'traPortfolio.svg',
         appLink: 'https://portfolio.trap.jp/'
       },
       {
         label: 'tpf-admin',
-        iconPath: 'traP.svg',
+        iconPath: 'traPortfolio-admin.svg',
         appLink: 'https://portfolio-admin.trap.jp/'
       }
     ],
@@ -117,7 +117,6 @@
       changeName: 'traPortal'
     },
     isRootChannelSelectableAsParentChannel: false,
-    showQrCodeButton: true,
     tooLargeFileMessage: '大きい%sの共有にはDriveを使用してください',
     showWidgetCopyButton: true,
     inlineReplyDisableChannels: [

@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import type { SoundboardItem } from '@traptitech/traq'
 import { onMounted, ref } from 'vue'
 import SoundBoardElement from './SoundBoardElement.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import { useToastStore } from '/@/store/ui/toast'
 import { useQall } from '/@/composables/qall/useQall'
-import type { SoundboardItem } from '@traptitech/traq'
 import apis from '/@/lib/apis'
+import { useToastStore } from '/@/store/ui/toast'
 
 const searchQuery = ref('')
 

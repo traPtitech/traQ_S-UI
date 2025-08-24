@@ -8,17 +8,17 @@
     <a-tab
       ref="allTabRef"
       label="すべて"
-      :aria-selected="!isStared"
+      :aria-selected="!isStarred"
       :aria-controls="allPanelId"
-      :tabindex="isStared ? -1 : 0"
+      :tabindex="isStarred ? -1 : 0"
       @click="unselectStarFilter"
     />
     <a-tab
       ref="staredTabRef"
       label="お気に入り"
-      :aria-selected="isStared"
+      :aria-selected="isStarred"
       :aria-controls="staredPanelId"
-      :tabindex="isStared ? 0 : -1"
+      :tabindex="isStarred ? 0 : -1"
       @click="selectStarFilter"
     />
   </div>
@@ -28,14 +28,13 @@
 import { ref, type Ref } from 'vue'
 import ATab from '/@/components/UI/ATab.vue'
 
-const props = defineProps<{
-  isStared: boolean
+const isStarred = defineModel<boolean>('isStarred', {
+  required: true
+})
+
+defineProps<{
   allPanelId: string
   staredPanelId: string
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:isStared', v: boolean): void
 }>()
 
 const allTabRef = ref<InstanceType<typeof ATab> | null>(null)
@@ -51,7 +50,7 @@ const tabNameRefs: Record<
 }
 
 const onKeydown = (e: KeyboardEvent) => {
-  const index = props.isStared ? 1 : 0
+  const index = isStarred.value ? 1 : 0
 
   let nextIndex: number
   if (e.key === 'ArrowLeft') {
@@ -65,15 +64,15 @@ const onKeydown = (e: KeyboardEvent) => {
   nextIndex = (nextIndex + tabNames.length) % tabNames.length
 
   const nextTabName = tabNames[nextIndex] ?? tabNames[index]
-  emit('update:isStared', tabNames[nextIndex] === 'stared')
+  isStarred.value = tabNames[nextIndex] === 'stared'
   tabNameRefs[nextTabName].value?.focus()
 }
 
 const selectStarFilter = () => {
-  emit('update:isStared', true)
+  isStarred.value = true
 }
 const unselectStarFilter = () => {
-  emit('update:isStared', false)
+  isStarred.value = false
 }
 </script>
 

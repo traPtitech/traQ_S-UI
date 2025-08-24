@@ -49,7 +49,7 @@ const toggleAudio = async () => {
   try {
     toggleMicMute()
     isMicOn.value = !isMicOn.value
-  } catch (err) {}
+  } catch (_) {}
 }
 
 const toggleVideo = async () => {
@@ -103,13 +103,13 @@ const handleSound = () => {
 }
 
 const reactionButton = useTemplateRef<HTMLDivElement>('reactionButton')
-const { openStampPicker, closeStampPicker } = useStampPickerInvoker(
+const { openStampPicker } = useStampPickerInvoker(
   async stampData => {
     try {
       await publishData({ type: 'stamp', message: stampData.id })
       qallMitt.emit('pushStamp', stampData.id)
       openStampPicker()
-    } catch (e) {}
+    } catch (_) {}
   },
   reactionButton,
   false,

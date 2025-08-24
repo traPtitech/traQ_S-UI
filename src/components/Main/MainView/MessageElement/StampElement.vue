@@ -4,6 +4,7 @@
     :class="$style.body"
     :aria-label="tooltip"
     :data-include-me="$boolAttr(includeMe)"
+    :data-is-archived="$boolAttr(isArchived)"
     @click="onClick"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
@@ -37,10 +38,12 @@ import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageStampById } from '/@/lib/messageStampList'
 import StampScaledElement from './StampScaledElement.vue'
 import useHover from '/@/composables/dom/useHover'
+import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
   stamp: MessageStampById
   isDetailShown: boolean
+  isArchived: boolean
 }>()
 
 const emit = defineEmits<{
@@ -50,9 +53,10 @@ const emit = defineEmits<{
 
 const { isTouchDevice } = useResponsiveStore()
 const { stampsMap } = useStampsStore()
+const { addErrorToast } = useToastStore()
 
 const stampName = computed(
-  () => stampsMap.value.get(props.stamp.id)?.name ?? ''
+  () => stampsMap.value.get(props.stamp.id)?.name ?? 'unknown stamp'
 )
 
 const tooltip = computed(
@@ -82,6 +86,14 @@ const isProgress = ref(false)
 
 const onClick = () => {
   if (isProgress.value) return
+
+  if (props.isArchived) {
+    addErrorToast(
+      'アーカイブされたチャンネルではスタンプの追加 / 削除はできません'
+    )
+    return
+  }
+
   if (includeMe.value) {
     emit('removeStamp', props.stamp.id)
   } else {
@@ -144,6 +156,9 @@ watch(isLongHovered, beginHover => {
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   cursor: pointer;
+  &[data-is-archived] {
+    cursor: not-allowed;
+  }
   user-select: none;
   overflow: hidden;
   contain: content;

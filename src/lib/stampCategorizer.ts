@@ -49,7 +49,7 @@ export const categorizeUnicodeStamps = async (
   const unicodeEmojis = (await import('/@/assets/unicode_emojis.json')).default
 
   const unicodeStampCategories: StampCategory[] = unicodeEmojis.map(
-    (emojiCategory, i) => {
+    emojiCategory => {
       const name = emojiCategory.category
       const stampIds = emojiCategory.emojis
         .map(emojiName => unicodeStampNameIdMap.get(emojiName))

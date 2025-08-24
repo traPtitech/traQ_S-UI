@@ -6,8 +6,7 @@ import { useStampsStore } from '/@/store/entities/stamps'
 
 const emojiAltnameTable = import('/@/assets/emoji_altname_table.json')
 
-declare const altNameSymbol: unique symbol
-type AltName = string & { nominalTyping: typeof altNameSymbol }
+type AltName = string & { readonly nominalTyping: unique symbol }
 
 const useStampFilter = () => {
   const { stampsMap } = useStampsStore()
@@ -32,7 +31,7 @@ const useStampFilter = () => {
         ...emojiAltnameTableData.value?.unicodeTable,
         ...emojiAltnameTableData.value?.altNameTable
         // unicodeの対応バージョン違いで存在しないものが含まれている場合がある
-      }).filter(([k, v]) => stampNames.value.includes(v))
+      }).filter(([_, v]) => stampNames.value.includes(v))
     )
   )
   const altNames = computed(() => Object.keys(altNameTable.value) as AltName[])

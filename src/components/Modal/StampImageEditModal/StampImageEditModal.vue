@@ -19,13 +19,13 @@
 
 <script lang="ts" setup>
 import { ref, type Ref } from 'vue'
-import apis, { formatResizeError } from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
+import ModalFrame from '../Common/ModalFrame.vue'
+import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import { imageSize } from '/@/components/Settings/StampTab/imageSize'
 import FormButton from '/@/components/UI/FormButton.vue'
-import ModalFrame from '../Common/ModalFrame.vue'
+import apis, { formatResizeError } from '/@/lib/apis'
 import { useModalStore } from '/@/store/ui/modal'
-import ImageUpload from '/@/components/Settings/ImageUpload.vue'
+import { useToastStore } from '/@/store/ui/toast'
 import type { StampId } from '/@/types/entity-ids'
 
 const props = defineProps<{

@@ -5,7 +5,7 @@ import {
 } from '/@/composables/qall/useLiveKitSDK'
 import { useMeStore } from '/@/store/domain/me'
 import { useToastStore } from '/@/store/ui/toast'
-import type { LocalAudioTrack, LocalVideoTrack } from 'livekit-client'
+import type { LocalAudioTrack } from 'livekit-client'
 import type {
   Channel,
   QallRoomStateChangedEventRoomStatesInner,
@@ -101,10 +101,6 @@ const setSpeakerMute = (track: LocalAudioTrack, muted: boolean) => {
   setLocalTrackMute(track, muted)
 }
 
-const setVideoMute = (track: LocalVideoTrack, muted: boolean) => {
-  setLocalTrackMute(track, muted)
-}
-
 messageMitt.on('addMessage', ({ message }) => {
   if (!rtcSettings.isTtsEnabled.value) return
   if (callingChannel.value !== message.channelId) return
@@ -132,17 +128,31 @@ const isScreenSharing = ref(false)
 const selectedTrack = ref<TrackInfo>()
 
 export const useQall = () => {
-  const joinQall = (channelName: string, isWebinar: boolean = false) => {
-    if (callingChannel.value) {
-      leaveRoom()
-    }
-    if (!myId.value) {
-      addErrorToast('接続に失敗しました')
-      return
-    }
-    joinRoom(channelName, isWebinar)
+  let joiningPromise: Promise<void> | null = null
+  const joinQall = async (channelName: string, isWebinar: boolean = false) => {
+    // 二重実行を防ぐチェック
+    if (joiningPromise) return
 
-    callingChannel.value = channelName
+    const attemptJoin = async () => {
+      try {
+        if (callingChannel.value) {
+          await leaveQall()
+          return
+        }
+        if (!myId.value) {
+          addErrorToast('接続に失敗しました')
+          return
+        }
+        await joinRoom(channelName, isWebinar)
+        callingChannel.value = channelName
+      } catch {
+        addErrorToast('Qallへの参加に失敗しました')
+      } finally {
+        joiningPromise = null
+      }
+    }
+
+    joiningPromise = attemptJoin()
   }
   const leaveQall = async () => {
     callingChannel.value = ''

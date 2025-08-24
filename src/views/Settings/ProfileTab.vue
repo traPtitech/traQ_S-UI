@@ -19,7 +19,7 @@
     <section :class="$style.section">
       <h3 :class="$style.heading">ひとこと</h3>
       <div :class="$style.bioContainer">
-        <inline-markdown :content="state.bio" accept-action />
+        <markdown-preview :content="state.bio" accept-action />
         <form-text-area v-model="state.bio" rows="2" :max-length="1000" />
       </div>
     </section>
@@ -52,25 +52,25 @@
 </template>
 
 <script lang="ts">
+import type { UserDetail } from '@traptitech/traq'
 import type { Ref } from 'vue'
 import { computed, reactive, ref, toRef } from 'vue'
-import type { UserDetail } from '@traptitech/traq'
-import apis, { formatResizeError } from '/@/lib/apis'
+import { onBeforeRouteLeave } from 'vue-router'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
-import { nullUuid } from '/@/lib/basic/uuid'
-import useChannelOptions from '/@/composables/useChannelOptions'
-import useMaxLength from '/@/composables/utils/useMaxLength'
-import { isValidTwitter } from '/@/lib/validate'
-import { useToastStore } from '/@/store/ui/toast'
-import { useMeStore } from '/@/store/domain/me'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useUsersStore } from '/@/store/entities/users'
-import { useStampsStore } from '/@/store/entities/stamps'
-import { useGroupsStore } from '/@/store/entities/groups'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useFileSelect } from '/@/composables/dom/useFileSelect'
+import useChannelOptions from '/@/composables/useChannelOptions'
+import useMaxLength from '/@/composables/utils/useMaxLength'
+import apis, { formatResizeError } from '/@/lib/apis'
+import { nullUuid } from '/@/lib/basic/uuid'
+import { isValidTwitter } from '/@/lib/validate'
+import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { useUsersStore } from '/@/store/entities/users'
 import { useModalStore } from '/@/store/ui/modal'
-import { onBeforeRouteLeave } from 'vue-router'
+import { useToastStore } from '/@/store/ui/toast'
 
 const useState = (detail: Ref<UserDetail>) => {
   const profile = computed(() => ({
@@ -133,11 +133,11 @@ const useIsLengthValid = (state: Profile) => {
 </script>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 const { detail: detailMayBeUndefined } = useMeStore()
 

@@ -99,7 +99,7 @@ const downloadAndtransform = async (url, filename) => {
       hinting: false
     })
     await fs.writeFile(path.join(rootPath, filename), writeBuffer)
-  } catch (e) {
+  } catch (_) {
     await fs.writeFile(path.join(rootPath, filename), readBuffer)
     console.warn(
       `Failed to remove font hinting. Outputted original. ${filename}`

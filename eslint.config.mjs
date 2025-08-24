@@ -4,7 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import js from '@eslint/js'
 import { FlatCompat } from '@eslint/eslintrc'
-import stylisticTs from '@stylistic/eslint-plugin-ts'
+import stylistic from '@stylistic/eslint-plugin'
 import cypress from 'eslint-plugin-cypress'
 import vueLint from 'eslint-plugin-vue'
 import prettier from 'eslint-config-prettier'
@@ -19,7 +19,12 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['**/coverage', '**/dist', '**/node_modules']
+    ignores: [
+      '**/coverage',
+      '**/dist',
+      '**/node_modules',
+      'public/new-relic.js'
+    ]
   },
   ...compat.extends(
     'eslint:recommended',
@@ -31,7 +36,7 @@ export default [
   {
     plugins: {
       'unused-imports': unusedImports,
-      '@stylistic/ts': stylisticTs
+      '@stylistic/ts': stylistic
     },
 
     linterOptions: {
@@ -76,7 +81,14 @@ export default [
       ],
 
       '@typescript-eslint/consistent-type-imports': 'error',
-      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          varsIgnorePattern: '^_',
+          argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_'
+        }
+      ],
       'unused-imports/no-unused-imports': 'warn',
       'unused-imports/no-unused-vars': 'off',
       'vue/require-default-prop': 'off',

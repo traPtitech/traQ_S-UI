@@ -7,9 +7,10 @@
     :datetime="datetime"
   >
     <div :class="$style.newTopic" :data-is-empty="details.after === ''">
-      <inline-markdown
+      <markdown-preview
         :content="details.after !== '' ? details.after : '未設定'"
         accept-action
+        inline
       />
     </div>
   </sidebar-event-frame>
@@ -17,7 +18,7 @@
 
 <script lang="ts" setup>
 import SidebarEventFrame from './SidebarEventFrame.vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import type { TopicChangedEvent } from '@traptitech/traq'
 
 defineProps<{

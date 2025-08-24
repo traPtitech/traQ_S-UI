@@ -4,13 +4,11 @@ import { wait } from '/@/lib/basic/timer'
 import router, { constructChannelPath, constructUserPath } from '/@/router'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ModalState } from '/@/store/ui/modal/states'
-import { useChannelsStore } from '/@/store/entities/channels'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import useChannelPath from '/@/composables/useChannelPath'
 
 const useModalStorePinia = defineStore('ui/modal', () => {
   const mainViewStore = useMainViewStore()
-  const channelsStore = useChannelsStore()
 
   const modalState = ref<ModalState[]>([])
   const currentState = computed(

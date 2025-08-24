@@ -97,6 +97,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
     postStampPaletteRequest: PostStampPaletteRequest
   ): Promise<StampPalette> => {
     // FIXME: stampがSetだと400になるので、Arrayに変換
+    // issue: https://github.com/traPtitech/traQ_S-UI/issues/4612
     const apiRequestPayload = {
       name: postStampPaletteRequest.name,
       description: postStampPaletteRequest.description,
@@ -122,6 +123,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
     patchStampPaletteRequest: PatchStampPaletteRequest
   ) => {
     // FIXME: stampがSetだと400になるので、Arrayに変換
+    // issue: https://github.com/traPtitech/traQ_S-UI/issues/4612
     const apiRequestPayload = {
       name: patchStampPaletteRequest.name,
       description: patchStampPaletteRequest.description,
@@ -159,15 +161,15 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
     }
   }
 
-  wsListener.on('STAMP_PALETTE_CREATED', ({ id }) => {
+  wsListener.on('STAMP_PALETTE_CREATED', () => {
     // eslint-disable-next-line no-console
     console.error('onStampPaletteCreated: Not implemented')
   })
-  wsListener.on('STAMP_PALETTE_UPDATED', ({ id }) => {
+  wsListener.on('STAMP_PALETTE_UPDATED', () => {
     // eslint-disable-next-line no-console
     console.error('onStampPaletteUpdated: Not implemented')
   })
-  wsListener.on('STAMP_PALETTE_DELETED', ({ id }) => {
+  wsListener.on('STAMP_PALETTE_DELETED', () => {
     // eslint-disable-next-line no-console
     console.error('onStampPaletteDeleted: Not implemented')
   })

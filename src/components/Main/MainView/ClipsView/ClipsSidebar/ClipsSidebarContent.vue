@@ -18,7 +18,7 @@
         :max-length="1000"
       >
         <template #default="slotProps">
-          <inline-markdown :content="slotProps.content" accept-action />
+          <markdown-preview :content="slotProps.content" accept-action inline />
         </template>
       </content-editor>
     </sidebar-content-container-foldable>
@@ -35,7 +35,12 @@
 
 <script lang="ts" setup>
 import { computed, watch } from 'vue'
-import type { ClipFolderId } from '/@/types/entity-ids'
+import ContentEditor from '/@/components/Main/MainView/PrimaryViewSidebar/ContentEditor.vue'
+import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerFoldable.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
+import useLocalInput from '/@/composables/utils/useLocalInput'
 import apis from '/@/lib/apis'
 import router, {
   constructChannelPath,
@@ -43,12 +48,7 @@ import router, {
 } from '/@/router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
-import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
-import SidebarContentContainerFoldable from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerFoldable.vue'
-import ContentEditor from '/@/components/Main/MainView/PrimaryViewSidebar/ContentEditor.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
-import useLocalInput from '/@/composables/utils/useLocalInput'
+import type { ClipFolderId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   clipFolderId: ClipFolderId

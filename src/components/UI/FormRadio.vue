@@ -1,7 +1,7 @@
 <template>
   <label :class="$style.label">
     <input
-      v-model="value"
+      v-model="modelValue"
       type="radio"
       :class="$style.radio"
       v-bind="$attrs"
@@ -14,31 +14,25 @@
   </label>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends string">
 import { computed } from 'vue'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
+
+const modelValue = defineModel<T>({ required: true })
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string
     inputValue?: string
     onSecondary?: boolean
     label?: string
   }>(),
   {
-    modelValue: '',
     inputValue: '',
     onSecondary: false,
     label: ''
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: string): void
-}>()
-
-const value = useModelValueSyncer(props, emit)
-const isChecked = computed(() => props.inputValue === value.value)
+const isChecked = computed(() => props.inputValue === modelValue.value)
 </script>
 
 <style lang="scss" module>

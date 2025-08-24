@@ -9,25 +9,21 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watchEffect, shallowRef, onUnmounted } from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
+import { onUnmounted, ref, shallowRef, watchEffect } from 'vue'
 import useObjectURL from '/@/composables/dom/useObjectURL'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-const props = withDefaults(
+const modelValue = defineModel<File>({ required: true })
+
+withDefaults(
   defineProps<{
-    modelValue: File | undefined
     rounded?: boolean
   }>(),
   {
     rounded: false
   }
 )
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', _file: File | undefined): void
-}>()
 
 // スタンプ編集用の設定
 const cropperGifOptions = {
@@ -47,20 +43,14 @@ const cropperDefaultOptions = {
   dragMode: 'move' as const
 } as const
 
-const value = useModelValueSyncer(props, emit)
-
-const originalImg = ref<File | undefined>(props.modelValue)
+const originalImg = ref<File>(modelValue.value)
 const originalImgUrl = useObjectURL(originalImg)
 
 let cropper: Cropper | undefined
 const imgEle = shallowRef<HTMLImageElement>()
 
 const updateImgView = () => {
-  if (!originalImg.value) {
-    if (cropper) cropper.destroy()
-    return
-  }
-  emit('update:modelValue', originalImg.value)
+  modelValue.value = originalImg.value
 
   if (!imgEle.value) return
 
@@ -73,25 +63,19 @@ const updateImgView = () => {
           cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
             if (!blob) return
 
-            emit(
-              'update:modelValue',
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              new File([blob], originalImg.value!.name, { type: blob.type })
-            )
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          }, originalImg.value!.type)
+            modelValue.value = new File([blob], originalImg.value.name, {
+              type: blob.type
+            })
+          }, originalImg.value.type)
         },
         ready: () => {
           cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
             if (!blob) return
 
-            emit(
-              'update:modelValue',
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              new File([blob], originalImg.value!.name, { type: blob.type })
-            )
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          }, originalImg.value!.type)
+            modelValue.value = new File([blob], originalImg.value.name, {
+              type: blob.type
+            })
+          }, originalImg.value.type)
         }
       }
 
@@ -101,12 +85,6 @@ const updateImgView = () => {
 }
 
 watchEffect(updateImgView)
-
-watchEffect(() => {
-  if (!value.value) {
-    originalImg.value = undefined
-  }
-})
 
 onUnmounted(() => {
   if (cropper) cropper.destroy()

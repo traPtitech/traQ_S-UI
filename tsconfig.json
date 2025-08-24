@@ -29,7 +29,9 @@
     "lib": ["esnext", "dom", "dom.iterable"]
   },
   "vueCompilerOptions": {
-    "strictTemplates": true
+    "strictTemplates": true,
+    "fallthroughAttributes": true,
+    "strictVModel": true
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "public/**/*.js"],
   "exclude": ["node_modules"]

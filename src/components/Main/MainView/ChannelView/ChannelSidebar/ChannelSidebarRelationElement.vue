@@ -12,18 +12,19 @@
       </router-link>
     </div>
     <div v-if="topic" :class="$style.topic">
-      <inline-markdown
+      <markdown-preview
         :class="$style.topic"
         :content="topic"
         :title="topic"
         accept-action
+        inline
       />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 
 withDefaults(
   defineProps<{

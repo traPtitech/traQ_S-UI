@@ -3,7 +3,7 @@ import { useQall } from '/@/composables/qall/useQall'
 import FormButton from '/@/components/UI/FormButton.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
 
-const props = defineProps<{
+defineProps<{
   open: boolean
 }>()
 

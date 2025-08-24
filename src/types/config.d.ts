@@ -89,11 +89,6 @@ export type Config = Readonly<{
    */
   isRootChannelSelectableAsParentChannel: boolean
   /**
-   * QRコード表示ボタンの有効化
-   * 省略時は`false`
-   */
-  showQrCodeButton?: boolean
-  /**
    * 大きなファイルサイズのファイルを送信した際に表示される補足メッセージ
    * `%s`の部分には「画像」または「ファイル」が入る
    * @default '大きい%sの共有には別のサービスを利用してください。'
@@ -120,6 +115,5 @@ export type Config = Readonly<{
 }>
 
 declare global {
-  // eslint-disable-next-line no-var
   var traQConfig: Config
 }
