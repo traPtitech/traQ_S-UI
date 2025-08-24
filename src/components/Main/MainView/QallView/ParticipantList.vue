@@ -18,9 +18,6 @@ const parseToFloat = (value: number | string): number => {
 }
 
 const isMuted = ref(false)
-const toggleMute = (trackInfo: TrackInfo) => {
-  isMuted.value = !isMuted.value
-}
 
 const style = useCssModule()
 const minValue = 0

@@ -24,12 +24,10 @@ import useChannelSubscribers from '/@/composables/subscription/useChannelSubscri
 import { useToastStore } from '/@/store/ui/toast'
 import useTextFilter from '/@/composables/utils/useTextFilter'
 import { useMeStore } from '/@/store/domain/me'
-import { useUsersStore } from '/@/store/entities/users'
 
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   const { myId } = useMeStore()
   const { addErrorToast } = useToastStore()
-  const { activeUsersMap } = useUsersStore()
   const subscribers = useChannelSubscribers(props)
 
   const initialSubscribers = ref(new Set<string>())

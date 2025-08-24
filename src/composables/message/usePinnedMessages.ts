@@ -52,25 +52,19 @@ const usePinnedMessages = (channelId: Ref<ChannelId>) => {
   useMittListener(messageMitt, 'deleteMessage', messageId => {
     removePinnedMessage(messageId)
   })
-  useMittListener(
-    messageMitt,
-    'changeMessagePinned',
-    async ({ message, pinned }) => {
-      if (channelId.value !== message.channelId) return
+  useMittListener(messageMitt, 'pinMessage', async message => {
+    if (channelId.value !== message.channelId) return
 
-      if (!pinned) {
-        removePinnedMessage(message.id)
-        return
-      }
-
-      const { data: pin } = await apis.getPin(message.id)
-      addPinnedMessage({
-        userId: pin.userId,
-        message,
-        pinnedAt: pin.pinnedAt
-      })
-    }
-  )
+    const { data: pin } = await apis.getPin(message.id)
+    addPinnedMessage({
+      userId: pin.userId,
+      message,
+      pinnedAt: pin.pinnedAt
+    })
+  })
+  useMittListener(messageMitt, 'unpinMessage', messageId => {
+    removePinnedMessage(messageId)
+  })
   useMittListener(wsListener, 'reconnect', async () => {
     await fetchPins(channelId.value)
   })

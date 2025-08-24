@@ -82,8 +82,7 @@ const {
   lastLoadingDirection,
   unreadSince,
   onLoadFormerMessagesRequest,
-  onLoadLatterMessagesRequest,
-  onLoadAroundMessagesRequest
+  onLoadLatterMessagesRequest
 } = useChannelMessageFetcher(scrollerEle, props)
 
 const { messagesMap } = useMessagesStore()

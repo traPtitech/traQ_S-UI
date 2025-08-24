@@ -45,7 +45,7 @@ const useMessageInputStateStorePinia = defineStore(
       >()
     }
 
-    const [state, restoring, restoringPromise] = useIndexedDbValue(
+    const [state] = useIndexedDbValue(
       'store/ui/messageInputStateStore',
       1,
       {

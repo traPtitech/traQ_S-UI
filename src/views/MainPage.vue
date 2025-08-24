@@ -133,8 +133,7 @@ const {
   isNavCompletelyAppeared,
   isSidebarAppeared,
   isSidebarCompletelyAppeared,
-  isMainViewActive,
-  currentActiveDrawer
+  isMainViewActive
 } = useMainViewLayout(navWidth, sidebarWidth)
 const { addToast } = useToastStore()
 

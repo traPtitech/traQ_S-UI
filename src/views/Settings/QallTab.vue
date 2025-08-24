@@ -115,7 +115,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, watchEffect, reactive } from 'vue'
+import { computed, reactive, ref, watchEffect } from 'vue'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 
 const useDevicesInfo = () => {
@@ -126,7 +126,7 @@ const useDevicesInfo = () => {
   const fetchDeviceList = async () => {
     try {
       devices.value = await navigator.mediaDevices.enumerateDevices()
-    } catch (e) {
+    } catch (_) {
       fetchFailed.value = true
     }
     if (devices.value.length === 0 || devices.value[0]?.label === '') {
@@ -197,11 +197,11 @@ const useVoices = () => {
 </script>
 
 <script lang="ts" setup>
-import AToggle from '/@/components/UI/AToggle.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
 import NoiseSuppression from '/@/components/Settings/QallTab/NoiseSuppression.vue'
+import AToggle from '/@/components/UI/AToggle.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
 import FormRangeWithValue from '/@/components/UI/FormRangeWithValue.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
 
 const state = reactive(useRtcSettings())
 

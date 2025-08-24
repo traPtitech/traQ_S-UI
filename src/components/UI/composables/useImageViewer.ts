@@ -274,11 +274,6 @@ const useImageViewer = (
     }))
   })
 
-  const rewriteCenterDiff = (oldPoint: Point, newPoint: Point) => {
-    const d = diff(newPoint, oldPoint)
-    state.centerDiff.x -= d.x
-    state.centerDiff.y -= d.y
-  }
   const rewriteRotate = (newRotate: number) => {
     if (360 < newRotate) {
       newRotate -= 360
@@ -288,8 +283,6 @@ const useImageViewer = (
 
   const clampCenterDiff = (centerDiff: Point) => {
     if (!imgEle.value) return centerDiff
-
-    const imgRect = imgEle.value.getBoundingClientRect()
 
     const width = imgEle.value.width * state.zoomRatio
     const height = imgEle.value.height * state.zoomRatio
@@ -330,7 +323,7 @@ const useImageViewer = (
     rewriteCenterDiffWithClamp(newCenterDiff)
   })
 
-  useMouseWheel(containerEle, (e, point) => {
+  useMouseWheel(containerEle, (e, _point) => {
     const deltaXScale = WHEEL_SCALE_DELTAX.get(e.deltaMode)
     const deltaYScale = WHEEL_SCALE_DELTAY.get(e.deltaMode)
     if (deltaXScale === undefined || deltaYScale === undefined) return
@@ -395,7 +388,7 @@ const useImageViewer = (
       }
       rewriteCenterDiffWithClamp(newCenterDiff)
     },
-    (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
+    (newDistance, firstDistance, newMidPoint, firstMidPoint, _rotateAngle) => {
       if (containerEle.value) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const beforeScale = firstState!.zoomRatio

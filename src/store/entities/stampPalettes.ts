@@ -161,15 +161,15 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
     }
   }
 
-  wsListener.on('STAMP_PALETTE_CREATED', ({ id }) => {
+  wsListener.on('STAMP_PALETTE_CREATED', () => {
     // eslint-disable-next-line no-console
     console.error('onStampPaletteCreated: Not implemented')
   })
-  wsListener.on('STAMP_PALETTE_UPDATED', ({ id }) => {
+  wsListener.on('STAMP_PALETTE_UPDATED', () => {
     // eslint-disable-next-line no-console
     console.error('onStampPaletteUpdated: Not implemented')
   })
-  wsListener.on('STAMP_PALETTE_DELETED', ({ id }) => {
+  wsListener.on('STAMP_PALETTE_DELETED', () => {
     // eslint-disable-next-line no-console
     console.error('onStampPaletteDeleted: Not implemented')
   })

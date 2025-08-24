@@ -23,12 +23,8 @@ import CloseButton from '/@/components/UI/CloseButton.vue'
 import VersionInfo from '/@/components/UI/VersionInfo.vue'
 import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
 import SafariWarning from './SafariWarning.vue'
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
 import useSettingsNavigation, { navigations } from './composables/useNavigation'
 
-const route = useRoute()
-const currentRouteName = computed(() => route.name)
 const { close } = useSettingsNavigation()
 </script>
 
