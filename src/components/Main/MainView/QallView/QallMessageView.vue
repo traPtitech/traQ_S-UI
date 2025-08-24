@@ -111,6 +111,7 @@ const handleScroll = () => {
           <IconButton
             :icon-name="`chevron-double-${isMessageShow ? 'down' : 'up'}`"
             icon-mdi
+            :class="$style.uiElement"
             @click="
               () => {
                 if (isMessageShow) {
@@ -208,6 +209,7 @@ const handleScroll = () => {
 }
 .uiElement {
   pointer-events: all;
+  @include color-ui-primary;
 }
 
 .uiToggleButton {
