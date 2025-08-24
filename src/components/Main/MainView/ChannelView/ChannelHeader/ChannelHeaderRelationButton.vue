@@ -91,14 +91,14 @@ const focusTrigger = () => {
 
   cursor: pointer;
   overflow: hidden;
-  height: 24px;
+  height: 32px;
   width: 24px;
   margin: 0 8px;
   display: grid;
   place-items: center;
   flex-shrink: 0;
   position: sticky;
-  right: 0;
+  right: -1px;
 
   transition: transform 0.1s;
 
