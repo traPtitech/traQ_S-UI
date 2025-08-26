@@ -1,11 +1,13 @@
 <template>
   <div
-    v-if="show || isStampPickerOpen || contextMenuPosition"
     ref="containerEle"
-    :class="$style.container"
+    :class="[$style.container, { [$style.hidden]: !isVisible }]"
     :data-is-mobile="$boolAttr(isMobile)"
+    :aria-hidden="!isVisible"
+    @pointerdown.capture="onPointerDownCapture"
+    @click.capture="suppressClickIfTriggeringDisplay"
   >
-    <transition v-if="!isMinimum" name="quick-reaction">
+    <transition v-if="!isMinimum && isVisible" name="quick-reaction">
       <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
         <a-stamp
           v-for="stamp in recentStamps"
@@ -118,6 +120,22 @@ const { recentStampIds } = useStampHistory()
 const { addStampOptimistically } = useStampUpdater()
 const { initialRecentStamps } = useStampsStore()
 
+const isVisible = computed(
+  () => props.show || isStampPickerOpen.value || contextMenuPosition.value
+)
+
+const isPointerEventStartedFromOutside = ref(true)
+const onPointerDownCapture = () => {
+  isPointerEventStartedFromOutside.value = false
+}
+const suppressClickIfTriggeringDisplay = (e: MouseEvent) => {
+  if (isPointerEventStartedFromOutside.value && isVisible.value) {
+    e.stopImmediatePropagation()
+    e.preventDefault()
+  }
+  isPointerEventStartedFromOutside.value = true
+}
+
 const pushInitialRecentStampsIfNeeded = (
   initialRecentStamps: Stamp[],
   recents: StampId[]
@@ -192,6 +210,11 @@ const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
   &:not([data-is-mobile]) {
     box-shadow: 0 1px 3px 0;
   }
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .quickReaction {
