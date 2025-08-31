@@ -62,9 +62,11 @@ const users = computed((): UserGroupMemberOrAdmin[] => {
       .map(m => ({ ...m, isMember: true, isAdmin: false }))
   ].filter(m => activeUsersMap.value.has(m.id))
 })
-const {openLinkAndClearModal}=useOpenLinkAndClearModal()
-const onGroupEdit = async (event: MouseEvent) => {
-  openLinkAndClearModal(event, "/group-manager")
+
+const { openLinkAndClearModal } = useOpenLinkAndClearModal()
+
+const onGroupEdit = (event: MouseEvent) => {
+  openLinkAndClearModal(event, '/group-manager')
 }
 </script>
 

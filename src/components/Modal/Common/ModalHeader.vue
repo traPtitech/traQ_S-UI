@@ -15,13 +15,13 @@
         <slot name="subtitle" />
       </h2>
     </div>
-        <icon-button
-          v-if="editButton"
-          :class="$style.editButton"
-          icon-name="pencil"
-          icon-mdi
-          @mousedown="(e: MouseEvent) => emit('edit', e)"
-        />
+    <icon-button
+      v-if="editButton"
+      :class="$style.editButton"
+      icon-name="pencil"
+      icon-mdi
+      @mousedown="(e: MouseEvent) => emit('edit', e)"
+    />
   </div>
 </template>
 

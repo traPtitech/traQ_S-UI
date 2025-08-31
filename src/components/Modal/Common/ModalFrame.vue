@@ -45,9 +45,11 @@ withDefaults(
     editButton: false
   }
 )
+
 const emit = defineEmits<{
   edit: [event: MouseEvent]
 }>()
+
 const { clearModal } = useModalStore()
 </script>
 
