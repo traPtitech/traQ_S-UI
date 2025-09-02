@@ -18,14 +18,14 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends string | null">
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 import { randomString } from '/@/lib/basic/randomString'
 
-const selectedOptionValue = defineModel<string | null>({ default: '' })
+const selectedOptionValue = defineModel<T>({ required: true })
 
-type Option = { key: string; value: string | null }
+type Option = { key: string; value: T }
 type Background = 'primary' | 'secondary'
 withDefaults(
   defineProps<{

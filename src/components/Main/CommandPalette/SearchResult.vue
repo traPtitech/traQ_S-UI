@@ -49,21 +49,22 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import { useCommandPalette } from '/@/store/app/commandPalette'
-import type { PopupSelectorItem } from '/@/components/UI/PopupSelector.vue'
-import useSearchMessages from './composables/useSearchMessages'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import useKeepScrollPosition from './composables/useKeepScrollPosition'
-import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
-import { useOpenLink } from '/@/composables/useOpenLink'
-import { constructMessagesPath } from '/@/router'
-import PopupSelector from '/@/components/UI/PopupSelector.vue'
+import useSearchMessages from './composables/useSearchMessages'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
-import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
+import type { PopupSelectorItem } from '/@/components/UI/PopupSelector.vue'
+import PopupSelector from '/@/components/UI/PopupSelector.vue'
+import { useOpenLink } from '/@/composables/useOpenLink'
+import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
+import { constructMessagesPath } from '/@/router'
+import { useCommandPalette } from '/@/store/app/commandPalette'
+import type { MessageId } from '/@/types/entity-ids'
 
-const selectorItems: PopupSelectorItem[] & { value: SearchMessageSortKey }[] = [
+const selectorItems: PopupSelectorItem<SearchMessageSortKey>[] &
+  { value: SearchMessageSortKey }[] = [
   { value: 'createdAt', title: '新しい順' },
   { value: '-createdAt', title: '古い順' },
   { value: 'updatedAt', title: '最近更新された順' }
