@@ -1,13 +1,13 @@
 <template>
   <div
+    v-if="isVisible"
     ref="containerEle"
-    :class="[$style.container, { [$style.hidden]: !isVisible }]"
+    :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
-    :aria-hidden="!isVisible"
     @pointerdown.capture="onPointerDownCapture"
     @click.capture="suppressClickIfTriggeringDisplay"
   >
-    <transition v-if="!isMinimum && isVisible" name="quick-reaction">
+    <transition v-if="!isMinimum" name="quick-reaction">
       <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
         <a-stamp
           v-for="stamp in recentStamps"
@@ -210,11 +210,6 @@ const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
   &:not([data-is-mobile]) {
     box-shadow: 0 1px 3px 0;
   }
-}
-
-.hidden {
-  opacity: 0;
-  pointer-events: none;
 }
 
 .quickReaction {
