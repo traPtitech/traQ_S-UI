@@ -75,6 +75,12 @@ const useActivityStream = () => {
       return
     }
 
+    // 何らかの異常でメッセージが重複した場合を無視
+    // https://github.com/traPtitech/traQ_S-UI/issues/4156
+    if (timeline.value.some(({ id }) => id === activity.id)) {
+      return
+    }
+
     // チャンネルアクティビティのとき、同じチャンネルのメッセージを消す
     if (mode.value.perChannel) {
       const sameChannelActivity = timelineChannelMap.value.get(
