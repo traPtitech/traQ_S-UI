@@ -66,26 +66,26 @@ const useActivityStream = () => {
     { deep: true }
   )
 
-  useMittListener(messageMitt, 'addMessage', ({ message: activity }) => {
+  useMittListener(messageMitt, 'addMessage', ({ message: addedMessage }) => {
     // 通常のチャンネルではない、つまりDMのときは無視
-    if (!channelsMap.value.has(activity.channelId)) return
+    if (!channelsMap.value.has(addedMessage.channelId)) return
 
     // 購読チャンネルのみを表示するときに購読してないチャンネルのメッセージは処理しない
-    if (!mode.value.all && !isChannelSubscribed(activity.channelId)) {
+    if (!mode.value.all && !isChannelSubscribed(addedMessage.channelId)) {
       return
     }
 
     // 何らかの異常でメッセージが重複した場合を無視
     // https://github.com/traPtitech/traQ_S-UI/issues/4156
     // 注: 暫定的な対処です cf. https://github.com/traPtitech/traQ_S-UI/issues/4767
-    if (timeline.value.some(({ id }) => id === activity.id)) {
+    if (timeline.value.some(({ id }) => id === addedMessage.id)) {
       return
     }
 
     // チャンネルアクティビティのとき、同じチャンネルのメッセージを消す
     if (mode.value.perChannel) {
       const sameChannelActivity = timelineChannelMap.value.get(
-        activity.channelId
+        addedMessage.channelId
       )
       if (sameChannelActivity) {
         const sameChannelActivityIndex = timeline.value.findIndex(
@@ -94,8 +94,8 @@ const useActivityStream = () => {
         timeline.value.splice(sameChannelActivityIndex, 1)
       }
     }
-    timeline.value.unshift(activity)
-    timelineChannelMap.value.set(activity.channelId, activity)
+    timeline.value.unshift(addedMessage)
+    timelineChannelMap.value.set(addedMessage.channelId, addedMessage)
 
     // ガーベッジコレクタ
     if (timeline.value.length > ACTIVITY_LENGTH * 2) {
@@ -109,20 +109,20 @@ const useActivityStream = () => {
       }
     }
   })
-  useMittListener(messageMitt, 'updateMessage', activity => {
+  useMittListener(messageMitt, 'updateMessage', updatedMessage => {
     // 通常のチャンネルではない、つまりDMのときは無視
-    if (!channelsMap.value.has(activity.channelId)) return
+    if (!channelsMap.value.has(updatedMessage.channelId)) return
 
-    const sameMessageIndex = timeline.value.findIndex(a => a.id === activity.id)
+    const sameMessageIndex = timeline.value.findIndex(a => a.id === updatedMessage.id)
     if (sameMessageIndex < 0) return
 
-    timeline.value[sameMessageIndex] = activity
+    timeline.value[sameMessageIndex] = updatedMessage
   })
-  useMittListener(messageMitt, 'deleteMessage', messageId => {
-    const activity = timeline.value.find(({ id }) => id === messageId)
+  useMittListener(messageMitt, 'deleteMessage', deletedMessageId => {
+    const activity = timeline.value.find(({ id }) => id === deletedMessageId)
     if (!activity) return
 
-    timeline.value = timeline.value.filter(({ id }) => id !== messageId)
+    timeline.value = timeline.value.filter(({ id }) => id !== deletedMessageId)
     if (timelineChannelMap.value.get(activity.channelId)?.id === activity.id) {
       timelineChannelMap.value.delete(activity.channelId)
     }
