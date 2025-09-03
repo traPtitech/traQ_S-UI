@@ -1,9 +1,11 @@
 <template>
   <div
-    v-if="show || isStampPickerOpen || contextMenuPosition"
+    v-if="isVisible"
     ref="containerEle"
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
+    @pointerdown.capture="onPointerDownCapture"
+    @click.capture="suppressClickIfTriggeringDisplay"
   >
     <transition v-if="!isMinimum" name="quick-reaction">
       <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
@@ -117,6 +119,22 @@ const props = withDefaults(
 const { recentStampIds } = useStampHistory()
 const { addStampOptimistically } = useStampUpdater()
 const { initialRecentStamps } = useStampsStore()
+
+const isVisible = computed(
+  () => props.show || isStampPickerOpen.value || contextMenuPosition.value
+)
+
+const isPointerEventStartedFromOutside = ref(true)
+const onPointerDownCapture = () => {
+  isPointerEventStartedFromOutside.value = false
+}
+const suppressClickIfTriggeringDisplay = (e: MouseEvent) => {
+  if (isPointerEventStartedFromOutside.value && isVisible.value) {
+    e.stopImmediatePropagation()
+    e.preventDefault()
+  }
+  isPointerEventStartedFromOutside.value = true
+}
 
 const pushInitialRecentStampsIfNeeded = (
   initialRecentStamps: Stamp[],
