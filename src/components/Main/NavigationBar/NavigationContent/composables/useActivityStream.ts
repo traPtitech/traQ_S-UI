@@ -113,17 +113,24 @@ const useActivityStream = () => {
     // 通常のチャンネルではない、つまりDMのときは無視
     if (!channelsMap.value.has(updatedMessage.channelId)) return
 
-    const sameMessageIndex = timeline.value.findIndex(a => a.id === updatedMessage.id)
+    const sameMessageIndex = timeline.value.findIndex(
+      a => a.id === updatedMessage.id
+    )
     if (sameMessageIndex < 0) return
 
     timeline.value[sameMessageIndex] = updatedMessage
   })
   useMittListener(messageMitt, 'deleteMessage', deletedMessageId => {
-    const deletedMessage = timeline.value.find(({ id }) => id === deletedMessageId)
+    const deletedMessage = timeline.value.find(
+      ({ id }) => id === deletedMessageId
+    )
     if (!deletedMessage) return
 
     timeline.value = timeline.value.filter(({ id }) => id !== deletedMessageId)
-    if (timelineChannelMap.value.get(deletedMessage.channelId)?.id === deletedMessage.id) {
+    if (
+      timelineChannelMap.value.get(deletedMessage.channelId)?.id ===
+      deletedMessage.id
+    ) {
       timelineChannelMap.value.delete(deletedMessage.channelId)
     }
   })
