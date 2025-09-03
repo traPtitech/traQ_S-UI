@@ -77,7 +77,6 @@ const useActivityStream = () => {
 
     // メッセージが重複した場合を無視
     // WebSocket の再接続による refetch と `MESSAGE_CREATED` イベントが同時に発生して、どちらからも同じメッセージを受け取る場合への対応
-    // https://github.com/traPtitech/traQ_S-UI/issues/4767
     if (timeline.value.some(({ id }) => id === addedMessage.id)) {
       return
     }
