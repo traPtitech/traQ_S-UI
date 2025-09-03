@@ -118,13 +118,10 @@ const useActivityStream = () => {
     timeline.value[sameMessageIndex] = activity
   })
   useMittListener(messageMitt, 'deleteMessage', messageId => {
-    const sameMessageIndex = timeline.value.findIndex(a => a.id === messageId)
-    if (sameMessageIndex < 0) return
+    const activity = timeline.value.find(({ id }) => id === messageId)
+    if (!activity) return
 
-    // ガーベッジコレクタ
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const activity = timeline.value[sameMessageIndex]!
-    timeline.value.splice(sameMessageIndex, 1)
+    timeline.value = timeline.value.filter(({ id }) => id !== messageId)
     if (timelineChannelMap.value.get(activity.channelId)?.id === activity.id) {
       timelineChannelMap.value.delete(activity.channelId)
     }
