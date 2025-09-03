@@ -77,6 +77,7 @@ const useActivityStream = () => {
 
     // 何らかの異常でメッセージが重複した場合を無視
     // https://github.com/traPtitech/traQ_S-UI/issues/4156
+    // 注: 暫定的な対処です cf. https://github.com/traPtitech/traQ_S-UI/issues/4767
     if (timeline.value.some(({ id }) => id === activity.id)) {
       return
     }
