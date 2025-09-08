@@ -91,6 +91,11 @@
         label: 'tpf-admin',
         iconPath: 'traPortfolio-admin.svg',
         appLink: 'https://portfolio-admin.trap.jp/'
+      },
+      {
+        label: 'rucQ',
+        iconPath: 'rucq.svg',
+        appLink: 'https://rucq.trap.jp/'
       }
     ],
     ogpIgnoreHostNames: [
@@ -107,7 +112,8 @@
       'drive.trapti.tech',
       'jomon.trap.jp',
       'ns.trap.jp',
-      'portfolio-admin.trap.jp'
+      'portfolio-admin.trap.jp',
+      'rucq.trap.jp'
     ],
     wikiPageOrigin: 'https://wiki.trap.jp',
     blogPagePrefix: 'https://trap.jp/author/',
