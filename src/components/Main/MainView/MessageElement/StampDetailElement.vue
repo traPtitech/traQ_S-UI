@@ -1,7 +1,8 @@
 <template>
   <div :class="$style.container">
-    <div>
-      {{ ':' + stampName + ': from ' }}
+    <div :class="$style.title">
+      <span :class="$style.stampName">{{ ':' + stampName + ': ' }}</span>
+      <span>from</span>
     </div>
     <div v-for="user in stamp.users" :key="user.id" :class="$style.contents">
       <StampDetailElementContent :user-id="user.id" :count="user.count">
@@ -37,6 +38,12 @@ const isLastUser = (user: StampUser) =>
   flex-wrap: wrap;
   width: 100%;
   min-width: 0;
+}
+.title {
+  min-width: 0;
+}
+.stampName {
+  word-break: break-all;
 }
 .contents {
   display: flex;
