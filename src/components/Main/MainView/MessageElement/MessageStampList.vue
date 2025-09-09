@@ -14,7 +14,12 @@
       :data-show-details="$boolAttr(isDetailShown)"
     >
       <transition-group name="stamp">
-        <div v-for="stamp in stampList" :key="stamp.id" :class="$style.stamp">
+        <div
+          v-for="stamp in stampList"
+          :key="stamp.id"
+          :class="$style.stamp"
+          :style="{ width: isDetailShown ? '100%' : 'auto' }"
+        >
           <StampElement
             :stamp="stamp"
             :is-detail-shown="isDetailShown"
