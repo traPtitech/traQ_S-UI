@@ -2,13 +2,13 @@
   <div v-if="shouldShow" :class="$style.body" data-is-shown>
     <UserIcon
       :class="$style.userIcon"
-      :user-id="message.userId"
+      :user-id="message!.userId"
       :size="24"
       prevent-modal
     />
     <MessageQuoteListItemHeader
       :class="$style.messageHeader"
-      :user-id="message.userId"
+      :user-id="message!.userId"
     />
     <div :class="$style.messageContents">
       <div
@@ -42,7 +42,7 @@
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
-import { computed, ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import type { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
@@ -58,12 +58,17 @@ const props = defineProps<{
   messageId: MessageId
 }>()
 
-const { renderedContentMap } = useMessagesView()
+const { renderedContentMap, renderMessageContent } = useMessagesView()
 const { messagesMap } = useMessagesStore()
 const { dmChannelsMap } = useChannelsStore()
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const message = computed(() => messagesMap.value.get(props.messageId)!)
+onBeforeMount(() => {
+  if (!renderedContentMap.value.has(props.messageId)) {
+    renderMessageContent(props.messageId)
+  }
+})
+
+const message = computed(() => messagesMap.value.get(props.messageId))
 const shouldShow = computed(
   () =>
     !!message.value &&
