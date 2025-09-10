@@ -16,6 +16,7 @@
     <MessageInputUploadProgress v-if="isPosting" :progress="progress" />
     <MessageInputPreview
       v-if="isPreviewShown && state.text !== ''"
+      :channel-id="channelId"
       :class="$style.preview"
       :text="state.text"
     />
