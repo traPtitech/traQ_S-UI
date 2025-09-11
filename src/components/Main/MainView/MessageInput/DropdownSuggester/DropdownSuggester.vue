@@ -12,27 +12,32 @@
         @mousedown.prevent="select(confirmedPartCandidate)"
       />
       <div :class="$style.scroll">
-        <DropdownSuggesterCandidate
+        <div
           v-for="(candidate, index) in candidates"
           :key="candidate.word.text"
-          :candidate="candidate.word"
-          :display="candidate.display"
-          :is-selected="selectedIndex === index"
-          @mousedown.prevent="select(candidate.word)"
-        />
+          :ref="selectedIndex === index ? scrollToSelectedCandidate : undefined"
+        >
+          <DropdownSuggesterCandidate
+            :candidate="candidate.word"
+            :display="candidate.display"
+            :is-selected="selectedIndex === index"
+            @mousedown.prevent="select(candidate.word)"
+          />
+        </div>
       </div>
     </div>
   </teleport>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, type ComponentPublicInstance } from 'vue'
 import type {
   Candidate,
   WordOrConfirmedPart
 } from '../composables/useWordSuggester'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 import { isIOS } from '/@/lib/dom/browser'
+import { debounce } from 'throttle-debounce'
 
 const props = withDefaults(
   defineProps<{
@@ -79,6 +84,17 @@ const confirmedPartCandidate = computed(
 const select = (word: WordOrConfirmedPart) => {
   emit('select', word)
 }
+
+const scrollToSelectedCandidate = debounce(
+  64,
+  (element: Element | ComponentPublicInstance | null) => {
+    if (!(element instanceof HTMLDivElement)) return
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    })
+  }
+)
 </script>
 
 <style lang="scss" module>

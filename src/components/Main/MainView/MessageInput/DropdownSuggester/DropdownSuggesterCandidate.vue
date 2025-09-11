@@ -1,5 +1,5 @@
 <template>
-  <div ref="containerRef" :class="$style.container" :aria-selected="isSelected">
+  <div :class="$style.container" :aria-selected="isSelected">
     <DropdownSuggesterUserIcon
       v-if="candidate.type === 'user'"
       :user-id="candidate.id"
@@ -23,10 +23,9 @@
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'
-import { ref, watchEffect } from 'vue'
 import type { WordOrConfirmedPart } from '../composables/useWordSuggester'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     candidate: WordOrConfirmedPart
     display?: string
@@ -36,18 +35,6 @@ const props = withDefaults(
     isSelected: false
   }
 )
-
-const containerRef = ref<HTMLDivElement>()
-watchEffect(() => {
-  if (!containerRef.value) return
-
-  if (props.isSelected) {
-    containerRef.value.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center'
-    })
-  }
-})
 </script>
 
 <style lang="scss" module>
