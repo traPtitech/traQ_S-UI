@@ -31,14 +31,18 @@ const events: Array<keyof EntityEventMap> = [
   'updateChannel'
 ]
 
-type WordWithId = {
-  type: 'user' | 'user-group' | 'stamp' | 'channel'
+interface WordBase {
+  delimiter?: string
   text: string
+}
+
+interface WordWithId extends WordBase {
+  type: 'user' | 'user-group' | 'stamp' | 'channel'
   id: string
 }
-type WordWithoutId = {
+
+interface WordWithoutId extends WordBase {
   type: 'stamp-effect'
-  text: string
 }
 
 export type Word = WordWithId | WordWithoutId
@@ -77,7 +81,8 @@ const useCandidateTree = () => {
       [...channelsMap.value.values()].map(channel => ({
         type: 'channel',
         text: channelIdToPathString(channel.id, true),
-        id: channel.id
+        id: channel.id,
+        delimiter: '/'
       }))
     )
 
@@ -115,7 +120,8 @@ const useWordSuggestionList = (
   const candidates = computed(() =>
     target.value.word.length >= minLength
       ? tree.value.search(
-          target.value.word.replace(/[＠＃]/g, c => replaceMap[c] ?? c)
+          target.value.word.replace(/[＠＃]/g, c => replaceMap[c] ?? c),
+          { stopAtNextDelimiter: target.value.word.startsWith('#') }
         )
       : []
   )
