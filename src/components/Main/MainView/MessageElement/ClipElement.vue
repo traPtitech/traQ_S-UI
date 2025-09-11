@@ -6,6 +6,7 @@
     :data-is-mobile="$boolAttr(isMobile)"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
+    @click="onClick"
   >
     <message-tools
       :class="$style.tools"
@@ -19,17 +20,17 @@
 </template>
 
 <script lang="ts" setup>
-import MessageContents from './MessageContents.vue'
-import MessageTools from './MessageTools.vue'
-import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import { computed, shallowRef, toRef } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { ChangeHeightData } from './composables/useElementRenderObserver'
 import useElementRenderObserver from './composables/useElementRenderObserver'
-import useEmbeddings from '/@/composables/message/useEmbeddings'
+import MessageContents from './MessageContents.vue'
+import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
+import MessageTools from './MessageTools.vue'
 import useHover from '/@/composables/dom/useHover'
+import useEmbeddings from '/@/composables/message/useEmbeddings'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import type { MessageId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   messageId: MessageId
@@ -56,7 +57,7 @@ useElementRenderObserver(
   emit
 )
 
-const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isHovered, onMouseEnter, onMouseLeave, onClick } = useHover()
 </script>
 
 <style lang="scss" module>

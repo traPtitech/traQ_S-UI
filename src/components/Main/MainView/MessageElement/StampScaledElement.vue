@@ -7,6 +7,7 @@
       :style="stylePosition"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
+      @click="onClick"
     >
       <transition name="scale-reaction">
         <a-stamp
@@ -29,11 +30,11 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import useHover from '/@/composables/dom/useHover'
+import StampDetailElement from './StampScaledDetailElement.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
+import useHover from '/@/composables/dom/useHover'
 import type { MessageStampById } from '/@/lib/messageStampList'
 import { useStampsStore } from '/@/store/entities/stamps'
-import StampDetailElement from './StampScaledDetailElement.vue'
 const props = defineProps<{
   stamp: MessageStampById
   show: boolean
@@ -60,7 +61,7 @@ const stylePosition = computed(() => {
   }
 })
 
-const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isHovered, onMouseEnter, onMouseLeave, onClick } = useHover()
 watch(isHovered, newIsHovered => {
   if (newIsHovered) {
     emit('scaled-hover')

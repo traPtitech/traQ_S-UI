@@ -1,29 +1,31 @@
-import { ref } from 'vue'
-import useToggle from '/@/composables/utils/useToggle'
+import { computed, ref } from 'vue'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
-const useHover = (LongHoverTime = 500) => {
-  const { value: isHovered, open, close } = useToggle()
-  const isLongHovered = ref(false)
-  const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const useHover = () => {
+  const { isTouchDevice } = useResponsiveStore()
+
+  const isTapHovered = ref(false)
+  const isMouseHovered = ref(false)
+  const isHovered = computed(() =>
+    isTouchDevice.value ? isTapHovered.value : isMouseHovered.value
+  )
+
   const onMouseEnter = () => {
-    open()
-    isHovered.value = true
-    hoverTimeout.value = setTimeout(() => {
-      if (isHovered.value) {
-        isLongHovered.value = true
-      }
-    }, LongHoverTime)
+    isMouseHovered.value = true
   }
   const onMouseLeave = () => {
-    close()
-    if (hoverTimeout.value) clearTimeout(hoverTimeout.value)
-    isLongHovered.value = false
+    isTapHovered.value = false
+    isMouseHovered.value = false
   }
+  const onClick = () => {
+    isTapHovered.value = true
+  }
+
   return {
     isHovered,
-    isLongHovered,
     onMouseEnter,
-    onMouseLeave
+    onMouseLeave,
+    onClick
   }
 }
 

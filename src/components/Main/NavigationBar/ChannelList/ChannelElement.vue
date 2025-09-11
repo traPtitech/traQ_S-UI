@@ -32,7 +32,12 @@
           :data-is-inactive="$boolAttr(!channel.active)"
           :aria-label="showShortenedPath ? pathTooltip : pathToShow"
           draggable="false"
-          @click="navigate"
+          @click="
+            e => {
+              onClick()
+              navigate(e)
+            }
+          "
           @mouseenter="onMouseEnter"
           @mouseleave="onMouseLeave"
           @focus="onFocus"
@@ -66,24 +71,24 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRef } from 'vue'
-import type { ChannelTreeNode } from '/@/lib/channelTree'
-import type { ChannelId } from '/@/types/entity-ids'
-import useHover from '/@/composables/dom/useHover'
-import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
-import { useMainViewStore } from '/@/store/ui/mainView'
-import ChannelElementIcon from './ChannelElementIcon.vue'
-import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
-import ChannelElementName from './ChannelElementName.vue'
-import useNotificationState from '../composables/useNotificationState'
-import { useOpenLink } from '/@/composables/useOpenLink'
-import useChannelPath from '/@/composables/useChannelPath'
-import useFocus from '/@/composables/dom/useFocus'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
+import { computed, toRef } from 'vue'
+import useNotificationState from '../composables/useNotificationState'
+import ChannelElementIcon from './ChannelElementIcon.vue'
+import ChannelElementName from './ChannelElementName.vue'
+import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 import {
   usePath,
   type TypedProps
 } from '/@/components/Main/NavigationBar/ChannelList/composables/usePath'
+import useFocus from '/@/composables/dom/useFocus'
+import useHover from '/@/composables/dom/useHover'
+import useChannelPath from '/@/composables/useChannelPath'
+import { useOpenLink } from '/@/composables/useOpenLink'
+import type { ChannelTreeNode } from '/@/lib/channelTree'
+import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
+import { useMainViewStore } from '/@/store/ui/mainView'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{
@@ -113,6 +118,7 @@ const isSelected = computed(
 )
 
 const onClickIcon = (e: KeyboardEvent | MouseEvent) => {
+  onIconClick()
   if (
     e instanceof MouseEvent &&
     (!hasChildren.value || e.button !== LEFT_CLICK_BUTTON)
@@ -133,12 +139,13 @@ const { pathToShow, pathTooltip } = usePath(props as TypedProps)
 
 const notificationState = useNotificationState(toRef(props, 'channel'))
 
-const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isHovered, onMouseEnter, onMouseLeave, onClick } = useHover()
 const { isFocused, onFocus, onBlur } = useFocus()
 const {
   isHovered: isIconHovered,
   onMouseEnter: onIconMouseEnter,
-  onMouseLeave: onIconMouseLeave
+  onMouseLeave: onIconMouseLeave,
+  onClick: onIconClick
 } = useHover()
 const onIconHovered = () => {
   onIconMouseEnter()

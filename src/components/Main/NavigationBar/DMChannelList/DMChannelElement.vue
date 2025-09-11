@@ -6,6 +6,7 @@
       @mousedown="openChannel"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
+      @click="onClick"
     >
       <div :class="$style.channelHash">
         <user-icon
@@ -33,16 +34,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRef } from 'vue'
-import useHover from '/@/composables/dom/useHover'
 import type { DMChannel } from '@traptitech/traq'
-import { useUsersStore } from '/@/store/entities/users'
+import { computed, toRef } from 'vue'
+import useNotificationState from '../composables/useNotificationState'
+import DMChannelElementName from './DMChannelElementName.vue'
 import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import DMChannelElementName from './DMChannelElementName.vue'
-import useNotificationState from '../composables/useNotificationState'
+import useHover from '/@/composables/dom/useHover'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useOpenLink } from '/@/composables/useOpenLink'
+import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
   dmChannel: DMChannel
@@ -59,7 +60,7 @@ const openChannel = (event: MouseEvent) => {
   openLink(event, channelIdToLink(props.dmChannel.id))
 }
 
-const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isHovered, onMouseEnter, onMouseLeave, onClick } = useHover()
 </script>
 
 <style lang="scss" module>

@@ -50,7 +50,12 @@ const waveformWrapperStyle = computed(() => {
 
 const selectingPosition = ref<number>()
 const waveformEle = shallowRef<HTMLDivElement>()
-const { isHovered, onMouseEnter, onMouseLeave: onMouseLeaveHover } = useHover()
+const {
+  isHovered,
+  onMouseEnter,
+  onMouseLeave: onMouseLeaveHover,
+  onClick: onClickHover
+} = useHover()
 const onMouseMove = throttle(100, (e: MouseEvent) => {
   if (!waveformEle.value || !isHovered.value) return
   const left = e.pageX - waveformEle.value.getBoundingClientRect().left
@@ -65,6 +70,7 @@ const selectingPositionStyle = computed(() => ({
 }))
 
 const onClick = (e: MouseEvent) => {
+  onClickHover()
   if (!waveformEle.value) return
   const waveformRect = waveformEle.value.getBoundingClientRect()
   const left = e.pageX - waveformRect.left

@@ -9,6 +9,7 @@
     :data-is-editing="$boolAttr(isEditing)"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
+    @click="onClick"
   >
     <message-pinned
       v-if="pinnedUserId"
@@ -32,19 +33,19 @@
 </template>
 
 <script lang="ts" setup>
-import MessageStampList from './MessageStampList.vue'
-import MessagePinned from './MessagePinned.vue'
-import MessageContents from './MessageContents.vue'
-import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
 import { computed, shallowRef, toRef } from 'vue'
-import type { MessageId, UserId } from '/@/types/entity-ids'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { ChangeHeightData } from './composables/useElementRenderObserver'
 import useElementRenderObserver from './composables/useElementRenderObserver'
-import useEmbeddings from '/@/composables/message/useEmbeddings'
+import MessageContents from './MessageContents.vue'
+import MessagePinned from './MessagePinned.vue'
+import MessageStampList from './MessageStampList.vue'
+import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
 import useHover from '/@/composables/dom/useHover'
+import useEmbeddings from '/@/composables/message/useEmbeddings'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import type { MessageId, UserId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{
@@ -82,7 +83,7 @@ useElementRenderObserver(
   emit
 )
 
-const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isHovered, onMouseEnter, onMouseLeave, onClick } = useHover()
 </script>
 
 <style lang="scss" module>
