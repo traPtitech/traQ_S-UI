@@ -30,14 +30,14 @@
 </template>
 
 <script lang="ts" setup>
-import SpinNumber from '/@/components/UI/SpinNumber.vue'
+import { computed, onMounted, ref, watch } from 'vue'
+import StampScaledElement from './StampScaledElement.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
-import { ref, computed, watch, onMounted } from 'vue'
+import SpinNumber from '/@/components/UI/SpinNumber.vue'
+import useLongHover from '/@/composables/dom/useLongHover'
+import type { MessageStampById } from '/@/lib/messageStampList'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import type { MessageStampById } from '/@/lib/messageStampList'
-import StampScaledElement from './StampScaledElement.vue'
-import useHover from '/@/composables/dom/useHover'
 import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
@@ -108,7 +108,7 @@ watch(
   }
 )
 
-const { isLongHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isLongHovered, onMouseEnter, onMouseLeave } = useLongHover()
 const stampRoot = ref<HTMLElement | null>(null)
 const hoveredRect = ref<DOMRect | undefined>(undefined)
 const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
