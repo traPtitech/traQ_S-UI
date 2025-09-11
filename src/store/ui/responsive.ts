@@ -1,4 +1,4 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
 import { mobileMinBreakpoint } from '/@/lib/media'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
@@ -16,7 +16,7 @@ const useResponsiveStorePinia = defineStore('ui/responsive', () => {
     isMobile.value = event.matches
   })
   isHoverSupported.addListener((event: MediaQueryListEvent) => {
-    isTouchDevice.value = event.matches
+    isTouchDevice.value = !event.matches
   })
 
   return { isMobile, isTouchDevice }
