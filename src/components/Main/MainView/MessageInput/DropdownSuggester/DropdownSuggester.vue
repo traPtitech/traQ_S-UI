@@ -37,6 +37,7 @@ import { isIOS } from '/@/lib/dom/browser'
 const props = withDefaults(
   defineProps<{
     isShown?: boolean
+    width: number
     position?: { top: number; left: number }
     candidates?: Candidate[]
     selectedIndex: number | null
@@ -54,7 +55,6 @@ const emit = defineEmits<{
   (e: 'select', _word: WordOrConfirmedPart): void
 }>()
 
-const WIDTH = 240
 const MARGIN = 8
 
 const iOSFlag = isIOS()
@@ -65,8 +65,8 @@ const styledPosition = computed(() => ({
       ? (window.visualViewport?.offsetTop ?? 0) + props.position.top
       : props.position.top
   }px`,
-  left: `min(${props.position.left}px, calc(100vw - ${WIDTH + MARGIN}px))`,
-  width: `${WIDTH}px`
+  left: `min(${props.position.left}px, calc(100vw - ${props.width + MARGIN}px))`,
+  width: `${props.width}px`
 }))
 
 const confirmedPartCandidate = computed(

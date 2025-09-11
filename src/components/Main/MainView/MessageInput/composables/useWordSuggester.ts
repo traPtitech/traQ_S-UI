@@ -144,6 +144,8 @@ const useWordSuggester = (
 
   const isChannelSuggestion = computed(() => confirmedText.value[0] === '#')
 
+  const suggesterWidth = computed(() => (isChannelSuggestion.value ? 360 : 240))
+
   const confirmedChannelPath = computed(() => {
     if (!isChannelSuggestion.value) return []
     return confirmedText.value.replace(/^#|\/$/, '').split('/')
@@ -201,6 +203,7 @@ const useWordSuggester = (
     onSelect,
     onBlur,
     isSuggesterShown,
+    suggesterWidth,
     position,
     suggestedCandidates,
     selectedCandidateIndex,

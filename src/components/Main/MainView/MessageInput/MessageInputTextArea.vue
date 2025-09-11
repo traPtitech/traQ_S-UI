@@ -26,6 +26,7 @@
     <div :class="$style.over" />
     <DropdownSuggester
       :is-shown="isSuggesterShown"
+      :width="suggesterWidth"
       :position="suggesterPosition"
       :candidates="suggestedCandidates"
       :selected-index="selectedCandidateIndex"
@@ -102,6 +103,7 @@ const {
   onKeyDown: onKeyDownWordSuggester,
   onBlur: onBlurWordSuggester,
   isSuggesterShown,
+  suggesterWidth,
   position,
   suggestedCandidates,
   selectedCandidateIndex,
