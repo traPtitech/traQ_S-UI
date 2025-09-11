@@ -1,6 +1,7 @@
 <template>
   <div
     ref="rootRef"
+    :key="refreshToken"
     :class="$style.root"
     @scroll.passive="
       () => {
@@ -54,6 +55,7 @@ import { isMessageScrollerRoute, RouteName } from '/@/router'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import type { MessageId } from '/@/types/entity-ids'
+import { useRefreshToken } from '/@/composables/dom/useRefreshToken'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -146,6 +148,8 @@ const props = withDefaults(
     isLoading: false
   }
 )
+
+const { refreshToken } = useRefreshToken('messages-scroller')
 
 const emit = defineEmits<{
   (e: 'requestLoadFormer'): void
