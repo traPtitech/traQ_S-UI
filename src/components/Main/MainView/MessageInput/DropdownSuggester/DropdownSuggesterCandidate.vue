@@ -14,7 +14,7 @@
       :effect-name-with-dot="candidate.text"
     />
     <div :class="$style.name">
-      {{ candidate.text }}
+      {{ display ?? candidate.text }}
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@ import type { WordOrConfirmedPart } from '../composables/useWordSuggester'
 const props = withDefaults(
   defineProps<{
     candidate: WordOrConfirmedPart
+    display?: string
     isSelected?: boolean
   }>(),
   {

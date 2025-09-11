@@ -15,6 +15,11 @@ export type WordOrConfirmedPart =
       text: string
     }
 
+export type Candidate = {
+  word: Word
+  display?: string
+}
+
 /**
  * 補完を表示する最小の文字数
  * 3なら`@ab`のときは表示されて`@a`では表示されない
@@ -52,8 +57,8 @@ const useWordSuggester = (
   })
 
   const {
-    suggestedCandidates,
-    confirmedPart,
+    suggestedCandidates: suggestedCandidateWords,
+    confirmedPart: confirmedText,
     selectedCandidateIndex,
     prevCandidateText,
     nextCandidateText
@@ -136,6 +141,59 @@ const useWordSuggester = (
   const onBlur = () => {
     isSuggesterShown.value = false
   }
+
+  const isChannelSuggestion = computed(() => confirmedText.value[0] === '#')
+
+  const confirmedChannelPath = computed(() => {
+    if (!isChannelSuggestion.value) return []
+    return confirmedText.value.replace(/^#|\/$/, '').split('/')
+  })
+
+  const confirmedChannelPathStr = computed(() =>
+    confirmedChannelPath.value.slice(0, -1).join('/')
+  )
+
+  const confirmedChannelShortenedPathStr = computed(() =>
+    confirmedChannelPath.value
+      .slice(0, -1)
+      .map(part => part[0])
+      .join('/')
+  )
+
+  const confirmedPartDisplay = computed(() => {
+    if (!isChannelSuggestion.value) return confirmedText.value
+
+    const confirmedPath = [
+      confirmedChannelShortenedPathStr.value,
+      confirmedChannelPath.value.at(-1)
+    ]
+      .filter(Boolean)
+      .join('/')
+
+    return `#${confirmedPath}`
+  })
+
+  const suggestedCandidates = computed(
+    () =>
+      suggestedCandidateWords.value.map(word => {
+        if (word.type !== 'channel') return { word }
+
+        const restPath = word.text.replace(
+          new RegExp(`#${confirmedChannelPathStr.value}`, 'i'),
+          ''
+        )
+
+        return {
+          word: word,
+          display: `#${confirmedChannelShortenedPathStr.value}${restPath}`
+        }
+      }) as Candidate[]
+  )
+
+  const confirmedPart = computed(() => ({
+    text: confirmedText.value,
+    display: confirmedPartDisplay.value
+  }))
 
   return {
     onKeyDown,

@@ -7,16 +7,18 @@
       -->
       <DropdownSuggesterCandidate
         :candidate="confirmedPartCandidate"
+        :display="confirmedPart.display"
         :is-selected="selectedIndex === -1"
         @mousedown.prevent="select(confirmedPartCandidate)"
       />
       <div :class="$style.scroll">
         <DropdownSuggesterCandidate
           v-for="(candidate, index) in candidates"
-          :key="candidate.text"
-          :candidate="candidate"
+          :key="candidate.word.text"
+          :candidate="candidate.word"
+          :display="candidate.display"
           :is-selected="selectedIndex === index"
-          @mousedown.prevent="select(candidate)"
+          @mousedown.prevent="select(candidate.word)"
         />
       </div>
     </div>
@@ -25,8 +27,10 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import type { Word } from '../composables/useWordSuggestionList'
-import type { WordOrConfirmedPart } from '../composables/useWordSuggester'
+import type {
+  Candidate,
+  WordOrConfirmedPart
+} from '../composables/useWordSuggester'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 import { isIOS } from '/@/lib/dom/browser'
 
@@ -34,15 +38,15 @@ const props = withDefaults(
   defineProps<{
     isShown?: boolean
     position?: { top: number; left: number }
-    candidates?: Word[]
+    candidates?: Candidate[]
     selectedIndex: number | null
-    confirmedPart?: string
+    confirmedPart?: { text: string; display?: string }
   }>(),
   {
     isShown: false,
     position: () => ({ top: 0, left: 0 }),
     candidates: () => [],
-    confirmedPart: ''
+    confirmedPart: () => ({ text: '', display: '' })
   }
 )
 
@@ -68,7 +72,7 @@ const styledPosition = computed(() => ({
 const confirmedPartCandidate = computed(
   (): WordOrConfirmedPart => ({
     type: 'confirmed-part',
-    text: props.confirmedPart
+    text: props.confirmedPart.text
   })
 )
 
