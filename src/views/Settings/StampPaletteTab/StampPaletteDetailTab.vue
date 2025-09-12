@@ -102,6 +102,7 @@ const discardWithConfirm = () => {
     !isDraftDirty.value ||
     window.confirm('未保存の編集内容が破棄されますが、よろしいですか？')
   ) {
+    skipLeaveGuard.value = true
     goToSettingsStampPalette()
   }
 }
@@ -121,6 +122,7 @@ const finalizeWithToast = async () => {
   try {
     if (!draftPalette.value) throw new Error('draftPalette is null')
     await editStampPaletteWrapper(draftPalette.value)
+    skipLeaveGuard.value = true
     addSuccessToast()
     goToSettingsStampPalette()
   } catch (_) {
@@ -143,7 +145,7 @@ onBeforeUnmount(async () => {
 })
 
 useBeforeUnload(
-  isDraftDirty,
+  computed(() => isDraftDirty.value && !skipLeaveGuard.value),
   '未保存の編集内容があります。ページを離れますか？',
   _event => {
     skipLeaveGuard.value = true

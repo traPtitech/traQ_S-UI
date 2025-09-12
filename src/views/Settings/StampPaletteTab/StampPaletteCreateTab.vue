@@ -50,6 +50,7 @@ const discardWithConfirm = () => {
     !isDraftDirty.value ||
     window.confirm('未保存の編集内容が破棄されますが、よろしいですか？')
   ) {
+    skipLeaveGuard.value = true
     goToSettingsStampPalette()
   }
 }
@@ -68,6 +69,7 @@ const finalizeWithToast = async () => {
   }
   try {
     await createStampPaletteWrapper(draftPalette.value)
+    skipLeaveGuard.value = true
     addSuccessToast()
     goToSettingsStampPalette()
   } catch (_) {
