@@ -4,9 +4,9 @@
       <h3>パレットの作成</h3>
       <stamp-palette-description />
     </div>
-    <stamp-palette-editor v-model:palette="newStampPalette" />
+    <stamp-palette-editor v-model:palette="draftPalette" />
     <stamp-palette-action-buttons
-      :palette="newStampPalette"
+      :palette="draftPalette"
       @finalize="finalizeWithToast"
       @cancel="discardWithConfirm"
     />
@@ -30,7 +30,7 @@ import type { StampId, StampPaletteId } from '/@/types/entity-ids'
 
 const { addInfoToast, addErrorToast } = useToastStore()
 
-const emptyStampPalette: StampPalette = {
+const initialPalette: StampPalette = {
   id: '' as StampPaletteId,
   name: '新規パレット',
   stamps: [] as StampId[],
@@ -39,15 +39,15 @@ const emptyStampPalette: StampPalette = {
   updatedAt: '',
   description: ''
 }
-const newStampPalette = ref(structuredClone(emptyStampPalette))
+const draftPalette = ref(structuredClone(initialPalette))
 
-const hasPaletteUnsavedChanges = computed(
-  () => !areStampPalettesEqual(newStampPalette.value, emptyStampPalette)
+const isDraftDirty = computed(
+  () => !areStampPalettesEqual(draftPalette.value, initialPalette)
 )
 
 const discardWithConfirm = () => {
   if (
-    !hasPaletteUnsavedChanges.value ||
+    !isDraftDirty.value ||
     window.confirm('未保存の編集内容が破棄されますが、よろしいですか？')
   ) {
     goToSettingsStampPalette()
@@ -62,12 +62,12 @@ const addFailureToast = () => {
 }
 
 const finalizeWithToast = async () => {
-  if (!hasPaletteUnsavedChanges.value) {
+  if (!isDraftDirty.value) {
     goToSettingsStampPalette()
     return
   }
   try {
-    await createStampPaletteWrapper(newStampPalette.value)
+    await createStampPaletteWrapper(draftPalette.value)
     addSuccessToast()
     goToSettingsStampPalette()
   } catch (_) {
@@ -75,14 +75,14 @@ const finalizeWithToast = async () => {
   }
 }
 
-const isConfirmed = ref(false)
+const skipLeaveGuard = ref(false)
 
 onBeforeUnmount(async () => {
-  if (!hasPaletteUnsavedChanges.value || isConfirmed.value) return
-  isConfirmed.value = true
+  if (!isDraftDirty.value || skipLeaveGuard.value) return
+  skipLeaveGuard.value = true
   if (!window.confirm('未保存の編集内容を保存しますか？')) return
   try {
-    await createStampPaletteWrapper(newStampPalette.value)
+    await createStampPaletteWrapper(draftPalette.value)
     addSuccessToast()
   } catch (_) {
     addFailureToast()
@@ -90,10 +90,10 @@ onBeforeUnmount(async () => {
 })
 
 useBeforeUnload(
-  computed(() => hasPaletteUnsavedChanges.value && !isConfirmed.value),
+  computed(() => isDraftDirty.value && !skipLeaveGuard.value),
   '未保存の編集内容があります。ページを離れますか？',
   _event => {
-    isConfirmed.value = true
+    skipLeaveGuard.value = true
   }
 )
 </script>
