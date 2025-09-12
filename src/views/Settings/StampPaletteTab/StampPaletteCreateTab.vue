@@ -25,11 +25,9 @@ import {
   goToSettingsStampPalette
 } from '/@/components/Settings/StampPaletteTab/utils'
 import { useBeforeUnload } from '/@/composables/dom/useBeforeUnload'
-import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useToastStore } from '/@/store/ui/toast'
 import type { StampId, StampPaletteId } from '/@/types/entity-ids'
 
-const { stampPalettesMap } = useStampPalettesStore()
 const { addInfoToast, addErrorToast } = useToastStore()
 
 const emptyStampPalette: StampPalette = {
@@ -42,15 +40,10 @@ const emptyStampPalette: StampPalette = {
   description: ''
 }
 const newStampPalette = ref(structuredClone(emptyStampPalette))
-const savedStampPalette = computed(() =>
-  stampPalettesMap.value.get(newStampPalette.value.id)
-)
 
-const hasPaletteUnsavedChanges = computed(() => {
-  if (!savedStampPalette.value)
-    return !areStampPalettesEqual(newStampPalette.value, emptyStampPalette)
-  return !areStampPalettesEqual(newStampPalette.value, savedStampPalette.value)
-})
+const hasPaletteUnsavedChanges = computed(
+  () => !areStampPalettesEqual(newStampPalette.value, emptyStampPalette)
+)
 
 const discardWithConfirm = () => {
   if (
