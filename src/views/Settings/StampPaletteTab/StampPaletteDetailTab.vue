@@ -108,10 +108,10 @@ const discardWithConfirm = () => {
 }
 
 const addSuccessToast = () => {
-  addInfoToast('スタンプパレットを保存しました')
+  addInfoToast('スタンプパレットを更新しました')
 }
 const addFailureToast = () => {
-  addErrorToast('スタンプパレットの保存に失敗しました')
+  addErrorToast('スタンプパレットの更新に失敗しました')
 }
 
 const finalizeWithToast = async () => {
