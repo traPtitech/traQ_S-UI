@@ -31,7 +31,11 @@
         @click="toggleFold"
       />
     </div>
-    <MessageQuoteListItemFooter :class="$style.footer" :message="message" />
+    <MessageQuoteListItemFooter
+      :class="$style.footer"
+      :message="message"
+      :disable-links="disableFooterLinks"
+    />
   </div>
   <div v-else :class="$style.body">
     存在しないか表示できないメッセージの引用です
@@ -56,6 +60,7 @@ import useBoxSize from '/@/composables/dom/useBoxSize'
 const props = defineProps<{
   parentMessageChannelId: ChannelId | DMChannelId
   messageId: MessageId
+  disableFooterLinks: boolean
 }>()
 
 const { renderedContentMap, renderMessageContent } = useMessagesView()
