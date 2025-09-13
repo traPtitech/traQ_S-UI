@@ -221,7 +221,7 @@ $expand-button-height: 32px;
   }
 }
 .quoteList {
-  margin-top: 16px;
+  margin-block: 16px;
 }
 .expandButton {
   position: absolute;
