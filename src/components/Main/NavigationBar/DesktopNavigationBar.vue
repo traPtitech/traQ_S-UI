@@ -43,6 +43,7 @@
       @pointerdown="onDragStart"
       @pointermove="onDragging"
       @pointerup="onDragEnd"
+      @dblclick="initializeNavigationWidth"
     />
   </div>
 </template>
@@ -67,6 +68,7 @@ const {
 
 const {
   isNavigationClosed,
+  initializeNavigationWidth,
   navigationRef,
   resizerRef: navigationResizerRef
 } = useNavigationLayoutStore()
