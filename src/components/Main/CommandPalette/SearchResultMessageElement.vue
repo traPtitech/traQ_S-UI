@@ -19,6 +19,12 @@
             :content="renderedContent"
             @click="toggleSpoilerHandler"
           />
+          <message-quote-list
+            v-if="quotedMessageIds.length > 0"
+            :class="$style.quoteList"
+            :parent-message-channel-id="message.channelId"
+            :message-ids="quotedMessageIds"
+          />
         </div>
         <div
           v-if="oversized && !expanded"
@@ -52,7 +58,8 @@ import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useUsersStore } from '/@/store/entities/users'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { render } from '/@/lib/markdown/markdown'
-import { isFile } from '/@/lib/guard/embeddingOrUrl'
+import { isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
+import MessageQuoteList from '/@/components/Main/MainView/MessageElement/MessageQuoteList.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
@@ -113,7 +120,11 @@ watchEffect(async () => {
 const renderedContent = computed(() => renderedResult.value?.renderedText ?? '')
 const fileIds = computed(
   () =>
-    renderedResult.value?.embeddings.filter(isFile).map(file => file.id) ?? []
+    renderedResult.value?.embeddings.filter(isFile).map(({ id }) => id) ?? []
+)
+const quotedMessageIds = computed(
+  () =>
+    renderedResult.value?.embeddings.filter(isMessage).map(({ id }) => id) ?? []
 )
 
 const onClick = (e: MouseEvent) => {
@@ -208,6 +219,9 @@ $expand-button-height: 32px;
       transparent 100%
     );
   }
+}
+.quoteList {
+  margin-top: 16px;
 }
 .expandButton {
   position: absolute;
