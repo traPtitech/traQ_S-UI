@@ -102,7 +102,7 @@ const discardWithConfirm = () => {
     !isDraftDirty.value ||
     window.confirm('未保存の編集内容が破棄されますが、よろしいですか？')
   ) {
-    skipLeaveGuard.value = true
+    suppressLeaveWarning.value = true
     goToSettingsStampPalette()
   }
 }
@@ -122,7 +122,7 @@ const finalizeWithToast = async () => {
   try {
     if (!draftPalette.value) throw new Error('draftPalette is null')
     await editStampPaletteWrapper(draftPalette.value)
-    skipLeaveGuard.value = true
+    suppressLeaveWarning.value = true
     addSuccessToast()
     goToSettingsStampPalette()
   } catch (_) {
@@ -130,11 +130,15 @@ const finalizeWithToast = async () => {
   }
 }
 
-const skipLeaveGuard = ref(false)
+const suppressLeaveWarning = ref(false)
+
+const shouldWarnOnLeave = computed(
+  () => isDraftDirty.value && !suppressLeaveWarning.value
+)
 
 onBeforeUnmount(async () => {
-  if (!isDraftDirty.value || !draftPalette.value || skipLeaveGuard.value) return
-  skipLeaveGuard.value = true
+  if (!shouldWarnOnLeave.value || !draftPalette.value) return
+  suppressLeaveWarning.value = true
   if (!window.confirm('未保存の編集内容を保存しますか？')) return
   try {
     await editStampPaletteWrapper(draftPalette.value)
@@ -145,10 +149,10 @@ onBeforeUnmount(async () => {
 })
 
 useBeforeUnload(
-  computed(() => isDraftDirty.value && !skipLeaveGuard.value),
+  shouldWarnOnLeave,
   '未保存の編集内容があります。ページを離れますか？',
   _event => {
-    skipLeaveGuard.value = true
+    suppressLeaveWarning.value = true
   }
 )
 </script>
