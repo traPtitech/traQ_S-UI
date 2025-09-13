@@ -94,7 +94,12 @@ const oversized = computed(
 )
 
 const markdownId = randomString()
-const { value: isFold, toggle: toggleFold } = useToggle(true)
+const { value: isFold, toggle: toggleFoldImpl } = useToggle(true)
+
+const toggleFold = (e: MouseEvent) => {
+  e.stopPropagation()
+  toggleFoldImpl()
+}
 </script>
 
 <style lang="scss" module>
