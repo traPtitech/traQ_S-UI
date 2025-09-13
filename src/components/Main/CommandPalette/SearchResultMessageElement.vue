@@ -19,11 +19,12 @@
             :content="renderedContent"
             @click="toggleSpoilerHandler"
           />
-          <message-quote-list
+          <MessageQuoteList
             v-if="quotedMessageIds.length > 0"
             :class="$style.quoteList"
             :parent-message-channel-id="message.channelId"
             :message-ids="quotedMessageIds"
+            disable-item-footer-links
           />
         </div>
         <div
