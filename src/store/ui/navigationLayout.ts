@@ -53,6 +53,11 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
     restoreNavigationWidthImpl()
   }
 
+  const initializeNavigationWidth = () => {
+    navigationWidth.value = DEFAULT_NAVIGATION_WIDTH
+    saveNavigationWidth()
+  }
+
   onMounted(() => {
     restoringPromise.value.then(() => {
       restoreNavigationWidthImpl()
@@ -67,6 +72,7 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
     isNavigationClosed,
     saveNavigationWidth,
     restoreNavigationWidth,
+    initializeNavigationWidth,
     updateNavigationLeft
   }
 })
