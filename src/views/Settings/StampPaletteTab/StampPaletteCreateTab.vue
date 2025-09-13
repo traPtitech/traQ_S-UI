@@ -97,10 +97,7 @@ onBeforeUnmount(async () => {
 
 useBeforeUnload(
   shouldWarnOnLeave,
-  '未保存の編集内容があります。ページを離れますか？',
-  _event => {
-    suppressLeaveWarning.value = true
-  }
+  '未保存の編集内容があります。ページを離れますか？'
 )
 </script>
 
