@@ -6,9 +6,9 @@ import {
   NAVIGATION_CLOSING_THRESHOLD
 } from '/@/store/ui/navigationLayout'
 import { createAnimationFrameController } from '/@/lib/dom/animationFrame'
-import useInnerWindowSize from './useInnerWindowSize'
+import useInnerWindowSize from '/@/composables/dom/useInnerWindowSize'
 
-export const useNavigationResizer = () => {
+const useNavigationResizer = () => {
   const animationFrame = createAnimationFrameController()
 
   const { width: windowWidth } = useInnerWindowSize({ width: Infinity })
@@ -99,3 +99,5 @@ export const useNavigationResizer = () => {
     onDragEnd
   }
 }
+
+export default useNavigationResizer

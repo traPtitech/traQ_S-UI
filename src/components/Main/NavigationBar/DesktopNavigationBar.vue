@@ -54,7 +54,7 @@ import EphemeralNavigationContent from '/@/components/Main/NavigationBar/Ephemer
 import DesktopNavigationSelector from '/@/components/Main/NavigationBar/DesktopNavigationSelector.vue'
 import DesktopToolBox from '/@/components/Main/NavigationBar/DesktopToolBox.vue'
 import useNavigation from './composables/useNavigation'
-import { useNavigationResizer } from '/@/composables/dom/useNavigationResizer'
+import useNavigationResizer from './composables/useNavigationResizer'
 import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
 
 const {
