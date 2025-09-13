@@ -78,8 +78,7 @@ const useThemeSettingsPinia = defineStore('ui/themeSettings', () => {
 
   const queryList = window.matchMedia('(prefers-color-scheme: dark)')
   const isOsDarkTheme = ref(queryList.matches)
-  // safariではaddEventListener('change', func)が未対応なため
-  queryList.addListener((event: MediaQueryListEvent) => {
+  queryList.addEventListener('change', (event: MediaQueryListEvent) => {
     isOsDarkTheme.value = event.matches
   })
 

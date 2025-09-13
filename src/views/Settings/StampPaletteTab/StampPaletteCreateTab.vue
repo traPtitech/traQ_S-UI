@@ -4,9 +4,9 @@
       <h3>パレットの作成</h3>
       <stamp-palette-description />
     </div>
-    <stamp-palette-editor v-model:palette="newStampPalette" />
+    <stamp-palette-editor v-model:palette="draftPalette" />
     <stamp-palette-action-buttons
-      :palette="newStampPalette"
+      :palette="draftPalette"
       @finalize="finalizeWithToast"
       @cancel="discardWithConfirm"
     />
@@ -25,14 +25,12 @@ import {
   goToSettingsStampPalette
 } from '/@/components/Settings/StampPaletteTab/utils'
 import { useBeforeUnload } from '/@/composables/dom/useBeforeUnload'
-import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useToastStore } from '/@/store/ui/toast'
 import type { StampId, StampPaletteId } from '/@/types/entity-ids'
 
-const { stampPalettesMap } = useStampPalettesStore()
 const { addInfoToast, addErrorToast } = useToastStore()
 
-const emptyStampPalette: StampPalette = {
+const initialPalette: StampPalette = {
   id: '' as StampPaletteId,
   name: '新規パレット',
   stamps: [] as StampId[],
@@ -41,40 +39,37 @@ const emptyStampPalette: StampPalette = {
   updatedAt: '',
   description: ''
 }
-const newStampPalette = ref(structuredClone(emptyStampPalette))
-const savedStampPalette = computed(() =>
-  stampPalettesMap.value.get(newStampPalette.value.id)
-)
+const draftPalette = ref(structuredClone(initialPalette))
 
-const hasPaletteUnsavedChanges = computed(() => {
-  if (!savedStampPalette.value)
-    return !areStampPalettesEqual(newStampPalette.value, emptyStampPalette)
-  return !areStampPalettesEqual(newStampPalette.value, savedStampPalette.value)
-})
+const isDraftDirty = computed(
+  () => !areStampPalettesEqual(draftPalette.value, initialPalette)
+)
 
 const discardWithConfirm = () => {
   if (
-    !hasPaletteUnsavedChanges.value ||
+    !isDraftDirty.value ||
     window.confirm('未保存の編集内容が破棄されますが、よろしいですか？')
   ) {
+    suppressLeaveWarning.value = true
     goToSettingsStampPalette()
   }
 }
 
 const addSuccessToast = () => {
-  addInfoToast('スタンプパレットを保存しました')
+  addInfoToast('スタンプパレットを作成しました')
 }
 const addFailureToast = () => {
-  addErrorToast('スタンプパレットの保存に失敗しました')
+  addErrorToast('スタンプパレットの作成に失敗しました')
 }
 
 const finalizeWithToast = async () => {
-  if (!hasPaletteUnsavedChanges.value) {
+  if (!isDraftDirty.value) {
     goToSettingsStampPalette()
     return
   }
   try {
-    await createStampPaletteWrapper(newStampPalette.value)
+    await createStampPaletteWrapper(draftPalette.value)
+    suppressLeaveWarning.value = true
     addSuccessToast()
     goToSettingsStampPalette()
   } catch (_) {
@@ -82,14 +77,18 @@ const finalizeWithToast = async () => {
   }
 }
 
-const isConfirmed = ref(false)
+const suppressLeaveWarning = ref(false)
+
+const shouldWarnOnLeave = computed(
+  () => isDraftDirty.value && !suppressLeaveWarning.value
+)
 
 onBeforeUnmount(async () => {
-  if (!hasPaletteUnsavedChanges.value || isConfirmed.value) return
-  isConfirmed.value = true
+  if (!shouldWarnOnLeave.value) return
+  suppressLeaveWarning.value = true
   if (!window.confirm('未保存の編集内容を保存しますか？')) return
   try {
-    await createStampPaletteWrapper(newStampPalette.value)
+    await createStampPaletteWrapper(draftPalette.value)
     addSuccessToast()
   } catch (_) {
     addFailureToast()
@@ -97,11 +96,8 @@ onBeforeUnmount(async () => {
 })
 
 useBeforeUnload(
-  computed(() => hasPaletteUnsavedChanges.value && !isConfirmed.value),
-  '未保存の編集内容があります。ページを離れますか？',
-  _event => {
-    isConfirmed.value = true
-  }
+  shouldWarnOnLeave,
+  '未保存の編集内容があります。ページを離れますか？'
 )
 </script>
 
