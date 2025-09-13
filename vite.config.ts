@@ -105,7 +105,13 @@ export default defineConfig(({ mode }) => ({
         globPatterns: ['**/*.{js,css,html}' /* default */, '**/assets/**/*.svg']
       }
     }),
-    VuePlugin(),
+    VuePlugin({
+      template: {
+        compilerOptions: {
+          isCustomElement: tag => tag.startsWith('cropper-')
+        }
+      }
+    }),
     svgLoader({
       defaultImport: 'component',
       svgoConfig: {
