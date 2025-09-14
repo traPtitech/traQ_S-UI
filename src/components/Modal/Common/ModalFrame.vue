@@ -8,7 +8,7 @@
         :title="title"
         :return-button="returnButton"
         :edit-button="editButton"
-        @edit="(e: MouseEvent) => emit('edit', e)"
+        @edit="emit('edit', $event)"
       >
         <template #subtitle>
           <template v-if="subtitle">
