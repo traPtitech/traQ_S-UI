@@ -4,6 +4,8 @@
     :subtitle="name"
     icon-name="group"
     return-button
+    edit-button
+    @edit="onGroupEdit"
   >
     <user-list-item
       v-for="user in users"
@@ -29,7 +31,7 @@ import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
-
+import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
 const props = defineProps<{
   id: string
 }>()
@@ -60,6 +62,12 @@ const users = computed((): UserGroupMemberOrAdmin[] => {
       .map(m => ({ ...m, isMember: true, isAdmin: false }))
   ].filter(m => activeUsersMap.value.has(m.id))
 })
+
+const { openLinkAndClearModal } = useOpenLinkAndClearModal()
+
+const onGroupEdit = (event: MouseEvent) => {
+  openLinkAndClearModal(event, '/group-manager')
+}
 </script>
 
 <style lang="scss" module>
