@@ -9,6 +9,7 @@ import type { LocalAudioTrack } from 'livekit-client'
 import type {
   Channel,
   QallRoomStateChangedEventRoomStatesInner,
+  QallRoomWithParticipants,
   User
 } from '@traptitech/traq'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -38,6 +39,11 @@ wsListener.on('QALL_ROOM_STATE_CHANGED', async ({ roomStates }) => {
   rooms.value = await purifyRoomData(roomStates)
 })
 
+wsListener.on('reconnect', async () => {
+  const { data } = await apis.getRooms()
+  rooms.value = await purifyRoomData(data)
+})
+
 const {
   joinRoom,
   leaveRoom,
@@ -64,7 +70,7 @@ const meStore = useMeStore()
 const rtcSettings = useRtcSettings()
 
 const purifyRoomData = async (
-  data: QallRoomStateChangedEventRoomStatesInner[]
+  data: QallRoomStateChangedEventRoomStatesInner[] | QallRoomWithParticipants[]
 ): Promise<Rooms> => {
   if (!data) return []
   await bothChannelsMapInitialFetchPromise.value
@@ -77,7 +83,7 @@ const purifyRoomData = async (
           room.participants
             ?.map(p => ({
               joinedAt: p.joinedAt,
-              user: usersMap.value.get(p.identity.slice(0, -37)),
+              user: p.identity && usersMap.value.get(p.identity.slice(0, -37)),
               canPublish: p.canPublish,
               attributes: p.attributes
             }))
