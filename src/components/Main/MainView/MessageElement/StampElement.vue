@@ -108,7 +108,10 @@ watch(
   }
 )
 
-const { isLongHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isLongHovered, onMouseEnter, onMouseLeave } = useHover({
+  longHoverDuration: 500
+})
+
 const stampRoot = ref<HTMLElement | null>(null)
 const hoveredRect = ref<DOMRect | undefined>(undefined)
 const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
