@@ -17,7 +17,7 @@ import { messageMitt } from '/@/store/entities/messages'
 import { useTts } from '/@/store/app/tts'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { wsListener } from '/@/lib/websocket'
-import useMittListener from '../utils/useMittListener'
+import apis from '/@/lib/apis'
 
 type Participant = {
   user: User
@@ -34,15 +34,9 @@ type Rooms = Room[]
 
 const rooms = ref<Rooms>([])
 
-useMittListener(
-  wsListener,
-  'QALL_ROOM_STATE_CHANGED',
-  async ({ roomStates }) => {
-    purifyRoomData(roomStates).then(
-      purifiedRooms => (rooms.value = purifiedRooms)
-    )
-  }
-)
+wsListener.on('QALL_ROOM_STATE_CHANGED', async ({ roomStates }) => {
+  rooms.value = await purifyRoomData(roomStates)
+})
 
 const {
   joinRoom,
