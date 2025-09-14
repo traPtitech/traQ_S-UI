@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import axios from 'axios'
 import postcss from 'postcss'
-import { Font, woff2 } from 'fonteditor-core'
+import { createFont, woff2 } from 'fonteditor-core'
 import fs from 'fs/promises'
 import path from 'path'
 import zlib from 'zlib'
@@ -91,7 +91,7 @@ const downloadAndtransform = async (url, filename) => {
   const res = await axios.get(url, { responseType: 'arraybuffer' })
   const readBuffer = Buffer.from(res.data, 'binary')
   try {
-    const font = Font.create(readBuffer, {
+    const font = createFont(readBuffer, {
       type: 'woff2'
     })
     const writeBuffer = font.write({

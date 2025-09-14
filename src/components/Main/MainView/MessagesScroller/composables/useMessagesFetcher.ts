@@ -195,11 +195,16 @@ const useMessageFetcher = (
   }
 
   const addNewMessage = async (messageId: MessageId) => {
+    const beforeId = id.value
     await renderMessageContent(messageId)
 
     // すでに追加済みの場合は追加しない
     // https://github.com/traPtitech/traQ_S-UI/issues/1748
     if (messageIds.value.includes(messageId)) return
+    // チャンネルの移動などで id が変化していたら追加しない
+    // https://github.com/traPtitech/traQ_S-UI/issues/4218
+    if (beforeId !== id.value) return
+
     messageIds.value.push(messageId)
   }
 
