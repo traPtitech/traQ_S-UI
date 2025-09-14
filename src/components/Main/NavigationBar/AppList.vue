@@ -44,6 +44,7 @@ import ClickOutside from '/@/components/UI/ClickOutside'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import useGridLayout from '/@/composables/dom/useGridLayout'
 import { useSortable } from '/@/composables/dom/useSortable'
+import { isTouchDevice } from '/@/lib/dom/browser'
 import { useAppList } from '/@/store/ui/appList'
 
 const emit = defineEmits<{
@@ -56,7 +57,8 @@ const { containerRef } = useSortable({
     set: sortable => {
       updateAppOrder(sortable.toArray())
     }
-  }
+  },
+  delay: isTouchDevice() ? 200 : 0
 })
 const { columnCount } = useGridLayout(containerRef, { columnCount: 0 })
 
