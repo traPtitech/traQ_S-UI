@@ -1,4 +1,4 @@
-import type { Token } from 'markdown-it'
+import type Token from 'markdown-it/lib/token.d.mts'
 
 export const formatUrl = (text: string, embeddingOrigin: string) => {
   try {
@@ -11,7 +11,7 @@ export const formatUrl = (text: string, embeddingOrigin: string) => {
       }
     }
     return `${url.hostname}ドメインのURL`
-  } catch {}
+  } catch { }
 
   if (!text.includes('://')) {
     text = `https://${text}`
