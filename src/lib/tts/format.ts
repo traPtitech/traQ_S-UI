@@ -11,7 +11,7 @@ export const formatUrl = (text: string, embeddingOrigin: string) => {
       }
     }
     return `${url.hostname}ドメインのURL`
-  } catch { }
+  } catch {}
 
   if (!text.includes('://')) {
     text = `https://${text}`
