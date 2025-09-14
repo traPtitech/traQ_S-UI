@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import { constructMessagesPath } from '/@/router'
-import { useMessageQuery } from '/@/composables/router/useRoutes'
+import { useMessageQuery } from '/@/composables/utils/useMessageQuery'
 
 const messageQuery = useMessageQuery()
 

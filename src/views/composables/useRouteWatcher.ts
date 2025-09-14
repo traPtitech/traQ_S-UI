@@ -15,7 +15,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 import { useRefreshToken } from '/@/composables/dom/useRefreshToken'
-import { useMessageQuery } from '/@/composables/router/useRoutes'
+import { useMessageQuery } from '/@/composables/utils/useMessageQuery'
 
 type Views = 'none' | 'main' | 'not-found'
 
