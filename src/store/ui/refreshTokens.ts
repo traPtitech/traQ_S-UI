@@ -2,11 +2,17 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
-const useRefreshTokensPinia = defineStore('ui/refreshTokens', () => {
-  const tokens = ref(new Map<string, boolean>())
+export type RefreshTokenStoreKey = 'messages-scroller'
 
-  const refresh = (key: string) => tokens.value.set(key, !tokens.value.get(key))
-  const getToken = (key: string): PropertyKey => String(tokens.value.get(key))
+const useRefreshTokensPinia = defineStore('ui/refreshTokens', () => {
+  const tokens = ref(new Map<RefreshTokenStoreKey, boolean>())
+
+  const refresh = (key: RefreshTokenStoreKey): void => {
+    tokens.value.set(key, !tokens.value.get(key))
+  }
+
+  const getToken = (key: RefreshTokenStoreKey): string =>
+    String(tokens.value.get(key))
 
   return { tokens, refresh, getToken }
 })

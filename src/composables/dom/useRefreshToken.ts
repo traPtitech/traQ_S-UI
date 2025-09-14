@@ -1,7 +1,10 @@
 import { computed } from 'vue'
-import { useRefreshTokens } from '/@/store/ui/refreshTokens'
+import {
+  useRefreshTokens,
+  type RefreshTokenStoreKey
+} from '/@/store/ui/refreshTokens'
 
-export const useRefreshToken = (key: string) => {
+export const useRefreshToken = (key: RefreshTokenStoreKey) => {
   const { refresh: refreshImpl, getToken } = useRefreshTokens()
 
   const refresh = () => refreshImpl(key)
