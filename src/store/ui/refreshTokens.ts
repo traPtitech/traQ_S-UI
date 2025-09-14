@@ -2,7 +2,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
-const useRefreshTokensPinia = defineStore('app/refreshTokens', () => {
+const useRefreshTokensPinia = defineStore('ui/refreshTokens', () => {
   const tokens = ref(new Map<string, boolean>())
 
   const refresh = (key: string) => tokens.value.set(key, !tokens.value.get(key))
