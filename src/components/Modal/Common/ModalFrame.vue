@@ -7,6 +7,8 @@
         :icon-mdi="iconMdi"
         :title="title"
         :return-button="returnButton"
+        :edit-button="editButton"
+        @edit="emit('edit', $event)"
       >
         <template #subtitle>
           <template v-if="subtitle">
@@ -34,13 +36,19 @@ withDefaults(
     title: string
     subtitle?: string
     returnButton?: boolean
+    editButton?: boolean
   }>(),
   {
     iconMdi: false,
     subtitle: '',
-    returnButton: false
+    returnButton: false,
+    editButton: false
   }
 )
+
+const emit = defineEmits<{
+  edit: [event: MouseEvent]
+}>()
 
 const { clearModal } = useModalStore()
 </script>

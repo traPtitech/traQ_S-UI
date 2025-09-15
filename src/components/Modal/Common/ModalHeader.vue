@@ -15,12 +15,20 @@
         <slot name="subtitle" />
       </h2>
     </div>
+    <icon-button
+      v-if="editButton"
+      :class="$style.editButton"
+      icon-name="pencil"
+      icon-mdi
+      @mousedown="emit('edit', $event)"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import ModalReturnButton from './ModalReturnButton.vue'
+import IconButton from '/@/components/UI/IconButton.vue'
 
 withDefaults(
   defineProps<{
@@ -29,13 +37,18 @@ withDefaults(
     title: string
     subtitle?: string
     returnButton?: boolean
+    editButton?: boolean
   }>(),
   {
     iconMdi: false,
     subtitle: '',
-    returnButton: false
+    returnButton: false,
+    editButton: false
   }
 )
+const emit = defineEmits<{
+  edit: [event: MouseEvent]
+}>()
 </script>
 
 <style lang="scss" module>
@@ -81,5 +94,9 @@ withDefaults(
 }
 .icon {
   margin-right: 16px;
+}
+.editButton {
+  @include color-ui-secondary;
+  cursor: pointer;
 }
 </style>
