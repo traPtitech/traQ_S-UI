@@ -20,7 +20,7 @@ export type Config = Readonly<{
     vapidKey: string
   }>
   /**
-   * Qall機能を無効化するかどうか
+   * Qall機能を有効化するかどうか
    * 省略時は無効化
    */
   enableQall?: boolean
