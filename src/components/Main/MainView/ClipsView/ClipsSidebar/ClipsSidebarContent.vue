@@ -23,12 +23,7 @@
       </ContentEditor>
     </SidebarContentContainerFoldable>
     <div :class="$style.item">
-      <FormButton
-        label="削除"
-        type="secondary"
-        is-danger
-        @click="deleteClip"
-      />
+      <FormButton label="削除" type="secondary" is-danger @click="deleteClip" />
     </div>
   </div>
 </template>

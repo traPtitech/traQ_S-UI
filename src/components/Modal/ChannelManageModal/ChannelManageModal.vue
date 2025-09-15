@@ -14,10 +14,7 @@
       />
       <label :class="$style.toggle">
         アーカイブ
-        <AToggle
-          v-model="manageState.archived"
-          :disabled="!canToggleArchive"
-        />
+        <AToggle v-model="manageState.archived" :disabled="!canToggleArchive" />
       </label>
       <p v-if="!canToggleArchive" :class="$style.cantToggleArchiveMessage">
         このチャンネルはアーカイブチャンネルの子チャンネルなので、アーカイブ状態を解除できません。

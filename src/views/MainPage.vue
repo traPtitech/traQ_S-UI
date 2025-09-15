@@ -12,10 +12,7 @@
     @touchcancel="touchendHandler"
   >
     <div :class="$style.homeContainer">
-      <NavigationBar
-        v-show="shouldShowNav"
-        :class="$style.navigationWrapper"
-      />
+      <NavigationBar v-show="shouldShowNav" :class="$style.navigationWrapper" />
       <MainViewFrame
         v-if="routeWatcherState.view === 'main'"
         :is-active="isMainViewActive"

@@ -9,11 +9,7 @@
         is-danger
         @click="onLogoutClick"
       />
-      <FormButton
-        label="全セッション破棄"
-        is-danger
-        @click="onSessionDelete"
-      />
+      <FormButton label="全セッション破棄" is-danger @click="onSessionDelete" />
     </div>
   </section>
 </template>

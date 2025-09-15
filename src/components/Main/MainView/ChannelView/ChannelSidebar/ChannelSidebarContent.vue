@@ -11,10 +11,7 @@
       :qall-user-ids="qallUserIds"
       :class="$style.sidebarItem"
     />
-    <ChannelSidebarTopic
-      :class="$style.sidebarItem"
-      :channel-id="channelId"
-    />
+    <ChannelSidebarTopic :class="$style.sidebarItem" :channel-id="channelId" />
     <ChannelSidebarPinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.sidebarItem"

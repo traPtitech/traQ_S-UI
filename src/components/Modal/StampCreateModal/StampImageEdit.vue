@@ -5,11 +5,7 @@
     </div>
     <div :class="$style.buttonContainer">
       <FormButton label="キャンセル" type="tertiary" @click="cancel" />
-      <FormButton
-        label="次へ"
-        :loading="isChecking"
-        @click="checkStampImage"
-      />
+      <FormButton label="次へ" :loading="isChecking" @click="checkStampImage" />
     </div>
   </div>
 </template>

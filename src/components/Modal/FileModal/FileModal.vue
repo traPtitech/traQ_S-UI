@@ -6,14 +6,8 @@
       :data-fullsize="$boolAttr(isFullsizeModal)"
     >
       <FileModalImage v-if="fileType === 'image'" :file-id="fileMeta.id" />
-      <FileModalVideo
-        v-else-if="fileType === 'video'"
-        :file-id="fileMeta.id"
-      />
-      <FileModalAudio
-        v-else-if="fileType === 'audio'"
-        :file-id="fileMeta.id"
-      />
+      <FileModalVideo v-else-if="fileType === 'video'" :file-id="fileMeta.id" />
+      <FileModalAudio v-else-if="fileType === 'audio'" :file-id="fileMeta.id" />
       <FileModalFile v-else :file-id="fileMeta.id" />
     </div>
   </ClickOutside>

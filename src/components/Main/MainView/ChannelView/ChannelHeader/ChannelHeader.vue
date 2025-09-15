@@ -3,10 +3,7 @@
     <template #header>
       <div :class="$style.header">
         <ChannelHeaderChannelName :channel-id="channelId" />
-        <ChannelHeaderRelationButton
-          :key="channelId"
-          :channel-id="channelId"
-        />
+        <ChannelHeaderRelationButton :key="channelId" :channel-id="channelId" />
         <ChannelHeaderTopic :class="$style.topic" :channel-id="channelId" />
       </div>
     </template>

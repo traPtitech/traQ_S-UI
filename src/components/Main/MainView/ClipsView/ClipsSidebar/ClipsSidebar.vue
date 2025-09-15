@@ -3,11 +3,7 @@
     <template #page>
       <PrimaryViewSidebarPage>
         <template #header>
-          <SidebarHeader
-            icon-name="bookmark"
-            icon-mdi
-            :text="clipFolderName"
-          />
+          <SidebarHeader icon-name="bookmark" icon-mdi :text="clipFolderName" />
         </template>
         <template #content>
           <ClipsSidebarContent :clip-folder-id="clipFolderId" />
