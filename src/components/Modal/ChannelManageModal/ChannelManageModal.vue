@@ -1,20 +1,20 @@
 <template>
-  <modal-frame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
+  <ModalFrame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
     <div :class="$style.container">
-      <form-input
+      <FormInput
         v-model="manageState.name"
         label="チャンネル名"
         :max-length="20"
         focus-on-mount
       />
-      <form-selector
+      <FormSelector
         v-model="manageState.parent"
         label="親チャンネル"
         :options="channelOptions"
       />
       <label :class="$style.toggle">
         アーカイブ
-        <a-toggle
+        <AToggle
           v-model="manageState.archived"
           :disabled="!canToggleArchive"
         />
@@ -24,16 +24,16 @@
       </p>
       <label :class="$style.toggle">
         強制通知
-        <a-toggle v-model="manageState.force" />
+        <AToggle v-model="manageState.force" />
       </label>
-      <form-button
+      <FormButton
         label="変更"
         :disabled="!isManageEnabled"
         :class="$style.button"
         @click="manageChannel"
       />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">

@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
-    <authenticate-header :class="$style.header" title="OAuth認可" />
-    <client-description
+    <AuthenticateHeader :class="$style.header" title="OAuth認可" />
+    <ClientDescription
       v-if="client"
       :class="[$style.item, $style.clientDesc]"
       :client="client"
@@ -10,18 +10,18 @@
     <p v-if="client" :class="$style.item">
       {{ client.name }}がtraQアカウントへのアクセスを要求しています
     </p>
-    <client-scopes :scopes="scopes" />
+    <ClientScopes :scopes="scopes" />
     <div :class="$style.error">
       <span v-if="error">{{ error }}</span>
     </div>
     <div :class="$style.buttons">
-      <authenticate-button
+      <AuthenticateButton
         type="secondary"
         :class="$style.button"
         label="キャンセル"
         @click="deny"
       />
-      <authenticate-button
+      <AuthenticateButton
         type="primary"
         :class="$style.button"
         label="許可"

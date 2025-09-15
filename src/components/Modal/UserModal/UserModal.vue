@@ -1,12 +1,12 @@
 <template>
-  <click-outside stop @click-outside="clearModal">
+  <ClickOutside stop @click-outside="clearModal">
     <div :class="$style.wrapper" data-testid="usermodal">
-      <close-button
+      <CloseButton
         :size="isMobile ? 24 : 32"
         :class="$style.close"
         @close="clearModal"
       />
-      <user-icon
+      <UserIcon
         v-if="!isMobile"
         :user-id="id"
         prevent-modal
@@ -14,19 +14,19 @@
         :style="styles.icon"
       />
       <div :class="$style.content" :style="styles.content">
-        <feature-container :user="user" :detail="userDetail" />
-        <navigation-selector
+        <FeatureContainer :user="user" :detail="userDetail" />
+        <NavigationSelector
           :current-navigation="currentNavigation"
           @navigation-change="onNavigationChange"
         />
-        <navigation-content
+        <NavigationContent
           :current-navigation="currentNavigation"
           :user="user"
           :detail="userDetail"
         />
       </div>
     </div>
-  </click-outside>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>

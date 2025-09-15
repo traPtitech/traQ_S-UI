@@ -6,13 +6,13 @@
     </p>
   </div>
   <div :class="$style.buttons">
-    <authenticate-button
+    <AuthenticateButton
       :class="$style.button"
       type="primary"
       label="上のアカウントでログイン"
       @click="emit('login')"
     />
-    <authenticate-button
+    <AuthenticateButton
       :class="$style.button"
       type="secondary"
       label="ほかでログイン"

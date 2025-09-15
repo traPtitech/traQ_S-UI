@@ -1,25 +1,25 @@
 <template>
   <section :class="$style.browserTab">
-    <notification-state />
-    <citation-notification />
-    <eco-mode v-model="state.ecoMode" />
-    <open-mode
+    <NotificationState />
+    <CitationNotification />
+    <EcoMode v-model="state.ecoMode" />
+    <OpenMode
       v-model:open-mode="state.openMode"
       v-model:open-channel-name="state.openChannelName"
     />
-    <prioritize-channel-toggle
+    <PrioritizeChannelToggle
       v-model="state.prioritizeStarredChannel"
       title="未読画面でお気に入りを優先表示"
       description="未読チャンネル一覧でお気に入りチャンネルを優先的に表示するようにします。"
     />
-    <prioritize-channel-toggle
+    <PrioritizeChannelToggle
       v-model="state.prioritizeNotifiedChannel"
       title="未読画面で通知を優先表示"
       description="未読チャンネル一覧で通知オンのチャンネルを優先的に表示するようにします。"
     />
-    <send-key v-model:send-with-modifier-key="state.sendWithModifierKey" />
-    <modifier-keys v-model:modifier-key="state.modifierKey" />
-    <cache-manager />
+    <SendKey v-model:send-with-modifier-key="state.sendWithModifierKey" />
+    <ModifierKeys v-model:modifier-key="state.modifierKey" />
+    <CacheManager />
   </section>
 </template>
 

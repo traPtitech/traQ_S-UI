@@ -1,12 +1,12 @@
 <template>
-  <modal-frame :title="title" :subtitle="subtitle" icon-name="hash">
-    <form-selector
+  <ModalFrame :title="title" :subtitle="subtitle" icon-name="hash">
+    <FormSelector
       v-if="parentChannelId === undefined"
       v-model="state.parentChannelId"
       label="親チャンネル"
       :options="channelOptions"
     />
-    <form-input
+    <FormInput
       v-model="state.channelName"
       label="チャンネル名"
       :class="$style.input"
@@ -18,13 +18,13 @@
       <span :class="$style.newChannelPath">{{ newChannelPath }}</span>
       が新たに作成されます。(作成後のチャンネルの削除や移動、チャンネル名の変更はできません。)
     </p>
-    <form-button
+    <FormButton
       label="作成"
       :disabled="!isCreateEnabled"
       :class="$style.button"
       @click="createChannel"
     />
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">

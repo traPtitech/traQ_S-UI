@@ -12,14 +12,14 @@
         :height="fileThumbnailSize.height"
         :width="fileThumbnailSize.width"
       />
-      <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
+      <PlayIcon v-if="isAnimatedImage" :class="$style.playIcon" />
     </router-link>
     <router-link v-else :to="fileLink" :class="$style.container">
       <!--
         CSSで固定値指定なのでheight, widthはつけない
       -->
       <img draggable="false" :alt="name" :src="fileThumbnailPath" />
-      <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
+      <PlayIcon v-if="isAnimatedImage" :class="$style.playIcon" />
     </router-link>
   </template>
   <div v-else :class="$style.container">表示できない画像です</div>

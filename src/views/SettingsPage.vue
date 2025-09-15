@@ -1,11 +1,11 @@
 <template>
   <div v-if="isLoginCheckDone" :class="$style.container">
-    <mobile-setting-modal v-if="isMobile">
+    <MobileSettingModal v-if="isMobile">
       <router-view />
-    </mobile-setting-modal>
-    <desktop-setting-modal v-else>
+    </MobileSettingModal>
+    <DesktopSettingModal v-else>
       <router-view />
-    </desktop-setting-modal>
+    </DesktopSettingModal>
   </div>
   <div v-else />
 </template>

@@ -3,7 +3,7 @@
     <div :class="$style.description">
       <h3>この端末/ブラウザでの通知</h3>
       <div>
-        <form-button
+        <FormButton
           v-if="permission === 'default'"
           label="設定"
           @click="requestPermission"
@@ -12,7 +12,7 @@
       </div>
     </div>
     <div>
-      <a-toggle :model-value="permission === 'granted'" disabled />
+      <AToggle :model-value="permission === 'granted'" disabled />
     </div>
   </div>
 </template>

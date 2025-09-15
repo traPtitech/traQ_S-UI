@@ -4,7 +4,7 @@
     :class="$style.container"
     :data-is-white="$boolAttr(isWhite)"
   >
-    <file-description
+    <FileDescription
       :file-id="fileId"
       :is-white="isWhite"
       is-ellipsis

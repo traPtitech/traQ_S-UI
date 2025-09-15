@@ -2,13 +2,13 @@
   <div>
     <div :class="$style.header">
       <div :class="$style.label">メンバー</div>
-      <a-icon
+      <AIcon
         name="plus-circle-outline"
         mdi
         :class="$style.controlIcon"
         @click="onClickAdd"
       />
-      <a-icon
+      <AIcon
         name="close"
         mdi
         :class="$style.controlIcon"
@@ -16,7 +16,7 @@
       />
     </div>
     <div :class="$style.list">
-      <group-user
+      <GroupUser
         v-for="member in members"
         :id="member.id"
         :key="member.id"
@@ -27,7 +27,7 @@
         <div :class="$style.role">
           {{ member.role }}
         </div>
-      </group-user>
+      </GroupUser>
     </div>
   </div>
 </template>

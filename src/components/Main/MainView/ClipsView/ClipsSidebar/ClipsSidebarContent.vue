@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
-    <sidebar-content-container title="名前" :class="$style.item">
-      <content-editor
+    <SidebarContentContainer title="名前" :class="$style.item">
+      <ContentEditor
         v-model="localName"
         v-model:is-editing="isNameEditing"
         :max-length="30"
@@ -9,21 +9,21 @@
         <template #default="slotProps">
           {{ slotProps.content }}
         </template>
-      </content-editor>
-    </sidebar-content-container>
-    <sidebar-content-container-foldable title="説明" :class="$style.item">
-      <content-editor
+      </ContentEditor>
+    </SidebarContentContainer>
+    <SidebarContentContainerFoldable title="説明" :class="$style.item">
+      <ContentEditor
         v-model="localDescription"
         v-model:is-editing="isDescriptionEditing"
         :max-length="1000"
       >
         <template #default="slotProps">
-          <markdown-preview :content="slotProps.content" accept-action inline />
+          <MarkdownPreview :content="slotProps.content" accept-action inline />
         </template>
-      </content-editor>
-    </sidebar-content-container-foldable>
+      </ContentEditor>
+    </SidebarContentContainerFoldable>
     <div :class="$style.item">
-      <form-button
+      <FormButton
         label="削除"
         type="secondary"
         is-danger

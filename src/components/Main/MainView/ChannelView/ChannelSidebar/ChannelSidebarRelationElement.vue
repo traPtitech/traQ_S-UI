@@ -12,7 +12,7 @@
       </router-link>
     </div>
     <div v-if="topic" :class="$style.topic">
-      <markdown-preview
+      <MarkdownPreview
         :class="$style.topic"
         :content="topic"
         :title="topic"

@@ -11,7 +11,7 @@
     <template v-else>
       <img :src="previewUrl" :class="$style.image" />
       <div :class="$style.icon">
-        <a-icon v-if="showPlayIcon" mdi name="play" :size="32" />
+        <AIcon v-if="showPlayIcon" mdi name="play" :size="32" />
       </div>
     </template>
   </div>

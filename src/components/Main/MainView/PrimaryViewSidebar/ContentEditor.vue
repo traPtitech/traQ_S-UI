@@ -1,12 +1,12 @@
 <template>
   <div :class="$style.container">
     <div v-if="isEditingValue && !props.isLoading">
-      <textarea-autosize
+      <TextareaAutosize
         ref="textareaRef"
         v-model="modelValue"
         :class="$style.editor"
       />
-      <length-count :val="modelValue" :max-length="maxLength" />
+      <LengthCount :val="modelValue" :max-length="maxLength" />
     </div>
     <div v-else :class="$style.content" :data-is-empty="$boolAttr(isEmpty)">
       <slot :content="content" />
@@ -18,8 +18,8 @@
       :class="$style.button"
       @click="onButtonClick"
     >
-      <a-icon v-if="isEditingValue" :size="20" name="check" mdi />
-      <a-icon v-else :size="20" name="pencil-outline" mdi />
+      <AIcon v-if="isEditingValue" :size="20" name="check" mdi />
+      <AIcon v-else :size="20" name="pencil-outline" mdi />
     </button>
   </div>
 </template>

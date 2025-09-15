@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <indicator-dot
+    <IndicatorDot
       :class="$style.dot"
       :data-is-online="$boolAttr(isOnline)"
       :size="size"

@@ -1,5 +1,5 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="グループ"
     :subtitle="name"
     icon-name="group"
@@ -7,7 +7,7 @@
     edit-button
     @edit="onGroupEdit"
   >
-    <user-list-item
+    <UserListItem
       v-for="user in users"
       :key="user.id"
       :user-id="user.id"
@@ -20,8 +20,8 @@
       <div v-if="user.isAdmin && !user.isMember" :class="$style.nonMemberAdmin">
         グループ外管理者
       </div>
-    </user-list-item>
-  </modal-frame>
+    </UserListItem>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>

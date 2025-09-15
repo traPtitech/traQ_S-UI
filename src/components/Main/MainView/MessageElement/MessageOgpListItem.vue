@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <message-ogp-content-video
+    <MessageOgpContentVideo
       v-if="isVideoType && imageUrl && videoUrl"
       :url="ogpData.url"
       :title="ogpData.title"
@@ -8,7 +8,7 @@
       :preview-url="imageUrl"
       :embedded-url="videoUrl"
     />
-    <message-ogp-content-website
+    <MessageOgpContentWebsite
       v-else
       :url="ogpData.url"
       :title="ogpData.title"

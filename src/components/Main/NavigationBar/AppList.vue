@@ -1,9 +1,9 @@
 <template>
-  <click-outside @click-outside="close">
+  <ClickOutside @click-outside="close">
     <div :class="$style.container">
       <div :class="$style.header">
         <span :class="$style.title">サービス</span>
-        <close-button
+        <CloseButton
           :class="$style.close"
           :size="32"
           :border-width="2"
@@ -11,7 +11,7 @@
         />
       </div>
       <div :class="$style.list">
-        <app-list-item
+        <AppListItem
           v-for="app in apps"
           :key="app.label"
           :icon-path="app.iconPath"
@@ -20,7 +20,7 @@
         />
       </div>
     </div>
-  </click-outside>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>

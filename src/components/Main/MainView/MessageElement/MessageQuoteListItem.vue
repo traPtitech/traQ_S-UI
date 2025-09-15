@@ -1,12 +1,12 @@
 <template>
   <div v-if="shouldShow" :class="$style.body" data-is-shown>
-    <user-icon
+    <UserIcon
       :class="$style.userIcon"
       :user-id="message.userId"
       :size="24"
       prevent-modal
     />
-    <message-quote-list-item-header
+    <MessageQuoteListItemHeader
       :class="$style.messageHeader"
       :user-id="message.userId"
     />
@@ -17,9 +17,9 @@
         :class="[$style.markdownContainer, oversized && $style.oversized]"
         :data-expanded="!isFold"
       >
-        <markdown-content :content="content" />
+        <MarkdownContent :content="content" />
       </div>
-      <fold-button
+      <FoldButton
         v-if="oversized"
         :is-fold="isFold"
         :class="$style.foldButton"
@@ -31,7 +31,7 @@
         @click="toggleFold"
       />
     </div>
-    <message-quote-list-item-footer :class="$style.footer" :message="message" />
+    <MessageQuoteListItemFooter :class="$style.footer" :message="message" />
   </div>
   <div v-else :class="$style.body">
     存在しないか表示できないメッセージの引用です
