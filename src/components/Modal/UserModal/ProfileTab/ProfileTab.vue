@@ -1,15 +1,15 @@
 <template>
   <div>
-    <account-state :class="$style.section" :state="user.state" />
-    <bio-text :class="$style.section" :bio="detail?.bio" />
-    <home-channel :channel-id="detail?.homeChannel" :class="$style.section" />
-    <account-list
+    <AccountState :class="$style.section" :state="user.state" />
+    <BioText :class="$style.section" :bio="detail?.bio" />
+    <HomeChannel :channel-id="detail?.homeChannel" :class="$style.section" />
+    <AccountList
       :class="$style.section"
       :bot="user.bot"
       :name="user.name"
       :twitter-id="detail?.twitterId"
     />
-    <last-online
+    <LastOnline
       :class="$style.section"
       :last-online="detail?.lastOnline ?? undefined"
     />

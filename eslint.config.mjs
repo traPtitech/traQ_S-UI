@@ -1,13 +1,13 @@
+import { FlatCompat } from '@eslint/eslintrc'
+import js from '@eslint/js'
+import stylistic from '@stylistic/eslint-plugin'
+import prettier from 'eslint-config-prettier'
+import cypress from 'eslint-plugin-cypress'
 import unusedImports from 'eslint-plugin-unused-imports'
+import vueLint from 'eslint-plugin-vue'
 import globals from 'globals'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import js from '@eslint/js'
-import { FlatCompat } from '@eslint/eslintrc'
-import stylistic from '@stylistic/eslint-plugin'
-import cypress from 'eslint-plugin-cypress'
-import vueLint from 'eslint-plugin-vue'
-import prettier from 'eslint-config-prettier'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -44,8 +44,8 @@ export default [
     },
 
     languageOptions: {
-      ecmaVersion: 5,
-      sourceType: 'script',
+      ecmaVersion: 'latest',
+      sourceType: 'module',
 
       parserOptions: {
         parser: '@typescript-eslint/parser'
@@ -108,7 +108,7 @@ export default [
       ],
 
       'vue/component-api-style': ['error', ['script-setup']],
-      'vue/component-name-in-template-casing': ['error', 'kebab-case'],
+      'vue/component-name-in-template-casing': ['error', 'PascalCase'],
 
       'vue/v-on-event-hyphenation': [
         'error',
@@ -131,6 +131,7 @@ export default [
     ignores: ['*/**/*.cjs'],
 
     languageOptions: {
+      sourceType: 'script',
       globals: {
         ...globals.node
       }

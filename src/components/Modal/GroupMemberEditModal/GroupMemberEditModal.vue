@@ -1,19 +1,19 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="グループメンバー編集"
     :subtitle="`${groupName} - ${userDisplayName}`"
     icon-name="group"
   >
-    <form-input
+    <FormInput
       v-model="role"
       :class="$style.item"
       label="役割"
       :max-length="30"
     />
     <div :class="$style.editButtonWrapper">
-      <form-button label="編集" @click="edit" />
+      <FormButton label="編集" @click="edit" />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>

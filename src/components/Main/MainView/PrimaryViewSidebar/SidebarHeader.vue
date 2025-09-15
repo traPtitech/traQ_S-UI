@@ -1,6 +1,6 @@
 <template>
   <h2 :class="$style.title">
-    <a-icon
+    <AIcon
       v-if="iconName"
       :class="$style.icon"
       :name="iconName"

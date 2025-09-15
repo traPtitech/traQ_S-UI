@@ -5,7 +5,7 @@
       <p v-if="cacheData && cacheData.usage" :class="$style.usage">
         <span>{{ prettifyFileSize(cacheData.usage) }}</span>
       </p>
-      <form-button
+      <FormButton
         :class="$style.button"
         label="削除する"
         type="secondary"

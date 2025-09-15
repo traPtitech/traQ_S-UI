@@ -1,13 +1,13 @@
 <template>
   <div :class="$style.container">
-    <form-selector
+    <FormSelector
       v-model="channelId"
       :class="$style.item"
       label="投稿先チャンネル"
       :options="channelOptions"
     />
-    <share-target-message-input :class="[$style.item, $style.input]" />
-    <form-button
+    <ShareTargetMessageInput :class="[$style.item, $style.input]" />
+    <FormButton
       :class="[$style.item, $style.button]"
       label="送信"
       :loading="isPosting"

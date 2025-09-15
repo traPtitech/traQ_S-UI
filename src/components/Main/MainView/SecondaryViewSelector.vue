@@ -1,5 +1,5 @@
 <template>
-  <null-view v-if="secondaryView" :class="$style.secondary" />
+  <NullView v-if="secondaryView" :class="$style.secondary" />
 </template>
 
 <script lang="ts" setup>

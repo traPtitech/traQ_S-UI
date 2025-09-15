@@ -1,15 +1,15 @@
 <template>
-  <sidebar-content-container-foldable title="トピック">
-    <content-editor
+  <SidebarContentContainerFoldable title="トピック">
+    <ContentEditor
       v-model="localTopic"
       v-model:is-editing="isEditing"
       :max-length="500"
     >
       <template #default="slotProps">
-        <markdown-preview :content="slotProps.content" accept-action inline />
+        <MarkdownPreview :content="slotProps.content" accept-action inline />
       </template>
-    </content-editor>
-  </sidebar-content-container-foldable>
+    </ContentEditor>
+  </SidebarContentContainerFoldable>
 </template>
 
 <script lang="ts" setup>

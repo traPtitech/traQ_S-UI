@@ -5,19 +5,19 @@
     @click="emit('click')"
   >
     <div v-if="isActive" :class="$style.indicator" />
-    <a-stamp
+    <AStamp
       v-if="stampSet.type === 'palette'"
       :stamp-id="pickThumbnail(stampSet.id)"
       :size="24"
       :class="$style.paletteStamp"
     />
-    <a-icon
+    <AIcon
       v-else-if="stampSet.type === 'category'"
       :name="`stampCategory/${stampSet.id}`"
       :size="24"
       :class="$style.icon"
     />
-    <a-icon
+    <AIcon
       v-else-if="stampSet.type === 'history'"
       mdi
       name="history"

@@ -1,12 +1,12 @@
 <template>
-  <modal-frame title="新規スタンプ登録" :subtitle="subtitle">
-    <stamp-image-edit
+  <ModalFrame title="新規スタンプ登録" :subtitle="subtitle">
+    <StampImageEdit
       v-if="step === 'image'"
       :file="file"
       @update-file="updateFile"
     />
-    <stamp-info-edit v-else :stamp-image="stampImage" @back="backToImageEdit" />
-  </modal-frame>
+    <StampInfoEdit v-else :stamp-image="stampImage" @back="backToImageEdit" />
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>

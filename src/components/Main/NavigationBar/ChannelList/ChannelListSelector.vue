@@ -5,7 +5,7 @@
     @keydown.left="onKeydown"
     @keydown.right="onKeydown"
   >
-    <a-tab
+    <ATab
       ref="allTabRef"
       label="すべて"
       :aria-selected="!isStarred"
@@ -13,7 +13,7 @@
       :tabindex="isStarred ? -1 : 0"
       @click="unselectStarFilter"
     />
-    <a-tab
+    <ATab
       ref="staredTabRef"
       label="お気に入り"
       :aria-selected="isStarred"

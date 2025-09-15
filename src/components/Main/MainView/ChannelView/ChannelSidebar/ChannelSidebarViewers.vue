@@ -1,19 +1,19 @@
 <template>
-  <sidebar-content-container
+  <SidebarContentContainer
     v-if="!isDetailOpen"
     large-padding
     clickable
     @toggle="toggle"
   >
-    <user-icon-ellipsis-list
+    <UserIconEllipsisList
       direction="row"
       transition="fade-right"
       :user-ids="viewerIds"
       :inactive-user-ids="inactiveViewerIds"
       @toggle="toggle"
     />
-  </sidebar-content-container>
-  <channel-sidebar-viewers-detail
+  </SidebarContentContainer>
+  <ChannelSidebarViewersDetail
     v-else
     :viewer-ids="viewerIds"
     :inactive-viewer-ids="inactiveViewerIds"

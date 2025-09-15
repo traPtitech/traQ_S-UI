@@ -5,8 +5,8 @@
     </span>
     <!-- デザインが確定したら消すか消さないか決める -->
     <template v-if="qallUserIds.length > 0">
-      <a-icon :class="$style.qallIcon" :size="16" mdi name="phone-outline" />
-      <user-icon-ellipsis-list
+      <AIcon :class="$style.qallIcon" :size="16" mdi name="phone-outline" />
+      <UserIconEllipsisList
         :class="$style.qallUserList"
         direction="row"
         transition="fade-right"

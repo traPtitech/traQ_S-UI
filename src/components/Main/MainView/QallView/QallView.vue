@@ -269,7 +269,7 @@ const toggleDanmaku = () => {
                 <ClickOutside @click-outside="showParticipants = false">
                   <div v-if="showParticipants" :class="$style.participantsList">
                     <div :class="$style.participantsContent">
-                      <participant-list
+                      <ParticipantList
                         v-for="participant in filteredParticipants"
                         :key="participant.user.id"
                         :participant="participant.user"

@@ -7,7 +7,7 @@
   >
     <transition v-if="!isMinimum" name="quick-reaction">
       <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
-        <a-stamp
+        <AStamp
           v-for="stamp in recentStamps"
           :key="stamp"
           :stamp-id="stamp"
@@ -25,7 +25,7 @@
       "
     >
       <template v-if="!isMinimum && isMobile">
-        <a-icon
+        <AIcon
           v-if="showQuickReaction"
           mdi
           name="chevron-right"
@@ -33,7 +33,7 @@
           :class="$style.icon"
           @click="toggleQuickReaction"
         />
-        <a-icon
+        <AIcon
           v-else
           mdi
           name="chevron-left"
@@ -42,7 +42,7 @@
           @click="toggleQuickReaction"
         />
       </template>
-      <a-icon
+      <AIcon
         v-if="!isMinimum"
         mdi
         name="emoticon-outline"
@@ -50,7 +50,7 @@
         :class="$style.icon"
         @click="toggleStampPicker"
       />
-      <a-icon
+      <AIcon
         v-if="isMine"
         mdi
         name="pencil"
@@ -58,14 +58,14 @@
         :class="$style.icon"
         @click="editMessage"
       />
-      <a-icon
+      <AIcon
         mdi
         name="link"
         :size="28"
         :class="$style.icon"
         @click="copyLink"
       />
-      <a-icon
+      <AIcon
         :class="$style.icon"
         :size="28"
         mdi
@@ -73,7 +73,7 @@
         @click="onDotsClick"
       />
     </div>
-    <message-context-menu
+    <MessageContextMenu
       v-if="contextMenuPosition"
       :position="contextMenuPosition"
       :message-id="messageId"

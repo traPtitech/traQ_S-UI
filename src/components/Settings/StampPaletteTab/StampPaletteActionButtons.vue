@@ -1,8 +1,8 @@
 <template>
   <div>
     <div :class="$style.buttons">
-      <form-button label="キャンセル" type="tertiary" @click="emit('cancel')" />
-      <form-button
+      <FormButton label="キャンセル" type="tertiary" @click="emit('cancel')" />
+      <FormButton
         label="確定"
         type="primary"
         :disabled="!isPaletteValid"

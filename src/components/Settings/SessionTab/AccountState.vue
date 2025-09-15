@@ -2,18 +2,14 @@
   <section>
     <h3 :class="$style.header">アカウント</h3>
     <div>
-      <form-button
+      <FormButton
         label="ログアウト"
         :class="$style.logout"
         type="secondary"
         is-danger
         @click="onLogoutClick"
       />
-      <form-button
-        label="全セッション破棄"
-        is-danger
-        @click="onSessionDelete"
-      />
+      <FormButton label="全セッション破棄" is-danger @click="onSessionDelete" />
     </div>
   </section>
 </template>

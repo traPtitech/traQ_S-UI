@@ -9,23 +9,23 @@
       :class="$style.toNewMessageButton"
       @click="onClickToNewMessageButton"
     >
-      最新メッセージ<a-icon name="arrow-down" mdi />
+      最新メッセージ<AIcon name="arrow-down" mdi />
     </button>
-    <message-input-typing-users :typing-users="typingUsers" />
-    <message-input-key-guide :show="showKeyGuide" />
-    <message-input-upload-progress v-if="isPosting" :progress="progress" />
-    <message-input-preview
+    <MessageInputTypingUsers :typing-users="typingUsers" />
+    <MessageInputKeyGuide :show="showKeyGuide" />
+    <MessageInputUploadProgress v-if="isPosting" :progress="progress" />
+    <MessageInputPreview
       v-if="isPreviewShown && state.text !== ''"
       :class="$style.preview"
       :text="state.text"
     />
-    <message-input-file-list :class="$style.fileList" :channel-id="channelId" />
+    <MessageInputFileList :class="$style.fileList" :channel-id="channelId" />
     <div v-if="isArchived" :class="$style.inputContainer" data-is-archived>
-      <a-icon :class="$style.controls" name="archive" mdi />
+      <AIcon :class="$style.controls" name="archive" mdi />
       <div>アーカイブチャンネルのため、投稿できません</div>
     </div>
     <div v-else :class="$style.inputContainer">
-      <message-input-left-controls
+      <MessageInputLeftControls
         v-model:is-left-controls-expanded="isLeftControlsExpanded"
         v-model:is-preview-shown="isPreviewShown"
         v-model:is-input-text-area-expanded="isInputTextAreaExpanded"
@@ -36,7 +36,7 @@
           textareaComponentRef?.textareaAutosizeRef?.autosizeUpdateTextarea
         "
       />
-      <message-input-text-area
+      <MessageInputTextArea
         ref="textareaComponentRef"
         v-model="state.text"
         v-model:show-text-area-expand-button="showTextAreaExpandButton"
@@ -53,7 +53,7 @@
         @modifier-key-up="onModifierKeyUp"
         @post-message="postMessage"
       />
-      <message-input-right-controls
+      <MessageInputRightControls
         :class="$style.rightControls"
         :can-post-message="canPostMessage"
         :is-posting="isPosting"

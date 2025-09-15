@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <markdown-preview :content="topic" :title="topic" inline />
+    <MarkdownPreview :content="topic" :title="topic" inline />
   </div>
 </template>
 

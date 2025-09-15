@@ -1,14 +1,14 @@
 <template>
-  <modal-frame title="クリップ" icon-mdi icon-name="bookmark">
+  <ModalFrame title="クリップ" icon-mdi icon-name="bookmark">
     <template #subtitle>
-      <markdown-preview
+      <MarkdownPreview
         :class="$style.subtitle"
         :content="messageContent"
         inline
       />
     </template>
     <template #default>
-      <clip-folder-element
+      <ClipFolderElement
         v-for="clipFolder in sortedClipFolders"
         :key="clipFolder.id"
         :folder-name="clipFolder.name"
@@ -16,7 +16,7 @@
         @click="toggleClip(clipFolder.id)"
       />
     </template>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">
