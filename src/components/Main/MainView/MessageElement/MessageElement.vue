@@ -12,22 +12,22 @@
       @click="onClick"
       @mouseleave="onMouseLeave"
     >
-      <message-pinned
+      <MessagePinned
         v-if="pinnedUserId"
         :pinned-user-id="pinnedUserId"
         :class="$style.pinned"
       />
-      <message-tools
+      <MessageTools
         :show="showMessageTools"
         :class="$style.tools"
         :message-id="messageId"
         :is-minimum="isArchived"
       />
-      <message-contents
+      <MessageContents
         :class="$style.messageContents"
         :message-id="messageId"
       />
-      <message-stamp-list
+      <MessageStampList
         :show-detail-button="isHovered || isMobile"
         :message-id="messageId"
         :stamps="message.stamps"

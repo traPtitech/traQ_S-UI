@@ -9,17 +9,17 @@
       @click="onClick"
       @mouseleave="onMouseLeave"
     >
-      <message-tools
+      <MessageTools
         :class="$style.tools"
         :show="isHovered"
         :message-id="messageId"
         is-minimum
       />
-      <message-contents
+      <MessageContents
         :class="$style.messageContents"
         :message-id="messageId"
       />
-      <message-quote-list-item-footer
+      <MessageQuoteListItemFooter
         :class="$style.footer"
         :message="message"
       />
