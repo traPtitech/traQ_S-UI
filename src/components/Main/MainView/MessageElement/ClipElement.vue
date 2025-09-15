@@ -1,21 +1,29 @@
 <template>
-  <div
-    v-if="message"
-    ref="bodyRef"
-    :class="$style.body"
-    :data-is-mobile="$boolAttr(isMobile)"
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
-  >
-    <message-tools
-      :class="$style.tools"
-      :show="isHovered"
-      :message-id="messageId"
-      is-minimum
-    />
-    <message-contents :class="$style.messageContents" :message-id="messageId" />
-    <message-quote-list-item-footer :class="$style.footer" :message="message" />
-  </div>
+  <ClickOutside @click-outside="onClickOutside">
+    <div
+      v-if="message"
+      ref="bodyRef"
+      :class="$style.body"
+      :data-is-mobile="$boolAttr(isMobile)"
+      @mouseenter="onMouseEnter"
+      @mouseleave="onMouseLeave"
+    >
+      <message-tools
+        :class="$style.tools"
+        :show="isHovered"
+        :message-id="messageId"
+        is-minimum
+      />
+      <message-contents
+        :class="$style.messageContents"
+        :message-id="messageId"
+      />
+      <message-quote-list-item-footer
+        :class="$style.footer"
+        :message="message"
+      />
+    </div>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>
@@ -24,8 +32,8 @@ import type { ChangeHeightData } from './composables/useElementRenderObserver'
 import useElementRenderObserver from './composables/useElementRenderObserver'
 import MessageContents from './MessageContents.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
-import MessageTools from './MessageTools.vue'
-import useHover from '/@/composables/dom/useHover'
+import MessageTools, { useMessageToolsHover } from './MessageTools.vue'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useResponsiveStore } from '/@/store/ui/responsive'
@@ -56,7 +64,8 @@ useElementRenderObserver(
   emit
 )
 
-const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isHovered, onMouseEnter, onMouseLeave, onClickOutside } =
+  useMessageToolsHover()
 </script>
 
 <style lang="scss" module>
