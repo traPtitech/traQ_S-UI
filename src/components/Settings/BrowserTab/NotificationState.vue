@@ -32,14 +32,14 @@ const useNotificationPermission = () => {
     permission.value = await requestNotificationPermission()
   }
 
-  return { permission, requestPermission, status }
+  return { permission, requestPermission }
 }
 </script>
 
 <script lang="ts" setup>
 import FormButton from '/@/components/UI/FormButton.vue'
 
-const { permission, status, requestPermission } = useNotificationPermission()
+const { permission, requestPermission } = useNotificationPermission()
 </script>
 
 <style lang="scss" module>
