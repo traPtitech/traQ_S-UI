@@ -20,7 +20,7 @@
       :class="$style.editButton"
       icon-name="pencil"
       icon-mdi
-      @mousedown="emit('edit', $event)"
+      @click="emit('edit', $event)"
     />
   </div>
 </template>
