@@ -15,7 +15,7 @@
       :class="$style.viewport"
       data-testid="channel-viewport"
     >
-      <messages-scroller-separator
+      <MessagesScrollerSeparator
         v-if="isReachedEnd"
         title="これ以上メッセージはありません"
         :class="$style.noMoreSeparator"

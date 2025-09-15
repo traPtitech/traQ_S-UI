@@ -1,35 +1,35 @@
 <template>
   <div :class="$style.container">
-    <line-editor
+    <LineEditor
       v-model="name"
       :class="$style.item"
       label="グループ名"
       :max-length="30"
     />
-    <line-editor
+    <LineEditor
       v-model="description"
       :class="$style.item"
       label="説明"
       :max-length="100"
     />
-    <line-editor
+    <LineEditor
       v-model="type"
       :class="$style.item"
       label="タイプ"
       :max-length="30"
     />
-    <group-admin-list
+    <GroupAdminList
       :class="$style.item"
       :group-id="group.id"
       :admins="group.admins"
     />
-    <group-member-list
+    <GroupMemberList
       :class="$style.item"
       :group-id="group.id"
       :members="group.members"
     />
     <div :class="[$style.item, $style.deleteButtonWrapper]">
-      <form-button
+      <FormButton
         label="グループを削除"
         type="secondary"
         is-danger

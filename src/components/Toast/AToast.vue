@@ -5,7 +5,7 @@
     :role="role"
     @click="onClick"
   >
-    <a-icon :class="$style.icon" :name="iconName" mdi :size="32" />
+    <AIcon :class="$style.icon" :name="iconName" mdi :size="32" />
     <div :class="$style.text">
       {{ toast.text }}
     </div>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <channel-header-tools-list
+    <ChannelHeaderToolsList
       :class="$style.tools"
       :channel-id="channelId"
       :is-forced-channel="channelState.forced"
@@ -8,16 +8,16 @@
       :is-archived="channelState.archived"
       @click-more="togglePopupMenu"
     >
-      <click-outside v-if="isPopupMenuShown" @click-outside="closePopupMenu">
-        <channel-header-tools-menu
+      <ClickOutside v-if="isPopupMenuShown" @click-outside="closePopupMenu">
+        <ChannelHeaderToolsMenu
           :class="$style.toolsMenu"
           :channel-id="channelId"
           :show-notification-setting-btn="!channelState.forced"
           :is-archived="channelState.archived"
           @click-item="closePopupMenu"
         />
-      </click-outside>
-    </channel-header-tools-list>
+      </ClickOutside>
+    </ChannelHeaderToolsList>
   </div>
 </template>
 

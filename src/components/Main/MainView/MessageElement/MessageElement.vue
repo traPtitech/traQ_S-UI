@@ -10,19 +10,19 @@
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
-    <message-pinned
+    <MessagePinned
       v-if="pinnedUserId"
       :pinned-user-id="pinnedUserId"
       :class="$style.pinned"
     />
-    <message-tools
+    <MessageTools
       :show="isHovered && !isEditing"
       :class="$style.tools"
       :message-id="messageId"
       :is-minimum="isArchived"
     />
-    <message-contents :class="$style.messageContents" :message-id="messageId" />
-    <message-stamp-list
+    <MessageContents :class="$style.messageContents" :message-id="messageId" />
+    <MessageStampList
       :show-detail-button="isHovered || isMobile"
       :message-id="messageId"
       :stamps="message.stamps"

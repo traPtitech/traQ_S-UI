@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
-    <stamp-palette-list-item-header :palette="palette" />
-    <stamp-palette-list-item-stamp-list :stamps="stamps" />
+    <StampPaletteListItemHeader :palette="palette" />
+    <StampPaletteListItemStampList :stamps="stamps" />
   </div>
 </template>
 

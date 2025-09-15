@@ -29,7 +29,7 @@
       <span v-if="suffix" :class="$style.suffix" @click="focus">
         {{ suffix }}
       </span>
-      <length-count
+      <LengthCount
         v-if="maxLength && typeof modelValue === 'string'"
         :class="$style.count"
         :val="modelValue"
@@ -41,7 +41,7 @@
         :class="$style.toggle"
         @click.prevent="togglePassword"
       >
-        <a-icon
+        <AIcon
           :name="isPasswordShown ? 'eye-off-outline' : 'eye-outline'"
           mdi
           :class="$style.toggleIcon"

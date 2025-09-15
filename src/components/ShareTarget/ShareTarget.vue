@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
-    <authenticate-header :class="$style.header" title="シェア" />
-    <share-target-form
+    <AuthenticateHeader :class="$style.header" title="シェア" />
+    <ShareTargetForm
       v-if="!donePost"
       :class="$style.form"
       :default-text="defaultText"

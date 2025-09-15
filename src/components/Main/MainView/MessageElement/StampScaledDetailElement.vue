@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div v-for="userId in userIds" :key="userId" :class="$style.contents">
-      <user-icon
+      <UserIcon
         :user-id="userId"
         :size="24"
         :class="$style.content"

@@ -2,7 +2,7 @@
   <div>
     <p :class="$style.title">許可される項目:</p>
     <ul :class="$style.list">
-      <client-scope
+      <ClientScope
         v-for="scope in scopes"
         :key="scope"
         :class="$style.item"

@@ -4,7 +4,7 @@
       {{ ':' + stampName + ': from ' }}
     </div>
     <div v-for="user in stamp.users" :key="user.id" :class="$style.contents">
-      <stamp-detail-element-content
+      <StampDetailElementContent
         :user-id="user.id"
         :count="user.count"
         :class="$style.content"

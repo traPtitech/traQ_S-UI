@@ -1,12 +1,12 @@
 <template>
-  <sidebar-content-container-foldable title="関連チャンネル">
-    <channel-sidebar-relation-content
+  <SidebarContentContainerFoldable title="関連チャンネル">
+    <ChannelSidebarRelationContent
       :parent="parent"
       :children="children"
       :siblings="siblings"
       :current="current"
     />
-  </sidebar-content-container-foldable>
+  </SidebarContentContainerFoldable>
 </template>
 
 <script lang="ts" setup>

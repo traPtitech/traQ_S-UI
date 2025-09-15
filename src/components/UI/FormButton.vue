@@ -7,10 +7,10 @@
     :data-is-danger="$boolAttr(isDanger)"
   >
     <div :class="$style.label">
-      <a-icon v-if="icon" :mdi="mdi" :name="icon" />
+      <AIcon v-if="icon" :mdi="mdi" :name="icon" />
       {{ label }}
     </div>
-    <loading-spinner
+    <LoadingSpinner
       v-if="loading"
       :class="$style.spinner"
       :color="spinnerColor"

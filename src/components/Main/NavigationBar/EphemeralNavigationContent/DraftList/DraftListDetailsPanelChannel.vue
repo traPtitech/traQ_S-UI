@@ -2,7 +2,7 @@
   <router-link :to="channelLink">
     <div :class="$style.container">
       <div :class="$style.state">
-        <a-icon v-if="hasAttachments" name="file" mdi :class="$style.icon" />
+        <AIcon v-if="hasAttachments" name="file" mdi :class="$style.icon" />
         <div
           class="markdown-inline-body"
           :class="$style.text"

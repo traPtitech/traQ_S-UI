@@ -7,7 +7,7 @@
       </p>
     </div>
     <div>
-      <a-toggle v-model="modelValue" />
+      <AToggle v-model="modelValue" />
     </div>
   </div>
 </template>

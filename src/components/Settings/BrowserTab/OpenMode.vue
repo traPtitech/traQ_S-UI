@@ -5,14 +5,14 @@
       <p>
         特定のチャンネルを指定します。OFFの場合は最後に開いたチャンネルが設定されます。
       </p>
-      <form-selector-filterable
+      <FormSelectorFilterable
         v-if="openMode === 'particular'"
         v-model="openChannelNameValue"
         :options="channelOptions"
       />
     </div>
     <div>
-      <a-toggle
+      <AToggle
         :model-value="openModeValue === 'particular'"
         @update:model-value="toggleOpenMode"
       />

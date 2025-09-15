@@ -1,5 +1,5 @@
 <template>
-  <sidebar-event-frame
+  <SidebarEventFrame
     title="トピック変更"
     icon-name="format-title"
     icon-mdi
@@ -7,13 +7,13 @@
     :datetime="datetime"
   >
     <div :class="$style.newTopic" :data-is-empty="details.after === ''">
-      <markdown-preview
+      <MarkdownPreview
         :content="details.after !== '' ? details.after : '未設定'"
         accept-action
         inline
       />
     </div>
-  </sidebar-event-frame>
+  </SidebarEventFrame>
 </template>
 
 <script lang="ts" setup>

@@ -2,7 +2,7 @@
   <section :class="$style.container">
     <div>
       <h2 :class="$style.header">設定</h2>
-      <desktop-tab-selector-item
+      <DesktopTabSelectorItem
         v-for="navigation in navigations"
         :key="navigation.routeName"
         :route-name="navigation.routeName"
@@ -11,7 +11,7 @@
         :is-selected="currentRouteName === navigation.routeName"
       />
     </div>
-    <version-info :class="$style.version" />
+    <VersionInfo :class="$style.version" />
   </section>
 </template>
 

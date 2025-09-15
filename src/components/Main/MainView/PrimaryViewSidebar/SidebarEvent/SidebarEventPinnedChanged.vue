@@ -1,5 +1,5 @@
 <template>
-  <sidebar-event-frame
+  <SidebarEventFrame
     :title="title"
     icon-name="pin"
     icon-mdi
@@ -8,13 +8,13 @@
     :link="messageLink"
   >
     <template v-if="message">
-      <user-name :user="user" />
-      <render-content :content="message?.content ?? ''" line-clamp-content />
+      <UserName :user="user" />
+      <RenderContent :content="message?.content ?? ''" line-clamp-content />
     </template>
     <div v-else-if="message === null" :class="$style.deletedMessage">
       削除されたメッセージ
     </div>
-  </sidebar-event-frame>
+  </SidebarEventFrame>
 </template>
 
 <script lang="ts" setup>

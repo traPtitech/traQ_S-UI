@@ -4,7 +4,7 @@
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
-    <circle-icon
+    <CircleIcon
       mdi
       name="close"
       :size="16"
