@@ -8,7 +8,8 @@
       :data-is-pinned="$boolAttr(message.pinned)"
       :data-is-entry="$boolAttr(isEntryMessage)"
       :data-is-editing="$boolAttr(isEditing)"
-      @mouseenter="onMouseEnter"
+      @pointerenter="onPointerEnter"
+      @click="onClick"
       @mouseleave="onMouseLeave"
     >
       <message-pinned
@@ -89,7 +90,7 @@ useElementRenderObserver(
   emit
 )
 
-const { isHovered, onMouseEnter, onMouseLeave, onClickOutside } =
+const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
   useMessageToolsHover()
 </script>
 

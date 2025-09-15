@@ -5,7 +5,8 @@
       ref="bodyRef"
       :class="$style.body"
       :data-is-mobile="$boolAttr(isMobile)"
-      @mouseenter="onMouseEnter"
+      @pointerenter="onPointerEnter"
+      @click="onClick"
       @mouseleave="onMouseLeave"
     >
       <message-tools
@@ -64,7 +65,7 @@ useElementRenderObserver(
   emit
 )
 
-const { isHovered, onMouseEnter, onMouseLeave, onClickOutside } =
+const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
   useMessageToolsHover()
 </script>
 

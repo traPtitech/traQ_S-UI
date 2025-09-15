@@ -186,7 +186,11 @@ const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
 export const useMessageToolsHover = () => {
   const isHovered = ref(false)
 
-  const onMouseEnter = () => {
+  const onPointerEnter = (e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') return
+    isHovered.value = true
+  }
+  const onClick = () => {
     isHovered.value = true
   }
   const onMouseLeave = () => {
@@ -198,7 +202,8 @@ export const useMessageToolsHover = () => {
 
   return {
     isHovered,
-    onMouseEnter,
+    onPointerEnter,
+    onClick,
     onMouseLeave,
     onClickOutside
   }
