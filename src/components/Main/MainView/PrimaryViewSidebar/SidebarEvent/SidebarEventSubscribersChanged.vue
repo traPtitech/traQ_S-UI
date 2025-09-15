@@ -1,5 +1,5 @@
 <template>
-  <sidebar-event-frame
+  <SidebarEventFrame
     title="購読者変更"
     icon-name="notified"
     :user-id="details.userId"
@@ -7,13 +7,13 @@
   >
     <div v-if="details.on.length > 0">
       <div :class="$style.label">新しい購読者</div>
-      <user-icon-ellipsis-list direction="row" :user-ids="details.on" />
+      <UserIconEllipsisList direction="row" :user-ids="details.on" />
     </div>
     <div v-if="details.off.length > 0">
       <div :class="$style.label">解除した購読者</div>
-      <user-icon-ellipsis-list direction="row" :user-ids="details.off" />
+      <UserIconEllipsisList direction="row" :user-ids="details.off" />
     </div>
-  </sidebar-event-frame>
+  </SidebarEventFrame>
 </template>
 
 <script lang="ts" setup>

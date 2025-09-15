@@ -1,11 +1,11 @@
 <template>
-  <primary-view-frame :is-ready="isReady">
+  <PrimaryViewFrame :is-ready="isReady">
     <template #header>
-      <channel-header :channel-id="channelId" />
+      <ChannelHeader :channel-id="channelId" />
     </template>
     <template #default>
       <QallView v-if="getQallingState(channelId) === 'mainView'" />
-      <channel-view-content
+      <ChannelViewContent
         v-else
         :channel-id="channelId"
         :entry-message-id="entryMessageId"
@@ -14,7 +14,7 @@
       />
     </template>
     <template #sidebar>
-      <channel-sidebar
+      <ChannelSidebar
         v-if="getQallingState(channelId) !== 'mainView'"
         :channel-id="channelId"
         :is-sidebar-opener-ready="isReady"
@@ -23,7 +23,7 @@
         :inactive-viewing-users="inactiveViewingUsers"
       />
     </template>
-  </primary-view-frame>
+  </PrimaryViewFrame>
 </template>
 
 <script lang="ts" setup>

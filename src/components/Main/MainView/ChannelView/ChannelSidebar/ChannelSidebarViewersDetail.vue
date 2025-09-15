@@ -1,7 +1,7 @@
 <template>
-  <sidebar-content-container clickable title="閲覧者" @toggle="emit('toggle')">
+  <SidebarContentContainer clickable title="閲覧者" @toggle="emit('toggle')">
     <div v-for="user in viewers" :key="user.id" :class="$style.item">
-      <user-icon :user-id="user.id" :size="32" />
+      <UserIcon :user-id="user.id" :size="32" />
       <div :class="$style.userName">
         {{ user.displayName }}
       </div>
@@ -11,12 +11,12 @@
       :key="user.id"
       :class="[$style.item, $style.transparent]"
     >
-      <user-icon :user-id="user.id" :size="32" />
+      <UserIcon :user-id="user.id" :size="32" />
       <div :class="$style.userName">
         {{ user.displayName }}
       </div>
     </div>
-  </sidebar-content-container>
+  </SidebarContentContainer>
 </template>
 
 <script lang="ts" setup>

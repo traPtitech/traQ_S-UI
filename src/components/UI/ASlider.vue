@@ -1,5 +1,5 @@
 <template>
-  <vue-slider
+  <VueSlider
     v-if="isClickPrevent"
     v-model="modelValue"
     :min="min"
@@ -11,7 +11,7 @@
     :dot-size="12"
     @click.prevent
   />
-  <vue-slider
+  <VueSlider
     v-else
     v-model="modelValue"
     :min="min"

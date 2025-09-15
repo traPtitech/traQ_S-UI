@@ -1,6 +1,6 @@
 <template>
   <div v-if="isCommandPaletteShown" :class="$style.container">
-    <command-palette />
+    <CommandPalette />
   </div>
 </template>
 

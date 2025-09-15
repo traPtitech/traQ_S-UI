@@ -1,15 +1,15 @@
 <template>
   <div :class="$style.container">
-    <file-modal-content-header v-if="fileMeta" :file-id="fileMeta.id" />
+    <FileModalContentHeader v-if="fileMeta" :file-id="fileMeta.id" />
     <audio ref="audioEle" controls :src="fileRawPath" :class="$style.audio" />
-    <audio-player-waveform
+    <AudioPlayerWaveform
       v-if="fileWaveformPath"
       v-model:current-time="currentTime"
       :class="$style.waveform"
       :waveform-path="fileWaveformPath"
       :duration="duration"
     />
-    <file-modal-content-footer v-if="fileMeta" :file-id="fileMeta.id" />
+    <FileModalContentFooter v-if="fileMeta" :file-id="fileMeta.id" />
   </div>
 </template>
 

@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.container">
-    <desktop-tab-selector :class="$style.selector" />
-    <desktop-tab-frame :class="$style.frame">
+    <DesktopTabSelector :class="$style.selector" />
+    <DesktopTabFrame :class="$style.frame">
       <slot />
-    </desktop-tab-frame>
-    <close-button :class="$style.close" with-text :size="56" @close="close" />
+    </DesktopTabFrame>
+    <CloseButton :class="$style.close" with-text :size="56" @close="close" />
   </div>
 </template>
 

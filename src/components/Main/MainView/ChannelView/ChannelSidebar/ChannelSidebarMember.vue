@@ -1,15 +1,15 @@
 <template>
-  <sidebar-content-container title="メンバー">
-    <empty-state v-if="isForceNotification"> 強制通知チャンネル </empty-state>
-    <empty-state v-else-if="!subscribers">
+  <SidebarContentContainer title="メンバー">
+    <EmptyState v-if="isForceNotification"> 強制通知チャンネル </EmptyState>
+    <EmptyState v-else-if="!subscribers">
       メンバーの取得に失敗しました
-    </empty-state>
-    <channel-sidebar-member-icons
+    </EmptyState>
+    <ChannelSidebarMemberIcons
       v-else-if="subscribers.size > 0"
       :viewer-states="viewStates"
     />
-    <empty-state v-else> メンバーはいません </empty-state>
-  </sidebar-content-container>
+    <EmptyState v-else> メンバーはいません </EmptyState>
+  </SidebarContentContainer>
 </template>
 
 <script lang="ts" setup>

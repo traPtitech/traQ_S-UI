@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.container">
-    <user-icon :user-id="userId" />
+    <UserIcon :user-id="userId" />
     <span :class="$style.name">{{ name }}</span>
-    <a-toggle v-model="value" />
+    <AToggle v-model="value" />
   </div>
 </template>
 

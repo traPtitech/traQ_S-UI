@@ -1,6 +1,6 @@
 <template>
   <div>
-    <channel-element
+    <ChannelElement
       v-for="channel in channelTreeNodes"
       :key="channel.id"
       :class="$style.element"
@@ -9,12 +9,12 @@
       :show-star="props.showStar"
       :show-notified="props.showNotified"
     >
-      <channel-element-topic
+      <ChannelElementTopic
         v-if="showTopic"
         :class="$style.topic"
         :channel-id="channel.id"
       />
-    </channel-element>
+    </ChannelElement>
   </div>
 </template>
 

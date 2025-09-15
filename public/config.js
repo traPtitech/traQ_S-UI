@@ -12,9 +12,7 @@
       vapidKey:
         'BPHegiDotHG7TlKhoW1qvwUYjOQj1C7RgKjvw3etUJZ_4x3LWUtFVXtRANWwckJX4G2w3CVj4zwi5QNThg7DZH4'
     },
-    skyway: {
-      apiKey: '55fd6e68-6e1b-492b-b57d-df0273c6e217'
-    },
+    enableQall: true,
     enableSearch: true,
     services: [
       {

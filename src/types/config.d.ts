@@ -20,12 +20,10 @@ export type Config = Readonly<{
     vapidKey: string
   }>
   /**
-   * skyway用設定
-   * 省略時はQall機能を無効化
+   * Qall機能を無効化するかどうか
+   * 省略時は無効化
    */
-  skyway?: Readonly<{
-    apiKey: string
-  }>
+  enableQall?: boolean
   /**
    * 検索機能を有効化するかどうか
    * 省略時は無効化

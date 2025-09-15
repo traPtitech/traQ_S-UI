@@ -1,7 +1,7 @@
 <template>
-  <sidebar-content-container v-if="viewStates.length > 0" title="参加BOT">
-    <channel-sidebar-member-icons :viewer-states="viewStates" />
-  </sidebar-content-container>
+  <SidebarContentContainer v-if="viewStates.length > 0" title="参加BOT">
+    <ChannelSidebarMemberIcons :viewer-states="viewStates" />
+  </SidebarContentContainer>
 </template>
 
 <script lang="ts" setup>

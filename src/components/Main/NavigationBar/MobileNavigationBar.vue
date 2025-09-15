@@ -5,9 +5,9 @@
       $boolAttr(!!ephemeralNavigationSelectorState.currentNavigation)
     "
   >
-    <mobile-tool-box :class="$style.toolBox" />
+    <MobileToolBox :class="$style.toolBox" />
     <div :class="$style.content">
-      <navigation-content
+      <NavigationContent
         :current-navigation="navigationSelectorState.currentNavigation"
       />
     </div>
@@ -15,7 +15,7 @@
       v-if="ephemeralNavigationSelectorState.currentNavigation"
       :class="$style.ephemeralContent"
     >
-      <ephemeral-navigation-content
+      <EphemeralNavigationContent
         transparent
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
@@ -23,7 +23,7 @@
       />
     </div>
     <div :class="$style.selector">
-      <navigation-selector
+      <NavigationSelector
         :current-navigation="navigationSelectorState.currentNavigation"
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation

@@ -13,9 +13,9 @@
     <div :class="$style.layoutContainer" :data-layout="layout">
       <QallAudio />
 
-      <primary-view-selector :is-ready="isMounted" />
+      <PrimaryViewSelector :is-ready="isMounted" />
       <div id="sidebar-opener" :class="$style.hidden" />
-      <secondary-view-selector v-if="layout !== 'single'" />
+      <SecondaryViewSelector v-if="layout !== 'single'" />
     </div>
   </div>
 </template>

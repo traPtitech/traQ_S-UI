@@ -5,14 +5,14 @@
     :aria-disabled="disabled"
   >
     <div :class="$style.volumeSlider">
-      <a-slider
+      <ASlider
         v-model="roundedVolume"
         :disabled="disabled"
         tooltip="none"
         is-click-prevent
       />
     </div>
-    <a-icon
+    <AIcon
       :class="$style.icon"
       mdi
       :size="20"

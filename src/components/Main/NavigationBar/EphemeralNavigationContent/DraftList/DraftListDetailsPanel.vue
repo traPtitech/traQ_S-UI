@@ -1,13 +1,13 @@
 <template>
-  <collapse-content>
-    <draft-list-details-panel-channel
+  <CollapseContent>
+    <DraftListDetailsPanelChannel
       v-for="[channelId, state] in inputChannels"
       :key="channelId"
       :class="$style.channel"
       :state="state"
       :channel-id="channelId"
     />
-  </collapse-content>
+  </CollapseContent>
 </template>
 
 <script lang="ts" setup>

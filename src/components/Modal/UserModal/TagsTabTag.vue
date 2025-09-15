@@ -1,12 +1,12 @@
 <template>
   <li :class="$style.tag" @click="onTagClick">
     <div :class="$style.content">
-      <a-icon name="tag" mdi :class="$style.icon" :size="20" />
+      <AIcon name="tag" mdi :class="$style.icon" :size="20" />
       <div :class="$style.text">
         {{ tag.tag }}
       </div>
     </div>
-    <tags-tab-edit
+    <TagsTabEdit
       :tag-id="tag.tagId"
       :is-mine="isMine"
       :user-id="userId"

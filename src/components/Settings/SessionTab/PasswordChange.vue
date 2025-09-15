@@ -13,7 +13,7 @@
       から可能です。
     </p>
     <template v-else>
-      <form-input
+      <FormInput
         v-model="state.old"
         label="現在のパスワード"
         type="password"
@@ -21,7 +21,7 @@
         autocomplete="current-password"
         :class="$style.form"
       />
-      <form-input
+      <FormInput
         v-model="state.new"
         label="新しいパスワード"
         type="password"
@@ -30,7 +30,7 @@
         :class="$style.form"
       />
       <div :class="$style.changeButton">
-        <form-button
+        <FormButton
           label="変更"
           :disabled="!isValid"
           :loading="isChanging"

@@ -1,6 +1,6 @@
 <template>
   <label :class="$style.checkbox">
-    <form-checkbox-inner v-model="modelValue" />
+    <FormCheckboxInner v-model="modelValue" />
     <slot />
   </label>
 </template>

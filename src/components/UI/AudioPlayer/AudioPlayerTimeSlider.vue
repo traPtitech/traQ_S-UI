@@ -4,7 +4,7 @@
     :aria-disabled="disabled"
     :data-show-background-on-hover="showBackgroundOnHover"
   >
-    <a-slider
+    <ASlider
       v-model="roundedCurrentTime"
       :disabled="disabled"
       :min="0"

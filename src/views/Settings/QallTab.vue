@@ -9,7 +9,7 @@
             マイクなどへのアクセス許可が必要です。
           </p>
         </section>
-        <a-toggle v-model="state.isEnabled" :class="$style.toggle" />
+        <AToggle v-model="state.isEnabled" :class="$style.toggle" />
       </div>
     </section>
     <template v-if="state.isEnabled">
@@ -22,10 +22,10 @@
                 Qallしているチャンネルに投稿されたメッセージを読み上げます。
               </p>
             </section>
-            <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
+            <AToggle v-model="state.isTtsEnabled" :class="$style.toggle" />
           </div>
           <div v-if="state.isTtsEnabled" :class="$style.contents">
-            <form-selector
+            <FormSelector
               v-if="voiceOptions.length > 0"
               v-model="state.voiceName"
               label="読み上げボイスの種類"
@@ -33,21 +33,21 @@
               :class="$style.option"
             />
             <p v-else>読み上げ音声の声の種類が取得できませんでした。</p>
-            <form-input
+            <FormInput
               v-model="state.voicePitch"
               label="ピッチ"
               type="number"
               step="0.1"
               :class="$style.option"
             />
-            <form-input
+            <FormInput
               v-model="state.voiceRate"
               label="速度"
               type="number"
               step="0.1"
               :class="$style.option"
             />
-            <form-input
+            <FormInput
               v-model="state.voiceVolume"
               label="音量"
               type="number"
@@ -60,7 +60,7 @@
       <section :class="$style.element">
         <h3 :class="$style.heading">入力デバイス</h3>
         <div>
-          <form-selector
+          <FormSelector
             v-if="!fetchFailed && audioInputDevices.length > 0"
             v-model="state.audioInputDeviceId"
             :options="audioInputDeviceOptions"
@@ -71,7 +71,7 @@
       <section :class="$style.element">
         <h3 :class="$style.heading">出力デバイス</h3>
         <div>
-          <form-selector
+          <FormSelector
             v-if="!fetchFailed && audioOutputDevices.length"
             v-model="state.audioOutputDeviceId"
             :options="audioOutputDeviceOptions"
@@ -81,7 +81,7 @@
       </section>
       <section :class="$style.element">
         <h3 :class="$style.heading">マスターボリューム</h3>
-        <form-range-with-value
+        <FormRangeWithValue
           v-model="state.masterVolume"
           max-text="100%"
           :min="0"
@@ -96,7 +96,7 @@
           マイクに入力された音が指定した音量以下だった場合にミュートします。
           -100dBにすると無効になります。
         </p>
-        <form-range-with-value
+        <FormRangeWithValue
           v-model="state.noiseGateThreshold"
           max-text="-100dB"
           :min="-100"
@@ -106,7 +106,7 @@
           :class="$style.noiseGate"
         />
       </section>
-      <noise-suppression
+      <NoiseSuppression
         v-model="state.noiseSuppression"
         :class="$style.element"
       />

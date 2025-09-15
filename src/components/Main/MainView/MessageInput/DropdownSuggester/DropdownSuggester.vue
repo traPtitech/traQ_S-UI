@@ -5,13 +5,13 @@
         mousedownイベントでやっているのはclickイベントだとフォーカスが外れるため
         preventをすることでclickイベントでフォーカスが外れるのを回避している
       -->
-      <dropdown-suggester-candidate
+      <DropdownSuggesterCandidate
         :candidate="confirmedPartCandidate"
         :is-selected="selectedIndex === -1"
         @mousedown.prevent="select(confirmedPartCandidate)"
       />
       <div :class="$style.scroll">
-        <dropdown-suggester-candidate
+        <DropdownSuggesterCandidate
           v-for="(candidate, index) in candidates"
           :key="candidate.text"
           :candidate="candidate"

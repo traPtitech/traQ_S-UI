@@ -1,12 +1,12 @@
 <template>
   <div :class="$style.container" @click="onClick">
-    <user-icon
+    <UserIcon
       v-if="item.type === 'user'"
       :class="$style.icon"
       :user-id="item.value"
       :size="20"
     />
-    <a-icon v-else :class="$style.icon" :mdi="icon.mdi" :name="icon.name" />
+    <AIcon v-else :class="$style.icon" :mdi="icon.mdi" :name="icon.name" />
     <span :class="$style.title">{{ title }}</span>
     <span :class="$style.description">{{ description }}</span>
   </div>
