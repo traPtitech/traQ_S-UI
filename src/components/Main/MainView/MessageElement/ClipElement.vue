@@ -19,10 +19,7 @@
         :class="$style.messageContents"
         :message-id="messageId"
       />
-      <MessageQuoteListItemFooter
-        :class="$style.footer"
-        :message="message"
-      />
+      <MessageQuoteListItemFooter :class="$style.footer" :message="message" />
     </div>
   </ClickOutside>
 </template>
