@@ -1,22 +1,22 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="通知設定"
     :subtitle="channelPathString"
     icon-name="notified-or-subscribed"
   >
-    <modal-section title="自分の通知設定">
-      <notification-state-selector :channel-id="channelId" />
-    </modal-section>
-    <modal-section
+    <ModalSection title="自分の通知設定">
+      <NotificationStateSelector :channel-id="channelId" />
+    </ModalSection>
+    <ModalSection
       title="他ユーザーの通知設定"
       description="このチャンネルのメッセージの通知がユーザーに送られるか選択できます（通知を送る場合、未読管理も有効になります）"
     >
-      <user-notification-list
+      <UserNotificationList
         v-if="channelId && modalMounted"
         :channel-id="channelId"
       />
-    </modal-section>
-  </modal-frame>
+    </ModalSection>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>

@@ -3,7 +3,7 @@
     <template v-if="detail === undefined"> Now loading... </template>
     <template v-else>
       <ul :class="$style.list">
-        <tags-tab-tag
+        <TagsTabTag
           v-for="tag in tags"
           :key="tag.tagId"
           :class="$style.tag"
@@ -12,7 +12,7 @@
           :is-mine="isMine"
         />
       </ul>
-      <tags-tab-add :user-id="detail.id" />
+      <TagsTabAdd :user-id="detail.id" />
     </template>
   </div>
 </template>

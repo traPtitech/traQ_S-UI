@@ -1,6 +1,6 @@
 <template>
   <button :class="$style.container" :title="title" :aria-disabled="disabled">
-    <a-icon :class="$style.icon" :mdi="iconMdi" :name="iconName" />
+    <AIcon :class="$style.icon" :mdi="iconMdi" :name="iconName" />
   </button>
 </template>
 

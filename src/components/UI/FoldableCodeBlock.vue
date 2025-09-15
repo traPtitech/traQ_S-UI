@@ -6,7 +6,7 @@
     @click="unfold"
   >
     <div ref="preWrapRef" :class="wrapClass" v-html="preContent.outerHTML" />
-    <fold-button
+    <FoldButton
       show-icon
       :is-fold="isFold"
       :class="$style.button"

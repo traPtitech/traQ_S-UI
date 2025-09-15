@@ -2,10 +2,10 @@
   <section :class="$style.section">
     <div :class="$style.sectionHeader">
       <h3>パレットの作成</h3>
-      <stamp-palette-description />
+      <StampPaletteDescription />
     </div>
-    <stamp-palette-editor v-model:palette="draftPalette" />
-    <stamp-palette-action-buttons
+    <StampPaletteEditor v-model:palette="draftPalette" />
+    <StampPaletteActionButtons
       :palette="draftPalette"
       @finalize="finalizeWithToast"
       @cancel="discardWithConfirm"

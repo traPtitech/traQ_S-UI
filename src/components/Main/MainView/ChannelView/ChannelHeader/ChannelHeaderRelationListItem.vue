@@ -1,10 +1,10 @@
 <template>
-  <router-link :id="linkId" :to="channelLink" :class="$style.wrap">
+  <RouterLink :id="linkId" :to="channelLink" :class="$style.wrap">
     <div :class="$style.channelName"># {{ props.channel.name }}</div>
     <div :class="[$style.topic, isTopicEmpty && $style.empty]">
       {{ topic }}
     </div>
-  </router-link>
+  </RouterLink>
 </template>
 
 <script setup lang="ts">

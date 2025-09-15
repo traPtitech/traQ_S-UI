@@ -2,13 +2,13 @@
   <div :class="$style.container" :data-is-small="small">
     <div :class="$style.valueContainer" @click="toggle">
       {{ currentItem?.title ?? '' }}
-      <a-icon
+      <AIcon
         :class="$style.trailingIcon"
         name="rounded-triangle"
         :size="small ? 20 : 24"
       />
     </div>
-    <click-outside @click-outside="close">
+    <ClickOutside @click-outside="close">
       <div v-if="isOpen" :class="$style.selectorContainer">
         <div
           v-for="item in items"
@@ -17,7 +17,7 @@
           @click="onClick(item)"
         >
           <div :class="$style.item">
-            <a-icon
+            <AIcon
               v-if="item.iconName"
               :name="item.iconName"
               :mdi="item.iconMdi"
@@ -27,7 +27,7 @@
           </div>
         </div>
       </div>
-    </click-outside>
+    </ClickOutside>
   </div>
 </template>
 

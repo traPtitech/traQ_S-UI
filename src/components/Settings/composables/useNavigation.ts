@@ -4,8 +4,6 @@ import { RouteName } from '/@/router'
 import type { SettingsRouteName } from '/@/router/settings'
 import type { SettingsStampPaletteRouteName } from '/@/router/settingsStampPalette'
 
-const isSkywayApikeySet = window.traQConfig.skyway !== undefined
-
 export type NavigationItemType =
   | 'profile'
   | 'session'
@@ -54,7 +52,7 @@ export const navigations: {
     iconName: 'cogs',
     iconMdi: true
   },
-  ...(isSkywayApikeySet
+  ...(window.traQConfig.enableQall
     ? [
         {
           routeName: 'settingsQall',

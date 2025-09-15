@@ -1,17 +1,17 @@
 <template>
   <div>
-    <channel-sidebar-viewers
+    <ChannelSidebarViewers
       v-model="isViewersDetailOpen"
       :viewer-ids="viewerIds"
       :inactive-viewer-ids="inactiveViewerIds"
       :class="$style.item"
     />
-    <channel-sidebar-pinned
+    <ChannelSidebarPinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.item"
       @click-link="emit('moveToPinned')"
     />
-    <channel-sidebar-events
+    <ChannelSidebarEvents
       :class="$style.item"
       @click-link="emit('moveToEvents')"
     />

@@ -2,21 +2,21 @@
   <section>
     <h3 :class="$style.heading">ノイズ抑制</h3>
     <template v-if="isAudioWorkletSupported">
-      <form-radio
+      <FormRadio
         :model-value="noiseSuppressionValue"
         :class="$style.input"
         label="Rnnoise"
         input-value="rnnoise"
         @update:model-value="updateNoiseSuppressionValue"
       />
-      <form-radio
+      <FormRadio
         :model-value="noiseSuppressionValue"
         :class="$style.input"
         label="Speex"
         input-value="speex"
         @update:model-value="updateNoiseSuppressionValue"
       />
-      <form-radio
+      <FormRadio
         :model-value="noiseSuppressionValue"
         :class="$style.input"
         label="無効"

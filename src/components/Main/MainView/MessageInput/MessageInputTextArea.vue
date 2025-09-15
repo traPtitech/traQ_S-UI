@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <textarea-autosize
+    <TextareaAutosize
       ref="textareaAutosizeRef"
       v-model="modelValue"
       :class="$style.textarea"
@@ -24,7 +24,7 @@
       @autosize-updated="updateShowIsInputTextareaExpandButtonVisibility"
     />
     <div :class="$style.over" />
-    <dropdown-suggester
+    <DropdownSuggester
       :is-shown="isSuggesterShown"
       :position="suggesterPosition"
       :candidates="suggestedCandidates"

@@ -1,15 +1,15 @@
 <template>
   <div ref="containerRef" :class="$style.container" :aria-selected="isSelected">
-    <dropdown-suggester-user-icon
+    <DropdownSuggesterUserIcon
       v-if="candidate.type === 'user'"
       :user-id="candidate.id"
     />
-    <a-stamp
+    <AStamp
       v-else-if="candidate.type === 'stamp'"
       :stamp-id="candidate.id"
       :size="24"
     />
-    <dropdown-suggester-stamp-effect
+    <DropdownSuggesterStampEffect
       v-else-if="candidate.type === 'stamp-effect'"
       :effect-name-with-dot="candidate.text"
     />

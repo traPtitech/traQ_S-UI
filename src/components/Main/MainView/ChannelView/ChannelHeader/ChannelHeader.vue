@@ -1,19 +1,16 @@
 <template>
-  <primary-view-header>
+  <PrimaryViewHeader>
     <template #header>
       <div :class="$style.header">
-        <channel-header-channel-name :channel-id="channelId" />
-        <channel-header-relation-button
-          :key="channelId"
-          :channel-id="channelId"
-        />
-        <channel-header-topic :class="$style.topic" :channel-id="channelId" />
+        <ChannelHeaderChannelName :channel-id="channelId" />
+        <ChannelHeaderRelationButton :key="channelId" :channel-id="channelId" />
+        <ChannelHeaderTopic :class="$style.topic" :channel-id="channelId" />
       </div>
     </template>
     <template #tools>
-      <channel-header-tools :channel-id="channelId" />
+      <ChannelHeaderTools :channel-id="channelId" />
     </template>
-  </primary-view-header>
+  </PrimaryViewHeader>
 </template>
 
 <script lang="ts" setup>

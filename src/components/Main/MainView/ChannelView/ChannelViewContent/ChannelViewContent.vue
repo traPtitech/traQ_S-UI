@@ -5,11 +5,11 @@
     @dragover.prevent.stop="onDragOver"
     @drop.prevent.stop="onDrop"
   >
-    <channel-view-content-file-upload-overlay
+    <ChannelViewContentFileUploadOverlay
       v-if="canDrop"
       :class="$style.fileUploadOverlay"
     />
-    <channel-view-content-main
+    <ChannelViewContentMain
       :channel-id="channelId"
       :entry-message-id="entryMessageId"
       :pinned-messages="pinnedMessages"

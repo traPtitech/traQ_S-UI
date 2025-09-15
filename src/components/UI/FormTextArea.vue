@@ -7,7 +7,7 @@
       :class="$style.inputContainer"
       :data-on-secondary="$boolAttr(onSecondary)"
     >
-      <textarea-autosize
+      <TextareaAutosize
         :id="id"
         ref="inputRef"
         v-model="modelValue"
@@ -17,7 +17,7 @@
         :style="style"
         :rows="rows"
       />
-      <length-count
+      <LengthCount
         :class="$style.count"
         :val="modelValue"
         :max-length="maxLength"

@@ -4,14 +4,14 @@
       {{ label }}
     </div>
     <div v-if="isEditing" :class="$style.inputWrapper">
-      <form-input
+      <FormInput
         ref="inputRef"
         v-model="localValue"
         :class="$style.input"
         :max-length="maxLength"
         on-secondary
       />
-      <a-icon
+      <AIcon
         name="check"
         mdi
         :class="$style.icon"
@@ -23,7 +23,7 @@
       <div :class="$style.value" :data-is-empty="localValue === ''">
         {{ localValue || `${label}が設定されていません` }}
       </div>
-      <a-icon
+      <AIcon
         name="pencil-outline"
         mdi
         :class="$style.icon"

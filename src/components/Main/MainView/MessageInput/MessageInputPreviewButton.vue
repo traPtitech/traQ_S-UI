@@ -1,5 +1,5 @@
 <template>
-  <icon-button
+  <IconButton
     :class="$style.container"
     title="プレビュー表示"
     icon-name="markdown"

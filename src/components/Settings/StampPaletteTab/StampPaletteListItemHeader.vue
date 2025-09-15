@@ -7,9 +7,9 @@
       :class="$style.link"
       :to="constructSettingsStampPaletteDetailPath(palette.id)"
     >
-      <a-icon mdi name="pencil" />
+      <AIcon mdi name="pencil" />
     </router-link>
-    <icon-button
+    <IconButton
       :class="$style.icon"
       icon-name="delete"
       icon-mdi

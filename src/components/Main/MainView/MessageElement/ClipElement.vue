@@ -7,14 +7,14 @@
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
-    <message-tools
+    <MessageTools
       :class="$style.tools"
       :show="isHovered"
       :message-id="messageId"
       is-minimum
     />
-    <message-contents :class="$style.messageContents" :message-id="messageId" />
-    <message-quote-list-item-footer :class="$style.footer" :message="message" />
+    <MessageContents :class="$style.messageContents" :message-id="messageId" />
+    <MessageQuoteListItemFooter :class="$style.footer" :message="message" />
   </div>
 </template>
 
