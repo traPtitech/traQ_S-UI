@@ -1,5 +1,5 @@
 <template>
-  <ClickOutside @click-outside="onClickOutside">
+  <ClickOutside :enabled="showMessageTools" @click-outside="onClickOutside">
     <div
       v-if="message"
       ref="bodyRef"
@@ -18,7 +18,7 @@
         :class="$style.pinned"
       />
       <message-tools
-        :show="isHovered && !isEditing"
+        :show="showMessageTools"
         :class="$style.tools"
         :message-id="messageId"
         :is-minimum="isArchived"
@@ -92,6 +92,7 @@ useElementRenderObserver(
 
 const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
   useMessageToolsHover()
+const showMessageTools = computed(() => isHovered.value && !isEditing.value)
 </script>
 
 <style lang="scss" module>

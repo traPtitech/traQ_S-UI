@@ -1,5 +1,5 @@
 <template>
-  <ClickOutside @click-outside="onClickOutside">
+  <ClickOutside :enabled="isHovered" @click-outside="onClickOutside">
     <div
       v-if="message"
       ref="bodyRef"
