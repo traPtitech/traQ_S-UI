@@ -1,6 +1,6 @@
 <template>
   <div>
-    <sidebar-pinned-message
+    <SidebarPinnedMessage
       v-for="message in sortedMessages"
       :key="message.id"
       :message="message"

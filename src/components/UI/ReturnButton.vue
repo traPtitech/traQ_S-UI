@@ -1,5 +1,5 @@
 <template>
-  <a-icon :size="size" mdi name="chevron-left" :class="$style.button" />
+  <AIcon :size="size" mdi name="chevron-left" :class="$style.button" />
 </template>
 
 <script lang="ts" setup>

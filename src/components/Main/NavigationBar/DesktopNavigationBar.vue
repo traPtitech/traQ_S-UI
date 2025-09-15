@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.selector">
-      <desktop-navigation-selector
+      <DesktopNavigationSelector
         :current-navigation="navigationSelectorState.currentNavigation"
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
@@ -11,15 +11,15 @@
         @ephemeral-entry-remove="onEphemeralEntryRemove"
         @ephemeral-entry-add="onEphemeralEntryAdd"
       />
-      <desktop-tool-box />
+      <DesktopToolBox />
     </div>
     <div :class="$style.navigations">
-      <navigation-content
+      <NavigationContent
         :class="$style.navigation"
         :current-navigation="navigationSelectorState.currentNavigation"
       />
       <transition name="fade-bottom">
-        <ephemeral-navigation-content
+        <EphemeralNavigationContent
           v-if="ephemeralNavigationSelectorState.currentNavigation"
           :class="$style.ephemeralNavigation"
           :current-ephemeral-navigation="

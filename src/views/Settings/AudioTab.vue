@@ -12,7 +12,7 @@
           @change="handleFileSelect"
         />
 
-        <form-button
+        <FormButton
           label="音声ファイルを選択"
           type="secondary"
           icon="plus"
@@ -34,7 +34,7 @@
         </div>
         <AStamp v-if="stampId" :stamp-id="stampId" :size="32" />
         <div ref="stampPickerButton">
-          <form-button
+          <FormButton
             label="アイコンスタンプを選択"
             type="secondary"
             icon="plus"
@@ -42,7 +42,7 @@
             @click="toggleStampPicker"
           />
         </div>
-        <form-button
+        <FormButton
           label="アップロード"
           type="primary"
           :disabled="!audioName"

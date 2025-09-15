@@ -1,5 +1,5 @@
 <template>
-  <message-panel
+  <MessagePanel
     :message="message"
     :title-type="titleType"
     line-clamp-content

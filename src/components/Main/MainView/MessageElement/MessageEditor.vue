@@ -1,12 +1,12 @@
 <template>
   <div ref="containerEle" :class="$style.container">
-    <message-input-key-guide :show="isModifierKeyPressed" is-edit />
-    <message-input-upload-progress
+    <MessageInputKeyGuide :show="isModifierKeyPressed" is-edit />
+    <MessageInputUploadProgress
       v-if="isPostingAttachment"
       :progress="attachmentPostProgress"
     />
     <div :class="$style.inputContainer">
-      <message-input-text-area
+      <MessageInputTextArea
         ref="textareaComponentRef"
         v-model="text"
         :class="$style.inputTextArea"
@@ -20,12 +20,12 @@
       />
       <!-- divで包まないとホバー時の拡大の中心位置がずれる -->
       <div>
-        <message-input-insert-stamp-button
+        <MessageInputInsertStampButton
           :class="$style.iconButton"
           :disabled="isPostingAttachment"
           @click="toggleStampPicker"
         />
-        <message-input-upload-button
+        <MessageInputUploadButton
           :class="$style.iconButton"
           :disabled="isPostingAttachment"
           @click="addAttachment"
@@ -33,8 +33,8 @@
       </div>
     </div>
     <div :class="$style.controls">
-      <form-button label="キャンセル" type="tertiary" @click="cancel" />
-      <form-button
+      <FormButton label="キャンセル" type="tertiary" @click="cancel" />
+      <FormButton
         label="OK"
         :disabled="isPostingAttachment"
         @click="editMessage"

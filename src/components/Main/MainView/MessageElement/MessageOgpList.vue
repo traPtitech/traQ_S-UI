@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <message-ogp-list-item
+    <MessageOgpListItem
       v-for="(data, i) in ogpData"
       :key="i"
       :class="$style.item"

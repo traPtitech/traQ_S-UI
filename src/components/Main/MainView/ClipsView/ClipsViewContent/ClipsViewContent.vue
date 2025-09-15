@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <clips-view-content-main :clip-folder-id="clipFolderId" />
+    <ClipsViewContentMain :clip-folder-id="clipFolderId" />
   </div>
 </template>
 

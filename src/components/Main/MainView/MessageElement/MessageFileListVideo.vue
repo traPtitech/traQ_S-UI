@@ -5,7 +5,7 @@
     :class="[$style.container, isLoaded || $style.unload]"
   >
     <div :class="$style.overlay">
-      <message-file-list-item-content :file-id="fileId" is-white />
+      <MessageFileListItemContent :file-id="fileId" is-white />
     </div>
     <video
       ref="video"

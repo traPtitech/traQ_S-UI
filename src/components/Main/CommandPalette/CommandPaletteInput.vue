@@ -2,8 +2,8 @@
   <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
     <div :class="$style.inputContainer">
       <div :class="$style.icon">
-        <a-icon v-if="mode === 'search'" mdi name="search" />
-        <a-icon v-else-if="mode === 'command'" mdi name="code-grater-than" />
+        <AIcon v-if="mode === 'search'" mdi name="search" />
+        <AIcon v-else-if="mode === 'command'" mdi name="code-grater-than" />
       </div>
       <input
         ref="inputRef"
@@ -14,7 +14,7 @@
         @keydown.enter="onEnter"
       />
     </div>
-    <close-button
+    <CloseButton
       :class="$style.closeIcon"
       :size="24"
       :inner-size="12"

@@ -1,7 +1,7 @@
 <template>
-  <primary-view-header>
+  <PrimaryViewHeader>
     <template #header>
-      <primary-view-header-title
+      <PrimaryViewHeaderTitle
         :class="$style.header"
         :title="clipFolderName"
         icon-mdi
@@ -9,13 +9,13 @@
       />
     </template>
     <template #tools>
-      <primary-view-header-tools-item
+      <PrimaryViewHeaderToolsItem
         icon-mdi
         icon-name="info-outline"
         @click="openSidebar"
       />
     </template>
-  </primary-view-header>
+  </PrimaryViewHeader>
 </template>
 
 <script lang="ts" setup>

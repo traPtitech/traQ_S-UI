@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <a-icon
+    <AIcon
       v-if="iconName"
       :class="$style.icon"
       :name="iconName"

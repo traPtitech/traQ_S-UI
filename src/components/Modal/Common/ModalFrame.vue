@@ -1,7 +1,7 @@
 <template>
-  <click-outside stop @click-outside="clearModal">
+  <ClickOutside stop @click-outside="clearModal">
     <div :class="$style.container">
-      <common-modal-header
+      <CommonModalHeader
         :class="$style.header"
         :icon-name="iconName"
         :icon-mdi="iconMdi"
@@ -16,12 +16,12 @@
           </template>
           <slot v-else name="subtitle" />
         </template>
-      </common-modal-header>
+      </CommonModalHeader>
       <div :class="$style.body">
         <slot />
       </div>
     </div>
-  </click-outside>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>

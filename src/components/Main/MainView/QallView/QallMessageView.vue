@@ -69,7 +69,7 @@ const handleScroll = () => {
         :class="$style.messageContainer"
         :data-is-not-messages-show="$boolAttr(!isMessageShow)"
       >
-        <scroll-loading-bar
+        <ScrollLoadingBar
           :class="$style.loadingBar"
           :show="isLoading && isMessageShow"
         />
@@ -80,7 +80,7 @@ const handleScroll = () => {
           >
             <div :class="$style.messageContainerBackground" />
 
-            <messages-scroller
+            <MessagesScroller
               v-if="isMessageShow"
               ref="scrollerEle"
               :message-ids="messageIds"
@@ -96,7 +96,7 @@ const handleScroll = () => {
               <template
                 #default="{ messageId, onChangeHeight, onEntryMessageLoaded }"
               >
-                <message-element
+                <MessageElement
                   :class="$style.element"
                   :message-id="messageId"
                   :is-archived="isArchived"
@@ -104,7 +104,7 @@ const handleScroll = () => {
                   @entry-message-loaded="onEntryMessageLoaded"
                 />
               </template>
-            </messages-scroller>
+            </MessagesScroller>
           </div>
         </transition>
         <div :class="[$style.uiElement, $style.uiToggleButton]">
@@ -127,7 +127,7 @@ const handleScroll = () => {
       </div>
       <slot name="default" />
     </div>
-    <message-input
+    <MessageInput
       :channel-id="channelId"
       :typing-users="typingUsers"
       :show-to-new-message-button="false"

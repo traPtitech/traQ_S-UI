@@ -1,6 +1,6 @@
 <template>
   <div v-if="topic" :class="$style.container">
-    <markdown-preview
+    <MarkdownPreview
       :class="$style.topic"
       :content="topic"
       :title="topic"

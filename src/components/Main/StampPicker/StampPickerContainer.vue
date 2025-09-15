@@ -1,7 +1,7 @@
 <template>
   <teleport v-if="isStampPickerShown" to="#stamp-picker-popup">
     <keep-alive>
-      <stamp-picker :style="style" :class="$style.positionAbsolute" />
+      <StampPicker :style="style" :class="$style.positionAbsolute" />
     </keep-alive>
   </teleport>
 </template>

@@ -6,7 +6,7 @@
   >
     <!-- チャンネル表示本体 -->
     <div :class="$style.channelContainer">
-      <channel-element-icon
+      <ChannelElementIcon
         :class="$style.channelIcon"
         :has-child="hasChildren"
         :is-selected="isSelected"
@@ -38,12 +38,12 @@
           @focus="onFocus"
           @blur="onBlur"
         >
-          <channel-element-name
+          <ChannelElementName
             :channel="channel"
             :show-shortened-path="showShortenedPath"
             :is-selected="isSelected"
           />
-          <channel-element-unread-badge
+          <ChannelElementUnreadBadge
             :is-noticeable="notificationState.isNoticeable"
             :unread-count="notificationState.unreadCount"
           />

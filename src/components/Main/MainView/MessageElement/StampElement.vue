@@ -10,16 +10,16 @@
     @mouseleave="onMouseLeave"
   >
     <transition name="stamp-pressed" mode="out-in">
-      <a-stamp
+      <AStamp
         :key="pressAnimationKey"
         :stamp-id="stamp.id"
         :size="20"
         without-title
       />
     </transition>
-    <spin-number :value="stamp.sum" :class="$style.count" />
+    <SpinNumber :value="stamp.sum" :class="$style.count" />
   </div>
-  <stamp-scaled-element
+  <StampScaledElement
     :class="$style.scaleReaction"
     :show="(isLongHovered || RemainScaled) && !isDetailShown && !isTouchDevice"
     :stamp="stamp"

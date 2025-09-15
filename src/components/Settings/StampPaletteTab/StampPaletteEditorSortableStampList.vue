@@ -23,9 +23,9 @@
         :data-id="stampId"
         @click="toggleStampSelection(stampId)"
       >
-        <a-stamp :stamp-id="stampId" :size="24" />
+        <AStamp :stamp-id="stampId" :size="24" />
       </div>
-      <icon-button
+      <IconButton
         :disabled="selectedStampIds.length === 0"
         icon-name="delete"
         icon-mdi
@@ -34,7 +34,7 @@
       />
     </div>
     <div v-else :class="$style.emptyState">スタンプを追加してください</div>
-    <stamp-palette-editor-limit-indicator
+    <StampPaletteEditorLimitIndicator
       :current-count="stampIdsModel.length"
       :limit="STAMP_PALETTE_STAMPS_LIMIT"
       :class="$style.stampCount"

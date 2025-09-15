@@ -1,23 +1,23 @@
 <template>
-  <channel-view
+  <ChannelView
     v-if="primaryView.type === 'channel'"
     :is-ready="isReady"
     :channel-id="primaryView.channelId"
     :entry-message-id="primaryView.entryMessageId"
   />
-  <d-m-view
+  <DMView
     v-else-if="primaryView.type === 'dm'"
     :is-ready="isReady"
     :channel-id="primaryView.channelId"
     :entry-message-id="primaryView.entryMessageId"
     :user-name="primaryView.userName"
   />
-  <clips-view
+  <ClipsView
     v-else-if="primaryView.type === 'clips'"
     :is-ready="isReady"
     :clip-folder-id="primaryView.clipFolderId"
   />
-  <null-view v-else />
+  <NullView v-else />
 </template>
 
 <script lang="ts" setup>

@@ -1,6 +1,6 @@
 <template>
   <section :class="$style.container">
-    <navigation-selector-item
+    <NavigationSelectorItem
       v-for="item in items"
       :key="item.type"
       :icon-name="item.iconName"

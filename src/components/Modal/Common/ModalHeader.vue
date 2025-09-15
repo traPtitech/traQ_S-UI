@@ -1,9 +1,9 @@
 <template>
   <div :class="$style.container">
-    <modal-return-button v-if="returnButton" :class="$style.returnButton" />
+    <ModalReturnButton v-if="returnButton" :class="$style.returnButton" />
     <div :class="$style.content">
       <h1 :class="$style.title">
-        <a-icon
+        <AIcon
           v-if="iconName"
           :class="$style.icon"
           :name="iconName"
@@ -15,12 +15,12 @@
         <slot name="subtitle" />
       </h2>
     </div>
-    <icon-button
+    <IconButton
       v-if="editButton"
       :class="$style.editButton"
       icon-name="pencil"
       icon-mdi
-      @mousedown="emit('edit', $event)"
+      @click="emit('edit', $event)"
     />
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <message-file-list-item-content v-if="canShow" :file-id="fileId" />
+    <MessageFileListItemContent v-if="canShow" :file-id="fileId" />
     <div v-else :class="$style.error">表示できないファイルです</div>
   </div>
 </template>
