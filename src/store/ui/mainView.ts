@@ -17,7 +17,6 @@ interface ViewInformationBase {
 }
 export type PrimaryViewInformation = ChannelView | ClipsView | DMView
 export type SecondaryViewInformation = QallView
-export type ViewInformation = ChannelView | QallView | ClipsView | DMView
 
 export type LayoutType = 'single' | 'split' | 'split-reverse'
 

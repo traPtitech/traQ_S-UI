@@ -5,6 +5,7 @@ import type { Message } from '@traptitech/traq'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
+import { unique } from '/@/lib/basic/array'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
@@ -91,7 +92,7 @@ const useMessageFetcher = (
         isLoading.value = false
         isInitialLoad.value = false
         lastLoadingDirection.value = 'former'
-        messageIds.value = [...new Set([...newMessageIds, ...messageIds.value])]
+        messageIds.value = unique([...newMessageIds, ...messageIds.value])
       }
     )
   }
@@ -109,7 +110,7 @@ const useMessageFetcher = (
         isLoading.value = false
         isInitialLoad.value = false
         lastLoadingDirection.value = 'latest'
-        messageIds.value = [...new Set([...newMessageIds, ...messageIds.value])]
+        messageIds.value = unique([...newMessageIds, ...messageIds.value])
       }
     )
   }
@@ -130,7 +131,7 @@ const useMessageFetcher = (
         isLoading.value = false
         isInitialLoad.value = false
         lastLoadingDirection.value = 'latter'
-        messageIds.value = [...new Set([...messageIds.value, ...newMessageIds])]
+        messageIds.value = unique([...messageIds.value, ...newMessageIds])
       }
     )
   }
@@ -189,7 +190,7 @@ const useMessageFetcher = (
       newMessageIds => {
         isLoading.value = false
         lastLoadingDirection.value = 'latter'
-        messageIds.value = [...new Set([...messageIds.value, ...newMessageIds])]
+        messageIds.value = unique([...messageIds.value, ...newMessageIds])
       }
     )
   }

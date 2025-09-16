@@ -13,12 +13,15 @@ const CSSColorTypeSimpleSchema = z
     message: 'Invalid CSSColorTypeSimple'
   })
 
+/** @public */
 export type CSSColorType = string
 const CSSColorTypeSchema = z.string().min(1)
 
+/** @public */
 export type CSSImageType = string
 const CSSImageTypeSchema = z.string().min(1)
 
+/** @public */
 export type CSSImageColorType = z.infer<typeof CSSImageColorTypeSchema>
 const CSSImageColorTypeSchema = z.union([
   CSSColorTypeSchema,

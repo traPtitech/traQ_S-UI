@@ -10,6 +10,7 @@ import { useMessagesView } from '/@/store/domain/messagesView'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
+import { unique } from '/@/lib/basic/array'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 60
@@ -146,9 +147,7 @@ const useChannelMessageFetcher = (
       fetchFormerMessages(isReachedEnd),
       fetchLatterMessages(isReachedLatest)
     ])
-    return [
-      ...new Set([...formerMessageIds, entryMessage.id, ...latterMessageIds])
-    ]
+    return unique([...formerMessageIds, entryMessage.id, ...latterMessageIds])
   }
 
   // 直近のメッセージを取得し作成日時昇順で並べ替えて返す
