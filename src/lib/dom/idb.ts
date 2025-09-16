@@ -1,5 +1,5 @@
 import type { UseStore } from 'idb-keyval'
-import { promisifyRequest, createStore as idbCreateStore } from 'idb-keyval'
+import { promisifyRequest } from 'idb-keyval'
 
 export const dbPrefix = 'traQ_S-'
 
@@ -105,8 +105,4 @@ export function createStoreWithMigrations(
     const store = db.transaction(storeName, txMode).objectStore(storeName)
     return callback(store)
   }
-}
-
-export function createStore(dbName: string, storeName: string): UseStore {
-  return idbCreateStore(`${dbPrefix}${dbName}`, storeName)
 }

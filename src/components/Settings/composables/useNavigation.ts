@@ -4,17 +4,6 @@ import { RouteName } from '/@/router'
 import type { SettingsRouteName } from '/@/router/settings'
 import type { SettingsStampPaletteRouteName } from '/@/router/settingsStampPalette'
 
-export type NavigationItemType =
-  | 'profile'
-  | 'session'
-  | 'browser'
-  | 'qall'
-  | 'stamp'
-  | 'stamp-palette'
-  | 'theme'
-  | 'audio'
-  | 'feature-flag'
-
 // TODO: 言語系リソースの置き場所
 export const navigationRouteNameTitleMap: Record<
   SettingsRouteName | SettingsStampPaletteRouteName,

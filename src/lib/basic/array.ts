@@ -63,4 +63,4 @@ export const isDefined = <T>(o: T): o is Exclude<T, undefined> => {
   return o !== undefined
 }
 
-export const unique = <T>(a: T[]) => [...new Set(a)]
+export const unique = <T>(a: Iterable<T>) => [...new Set(a)]
