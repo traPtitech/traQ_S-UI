@@ -23,7 +23,8 @@
     "type-check:test": "tsc --noEmit --project tests/unit/tsconfig.json && tsc --noEmit --project tests/e2e/tsconfig.json",
     "gen-fonts": "node build/gen-mplus.js",
     "gen-unicode_emojis": "node build/gen-unicode_emojis.js",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "knip": "knip --cache"
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
@@ -89,6 +90,7 @@
     "fake-indexeddb": "^6.0.1",
     "fonteditor-core": "^2.6.1",
     "jsdom": "^26.1.0",
+    "knip": "^5.63.1",
     "patch-package": "^8.0.0",
     "pinia": "^3.0.1",
     "postcss": "^8.5.3",
