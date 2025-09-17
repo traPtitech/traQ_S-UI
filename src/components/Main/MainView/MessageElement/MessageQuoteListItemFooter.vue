@@ -1,12 +1,15 @@
 <template>
   <div :class="$style.container">
     <span :class="$style.description">
-      <router-link :to="channelLink">
+      <span v-if="disableLinks">
+        {{ channelPath }}
+      </span>
+      <router-link v-else :to="channelLink">
         {{ channelPath }}
       </router-link>
       - {{ date }}
     </span>
-    <router-link :class="$style.link" :to="messageLink">
+    <router-link v-if="!disableLinks" :class="$style.link" :to="messageLink">
       メッセージへ
     </router-link>
   </div>
@@ -19,9 +22,15 @@ import useChannelPath from '/@/composables/useChannelPath'
 import { getDateRepresentation } from '/@/lib/basic/date'
 import { constructMessagesPath } from '/@/router'
 
-const props = defineProps<{
-  message?: Message
-}>()
+const props = withDefaults(
+  defineProps<{
+    message?: Message
+    disableLinks?: boolean
+  }>(),
+  {
+    disableLinks: false
+  }
+)
 
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
 
