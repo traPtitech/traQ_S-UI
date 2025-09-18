@@ -1,7 +1,7 @@
 <template>
   <div
     ref="rootRef"
-    :key="refreshToken"
+    :key="renderKey"
     :class="$style.root"
     @scroll.passive="
       () => {
@@ -55,7 +55,7 @@ import { isMessageScrollerRoute, RouteName } from '/@/router'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import type { MessageId } from '/@/types/entity-ids'
-import { useRefreshToken } from '/@/composables/dom/useRefreshToken'
+import { useRenderKey } from '/@/composables/dom/useRenderKey'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -149,7 +149,7 @@ const props = withDefaults(
   }
 )
 
-const { refreshToken } = useRefreshToken('messages-scroller')
+const { key: renderKey } = useRenderKey('messages-scroller')
 
 const emit = defineEmits<{
   (e: 'requestLoadFormer'): void

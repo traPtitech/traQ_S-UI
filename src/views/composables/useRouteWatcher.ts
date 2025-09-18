@@ -14,7 +14,7 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
-import { useRefreshToken } from '/@/composables/dom/useRefreshToken'
+import { useRenderKey } from '/@/composables/dom/useRenderKey'
 import { useMessageQuery } from '/@/composables/utils/useMessageQuery'
 
 type Views = 'none' | 'main' | 'not-found'
@@ -238,7 +238,7 @@ const useRouteWatcher = () => {
       return
     }
 
-    useRefreshToken('messages-scroller').refresh()
+    useRenderKey('messages-scroller').refresh()
   }
 
   type RouteParamWithQuery = readonly [routeParam: string, query: LocationQuery]
