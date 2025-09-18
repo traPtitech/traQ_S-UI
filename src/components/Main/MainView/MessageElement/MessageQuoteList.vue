@@ -6,6 +6,7 @@
       :class="$style.item"
       :parent-message-channel-id="parentMessageChannelId"
       :message-id="id"
+      :disable-footer-links="disableItemFooterLinks"
     />
   </div>
 </template>
@@ -18,9 +19,11 @@ withDefaults(
   defineProps<{
     parentMessageChannelId: ChannelId | DMChannelId
     messageIds?: MessageId[]
+    disableItemFooterLinks?: boolean
   }>(),
   {
-    messageIds: () => []
+    messageIds: () => [],
+    disableItemFooterLinks: false
   }
 )
 </script>
