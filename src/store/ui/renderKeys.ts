@@ -2,7 +2,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
-export type RenderKeyStoreId = 'messages-scroller'
+export type RenderKeyStoreId = 'messages'
 
 const useRenderKeyStorePinia = defineStore('ui/renderKeys', () => {
   const keys = ref(new Map<RenderKeyStoreId, boolean>())

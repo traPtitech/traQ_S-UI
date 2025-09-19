@@ -238,7 +238,7 @@ const useRouteWatcher = () => {
       return
     }
 
-    useRenderKey('messages-scroller').refresh()
+    useRenderKey('messages').refresh()
   }
 
   type RouteParamWithQuery = readonly [routeParam: string, query: LocationQuery]
