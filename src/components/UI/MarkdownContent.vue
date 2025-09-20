@@ -1,5 +1,5 @@
 <template>
-  <span
+  <div
     ref="contentRef"
     class="markdown-body"
     :class="$style.content"
