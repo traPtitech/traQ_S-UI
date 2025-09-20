@@ -100,5 +100,6 @@ $messagePaddingMobile: 16px;
 .footer {
   margin-top: 4px;
   margin-left: 42px;
+  padding-left: 8px;
 }
 </style>
