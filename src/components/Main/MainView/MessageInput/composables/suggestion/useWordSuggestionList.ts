@@ -4,12 +4,12 @@ import type { Ref } from 'vue'
 import { ref, onBeforeUnmount, computed, readonly, watchEffect } from 'vue'
 import type { EntityEventMap } from '/@/store/entities/mitt'
 import { entityMitt } from '/@/store/entities/mitt'
-import type { Target } from '/@/lib/suggestion'
+import type { Target } from '/@/lib/suggestion/basic'
 import {
   getDeterminedCharacters,
   getPrevCandidateIndex,
   getNextCandidateIndex
-} from '/@/lib/suggestion'
+} from '/@/lib/suggestion/basic'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import useUserList from '/@/composables/users/useUserList'
@@ -61,22 +61,22 @@ const useCandidateTree = () => {
       // 重複を許す場合、優先するものから入れる
       userList.value.map(user => ({
         type: 'user',
-        text: '@' + user.name,
+        text: `@${user.name}`,
         id: user.id
       })),
       [...userGroupsMap.value.values()].map(userGroup => ({
         type: 'user-group',
-        text: '@' + userGroup.name,
+        text: `@${userGroup.name}`,
         id: userGroup.id
       })),
       [...stampsMap.value.values()].map(stamp => ({
         type: 'stamp',
-        text: ':' + stamp.name,
+        text: `:${stamp.name}`,
         id: stamp.id
       })),
       [...animeEffectSet, ...sizeEffectSet].map(effectName => ({
         type: 'stamp-effect',
-        text: '.' + effectName
+        text: `.${effectName}`
       })),
       [...channelsMap.value.values()].map(channel => ({
         type: 'channel',
@@ -127,7 +127,7 @@ const useWordSuggestionList = (
         )
       : []
   )
-  const confirmedPart = computed(() =>
+  const confirmedText = computed(() =>
     getDeterminedCharacters(candidates.value.map(obj => obj.text))
   )
 
@@ -140,7 +140,7 @@ const useWordSuggestionList = (
   watchEffect(() => {
     const i = candidates.value.findIndex(c => c.text === currentInputWord.value)
     // 候補に存在せず確定部とも一致していなかったら選択状態を解除
-    if (i === -1 && confirmedPart.value !== currentInputWord.value) {
+    if (i === -1 && confirmedText.value !== currentInputWord.value) {
       selectedIndex.value = null
       return
     }
@@ -149,7 +149,7 @@ const useWordSuggestionList = (
   })
 
   const getCandidateTextFromIndex = (i: number) => {
-    if (i === -1) return confirmedPart.value
+    if (i === -1) return confirmedText.value
     return candidates.value[i]?.text ?? ''
   }
   const prevCandidateText = computed(() =>
@@ -164,8 +164,8 @@ const useWordSuggestionList = (
   )
 
   return {
-    suggestedCandidates: candidates,
-    confirmedPart,
+    suggestedCandidateWords: candidates,
+    confirmedText,
     selectedCandidateIndex: readonly(selectedIndex),
     prevCandidateText,
     nextCandidateText

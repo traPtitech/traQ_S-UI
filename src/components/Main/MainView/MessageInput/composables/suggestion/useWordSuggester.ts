@@ -4,8 +4,8 @@ import type { Word } from './useWordSuggestionList'
 import useWordSuggesterList from './useWordSuggestionList'
 import useInsertText from '/@/composables/dom/useInsertText'
 import getCaretPosition from '/@/lib/dom/caretPosition'
-import type { Target } from '/@/lib/suggestion'
-import { getCurrentWord } from '/@/lib/suggestion'
+import type { Target } from '/@/lib/suggestion/basic'
+import { getCurrentWord } from '/@/lib/suggestion/basic'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 
 export type WordOrConfirmedPart =
@@ -17,6 +17,11 @@ export type WordOrConfirmedPart =
 
 export interface Candidate {
   word: Word
+  display?: string
+}
+
+export interface ConfirmedPart {
+  text: string
   display?: string
 }
 
@@ -57,8 +62,8 @@ const useWordSuggester = (
   })
 
   const {
-    suggestedCandidates: suggestedCandidateWords,
-    confirmedPart: confirmedText,
+    suggestedCandidateWords,
+    confirmedText,
     selectedCandidateIndex,
     prevCandidateText,
     nextCandidateText
@@ -79,11 +84,7 @@ const useWordSuggester = (
       return
     }
 
-    if (suggestedCandidates.value.length === 0) {
-      isSuggesterShown.value = false
-      return
-    }
-    isSuggesterShown.value = true
+    isSuggesterShown.value = suggestedCandidateWords.value.length > 0
   }
 
   const onKeyDown = (e: KeyboardEvent) => {
@@ -93,8 +94,8 @@ const useWordSuggester = (
     // Tabによるフォーカスの移動を防止するため、長押しで連続移動できるようにするためにkeyDownで行う必要がある
     if (e.key === 'Tab') {
       e.preventDefault()
-      if (suggestedCandidates.value.length === 0) return
-      if (suggestedCandidates.value.length === 1) {
+      if (suggestedCandidateWords.value.length === 0) return
+      if (suggestedCandidateWords.value.length === 1) {
         isSuggesterShown.value = false
       }
 
@@ -142,58 +143,12 @@ const useWordSuggester = (
     isSuggesterShown.value = false
   }
 
-  const isChannelSuggestion = computed(() => confirmedText.value[0] === '#')
-
-  const suggesterWidth = computed(() => (isChannelSuggestion.value ? 360 : 240))
-
-  const confirmedChannelPath = computed(() => {
-    if (!isChannelSuggestion.value) return []
-    return confirmedText.value.replace(/^#|\/$/, '').split('/')
+  const suggestedCandidates = computed(() => {
+    return suggestedCandidateWords.value.map(word => ({ word }))
   })
-
-  const confirmedChannelPathStr = computed(() =>
-    confirmedChannelPath.value.slice(0, -1).join('/')
-  )
-
-  const confirmedChannelShortenedPathStr = computed(() =>
-    confirmedChannelPath.value
-      .slice(0, -1)
-      .map(part => part[0])
-      .join('/')
-  )
-
-  const confirmedPartDisplay = computed(() => {
-    if (!isChannelSuggestion.value) return confirmedText.value
-
-    const confirmedPath = [
-      confirmedChannelShortenedPathStr.value,
-      confirmedChannelPath.value.at(-1)
-    ]
-      .filter(Boolean)
-      .join('/')
-
-    return `#${confirmedPath}`
-  })
-
-  const suggestedCandidates = computed(() =>
-    suggestedCandidateWords.value.map(word => {
-      if (word.type !== 'channel') return { word }
-
-      const restPath = word.text.replace(
-        new RegExp(`#${confirmedChannelPathStr.value}`, 'i'),
-        ''
-      )
-
-      return {
-        word: word,
-        display: `#${confirmedChannelShortenedPathStr.value}${restPath}`
-      }
-    })
-  )
 
   const confirmedPart = computed(() => ({
-    text: confirmedText.value,
-    display: confirmedPartDisplay.value
+    text: confirmedText.value
   }))
 
   return {
@@ -202,7 +157,7 @@ const useWordSuggester = (
     onSelect,
     onBlur,
     isSuggesterShown,
-    suggesterWidth,
+    suggesterWidth: 240,
     position,
     suggestedCandidates,
     selectedCandidateIndex,
