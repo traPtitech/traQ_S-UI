@@ -15,7 +15,7 @@ export type WordOrConfirmedPart =
       text: string
     }
 
-export type Candidate = {
+export interface Candidate {
   word: Word
   display?: string
 }
@@ -175,21 +175,20 @@ const useWordSuggester = (
     return `#${confirmedPath}`
   })
 
-  const suggestedCandidates = computed(
-    () =>
-      suggestedCandidateWords.value.map(word => {
-        if (word.type !== 'channel') return { word }
+  const suggestedCandidates = computed(() =>
+    suggestedCandidateWords.value.map(word => {
+      if (word.type !== 'channel') return { word }
 
-        const restPath = word.text.replace(
-          new RegExp(`#${confirmedChannelPathStr.value}`, 'i'),
-          ''
-        )
+      const restPath = word.text.replace(
+        new RegExp(`#${confirmedChannelPathStr.value}`, 'i'),
+        ''
+      )
 
-        return {
-          word: word,
-          display: `#${confirmedChannelShortenedPathStr.value}${restPath}`
-        }
-      }) as Candidate[]
+      return {
+        word: word,
+        display: `#${confirmedChannelShortenedPathStr.value}${restPath}`
+      }
+    })
   )
 
   const confirmedPart = computed(() => ({
