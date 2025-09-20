@@ -108,6 +108,8 @@ const replaceMap: Record<string, string | undefined> = {
   '＃': '#'
 }
 
+const replaceRegex = new RegExp(`[${Object.keys(replaceMap).join('|')}]`, 'g')
+
 /**
  * @param minLength 補完が利用できるようになる最小の文字数
  */
@@ -120,10 +122,7 @@ const useWordSuggestionList = (
   const candidates = computed(() =>
     target.value.word.length >= minLength
       ? tree.value.search(
-          target.value.word.replace(
-            new RegExp(`[${Object.keys(replaceMap).join('|')}]`, 'g'),
-            c => replaceMap[c] ?? c
-          ),
+          target.value.word.replace(replaceRegex, c => replaceMap[c] ?? c),
           { stopAtNextDelimiter: target.value.word.startsWith('#') }
         )
       : []
