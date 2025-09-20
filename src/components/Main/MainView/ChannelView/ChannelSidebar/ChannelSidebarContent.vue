@@ -31,9 +31,6 @@
       :viewer-ids="viewerIds"
     />
     <ChannelSidebarBots :channel-id="channelId" :class="$style.sidebarItem" />
-    <!--
-    <channel-sidebar-edit :class="$style.edit" />
-    -->
   </div>
 </template>
 

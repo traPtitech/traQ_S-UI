@@ -9,7 +9,7 @@ const useObjectURL = withSetup(useObjectURLWithoutSetup)
 const loadBlob = async (filename: string) => {
   const p = path.resolve(__dirname, filename)
   const buff = await fs.readFile(p)
-  return new Blob([buff], { type: 'image/gif' })
+  return new Blob([new Uint8Array(buff)], { type: 'image/gif' })
 }
 
 describe('useObjectURL', () => {

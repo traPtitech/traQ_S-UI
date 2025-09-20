@@ -1,7 +1,7 @@
 import { reactive, computed, ref } from 'vue'
 import type { Stamp } from '@traptitech/traq'
 import { compareStringInsensitive } from '/@/lib/basic/string'
-import { getMatchedWithPriority } from '/@/lib/basic/array'
+import { getMatchedWithPriority, unique } from '/@/lib/basic/array'
 import { useStampsStore } from '/@/store/entities/stamps'
 
 const emojiAltnameTable = import('/@/assets/emoji_altname_table.json')
@@ -47,7 +47,7 @@ const useStampFilter = () => {
 
   const getStamps = (stampNames: Iterable<string>) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return [...new Set(stampNames)].map(name => stampsTable.value[name]!)
+    return unique(stampNames).map(name => stampsTable.value[name]!)
   }
 
   const state = reactive({

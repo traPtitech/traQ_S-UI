@@ -27,15 +27,6 @@ export const navigationTypeNameMap: Record<NavigationItemType, string> = {
   clips: 'クリップ'
 }
 
-export const ephemeralNavigationTypeNameMap: Record<
-  NonNullable<EphemeralNavigationItemType>,
-  string
-> = {
-  qallController: 'Qall',
-  draftList: '下書き一覧',
-  audioController: '音楽'
-}
-
 export const { useNavigation, useNavigationSelectorItem } = createNavigation<
   NavigationItemType,
   'navigationChange'

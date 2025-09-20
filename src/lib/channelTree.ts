@@ -4,7 +4,6 @@ import { nullUuid } from '/@/lib/basic/uuid'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 
 export const rootChannelId = nullUuid
-export type RootChannelId = typeof rootChannelId
 
 export type ChannelLike = Pick<
   Channel,

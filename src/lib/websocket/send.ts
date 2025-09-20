@@ -1,6 +1,5 @@
 import { ws } from './index'
 import type { ChannelViewState } from '@traptitech/traq'
-import type { WebRTCUserStateSessions } from '/@/lib/apis'
 import type { ChannelId } from '/@/types/entity-ids'
 
 export type WebSocketCommand = 'viewstate' | 'rtcstate' | 'timeline_streaming'
@@ -22,28 +21,6 @@ export const changeViewState: ChangeViewStateFunction = (
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     ws.sendCommand(VIEWSTATE_COMMAND, channelId, viewState!)
   }
-}
-
-const RTCSTATE_COMMAND = 'rtcstate'
-
-export const changeRTCState = (
-  channelId: ChannelId | null,
-  states: WebRTCUserStateSessions[]
-) => {
-  if (!channelId) {
-    ws.sendCommand(RTCSTATE_COMMAND, '')
-    return
-  }
-  if (states.length === 0) {
-    ws.sendCommand(RTCSTATE_COMMAND, channelId, '')
-    return
-  }
-  ws.sendCommand(
-    RTCSTATE_COMMAND,
-    channelId,
-    ...states.flatMap(s => [s.state, s.sessionId]),
-    '' // 終端の:をつける
-  )
 }
 
 const TIMELINE_STREAMING_COMMAND = 'timeline_streaming'
