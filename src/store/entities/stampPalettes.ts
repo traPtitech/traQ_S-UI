@@ -54,13 +54,8 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
       stampPalettesMapFetched.value,
       stampPalettesMapInitialFetchPromise.value,
       getStampPalette,
-      apiStampPalette => {
-        // レスポンスのStampPaletteはstampsが空配列の場合にnullになるバグがあるので、空配列をセットする
-        const normalizedPalette = {
-          ...apiStampPalette,
-          stamps: apiStampPalette.stamps ?? []
-        }
-        stampPalettesMap.value.set(stampPaletteId, normalizedPalette)
+      fetchedStampPalette => {
+        stampPalettesMap.value.set(stampPaletteId, fetchedStampPalette)
       }
     )
     if (stampPalette) {
@@ -79,13 +74,8 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
       return stampPalettesMap.value
     }
 
-    const [{ data: stampPalettesFromApi }, shared] = await getStampPalettes()
-    // レスポンスのStampPaletteはstampsが空配列の場合にnullになるバグがあるので、空配列をセットする
-    const normalizedStampPalettes = stampPalettesFromApi.map(palette => ({
-      ...palette,
-      stamps: palette.stamps ?? []
-    }))
-    const newStampPalettesMap = arrayToMap(normalizedStampPalettes, 'id')
+    const [{ data: fetchedStampPalettes }, shared] = await getStampPalettes()
+    const newStampPalettesMap = arrayToMap(fetchedStampPalettes, 'id')
     if (!shared) {
       stampPalettesMap.value = newStampPalettesMap
       stampPalettesMapFetched.value = true
@@ -103,19 +93,13 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
       description: postStampPaletteRequest.description,
       stamps: Array.from(postStampPaletteRequest.stamps)
     }
-    const [{ data: createdStampPaletteFromApi }, shared] =
+    const [{ data: createdStampPalette }, shared] =
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await createStampPaletteSingleflight(apiRequestPayload as any)
-
-    // レスポンスのStampPaletteはstampsが空配列の場合にnullになるバグがあるので、空配列をセットする
-    const normalizedPalette = {
-      ...createdStampPaletteFromApi,
-      stamps: createdStampPaletteFromApi.stamps ?? []
-    }
     if (!shared) {
-      stampPalettesMap.value.set(normalizedPalette.id, normalizedPalette)
+      stampPalettesMap.value.set(createdStampPalette.id, createdStampPalette)
     }
-    return normalizedPalette
+    return createdStampPalette
   }
 
   const editStampPalette = async (
@@ -146,7 +130,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
         paletteToUpdate.description = apiRequestPayload.description
       }
       if (apiRequestPayload.stamps) {
-        paletteToUpdate.stamps = apiRequestPayload.stamps ?? []
+        paletteToUpdate.stamps = apiRequestPayload.stamps
       }
       paletteToUpdate.updatedAt = new Date().toISOString()
       stampPalettesMap.value.set(stampPaletteId, paletteToUpdate)
