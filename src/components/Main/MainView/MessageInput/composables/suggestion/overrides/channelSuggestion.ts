@@ -1,6 +1,8 @@
 import { computed, toValue, type MaybeRefOrGetter } from 'vue'
 import type { Candidate, ConfirmedPart } from '../useWordSuggester'
 
+const CHANNEL_PATH_TRIMMING_REGEXP = /^#|\/$/
+
 const channelSuggestionOverride = <
   Params extends {
     suggesterWidth: MaybeRefOrGetter<number>
@@ -16,7 +18,7 @@ const channelSuggestionOverride = <
 
   const confirmedChannelPath = computed(() => {
     return toValue(input.confirmedPart)
-      .text.replace(/^#|\/$/, '')
+      .text.replace(CHANNEL_PATH_TRIMMING_REGEXP, '')
       .split('/')
   })
 
@@ -31,19 +33,18 @@ const channelSuggestionOverride = <
       .join('/')
   )
 
-  const suggestedCandidates = computed(() =>
-    toValue(input.suggestedCandidates).map(candidate => {
-      const restPath = candidate.word.text.replace(
-        new RegExp(`#${confirmedChannelPathString.value}`, 'i'),
-        ''
-      )
+  const suggestedCandidates = computed(() => {
+    const regExp = new RegExp(`#${confirmedChannelPathString.value}`, 'i')
+
+    return toValue(input.suggestedCandidates).map(candidate => {
+      const restPath = candidate.word.text.replace(regExp, '')
 
       return {
         ...candidate,
         display: `#${confirmedChannelShortenedPathString.value}${restPath}`
       }
     })
-  )
+  })
 
   const confirmedPartDisplay = computed(() => {
     const confirmedPath = [
