@@ -23,7 +23,7 @@
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'
-import type { WordOrConfirmedPart } from '../composables/useWordSuggester'
+import type { WordOrConfirmedPart } from '../composables/suggestion/useWordSuggester'
 
 withDefaults(
   defineProps<{
