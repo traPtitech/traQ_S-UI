@@ -24,7 +24,7 @@
         >
           引用メッセージ
         </div>
-        <SearchResultMessageFileList
+        <MessageFileSummary
           v-if="embeddingsState.fileIds.length > 0"
           :file-ids="embeddingsState.fileIds"
           :class="$style.fileList"
@@ -67,7 +67,7 @@ import useToggle from '/@/composables/utils/useToggle'
 import FoldButton from '/@/components/UI/FoldButton.vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useBoxSize from '/@/composables/dom/useBoxSize'
-import SearchResultMessageFileList from '../../CommandPalette/SearchResultMessageFileList.vue'
+import MessageFileSummary from './MessageFileSummary.vue'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
 
 const props = defineProps<{
