@@ -37,7 +37,6 @@ import type {
 } from '../composables/useWordSuggester'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 import { isIOS } from '/@/lib/dom/browser'
-import { debounce } from 'throttle-debounce'
 
 const props = withDefaults(
   defineProps<{
@@ -85,16 +84,14 @@ const select = (word: WordOrConfirmedPart) => {
   emit('select', word)
 }
 
-const scrollToSelectedCandidate = debounce(
-  64,
-  (element: Element | ComponentPublicInstance | null) => {
-    if (!(element instanceof HTMLDivElement)) return
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center'
-    })
-  }
-)
+const scrollToSelectedCandidate = (
+  element: Element | ComponentPublicInstance | null
+) => {
+  if (!(element instanceof HTMLDivElement)) return
+  element.scrollIntoView({
+    block: 'center'
+  })
+}
 </script>
 
 <style lang="scss" module>
