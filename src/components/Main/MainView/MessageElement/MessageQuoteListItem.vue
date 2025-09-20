@@ -18,6 +18,17 @@
         :data-expanded="!isFold"
       >
         <MarkdownContent :content="content" />
+        <div
+          v-if="embeddingsState.quoteMessageIds.length > 0"
+          :class="[$style.body, $style.quote]"
+        >
+          引用メッセージ
+        </div>
+        <SearchResultMessageFileList
+          v-if="embeddingsState.fileIds.length > 0"
+          :file-ids="embeddingsState.fileIds"
+          :class="$style.fileList"
+        />
       </div>
       <FoldButton
         v-if="oversized"
@@ -46,7 +57,7 @@
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref, watchEffect } from 'vue'
 import type { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
@@ -56,6 +67,8 @@ import useToggle from '/@/composables/utils/useToggle'
 import FoldButton from '/@/components/UI/FoldButton.vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useBoxSize from '/@/composables/dom/useBoxSize'
+import SearchResultMessageFileList from '../../CommandPalette/SearchResultMessageFileList.vue'
+import useEmbeddings from '/@/composables/message/useEmbeddings'
 
 const props = defineProps<{
   parentMessageChannelId: ChannelId | DMChannelId
@@ -64,13 +77,20 @@ const props = defineProps<{
 }>()
 
 const { renderedContentMap, renderMessageContent } = useMessagesView()
-const { messagesMap } = useMessagesStore()
+const { messagesMap, fetchFileMetaData } = useMessagesStore()
 const { dmChannelsMap } = useChannelsStore()
+const { embeddingsState } = useEmbeddings(props)
 
 onBeforeMount(() => {
   if (!renderedContentMap.value.has(props.messageId)) {
     renderMessageContent(props.messageId)
   }
+})
+
+watchEffect(async () => {
+  await Promise.allSettled(
+    embeddingsState.fileIds.map(fileId => fetchFileMetaData({ fileId }))
+  )
 })
 
 const message = computed(() => messagesMap.value.get(props.messageId))
@@ -197,6 +217,14 @@ $mask-image: linear-gradient(
   &:focus-visible {
     @include background-tertiary;
   }
+}
+
+.fileList {
+  margin-block: 8px;
+}
+
+.quote {
+  margin-block: 8px;
 }
 
 .footer {
