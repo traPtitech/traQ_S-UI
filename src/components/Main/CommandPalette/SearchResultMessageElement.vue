@@ -35,7 +35,7 @@
           <AIcon name="arrow-expand-vertical" mdi :size="20" />全て表示
         </div>
       </div>
-      <SearchResultMessageFileList
+      <MessageFileSummary
         v-if="fileIds.length > 0"
         :file-ids="fileIds"
         :class="$style.fileList"
@@ -60,10 +60,10 @@ import { useUsersStore } from '/@/store/entities/users'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { render } from '/@/lib/markdown/markdown'
 import { isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
-import MessageQuoteList from '/@/components/Main/MainView/MessageElement/MessageQuoteList.vue'
+import MessageQuoteList from '/@/components/Main/MainView/MessageElement/Embeddings/MessageQuoteList.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
+import MessageFileSummary from '../MainView/MessageElement/Embeddings/MessageFileSummary.vue'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import useToggle from '/@/composables/utils/useToggle'
 import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
