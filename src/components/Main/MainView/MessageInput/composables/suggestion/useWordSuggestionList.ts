@@ -71,7 +71,7 @@ const useCandidateTree = () => {
       })),
       [...stampsMap.value.values()].map(stamp => ({
         type: 'stamp',
-        text: `:${stamp.name}`,
+        text: `:${stamp.name}:`,
         id: stamp.id
       })),
       [...animeEffectSet, ...sizeEffectSet].map(effectName => ({
