@@ -1,35 +1,41 @@
 <template>
-  <div
-    v-if="message"
-    ref="bodyRef"
-    :class="$style.body"
-    :data-is-mobile="$boolAttr(isMobile)"
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
-  >
-    <MessageTools
-      :class="$style.tools"
-      :show="isHovered"
-      :message-id="messageId"
-      is-minimum
-    />
-    <MessageContents :class="$style.messageContents" :message-id="messageId" />
-    <MessageQuoteListItemFooter :class="$style.footer" :message="message" />
-  </div>
+  <ClickOutside :enabled="isHovered" @click-outside="onClickOutside">
+    <div
+      v-if="message"
+      ref="bodyRef"
+      :class="$style.body"
+      :data-is-mobile="$boolAttr(isMobile)"
+      @pointerenter="onPointerEnter"
+      @click="onClick"
+      @mouseleave="onMouseLeave"
+    >
+      <MessageTools
+        :class="$style.tools"
+        :show="isHovered"
+        :message-id="messageId"
+        is-minimum
+      />
+      <MessageContents
+        :class="$style.messageContents"
+        :message-id="messageId"
+      />
+      <MessageQuoteListItemFooter :class="$style.footer" :message="message" />
+    </div>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>
-import MessageContents from './MessageContents.vue'
-import MessageTools from './MessageTools.vue'
-import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import { computed, shallowRef, toRef } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { ChangeHeightData } from './composables/useElementRenderObserver'
 import useElementRenderObserver from './composables/useElementRenderObserver'
+import MessageContents from './MessageContents.vue'
+import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
+import MessageTools, { useMessageToolsHover } from './MessageTools.vue'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
-import useHover from '/@/composables/dom/useHover'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import type { MessageId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   messageId: MessageId
@@ -56,7 +62,8 @@ useElementRenderObserver(
   emit
 )
 
-const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
+  useMessageToolsHover()
 </script>
 
 <style lang="scss" module>

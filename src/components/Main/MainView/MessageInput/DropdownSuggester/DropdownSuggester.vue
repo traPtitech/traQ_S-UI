@@ -7,42 +7,51 @@
       -->
       <DropdownSuggesterCandidate
         :candidate="confirmedPartCandidate"
+        :display="confirmedPart.display"
         :is-selected="selectedIndex === -1"
         @mousedown.prevent="select(confirmedPartCandidate)"
       />
       <div :class="$style.scroll">
-        <DropdownSuggesterCandidate
+        <div
           v-for="(candidate, index) in candidates"
-          :key="candidate.text"
-          :candidate="candidate"
-          :is-selected="selectedIndex === index"
-          @mousedown.prevent="select(candidate)"
-        />
+          :key="candidate.word.text"
+          :ref="selectedIndex === index ? scrollToSelectedCandidate : undefined"
+        >
+          <DropdownSuggesterCandidate
+            :candidate="candidate.word"
+            :display="candidate.display"
+            :is-selected="selectedIndex === index"
+            @mousedown.prevent="select(candidate.word)"
+          />
+        </div>
       </div>
     </div>
   </teleport>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import type { Word } from '../composables/useWordSuggestionList'
-import type { WordOrConfirmedPart } from '../composables/useWordSuggester'
+import { computed, type ComponentPublicInstance } from 'vue'
+import type {
+  Candidate,
+  WordOrConfirmedPart
+} from '../composables/suggestion/useWordSuggester'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 import { isIOS } from '/@/lib/dom/browser'
 
 const props = withDefaults(
   defineProps<{
     isShown?: boolean
+    width: number
     position?: { top: number; left: number }
-    candidates?: Word[]
+    candidates?: Candidate[]
     selectedIndex: number | null
-    confirmedPart?: string
+    confirmedPart?: { text: string; display?: string }
   }>(),
   {
     isShown: false,
     position: () => ({ top: 0, left: 0 }),
     candidates: () => [],
-    confirmedPart: ''
+    confirmedPart: () => ({ text: '', display: '' })
   }
 )
 
@@ -50,7 +59,6 @@ const emit = defineEmits<{
   (e: 'select', _word: WordOrConfirmedPart): void
 }>()
 
-const WIDTH = 240
 const MARGIN = 8
 
 const iOSFlag = isIOS()
@@ -61,19 +69,28 @@ const styledPosition = computed(() => ({
       ? (window.visualViewport?.offsetTop ?? 0) + props.position.top
       : props.position.top
   }px`,
-  left: `min(${props.position.left}px, calc(100vw - ${WIDTH + MARGIN}px))`,
-  width: `${WIDTH}px`
+  left: `min(${props.position.left}px, calc(100vw - ${props.width + MARGIN}px))`,
+  width: `${props.width}px`
 }))
 
 const confirmedPartCandidate = computed(
   (): WordOrConfirmedPart => ({
     type: 'confirmed-part',
-    text: props.confirmedPart
+    text: props.confirmedPart.text
   })
 )
 
 const select = (word: WordOrConfirmedPart) => {
   emit('select', word)
+}
+
+const scrollToSelectedCandidate = (
+  element: Element | ComponentPublicInstance | null
+) => {
+  if (!(element instanceof HTMLDivElement)) return
+  element.scrollIntoView({
+    block: 'center'
+  })
 }
 </script>
 

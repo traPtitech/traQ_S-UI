@@ -4,7 +4,7 @@ import useNavigationController from '/@/composables/mainView/useNavigationContro
 import useChannelPath from '/@/composables/useChannelPath'
 import type { LocationQuery } from 'vue-router'
 import { useRoute } from 'vue-router'
-import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
+import { getFirstParam } from '/@/lib/basic/url'
 import { dequal } from 'dequal'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import { useModalStore } from '/@/store/ui/modal'
@@ -14,6 +14,8 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+import { useRenderKey } from '/@/composables/dom/useRenderKey'
+import { useMessageQuery } from '/@/composables/utils/useMessageQuery'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -47,6 +49,7 @@ const useRouteWatcher = () => {
   const { usersMap, usersMapInitialFetchPromise, fetchUserByName } =
     useUsersStore()
   const { fetchClipFolder } = useClipFoldersStore()
+  const messageQuery = useMessageQuery()
 
   const state = reactive({
     currentRouteName: computed(() => route.name ?? ''),
@@ -92,7 +95,7 @@ const useRouteWatcher = () => {
 
       changePrimaryViewToChannel({
         channelId: id,
-        entryMessageId: getFirstQuery(route.query['message']) ?? undefined
+        entryMessageId: messageQuery.value
       })
     } catch (_) {
       state.view = 'not-found'
@@ -118,7 +121,7 @@ const useRouteWatcher = () => {
       changePrimaryViewToDM({
         channelId: dmChannelId,
         userName: user.name,
-        entryMessageId: getFirstQuery(route.query['message']) ?? undefined
+        entryMessageId: messageQuery.value
       })
       state.view = 'main'
     } catch {
@@ -232,7 +235,10 @@ const useRouteWatcher = () => {
     } else {
       // チャンネルがなかった
       state.view = 'not-found'
+      return
     }
+
+    useRenderKey('messages').refresh()
   }
 
   type RouteParamWithQuery = readonly [routeParam: string, query: LocationQuery]

@@ -9,9 +9,13 @@
       </router-link>
       - {{ date }}
     </span>
-    <router-link v-if="!disableLinks" :class="$style.link" :to="messageLink">
+    <MessageLink
+      v-if="!disableLinks"
+      :class="$style.link"
+      :message-id="message?.id ?? ''"
+    >
       メッセージへ
-    </router-link>
+    </MessageLink>
   </div>
 </template>
 
@@ -20,7 +24,7 @@ import { computed } from 'vue'
 import type { Message } from '@traptitech/traq'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getDateRepresentation } from '/@/lib/basic/date'
-import { constructMessagesPath } from '/@/router'
+import MessageLink from '/@/components/UI/MessageLink.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -42,9 +46,6 @@ const channelLink = computed(() =>
 )
 const date = computed(() =>
   props.message ? getDateRepresentation(props.message.createdAt) : ''
-)
-const messageLink = computed(() =>
-  props.message ? constructMessagesPath(props.message.id) : ''
 )
 </script>
 

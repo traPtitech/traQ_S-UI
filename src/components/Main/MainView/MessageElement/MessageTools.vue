@@ -182,6 +182,34 @@ const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
 )
 </script>
 
+<script lang="ts">
+export const useMessageToolsHover = () => {
+  const isHovered = ref(false)
+
+  const onPointerEnter = (e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') return
+    isHovered.value = true
+  }
+  const onClick = () => {
+    isHovered.value = true
+  }
+  const onMouseLeave = () => {
+    isHovered.value = false
+  }
+  const onClickOutside = () => {
+    isHovered.value = false
+  }
+
+  return {
+    isHovered,
+    onPointerEnter,
+    onClick,
+    onMouseLeave,
+    onClickOutside
+  }
+}
+</script>
+
 <style lang="scss" module>
 .container {
   @include color-ui-tertiary;
