@@ -21,6 +21,14 @@ import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useTts } from '/@/store/app/tts'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 import useDocumentTitle from '/@/composables/document/useDocumentTitle'
+import { isWebKit } from './lib/dom/browser'
+
+if (isWebKit()) {
+  document.body.style.setProperty(
+    '--contain-strict',
+    'inline-size layout paint style'
+  )
+}
 
 const useQallConfirmer = () => {
   window.addEventListener('beforeunload', event => {
