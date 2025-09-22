@@ -2,6 +2,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed } from 'vue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import { isWebKit } from '/@/lib/dom/browser'
 
 type FeatureFlagDescription = {
   title: string
@@ -31,7 +32,7 @@ export const featureFlagDescriptions = {
     description:
       '「contain: strict」を「contain: inline-size layout paint style」で代替します。 ' +
       'WebKit 系ブラウザ (Safari など）でレイアウトが崩れる場合に有効にすることで不具合が解消される可能性があります。',
-    defaultValue: false,
+    defaultValue: isWebKit(),
     endAt: new Date('9999-12-31T00:00')
   }
 } as const satisfies Record<string, FeatureFlagDescription>
