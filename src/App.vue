@@ -21,14 +21,16 @@ import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useTts } from '/@/store/app/tts'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 import useDocumentTitle from '/@/composables/document/useDocumentTitle'
-import { isWebKit } from './lib/dom/browser'
+import { isWebKit } from '/@/lib/dom/browser'
 
-if (isWebKit()) {
+const alternateContainStrict = () => {
   document.body.style.setProperty(
     '--contain-strict',
     'inline-size layout paint style'
   )
 }
+
+if (isWebKit()) alternateContainStrict()
 
 const useQallConfirmer = () => {
   window.addEventListener('beforeunload', event => {
@@ -96,6 +98,15 @@ ${Object.entries(style.value)
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
+
+const { featureFlags } = useFeatureFlagSettings()
+
+watchEffect(() => {
+  if (featureFlags.value.contain_strict_alternate.enabled) {
+    alternateContainStrict()
+  }
+})
 
 useTts()
 

@@ -25,6 +25,14 @@ export const featureFlagDescriptions = {
     description: '「提供終了日」の表記がひらがなになります。',
     defaultValue: false,
     endAt: new Date('2025-07-31T23:59:59+09:00')
+  },
+  contain_strict_alternate: {
+    title: 'contain: strict の代替',
+    description:
+      '「contain: strict」を「contain: inline-size layout paint style」で代替します。 ' +
+      'WebKit 系ブラウザ (Safari など）でレイアウトが崩れる場合に有効にすることで不具合が解消される可能性があります。',
+    defaultValue: false,
+    endAt: new Date('9999-12-31T00:00')
   }
 } as const satisfies Record<string, FeatureFlagDescription>
 
