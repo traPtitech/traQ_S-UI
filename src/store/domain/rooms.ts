@@ -70,9 +70,9 @@ const useRoomsStorePinia = defineStore('domain/rooms', () => {
 
   const fetchRooms = async ({
     ignoreCache = false
-  }: { ignoreCache?: boolean } = {}) => {
+  }: { ignoreCache?: boolean } = {}): Promise<Rooms> => {
     if (roomsFetched.value && !ignoreCache) {
-      return roomsFetched.value
+      return rooms.value
     }
 
     const [{ data }, shared] = await getRooms()
@@ -80,7 +80,7 @@ const useRoomsStorePinia = defineStore('domain/rooms', () => {
       rooms.value = await purifyRoomData(data)
       roomsFetched.value = true
     }
-    return rooms
+    return rooms.value
   }
 
   wsListener.on('QALL_ROOM_STATE_CHANGED', async ({ roomStates }) => {
