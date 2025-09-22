@@ -49,7 +49,7 @@ defineExpose({ focus })
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  contain: strict;
+  contain: var(--contain-strict);
   height: 1.5rem;
   line-height: 1.5rem;
 }

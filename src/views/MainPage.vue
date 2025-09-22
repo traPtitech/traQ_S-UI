@@ -224,7 +224,7 @@ $nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
     y: auto;
   }
   scrollbar-gutter: stable;
-  contain: strict;
+  contain: var(--contain-strict);
   z-index: $z-index-sidebar-wrapper;
 }
 .sidebarPortal {
