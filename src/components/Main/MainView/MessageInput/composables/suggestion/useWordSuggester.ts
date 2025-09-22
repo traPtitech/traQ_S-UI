@@ -131,14 +131,12 @@ const useWordSuggester = (
   }
 
   const onSelect = (word: WordOrConfirmedPart) => {
-    if (word.type === 'stamp') {
-      insertText(`${word.text}:`)
-      upsertLocalStampHistory(word.id, new Date())
-    } else {
-      insertText(word.text)
-    }
+    insertText(word.text)
     isSuggesterShown.value = false
+
+    if (word.type === 'stamp') upsertLocalStampHistory(word.id, new Date())
   }
+
   const onBlur = () => {
     isSuggesterShown.value = false
   }
