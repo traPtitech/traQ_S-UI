@@ -15,7 +15,7 @@
       >
         +{{ inVisibleCount }}
       </span>
-      <user-icon
+      <UserIcon
         v-for="userId in visibleInactiveIconIds"
         :key="userId"
         :class="$style.userIcon"
@@ -25,7 +25,7 @@
         :style="styles.userIcon"
         is-inactive
       />
-      <user-icon
+      <UserIcon
         v-for="userId in visibleIconIds"
         :key="userId"
         :class="$style.userIcon"

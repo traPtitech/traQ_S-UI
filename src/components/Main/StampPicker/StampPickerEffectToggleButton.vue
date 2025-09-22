@@ -4,7 +4,7 @@
     :aria-selected="isActive"
     :data-has-effect="hasEffect"
   >
-    <a-icon name="effect" />
+    <AIcon name="effect" />
   </button>
 </template>
 

@@ -2,7 +2,7 @@
   <div ref="targetRef" :class="$style.frame" @scroll.passive="onScroll">
     <div :style="containerStyle">
       <div :class="$style.panel" :style="panelStyle">
-        <stamp-picker-stamp-list-item
+        <StampPickerStampListItem
           v-for="{ stamp, key } in stampsWithAnimationKey"
           :key="stamp.id"
           :stamp="stamp"

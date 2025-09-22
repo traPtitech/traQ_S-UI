@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <file-type-icon
+    <FileTypeIcon
       :type="fileType"
       :size="24"
       :is-animated-image="isAnimatedImage"

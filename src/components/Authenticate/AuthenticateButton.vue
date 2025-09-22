@@ -5,7 +5,7 @@
     :data-type="type"
     :type="isSubmit ? 'submit' : 'button'"
   >
-    <a-icon
+    <AIcon
       v-if="iconName"
       :class="$style.icon"
       :name="iconName"

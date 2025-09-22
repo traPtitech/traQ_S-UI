@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.outerContainer" :style="outerContainerStyle">
-    <icon-button
+    <IconButton
       v-if="showTextAreaExpandButton"
       :class="$style.textAreaExpandButton"
       :icon-name="isInputTextAreaExpanded ? 'chevron-down' : 'chevron-up'"
@@ -9,16 +9,16 @@
     />
     <div :class="$style.innerContainer" :data-is-mobile="$boolAttr(isMobile)">
       <template v-if="!isMobile || isLeftControlsExpanded">
-        <message-input-upload-button
+        <MessageInputUploadButton
           :class="$style.button"
           @click="emit('clickAddAttachment')"
         />
-        <message-input-preview-button
+        <MessageInputPreviewButton
           v-model="isPreviewShownValue"
           :class="$style.button"
         />
       </template>
-      <icon-button
+      <IconButton
         v-if="isMobile"
         :class="$style.button"
         :icon-name="isLeftControlsExpanded ? 'chevron-left' : 'chevron-right'"

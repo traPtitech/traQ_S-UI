@@ -3,8 +3,8 @@
     <section :class="$style.section">
       <h3 :class="$style.heading">アイコン</h3>
       <div :class="$style.iconContainer">
-        <user-icon :user-id="detail.id" :size="200" prevent-modal />
-        <form-button
+        <UserIcon :user-id="detail.id" :size="200" prevent-modal />
+        <FormButton
           label="アイコンを変更する"
           type="secondary"
           :class="$style.iconEditButton"
@@ -14,34 +14,34 @@
     </section>
     <section :class="$style.section">
       <h3 :class="$style.heading">表示名</h3>
-      <form-input v-model="state.displayName" :max-length="32" />
+      <FormInput v-model="state.displayName" :max-length="32" />
     </section>
     <section :class="$style.section">
       <h3 :class="$style.heading">ひとこと</h3>
       <div :class="$style.bioContainer">
-        <markdown-preview :content="state.bio" accept-action />
-        <form-text-area v-model="state.bio" rows="2" :max-length="1000" />
+        <MarkdownPreview :content="state.bio" accept-action />
+        <FormTextArea v-model="state.bio" rows="2" :max-length="1000" />
       </div>
     </section>
     <section :class="$style.section">
       <h3 :class="$style.heading">ホームチャンネル</h3>
-      <form-selector-filterable
+      <FormSelectorFilterable
         v-model="state.homeChannel"
         :options="channelOptions"
       />
     </section>
     <section :class="$style.section">
       <h3 :class="$style.heading">X (旧Twitter)</h3>
-      <form-input v-model="state.twitterId" prefix="@" :max-length="15" />
+      <FormInput v-model="state.twitterId" prefix="@" :max-length="15" />
     </section>
     <div :class="$style.buttonContainer">
-      <form-button
+      <FormButton
         label="リセット"
         :disabled="!isChanged"
         type="tertiary"
         @click="handleReset"
       />
-      <form-button
+      <FormButton
         label="プロフィールを更新"
         :disabled="!canUpdate"
         :loading="isUpdating"

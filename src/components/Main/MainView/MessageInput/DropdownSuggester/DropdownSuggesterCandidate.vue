@@ -1,20 +1,20 @@
 <template>
-  <div ref="containerRef" :class="$style.container" :aria-selected="isSelected">
-    <dropdown-suggester-user-icon
+  <div :class="$style.container" :aria-selected="isSelected">
+    <DropdownSuggesterUserIcon
       v-if="candidate.type === 'user'"
       :user-id="candidate.id"
     />
-    <a-stamp
+    <AStamp
       v-else-if="candidate.type === 'stamp'"
       :stamp-id="candidate.id"
       :size="24"
     />
-    <dropdown-suggester-stamp-effect
+    <DropdownSuggesterStampEffect
       v-else-if="candidate.type === 'stamp-effect'"
       :effect-name-with-dot="candidate.text"
     />
     <div :class="$style.name">
-      {{ candidate.text }}
+      {{ display ?? candidate.text }}
     </div>
   </div>
 </template>
@@ -23,30 +23,18 @@
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'
-import { ref, watchEffect } from 'vue'
-import type { WordOrConfirmedPart } from '../composables/useWordSuggester'
+import type { WordOrConfirmedPart } from '../composables/suggestion/useWordSuggester'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     candidate: WordOrConfirmedPart
+    display?: string
     isSelected?: boolean
   }>(),
   {
     isSelected: false
   }
 )
-
-const containerRef = ref<HTMLDivElement>()
-watchEffect(() => {
-  if (!containerRef.value) return
-
-  if (props.isSelected) {
-    containerRef.value.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center'
-    })
-  }
-})
 </script>
 
 <style lang="scss" module>

@@ -1,7 +1,7 @@
 <template>
-  <primary-view-sidebar-page show-back-button @back="emit('moveBack')">
+  <PrimaryViewSidebarPage show-back-button @back="emit('moveBack')">
     <template #header>
-      <sidebar-header text="イベント" />
+      <SidebarHeader text="イベント" />
     </template>
     <template #content>
       <div
@@ -9,7 +9,7 @@
         :class="$style.container"
         @scroll.passive="onScroll"
       >
-        <sidebar-event
+        <SidebarEvent
           v-for="parsedEvent in parsedEvents"
           :key="parsedEvent.datetime"
           :class="$style.item"
@@ -20,7 +20,7 @@
         </div>
       </div>
     </template>
-  </primary-view-sidebar-page>
+  </PrimaryViewSidebarPage>
 </template>
 
 <script lang="ts" setup>

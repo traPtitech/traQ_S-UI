@@ -5,9 +5,9 @@
         <component :is="Component" />
       </keep-alive>
     </router-view>
-    <modal-container />
-    <toast-container />
-    <stamp-picker-container />
+    <ModalContainer />
+    <ToastContainer />
+    <StampPickerContainer />
   </div>
 </template>
 

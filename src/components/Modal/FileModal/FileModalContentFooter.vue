@@ -3,7 +3,7 @@
     <div :class="$style.channelPath" @mousedown="onClick">
       {{ channelPath }}
     </div>
-    <file-modal-content-footer-username
+    <FileModalContentFooterUsername
       :class="$style.userName"
       :user-id="user?.id"
     />

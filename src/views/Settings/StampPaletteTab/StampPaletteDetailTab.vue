@@ -2,7 +2,7 @@
   <section :class="$style.section">
     <div :class="$style.sectionHeader">
       <h3>パレットの編集</h3>
-      <stamp-palette-description />
+      <StampPaletteDescription />
     </div>
     <div v-if="!isStampPaletteFetched">
       <p>読み込み中...</p>
@@ -14,8 +14,8 @@
       <p>スタンプパレットの編集権限がありません。</p>
     </div>
     <div v-else>
-      <stamp-palette-editor v-model:palette="draftPalette" />
-      <stamp-palette-action-buttons
+      <StampPaletteEditor v-model:palette="draftPalette" />
+      <StampPaletteActionButtons
         :palette="draftPalette"
         @finalize="finalizeWithToast"
         @cancel="discardWithConfirm"

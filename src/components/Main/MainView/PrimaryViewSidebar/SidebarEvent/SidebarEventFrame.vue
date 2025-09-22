@@ -1,18 +1,18 @@
 <template>
-  <optional-router-link
+  <OptionalRouterLink
     :class="$style.container"
     :data-is-link-available="$boolAttr(!!link)"
     :to="link"
     block
   >
     <div :class="$style.titleWrapper">
-      <a-icon :name="iconName" :mdi="iconMdi" />
+      <AIcon :name="iconName" :mdi="iconMdi" />
       <div :class="$style.title">
         {{ title }}
       </div>
     </div>
     <div :class="$style.header">
-      <user-icon :user-id="userId" :size="20" />
+      <UserIcon :user-id="userId" :size="20" />
       <div :class="$style.time">
         {{ timeString }}
       </div>
@@ -21,7 +21,7 @@
     <div :class="$style.content">
       <slot />
     </div>
-  </optional-router-link>
+  </OptionalRouterLink>
 </template>
 
 <script lang="ts" setup>

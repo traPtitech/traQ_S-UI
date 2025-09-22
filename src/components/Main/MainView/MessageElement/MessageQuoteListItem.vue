@@ -1,14 +1,14 @@
 <template>
   <div v-if="shouldShow" :class="$style.body" data-is-shown>
-    <user-icon
+    <UserIcon
       :class="$style.userIcon"
-      :user-id="message.userId"
+      :user-id="message!.userId"
       :size="24"
       prevent-modal
     />
-    <message-quote-list-item-header
+    <MessageQuoteListItemHeader
       :class="$style.messageHeader"
-      :user-id="message.userId"
+      :user-id="message!.userId"
     />
     <div :class="$style.messageContents">
       <div
@@ -17,9 +17,9 @@
         :class="[$style.markdownContainer, oversized && $style.oversized]"
         :data-expanded="!isFold"
       >
-        <markdown-content :content="content" />
+        <MarkdownContent :content="content" />
       </div>
-      <fold-button
+      <FoldButton
         v-if="oversized"
         :is-fold="isFold"
         :class="$style.foldButton"
@@ -31,7 +31,11 @@
         @click="toggleFold"
       />
     </div>
-    <message-quote-list-item-footer :class="$style.footer" :message="message" />
+    <MessageQuoteListItemFooter
+      :class="$style.footer"
+      :message="message"
+      :disable-links="disableFooterLinks"
+    />
   </div>
   <div v-else :class="$style.body">
     存在しないか表示できないメッセージの引用です
@@ -42,7 +46,7 @@
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
-import { computed, ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import type { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
@@ -56,14 +60,20 @@ import useBoxSize from '/@/composables/dom/useBoxSize'
 const props = defineProps<{
   parentMessageChannelId: ChannelId | DMChannelId
   messageId: MessageId
+  disableFooterLinks: boolean
 }>()
 
-const { renderedContentMap } = useMessagesView()
+const { renderedContentMap, renderMessageContent } = useMessagesView()
 const { messagesMap } = useMessagesStore()
 const { dmChannelsMap } = useChannelsStore()
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const message = computed(() => messagesMap.value.get(props.messageId)!)
+onBeforeMount(() => {
+  if (!renderedContentMap.value.has(props.messageId)) {
+    renderMessageContent(props.messageId)
+  }
+})
+
+const message = computed(() => messagesMap.value.get(props.messageId))
 const shouldShow = computed(
   () =>
     !!message.value &&
@@ -84,7 +94,12 @@ const oversized = computed(
 )
 
 const markdownId = randomString()
-const { value: isFold, toggle: toggleFold } = useToggle(true)
+const { value: isFold, toggle: toggleFoldImpl } = useToggle(true)
+
+const toggleFold = (e: MouseEvent) => {
+  e.stopPropagation()
+  toggleFoldImpl()
+}
 </script>
 
 <style lang="scss" module>

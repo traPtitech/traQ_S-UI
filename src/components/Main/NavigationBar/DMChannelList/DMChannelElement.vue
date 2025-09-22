@@ -8,7 +8,7 @@
       @mouseleave="onMouseLeave"
     >
       <div :class="$style.channelHash">
-        <user-icon
+        <UserIcon
           has-notification
           prevent-modal
           :user-id="user.id"
@@ -16,8 +16,8 @@
           :indicator-size="8"
         />
       </div>
-      <d-m-channel-element-name :name="user.name" />
-      <channel-element-unread-badge
+      <DMChannelElementName :name="user.name" />
+      <ChannelElementUnreadBadge
         is-noticeable
         :unread-count="notificationState.unreadCount"
       />
