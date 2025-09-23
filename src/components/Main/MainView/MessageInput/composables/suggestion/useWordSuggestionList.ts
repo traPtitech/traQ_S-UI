@@ -36,12 +36,12 @@ interface WordBase {
   text: string
 }
 
-interface WordWithId extends WordBase {
+export interface WordWithId extends WordBase {
   type: 'user' | 'user-group' | 'stamp' | 'channel'
   id: string
 }
 
-interface WordWithoutId extends WordBase {
+export interface WordWithoutId extends WordBase {
   type: 'stamp-effect'
 }
 
@@ -71,7 +71,7 @@ const useCandidateTree = () => {
       })),
       [...stampsMap.value.values()].map(stamp => ({
         type: 'stamp',
-        text: `:${stamp.name}:`,
+        text: `:${stamp.name}`,
         id: stamp.id
       })),
       [...animeEffectSet, ...sizeEffectSet].map(effectName => ({

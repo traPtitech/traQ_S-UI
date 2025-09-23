@@ -13,11 +13,15 @@ type Invocable = (...args: any[]) => any
 type Condition = MaybeRefOrGetter<boolean>
 type Overrides = Record<string, MaybeRefOrGetter<unknown>>
 
-type Applied<T, Overrides> = {
+type Applied<T, O> = {
   [K in keyof T]: T[K] extends Invocable
-    ? T[K]
-    : K extends keyof Overrides
-      ? ComputedRef<UnwrapRef<T[K]> | UnwrapRef<Overrides[K]>>
+    ? K extends keyof O
+      ? O[K] extends Invocable
+        ? (...args: Parameters<T[K]>) => ReturnType<T[K]> | ReturnType<O[K]>
+        : never
+      : T[K]
+    : K extends keyof O
+      ? ComputedRef<UnwrapRef<T[K]> | UnwrapRef<O[K]>>
       : ComputedRef<UnwrapRef<T[K]>>
 }
 
@@ -36,7 +40,17 @@ const apply = <
   }
 ) => {
   return Object.entries(values).reduce((applied, [key, value]) => {
-    if (value instanceof Function) return { ...applied, [key]: value }
+    if (value instanceof Function)
+      return {
+        ...applied,
+        [key]: (...input: Parameters<typeof value>) => {
+          if (overrides[key] instanceof Function && toValue(condition)) {
+            return overrides[key](...input)
+          } else {
+            return value(...input)
+          }
+        }
+      }
 
     return {
       ...applied,
@@ -57,10 +71,7 @@ export const toOverridable = <
 ) => {
   return {
     ...values,
-    overrides: <
-      C extends MaybeRefOrGetter<boolean>,
-      O extends Record<string, MaybeRefOrGetter<unknown>>
-    >(
+    overrides: <C extends Condition, O extends Overrides>(
       override: (value: T) => {
         condition: C
         overrides: O
