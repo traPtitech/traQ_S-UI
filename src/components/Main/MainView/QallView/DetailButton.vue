@@ -30,7 +30,6 @@ function handleClick() {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: $theme-background-primary-default;
   width: 24px;
   height: 24px;
 }
