@@ -208,8 +208,8 @@ const handleScroll = () => {
   contain: content;
 }
 .uiElement {
-  pointer-events: all;
   @include color-ui-primary;
+  pointer-events: all;
 }
 
 .uiToggleButton {

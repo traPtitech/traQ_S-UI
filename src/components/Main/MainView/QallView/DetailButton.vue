@@ -21,6 +21,8 @@ function handleClick() {
 
 <style lang="scss" module>
 .detailButton {
+  @include color-ui-primary;
+  @include background-tertiary;
   position: absolute;
   bottom: -6px;
   right: -6px;
@@ -31,7 +33,5 @@ function handleClick() {
   background-color: $theme-background-primary-default;
   width: 24px;
   height: 24px;
-  @include color-ui-primary;
-  @include background-tertiary;
 }
 </style>
