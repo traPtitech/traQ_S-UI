@@ -88,7 +88,7 @@ const staredChannels = computed(() => {
 const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
   const mapped = tree.map((node, index) => ({
     index,
-    pathString: channelIdToPathString(node.id).toUpperCase()
+    pathString: channelIdToPathString(node.id)?.toUpperCase() ?? ''
   }))
   mapped.sort((a, b) => {
     if (a.pathString > b.pathString) {

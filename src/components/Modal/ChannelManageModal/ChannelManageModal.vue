@@ -107,7 +107,7 @@ const channel = computed((): Required<PatchChannelRequest> => {
   }
 })
 const { channelIdToPathString } = useChannelPath()
-const subtitle = computed(() => channelIdToPathString(props.id, true))
+const subtitle = computed(() => channelIdToPathString(props.id, true) ?? '')
 
 const manageState = reactive({ ...channel.value })
 const { manageChannel } = useManageChannel(props, manageState, channel)

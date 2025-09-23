@@ -167,7 +167,7 @@ const useRouteWatcher = () => {
     let channelPath = ''
     let channelId = ''
     if (file.channelId) {
-      channelPath = channelIdToPathString(file.channelId, true)
+      channelPath = channelIdToPathString(file.channelId, true) ?? ''
       channelId = file.channelId
     } else {
       channelPath = openChannelPath.value
@@ -218,7 +218,7 @@ const useRouteWatcher = () => {
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
-        path: channelIdToLink(message.channelId),
+        path: channelIdToLink(message.channelId) as string,
         query: { message: message.id }
       })
     } else if (dmChannelsMap.value.has(channelId)) {

@@ -44,8 +44,7 @@ const onDMClick = async (event: MouseEvent) => {
 
 const onHomeChannelClick = async (event: MouseEvent) => {
   if (!props.homeChannelId) return
-
-  openLinkAndClearModal(event, channelIdToLink(props.homeChannelId))
+  openLinkAndClearModal(event, channelIdToLink(props.homeChannelId) as string)
 }
 </script>
 

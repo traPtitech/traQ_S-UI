@@ -28,7 +28,7 @@ import MessageLink from '/@/components/UI/MessageLink.vue'
 
 const props = withDefaults(
   defineProps<{
-    message?: Message
+    message: Message
     disableLinks?: boolean
   }>(),
   {
@@ -38,14 +38,14 @@ const props = withDefaults(
 
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
 
-const channelPath = computed(() =>
-  props.message ? channelIdToPathString(props.message.channelId, true) : ''
+const channelPath = computed(
+  () => channelIdToPathString(props.message.channelId, true) ?? ''
 )
-const channelLink = computed(() =>
-  props.message ? channelIdToLink(props.message.channelId) : ''
+const channelLink = computed(
+  () => channelIdToLink(props.message.channelId) ?? ''
 )
-const date = computed(() =>
-  props.message ? getDateRepresentation(props.message.createdAt) : ''
+const date = computed(
+  () => getDateRepresentation(props.message.createdAt) ?? ''
 )
 </script>
 

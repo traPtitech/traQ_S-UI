@@ -31,10 +31,10 @@ const props = defineProps<{
 
 const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
 
-const channelPath = computed(() =>
-  channelIdToShortPathString(props.channelId, true)
+const channelPath = computed(
+  () => channelIdToShortPathString(props.channelId, true) ?? ''
 )
-const channelLink = computed(() => channelIdToLink(props.channelId))
+const channelLink = computed(() => channelIdToLink(props.channelId) ?? '')
 const hasAttachments = computed(() => props.state.attachments.length > 0)
 
 const renderedContent = ref()

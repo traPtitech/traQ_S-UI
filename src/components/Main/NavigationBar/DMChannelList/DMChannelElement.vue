@@ -56,7 +56,7 @@ const notificationState = useNotificationState(toRef(props, 'dmChannel'))
 const { openLink } = useOpenLink()
 const { channelIdToLink } = useChannelPath()
 const openChannel = (event: MouseEvent) => {
-  openLink(event, channelIdToLink(props.dmChannel.id))
+  openLink(event, channelIdToLink(props.dmChannel.id) as string)
 }
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()

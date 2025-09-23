@@ -41,6 +41,7 @@ const channelPath = computed(() =>
 
 const onClick = async (event: MouseEvent) => {
   if (!props.channelId) return
+  if (!channelPath.value) return
 
   openLinkAndClearModal(event, constructChannelPath(channelPath.value))
 }

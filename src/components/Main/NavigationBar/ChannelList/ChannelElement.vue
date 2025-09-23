@@ -22,7 +22,7 @@
       <router-link
         v-slot="{ href, navigate }"
         custom
-        :to="channelIdToLink(props.channel.id)"
+        :to="channelIdToLink(props.channel.id) ?? ''"
       >
         <a
           :class="$style.channel"
@@ -30,7 +30,9 @@
           :aria-current="isSelected && 'page'"
           :aria-expanded="hasChildren && isOpened ? true : undefined"
           :data-is-inactive="$boolAttr(!channel.active)"
-          :aria-label="showShortenedPath ? pathTooltip : pathToShow"
+          :aria-label="
+            showShortenedPath ? pathTooltip : (pathToShow ?? undefined)
+          "
           draggable="false"
           @click="navigate"
           @mouseenter="onMouseEnter"
@@ -126,7 +128,7 @@ const onClickIcon = (e: KeyboardEvent | MouseEvent) => {
 const { openLink } = useOpenLink()
 const { channelIdToLink } = useChannelPath()
 const openChannel = (event: MouseEvent) => {
-  openLink(event, channelIdToLink(props.channel.id))
+  openLink(event, channelIdToLink(props.channel.id) as string)
 }
 
 const { pathToShow, pathTooltip } = usePath(props as TypedProps)

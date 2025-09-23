@@ -26,7 +26,7 @@ const focus = () => {
 }
 
 const { channelIdToLink } = useChannelPath()
-const channelLink = computed(() => channelIdToLink(props.channel.id))
+const channelLink = computed(() => channelIdToLink(props.channel.id) ?? '')
 
 const isTopicEmpty = computed(() => props.channel.topic.length === 0)
 const topic = computed(() =>

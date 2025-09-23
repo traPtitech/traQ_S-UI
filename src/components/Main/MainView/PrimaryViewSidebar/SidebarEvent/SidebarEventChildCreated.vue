@@ -27,5 +27,7 @@ const newChildPath = computed(() =>
   channelIdToShortPathString(props.details.channelId, true)
 )
 
-const newChildLink = computed(() => channelIdToLink(props.details.channelId))
+const newChildLink = computed(
+  () => channelIdToLink(props.details.channelId) ?? ''
+)
 </script>
