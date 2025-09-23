@@ -6,7 +6,6 @@ import useInsertText from '/@/composables/dom/useInsertText'
 import getCaretPosition from '/@/lib/dom/caretPosition'
 import type { Target } from '/@/lib/suggestion/basic'
 import { getCurrentWord } from '/@/lib/suggestion/basic'
-import { useStampHistory } from '/@/store/domain/stampHistory'
 
 export type WordOrConfirmedPart =
   | Word
@@ -35,8 +34,6 @@ const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: Ref<string>
 ) => {
-  const { upsertLocalStampHistory } = useStampHistory()
-
   const isSuggesterShown = ref(false)
   const target = ref<Target>({
     word: '',
@@ -131,14 +128,10 @@ const useWordSuggester = (
   }
 
   const onSelect = (word: WordOrConfirmedPart) => {
-    if (word.type === 'stamp') {
-      insertText(`${word.text}:`)
-      upsertLocalStampHistory(word.id, new Date())
-    } else {
-      insertText(word.text)
-    }
+    insertText(word.text)
     isSuggesterShown.value = false
   }
+
   const onBlur = () => {
     isSuggesterShown.value = false
   }
