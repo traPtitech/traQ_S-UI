@@ -15,7 +15,7 @@ import { ref, watchEffect } from 'vue'
 import { isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import MessageQuoteList from '/@/components/Main/MainView/MessageElement/MessageQuoteList.vue'
+import MessageQuoteList from '/@/components/Main/MainView/MessageElement/Embeddings/MessageQuoteList.vue'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import type { MessageId } from '/@/types/entity-ids'
 

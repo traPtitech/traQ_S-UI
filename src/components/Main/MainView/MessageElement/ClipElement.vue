@@ -29,7 +29,7 @@ import { computed, shallowRef, toRef } from 'vue'
 import type { ChangeHeightData } from './composables/useElementRenderObserver'
 import useElementRenderObserver from './composables/useElementRenderObserver'
 import MessageContents from './MessageContents.vue'
-import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
+import MessageQuoteListItemFooter from './Embeddings/MessageQuoteListItemFooter.vue'
 import MessageTools, { useMessageToolsHover } from './MessageTools.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
@@ -100,5 +100,6 @@ $messagePaddingMobile: 16px;
 .footer {
   margin-top: 4px;
   margin-left: 42px;
+  padding-left: 8px;
 }
 </style>
