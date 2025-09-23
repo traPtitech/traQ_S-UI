@@ -194,13 +194,13 @@ const toggleDanmaku = () => {
         <IconButton
           :icon-name="`comment${showDanmaku ? '' : '-off'}-outline`"
           icon-mdi
-          :class="$style.closeButton"
+          :class="$style.qallViewHeaderButton"
           @click="toggleDanmaku"
         />
         <IconButton
           icon-name="close"
           icon-mdi
-          :class="$style.closeButton"
+          :class="$style.qallViewHeaderButton"
           @click="isSubView = true"
         />
       </div>
@@ -384,7 +384,7 @@ const toggleDanmaku = () => {
   margin: 0 16px;
 }
 
-.closeButton {
+.qallViewHeaderButton {
   @include color-ui-primary;
 }
 
