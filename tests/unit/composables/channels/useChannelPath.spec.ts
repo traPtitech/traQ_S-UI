@@ -205,7 +205,7 @@ describe('useChannelPath', () => {
   )
 })
 
-const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
+export const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
   {
     id: 'e50e2c2b-d9d5-4fc6-a30b-908a0f65d425',
     name: 'event',
