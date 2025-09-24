@@ -12,8 +12,6 @@ import { useViewStatesStore } from '/@/store/domain/viewStates'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useRoomsStore } from '/@/store/domain/rooms'
 
-// TODO: Qall
-
 const useInitialFetch_ = () => {
   const { fetchUsers } = useUsersStore()
   const { fetchUserGroups } = useGroupsStore()
