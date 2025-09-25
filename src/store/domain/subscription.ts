@@ -141,13 +141,11 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
     subscriptionMap.value = new Map(res.data.map(s => [s.channelId, s.level]))
     subscriptionMapFetched.value = true
   }
-  const changeSubscriptionLevel = async (
+
+  const changeSubscriptionLevel = (
     channelId: ChannelId,
     subscriptionLevel: ChannelSubscribeLevel
   ) => {
-    await apis.setChannelSubscribeLevel(channelId, {
-      level: subscriptionLevel
-    })
     subscriptionMap.value.set(channelId, subscriptionLevel)
   }
 
