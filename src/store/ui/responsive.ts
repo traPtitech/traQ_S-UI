@@ -1,10 +1,10 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
-import { mobileMinBreakpoint } from '/@/lib/media'
+import { mobileBreakpoint } from '/@/lib/media'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
 const useResponsiveStorePinia = defineStore('ui/responsive', () => {
-  const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
+  const queryList = window.matchMedia(`(max-width: ${mobileBreakpoint}px)`)
   const isHoverSupported = window.matchMedia(
     '(hover: hover) and (pointer: fine)'
   )

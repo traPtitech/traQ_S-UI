@@ -19,28 +19,6 @@ export const getISOFullDayString = (date: Readonly<Date>) =>
 
 export const getCurrentTimeString = () => getTimeString(new Date())
 
-/**
- * 2つの日時を比べ、差異がない部分については省略したものを出力する
- * @param ofDate 出力する日時
- * @param fromDate 比較する日時
- */
-export const getDateRepresentationWithoutSameDate = (
-  ofDate: Readonly<Date>,
-  fromDate: Readonly<Date>
-) => {
-  const timeString = getTimeString(ofDate)
-  if (fromDate.getFullYear() !== ofDate.getFullYear()) {
-    return getFullDayString(ofDate) + ' ' + timeString
-  }
-  if (
-    fromDate.getDate() !== ofDate.getDate() ||
-    fromDate.getMonth() !== ofDate.getMonth()
-  ) {
-    return getDayString(ofDate) + ' ' + timeString
-  }
-  return timeString
-}
-
 export const getDateRepresentation = (date: Readonly<Date> | string) => {
   const displayDate = new Date(date)
   if (Number.isNaN(displayDate.getTime())) {

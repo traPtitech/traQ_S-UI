@@ -1,3 +1,4 @@
+/** @public */
 export type { Theme } from '/@/lib/theme/schema'
 
 declare global {

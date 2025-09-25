@@ -16,11 +16,3 @@ export const getUserAudio = async (deviceId?: string) => {
   })
   return rawAudio
 }
-
-export const getUserDisplay = async () => {
-  const rawVideo = await navigator.mediaDevices.getDisplayMedia({
-    audio: false,
-    video: true
-  })
-  return rawVideo
-}
