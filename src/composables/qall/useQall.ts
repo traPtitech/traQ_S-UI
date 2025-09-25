@@ -6,43 +6,11 @@ import {
 import { useMeStore } from '/@/store/domain/me'
 import { useToastStore } from '/@/store/ui/toast'
 import type { LocalAudioTrack } from 'livekit-client'
-import type {
-  Channel,
-  QallRoomStateChangedEventRoomStatesInner,
-  User
-} from '@traptitech/traq'
-import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 import { messageMitt } from '/@/store/entities/messages'
 import { useTts } from '/@/store/app/tts'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
-import { wsListener } from '/@/lib/websocket'
-import useMittListener from '../utils/useMittListener'
-
-type Participant = {
-  user: User
-  joinedAt: string
-  canPublish: boolean
-  attributes: { [key: string]: string }
-}
-type Room = {
-  channel: Channel
-  participants: Participant[]
-  isWebinar: boolean
-}
-type Rooms = Room[]
-
-const rooms = ref<Rooms>([])
-
-useMittListener(
-  wsListener,
-  'QALL_ROOM_STATE_CHANGED',
-  async ({ roomStates }) => {
-    purifyRoomData(roomStates).then(
-      purifiedRooms => (rooms.value = purifiedRooms)
-    )
-  }
-)
+import { useRoomsStore } from '/@/store/domain/rooms'
 
 const {
   joinRoom,
@@ -62,40 +30,11 @@ const {
 } = useLiveKitSDK()
 const { myId } = useMeStore()
 const { addErrorToast } = useToastStore()
-const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
 const { usersMap } = useUsersStore()
 const { addQueue } = useTts()
 
 const meStore = useMeStore()
 const rtcSettings = useRtcSettings()
-
-const purifyRoomData = async (
-  data: QallRoomStateChangedEventRoomStatesInner[]
-): Promise<Rooms> => {
-  if (!data) return []
-  await bothChannelsMapInitialFetchPromise.value
-  return data
-    .filter(room => room.participants && room.participants.length > 0)
-    .map(room => {
-      return {
-        channel: channelsMap.value.get(room.roomId),
-        participants:
-          room.participants
-            ?.map(p => ({
-              joinedAt: p.joinedAt,
-              user: usersMap.value.get(p.identity.slice(0, -37)),
-              canPublish: p.canPublish,
-              attributes: p.attributes
-            }))
-            .filter((p): p is Participant => !!p.user) ?? [],
-        isWebinar: room.isWebinar
-      }
-    })
-    .filter((room): room is Room => {
-      if (!room.channel) return false
-      return !room.channel.archived
-    })
-}
 
 const setSpeakerMute = (track: LocalAudioTrack, muted: boolean) => {
   setLocalTrackMute(track, muted)
@@ -128,6 +67,8 @@ const isScreenSharing = ref(false)
 const selectedTrack = ref<TrackInfo>()
 
 export const useQall = () => {
+  const { rooms } = useRoomsStore()
+
   let joiningPromise: Promise<void> | null = null
   const joinQall = async (channelName: string, isWebinar: boolean = false) => {
     // 二重実行を防ぐチェック
@@ -163,6 +104,7 @@ export const useQall = () => {
     isCameraOn.value = false
     isScreenSharing.value = false
   }
+
   return {
     callingChannel,
     isSubView,

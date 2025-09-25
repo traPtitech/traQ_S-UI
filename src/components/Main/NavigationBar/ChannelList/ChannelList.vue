@@ -23,11 +23,11 @@ import type { ChannelTreeNode } from '/@/lib/channelTree'
 import type { Channel } from '@traptitech/traq'
 import ChannelElementTopic from './ChannelElementTopic.vue'
 import ChannelElement from './ChannelElement.vue'
-import { computed } from 'vue'
+import { computed, type DeepReadonly } from 'vue'
 
 const props = withDefaults(
   defineProps<{
-    channels: ReadonlyArray<Channel>
+    channels: DeepReadonly<Channel[]>
     showTopic?: boolean
     showStar?: boolean
     showNotified?: boolean
