@@ -45,10 +45,13 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
   const unreadChannelsMap = ref(
     new Map<ChannelId | DMChannelId, UnreadChannel>()
   )
+
   const unreadChannelsMapFetched = ref(false)
+
   const unreadChannelsMapInitialFetchPromise = ref(
     useTrueChangedPromise(unreadChannelsMapFetched)
   )
+
   const setUnreadChannelsMap = (
     newUnreadChannelsMap: Map<ChannelId, UnreadChannel>
   ) => {
@@ -56,6 +59,7 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
     unreadChannelsMapFetched.value = true
     updateBadge(unreadChannelsMap.value)
   }
+
   const upsertUnreadChannel = (
     message: Readonly<Message>,
     noticeable: boolean
@@ -81,6 +85,7 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
     }
     updateBadge(unreadChannelsMap.value)
   }
+
   /**
    * 既読になったイベントを受け取ったときに利用
    */
@@ -89,6 +94,7 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
     updateBadge(unreadChannelsMap.value)
     removeNotification(channelId)
   }
+
   /**
    * 既読にするときに利用
    */
@@ -106,6 +112,7 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
       deleteUnreadChannel(channelId)
     }
   }
+
   const fetchUnreadChannels = async ({
     ignoreCache = false
   }: { ignoreCache?: boolean } = {}) => {
@@ -121,6 +128,7 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
 
   const subscriptionMap = ref(new Map<ChannelId, ChannelSubscribeLevel>())
   const subscriptionMapFetched = ref(false)
+
   const subscribedChannels = computed(
     () =>
       new Set(
@@ -133,9 +141,11 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
           .map(([id]) => id)
       )
   )
+
   const isChannelSubscribed = (channelId: ChannelId) =>
     (subscriptionMap.value.get(channelId) ?? ChannelSubscribeLevel.none) !==
     ChannelSubscribeLevel.none
+
   const fetchSubscriptions = async ({
     ignoreCache = false
   }: { ignoreCache?: boolean } = {}) => {
@@ -163,10 +173,12 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
   wsListener.on('MESSAGE_READ', ({ id }) => {
     deleteUnreadChannel(id)
   })
+
   wsListener.on('reconnect', () => {
     fetchUnreadChannels({ ignoreCache: true })
     fetchSubscriptions({ ignoreCache: true })
   })
+
   wsListener.on('CHANNEL_SUBSCRIBERS_CHANGED', () => {
     fetchSubscriptions({ ignoreCache: true })
   })
