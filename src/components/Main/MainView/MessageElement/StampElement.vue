@@ -20,7 +20,6 @@
     <SpinNumber :value="stamp.sum" :class="$style.count" />
   </div>
   <StampScaledElement
-    :class="$style.scaleReaction"
     :show="(isLongHovered || RemainScaled) && !isDetailShown && !isTouchDevice"
     :stamp="stamp"
     :target-rect="hoveredRect"
@@ -176,19 +175,5 @@ watch(isLongHovered, beginHover => {
     left: 6px;
     right: 4px;
   }
-}
-
-.scaleReaction {
-  @include background-tertiary;
-  display: flex;
-  align-items: center;
-  padding: 0.125rem 0.25rem;
-  border-radius: 0.25rem;
-  user-select: none;
-  overflow: visible;
-  contain: content;
-  position: absolute;
-  bottom: 105%;
-  z-index: $z-index-message-element-scaled-stamp;
 }
 </style>

@@ -27,5 +27,5 @@ const newParentPath = computed(() =>
   channelIdToPathString(props.details.after, true)
 )
 
-const newParentLink = computed(() => channelIdToLink(props.details.after))
+const newParentLink = computed(() => channelIdToLink(props.details.after) ?? '')
 </script>

@@ -88,7 +88,7 @@ const { channelIdToShortPathString } = useChannelPath()
 
 const path = computed(() => {
   try {
-    return channelIdToShortPathString(props.message.channelId)
+    return channelIdToShortPathString(props.message.channelId) ?? 'unknown'
   } catch {
     return 'unknown'
   }

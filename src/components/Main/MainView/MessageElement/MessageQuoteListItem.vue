@@ -33,7 +33,7 @@
     </div>
     <MessageQuoteListItemFooter
       :class="$style.footer"
-      :message="message"
+      :message="message!"
       :disable-links="disableFooterLinks"
     />
   </div>

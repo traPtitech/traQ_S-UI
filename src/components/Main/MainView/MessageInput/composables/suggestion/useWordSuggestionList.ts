@@ -15,6 +15,7 @@ import { useStampsStore } from '/@/store/entities/stamps'
 import useUserList from '/@/composables/users/useUserList'
 import { useChannelsStore } from '/@/store/entities/channels'
 import useChannelPath from '/@/composables/useChannelPath'
+import { isDefined } from '/@/lib/basic/array'
 
 const events: Array<keyof EntityEventMap> = [
   'setUser',
@@ -78,12 +79,19 @@ const useCandidateTree = () => {
         type: 'stamp-effect',
         text: `.${effectName}`
       })),
-      [...channelsMap.value.values()].map(channel => ({
-        type: 'channel',
-        text: channelIdToPathString(channel.id, true),
-        id: channel.id,
-        delimiter: '/'
-      }))
+      [...channelsMap.value.values()]
+        .map(channel => {
+          const path = channelIdToPathString(channel.id, true)
+          if (!path) return undefined
+
+          return {
+            type: 'channel',
+            text: path,
+            id: channel.id,
+            delimiter: '/'
+          } as const
+        })
+        .filter(isDefined)
     )
 
   const tree = ref<TrieTree<Word>>(constructTree())

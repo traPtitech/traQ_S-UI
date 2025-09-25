@@ -33,8 +33,8 @@ const props = defineProps<{
 }>()
 
 const { channelIdToPathString } = useChannelPath()
-const channelPathString = computed(() =>
-  channelIdToPathString(props.channelId, true)
+const channelPathString = computed(
+  () => channelIdToPathString(props.channelId, true) ?? ''
 )
 
 const modalMounted = ref(false)
