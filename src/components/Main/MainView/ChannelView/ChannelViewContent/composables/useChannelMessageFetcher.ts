@@ -106,17 +106,17 @@ const useChannelMessageFetcher = (
       isReachedEnd.value = true
     }
 
-    const messagesAsc = messages.reverse()
-    updateDates(messagesAsc)
+    messages.reverse()
+    updateDates(messages)
 
-    return messagesAsc.map(message => message.id)
+    return messages.map(message => message.id)
   }
 
   const fetchLatterMessages = async (
     isReachedLatest: Ref<boolean>
   ): Promise<ChannelId[]> => {
     await waitHeightResolved
-    const { messages: messagesAsc, hasMore } = await fetchMessagesByChannelId({
+    const { messages, hasMore } = await fetchMessagesByChannelId({
       channelId: props.channelId,
       limit: fetchLimit.value,
       order: 'asc',
@@ -127,9 +127,9 @@ const useChannelMessageFetcher = (
       isReachedLatest.value = true
     }
 
-    updateDates(messagesAsc)
+    updateDates(messages)
 
-    return messagesAsc.map(message => message.id)
+    return messages.map(message => message.id)
   }
 
   const fetchAroundMessages = async (
@@ -165,10 +165,10 @@ const useChannelMessageFetcher = (
       isReachedLatest.value = true
     }
 
-    const messagesAsc = messages.reverse()
-    updateDates(messagesAsc)
+    messages.reverse()
+    updateDates(messages)
 
-    return messagesAsc.map(message => message.id)
+    return messages.map(message => message.id)
   }
 
   const onReachedLatest = async () => {
