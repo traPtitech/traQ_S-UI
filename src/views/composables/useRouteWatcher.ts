@@ -110,13 +110,13 @@ const useRouteWatcher = () => {
         username: state.currentRouteParam,
         cacheStrategy: 'useCache'
       })
-      if (!user) throw 'user not found'
+      if (!user) throw new Error('user not found')
 
       const dmChannelId =
         userIdToDmChannelIdMap.value.get(user.id) ??
         (await fetchUserDMChannel(user.id))
 
-      if (!dmChannelId) throw 'failed to fetch DM channel ID'
+      if (!dmChannelId) throw new Error('failed to fetch DM channel ID')
 
       changePrimaryViewToDM({
         channelId: dmChannelId,
