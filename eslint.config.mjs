@@ -55,6 +55,7 @@ export default [
     rules: {
       'no-console': 'warn',
       'no-debugger': 'warn',
+      'no-throw-literal': 'error',
 
       'no-empty': [
         'error',

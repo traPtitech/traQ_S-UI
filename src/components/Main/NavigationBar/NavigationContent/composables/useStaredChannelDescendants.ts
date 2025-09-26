@@ -10,7 +10,7 @@ const collectDescendants = (
   channelsMap: Map<ChannelId, Channel>
 ) => {
   if (!channelsMap.has(id)) {
-    throw `channelIdToPath: No channel: ${id}`
+    throw new Error(`channelIdToPath: No channel: ${id}`)
   }
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const channel = channelsMap.get(id)!

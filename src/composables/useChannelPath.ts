@@ -40,7 +40,7 @@ const useChannelPath = () => {
     }
 
     if (!bothChannelsMapFetched.value) return null
-    throw `channelIdToPath: No channel: ${id}`
+    throw new Error(`channelIdToPath: No channel: ${id}`)
   }
 
   const channelIdToPath = (id: ChannelId | DMChannelId) =>
@@ -87,7 +87,7 @@ const useChannelPath = () => {
     }
     const parentChannel = channelsMap.value.get(self.parentId)
     if (parentChannel === undefined) {
-      throw `channelIdToSiblingIds: No parents ${id}`
+      throw new Error(`channelIdToSiblingIds: No parents ${id}`)
     }
     return (
       parentChannel.children.filter(
@@ -102,12 +102,12 @@ const useChannelPath = () => {
   const checkHavingSameNameCousin = (id: ChannelId) => {
     const self = channelsMap.value.get(id)
     if (self === undefined) {
-      throw `checkHavingSameNameCousin: No channel: ${id}`
+      throw new Error(`checkHavingSameNameCousin: No channel: ${id}`)
     }
     const selfName = self.name
     const parentId = self.parentId
     if (parentId === null) {
-      throw `checkHavingSameNameCousin: No parent channel: ${id}`
+      throw new Error(`checkHavingSameNameCousin: No parent channel: ${id}`)
     }
     const parentSiblingIds = channelIdToSiblingIds(parentId)
     for (const parentSiblingId of parentSiblingIds) {
@@ -125,7 +125,7 @@ const useChannelPath = () => {
   const channelIdToUniqueInitial = (id: string) => {
     const selfName = channelsMap.value.get(id)?.name
     if (selfName === undefined) {
-      throw `ChannelIdToUniqueInitial: No Channel ${id}`
+      throw new Error(`ChannelIdToUniqueInitial: No Channel ${id}`)
     }
     const SiblingIds = channelIdToSiblingIds(id)
     const SiblingNames = SiblingIds.map(
@@ -144,7 +144,7 @@ const useChannelPath = () => {
 
     if (!channelsMap.value.has(id)) {
       if (!bothChannelsMapFetched.value) return null
-      throw `channelIdToShortPathString: No channel: ${id}`
+      throw new Error(`channelIdToShortPathString: No channel: ${id}`)
     }
 
     // channelIdToSimpleChannelPath が null になるような場合はこの部分に到達しない
