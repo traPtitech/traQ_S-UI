@@ -127,6 +127,6 @@ const component = computed(() => {
   background-color: rgba(0, 0, 0, 0.15);
   transition: background-color 0.1s;
   z-index: $z-index-modal-container;
-  contain: strict;
+  contain: var(--contain-strict);
 }
 </style>

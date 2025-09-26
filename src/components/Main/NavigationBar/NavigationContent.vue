@@ -51,7 +51,7 @@ withDefaults(
     left: 8px;
   }
   backface-visibility: hidden;
-  contain: strict;
+  contain: var(--contain-strict);
 }
 .content {
   margin: 24px 0;

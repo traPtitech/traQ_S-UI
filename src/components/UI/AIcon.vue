@@ -89,6 +89,6 @@ const path = computed(() => mdiPaths[props.name])
 
 <style lang="scss" module>
 .icon {
-  contain: strict;
+  contain: var(--contain-strict);
 }
 </style>

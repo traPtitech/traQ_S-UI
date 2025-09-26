@@ -60,6 +60,6 @@ const style = computed(() => {
 .positionAbsolute {
   position: fixed;
   z-index: $z-index-stamp-picker;
-  contain: strict;
+  contain: var(--contain-strict);
 }
 </style>

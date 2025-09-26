@@ -279,7 +279,7 @@ useScrollRestoration(rootRef, state)
   overflow-y: scroll;
   padding: 12px 0;
   backface-visibility: hidden;
-  contain: strict;
+  contain: var(--contain-strict);
   // overflow-anchorはデフォルトでautoだが、Safariが対応していないので、
   // 手動で調節しているため明示的に無効化する
   overflow-anchor: none;
