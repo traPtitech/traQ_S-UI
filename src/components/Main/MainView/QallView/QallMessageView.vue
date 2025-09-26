@@ -207,6 +207,7 @@ const handleScroll = () => {
   contain: content;
 }
 .uiElement {
+  @include color-ui-primary;
   pointer-events: all;
 }
 
