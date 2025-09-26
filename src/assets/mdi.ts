@@ -23,6 +23,8 @@ import {
   mdiChevronLeft,
   mdiChevronRight,
   mdiChevronUp,
+  mdiClipboardCheckMultipleOutline,
+  mdiClipboardTextMultipleOutline,
   mdiClose,
   mdiCloseCircle,
   mdiCodeGreaterThan,
@@ -191,7 +193,9 @@ const mdi: MdiIconsMapping = {
   'video-off': mdiVideoOff,
   'comment-outline': mdiCommentTextMultipleOutline,
   'comment-off-outline': mdiCommentOffOutline,
-  'palette-outline': mdiPaletteOutline
+  'palette-outline': mdiPaletteOutline,
+  'clipboard-text-multiple-outline': mdiClipboardTextMultipleOutline,
+  'clipboard-check-multiple-outline': mdiClipboardCheckMultipleOutline
 }
 
 export default mdi
