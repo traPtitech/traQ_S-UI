@@ -36,7 +36,6 @@
 import { throttle } from 'throttle-debounce'
 import type { Ref } from 'vue'
 import {
-  computed,
   nextTick,
   onMounted,
   onUnmounted,
@@ -114,11 +113,12 @@ const useScrollRestoration = (
   const { lastScrollPosition } = useMainViewStore()
   const route = useRoute()
   watch(
-    computed(() => route.name),
+    () => route.name,
     async (to, from) => {
       if (isMessageScrollerRoute(from)) {
-        lastScrollPosition.value = rootRef.value?.scrollTop ?? 0
+        lastScrollPosition.value = state.scrollTop
       }
+
       if (isMessageScrollerRoute(to)) {
         state.scrollTop = lastScrollPosition.value
         await nextTick()
