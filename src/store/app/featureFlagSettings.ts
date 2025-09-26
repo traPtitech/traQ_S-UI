@@ -25,7 +25,7 @@ export const featureFlagDescriptions = {
     title: 'フラグテスト・サンプル用',
     description: '「提供終了日」の表記がひらがなになります。',
     defaultValue: false,
-    endAt: new Date('2025-07-31T23:59:59+09:00')
+    endAt: new Date('9999-12-31T00:00')
   },
   contain_strict_alternate: {
     title: 'contain: strict の代替',
