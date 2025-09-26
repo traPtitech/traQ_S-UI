@@ -7,7 +7,7 @@ $ npm i
 $ npm run gen-fonts
 ```
 
-Vetur ではなく Volar を導入することを推奨しています。
+Vetur ではなく Vue (offical) を導入することを推奨しています。
 
 ## コマンド
 
