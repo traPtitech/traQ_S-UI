@@ -138,11 +138,7 @@ const parser = async (
         : undefined
     }
     case 'in': {
-      const result = await channelOrDmChannelParser(
-        store.channelPathToId,
-        store.usernameToDmChannelId,
-        extracted
-      )
+      const result = await channelOrDmChannelParser(store, extracted)
       return result
         ? { type, raw: rawQuery(extracted), value: result }
         : undefined
