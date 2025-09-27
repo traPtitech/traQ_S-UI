@@ -72,6 +72,11 @@ const getStoreForParser = ({
       ? primaryView.value.channelId
       : undefined
   },
+  getMyDmChannelId: () => {
+    const myUserId = me.value?.id
+    if (!myUserId) return undefined
+    return userIdToDmChannelIdMap.value.get(myUserId)
+  },
   getMyUsername: () => `@${me.value?.name}`,
   getMyUserId: () => me.value?.id
 })
