@@ -1,5 +1,4 @@
-import type { Ref, ComputedRef } from 'vue'
-import { computed } from 'vue'
+import type { Ref } from 'vue'
 import type { ChannelTree } from '/@/lib/channelTree'
 import { channelPathToId } from '/@/lib/channelTree'
 import type { StoreForParser } from '/@/lib/searchMessage/parserBase'
@@ -11,23 +10,29 @@ import type { PrimaryViewInformation } from '/@/store/ui/mainView'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useUsersStore } from '/@/store/entities/users'
-import type { Channel, User } from '@traptitech/traq'
+import type { Channel, DMChannel, User } from '@traptitech/traq'
 import { channelIdToPathString } from '/@/lib/channel'
-import type { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useMeStore } from '/@/store/domain/me'
 
 const getStoreForParser = ({
   primaryView,
   channelsMap,
+  dmChannelsMap,
+  userIdToDmChannelIdMap,
   channelTree,
-  myUsername,
+  usersMap,
+  me,
   fetchUserByName
 }: {
   primaryView: Ref<PrimaryViewInformation>
   channelsMap: Ref<ReadonlyMap<ChannelId, Channel>>
+  dmChannelsMap: Ref<ReadonlyMap<DMChannelId, DMChannel>>
+  userIdToDmChannelIdMap: Ref<ReadonlyMap<UserId, DMChannelId>>
   channelTree: Ref<ChannelTree>
-  myUsername: ComputedRef<string | undefined>
+  usersMap: Ref<ReadonlyMap<UserId, User>>
+  me: Ref<User | undefined>
   fetchUserByName: (param: { username: string }) => Promise<User | undefined>
 }): StoreForParser => ({
   channelPathToId: path => {
@@ -37,34 +42,56 @@ const getStoreForParser = ({
       return undefined
     }
   },
+  usernameToDmChannelId: async username => {
+    const user = await fetchUserByName({ username })
+    return userIdToDmChannelIdMap.value.get(user?.id ?? '')
+  },
   usernameToId: async username => {
     const user = await fetchUserByName({ username })
     return user?.id
   },
-  getCurrentChannelPath: () => {
+  getCurrentChannelPathOrUsername: () => {
     const channelId =
       primaryView.value.type === 'channel' || primaryView.value.type === 'dm'
         ? primaryView.value.channelId
         : undefined
-    return channelId
-      ? channelIdToPathString(channelId, channelsMap.value)
+    if (!channelId) return undefined
+
+    const path = channelIdToPathString(channelId, channelsMap.value)
+    if (path) return `#${path}`
+
+    const userId = dmChannelsMap.value.get(channelId)?.userId
+    if (!userId) return undefined
+
+    const username = usersMap.value.get(userId)?.name
+    if (username) return `@${username}`
+  },
+  getCurrentChannelId: () => {
+    return primaryView.value.type === 'channel' ||
+      primaryView.value.type === 'dm'
+      ? primaryView.value.channelId
       : undefined
   },
-  getMyUsername: () => myUsername.value
+  getMyUsername: () => `@${me.value?.name}`,
+  getMyUserId: () => me.value?.id
 })
 
 const useQueryParser = () => {
-  const { channelsMap } = useChannelsStore()
+  const { channelsMap, dmChannelsMap, userIdToDmChannelIdMap } =
+    useChannelsStore()
   const { channelTree } = useChannelTree()
   const { primaryView } = useMainViewStore()
-  const { fetchUserByName } = useUsersStore()
+  const { fetchUserByName, usersMap } = useUsersStore()
   const { detail: me } = useMeStore()
   const parseQuery = createQueryParser(
     getStoreForParser({
       primaryView,
       channelsMap,
+      dmChannelsMap,
+      userIdToDmChannelIdMap,
       channelTree,
-      myUsername: computed(() => me.value?.name),
+      usersMap,
+      me,
       fetchUserByName
     })
   )

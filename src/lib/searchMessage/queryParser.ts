@@ -9,7 +9,7 @@ import type {
 } from './parserBase'
 import { FromToMeToken } from './parserBase'
 import {
-  channelParser,
+  channelOrDmChannelParser,
   InHereToken,
   dateParser,
   parseToFilter as parseToFilterBase,
@@ -134,7 +134,11 @@ const parser = async (
         : undefined
     }
     case 'in': {
-      const result = channelParser(store.channelPathToId, extracted)
+      const result = await channelOrDmChannelParser(
+        store.channelPathToId,
+        store.usernameToDmChannelId,
+        extracted
+      )
       return result
         ? { type, raw: rawQuery(extracted), value: result }
         : undefined
@@ -201,8 +205,8 @@ const filterOrStringToSearchMessageQuery = (
         [f.type]: f.value.toISOString()
       }
     case 'in': {
-      const channelId = f.value === InHereToken ? currentChannelId : f.value
-      return { in: channelId }
+      if (f.value === InHereToken) return { in: currentChannelId }
+      return { in: f.value }
     }
     case 'to':
     case 'from': {
@@ -241,20 +245,21 @@ export const createQueryParser = (store: StoreForParser) => {
         .map(parseQueryFragmentToFilter)
     )
 
-    const currentChannelPath = store.getCurrentChannelPath()
-    const currentChannelId = currentChannelPath
-      ? store.channelPathToId(currentChannelPath)
-      : undefined
+    const currentChannelPathOrUsername = store.getCurrentChannelPathOrUsername()
+    const currentChannelId = store.getCurrentChannelId()
     const myUsername = store.getMyUsername()
-    const myUserId = myUsername
-      ? await store.usernameToId(myUsername)
-      : undefined
+    const myUserId = store.getMyUserId()
 
     const normalizedQuery = parseds
       .map(q =>
-        parsedFilterToNormalizedString(q, currentChannelPath, myUsername)
+        parsedFilterToNormalizedString(
+          q,
+          currentChannelPathOrUsername,
+          myUsername
+        )
       )
       .join(' ')
+
     const queryObject = parseds
       .map(f =>
         filterOrStringToSearchMessageQuery(currentChannelId, myUserId, f)
@@ -267,15 +272,15 @@ export const createQueryParser = (store: StoreForParser) => {
 
 const parsedFilterToNormalizedString = (
   f: string | Filter,
-  currentChannelPath: string | undefined,
+  currentChannelPathOrUsername: string | undefined,
   myUsername: string | undefined
 ) => {
-  if (typeof f === 'string') {
-    return f
-  }
+  if (typeof f === 'string') return f
+
   if (f.type === 'in' && f.value === InHereToken) {
-    return `in:${currentChannelPath}`
+    return `in:${currentChannelPathOrUsername}`
   }
+
   if ((f.type === 'from' || f.type === 'to') && f.value === FromToMeToken) {
     return `${f.type}:${myUsername}`
   }
