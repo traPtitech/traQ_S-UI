@@ -7,12 +7,16 @@ import {
 const mockMessageId = 'message-id'
 const mockMessageUrl = `https://example.com/messages/${mockMessageId}`
 const mockChannelId = 'channel-id'
+const mockDmChannelId = 'dm-channel-id'
 const mockChannelName = 'general'
 const mockUserId = 'user-id'
 const mockUserName = 'user'
 const mockCurrentChannelPath = 'current/channel'
 const mockCurrentChannelId = 'current-channel-id'
+const mockCurrentUsername = 'currentUser'
+const mockCurrentUserDmChannelId = 'current-user-dm-channel-id'
 const mockMyUserId = 'my-user-id'
+const mockMyDmChannelId = 'my-dm-channel-id'
 const mockMyUsername = 'myUsername'
 
 describe('parseQuery', () => {
@@ -26,6 +30,15 @@ describe('parseQuery', () => {
       }
       return undefined
     },
+    usernameToDmChannelId: async username => {
+      if (username === mockUserName) {
+        return mockDmChannelId
+      }
+      if (username === mockCurrentUsername) {
+        return mockCurrentUserDmChannelId
+      }
+      return undefined
+    },
     usernameToId: username => {
       if (username === mockUserName) {
         return mockUserId
@@ -35,7 +48,10 @@ describe('parseQuery', () => {
       }
       return undefined
     },
-    getCurrentChannelPath: () => mockCurrentChannelPath,
+    getCurrentChannelId: () => mockCurrentChannelId,
+    getMyDmChannelId: () => mockMyDmChannelId,
+    getMyUserId: () => mockMyUserId,
+    getCurrentChannelPathOrUsername: () => mockCurrentChannelPath,
     getMyUsername: () => mockMyUsername
   }
   const parseQuery = createQueryParser(store)
@@ -53,26 +69,61 @@ describe('parseQuery', () => {
     expect(queryObject.word).toBe('lorem ipsum')
     expect(queryObject.after).toBe('2021-01-23T00:00:00.000Z')
   })
-  it('can parse query with in-filter (prefix: `in:`)', async () => {
+  it('can parse query with in-filter (prefix: `in:`, channel)', async () => {
     const query = `lorem ipsum in:${mockChannelName}`
     const { normalizedQuery, queryObject } = await parseQuery(query)
     expect(normalizedQuery).toBe(query)
     expect(queryObject.word).toBe('lorem ipsum')
     expect(queryObject.in).toEqual(mockChannelId)
   })
-  it('can parse query with in-filter (prefix: `#`)', async () => {
+  it('can parse query with in-filter (prefix: `in:`, user)', async () => {
+    const query = `lorem ipsum in:${mockUserName}`
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.in).toEqual(mockDmChannelId)
+  })
+  it('can parse query with in-filter (prefix: `#`, channel)', async () => {
     const query = `lorem ipsum #${mockChannelName}`
     const { normalizedQuery, queryObject } = await parseQuery(query)
     expect(normalizedQuery).toBe(query)
     expect(queryObject.word).toBe('lorem ipsum')
     expect(queryObject.in).toEqual(mockChannelId)
   })
-  it('can parse query with in-filter (prefix: `in:#`)', async () => {
+  it('can parse query with in-filter (prefix: `#`, user)', async () => {
+    const query = `lorem ipsum #${mockUserName}`
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe(query)
+    expect(queryObject.in).toBeUndefined()
+  })
+  it('can parse query with in-filter (prefix: `in:#`, channel)', async () => {
     const query = `lorem ipsum in:#${mockChannelName}`
     const { normalizedQuery, queryObject } = await parseQuery(query)
     expect(normalizedQuery).toBe(query)
     expect(queryObject.word).toBe('lorem ipsum')
     expect(queryObject.in).toEqual(mockChannelId)
+  })
+  it('can parse query with in-filter (prefix: `in:#`, user)', async () => {
+    const query = `lorem ipsum in:#${mockUserName}`
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe(query)
+    expect(queryObject.in).toBeUndefined()
+  })
+  it('can parse query with in-filter (prefix: `in:@`, channel)', async () => {
+    const query = `lorem ipsum in:@${mockChannelName}`
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe(query)
+    expect(queryObject.in).toBeUndefined()
+  })
+  it('can parse query with in-filter (prefix: `in:@`, user)', async () => {
+    const query = `lorem ipsum in:@${mockUserName}`
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.in).toEqual(mockDmChannelId)
   })
   it('can parse query with in:here', async () => {
     const query = 'lorem ipsum in:here'
@@ -80,6 +131,13 @@ describe('parseQuery', () => {
     expect(normalizedQuery).toBe(`lorem ipsum in:${mockCurrentChannelPath}`)
     expect(queryObject.word).toBe('lorem ipsum')
     expect(queryObject.in).toEqual(mockCurrentChannelId)
+  })
+  it('can parse query with in:me', async () => {
+    const query = 'lorem ipsum in:me'
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(`lorem ipsum in:${mockMyUsername}`)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.in).toEqual(mockMyDmChannelId)
   })
   it('can parse query with user-filter without @', async () => {
     const query = `lorem ipsum from:${mockUserName}`
@@ -184,7 +242,7 @@ describe('parseQuery', () => {
     const query = 'lorem ipsum from:@phantom'
     const { normalizedQuery, queryObject } = await parseQuery(query)
     expect(normalizedQuery).toBe(query)
-    expect(queryObject.word).toBe('lorem ipsum from:@phantom')
+    expect(queryObject.word).toBe(query)
     expect(queryObject.from).toBeUndefined()
   })
 })
