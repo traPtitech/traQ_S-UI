@@ -1,4 +1,9 @@
-import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
+import type {
+  ChannelId,
+  DMChannelId,
+  MessageId,
+  UserId
+} from '/@/types/entity-ids'
 
 const dateOnlyFormRegex = /^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$/
 
@@ -86,6 +91,7 @@ export type StoreForParser = {
   usernameToId: UsernameToId
   getCurrentChannelPathOrUsername: () => string | undefined
   getCurrentChannelId: () => ChannelId | undefined
+  getMyDmChannelId: () => DMChannelId | undefined
   getMyUsername: () => string | undefined
   getMyUserId: () => UserId | undefined
 }
@@ -155,16 +161,17 @@ export const dateParser = <T extends string>(
   return date
 }
 
-export const InHereToken = Symbol('in:here')
-export const FromToMeToken = Symbol('from:me / to:me')
+export const HereToken = Symbol('in:here')
+export const MeToken = Symbol('in:me / from:me / to:me')
 
 export const channelOrDmChannelParser = async <T extends string>(
   channelPathToId: ChannelPathToId,
   usernameToDmChannelId: UsernameToDmChannelId,
   extracted: ExtractedFilter<T>
-): Promise<ChannelId | typeof InHereToken | undefined> => {
+): Promise<ChannelId | typeof HereToken | typeof MeToken | undefined> => {
   const body = extracted.prefix === '#' ? `#${extracted.body}` : extracted.body
-  if (body === 'here') return InHereToken
+  if (body === 'here') return HereToken
+  if (body === 'me') return MeToken
 
   const channelName = body.startsWith('#') ? body.slice(1) : body
   const channelPath = channelPathToId(channelName)
@@ -177,13 +184,13 @@ export const channelOrDmChannelParser = async <T extends string>(
 export const userParser = async <T extends string>(
   usernameToId: UsernameToId,
   extracted: ExtractedFilter<T>
-): Promise<UserId | typeof FromToMeToken | undefined> => {
+): Promise<UserId | typeof MeToken | undefined> => {
   const username = extracted.body.startsWith('@')
     ? extracted.body.slice(1)
     : extracted.body
 
   if (username === 'me') {
-    return FromToMeToken
+    return MeToken
   }
 
   return usernameToId(username)
