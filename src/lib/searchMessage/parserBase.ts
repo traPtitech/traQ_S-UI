@@ -185,13 +185,11 @@ export const userParser = async <T extends string>(
   usernameToId: UsernameToId,
   extracted: ExtractedFilter<T>
 ): Promise<UserId | typeof MeToken | undefined> => {
+  if (extracted.body === 'me') return MeToken
+
   const username = extracted.body.startsWith('@')
     ? extracted.body.slice(1)
     : extracted.body
-
-  if (username === 'me') {
-    return MeToken
-  }
 
   return usernameToId(username)
 }
