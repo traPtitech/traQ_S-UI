@@ -18,10 +18,20 @@
         :class="$style.pinned"
       />
       <MessageTools
-        :show="showMessageTools"
+        v-if="showMessageTools"
+        ref="messageToolsRef"
         :class="$style.tools"
         :message-id="messageId"
         :is-minimum="isArchived"
+        :context-menu-position="contextMenuPosition"
+        @toggle-stamp-picker="toggleStampPicker"
+        @open-context-menu="
+          openContextMenu({
+            x: $event.pageX,
+            y: $event.pageY
+          })
+        "
+        @close-context-menu="closeContextMenu"
       />
       <MessageContents
         :class="$style.messageContents"
@@ -53,6 +63,9 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageId, UserId } from '/@/types/entity-ids'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+import { useStampUpdater } from '/@/lib/updater/stamp'
+import useContextMenu from '/@/composables/useContextMenu'
 
 const props = withDefaults(
   defineProps<{
@@ -92,7 +105,32 @@ useElementRenderObserver(
 
 const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
   useMessageToolsHover()
-const showMessageTools = computed(() => isHovered.value && !isEditing.value)
+
+const { addStampOptimistically } = useStampUpdater()
+
+const messageToolsRef = shallowRef<InstanceType<typeof MessageTools> | null>(
+  null
+)
+
+const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
+  useStampPickerInvoker(
+    async stampData => addStampOptimistically(props.messageId, stampData.id),
+    computed(() => messageToolsRef.value?.$el),
+    false
+  )
+
+const {
+  position: contextMenuPosition,
+  open: openContextMenu,
+  close: closeContextMenu
+} = useContextMenu()
+
+const showMessageTools = computed(
+  () =>
+    (isHovered.value && !isEditing.value) ||
+    isStampPickerOpen.value ||
+    !!contextMenuPosition.value
+)
 </script>
 
 <style lang="scss" module>
