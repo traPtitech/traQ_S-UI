@@ -8,6 +8,7 @@
       :data-is-pinned="$boolAttr(message.pinned)"
       :data-is-entry="$boolAttr(isEntryMessage)"
       :data-is-editing="$boolAttr(isEditing)"
+      :data-is-active="$boolAttr(isActive)"
       @pointerenter="onPointerEnter"
       @click="onClick"
       @mouseleave="onMouseLeave"
@@ -125,11 +126,12 @@ const {
   close: closeContextMenu
 } = useContextMenu()
 
+const isActive = computed(
+  () => isStampPickerOpen.value || !!contextMenuPosition.value
+)
+
 const showMessageTools = computed(
-  () =>
-    (isHovered.value && !isEditing.value) ||
-    isStampPickerOpen.value ||
-    !!contextMenuPosition.value
+  () => (isHovered.value && !isEditing.value) || isActive.value
 )
 </script>
 
@@ -154,8 +156,11 @@ $messagePaddingMobile: 16px;
     // TODO: 色を正しくする
     background: $common-background-pin;
   }
-  &:not([data-is-editing]):not([data-is-pinned]):not([data-is-entry]):hover {
-    background: var(--specific-message-hover-background);
+  &:not([data-is-editing]):not([data-is-pinned]):not([data-is-entry]) {
+    &[data-is-active],
+    &:hover {
+      background: var(--specific-message-hover-background);
+    }
   }
 }
 
