@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampPalette } from '@traptitech/traq'
+import type { StampPalette } from '/@/types/entity'
 import { computed, onBeforeUnmount, ref } from 'vue'
 import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/StampPaletteActionButtons.vue'
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
