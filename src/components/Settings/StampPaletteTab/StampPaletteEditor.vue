@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampPalette } from '@traptitech/traq'
+import type { StampPalette } from '/@/types/entity'
 import { computed } from 'vue'
 import StampPaletteEditorAddStamp from './StampPaletteEditorAddableStampList.vue'
 import StampPaletteEditorBasicInfo from './StampPaletteEditorBasicInfo.vue'

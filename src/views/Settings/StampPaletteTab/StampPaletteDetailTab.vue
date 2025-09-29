@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampPalette } from '@traptitech/traq'
+import type { StampPalette } from '/@/types/entity'
 import { isAxiosError } from 'axios'
 import { computed, onBeforeMount, onBeforeUnmount, ref, toRaw } from 'vue'
 import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/StampPaletteActionButtons.vue'

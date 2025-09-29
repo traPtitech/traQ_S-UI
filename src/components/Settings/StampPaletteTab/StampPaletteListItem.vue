@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampPalette } from '@traptitech/traq'
+import type { StampPalette } from '/@/types/entity'
 import { computed } from 'vue'
 import StampPaletteListItemHeader from './StampPaletteListItemHeader.vue'
 import StampPaletteListItemStampList from './StampPaletteListItemStampList.vue'
