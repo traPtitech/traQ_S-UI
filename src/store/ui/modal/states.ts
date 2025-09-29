@@ -1,3 +1,4 @@
+import type { NavigationItemType as UserModalNavigationItemType } from '/@/components/Modal/UserModal/composables/useNavigation'
 import type { RouteName } from '/@/router'
 import type {
   UserId,
@@ -62,6 +63,7 @@ interface BaseModalState {
 interface UserModalState extends BaseModalState {
   type: 'user'
   id: UserId
+  navigation?: UserModalNavigationItemType
 }
 
 interface NotificationModalState extends BaseModalState {

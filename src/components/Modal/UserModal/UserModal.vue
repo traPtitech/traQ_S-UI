@@ -16,11 +16,11 @@
       <div :class="$style.content" :style="styles.content">
         <FeatureContainer :user="user" :detail="userDetail" />
         <NavigationSelector
-          :current-navigation="currentNavigation"
+          :current-navigation="navigation"
           @navigation-change="onNavigationChange"
         />
         <NavigationContent
-          :current-navigation="currentNavigation"
+          :current-navigation="navigation"
           :user="user"
           :detail="userDetail"
         />
@@ -30,9 +30,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, toRef } from 'vue'
+import { computed, reactive } from 'vue'
 import type { UserId } from '/@/types/entity-ids'
-import { useNavigation } from './composables/useNavigation'
+import { type NavigationItemType } from './composables/useNavigation'
 import useUserDetail from './composables/useUserDetail'
 import { useModalStore } from '/@/store/ui/modal'
 import { useResponsiveStore } from '/@/store/ui/responsive'
@@ -46,9 +46,10 @@ import CloseButton from '/@/components/UI/CloseButton.vue'
 
 const props = defineProps<{
   id: UserId
+  navigation?: NavigationItemType
 }>()
 
-const { clearModal } = useModalStore()
+const { clearModal, replaceModal } = useModalStore()
 const { isMobile } = useResponsiveStore()
 const { usersMap } = useUsersStore()
 
@@ -64,8 +65,13 @@ const styles = reactive({
   }))
 })
 
-const { navigationSelectorState, onNavigationChange } = useNavigation()
-const currentNavigation = toRef(navigationSelectorState, 'currentNavigation')
+const onNavigationChange = (type: NavigationItemType) => {
+  replaceModal({
+    type: 'user',
+    id: props.id,
+    navigation: type
+  })
+}
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const user = computed(() => usersMap.value.get(props.id)!)
