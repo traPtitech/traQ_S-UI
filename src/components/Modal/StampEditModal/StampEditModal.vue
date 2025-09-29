@@ -14,7 +14,7 @@
           :class="$style.form"
           focus-on-mount
         />
-        <FormSelector
+        <FormSelectorFilterable
           v-model="state.creatorId"
           label="所有者"
           :options="creatorOptions"
@@ -43,7 +43,7 @@ import ModalFrame from '../Common/ModalFrame.vue'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormSelectorFilterable from '../../UI/FormSelectorFilterable.vue'
 import useUserList from '/@/composables/users/useUserList'
 import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
 import { isValidStampName } from '/@/lib/validate'

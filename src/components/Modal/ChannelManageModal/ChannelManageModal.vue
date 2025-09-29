@@ -7,7 +7,7 @@
         :max-length="20"
         focus-on-mount
       />
-      <FormSelector
+      <FormSelectorFilterable
         v-model="manageState.parent"
         label="親チャンネル"
         :options="channelOptions"
@@ -90,7 +90,7 @@ import ModalFrame from '../Common/ModalFrame.vue'
 import AToggle from '/@/components/UI/AToggle.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 
 const props = defineProps<{
   id: string
