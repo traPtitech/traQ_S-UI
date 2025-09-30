@@ -107,10 +107,11 @@ const handleScroll = () => {
             </messages-scroller>
           </div>
         </transition>
-        <div :class="[$style.uiElement, $style.uiToggleButton]">
+        <div>
           <IconButton
             :icon-name="`chevron-double-${isMessageShow ? 'down' : 'up'}`"
             icon-mdi
+            :class="$style.uiToggleButton"
             @click="
               () => {
                 if (isMessageShow) {
@@ -206,14 +207,11 @@ const handleScroll = () => {
   margin: 4px 0;
   contain: content;
 }
-.uiElement {
-  @include color-ui-primary;
-  pointer-events: all;
-}
 
 .uiToggleButton {
   @include color-ui-secondary;
   @include background-primary;
+  pointer-events: all;
   padding: 0.5rem;
   border-radius: 2rem;
   position: absolute;
