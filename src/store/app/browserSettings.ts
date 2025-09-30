@@ -17,6 +17,7 @@ type State = {
   ecoMode: boolean
   prioritizeStarredChannel: boolean
   prioritizeNotifiedChannel: boolean
+  constructStrictStarredChannelTree: boolean
   activityMode: ActivityMode
   filterStarChannel: boolean
 }
@@ -62,6 +63,7 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     ecoMode: false,
     prioritizeStarredChannel: true,
     prioritizeNotifiedChannel: true,
+    constructStrictStarredChannelTree: true,
     activityMode: { all: false, perChannel: false },
     filterStarChannel: false
   }
