@@ -2,6 +2,7 @@ import type {
   ChannelId,
   DMChannelId,
   MessageId,
+  UserGroupId,
   UserId
 } from '/@/types/entity-ids'
 
@@ -89,6 +90,10 @@ export type StoreForParser = {
   channelPathToId: ChannelPathToId
   usernameToDmChannelId: UsernameToDmChannelId
   usernameToId: UsernameToId
+  userIdToName: UserIdToName
+  userGroupNameToId: UserGroupNameToId
+  userGroupIdToUserIds: UserGroupIdToUserIds
+  userIdToUserGroupIds: UserIdToUserGroupIds
   getCurrentChannelPathOrUsername: () => string | undefined
   getCurrentChannelId: () => ChannelId | undefined
   getMyDmChannelId: () => DMChannelId | undefined
@@ -97,12 +102,18 @@ export type StoreForParser = {
 }
 
 type ChannelPathToId = (path: string) => ChannelId | undefined
+type UserIdToName = (userId: UserId) => string | undefined
 type UsernameToDmChannelId =
   | ((username: string) => DMChannelId | undefined)
   | ((username: string) => Promise<DMChannelId | undefined>)
 type UsernameToId =
   | ((username: string) => UserId | undefined)
   | ((username: string) => Promise<UserId | undefined>)
+type UserGroupNameToId =
+  | ((username: string) => UserGroupId | undefined)
+  | ((username: string) => Promise<UserGroupId | undefined>)
+type UserGroupIdToUserIds = (userGroupId: UserGroupId) => UserId[] | undefined
+type UserIdToUserGroupIds = (userId: UserId) => UserGroupId[] | undefined
 
 /**
  * `string`から`ExtractedFilter`を経由して実際のフィルターを作る
@@ -180,17 +191,29 @@ export const channelOrDmChannelParser = async <T extends string>(
   return usernameToDmChannelId(username)
 }
 
-export const userParser = async <T extends string>(
-  usernameToId: UsernameToId,
+export const userOrUserGroupParser = async <T extends string>(
+  { usernameToId, userGroupNameToId }: StoreForParser,
   extracted: ExtractedFilter<T>
-): Promise<UserId | typeof MeToken | undefined> => {
-  if (extracted.body === 'me') return MeToken
+): Promise<{ user?: UserId | typeof MeToken; group?: UserGroupId }> => {
+  const body = extracted.prefix === '@' ? `@${extracted.body}` : extracted.body
+  if (body === 'me') return { user: MeToken }
 
-  const username = extracted.body.startsWith('@')
-    ? extracted.body.slice(1)
-    : extracted.body
+  const userOrUserGroupName = body.startsWith('@') ? body.slice(1) : body
 
-  return usernameToId(username)
+  const userName = body.startsWith('@!')
+    ? userOrUserGroupName.slice(1)
+    : userOrUserGroupName
+
+  const userId = await usernameToId(userName)
+  if (userId) return { user: userId }
+
+  const userGroupName = body.startsWith('@&')
+    ? userOrUserGroupName.slice(1)
+    : userOrUserGroupName
+
+  const userGroupId = await userGroupNameToId(userGroupName)
+
+  return { group: userGroupId }
 }
 
 export const messageParser = <T extends string>(
