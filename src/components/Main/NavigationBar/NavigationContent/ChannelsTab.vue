@@ -21,13 +21,20 @@
             show-topic
           />
           <template v-else-if="filterStarChannel">
-            <ChannelTreeComponent
-              v-if="staredChannels.length > 0"
-              :id="staredPanelId"
-              :channels="staredChannels"
-              show-shortened-path
-              role="tabpanel"
-            />
+            <template v-if="staredChannels.length > 0">
+              <ChannelTreeComponent
+                v-if="constructStrictStarredChannelTree"
+                :id="staredPanelId"
+                :channels="starredTopLevelChannels"
+              />
+              <ChannelTreeComponent
+                v-else
+                :id="staredPanelId"
+                :channels="staredChannels"
+                show-shortened-path
+                role="tabpanel"
+              />
+            </template>
             <EmptyState v-else :id="staredPanelId" role="tabpanel">
               お気に入りチャンネルはありません
             </EmptyState>
@@ -67,15 +74,19 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useModalStore } from '/@/store/ui/modal'
 
 const { pushModal } = useModalStore()
-
-const { channelTree } = useChannelTree()
+const { channelTree, starredChannelTree } = useChannelTree()
 const { staredChannelSet } = useStaredChannels()
 const { channelsMap } = useChannelsStore()
 const { channelIdToPathString } = useChannelPath()
+
+// filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
 const topLevelChannels = computed(() =>
-  // filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
   filterTrees(toRaw(channelTree.value.children), channel => !channel.archived)
 )
+const starredTopLevelChannels = computed(() =>
+  filterTrees(toRaw(starredChannelTree.value.children), node => !node.archived)
+)
+
 const staredChannels = computed(() => {
   const trees = constructTreeFromIds(
     [...staredChannelSet.value],
@@ -105,7 +116,8 @@ const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
     .filter((v): v is ChannelTreeNode => v !== undefined)
 }
 
-const { filterStarChannel } = useBrowserSettings()
+const { filterStarChannel, constructStrictStarredChannelTree } =
+  useBrowserSettings()
 const channelListForFilter = computed(() =>
   [...channelsMap.value.values()].filter(channel => !channel.archived)
 )
