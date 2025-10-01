@@ -11,6 +11,8 @@ const mockDmChannelId = 'dm-channel-id'
 const mockChannelName = 'general'
 const mockUserId = 'user-id'
 const mockUserName = 'user'
+const mockUserGroupIds = ['user-group-id-00', 'user-group-id-01']
+const mockUserGroupNames = ['user-group-00', 'user-group-01']
 const mockCurrentChannelPath = 'current/channel'
 const mockCurrentChannelId = 'current-channel-id'
 const mockCurrentUsername = 'currentUser'
@@ -19,41 +21,71 @@ const mockMyUserId = 'my-user-id'
 const mockMyDmChannelId = 'my-dm-channel-id'
 const mockMyUsername = 'myUsername'
 
+const store: StoreForParser = {
+  channelPathToId: channelPath => {
+    if (channelPath === mockChannelName) {
+      return mockChannelId
+    }
+    if (channelPath === mockCurrentChannelPath) {
+      return mockCurrentChannelId
+    }
+    return undefined
+  },
+  usernameToDmChannelId: async username => {
+    if (username === mockUserName) {
+      return mockDmChannelId
+    }
+    if (username === mockCurrentUsername) {
+      return mockCurrentUserDmChannelId
+    }
+    return undefined
+  },
+  usernameToId: username => {
+    if (username === mockUserName) {
+      return mockUserId
+    }
+    if (username === mockMyUsername) {
+      return mockMyUserId
+    }
+    return undefined
+  },
+  userIdToName: userId => {
+    if (userId === mockUserId) {
+      return mockUserName
+    }
+    if (userId === mockMyUserId) {
+      return mockMyUsername
+    }
+    return undefined
+  },
+  userGroupNameToId: async name => {
+    const idx = mockUserGroupNames.indexOf(name)
+    if (idx === -1) return undefined
+    return mockUserGroupIds[idx]
+  },
+  userGroupIdToUserIds: groupId => {
+    const idx = mockUserGroupIds.indexOf(groupId)
+    if (idx === -1) return undefined
+    if (idx === 0) return [mockUserId, mockMyUserId]
+    return [mockUserId]
+  },
+  userIdToUserGroupIds: userId => {
+    if (userId === mockUserId) {
+      return mockUserGroupIds
+    }
+    if (userId === mockMyUserId) {
+      return [mockUserGroupIds[0] as string]
+    }
+    return []
+  },
+  getCurrentChannelId: () => mockCurrentChannelId,
+  getMyDmChannelId: () => mockMyDmChannelId,
+  getMyUserId: () => mockMyUserId,
+  getCurrentChannelPathOrUsername: () => mockCurrentChannelPath,
+  getMyUsername: () => mockMyUsername
+}
+
 describe('parseQuery', () => {
-  const store: StoreForParser = {
-    channelPathToId: channelPath => {
-      if (channelPath === mockChannelName) {
-        return mockChannelId
-      }
-      if (channelPath === mockCurrentChannelPath) {
-        return mockCurrentChannelId
-      }
-      return undefined
-    },
-    usernameToDmChannelId: async username => {
-      if (username === mockUserName) {
-        return mockDmChannelId
-      }
-      if (username === mockCurrentUsername) {
-        return mockCurrentUserDmChannelId
-      }
-      return undefined
-    },
-    usernameToId: username => {
-      if (username === mockUserName) {
-        return mockUserId
-      }
-      if (username === mockMyUsername) {
-        return mockMyUserId
-      }
-      return undefined
-    },
-    getCurrentChannelId: () => mockCurrentChannelId,
-    getMyDmChannelId: () => mockMyDmChannelId,
-    getMyUserId: () => mockMyUserId,
-    getCurrentChannelPathOrUsername: () => mockCurrentChannelPath,
-    getMyUsername: () => mockMyUsername
-  }
   const parseQuery = createQueryParser(store)
 
   it('can parse query without filter', async () => {
@@ -135,28 +167,172 @@ describe('parseQuery', () => {
   it('can parse query with in:me', async () => {
     const query = 'lorem ipsum in:me'
     const { normalizedQuery, queryObject } = await parseQuery(query)
-    expect(normalizedQuery).toBe(`lorem ipsum in:${mockMyUsername}`)
+    expect(normalizedQuery).toBe(`lorem ipsum in:@${mockMyUsername}`)
     expect(queryObject.word).toBe('lorem ipsum')
     expect(queryObject.in).toEqual(mockMyDmChannelId)
   })
-  it('can parse query with user-filter without @', async () => {
+  it('can parse query with user-filter (prefix: `from:`, user)', async () => {
     const query = `lorem ipsum from:${mockUserName}`
     const { normalizedQuery, queryObject } = await parseQuery(query)
     expect(normalizedQuery).toBe(query)
     expect(queryObject.word).toBe('lorem ipsum')
     expect(queryObject.from).toEqual(mockUserId)
   })
-  it('can parse query with user-filter with @', async () => {
+  it('can parse query with user-filter (prefix: `from:`, group)', () =>
+    Promise.all(
+      mockUserGroupIds.map(async (id, idx) => {
+        const query = `lorem ipsum from:${mockUserGroupNames[idx]}`
+        const { normalizedQuery, queryObject } = await parseQuery(query)
+        expect(normalizedQuery).toBe(query)
+        expect(queryObject.word).toBe('lorem ipsum')
+        expect(queryObject.from).toEqual(store.userGroupIdToUserIds(id))
+      })
+    ))
+  it('can parse query with user-filter (prefix: `to:`, user)', async () => {
+    const query = `lorem ipsum to:${mockUserName}`
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.to).toEqual([mockUserId])
+  })
+  it('can parse query with user-filter (prefix: `to(groups):`, user)', async () => {
+    const query = `lorem ipsum to(groups):${mockUserName}`
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.to).toEqual([
+      ...(store.userIdToUserGroupIds(mockUserId) ?? []),
+      mockUserId
+    ])
+  })
+  it('can parse query with user-filter (prefix: `to:`, group)', () =>
+    Promise.all(
+      mockUserGroupIds.map(async (id, idx) => {
+        const query = `lorem ipsum to:${mockUserGroupNames[idx]}`
+        const { normalizedQuery, queryObject } = await parseQuery(query)
+        expect(normalizedQuery).toBe(query)
+        expect(queryObject.word).toBe('lorem ipsum')
+        expect(queryObject.to).toEqual(id)
+      })
+    ))
+  it('can parse query with user-filter (prefix: `to(groups):`, group)', () =>
+    Promise.all(
+      mockUserGroupIds.map(async (id, idx) => {
+        const query = `lorem ipsum to(groups):${mockUserGroupNames[idx]}`
+        const { normalizedQuery, queryObject } = await parseQuery(query)
+        expect(normalizedQuery).toBe(query)
+        expect(queryObject.word).toBe('lorem ipsum')
+        expect(queryObject.to).toEqual(id)
+      })
+    ))
+  it('can parse query with user-filter (prefix: `@`, user)', async () => {
+    const query = `lorem ipsum @${mockUserName}`
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.to).toEqual([mockUserId])
+  })
+  it('can parse query with user-filter (prefix: `@`, group)', () =>
+    Promise.all(
+      mockUserGroupIds.map(async (id, idx) => {
+        const query = `lorem ipsum @${mockUserGroupNames[idx]}`
+        const { normalizedQuery, queryObject } = await parseQuery(query)
+        expect(normalizedQuery).toBe(query)
+        expect(queryObject.word).toBe('lorem ipsum')
+        expect(queryObject.to).toEqual(id)
+      })
+    ))
+  it('can parse query with user-filter (prefix: `from:@`, user)', async () => {
     const query = `lorem ipsum from:@${mockUserName}`
     const { normalizedQuery, queryObject } = await parseQuery(query)
     expect(normalizedQuery).toBe(query)
     expect(queryObject.word).toBe('lorem ipsum')
     expect(queryObject.from).toEqual(mockUserId)
   })
+  it('can parse query with user-filter (prefix: `from:@`, group)', async () =>
+    Promise.all(
+      mockUserGroupIds.map(async (id, idx) => {
+        const query = `lorem ipsum from:@${mockUserGroupNames[idx]}`
+        const { normalizedQuery, queryObject } = await parseQuery(query)
+        expect(normalizedQuery).toBe(query)
+        expect(queryObject.word).toBe('lorem ipsum')
+        expect(queryObject.from).toEqual(store.userGroupIdToUserIds(id))
+      })
+    ))
+
+  it('can parse query with user-filter (prefix: `@!`, user)', async () => {
+    const query = `lorem ipsum @!${mockUserName}`
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.to).toEqual([mockUserId])
+  })
+  it('can parse query with user-filter (prefix: `@!`, group)', () =>
+    Promise.all(
+      mockUserGroupIds.map(async (id, idx) => {
+        const query = `lorem ipsum @!${mockUserGroupNames[idx]}`
+        const { normalizedQuery, queryObject } = await parseQuery(query)
+        expect(normalizedQuery).toBe(query)
+        expect(queryObject.word).toBe(query)
+        expect(queryObject.to).toBeUndefined()
+      })
+    ))
+  it('can parse query with user-filter (prefix: `from:@!`, user)', async () => {
+    const query = `lorem ipsum from:@!${mockUserName}`
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe('lorem ipsum')
+    expect(queryObject.from).toEqual(mockUserId)
+  })
+  it('can parse query with user-filter (prefix: `from:@!`, group)', async () =>
+    Promise.all(
+      mockUserGroupIds.map(async (id, idx) => {
+        const query = `lorem ipsum from:@!${mockUserGroupNames[idx]}`
+        const { normalizedQuery, queryObject } = await parseQuery(query)
+        expect(normalizedQuery).toBe(query)
+        expect(queryObject.word).toBe(query)
+        expect(queryObject.from).toBeUndefined()
+      })
+    ))
+
+  it('can parse query with user-filter (prefix: `@&`, user)', async () => {
+    const query = `lorem ipsum @&${mockUserName}`
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe(query)
+    expect(queryObject.to).toBeUndefined()
+  })
+  it('can parse query with user-filter (prefix: `@&`, group)', () =>
+    Promise.all(
+      mockUserGroupIds.map(async (id, idx) => {
+        const query = `lorem ipsum @&${mockUserGroupNames[idx]}`
+        const { normalizedQuery, queryObject } = await parseQuery(query)
+        expect(normalizedQuery).toBe(query)
+        expect(queryObject.word).toBe('lorem ipsum')
+        expect(queryObject.to).toEqual(id)
+      })
+    ))
+  it('can parse query with user-filter (prefix: `from:@&`, user)', async () => {
+    const query = `lorem ipsum from:@&${mockUserName}`
+    const { normalizedQuery, queryObject } = await parseQuery(query)
+    expect(normalizedQuery).toBe(query)
+    expect(queryObject.word).toBe(query)
+    expect(queryObject.from).toBeUndefined()
+  })
+  it('can parse query with user-filter (prefix: `from:@&`, group)', async () =>
+    Promise.all(
+      mockUserGroupIds.map(async (id, idx) => {
+        const query = `lorem ipsum from:@&${mockUserGroupNames[idx]}`
+        const { normalizedQuery, queryObject } = await parseQuery(query)
+        expect(normalizedQuery).toBe(query)
+        expect(queryObject.word).toBe('lorem ipsum')
+        expect(queryObject.from).toEqual(store.userGroupIdToUserIds(id))
+      })
+    ))
   it('can parse query with me', async () => {
     const query = 'lorem ipsum to:me'
     const { normalizedQuery, queryObject } = await parseQuery(query)
-    expect(normalizedQuery).toBe(`lorem ipsum to:${mockMyUsername}`)
+    expect(normalizedQuery).toBe(`lorem ipsum to:@!${mockMyUsername}`)
     expect(queryObject.word).toBe('lorem ipsum')
     expect(queryObject.to).toEqual(mockMyUserId)
   })
