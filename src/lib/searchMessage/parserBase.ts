@@ -187,7 +187,9 @@ export const channelOrDmChannelParser = async <T extends string>(
   const channelPath = channelPathToId(channelName)
   if (channelPath) return channelPath
 
-  const username = body.startsWith('@') ? body.slice(1) : body
+  const username = body.slice(
+    Number(body.startsWith('@')) + Number(body.startsWith('@!'))
+  )
   return usernameToDmChannelId(username)
 }
 
