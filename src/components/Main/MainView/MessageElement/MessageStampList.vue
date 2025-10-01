@@ -1,6 +1,6 @@
 <template>
   <div v-if="stamps.length > 0" :class="$style.stampWrapper">
-    <a-icon
+    <AIcon
       v-if="showDetailButton"
       name="rounded-triangle"
       :size="20"
@@ -15,14 +15,14 @@
     >
       <transition-group name="stamp">
         <div v-for="stamp in stampList" :key="stamp.id" :class="$style.stamp">
-          <stamp-element
+          <StampElement
             :stamp="stamp"
             :is-detail-shown="isDetailShown"
             :is-archived="isArchived"
             @add-stamp="addStamp"
             @remove-stamp="removeStamp"
           />
-          <stamp-detail-element
+          <StampDetailElement
             v-if="isDetailShown"
             :class="$style.detail"
             :stamp="stamp"
@@ -34,7 +34,7 @@
         :class="$style.stampPickerOpener"
         @click="toggleStampPicker"
       >
-        <a-icon mdi name="plus" :size="20" />
+        <AIcon mdi name="plus" :size="20" />
       </div>
     </div>
   </div>

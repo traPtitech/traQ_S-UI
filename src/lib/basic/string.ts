@@ -66,3 +66,47 @@ export const replacePrefix = (
   if (!str.startsWith(searchValue)) return str
   return `${replaceValue}${str.slice(searchValue.length)}`
 }
+
+const INVISIBLE_CHARACTERS = {
+  basic: [
+    0x000b, // VERTICAL_TABULATION
+    0x200b, // ZERO_WIDTH_SPACE
+    0x2028, // LINE_SEPARATOR
+    0x2029, // PARAGRAPH_SEPARATOR
+    0x2061, // FUNCTION_APPLICATION
+    0x2062, // INVISIBLE_TIMES
+    0x2063, // INVISIBLE_SEPARATOR
+    0xfeff // ZERO_WIDTH_NO_BREAK_SPACE
+  ],
+  joiner: [
+    0x034f, // COMBINING_GRAPHEME_JOINER
+    0x200c, // ZERO_WIDTH_NON_JOINER
+    0x200d // ZERO_WIDTH_JOINER
+  ],
+  directional: [
+    0x200e, // LEFT_TO_RIGHT_MARK
+    0x200f, // RIGHT_TO_LEFT_MARK
+    0x202a, // LEFT_TO_RIGHT_EMBEDDING
+    0x202b, // RIGHT_TO_LEFT_EMBEDDING
+    0x202c, // POP_DIRECTIONAL_FORMATTING
+    0x202d, // LEFT_TO_RIGHT_OVERRIDE
+    0x202e // RIGHT_TO_LEFT_OVERRIDE
+  ]
+} as const
+
+export const makeInvisibleCharactersRemover = (
+  options: Partial<Record<keyof typeof INVISIBLE_CHARACTERS, boolean>> = {}
+) => {
+  type Keys = keyof typeof INVISIBLE_CHARACTERS
+  const defaultOptions = { basic: true }
+
+  const targets = Object.entries({ ...defaultOptions, ...options })
+    .filter(([_, value]) => value)
+    .map(([key]) => INVISIBLE_CHARACTERS[key as Keys])
+    .flat() as number[]
+
+  return (text: string) =>
+    [...text]
+      .filter(c => !targets.includes(c.codePointAt(0) as number))
+      .join('')
+}

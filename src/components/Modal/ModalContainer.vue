@@ -64,7 +64,6 @@ import TagModal from './TagModal/TagModal.vue'
 import GroupModal from './GroupModal/GroupModal.vue'
 import ChannelCreateModal from './ChannelCreateModal/ChannelCreateModal.vue'
 import FileModal from './FileModal/FileModal.vue'
-import QRCodeModal from './QRCodeModal/QRCodeModal.vue'
 import ClipCreateModal from './ClipCreateModal/ClipCreateModal.vue'
 import ClipFolderCreateModal from './ClipFolderCreateModal/ClipFolderCreateModal.vue'
 import ChannelManageModal from './ChannelManageModal/ChannelManageModal.vue'
@@ -89,7 +88,6 @@ const components: Record<ModalStateType, Component> = {
   group: GroupModal,
   'channel-create': ChannelCreateModal,
   file: FileModal,
-  qrcode: QRCodeModal,
   'clip-create': ClipCreateModal,
   'clip-folder-create': ClipFolderCreateModal,
   'channel-manage': ChannelManageModal,
@@ -129,6 +127,6 @@ const component = computed(() => {
   background-color: rgba(0, 0, 0, 0.15);
   transition: background-color 0.1s;
   z-index: $z-index-modal-container;
-  contain: strict;
+  contain: var(--contain-strict);
 }
 </style>

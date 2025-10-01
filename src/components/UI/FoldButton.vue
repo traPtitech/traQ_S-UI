@@ -3,7 +3,7 @@
     :class="[$style.button, small && $style.small]"
     :data-background="background"
   >
-    <a-icon
+    <AIcon
       v-if="showIcon"
       :name="isFold ? 'down' : 'up'"
       :class="$style['icon']"

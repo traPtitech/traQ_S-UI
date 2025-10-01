@@ -1,39 +1,36 @@
 <template>
   <div>
-    <channel-sidebar-viewers
+    <ChannelSidebarViewers
       v-model="isViewersDetailOpen"
       :viewer-ids="viewerIds"
       :inactive-viewer-ids="inactiveViewerIds"
       :class="$style.sidebarItem"
     />
-    <channel-sidebar-qall
+    <ChannelSidebarQall
       v-if="qallUserIds.length > 0"
       :qall-user-ids="qallUserIds"
       :class="$style.sidebarItem"
     />
-    <channel-sidebar-topic
-      :class="$style.sidebarItem"
-      :channel-id="channelId"
-    />
-    <channel-sidebar-pinned
+    <ChannelSidebarTopic :class="$style.sidebarItem" :channel-id="channelId" />
+    <ChannelSidebarPinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.sidebarItem"
       @click-link="emit('moveToPinned')"
     />
-    <channel-sidebar-events
+    <ChannelSidebarEvents
       :class="$style.sidebarItem"
       @click-link="emit('moveToEvents')"
     />
-    <channel-sidebar-relation
+    <ChannelSidebarRelation
       :channel-id="channelId"
       :class="$style.sidebarItem"
     />
-    <channel-sidebar-member
+    <ChannelSidebarMember
       :channel-id="channelId"
       :class="$style.sidebarItem"
       :viewer-ids="viewerIds"
     />
-    <channel-sidebar-bots :channel-id="channelId" :class="$style.sidebarItem" />
+    <ChannelSidebarBots :channel-id="channelId" :class="$style.sidebarItem" />
     <!--
     <channel-sidebar-edit :class="$style.edit" />
     -->

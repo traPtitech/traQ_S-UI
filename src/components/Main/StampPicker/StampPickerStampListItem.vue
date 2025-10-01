@@ -7,7 +7,7 @@
       @mouseenter="onStampHover"
     >
       <!-- keyにしてアニメーションが動くようにしている -->
-      <a-stamp
+      <AStamp
         :stamp-id="stamp.id"
         :size="32"
         :class="$style.item"

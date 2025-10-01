@@ -1,7 +1,7 @@
 <template>
-  <sidebar-content-container-foldable title="Qall">
-    <channel-sidebar-member-icons :viewer-states="viewStates" />
-  </sidebar-content-container-foldable>
+  <SidebarContentContainerFoldable title="Qall">
+    <ChannelSidebarMemberIcons :viewer-states="viewStates" />
+  </SidebarContentContainerFoldable>
 </template>
 
 <script lang="ts" setup>

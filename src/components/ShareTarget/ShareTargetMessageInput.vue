@@ -16,17 +16,17 @@
           />
         </div>
         <div :class="$style.controls">
-          <message-input-insert-stamp-button
+          <MessageInputInsertStampButton
             :class="$style.button"
             @click="toggleStampPicker"
           />
-          <message-input-upload-button
+          <MessageInputUploadButton
             :class="$style.button"
             @click="addAttachment"
           />
         </div>
       </div>
-      <message-input-file-list
+      <MessageInputFileList
         :class="$style.fileList"
         channel-id="share-target"
       />

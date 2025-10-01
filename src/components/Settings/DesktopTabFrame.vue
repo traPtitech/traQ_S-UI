@@ -1,7 +1,7 @@
 <template>
   <section :class="$style.container">
     <div :class="$style.content">
-      <tab-content-title :class="$style.title" />
+      <TabContentTitle :class="$style.title" />
       <slot />
     </div>
   </section>

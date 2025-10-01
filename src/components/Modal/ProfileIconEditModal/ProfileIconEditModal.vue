@@ -1,20 +1,20 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="アイコンの編集"
     subtitle="画像の位置・サイズを編集できます"
   >
     <div :class="$style.container">
-      <image-upload v-model="iconImage" />
+      <ImageUpload v-model="iconImage" />
     </div>
     <div :class="$style.buttonContainer">
-      <form-button label="キャンセル" type="tertiary" @click="cancel" />
-      <form-button
+      <FormButton label="キャンセル" type="tertiary" @click="cancel" />
+      <FormButton
         label="更新する"
         :loading="isEditing"
         @click="editIconImage"
       />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>

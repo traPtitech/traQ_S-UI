@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
-    <file-modal-content-header :file-id="fileId" :class="$style.header" />
-    <file-modal-content-footer :file-id="fileId" />
+    <FileModalContentHeader :file-id="fileId" :class="$style.header" />
+    <FileModalContentFooter :file-id="fileId" />
   </div>
 </template>
 

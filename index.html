@@ -21,6 +21,17 @@
       }
     </style>
 
+    <style>
+      /*
+        WebKit で発生する contain: strict による不具合の回避策
+        WebKit の場合は App.vue にて "inline-size layout paint style" を指定する
+        cf. https://bugs.webkit.org/show_bug.cgi?id=297186
+      */
+      body {
+        --contain-strict: strict;
+      }
+    </style>
+
     <link href="/fonts/fonts.css" rel="stylesheet" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"

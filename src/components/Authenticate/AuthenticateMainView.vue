@@ -2,15 +2,15 @@
   <transition name="zoom" appear>
     <!-- https://github.com/vuejs/rfcs/blob/master/active-rfcs/0017-transition-as-root.md -->
     <div v-if="shouldShow" :class="$style.container">
-      <authenticate-modal>
-        <login-form
+      <AuthenticateModal>
+        <LoginForm
           v-if="type === 'login'"
           :external-login="externalLogin"
           :sign-up-allowed="signUpAllowed"
         />
-        <registration-form v-if="type === 'registration'" />
-        <consent-form v-if="type === 'consent'" />
-      </authenticate-modal>
+        <RegistrationForm v-if="type === 'registration'" />
+        <ConsentForm v-if="type === 'consent'" />
+      </AuthenticateModal>
     </div>
   </transition>
 </template>

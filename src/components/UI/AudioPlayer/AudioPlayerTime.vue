@@ -1,12 +1,12 @@
 <template>
   <div :class="$style.container">
-    <semi-fixed-size-text
+    <SemiFixedSizeText
       :class="$style.time"
       :actual="displayCurrentTime"
       :placeholder="displayTimeMaxText"
     />
     <div :class="$style.slash">/</div>
-    <semi-fixed-size-text
+    <SemiFixedSizeText
       :class="$style.time"
       :actual="displayDuration"
       :placeholder="displayTimeMaxText"

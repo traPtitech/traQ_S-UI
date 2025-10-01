@@ -1,79 +1,52 @@
 <template>
   <div>
-    <navigation-content-container
+    <NavigationContentContainer
       v-if="homeChannelWithTree.length > 0"
       subtitle="ホームチャンネル"
       :class="$style.item"
     >
-      <channel-tree :channels="homeChannelWithTree" show-shortened-path />
-    </navigation-content-container>
-    <div
-      v-if="
-        featureFlags.flag_show_star_in_unread_channel_list.enabled ||
-        featureFlags.flag_show_notified_in_unread_channel_list.enabled
-      "
-    >
-      <navigation-content-container
+      <ChannelTree :channels="homeChannelWithTree" show-shortened-path />
+    </NavigationContentContainer>
+    <div>
+      <NavigationContentContainer
         v-if="
           dmChannelsWithNotification.length + noticeableChannels.length !== 0
         "
         subtitle="メンション"
         :class="$style.item"
       >
-        <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
-        <channel-list
+        <DMChannelList :dm-channels="dmChannelsWithNotification" />
+        <ChannelList
           :channels="noticeableChannels"
-          :show-star="
-            featureFlags.flag_show_star_in_unread_channel_list.enabled
-          "
+          :show-star="prioritizeStarredChannel"
         />
-      </navigation-content-container>
-      <navigation-content-container
-        v-if="dmChannelsWithNotification.length + unreadChannels.length !== 0"
+      </NavigationContentContainer>
+      <NavigationContentContainer
+        v-if="unreadChannels.length > 0"
         subtitle="未読"
         :class="$style.item"
       >
-        <channel-list
+        <ChannelList
           :channels="unreadChannels"
-          :show-star="
-            featureFlags.flag_show_star_in_unread_channel_list.enabled
-          "
-          :show-notified="
-            featureFlags.flag_show_notified_in_unread_channel_list.enabled
-          "
+          :show-star="prioritizeStarredChannel"
+          :show-notified="prioritizeNotifiedChannel"
         />
-      </navigation-content-container>
+      </NavigationContentContainer>
     </div>
-    <div v-else>
-      <navigation-content-container
-        v-if="
-          dmChannelsWithNotification.length +
-            noticeableChannels.length +
-            unreadChannels.length !==
-          0
-        "
-        subtitle="未読"
-        :class="$style.item"
-      >
-        <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
-        <channel-list :channels="noticeableChannels" />
-        <channel-list :channels="unreadChannels" />
-      </navigation-content-container>
-    </div>
-    <navigation-content-container subtitle="チャンネル" :class="$style.item">
-      <channel-tree
+    <NavigationContentContainer subtitle="チャンネル" :class="$style.item">
+      <ChannelTree
         v-if="topLevelChannels.length > 0"
         :channels="topLevelChannels"
       />
-      <empty-state v-else> 購読していません </empty-state>
-    </navigation-content-container>
-    <navigation-content-container
+      <EmptyState v-else> 購読していません </EmptyState>
+    </NavigationContentContainer>
+    <NavigationContentContainer
       v-if="qallingChannels.length > 0"
       subtitle="Qall中チャンネル"
       :class="$style.item"
     >
-      <channel-list :channels="qallingChannels" />
-    </navigation-content-container>
+      <ChannelList :channels="qallingChannels" />
+    </NavigationContentContainer>
   </div>
 </template>
 
@@ -91,13 +64,14 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import useChannelsWithNotification from '/@/composables/subscription/useChannelsWithNotification'
 import { filterTrees } from '/@/lib/basic/tree'
 import { useQall } from '/@/composables/qall/useQall'
-import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const { homeChannelTree } = useChannelTree()
 const { detail } = useMeStore()
 const { channelsMap } = useChannelsStore()
 const { rooms: roomWithParticipants } = useQall()
-const { featureFlags } = useFeatureFlagSettings()
+const { prioritizeNotifiedChannel, prioritizeStarredChannel } =
+  useBrowserSettings()
 
 const homeChannelWithTree = computed(() => {
   if (!detail.value?.homeChannel) return []

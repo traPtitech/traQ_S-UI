@@ -1,27 +1,27 @@
 <template>
   <div v-if="!cantPlay" :class="$style.container">
-    <audio-player-play-button
+    <AudioPlayerPlayButton
       v-model:is-playing="isPlaying"
       :class="$style.icon"
       :size="20"
     />
-    <audio-player-time
+    <AudioPlayerTime
       :class="$style.time"
       :current-time="currentTime"
       :duration="duration"
     />
     <div :class="$style.sliderContainer">
-      <audio-player-time-slider
+      <AudioPlayerTimeSlider
         v-model:current-time="currentTime"
         :duration="duration"
       />
-      <audio-player-volume-slider
+      <AudioPlayerVolumeSlider
         v-model:volume="volume"
         :class="$style.volumeSlider"
         :disabled="duration === 0"
       />
     </div>
-    <audio-player-pin-p-button
+    <AudioPlayerPinPButton
       :class="$style.icon"
       :is-pin-p-shown="isPinPShown"
       :size="20"

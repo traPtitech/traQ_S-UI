@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <template v-if="!isMobile">
-      <header-tools-item
+      <HeaderToolsItem
         v-if="true"
         icon-mdi
         :icon-name="isCallingHere ? 'phone' : 'phone-outline'"
@@ -12,7 +12,7 @@
         :tooltip="'Qallボタン'"
         @click="joinQall(props.channelId)"
       />
-      <header-tools-item
+      <HeaderToolsItem
         :class="$style.notificationIcon"
         :data-state="subscriptionChangeInfo.state"
         :icon-name="subscriptionChangeInfo.iconName"
@@ -21,7 +21,7 @@
         @click="changeToNextSubscriptionLevel"
       />
     </template>
-    <header-tools-item
+    <HeaderToolsItem
       v-if="isStarred"
       :class="$style.starIcon"
       data-is-starred
@@ -29,7 +29,7 @@
       tooltip="お気に入りから外す"
       @click="unstarChannel"
     />
-    <header-tools-item
+    <HeaderToolsItem
       v-else
       :class="$style.starIcon"
       icon-name="star-outline"
@@ -38,7 +38,7 @@
     />
     <div :class="$style.moreButton">
       <slot />
-      <header-tools-item
+      <HeaderToolsItem
         :class="$style.icon"
         icon-mdi
         icon-name="dots-horizontal"

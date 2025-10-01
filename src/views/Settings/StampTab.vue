@@ -1,7 +1,7 @@
 <template>
   <section>
-    <new-stamp />
-    <stamp-management />
+    <NewStamp />
+    <StampManagement />
   </section>
 </template>
 

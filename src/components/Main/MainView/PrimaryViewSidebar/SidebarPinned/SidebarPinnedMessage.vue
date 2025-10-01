@@ -1,6 +1,6 @@
 <template>
   <div>
-    <message-panel
+    <MessagePanel
       title-type="user"
       hide-subtitle
       line-clamp-content
@@ -10,7 +10,7 @@
       @click-context-menu-button="toggle"
     />
 
-    <sidebar-pinned-message-context-menu
+    <SidebarPinnedMessageContextMenu
       v-if="position"
       :position="position"
       :message-id="message.id"

@@ -10,8 +10,7 @@ import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
 import { useViewStatesStore } from '/@/store/domain/viewStates'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
-
-// TODO: Qall
+import { useRoomsStore } from '/@/store/domain/rooms'
 
 const useInitialFetch_ = () => {
   const { fetchUsers } = useUsersStore()
@@ -24,6 +23,8 @@ const useInitialFetch_ = () => {
   const { fetchViewStates } = useViewStatesStore()
   const { fetchStampHistory } = useStampHistory()
   const { fetchStaredChannels } = useStaredChannels()
+  const { fetchRooms } = useRoomsStore()
+
   return () => {
     // 初回fetch
     fetchUsers()
@@ -40,6 +41,8 @@ const useInitialFetch_ = () => {
 
     fetchStaredChannels()
     fetchClipFolders()
+
+    fetchRooms()
   }
 }
 

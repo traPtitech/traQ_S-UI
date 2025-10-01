@@ -1,6 +1,6 @@
 <template>
   <button :class="$style.button">
-    <a-icon
+    <AIcon
       :name="iconName"
       :mdi="iconMdi"
       :size="isMobile ? 20 : 24"

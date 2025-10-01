@@ -34,7 +34,7 @@ const useChannelOptions = (
     const channels = [...channelsMap.value.values()]
       .filter(channel => containsArchivedChannels || !channel.archived)
       .map(channel => ({
-        key: channelIdToPathString(channel.id, true),
+        key: channelIdToPathString(channel.id, true) ?? '',
         value: channelToVal(channel)
       }))
       .sort((a, b) => compareStringInsensitive(a.key, b.key))

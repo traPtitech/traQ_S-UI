@@ -1,5 +1,5 @@
 <template>
-  <return-button @click="popOrCloseModal" />
+  <ReturnButton @click="popOrCloseModal" />
 </template>
 
 <script lang="ts" setup>

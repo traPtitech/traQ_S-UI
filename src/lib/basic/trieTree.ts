@@ -2,13 +2,19 @@ import { isDefined } from '/@/lib/basic/array'
 
 let lastInsertedId = 0
 
+type SearchOptions = {
+  stopAtNextDelimiter?: boolean
+}
+
 class TrieNode {
   id: number
   isWord: boolean
+  isDelimiter: boolean
   children: Record<string, TrieNode>
 
   constructor(id = 0) {
     this.isWord = false
+    this.isDelimiter = false
     this.children = {}
     this.id = id
   }
@@ -16,7 +22,7 @@ class TrieNode {
   /**
    * 結果の並びは取り出した順
    */
-  search(str: string): number[] | undefined {
+  search(str: string, options: SearchOptions = {}): number[] | undefined {
     if (str.length === 0) {
       return
     }
@@ -31,10 +37,13 @@ class TrieNode {
       self = newSelf
     }
 
-    return self.getAllWords()
+    return self.getAllWords(options)
   }
 
-  insert(str: string): number | undefined {
+  insert(
+    str: string,
+    { delimiter = null }: { delimiter?: string | null } = {}
+  ): number | undefined {
     if (str.length === 0) {
       return
     }
@@ -50,6 +59,8 @@ class TrieNode {
       }
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       self = self.children[char]!
+
+      if (char === delimiter) self.isDelimiter = true
     }
 
     if (self.isWord === true) return
@@ -79,15 +90,20 @@ class TrieNode {
   /**
    * 自身以下の単語をすべて取得する
    */
-  private getAllWords() {
+  private getAllWords({
+    stopAtNextDelimiter = false
+  }: SearchOptions = {}): number[] {
     const results: number[] = []
 
     const childrens: TrieNode[] = [this]
     while (childrens.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const child = childrens.shift()!
+      const child = childrens.pop() as TrieNode
       if (child.isWord) {
         results.push(child.id)
+      }
+
+      if (stopAtNextDelimiter && child.isDelimiter && child.id !== this.id) {
+        continue
       }
 
       childrens.push(...Object.values(child.children))
@@ -97,7 +113,7 @@ class TrieNode {
   }
 }
 
-class TrieTree<Word extends { text: string }> {
+class TrieTree<Word extends { text: string; delimiter?: string }> {
   dict: Map<number, Word>
   root: TrieNode
 
@@ -112,8 +128,8 @@ class TrieTree<Word extends { text: string }> {
    *
    * @param str 検索文字列
    */
-  search(str: string): Word[] {
-    const ids = this.root.search(str.toLocaleLowerCase())
+  search(str: string, options: SearchOptions = {}): Word[] {
+    const ids = this.root.search(str.toLocaleLowerCase(), options)
     if (!ids) return []
     return ids
       .map(id => this.dict.get(id))
@@ -122,7 +138,10 @@ class TrieTree<Word extends { text: string }> {
   }
 
   insert(word: Word) {
-    const insertedId = this.root.insert(word.text.toLocaleLowerCase())
+    const insertedId = this.root.insert(word.text.toLocaleLowerCase(), {
+      delimiter: word.delimiter
+    })
+
     if (!insertedId) return
     this.dict.set(insertedId, word)
   }

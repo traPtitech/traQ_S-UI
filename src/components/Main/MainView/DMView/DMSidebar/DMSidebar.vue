@@ -1,12 +1,12 @@
 <template>
-  <primary-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
+  <PrimaryViewSidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #page>
-      <primary-view-sidebar-page v-if="page === 'default'">
+      <PrimaryViewSidebarPage v-if="page === 'default'">
         <template #header>
-          <sidebar-header icon-string="@" :text="userName" />
+          <SidebarHeader icon-string="@" :text="userName" />
         </template>
         <template #content>
-          <sidebar-content
+          <SidebarContent
             :viewer-ids="activeViewingUsers"
             :inactive-viewer-ids="inactiveViewingUsers"
             :pinned-messages-count="pinnedMessages.length"
@@ -14,26 +14,26 @@
             @move-to-events="moveToEventsPage"
           />
         </template>
-      </primary-view-sidebar-page>
-      <sidebar-pinned-page
+      </PrimaryViewSidebarPage>
+      <SidebarPinnedPage
         v-else-if="page === 'pinned'"
         :pinned-messages="pinnedMessages"
         @move-back="moveToDefaultPage"
       />
-      <sidebar-events-page
+      <SidebarEventsPage
         v-else-if="page === 'events'"
         :channel-id="channelId"
         @move-back="moveToDefaultPage"
       />
     </template>
     <template #opener>
-      <channel-sidebar-hidden
+      <ChannelSidebarHidden
         :viewer-ids="activeViewingUsers"
         :inactive-viewer-ids="inactiveViewingUsers"
         @open="openSidebar"
       />
     </template>
-  </primary-view-sidebar>
+  </PrimaryViewSidebar>
 </template>
 
 <script lang="ts" setup>

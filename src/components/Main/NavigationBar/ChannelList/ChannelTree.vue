@@ -1,6 +1,6 @@
 <template>
   <div>
-    <channel-element
+    <ChannelElement
       v-for="channel in channels"
       :key="channel.id"
       :class="$style.element"
@@ -9,10 +9,10 @@
       :show-shortened-path="showShortenedPath"
       @click-hash="toggleChildren"
     >
-      <slide-down :is-open="childrenShownChannels.has(channel.id)">
+      <SlideDown :is-open="childrenShownChannels.has(channel.id)">
         <channel-tree :class="$style.children" :channels="channel.children" />
-      </slide-down>
-    </channel-element>
+      </SlideDown>
+    </ChannelElement>
   </div>
 </template>
 

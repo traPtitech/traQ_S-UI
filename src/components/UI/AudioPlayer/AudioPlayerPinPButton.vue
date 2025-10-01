@@ -1,5 +1,5 @@
 <template>
-  <audio-player-abstract-button
+  <AudioPlayerAbstractButton
     v-if="canUsePinP"
     :disabled="isPinPShown || disabled"
     icon-name="picture-in-picture-bottom-right"

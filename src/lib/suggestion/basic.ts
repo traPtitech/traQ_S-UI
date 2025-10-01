@@ -11,7 +11,7 @@ export const getCurrentWord = (
   text: string
 ): Target => {
   const startIndex = elm.selectionStart
-  const nearest = lastIndexOf(text, ['@', ':', '.'], startIndex - 1)
+  const nearest = lastIndexOf(text, ['@', ':', '.', '#'], startIndex - 1)
   const prevSpaceIndex = lastIndexOf(text, [' ', '　'], startIndex - 1)
   if (prevSpaceIndex > nearest) {
     return { word: '', begin: 0, end: 0 }
@@ -23,23 +23,31 @@ export const getCurrentWord = (
   return { word, begin, end }
 }
 
-export const getDeterminedCharacters = (candidates: string[]) => {
-  if (candidates.length <= 0) return ''
+export const getDeterminedCharacters = (_candidates: string[]) => {
+  if (_candidates.length <= 0) return ''
+  if (_candidates[0] === undefined) return ''
 
-  candidates = candidates.map(candidate => candidate.toLocaleLowerCase())
-  if (candidates[0] === undefined) return ''
+  const candidates = _candidates.map(candidate => [...candidate])
 
-  const minLength = Math.min(...candidates.map(c => [...c].length))
+  const minLength = Math.min(...candidates.map(({ length }) => length))
   const confirmedPart: string[] = []
+
   for (let i = 0; i < minLength; i++) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    confirmedPart[i] = [...candidates[0]][i]!
+    confirmedPart[i] = candidates[0]![i]!
+
     for (const candidate of candidates) {
-      if (confirmedPart[i] !== [...candidate][i]) {
-        return confirmedPart.slice(0, -1).join('')
+      if (confirmedPart[i] !== candidate[i]) {
+        // candidates に大文字と小文字の両方が存在する場合は小文字にする
+        confirmedPart[i] = confirmedPart[i]?.toLocaleLowerCase() as string
+
+        if (confirmedPart[i] !== candidate[i]?.toLocaleLowerCase()) {
+          return confirmedPart.slice(0, -1).join('')
+        }
       }
     }
   }
+
   return confirmedPart.join('')
 }
 

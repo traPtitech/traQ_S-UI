@@ -1,5 +1,5 @@
 <template>
-  <context-menu-container :position="position" @close="close">
+  <ContextMenuContainer :position="position" @close="close">
     <div :class="$style.container">
       <span
         v-if="isPinned && !isMinimum"
@@ -46,7 +46,7 @@
         削除
       </span>
     </div>
-  </context-menu-container>
+  </ContextMenuContainer>
 </template>
 
 <script lang="ts">

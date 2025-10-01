@@ -8,7 +8,7 @@
       @keydown.left="onKeydown"
       @keydown.right="onKeydown"
     >
-      <a-tab
+      <ATab
         :id="myStampTabId"
         ref="myStampTab"
         :aria-selected="currentTab === 'myStamp'"
@@ -17,7 +17,7 @@
         label="所有スタンプ"
         @click="currentTab = 'myStamp'"
       />
-      <a-tab
+      <ATab
         :id="otherStampTabId"
         ref="otherStampTab"
         :aria-selected="currentTab === 'otherStamp'"
@@ -34,7 +34,7 @@
       role="tabpanel"
     >
       <p v-if="myStamps.length === 0">所有しているスタンプはありません</p>
-      <stamp-item
+      <StampItem
         v-for="stamp in myStamps"
         v-else
         :key="stamp.id"
@@ -47,7 +47,7 @@
       :class="$style.content"
       role="tabpanel"
     >
-      <stamp-item
+      <StampItem
         v-for="stamp in otherStamps"
         :key="stamp.id"
         :stamp="stamp"

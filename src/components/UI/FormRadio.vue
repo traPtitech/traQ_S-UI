@@ -14,10 +14,10 @@
   </label>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends string">
 import { computed } from 'vue'
 
-const modelValue = defineModel<string>({ default: '' })
+const modelValue = defineModel<T>({ required: true })
 
 const props = withDefaults(
   defineProps<{

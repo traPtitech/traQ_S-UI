@@ -1,6 +1,6 @@
 <template>
   <div :class="[$style.container, lineClampContent ? $style.lineClamp : '']">
-    <file-type-icon
+    <FileTypeIcon
       v-for="[fileType, isAnimatedImage] in fileTypes"
       :key="fileType"
       :class="$style.icon"
@@ -8,7 +8,7 @@
       :size="20"
       :is-animated-image="isAnimatedImage"
     />
-    <a-icon
+    <AIcon
       v-if="hasMessage"
       :class="$style.icon"
       name="comment-quote"

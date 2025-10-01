@@ -1,8 +1,8 @@
 <template>
   <!-- Enterキーでログインするため -->
   <form @submit.prevent="login">
-    <authenticate-header :class="$style.header" />
-    <login-form-saved
+    <AuthenticateHeader :class="$style.header" />
+    <LoginFormSaved
       v-if="saved"
       :saved="saved"
       :login-state="loginState"
@@ -10,7 +10,7 @@
       @use-other="dontUseSaved"
     />
     <template v-else>
-      <authenticate-input
+      <AuthenticateInput
         v-model="loginState.name"
         label="traQ ID"
         autocomplete="username"
@@ -18,7 +18,7 @@
         autofocus
       />
       <span :class="$style.item">
-        <authenticate-input
+        <AuthenticateInput
           v-model="loginState.pass"
           label="パスワード"
           type="password"
@@ -37,12 +37,12 @@
         <span v-if="loginState.error">{{ loginState.error }}</span>
       </div>
       <div :class="$style.buttons">
-        <authenticate-button type="primary" label="ログイン" is-submit />
+        <AuthenticateButton type="primary" label="ログイン" is-submit />
       </div>
       <template v-if="externalLogin.size > 0">
-        <authenticate-separator label="または" :class="$style.separator" />
+        <AuthenticateSeparator label="または" :class="$style.separator" />
         <div :class="$style.exLoginButtons">
-          <authenticate-button
+          <AuthenticateButton
             v-show="externalLogin.has('traQ')"
             type="secondary"
             :class="$style.exLoginButton"
@@ -50,7 +50,7 @@
             icon-name="traQ"
             @click="loginExternal('traq')"
           />
-          <authenticate-button
+          <AuthenticateButton
             v-show="externalLogin.has('google')"
             type="secondary"
             :class="$style.exLoginButton"
@@ -59,7 +59,7 @@
             icon-name="google"
             @click="loginExternal('google')"
           />
-          <authenticate-button
+          <AuthenticateButton
             v-show="externalLogin.has('github')"
             type="secondary"
             :class="$style.exLoginButton"
@@ -68,7 +68,7 @@
             icon-name="github"
             @click="loginExternal('github')"
           />
-          <authenticate-button
+          <AuthenticateButton
             v-show="externalLogin.has('oidc')"
             type="secondary"
             :class="$style.exLoginButton"
@@ -77,7 +77,7 @@
             icon-name="openid"
             @click="loginExternal('oidc')"
           />
-          <authenticate-button
+          <AuthenticateButton
             v-show="externalLogin.has('slack')"
             type="secondary"
             :class="$style.exLoginButton"
@@ -89,9 +89,9 @@
         </div>
       </template>
       <template v-if="signUpAllowed">
-        <authenticate-separator :class="$style.separator" />
+        <AuthenticateSeparator :class="$style.separator" />
         <router-link to="/registration">
-          <authenticate-button
+          <AuthenticateButton
             type="secondary"
             :class="$style.registrationButton"
             label="新規登録"

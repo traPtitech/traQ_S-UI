@@ -3,7 +3,7 @@
     <span :class="$style.displayName">{{
       user?.displayName ?? 'unknown'
     }}</span>
-    <grade-badge
+    <GradeBadge
       :class="$style.badge"
       :user-id="userId"
       :is-bot="user?.bot ?? false"
@@ -15,7 +15,7 @@
     >
       {{ date }}
     </span>
-    <a-icon
+    <AIcon
       v-if="createdAt !== updatedAt"
       :class="$style.editIcon"
       :size="16"

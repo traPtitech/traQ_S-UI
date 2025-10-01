@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :aria-selected="isSelected">
-    <a-icon :class="$style.icon" :name="info.icon" />
+    <AIcon :class="$style.icon" :name="info.icon" />
     <span :class="$style.title">{{ info.title }}</span>
     <span :class="$style.description">{{ info.description }}</span>
   </div>

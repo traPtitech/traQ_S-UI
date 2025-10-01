@@ -64,7 +64,7 @@ const volumeSliderClass = computed(() => ({
 <template>
   <div :class="$style.container">
     <div :class="$style.leftSide">
-      <user-icon :size="40" :user-id="participant.id" />
+      <UserIcon :size="40" :user-id="participant.id" />
       <span :class="$style.userName">{{ participant.displayName }}</span>
       <!-- TODO: Qall: ミュートを実装する -->
       <!-- <button :class="$style.micIconButton">

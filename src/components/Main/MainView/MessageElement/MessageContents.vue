@@ -1,34 +1,34 @@
 <template>
   <div :class="$style.container">
-    <user-icon :class="$style.userIcon" :user-id="message.userId" :size="40" />
-    <message-header
+    <UserIcon :class="$style.userIcon" :user-id="message.userId" :size="40" />
+    <MessageHeader
       :class="$style.messageHeader"
       :user-id="message.userId"
       :created-at="message.createdAt"
       :updated-at="message.updatedAt"
     />
     <div :class="$style.messageContents">
-      <markdown-content v-show="!isEditing" :content="renderedContent" />
-      <message-editor
+      <MarkdownContent v-show="!isEditing" :content="renderedContent" />
+      <MessageEditor
         v-if="isEditing"
         :raw-content="message.content"
         :message-id="messageId"
         :channel-id="message.channelId"
         @finish-editing="finishEditing"
       />
-      <message-quote-list
+      <MessageQuoteList
         v-if="embeddingsState.quoteMessageIds.length > 0"
         :class="$style.messageEmbeddingsList"
         :parent-message-channel-id="message.channelId"
         :message-ids="embeddingsState.quoteMessageIds"
       />
-      <message-file-list
+      <MessageFileList
         v-if="embeddingsState.fileIds.length > 0"
         :class="$style.messageEmbeddingsList"
         :channel-id="message.channelId"
         :file-ids="embeddingsState.fileIds"
       />
-      <message-ogp-list
+      <MessageOgpList
         v-if="embeddingsState.externalUrls.length > 0"
         :external-urls="embeddingsState.externalUrls"
       />

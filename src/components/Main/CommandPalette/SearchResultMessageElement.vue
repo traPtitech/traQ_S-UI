@@ -5,7 +5,7 @@
     :data-expanded="$boolAttr(expanded)"
     @click="onClick"
   >
-    <user-icon :class="$style.icon" :size="32" :user-id="message.userId" />
+    <UserIcon :class="$style.icon" :size="32" :user-id="message.userId" />
     <div :class="$style.header" @click.stop="">
       <span :class="$style.displayName">{{
         user?.displayName ?? 'Unknown'
@@ -15,9 +15,16 @@
     <div :class="$style.contentContainer">
       <div :class="$style.markdownWrapper">
         <div ref="contentRef" :class="$style.markdownContainer">
-          <markdown-content
+          <MarkdownContent
             :content="renderedContent"
             @click="toggleSpoilerHandler"
+          />
+          <MessageQuoteList
+            v-if="quotedMessageIds.length > 0"
+            :class="$style.quoteList"
+            :parent-message-channel-id="message.channelId"
+            :message-ids="quotedMessageIds"
+            disable-item-footer-links
           />
         </div>
         <div
@@ -25,10 +32,10 @@
           :class="$style.expandButton"
           @mousedown.stop="toggleExpanded"
         >
-          <a-icon name="arrow-expand-vertical" mdi :size="20" />全て表示
+          <AIcon name="arrow-expand-vertical" mdi :size="20" />全て表示
         </div>
       </div>
-      <search-result-message-file-list
+      <SearchResultMessageFileList
         v-if="fileIds.length > 0"
         :file-ids="fileIds"
         :class="$style.fileList"
@@ -52,7 +59,8 @@ import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useUsersStore } from '/@/store/entities/users'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { render } from '/@/lib/markdown/markdown'
-import { isFile } from '/@/lib/guard/embeddingOrUrl'
+import { isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
+import MessageQuoteList from '/@/components/Main/MainView/MessageElement/MessageQuoteList.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
@@ -113,7 +121,11 @@ watchEffect(async () => {
 const renderedContent = computed(() => renderedResult.value?.renderedText ?? '')
 const fileIds = computed(
   () =>
-    renderedResult.value?.embeddings.filter(isFile).map(file => file.id) ?? []
+    renderedResult.value?.embeddings.filter(isFile).map(({ id }) => id) ?? []
+)
+const quotedMessageIds = computed(
+  () =>
+    renderedResult.value?.embeddings.filter(isMessage).map(({ id }) => id) ?? []
 )
 
 const onClick = (e: MouseEvent) => {
@@ -208,6 +220,9 @@ $expand-button-height: 32px;
       transparent 100%
     );
   }
+}
+.quoteList {
+  margin-block: 16px;
 }
 .expandButton {
   position: absolute;

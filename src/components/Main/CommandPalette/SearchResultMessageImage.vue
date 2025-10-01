@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :style="containerStyle">
-    <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
+    <PlayIcon v-if="isAnimatedImage" :class="$style.playIcon" />
   </div>
 </template>
 

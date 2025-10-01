@@ -5,15 +5,15 @@
         <component :is="Component" />
       </keep-alive>
     </router-view>
-    <modal-container />
-    <toast-container />
-    <stamp-picker-container />
+    <ModalContainer />
+    <ToastContainer />
+    <StampPickerContainer />
   </div>
 </template>
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { computed, watchEffect } from 'vue'
+import { computed, watch, watchEffect } from 'vue'
 import useHtmlDataset from '/@/composables/document/useHtmlDataset'
 import { useThemeVariables } from '/@/composables/document/useThemeVariables'
 import { useResponsiveStore } from '/@/store/ui/responsive'
@@ -88,6 +88,20 @@ ${Object.entries(style.value)
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
+
+const { featureFlags } = useFeatureFlagSettings()
+
+watch(
+  () => featureFlags.value.contain_strict_alternate.enabled,
+  enabled => {
+    document.body.style.setProperty(
+      '--contain-strict',
+      enabled ? 'inline-size layout paint style' : 'strict'
+    )
+  },
+  { immediate: true }
+)
 
 useTts()
 

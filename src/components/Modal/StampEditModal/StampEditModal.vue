@@ -1,11 +1,11 @@
 <template>
-  <modal-frame title="スタンプ編集">
+  <ModalFrame title="スタンプ編集">
     <div :class="$style.container">
       <div :class="$style.leftContainer">
         <img :src="imageUrl" :class="$style.img" width="136" height="136" />
       </div>
       <div>
-        <form-input
+        <FormInput
           v-model="state.name"
           label="スタンプ名"
           prefix=":"
@@ -14,7 +14,7 @@
           :class="$style.form"
           focus-on-mount
         />
-        <form-selector
+        <FormSelector
           v-model="state.creatorId"
           label="所有者"
           :options="creatorOptions"
@@ -22,8 +22,8 @@
       </div>
     </div>
     <div :class="$style.buttonContainer">
-      <form-button label="キャンセル" type="tertiary" @click="cancel" />
-      <form-button
+      <FormButton label="キャンセル" type="tertiary" @click="cancel" />
+      <FormButton
         label="更新する"
         :disabled="!stampChanged || !isNameValid"
         :loading="isEditing"
@@ -31,26 +31,26 @@
         @click="editStamp"
       />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>
+import type { Stamp } from '@traptitech/traq'
+import type { AxiosError } from 'axios'
 import type { Ref } from 'vue'
 import { computed, reactive, ref } from 'vue'
-import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
-import type { Stamp } from '@traptitech/traq'
+import ModalFrame from '../Common/ModalFrame.vue'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
-import { isValidStampName } from '/@/lib/validate'
-import { useToastStore } from '/@/store/ui/toast'
+import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
 import useUserList from '/@/composables/users/useUserList'
+import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
+import { isValidStampName } from '/@/lib/validate'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
 import type { StampId } from '/@/types/entity-ids'
-import ModalFrame from '../Common/ModalFrame.vue'
-import type { AxiosError } from 'axios'
 
 type StampEditState = Pick<Stamp, 'name' | 'creatorId'>
 

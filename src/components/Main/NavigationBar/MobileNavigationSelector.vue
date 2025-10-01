@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <navigation-selector-item
+    <NavigationSelectorItem
       v-for="item in entries"
       :key="item.type"
       :class="$style.item"
@@ -11,7 +11,7 @@
       @click="onNavigationItemClick(item.type)"
     />
     <div v-if="showSeparator" :class="$style.separator" />
-    <navigation-selector-item
+    <NavigationSelectorItem
       v-for="item in ephemeralEntries"
       :key="item.type"
       :class="$style.item"

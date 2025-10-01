@@ -1,6 +1,6 @@
 <template>
   <section>
-    <profile-header text="最終オンライン日時" />
+    <ProfileHeader text="最終オンライン日時" />
     <p>{{ lastOnlineString }}</p>
   </section>
 </template>

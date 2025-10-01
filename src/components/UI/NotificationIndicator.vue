@@ -1,5 +1,5 @@
 <template>
-  <indicator-dot
+  <IndicatorDot
     :class="$style.container"
     :size="size"
     :border-width="borderWidth"

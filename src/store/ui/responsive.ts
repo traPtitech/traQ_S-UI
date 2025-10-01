@@ -11,11 +11,10 @@ const useResponsiveStorePinia = defineStore('ui/responsive', () => {
 
   const isMobile = ref(queryList.matches)
   const isTouchDevice = ref(!isHoverSupported.matches)
-  // safariではaddEventListener('change', func)が未対応なため
-  queryList.addListener((event: MediaQueryListEvent) => {
+  queryList.addEventListener('change', (event: MediaQueryListEvent) => {
     isMobile.value = event.matches
   })
-  isHoverSupported.addListener((event: MediaQueryListEvent) => {
+  isHoverSupported.addEventListener('change', (event: MediaQueryListEvent) => {
     isTouchDevice.value = event.matches
   })
 

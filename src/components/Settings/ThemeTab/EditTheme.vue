@@ -9,7 +9,7 @@
       :class="$style.element"
     />
     -->
-    <form-button
+    <FormButton
       label="import/export"
       type="secondary"
       :class="$style.element"

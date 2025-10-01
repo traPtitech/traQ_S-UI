@@ -22,17 +22,14 @@ const useCurrentViewers = (channelId: Ref<ChannelId>) => {
         v =>
           v.state === ChannelViewState.Monitoring ||
           v.state === ChannelViewState.Editing ||
-          v.userId === meStore.myId.value
+          v.state === ChannelViewState.StaleViewing
       )
       .map(v => v.userId)
   )
 
   const inactiveViewingUsers = computed(() =>
     currentViewers.value
-      .filter(
-        v =>
-          v.state === ChannelViewState.None && v.userId !== meStore.myId.value
-      )
+      .filter(v => v.state === ChannelViewState.None)
       .map(v => v.userId)
   )
 

@@ -3,25 +3,25 @@
     <div :class="$style.element">
       <h3 :class="$style.header">テーマ切り替え</h3>
       <div>
-        <form-radio
+        <FormRadio
           v-model="state.type"
           label="OS準拠"
           input-value="auto"
           :class="$style.form"
         />
-        <form-radio
+        <FormRadio
           v-model="state.type"
           label="ライト"
           input-value="light"
           :class="$style.form"
         />
-        <form-radio
+        <FormRadio
           v-model="state.type"
           label="ダーク"
           input-value="dark"
           :class="$style.form"
         />
-        <form-radio
+        <FormRadio
           v-model="state.type"
           label="カスタム"
           input-value="custom"
@@ -32,7 +32,7 @@
     <div :class="$style.element">
       <div :class="$style.container">
         <h3 :class="$style.header">カスタムテーマ</h3>
-        <edit-theme v-if="state.type === 'custom'" />
+        <EditTheme v-if="state.type === 'custom'" />
       </div>
     </div>
 
@@ -53,7 +53,7 @@
               </p>
               <!-- eslint-disable vue/valid-v-model -->
               <!-- TODO: 自動適用じゃなくてバリデーションしてから適用するようにする -->
-              <form-input
+              <FormInput
                 v-model="val[name as keyof typeof val] as string"
                 use-change-event
                 on-secondary
@@ -74,13 +74,13 @@
       <p v-else>カスタムテーマが選択されていません</p>
     </div>
     <div :class="$style.resetButtonContainer">
-      <form-button
+      <FormButton
         v-if="state.type === 'custom'"
         type="tertiary"
         label="ライトにリセット"
         @click="resetToLight"
       />
-      <form-button
+      <FormButton
         v-if="state.type === 'custom'"
         type="tertiary"
         label="ダークにリセット"

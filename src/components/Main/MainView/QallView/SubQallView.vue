@@ -29,7 +29,7 @@ const track = computed(() =>
 )
 
 const restoreMainView = () => {
-  const channelPath = channelIdToPathString(callingChannel.value)
+  const channelPath = channelIdToPathString(callingChannel.value) as string
   router.push(constructChannelPath(channelPath))
   isSubView.value = false
 }

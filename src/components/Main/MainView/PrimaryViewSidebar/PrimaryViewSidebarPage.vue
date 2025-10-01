@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.header">
-      <a-icon
+      <AIcon
         v-if="showBackButton"
         :size="28"
         mdi
@@ -10,7 +10,7 @@
         @click="emit('back')"
       />
       <slot name="header" />
-      <close-button :size="28" @close="closeSidebar" />
+      <CloseButton :size="28" @close="closeSidebar" />
     </div>
     <div :class="$style.content">
       <slot name="content" />

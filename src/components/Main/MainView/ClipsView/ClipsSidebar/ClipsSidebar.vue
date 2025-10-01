@@ -1,20 +1,16 @@
 <template>
-  <primary-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
+  <PrimaryViewSidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #page>
-      <primary-view-sidebar-page>
+      <PrimaryViewSidebarPage>
         <template #header>
-          <sidebar-header
-            icon-name="bookmark"
-            icon-mdi
-            :text="clipFolderName"
-          />
+          <SidebarHeader icon-name="bookmark" icon-mdi :text="clipFolderName" />
         </template>
         <template #content>
-          <clips-sidebar-content :clip-folder-id="clipFolderId" />
+          <ClipsSidebarContent :clip-folder-id="clipFolderId" />
         </template>
-      </primary-view-sidebar-page>
+      </PrimaryViewSidebarPage>
     </template>
-  </primary-view-sidebar>
+  </PrimaryViewSidebar>
 </template>
 
 <script lang="ts" setup>

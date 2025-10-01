@@ -4,7 +4,7 @@ import useNavigationController from '/@/composables/mainView/useNavigationContro
 import useChannelPath from '/@/composables/useChannelPath'
 import type { LocationQuery } from 'vue-router'
 import { useRoute } from 'vue-router'
-import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
+import { getFirstParam } from '/@/lib/basic/url'
 import { dequal } from 'dequal'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import { useModalStore } from '/@/store/ui/modal'
@@ -14,6 +14,8 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+import { useRenderKey } from '/@/composables/dom/useRenderKey'
+import { useMessageQuery } from '/@/composables/utils/useMessageQuery'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -47,6 +49,7 @@ const useRouteWatcher = () => {
   const { usersMap, usersMapInitialFetchPromise, fetchUserByName } =
     useUsersStore()
   const { fetchClipFolder } = useClipFoldersStore()
+  const messageQuery = useMessageQuery()
 
   const state = reactive({
     currentRouteName: computed(() => route.name ?? ''),
@@ -92,7 +95,7 @@ const useRouteWatcher = () => {
 
       changePrimaryViewToChannel({
         channelId: id,
-        entryMessageId: getFirstQuery(route.query['message']) ?? undefined
+        entryMessageId: messageQuery.value
       })
     } catch (_) {
       state.view = 'not-found'
@@ -107,18 +110,18 @@ const useRouteWatcher = () => {
         username: state.currentRouteParam,
         cacheStrategy: 'useCache'
       })
-      if (!user) throw 'user not found'
+      if (!user) throw new Error('user not found')
 
       const dmChannelId =
         userIdToDmChannelIdMap.value.get(user.id) ??
         (await fetchUserDMChannel(user.id))
 
-      if (!dmChannelId) throw 'failed to fetch DM channel ID'
+      if (!dmChannelId) throw new Error('failed to fetch DM channel ID')
 
       changePrimaryViewToDM({
         channelId: dmChannelId,
         userName: user.name,
-        entryMessageId: getFirstQuery(route.query['message']) ?? undefined
+        entryMessageId: messageQuery.value
       })
       state.view = 'main'
     } catch {
@@ -164,7 +167,7 @@ const useRouteWatcher = () => {
     let channelPath = ''
     let channelId = ''
     if (file.channelId) {
-      channelPath = channelIdToPathString(file.channelId, true)
+      channelPath = channelIdToPathString(file.channelId, true) ?? ''
       channelId = file.channelId
     } else {
       channelPath = openChannelPath.value
@@ -215,7 +218,7 @@ const useRouteWatcher = () => {
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
-        path: channelIdToLink(message.channelId),
+        path: channelIdToLink(message.channelId) as string,
         query: { message: message.id }
       })
     } else if (dmChannelsMap.value.has(channelId)) {
@@ -232,7 +235,10 @@ const useRouteWatcher = () => {
     } else {
       // チャンネルがなかった
       state.view = 'not-found'
+      return
     }
+
+    useRenderKey('messages').refresh()
   }
 
   type RouteParamWithQuery = readonly [routeParam: string, query: LocationQuery]

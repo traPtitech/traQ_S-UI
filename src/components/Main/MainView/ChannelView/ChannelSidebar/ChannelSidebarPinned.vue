@@ -1,5 +1,5 @@
 <template>
-  <sidebar-content-container-link
+  <SidebarContentContainerLink
     title="ピン留め"
     :count="pinnedMessageLength"
     @click-link="emit('clickLink')"

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <a-slider
+    <ASlider
       v-model="modelValue"
       :class="$style.range"
       :min="min"
@@ -10,7 +10,7 @@
       :interval="interval"
       :style="{ padding: '24px 0' }"
     />
-    <semi-fixed-size-text
+    <SemiFixedSizeText
       align="right"
       :actual="showValue"
       :placeholder="maxText"

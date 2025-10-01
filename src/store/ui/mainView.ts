@@ -117,7 +117,7 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
         cacheStrategy: 'useCache'
       })
       if (!user) {
-        throw 'user not found'
+        throw new Error('user not found')
       }
 
       changePrimaryViewToDM({

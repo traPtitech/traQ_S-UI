@@ -1,5 +1,5 @@
 <template>
-  <sidebar-event-frame
+  <SidebarEventFrame
     title="親チャンネル変更"
     icon-name="hash"
     :user-id="details.userId"
@@ -7,7 +7,7 @@
     :link="newParentLink"
   >
     {{ newParentPath }}
-  </sidebar-event-frame>
+  </SidebarEventFrame>
 </template>
 
 <script lang="ts" setup>
@@ -27,5 +27,5 @@ const newParentPath = computed(() =>
   channelIdToPathString(props.details.after, true)
 )
 
-const newParentLink = computed(() => channelIdToLink(props.details.after))
+const newParentLink = computed(() => channelIdToLink(props.details.after) ?? '')
 </script>

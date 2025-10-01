@@ -7,7 +7,7 @@ describe('useChannelPath', () => {
   beforeEach(() => {
     createTestingPinia()
 
-    const { channelsMap } = useChannelsStore()
+    const { channelsMap, bothChannelsMapFetched } = useChannelsStore()
     const refinedChannels: Channel[] = channels.map(channel => ({
       ...channel,
       force: false,
@@ -17,6 +17,7 @@ describe('useChannelPath', () => {
         .map(c => c.id)
     }))
     channelsMap.value = new Map(refinedChannels.map(c => [c.id, c]))
+    bothChannelsMapFetched.value = true
   })
 
   test('channel tree', () => {
@@ -205,7 +206,7 @@ describe('useChannelPath', () => {
   )
 })
 
-const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
+export const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
   {
     id: 'e50e2c2b-d9d5-4fc6-a30b-908a0f65d425',
     name: 'event',

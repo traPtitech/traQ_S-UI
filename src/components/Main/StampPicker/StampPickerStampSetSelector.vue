@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.innerContainer">
-      <stamp-picker-stamp-set-selector-item
+      <StampPickerStampSetSelectorItem
         v-for="set in stampSets"
         :key="set.id"
         :class="$style.item"

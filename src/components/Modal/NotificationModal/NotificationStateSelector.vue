@@ -1,6 +1,6 @@
 <template>
   <div>
-    <notification-state-selector-item
+    <NotificationStateSelectorItem
       v-for="level in levels"
       :key="level"
       :class="$style.item"

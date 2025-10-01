@@ -1,39 +1,39 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="クリップフォルダ作成"
     subtitle="メッセージを保存するフォルダを作成します"
     icon-name="bookmark"
     icon-mdi
   >
-    <form-input
+    <FormInput
       v-model="name.val"
       label="名前"
       :class="$style.input"
       :max-length="30"
       focus-on-mount
     />
-    <form-text-area
+    <FormTextArea
       v-model="description.val"
       label="説明"
       :class="$style.input"
       :max-height="160"
       :max-length="1000"
     />
-    <form-button
+    <FormButton
       label="作成"
       :disabled="!isCreateEnabled"
       :class="$style.button"
       @click="createClipFolder(name.val, description.val)"
     />
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">
 import { computed, reactive } from 'vue'
-import apis from '/@/lib/apis'
 import useMaxLength from '/@/composables/utils/useMaxLength'
-import { useToastStore } from '/@/store/ui/toast'
+import apis from '/@/lib/apis'
 import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
 
 const useCreateClipFolder = () => {
   const { addErrorToast } = useToastStore()
@@ -56,9 +56,9 @@ const useCreateClipFolder = () => {
 
 <script lang="ts" setup>
 import ModalFrame from '../Common/ModalFrame.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
 
 const name = reactive({ val: '', maxLength: 30 })
 const description = reactive({ val: '', maxLength: 1000 })

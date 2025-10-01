@@ -1,12 +1,12 @@
 <template>
-  <context-menu-container :position="position" @close="close">
+  <ContextMenuContainer :position="position" @close="close">
     <div :class="$style.container">
       <button :class="$style.button" @click="updateStampImage">
-        <a-icon name="file-image" mdi />
+        <AIcon name="file-image" mdi />
         スタンプ画像を更新する
       </button>
       <button :class="$style.button" @click="withClose(editStamp)">
-        <a-icon name="pencil-outline" mdi />
+        <AIcon name="pencil-outline" mdi />
         スタンプを編集する
       </button>
       <button
@@ -14,11 +14,11 @@
         :class="[$style.button, $style.dangerButton]"
         @click="withClose(deleteStamp)"
       >
-        <a-icon name="delete" mdi />
+        <AIcon name="delete" mdi />
         スタンプを削除する
       </button>
     </div>
-  </context-menu-container>
+  </ContextMenuContainer>
 </template>
 
 <script lang="ts" setup>

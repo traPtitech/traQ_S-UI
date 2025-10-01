@@ -1,9 +1,9 @@
 <template>
   <div v-if="fetchingSearchResult" :class="$style.empty">
-    <loading-spinner :class="$style.spinner" color="ui-secondary" />
+    <LoadingSpinner :class="$style.spinner" color="ui-secondary" />
   </div>
   <div v-else-if="searchResult.length > 0" :class="$style.container">
-    <popup-selector
+    <PopupSelector
       v-model="currentSortKey"
       :items="selectorItems"
       :class="$style.sortSelector"
@@ -15,7 +15,7 @@
         :key="message.id"
         :class="$style.elementContainer"
       >
-        <search-result-message-element
+        <SearchResultMessageElement
           :message="message"
           :current-sort-key="currentSortKey"
           @click-open="openMessage"
@@ -30,7 +30,7 @@
         :aria-hidden="currentPage <= 0"
         @click="jumpToPage(currentPage - 1)"
       >
-        <a-icon name="chevron-left" mdi /> 戻る
+        <AIcon name="chevron-left" mdi /> 戻る
       </div>
       <span :class="$style.page">
         {{ currentPage + 1 }} / {{ pageCount }} ページ
@@ -41,7 +41,7 @@
         :aria-hidden="currentPage >= pageCount - 1"
         @click="jumpToPage(currentPage + 1)"
       >
-        次へ <a-icon name="chevron-right" mdi />
+        次へ <AIcon name="chevron-right" mdi />
       </div>
     </div>
   </div>
@@ -49,21 +49,22 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import { useCommandPalette } from '/@/store/app/commandPalette'
-import type { PopupSelectorItem } from '/@/components/UI/PopupSelector.vue'
-import useSearchMessages from './composables/useSearchMessages'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import useKeepScrollPosition from './composables/useKeepScrollPosition'
-import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
-import { useOpenLink } from '/@/composables/useOpenLink'
-import { constructMessagesPath } from '/@/router'
-import PopupSelector from '/@/components/UI/PopupSelector.vue'
+import useSearchMessages from './composables/useSearchMessages'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
-import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
+import type { PopupSelectorItem } from '/@/components/UI/PopupSelector.vue'
+import PopupSelector from '/@/components/UI/PopupSelector.vue'
+import { useOpenLink } from '/@/composables/useOpenLink'
+import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
+import { constructMessagesPath } from '/@/router'
+import { useCommandPalette } from '/@/store/app/commandPalette'
+import type { MessageId } from '/@/types/entity-ids'
 
-const selectorItems: PopupSelectorItem[] & { value: SearchMessageSortKey }[] = [
+const selectorItems: PopupSelectorItem<SearchMessageSortKey>[] &
+  { value: SearchMessageSortKey }[] = [
   { value: 'createdAt', title: '新しい順' },
   { value: '-createdAt', title: '古い順' },
   { value: 'updatedAt', title: '最近更新された順' }

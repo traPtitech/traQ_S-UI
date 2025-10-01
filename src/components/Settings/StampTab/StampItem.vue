@@ -13,10 +13,10 @@
         </p>
       </div>
       <button :class="$style.dotsButton" @click="onDotsClick">
-        <a-icon name="dots-horizontal" mdi />
+        <AIcon name="dots-horizontal" mdi />
       </button>
     </div>
-    <stamp-context-menu
+    <StampContextMenu
       v-if="contextMenuPosition"
       :position="contextMenuPosition"
       :stamp-id="stamp.id"

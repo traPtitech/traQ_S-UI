@@ -11,7 +11,7 @@
       draggable="false"
       :class="$style.image"
     />
-    <message-ogp-description
+    <MessageOgpDescription
       :class="$style.description"
       :url="url"
       :title="title"

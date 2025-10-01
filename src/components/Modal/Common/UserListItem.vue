@@ -4,10 +4,10 @@
     :class="$style.container"
     @click.stop="openModal"
   >
-    <user-icon :class="$style.icon" :user-id="userId" :size="36" />
+    <UserIcon :class="$style.icon" :user-id="userId" :size="36" />
     <div :class="$style.desc">
       <div :class="$style.displayName">
-        <a-icon
+        <AIcon
           v-if="isAdmin"
           :class="$style.adminIcon"
           name="crown"

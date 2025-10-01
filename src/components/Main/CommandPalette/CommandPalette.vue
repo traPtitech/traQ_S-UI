@@ -1,18 +1,18 @@
 <template>
-  <click-outside
+  <ClickOutside
     stop
     unable-while-modal-open
     @click-outside="closeCommandPalette"
   >
     <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
-      <command-palette-input />
+      <CommandPaletteInput />
       <hr v-if="supplementalViewType" :class="$style.separator" />
-      <search-result v-if="supplementalViewType === 'search-result'" />
-      <search-suggestion
+      <SearchResult v-if="supplementalViewType === 'search-result'" />
+      <SearchSuggestion
         v-else-if="supplementalViewType === 'search-suggestion'"
       />
     </div>
-  </click-outside>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>

@@ -1,5 +1,5 @@
 <template>
-  <sidebar-content-container
+  <SidebarContentContainer
     clickable
     :title="title"
     :large-padding="largePadding"
@@ -10,11 +10,11 @@
         <span v-if="count !== undefined" :class="$style.count">{{
           count
         }}</span>
-        <a-icon name="chevron-right" :class="$style.icon" mdi />
+        <AIcon name="chevron-right" :class="$style.icon" mdi />
       </div>
     </template>
     <template #default />
-  </sidebar-content-container>
+  </SidebarContentContainer>
 </template>
 
 <script lang="ts" setup>

@@ -1,16 +1,16 @@
 <template>
   <div :class="$style.container">
-    <stamp-palette-editor-basic-info
+    <StampPaletteEditorBasicInfo
       v-model:name="name"
       v-model:description="description"
     />
-    <stamp-palette-editor-sortable-stamp-list v-model:stamp-ids="stamps" />
-    <stamp-palette-editor-add-stamp :current-stamp-ids="stamps" />
+    <StampPaletteEditorSortableStampList v-model:stamp-ids="stamps" />
+    <StampPaletteEditorAddStamp :current-stamp-ids="stamps" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { StampPalette } from '@traptitech/traq'
+import type { StampPalette } from '/@/types/entity'
 import { computed } from 'vue'
 import StampPaletteEditorAddStamp from './StampPaletteEditorAddableStampList.vue'
 import StampPaletteEditorBasicInfo from './StampPaletteEditorBasicInfo.vue'

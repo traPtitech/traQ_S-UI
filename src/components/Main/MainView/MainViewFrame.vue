@@ -35,7 +35,7 @@ $paddingSize: 16px;
   min-width: 0;
   padding: $paddingSize 0;
   transition: opacity 0.3s ease;
-  contain: strict;
+  contain: var(--contain-strict);
 }
 .body {
   height: calc(100% + #{$paddingSize * 2});

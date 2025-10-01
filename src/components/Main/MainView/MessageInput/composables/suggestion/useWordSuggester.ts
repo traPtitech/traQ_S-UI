@@ -4,9 +4,8 @@ import type { Word } from './useWordSuggestionList'
 import useWordSuggesterList from './useWordSuggestionList'
 import useInsertText from '/@/composables/dom/useInsertText'
 import getCaretPosition from '/@/lib/dom/caretPosition'
-import type { Target } from '/@/lib/suggestion'
-import { getCurrentWord } from '/@/lib/suggestion'
-import { useStampHistory } from '/@/store/domain/stampHistory'
+import type { Target } from '/@/lib/suggestion/basic'
+import { getCurrentWord } from '/@/lib/suggestion/basic'
 
 export type WordOrConfirmedPart =
   | Word
@@ -14,6 +13,16 @@ export type WordOrConfirmedPart =
       type: 'confirmed-part'
       text: string
     }
+
+export interface Candidate {
+  word: Word
+  display?: string
+}
+
+export interface ConfirmedPart {
+  text: string
+  display?: string
+}
 
 /**
  * 補完を表示する最小の文字数
@@ -25,8 +34,6 @@ const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: Ref<string>
 ) => {
-  const { upsertLocalStampHistory } = useStampHistory()
-
   const isSuggesterShown = ref(false)
   const target = ref<Target>({
     word: '',
@@ -52,8 +59,8 @@ const useWordSuggester = (
   })
 
   const {
-    suggestedCandidates,
-    confirmedPart,
+    suggestedCandidateWords,
+    confirmedText,
     selectedCandidateIndex,
     prevCandidateText,
     nextCandidateText
@@ -74,11 +81,7 @@ const useWordSuggester = (
       return
     }
 
-    if (suggestedCandidates.value.length === 0) {
-      isSuggesterShown.value = false
-      return
-    }
-    isSuggesterShown.value = true
+    isSuggesterShown.value = suggestedCandidateWords.value.length > 0
   }
 
   const onKeyDown = (e: KeyboardEvent) => {
@@ -88,8 +91,8 @@ const useWordSuggester = (
     // Tabによるフォーカスの移動を防止するため、長押しで連続移動できるようにするためにkeyDownで行う必要がある
     if (e.key === 'Tab') {
       e.preventDefault()
-      if (suggestedCandidates.value.length === 0) return
-      if (suggestedCandidates.value.length === 1) {
+      if (suggestedCandidateWords.value.length === 0) return
+      if (suggestedCandidateWords.value.length === 1) {
         isSuggesterShown.value = false
       }
 
@@ -125,17 +128,21 @@ const useWordSuggester = (
   }
 
   const onSelect = (word: WordOrConfirmedPart) => {
-    if (word.type === 'stamp') {
-      insertText(`${word.text}:`)
-      upsertLocalStampHistory(word.id, new Date())
-    } else {
-      insertText(word.text)
-    }
+    insertText(word.text)
     isSuggesterShown.value = false
   }
+
   const onBlur = () => {
     isSuggesterShown.value = false
   }
+
+  const suggestedCandidates = computed(() => {
+    return suggestedCandidateWords.value.map(word => ({ word }))
+  })
+
+  const confirmedPart = computed(() => ({
+    text: confirmedText.value
+  }))
 
   return {
     onKeyDown,
@@ -143,6 +150,7 @@ const useWordSuggester = (
     onSelect,
     onBlur,
     isSuggesterShown,
+    suggesterWidth: 240,
     position,
     suggestedCandidates,
     selectedCandidateIndex,

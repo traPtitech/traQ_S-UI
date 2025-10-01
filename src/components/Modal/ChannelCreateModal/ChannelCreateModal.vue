@@ -1,12 +1,12 @@
 <template>
-  <modal-frame :title="title" :subtitle="subtitle" icon-name="hash">
-    <form-selector
+  <ModalFrame :title="title" :subtitle="subtitle" icon-name="hash">
+    <FormSelector
       v-if="parentChannelId === undefined"
       v-model="state.parentChannelId"
       label="親チャンネル"
       :options="channelOptions"
     />
-    <form-input
+    <FormInput
       v-model="state.channelName"
       label="チャンネル名"
       :class="$style.input"
@@ -18,32 +18,32 @@
       <span :class="$style.newChannelPath">{{ newChannelPath }}</span>
       が新たに作成されます。(作成後のチャンネルの削除や移動、チャンネル名の変更はできません。)
     </p>
-    <form-button
+    <FormButton
       label="作成"
       :disabled="!isCreateEnabled"
       :class="$style.button"
       @click="createChannel"
     />
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">
-import { computed, reactive, watch, toRef } from 'vue'
-import useChannelPath from '/@/composables/useChannelPath'
-import { rootChannelId } from '/@/lib/channelTree'
-import type { ChannelId } from '/@/types/entity-ids'
-import useChannelOptions from '/@/composables/useChannelOptions'
 import { UserPermission } from '@traptitech/traq'
-import useCanCreateChildChannel from '/@/composables/modal/useCanCreateChildChannel'
-import { isValidChannelName } from '/@/lib/validate'
-import apis from '/@/lib/apis'
-import { channelTreeMitt } from '/@/store/domain/channelTree'
-import { useToastStore } from '/@/store/ui/toast'
-import { constructChannelPath } from '/@/router'
+import { computed, reactive, toRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { useModalStore } from '/@/store/ui/modal'
+import useCanCreateChildChannel from '/@/composables/modal/useCanCreateChildChannel'
+import useChannelOptions from '/@/composables/useChannelOptions'
+import useChannelPath from '/@/composables/useChannelPath'
+import apis from '/@/lib/apis'
+import { rootChannelId } from '/@/lib/channelTree'
+import { isValidChannelName } from '/@/lib/validate'
+import { constructChannelPath } from '/@/router'
+import { channelTreeMitt } from '/@/store/domain/channelTree'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
+import type { ChannelId } from '/@/types/entity-ids'
 
 interface State {
   channelName: string
@@ -125,8 +125,8 @@ const useChannelOptionsForSelector = () => {
 
 <script lang="ts" setup>
 import ModalFrame from '../Common/ModalFrame.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 
 const props = defineProps<{

@@ -9,7 +9,7 @@
     <div :class="$style.details">
       <div :class="$style.developer">
         <template v-if="token.clientDeveloper">
-          <user-icon
+          <UserIcon
             :class="$style.developerIcon"
             :user-id="token.clientDeveloper.id"
             :size="24"
@@ -33,7 +33,7 @@
         title="トークンを無効化"
         @click="emit('revoke')"
       >
-        <a-icon name="close" mdi />
+        <AIcon name="close" mdi />
       </button>
     </div>
   </li>

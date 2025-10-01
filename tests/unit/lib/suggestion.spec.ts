@@ -1,10 +1,10 @@
-import type { Target } from '/@/lib/suggestion'
+import type { Target } from '/@/lib/suggestion/basic'
 import {
   getCurrentWord,
   getDeterminedCharacters,
   getNextCandidateIndex,
   getPrevCandidateIndex
-} from '/@/lib/suggestion'
+} from '/@/lib/suggestion/basic'
 
 describe('suggestion', () => {
   describe('getCurrentWord', () => {

@@ -1,6 +1,6 @@
 <template>
   <button :class="$style.item" :aria-selected="isSelected">
-    <a-icon :name="iconName" :mdi="iconMdi" :size="24" />
+    <AIcon :name="iconName" :mdi="iconMdi" :size="24" />
   </button>
 </template>
 

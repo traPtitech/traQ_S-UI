@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
-    <sidebar-content-container title="名前" :class="$style.item">
-      <content-editor
+    <SidebarContentContainer title="名前" :class="$style.item">
+      <ContentEditor
         v-model="localName"
         v-model:is-editing="isNameEditing"
         :max-length="30"
@@ -9,33 +9,33 @@
         <template #default="slotProps">
           {{ slotProps.content }}
         </template>
-      </content-editor>
-    </sidebar-content-container>
-    <sidebar-content-container-foldable title="説明" :class="$style.item">
-      <content-editor
+      </ContentEditor>
+    </SidebarContentContainer>
+    <SidebarContentContainerFoldable title="説明" :class="$style.item">
+      <ContentEditor
         v-model="localDescription"
         v-model:is-editing="isDescriptionEditing"
         :max-length="1000"
       >
         <template #default="slotProps">
-          <inline-markdown :content="slotProps.content" accept-action />
+          <MarkdownPreview :content="slotProps.content" accept-action inline />
         </template>
-      </content-editor>
-    </sidebar-content-container-foldable>
+      </ContentEditor>
+    </SidebarContentContainerFoldable>
     <div :class="$style.item">
-      <form-button
-        label="削除"
-        type="secondary"
-        is-danger
-        @click="deleteClip"
-      />
+      <FormButton label="削除" type="secondary" is-danger @click="deleteClip" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, watch } from 'vue'
-import type { ClipFolderId } from '/@/types/entity-ids'
+import ContentEditor from '/@/components/Main/MainView/PrimaryViewSidebar/ContentEditor.vue'
+import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerFoldable.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
+import useLocalInput from '/@/composables/utils/useLocalInput'
 import apis from '/@/lib/apis'
 import router, {
   constructChannelPath,
@@ -43,12 +43,7 @@ import router, {
 } from '/@/router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
-import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
-import SidebarContentContainerFoldable from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerFoldable.vue'
-import ContentEditor from '/@/components/Main/MainView/PrimaryViewSidebar/ContentEditor.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
-import useLocalInput from '/@/composables/utils/useLocalInput'
+import type { ClipFolderId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   clipFolderId: ClipFolderId

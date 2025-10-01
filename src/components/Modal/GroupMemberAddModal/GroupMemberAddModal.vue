@@ -1,37 +1,37 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="グループメンバー追加"
     :subtitle="groupName"
     icon-name="group"
   >
-    <users-selector
+    <UsersSelector
       v-model="userIds"
       :exclude-ids="members"
       :class="[$style.users, $style.item]"
     />
-    <form-input
+    <FormInput
       v-model="role"
       :class="$style.item"
       label="役割"
       :max-length="30"
     />
     <div :class="$style.addButtonWrapper">
-      <form-button label="追加" :loading="isAdding" @click="add" />
+      <FormButton label="追加" :loading="isAdding" @click="add" />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
-import UsersSelector from '../Common/UsersSelector.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
 import { computed, ref } from 'vue'
+import ModalFrame from '../Common/ModalFrame.vue'
+import UsersSelector from '../Common/UsersSelector.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
 import apis from '/@/lib/apis'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useModalStore } from '/@/store/ui/modal'
 import { useToastStore } from '/@/store/ui/toast'
 import type { UserGroupId, UserId } from '/@/types/entity-ids'
-import { useModalStore } from '/@/store/ui/modal'
-import { useGroupsStore } from '/@/store/entities/groups'
 
 const props = defineProps<{
   id: UserGroupId

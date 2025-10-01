@@ -1,13 +1,13 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.buttons">
-      <toggle-button
+      <ToggleButton
         v-model="isNotAll"
         :class="$style.button"
         title="通知/未読購読チャンネルのみ表示"
         icon-name="notified"
       />
-      <toggle-button
+      <ToggleButton
         v-model="isPerChannel"
         :class="$style.button"
         title="同じチャンネルでは一つしかメッセージを表示しない"
@@ -17,7 +17,7 @@
     </div>
     <transition-group name="timeline" tag="div">
       <template v-if="timeline.length > 0">
-        <activity-element
+        <ActivityElement
           v-for="message in timeline"
           :key="message.id"
           :class="$style.element"
@@ -25,7 +25,7 @@
           :message="message"
         />
       </template>
-      <empty-state v-else> メッセージがありません </empty-state>
+      <EmptyState v-else> メッセージがありません </EmptyState>
     </transition-group>
   </div>
 </template>

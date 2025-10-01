@@ -1,6 +1,6 @@
 <template>
   <teleport to="#popup-header-relation">
-    <click-outside @click-outside="e => emit('outside-click', e)">
+    <ClickOutside @click-outside="e => emit('outside-click', e)">
       <div
         :id="props.popupId"
         ref="popupWrap"
@@ -15,7 +15,7 @@
           @keydown.left="onKeydown"
           @keydown.right="onKeydown"
         >
-          <a-tab
+          <ATab
             :id="siblingTabId"
             ref="siblingTab"
             :aria-selected="currentTab === 'siblings'"
@@ -24,7 +24,7 @@
             label="兄弟チャンネル"
             @click="currentTab = 'siblings'"
           />
-          <a-tab
+          <ATab
             :id="childrenTabId"
             ref="childrenTab"
             :aria-selected="currentTab === 'children'"
@@ -34,7 +34,7 @@
             @click="currentTab = 'children'"
           />
         </div>
-        <channel-header-relation-panel
+        <ChannelHeaderRelationPanel
           :id="siblingPanelId"
           role="tabpanel"
           :aria-labelledby="siblingTabId"
@@ -42,7 +42,7 @@
           empty-message="兄弟チャンネルはありません"
           :hidden="currentTab !== 'siblings'"
         />
-        <channel-header-relation-panel
+        <ChannelHeaderRelationPanel
           :id="childrenPanelId"
           role="tabpanel"
           :aria-labelledby="childrenTabId"
@@ -51,7 +51,7 @@
           :hidden="currentTab !== 'children'"
         />
       </div>
-    </click-outside>
+    </ClickOutside>
   </teleport>
 </template>
 

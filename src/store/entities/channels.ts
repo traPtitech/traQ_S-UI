@@ -164,6 +164,7 @@ const useChannelsStorePinia = defineStore('entities/channels', () => {
     channelsMap,
     dmChannelsMap,
     userIdToDmChannelIdMap,
+    bothChannelsMapFetched,
     bothChannelsMapInitialFetchPromise,
     addChannel,
     fetchUserDMChannel,

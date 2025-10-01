@@ -1,12 +1,12 @@
 <template>
   <div :class="$style.container">
-    <file-description
+    <FileDescription
       :file-id="fileId"
       :is-white="isWhite"
       :class="$style.description"
     />
     <div :class="$style.close">
-      <close-button
+      <CloseButton
         :size="24"
         :is-white="isWhite"
         :react-hover="!isWhite"

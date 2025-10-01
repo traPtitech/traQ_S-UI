@@ -1,6 +1,6 @@
 <template>
   <div>
-    <group-list-group
+    <GroupListGroup
       v-for="group in groups"
       :key="group.id"
       :group="group"

@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.wrapper">
-    <close-button :class="$style.close" with-text :size="56" @close="close" />
+    <CloseButton :class="$style.close" with-text :size="56" @close="close" />
     <section :class="$style.container">
       <div :class="[$style.header, $style.item]">
         <h2 :class="$style.title">ユーザーグループ管理</h2>
-        <form-button
+        <FormButton
           :class="$style.createButton"
           label="新規作成"
           @click="openGroupCreateModal"
@@ -13,7 +13,7 @@
       <p :class="[$style.desc, $style.item]">
         自分が管理者になっているユーザーグループ一覧
       </p>
-      <group-list :class="[$style.list, $style.item]" />
+      <GroupList :class="[$style.list, $style.item]" />
     </section>
   </div>
 </template>

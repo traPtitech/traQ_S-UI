@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <message-ogp-embed
+    <MessageOgpEmbed
       :preview-url="previewUrl"
       :embedded-url="embeddedUrl"
       show-play-icon
@@ -12,7 +12,7 @@
       rel="noopener noreferrer"
       :class="$style.description"
     >
-      <message-ogp-description
+      <MessageOgpDescription
         :url="url"
         :title="title"
         :description="description"

@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <span :class="$style.icon">
-      <a-icon mdi name="file-upload" :size="72" />
+      <AIcon mdi name="file-upload" :size="72" />
     </span>
     <p>ドロップしてファイルをアップロード</p>
     <p>またはテキストを追加</p>

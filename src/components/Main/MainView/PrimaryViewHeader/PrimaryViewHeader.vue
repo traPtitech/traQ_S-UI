@@ -1,7 +1,7 @@
 <template>
   <header :class="$style.container">
     <div :class="$style.headerContainer">
-      <popup-navigator
+      <PopupNavigator
         v-if="isMobile"
         :class="$style.icon"
         @click-icon="openNav"

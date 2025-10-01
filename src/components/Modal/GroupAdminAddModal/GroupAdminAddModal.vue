@@ -1,19 +1,19 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="グループ管理者追加"
     :subtitle="groupName"
     icon-name="crown"
     icon-mdi
   >
-    <users-selector
+    <UsersSelector
       v-model="userIds"
       :exclude-ids="admins"
       :class="[$style.users, $style.item]"
     />
     <div :class="$style.addButtonWrapper">
-      <form-button label="追加" :loading="isAdding" @click="add" />
+      <FormButton label="追加" :loading="isAdding" @click="add" />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>

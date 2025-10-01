@@ -3,7 +3,7 @@
     <div :class="$style.channelPath" @mousedown="onClick">
       {{ channelPath }}
     </div>
-    <file-modal-content-footer-username
+    <FileModalContentFooterUsername
       :class="$style.userName"
       :user-id="user?.id"
     />
@@ -48,7 +48,7 @@ const { channelIdToPathString, channelIdToLink } = useChannelPath()
 const channelPath = computed(() => {
   try {
     return fileMeta.value?.channelId
-      ? channelIdToPathString(fileMeta.value?.channelId, true)
+      ? (channelIdToPathString(fileMeta.value?.channelId, true) ?? '')
       : ''
   } catch {
     return ''
@@ -65,8 +65,7 @@ const channelLink = computed(() => {
 })
 
 const onClick = async (event: MouseEvent) => {
-  if (channelLink.value === '') return
-
+  if (!channelLink.value) return
   openLinkAndClearModal(event, channelLink.value)
 }
 </script>

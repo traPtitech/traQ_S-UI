@@ -1,5 +1,5 @@
 <template>
-  <not-found-page
+  <NotFoundPage
     v-if="routeWatcherState.view === 'not-found'"
     :route-param="routeWatcherState.currentRouteParam"
     :route-name="routeWatcherState.currentRouteName"
@@ -12,11 +12,8 @@
     @touchcancel="touchendHandler"
   >
     <div :class="$style.homeContainer">
-      <navigation-bar
-        v-show="shouldShowNav"
-        :class="$style.navigationWrapper"
-      />
-      <main-view-frame
+      <NavigationBar v-show="shouldShowNav" :class="$style.navigationWrapper" />
+      <MainViewFrame
         v-if="routeWatcherState.view === 'main'"
         :is-active="isMainViewActive"
         :hide-outer="hideOuter"
@@ -25,8 +22,8 @@
         :style="styles.mainViewWrapper"
         @click.capture="onClickMainViewFrame"
       >
-        <main-view :class="$style.mainView" />
-      </main-view-frame>
+        <MainView :class="$style.mainView" />
+      </MainViewFrame>
       <div
         v-show="isMobile && isSidebarAppeared"
         :class="$style.sidebarWrapper"
@@ -36,7 +33,7 @@
         <div id="sidebar-mobile" :class="$style.sidebarPortal" />
       </div>
     </div>
-    <command-palette-container />
+    <CommandPaletteContainer />
   </div>
 </template>
 
@@ -227,7 +224,7 @@ $nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
     y: auto;
   }
   scrollbar-gutter: stable;
-  contain: strict;
+  contain: var(--contain-strict);
   z-index: $z-index-sidebar-wrapper;
 }
 .sidebarPortal {

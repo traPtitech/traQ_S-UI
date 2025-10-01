@@ -1,10 +1,10 @@
 <template>
-  <primary-view-frame :is-ready="isReady">
+  <PrimaryViewFrame :is-ready="isReady">
     <template #header>
-      <d-m-header :user-name="userName" />
+      <DMHeader :user-name="userName" />
     </template>
     <template #default>
-      <channel-view-content
+      <ChannelViewContent
         :channel-id="channelId"
         :entry-message-id="entryMessageId"
         :pinned-messages="pinnedMessages"
@@ -12,7 +12,7 @@
       />
     </template>
     <template #sidebar>
-      <d-m-sidebar
+      <DMSidebar
         :channel-id="channelId"
         :user-name="userName"
         :is-sidebar-opener-ready="isReady"
@@ -21,7 +21,7 @@
         :inactive-viewing-users="inactiveViewingUsers"
       />
     </template>
-  </primary-view-frame>
+  </PrimaryViewFrame>
 </template>
 
 <script lang="ts" setup>

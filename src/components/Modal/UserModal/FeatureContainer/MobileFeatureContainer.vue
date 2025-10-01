@@ -1,16 +1,16 @@
 <template>
   <section :class="$style.feature">
-    <user-icon :user-id="user.id" prevent-modal :size="48" />
+    <UserIcon :user-id="user.id" prevent-modal :size="48" />
     <div :class="$style.names">
       <h1 :class="$style.displayName">
         {{ user.displayName }}
       </h1>
       <div :class="$style.nameInfo">
         <span :class="$style.name">@{{ user.name }}</span>
-        <online-indicator :user-id="user.id" has-text />
+        <OnlineIndicator :user-id="user.id" has-text />
       </div>
     </div>
-    <link-buttons
+    <LinkButtons
       :class="$style.buttons"
       :home-channel-id="detail?.homeChannel"
       :user-name="user.name"

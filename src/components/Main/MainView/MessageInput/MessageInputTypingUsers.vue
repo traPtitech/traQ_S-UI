@@ -5,11 +5,11 @@
       :class="$style.container"
       :data-is-mobile="$boolAttr(isMobile)"
     >
-      <message-input-typing-animation />
+      <MessageInputTypingAnimation />
       <div :class="$style.text">
         {{ text }}
       </div>
-      <user-icon-ellipsis-list
+      <UserIconEllipsisList
         direction="row"
         transition="fade-left"
         :show-count="false"

@@ -1,4 +1,4 @@
-import type { Token } from 'markdown-it'
+import type Token from 'markdown-it/lib/token.d.mts'
 
 export const formatUrl = (text: string, embeddingOrigin: string) => {
   try {

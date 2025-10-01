@@ -2,6 +2,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed } from 'vue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import { isWebKit } from '/@/lib/dom/browser'
 
 type FeatureFlagDescription = {
   title: string
@@ -24,21 +25,15 @@ export const featureFlagDescriptions = {
     title: 'フラグテスト・サンプル用',
     description: '「提供終了日」の表記がひらがなになります。',
     defaultValue: false,
-    endAt: new Date('2025-07-31T23:59:59+09:00')
+    endAt: new Date('9999-12-31T00:00')
   },
-  flag_show_star_in_unread_channel_list: {
-    title: '未読画面でお気に入りを優先表示',
+  contain_strict_alternate: {
+    title: 'contain: strict の代替',
     description:
-      '未読チャンネル一覧でお気に入りチャンネルを優先的に表示するようにします。',
-    defaultValue: true,
-    endAt: new Date('2025-08-20T23:59:59+09:00')
-  },
-  flag_show_notified_in_unread_channel_list: {
-    title: '未読画面で通知付きチャンネルを優先表示',
-    description:
-      '未読チャンネル一覧で通知付きチャンネルを優先的に表示するようにします。',
-    defaultValue: false,
-    endAt: new Date('2025-08-20T23:59:59+09:00')
+      '「contain: strict」を「contain: inline-size layout paint style」で代替します。 ' +
+      'WebKit 系ブラウザ (Safari など）でレイアウトが崩れる場合に有効にすることで不具合が解消される可能性があります。',
+    defaultValue: isWebKit(),
+    endAt: new Date('9999-12-31T00:00')
   }
 } as const satisfies Record<string, FeatureFlagDescription>
 

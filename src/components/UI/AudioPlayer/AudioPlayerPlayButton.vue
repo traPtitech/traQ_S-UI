@@ -1,5 +1,5 @@
 <template>
-  <audio-player-abstract-button
+  <AudioPlayerAbstractButton
     :disabled="disabled"
     :icon-name="isPlaying ? 'pause' : 'play'"
     icon-mdi

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <d-m-channel-element
+    <DMChannelElement
       v-for="dmChannel in dmChannels"
       :key="dmChannel.id"
       :class="$style.element"

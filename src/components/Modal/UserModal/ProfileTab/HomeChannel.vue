@@ -1,8 +1,8 @@
 <template>
   <section>
-    <profile-header text="ホームチャンネル" />
+    <ProfileHeader text="ホームチャンネル" />
     <p>
-      <a-icon name="home" mdi :class="$style.icon" />
+      <AIcon name="home" mdi :class="$style.icon" />
       <span v-if="isLoading" :class="$style.text" aria-busy="true"
         >[Now loading...]</span
       >
@@ -41,6 +41,7 @@ const channelPath = computed(() =>
 
 const onClick = async (event: MouseEvent) => {
   if (!props.channelId) return
+  if (!channelPath.value) return
 
   openLinkAndClearModal(event, constructChannelPath(channelPath.value))
 }

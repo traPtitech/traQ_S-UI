@@ -1,36 +1,37 @@
 <template>
   <div :class="$style.preview" :data-is-mobile="isMobile">
-    <markdown-content :content="previewRendered" />
-    <div
-      v-for="quoteMessage in quoteMessages"
-      :key="quoteMessage.id"
-      :class="$style.quote"
-    >
-      引用メッセージ
-    </div>
+    <MarkdownContent :content="previewRendered" />
+    <MessageQuoteList
+      v-if="quoteMessageIds.length > 0"
+      :class="$style.quoteList"
+      :parent-message-channel-id="channelId"
+      :message-ids="quoteMessageIds"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { EmbeddingMessage } from '@traptitech/traq-markdown-it'
 import { ref, watchEffect } from 'vue'
 import { isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
 import { useResponsiveStore } from '/@/store/ui/responsive'
+import MessageQuoteList from '/@/components/Main/MainView/MessageElement/MessageQuoteList.vue'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
+import type { MessageId } from '/@/types/entity-ids'
 
 const props = defineProps<{
+  channelId: string
   text: string
 }>()
 
 const { isMobile } = useResponsiveStore()
 
 const previewRendered = ref('')
-const quoteMessages = ref<EmbeddingMessage[]>([])
+const quoteMessageIds = ref<MessageId[]>([])
 watchEffect(async () => {
   const { renderedText, embeddings } = await render(props.text)
   previewRendered.value = renderedText
-  quoteMessages.value = embeddings.filter(isMessage)
+  quoteMessageIds.value = embeddings.filter(isMessage).map(({ id }) => id)
 })
 </script>
 
@@ -46,8 +47,7 @@ watchEffect(async () => {
   }
 }
 
-.quote {
-  padding-left: 16px;
-  border-left: solid 4px $theme-ui-tertiary-default;
+.quoteList {
+  margin-top: 16px;
 }
 </style>

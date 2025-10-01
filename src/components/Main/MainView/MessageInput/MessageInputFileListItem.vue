@@ -1,16 +1,16 @@
 <template>
   <div :class="$style.container">
-    <message-input-file-list-item-close-button
+    <MessageInputFileListItemCloseButton
       :class="$style.closeButton"
       @click="emit('itemRemove')"
     />
-    <message-input-file-list-item-image
+    <MessageInputFileListItemImage
       v-if="thumbnailDataUrl"
       :name="attachment.file.name"
       :src="thumbnailDataUrl"
     />
     <div v-else :class="$style.fileContainer">
-      <file-type-icon :type="attachment.type" />
+      <FileTypeIcon :type="attachment.type" />
       <div :class="$style.fileName">
         {{ attachment.file.name }}
       </div>

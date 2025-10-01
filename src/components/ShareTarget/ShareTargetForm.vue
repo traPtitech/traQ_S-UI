@@ -1,13 +1,13 @@
 <template>
   <div :class="$style.container">
-    <form-selector
+    <FormSelector
       v-model="channelId"
       :class="$style.item"
       label="投稿先チャンネル"
       :options="channelOptions"
     />
-    <share-target-message-input :class="[$style.item, $style.input]" />
-    <form-button
+    <ShareTargetMessageInput :class="[$style.item, $style.input]" />
+    <FormButton
       :class="[$style.item, $style.button]"
       label="送信"
       :loading="isPosting"
@@ -17,19 +17,19 @@
 </template>
 
 <script lang="ts" setup>
-import FormSelector from '/@/components/UI/FormSelector.vue'
+import { computed, ref, watch } from 'vue'
 import ShareTargetMessageInput from './ShareTargetMessageInput.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
-import { computed, watch, ref } from 'vue'
-import { nullUuid } from '/@/lib/basic/uuid'
 import usePostMessage from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
-import useChannelOptions from '/@/composables/useChannelOptions'
+import FormButton from '/@/components/UI/FormButton.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
-import type { ChannelId } from '/@/types/entity-ids'
+import useChannelOptions from '/@/composables/useChannelOptions'
+import { nullUuid } from '/@/lib/basic/uuid'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   defaultText: string

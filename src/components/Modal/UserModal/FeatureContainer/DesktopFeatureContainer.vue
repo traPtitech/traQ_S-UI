@@ -4,10 +4,10 @@
       <h1>{{ user.displayName }}</h1>
       <div :class="$style.onlineContainer">
         <p>@{{ user.name }}</p>
-        <online-indicator :user-id="user.id" has-text />
+        <OnlineIndicator :user-id="user.id" has-text />
       </div>
     </div>
-    <link-buttons
+    <LinkButtons
       :home-channel-id="detail?.homeChannel"
       :user-name="user.name"
       show-title

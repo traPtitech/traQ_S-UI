@@ -13,7 +13,7 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
   const sortFilterdChannel = (tree: Channel[]): Channel[] => {
     const mapped = tree.map((channel, index) => ({
       index,
-      pathString: channelIdToPathString(channel.id).toUpperCase()
+      pathString: channelIdToPathString(channel.id)?.toUpperCase() ?? ''
     }))
 
     mapped.sort((a, b) => {

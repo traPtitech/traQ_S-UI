@@ -5,7 +5,7 @@
         <img :class="$style.img" :src="imageUrl" width="136" height="136" />
       </div>
       <div>
-        <form-input
+        <FormInput
           v-model="newStampName"
           label="スタンプ名"
           prefix=":"
@@ -19,8 +19,8 @@
       </div>
     </div>
     <div :class="$style.buttonContainer">
-      <form-button label="戻る" type="tertiary" @click="back" />
-      <form-button
+      <FormButton label="戻る" type="tertiary" @click="back" />
+      <FormButton
         label="登録する"
         :disabled="!isNameValid"
         :loading="isCreating"
@@ -32,15 +32,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, type Ref } from 'vue'
-import apis, { formatResizeError } from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
-import FormInput from '/@/components/UI/FormInput.vue'
+import type { AxiosError } from 'axios'
+import { computed, ref, type Ref } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import apis, { formatResizeError } from '/@/lib/apis'
+import { isValidStampName } from '/@/lib/validate'
 import { useMeStore } from '/@/store/domain/me'
 import { useModalStore } from '/@/store/ui/modal'
-import type { AxiosError } from 'axios'
-import { isValidStampName } from '/@/lib/validate'
+import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
   stampImage: File

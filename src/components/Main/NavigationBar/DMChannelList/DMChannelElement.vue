@@ -8,7 +8,7 @@
       @mouseleave="onMouseLeave"
     >
       <div :class="$style.channelHash">
-        <user-icon
+        <UserIcon
           has-notification
           prevent-modal
           :user-id="user.id"
@@ -16,8 +16,8 @@
           :indicator-size="8"
         />
       </div>
-      <d-m-channel-element-name :name="user.name" />
-      <channel-element-unread-badge
+      <DMChannelElementName :name="user.name" />
+      <ChannelElementUnreadBadge
         is-noticeable
         :unread-count="notificationState.unreadCount"
       />
@@ -56,7 +56,7 @@ const notificationState = useNotificationState(toRef(props, 'dmChannel'))
 const { openLink } = useOpenLink()
 const { channelIdToLink } = useChannelPath()
 const openChannel = (event: MouseEvent) => {
-  openLink(event, channelIdToLink(props.dmChannel.id))
+  openLink(event, channelIdToLink(props.dmChannel.id) as string)
 }
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()

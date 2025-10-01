@@ -2,20 +2,20 @@
   <div :class="$style.container">
     <div :class="$style.header">
       <label :class="$style.checkAll">
-        <form-checkbox-inner
+        <FormCheckboxInner
           :model-value="isAllChecked"
           @update:model-value="toggleAll"
         />
       </label>
-      <filter-input v-model="query" :class="$style.search" focus-on-mount />
+      <FilterInput v-model="query" :class="$style.search" focus-on-mount />
     </div>
     <div :class="$style.list">
       <label v-for="user in filteredUsers" :key="user.id" :class="$style.user">
-        <form-checkbox-inner
+        <FormCheckboxInner
           :model-value="modelValue.has(user.id)"
           @update:model-value="toggle(user.id)"
         />
-        <user-icon :user-id="user.id" prevent-modal :class="$style.userIcon" />
+        <UserIcon :user-id="user.id" prevent-modal :class="$style.userIcon" />
         <div :class="$style.displayName">{{ user.displayName }}</div>
       </label>
     </div>

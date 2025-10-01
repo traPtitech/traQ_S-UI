@@ -1,11 +1,11 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="キャッシュの削除"
     subtitle="キャッシュを削除する項目を選んで下さい。"
   >
     <div :class="$style.content">
       <div :class="$style.checkboxContainer">
-        <form-checkbox
+        <FormCheckbox
           v-for="name in cacheCategories"
           :key="name"
           v-model="cacheCategoryToIsSelected[name]"
@@ -15,11 +15,11 @@
             {{ cacheLabel(name) }}
             <!-- TODO: キャッシュサイズを表示する -->
           </div>
-        </form-checkbox>
+        </FormCheckbox>
       </div>
       <div :class="$style.buttonContainer">
-        <form-button label="キャンセル" type="tertiary" @click="clearModal" />
-        <form-button
+        <FormButton label="キャンセル" type="tertiary" @click="clearModal" />
+        <FormButton
           label="削除する"
           type="secondary"
           :disabled="!anyCacheSelected"
@@ -28,7 +28,7 @@
         />
       </div>
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>

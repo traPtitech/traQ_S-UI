@@ -5,7 +5,7 @@
       :data-is-editing="$boolAttr(isEditing)"
       @click="toggleIsEditing"
     >
-      <a-icon
+      <AIcon
         mdi
         :name="isEditing ? 'toggle-switch-on' : 'toggle-switch-off'"
         :size="20"

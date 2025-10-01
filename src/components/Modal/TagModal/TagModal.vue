@@ -1,18 +1,18 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="タグ"
     :subtitle="tagName"
     icon-mdi
     icon-name="tag"
     return-button
   >
-    <user-list-item
+    <UserListItem
       v-for="userId in taggedUsers"
       :key="userId"
       :user-id="userId"
       :class="$style.item"
     />
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">

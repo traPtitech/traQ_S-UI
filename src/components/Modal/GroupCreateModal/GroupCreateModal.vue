@@ -1,47 +1,47 @@
 <template>
-  <modal-frame title="グループ作成" icon-name="group">
-    <form-input
+  <ModalFrame title="グループ作成" icon-name="group">
+    <FormInput
       v-model="name"
       :class="$style.item"
       label="グループ名"
       :max-length="30"
       focus-on-mount
     />
-    <form-input
+    <FormInput
       v-model="desc"
       :class="$style.item"
       label="説明"
       :max-length="100"
     />
-    <form-input
+    <FormInput
       v-model="type"
       :class="$style.item"
       label="タイプ"
       :max-length="30"
     />
-    <form-checkbox
+    <FormCheckbox
       v-model="addMember"
       :class="[$style.item, $style.memberCheckbox]"
     >
       自分自身をメンバーに追加する
-    </form-checkbox>
+    </FormCheckbox>
     <div :class="$style.createButtonWrapper">
-      <form-button label="作成" @click="create" />
+      <FormButton label="作成" @click="create" />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
-import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
-import { ref } from 'vue'
-import apis from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
-import { useModalStore } from '/@/store/ui/modal'
-import { useMeStore } from '/@/store/domain/me'
 import { AxiosError } from 'axios'
+import { ref } from 'vue'
+import ModalFrame from '../Common/ModalFrame.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import apis from '/@/lib/apis'
+import { useMeStore } from '/@/store/domain/me'
+import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
 
 const { myId } = useMeStore()
 const { addErrorToast } = useToastStore()

@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
-    <mobile-navigation-bar v-if="isMobile" />
-    <desktop-navigation-bar v-else />
+    <MobileNavigationBar v-if="isMobile" />
+    <DesktopNavigationBar v-else />
   </div>
 </template>
 

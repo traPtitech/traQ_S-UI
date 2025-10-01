@@ -20,12 +20,10 @@ export type Config = Readonly<{
     vapidKey: string
   }>
   /**
-   * skyway用設定
-   * 省略時はQall機能を無効化
+   * Qall機能を有効化するかどうか
+   * 省略時は無効化
    */
-  skyway?: Readonly<{
-    apiKey: string
-  }>
+  enableQall?: boolean
   /**
    * 検索機能を有効化するかどうか
    * 省略時は無効化
@@ -88,11 +86,6 @@ export type Config = Readonly<{
    * サーバーでははじいていないので、APIをたたけば誰でも可能
    */
   isRootChannelSelectableAsParentChannel: boolean
-  /**
-   * QRコード表示ボタンの有効化
-   * 省略時は`false`
-   */
-  showQrCodeButton?: boolean
   /**
    * 大きなファイルサイズのファイルを送信した際に表示される補足メッセージ
    * `%s`の部分には「画像」または「ファイル」が入る

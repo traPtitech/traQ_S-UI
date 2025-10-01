@@ -96,6 +96,24 @@ const useMessageFetcher = (
     )
   }
 
+  const onLoadLatestMessagesRequest = async () => {
+    isLoading.value = true
+
+    await runWithIdentifierCheck(
+      async () => {
+        const newMessageIds = await fetchFormerMessages(isReachedEnd)
+        await renderMessageFromIds(newMessageIds)
+        return newMessageIds
+      },
+      newMessageIds => {
+        isLoading.value = false
+        isInitialLoad.value = false
+        lastLoadingDirection.value = 'latest'
+        messageIds.value = [...new Set([...newMessageIds, ...messageIds.value])]
+      }
+    )
+  }
+
   const onLoadLatterMessagesRequest = async () => {
     if (!fetchLatterMessages || isReachedLatest.value) {
       return
@@ -177,11 +195,16 @@ const useMessageFetcher = (
   }
 
   const addNewMessage = async (messageId: MessageId) => {
+    const beforeId = id.value
     await renderMessageContent(messageId)
 
     // すでに追加済みの場合は追加しない
     // https://github.com/traPtitech/traQ_S-UI/issues/1748
     if (messageIds.value.includes(messageId)) return
+    // チャンネルの移動などで id が変化していたら追加しない
+    // https://github.com/traPtitech/traQ_S-UI/issues/4218
+    if (beforeId !== id.value) return
+
     messageIds.value.push(messageId)
   }
 
@@ -191,7 +214,7 @@ const useMessageFetcher = (
       onLoadAroundMessagesRequest(props.entryMessageId)
     } else {
       isReachedLatest.value = true
-      onLoadFormerMessagesRequest()
+      onLoadLatestMessagesRequest()
     }
   }
 

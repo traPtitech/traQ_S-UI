@@ -1,47 +1,47 @@
 <template>
   <div>
-    <navigation-content-container subtitle="チャンネルリスト">
+    <NavigationContentContainer subtitle="チャンネルリスト">
       <template #control>
         <button :class="$style.button" @click="onClickButton">
-          <a-icon :size="20" mdi name="plus-circle-outline" />
+          <AIcon :size="20" mdi name="plus-circle-outline" />
         </button>
       </template>
       <template #default>
-        <channel-filter v-model="query" :class="$style.filter" />
-        <channel-list-selector
+        <ChannelFilter v-model="query" :class="$style.filter" />
+        <ChannelListSelector
           v-if="query.length === 0"
           v-model:is-starred="filterStarChannel"
           :all-panel-id="allPanelId"
           :stared-panel-id="staredPanelId"
         />
         <template v-if="topLevelChannels.length > 0">
-          <channel-list
+          <ChannelList
             v-if="query.length > 0"
             :channels="filteredChannels"
             show-topic
           />
           <template v-else-if="filterStarChannel">
-            <channel-tree-component
+            <ChannelTreeComponent
               v-if="staredChannels.length > 0"
               :id="staredPanelId"
               :channels="staredChannels"
               show-shortened-path
               role="tabpanel"
             />
-            <empty-state v-else :id="staredPanelId" role="tabpanel">
+            <EmptyState v-else :id="staredPanelId" role="tabpanel">
               お気に入りチャンネルはありません
-            </empty-state>
+            </EmptyState>
           </template>
-          <channel-tree-component
+          <ChannelTreeComponent
             v-else
             :id="allPanelId"
             :channels="topLevelChannels"
             role="tabpanel"
           />
         </template>
-        <empty-state v-else> チャンネルがありません </empty-state>
+        <EmptyState v-else> チャンネルがありません </EmptyState>
       </template>
-    </navigation-content-container>
+    </NavigationContentContainer>
   </div>
 </template>
 
@@ -88,7 +88,7 @@ const staredChannels = computed(() => {
 const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
   const mapped = tree.map((node, index) => ({
     index,
-    pathString: channelIdToPathString(node.id).toUpperCase()
+    pathString: channelIdToPathString(node.id)?.toUpperCase() ?? ''
   }))
   mapped.sort((a, b) => {
     if (a.pathString > b.pathString) {

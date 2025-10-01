@@ -5,14 +5,14 @@
       <p>
         特定のチャンネルを指定します。OFFの場合は最後に開いたチャンネルが設定されます。
       </p>
-      <form-selector-filterable
+      <FormSelectorFilterable
         v-if="openMode === 'particular'"
         v-model="openChannelNameValue"
         :options="channelOptions"
       />
     </div>
     <div>
-      <a-toggle
+      <AToggle
         :model-value="openModeValue === 'particular'"
         @update:model-value="toggleOpenMode"
       />
@@ -35,7 +35,7 @@ fetchChannels()
 const { channelIdToPathString } = useChannelPath()
 
 const openModeValue = defineModel<OpenMode>('openMode', { required: true })
-const openChannelNameValue = defineModel<string | null>('openChannelName', {
+const openChannelNameValue = defineModel<string>('openChannelName', {
   required: true
 })
 
@@ -48,7 +48,7 @@ const toggleOpenMode = () => {
 }
 
 const { channelOptions } = useChannelOptions(undefined, channel =>
-  channel ? channelIdToPathString(channel.id) : '(unknown)'
+  channel ? (channelIdToPathString(channel.id) ?? '') : '(unknown)'
 )
 </script>
 

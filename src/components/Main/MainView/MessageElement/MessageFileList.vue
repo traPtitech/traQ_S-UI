@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :class="$style.imageContainer">
-      <message-file-list-image
+      <MessageFileListImage
         v-for="meta in fileMetaDataState.images"
         :key="meta.id"
         :channel-id="channelId"
@@ -9,19 +9,19 @@
         :is-large="showLargeImage"
       />
     </div>
-    <message-file-list-video
+    <MessageFileListVideo
       v-for="meta in fileMetaDataState.videos"
       :key="meta.id"
       :channel-id="channelId"
       :file-id="meta.id"
     />
-    <message-file-list-audio
+    <MessageFileListAudio
       v-for="meta in fileMetaDataState.audios"
       :key="meta.id"
       :channel-id="channelId"
       :file-id="meta.id"
     />
-    <message-file-list-file
+    <MessageFileListFile
       v-for="meta in fileMetaDataState.files"
       :key="meta.id"
       :class="$style.item"

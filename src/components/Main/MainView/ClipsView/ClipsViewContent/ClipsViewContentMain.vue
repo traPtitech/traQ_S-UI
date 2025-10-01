@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
-    <scroll-loading-bar :class="$style.loadingBar" :show="isLoading" />
-    <messages-scroller
+    <ScrollLoadingBar :class="$style.loadingBar" :show="isLoading" />
+    <MessagesScroller
       ref="scrollerEle"
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
@@ -11,14 +11,14 @@
       @request-load-former="onLoadFormerMessagesRequest"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
-        <clip-element
+        <ClipElement
           :class="$style.element"
           :message-id="messageId"
           @change-height="onChangeHeight"
           @entry-message-loaded="onEntryMessageLoaded"
         />
       </template>
-    </messages-scroller>
+    </MessagesScroller>
   </div>
 </template>
 

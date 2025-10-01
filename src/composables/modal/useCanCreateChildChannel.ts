@@ -9,7 +9,8 @@ const useCanCreateChildChannel = () => {
   const { channelIdToPathString } = useChannelPath()
 
   const canCreateChildChannel = (channelId: ChannelId) => {
-    const path = channelId !== nullUuid ? channelIdToPathString(channelId) : ''
+    const path =
+      channelId !== nullUuid ? (channelIdToPathString(channelId) ?? '') : ''
     const isArchived = channelsMap.value.get(channelId)?.archived ?? false
     return canCreateChildChannel_(path, isArchived)
   }

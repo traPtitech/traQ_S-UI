@@ -1,55 +1,52 @@
 <template>
-  <modal-frame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
+  <ModalFrame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
     <div :class="$style.container">
-      <form-input
+      <FormInput
         v-model="manageState.name"
         label="チャンネル名"
         :max-length="20"
         focus-on-mount
       />
-      <form-selector
+      <FormSelector
         v-model="manageState.parent"
         label="親チャンネル"
         :options="channelOptions"
       />
       <label :class="$style.toggle">
         アーカイブ
-        <a-toggle
-          v-model="manageState.archived"
-          :disabled="!canToggleArchive"
-        />
+        <AToggle v-model="manageState.archived" :disabled="!canToggleArchive" />
       </label>
       <p v-if="!canToggleArchive" :class="$style.cantToggleArchiveMessage">
         このチャンネルはアーカイブチャンネルの子チャンネルなので、アーカイブ状態を解除できません。
       </p>
       <label :class="$style.toggle">
         強制通知
-        <a-toggle v-model="manageState.force" />
+        <AToggle v-model="manageState.force" />
       </label>
-      <form-button
+      <FormButton
         label="変更"
         :disabled="!isManageEnabled"
         :class="$style.button"
         @click="manageChannel"
       />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">
+import type { PatchChannelRequest } from '@traptitech/traq'
 import type { Ref } from 'vue'
 import { computed, reactive } from 'vue'
-import useChannelPath from '/@/composables/useChannelPath'
-import apis from '/@/lib/apis'
-import type { PatchChannelRequest } from '@traptitech/traq'
-import { nullUuid } from '/@/lib/basic/uuid'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import useChannelOptions from '/@/composables/useChannelOptions'
-import { isValidChannelName } from '/@/lib/validate'
+import useChannelPath from '/@/composables/useChannelPath'
+import apis from '/@/lib/apis'
+import { nullUuid } from '/@/lib/basic/uuid'
 import { canCreateChildChannel } from '/@/lib/channel'
-import { useToastStore } from '/@/store/ui/toast'
-import { useModalStore } from '/@/store/ui/modal'
+import { isValidChannelName } from '/@/lib/validate'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
 
 const useManageChannel = (
   props: { id: string },
@@ -90,10 +87,10 @@ const useManageChannel = (
 
 <script lang="ts" setup>
 import ModalFrame from '../Common/ModalFrame.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
 import AToggle from '/@/components/UI/AToggle.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
 
 const props = defineProps<{
   id: string
@@ -110,7 +107,7 @@ const channel = computed((): Required<PatchChannelRequest> => {
   }
 })
 const { channelIdToPathString } = useChannelPath()
-const subtitle = computed(() => channelIdToPathString(props.id, true))
+const subtitle = computed(() => channelIdToPathString(props.id, true) ?? '')
 
 const manageState = reactive({ ...channel.value })
 const { manageChannel } = useManageChannel(props, manageState, channel)

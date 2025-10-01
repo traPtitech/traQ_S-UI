@@ -4,15 +4,15 @@
       {{ group.name }}
     </div>
     <div :class="$style.adminList">
-      <a-icon name="crown" mdi />
-      <user-icon-ellipsis-list
+      <AIcon name="crown" mdi />
+      <UserIconEllipsisList
         direction="row"
         :user-ids="group.admins"
         prevent-modal
       />
     </div>
     <div :class="$style.editIconWrapper">
-      <a-icon
+      <AIcon
         name="pencil-outline"
         mdi
         :class="$style.editIcon"

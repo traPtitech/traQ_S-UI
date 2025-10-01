@@ -1,12 +1,12 @@
 <template>
-  <primary-view-sidebar-page show-back-button @back="emit('moveBack')">
+  <PrimaryViewSidebarPage show-back-button @back="emit('moveBack')">
     <template #header>
-      <sidebar-header text="ピン留め" />
+      <SidebarHeader text="ピン留め" />
     </template>
     <template #content>
-      <sidebar-pinned-list :pinned-messages="pinnedMessages" />
+      <SidebarPinnedList :pinned-messages="pinnedMessages" />
     </template>
-  </primary-view-sidebar-page>
+  </PrimaryViewSidebarPage>
 </template>
 
 <script lang="ts" setup>

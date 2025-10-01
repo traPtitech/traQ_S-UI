@@ -116,7 +116,9 @@ const useModalStorePinia = defineStore('ui/modal', () => {
     const primaryView = mainViewStore.primaryView.value
     if (primaryView.type === 'channel') {
       router.replace(
-        constructChannelPath(channelIdToPathString(primaryView.channelId))
+        constructChannelPath(
+          channelIdToPathString(primaryView.channelId) as string
+        )
       )
     } else if (primaryView.type === 'dm') {
       router.replace(constructUserPath(primaryView.userName))

@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <h4>スタンプを追加</h4>
-    <filter-input
+    <FilterInput
       v-model="filterState.query"
       placeholder="スタンプを検索"
       :class="$style.filterInput"
@@ -21,7 +21,7 @@
           :class="$style.addableStampListItem"
           @click="addStamp(stamp.id)"
         >
-          <stamp-palette-editor-add-stamp-list-item :stamp="stamp" />
+          <StampPaletteEditorAddStampListItem :stamp="stamp" />
         </div>
         <div
           v-if="displayCount < allAddableStamps.length"

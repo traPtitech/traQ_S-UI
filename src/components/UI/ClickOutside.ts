@@ -1,13 +1,14 @@
-import type { VNode, ComponentPublicInstance } from 'vue'
+import type { ComponentPublicInstance, VNode } from 'vue'
 import {
-  defineComponent,
-  Text,
-  Comment,
   cloneVNode,
-  shallowRef,
-  onMounted,
+  Comment,
+  defineComponent,
   onBeforeUnmount,
-  ref
+  onMounted,
+  ref,
+  shallowRef,
+  Text,
+  watch
 } from 'vue'
 import { isIOS } from '/@/lib/dom/browser'
 import { useModalStore } from '/@/store/ui/modal'
@@ -33,6 +34,12 @@ const endEventName = isIOS() ? 'touchend' : 'mouseup'
 export default defineComponent({
   name: 'ClickOutside',
   props: {
+    enabled: {
+      type: Boolean,
+      default(this: void) {
+        return true
+      }
+    },
     stop: {
       type: Boolean,
       default(this: void) {
@@ -54,6 +61,7 @@ export default defineComponent({
 
     const { shouldShowModal } = useModalStore()
     const isMouseDown = ref(false)
+    let listening = false
 
     const onMouseDown = (e: MouseEvent | TouchEvent) => {
       if (!element.value) return
@@ -93,14 +101,33 @@ export default defineComponent({
       }
     }
 
-    onMounted(() => {
+    const addListeners = () => {
+      if (listening) return
       window.addEventListener(startEventName, onMouseDown, { capture: true })
       window.addEventListener(endEventName, onMouseUp, { capture: true })
-    })
-    onBeforeUnmount(() => {
+      listening = true
+    }
+    const removeListeners = () => {
+      if (!listening) return
       window.removeEventListener(startEventName, onMouseDown, { capture: true })
       window.removeEventListener(endEventName, onMouseUp, { capture: true })
+      listening = false
+    }
+
+    onMounted(() => {
+      if (props.enabled) addListeners()
     })
+    onBeforeUnmount(() => {
+      removeListeners()
+    })
+
+    watch(
+      () => props.enabled,
+      enabled => {
+        if (enabled) addListeners()
+        else removeListeners()
+      }
+    )
 
     return () => {
       if (!slots['default']) {

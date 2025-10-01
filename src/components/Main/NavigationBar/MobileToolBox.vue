@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <tool-item
+    <ToolItem
       v-for="tool in tools"
       :key="tool.iconName"
       :icon-name="tool.iconName"
@@ -8,7 +8,7 @@
       @mousedown.middle="tool.onClick"
       @click="tool.onClick"
     />
-    <app-list
+    <AppList
       v-if="isServicesShown"
       :class="$style.services"
       @close="closeServices"

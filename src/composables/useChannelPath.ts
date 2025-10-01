@@ -12,52 +12,56 @@ import { watch } from 'vue'
 const MAX_SHORT_PATH_LENGTH = 20
 
 const useChannelPath = () => {
-  const { channelsMap, dmChannelsMap } = useChannelsStore()
+  const { channelsMap, dmChannelsMap, bothChannelsMapFetched } =
+    useChannelsStore()
   const { usersMap } = useUsersStore()
   const { topLevelChannels } = useChannelTree()
 
   const getUserNameByDMChannelId = (dmChannelId: DMChannelId) => {
     const dmChannel = dmChannelsMap.value.get(dmChannelId)
-    if (!dmChannel) return ''
+    if (!dmChannel) return null
     return usersMap.value.get(dmChannel.userId)?.name ?? ''
   }
 
   const channelIdToSimpleChannelPath = (
     id: ChannelId | DMChannelId
-  ): SimpleChannel[] => {
+  ): SimpleChannel[] | null => {
     if (dmChannelsMap.value.has(id)) {
       return [
         {
           id,
-          name: getUserNameByDMChannelId(id)
+          name: getUserNameByDMChannelId(id) as string
         }
       ]
-    } else if (!channelsMap.value.has(id)) {
-      throw `channelIdToPath: No channel: ${id}`
     }
-    return libChannelIdToSimpleChannelPath(id, channelsMap.value)
+
+    if (channelsMap.value.has(id)) {
+      return libChannelIdToSimpleChannelPath(id, channelsMap.value)
+    }
+
+    if (!bothChannelsMapFetched.value) return null
+    throw new Error(`channelIdToPath: No channel: ${id}`)
   }
 
-  const channelIdToPath = (id: ChannelId | DMChannelId): string[] =>
-    channelIdToSimpleChannelPath(id).map(c => c.name)
+  const channelIdToPath = (id: ChannelId | DMChannelId) =>
+    channelIdToSimpleChannelPath(id)?.map(c => c.name) ?? null
 
-  const dmChannelIdToPathString = (id: DMChannelId, hashed = false): string =>
+  const dmChannelIdToPathString = (id: DMChannelId, hashed = false) =>
     (hashed ? '@' : '') + (getUserNameByDMChannelId(id) ?? '')
 
   const channelIdToPathString = (
     id: ChannelId | DMChannelId,
     hashed = false
-  ): string => {
+  ) => {
+    if (!bothChannelsMapFetched.value) return null
     if (dmChannelsMap.value.has(id)) return dmChannelIdToPathString(id, hashed)
-    return (hashed ? '#' : '') + channelIdToPath(id).join('/')
+    return (hashed ? '#' : '') + channelIdToPath(id)?.join('/')
   }
+
   /**
    * 文字列 target が、candidates の中で他の文字列と区別できるようになるために必要な最短の接頭辞を求める
    */
-  const getShortestUniqueInitial = (
-    candidates: string[],
-    target: string
-  ): string => {
+  const getShortestUniqueInitial = (candidates: string[], target: string) => {
     let restCandidates: string[] = candidates.filter(c => c !== target)
     for (let i = 0; i < target.length; i++) {
       restCandidates = restCandidates.filter(word => word[i] === target[i])
@@ -83,7 +87,7 @@ const useChannelPath = () => {
     }
     const parentChannel = channelsMap.value.get(self.parentId)
     if (parentChannel === undefined) {
-      throw `channelIdToSiblingIds: No parents ${id}`
+      throw new Error(`channelIdToSiblingIds: No parents ${id}`)
     }
     return (
       parentChannel.children.filter(
@@ -95,15 +99,15 @@ const useChannelPath = () => {
   /**
    * (トップレベルチャンネルに使うとエラーを投げる)
    */
-  const checkHavingSameNameCousin = (id: ChannelId): boolean => {
+  const checkHavingSameNameCousin = (id: ChannelId) => {
     const self = channelsMap.value.get(id)
     if (self === undefined) {
-      throw `checkHavingSameNameCousin: No channel: ${id}`
+      throw new Error(`checkHavingSameNameCousin: No channel: ${id}`)
     }
     const selfName = self.name
     const parentId = self.parentId
     if (parentId === null) {
-      throw `checkHavingSameNameCousin: No parent channel: ${id}`
+      throw new Error(`checkHavingSameNameCousin: No parent channel: ${id}`)
     }
     const parentSiblingIds = channelIdToSiblingIds(parentId)
     for (const parentSiblingId of parentSiblingIds) {
@@ -118,10 +122,10 @@ const useChannelPath = () => {
     return false
   }
 
-  const channelIdToUniqueInitial = (id: string): string => {
+  const channelIdToUniqueInitial = (id: string) => {
     const selfName = channelsMap.value.get(id)?.name
     if (selfName === undefined) {
-      throw `ChannelIdToUniqueInitial: No Channel ${id}`
+      throw new Error(`ChannelIdToUniqueInitial: No Channel ${id}`)
     }
     const SiblingIds = channelIdToSiblingIds(id)
     const SiblingNames = SiblingIds.map(
@@ -133,15 +137,19 @@ const useChannelPath = () => {
   const channelIdToShortPathString = (
     id: ChannelId | DMChannelId,
     hashed = false
-  ): string => {
+  ) => {
     if (dmChannelsMap.value.has(id)) {
       return dmChannelIdToPathString(id, hashed)
     }
 
     if (!channelsMap.value.has(id)) {
-      throw `channelIdToShortPathString: No channel: ${id}`
+      if (!bothChannelsMapFetched.value) return null
+      throw new Error(`channelIdToShortPathString: No channel: ${id}`)
     }
-    const simpleChannels = channelIdToSimpleChannelPath(id)
+
+    // channelIdToSimpleChannelPath が null になるような場合はこの部分に到達しない
+    const simpleChannels = channelIdToSimpleChannelPath(id) as SimpleChannel[]
+
     const channelsLength = simpleChannels.length
     if (channelsLength === 0) {
       return hashed ? '#' : ''
@@ -257,7 +265,9 @@ const useChannelPath = () => {
   })
 
   const channelIdToLink = (id: ChannelId | DMChannelId) => {
-    const pathString = channelIdToPathString(id, false)
+    if (!bothChannelsMapFetched.value) return null
+
+    const pathString = channelIdToPathString(id, false) as string
     if (dmChannelsMap.value.has(id)) {
       return constructUserPath(pathString)
     }

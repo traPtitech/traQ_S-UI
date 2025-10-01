@@ -1,5 +1,5 @@
 <template>
-  <sidebar-event-frame
+  <SidebarEventFrame
     title="アーカイブ状態変更"
     icon-name="snowflake"
     icon-mdi
@@ -9,7 +9,7 @@
     {{
       !details.visibility ? 'アーカイブされました' : 'アーカイブ解除されました'
     }}
-  </sidebar-event-frame>
+  </SidebarEventFrame>
 </template>
 
 <script lang="ts" setup>

@@ -1,5 +1,5 @@
 <template>
-  <empty-state :class="$style.container"> Not Implemented </empty-state>
+  <EmptyState :class="$style.container"> Not Implemented </EmptyState>
 </template>
 
 <script lang="ts" setup>

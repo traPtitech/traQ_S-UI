@@ -1,13 +1,13 @@
 <template>
   <div :class="$style.effectList">
-    <stamp-picker-effect-selector-item
+    <StampPickerEffectSelectorItem
       v-for="effect in sizeEffectSet"
       :key="effect"
       :name="effect"
       :is-selected="sizeEffect === effect"
       @click="updateSizeEffect(effect)"
     />
-    <stamp-picker-effect-selector-item
+    <StampPickerEffectSelectorItem
       v-for="effect in animeEffectsWithoutAlias"
       :key="effect"
       :name="effect"

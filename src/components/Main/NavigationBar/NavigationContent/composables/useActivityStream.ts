@@ -66,19 +66,25 @@ const useActivityStream = () => {
     { deep: true }
   )
 
-  useMittListener(messageMitt, 'addMessage', ({ message: activity }) => {
+  useMittListener(messageMitt, 'addMessage', ({ message: addedMessage }) => {
     // 通常のチャンネルではない、つまりDMのときは無視
-    if (!channelsMap.value.has(activity.channelId)) return
+    if (!channelsMap.value.has(addedMessage.channelId)) return
 
     // 購読チャンネルのみを表示するときに購読してないチャンネルのメッセージは処理しない
-    if (!mode.value.all && !isChannelSubscribed(activity.channelId)) {
+    if (!mode.value.all && !isChannelSubscribed(addedMessage.channelId)) {
+      return
+    }
+
+    // メッセージが重複した場合を無視
+    // WebSocket の再接続による refetch と `MESSAGE_CREATED` イベントが同時に発生して、どちらからも同じメッセージを受け取る場合への対応
+    if (timeline.value.some(({ id }) => id === addedMessage.id)) {
       return
     }
 
     // チャンネルアクティビティのとき、同じチャンネルのメッセージを消す
     if (mode.value.perChannel) {
       const sameChannelActivity = timelineChannelMap.value.get(
-        activity.channelId
+        addedMessage.channelId
       )
       if (sameChannelActivity) {
         const sameChannelActivityIndex = timeline.value.findIndex(
@@ -87,8 +93,8 @@ const useActivityStream = () => {
         timeline.value.splice(sameChannelActivityIndex, 1)
       }
     }
-    timeline.value.unshift(activity)
-    timelineChannelMap.value.set(activity.channelId, activity)
+    timeline.value.unshift(addedMessage)
+    timelineChannelMap.value.set(addedMessage.channelId, addedMessage)
 
     // ガーベッジコレクタ
     if (timeline.value.length > ACTIVITY_LENGTH * 2) {
@@ -102,25 +108,29 @@ const useActivityStream = () => {
       }
     }
   })
-  useMittListener(messageMitt, 'updateMessage', activity => {
+  useMittListener(messageMitt, 'updateMessage', updatedMessage => {
     // 通常のチャンネルではない、つまりDMのときは無視
-    if (!channelsMap.value.has(activity.channelId)) return
+    if (!channelsMap.value.has(updatedMessage.channelId)) return
 
-    const sameMessageIndex = timeline.value.findIndex(a => a.id === activity.id)
+    const sameMessageIndex = timeline.value.findIndex(
+      a => a.id === updatedMessage.id
+    )
     if (sameMessageIndex < 0) return
 
-    timeline.value[sameMessageIndex] = activity
+    timeline.value[sameMessageIndex] = updatedMessage
   })
-  useMittListener(messageMitt, 'deleteMessage', messageId => {
-    const sameMessageIndex = timeline.value.findIndex(a => a.id === messageId)
-    if (sameMessageIndex < 0) return
+  useMittListener(messageMitt, 'deleteMessage', deletedMessageId => {
+    const deletedMessage = timeline.value.find(
+      ({ id }) => id === deletedMessageId
+    )
+    if (!deletedMessage) return
 
-    // ガーベッジコレクタ
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const activity = timeline.value[sameMessageIndex]!
-    timeline.value.splice(sameMessageIndex, 1)
-    if (timelineChannelMap.value.get(activity.channelId)?.id === activity.id) {
-      timelineChannelMap.value.delete(activity.channelId)
+    timeline.value = timeline.value.filter(({ id }) => id !== deletedMessageId)
+    if (
+      timelineChannelMap.value.get(deletedMessage.channelId)?.id ===
+      deletedMessage.id
+    ) {
+      timelineChannelMap.value.delete(deletedMessage.channelId)
     }
   })
   useMittListener(messageMitt, 'reconnect', async () => {

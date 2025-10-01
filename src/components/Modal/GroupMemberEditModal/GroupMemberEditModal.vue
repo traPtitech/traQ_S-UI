@@ -1,32 +1,32 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="グループメンバー編集"
     :subtitle="`${groupName} - ${userDisplayName}`"
     icon-name="group"
   >
-    <form-input
+    <FormInput
       v-model="role"
       :class="$style.item"
       label="役割"
       :max-length="30"
     />
     <div :class="$style.editButtonWrapper">
-      <form-button label="編集" @click="edit" />
+      <FormButton label="編集" @click="edit" />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
 import { computed, ref } from 'vue'
+import ModalFrame from '../Common/ModalFrame.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
 import apis from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
-import type { UserGroupId, UserId } from '/@/types/entity-ids'
-import { useModalStore } from '/@/store/ui/modal'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
+import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
+import type { UserGroupId, UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   groupId: UserGroupId

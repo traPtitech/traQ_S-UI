@@ -1,10 +1,14 @@
 <template>
-  <modal-frame title="クリップ" icon-mdi icon-name="bookmark">
+  <ModalFrame title="クリップ" icon-mdi icon-name="bookmark">
     <template #subtitle>
-      <inline-markdown :class="$style.subtitle" :content="messageContent" />
+      <MarkdownPreview
+        :class="$style.subtitle"
+        :content="messageContent"
+        inline
+      />
     </template>
     <template #default>
-      <clip-folder-element
+      <ClipFolderElement
         v-for="clipFolder in sortedClipFolders"
         :key="clipFolder.id"
         :folder-name="clipFolder.name"
@@ -12,7 +16,7 @@
         @click="toggleClip(clipFolder.id)"
       />
     </template>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">
@@ -68,7 +72,7 @@ const useCreateClip = (
 <script lang="ts" setup>
 import ModalFrame from '../Common/ModalFrame.vue'
 import ClipFolderElement from './ClipFolderElement.vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 
 const props = defineProps<{
   messageId: string

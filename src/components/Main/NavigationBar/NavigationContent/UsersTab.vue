@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.container">
-    <unread-d-ms />
-    <user-list />
-    <group-manager-opener />
+    <UnreadDMs />
+    <UserList />
+    <GroupManagerOpener />
   </div>
 </template>
 

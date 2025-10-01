@@ -2,7 +2,7 @@
   <div>
     <div :class="$style.header">
       <div :class="$style.label">管理者</div>
-      <a-icon
+      <AIcon
         name="plus-circle-outline"
         mdi
         :class="$style.addIcon"
@@ -10,7 +10,7 @@
       />
     </div>
     <div :class="$style.list">
-      <group-user
+      <GroupUser
         v-for="admin in admins"
         :id="admin"
         :key="admin"

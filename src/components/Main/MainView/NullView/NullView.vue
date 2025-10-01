@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <a-icon :class="$style.logo" name="traQ" />
+    <AIcon :class="$style.logo" name="traQ" />
   </div>
 </template>
 

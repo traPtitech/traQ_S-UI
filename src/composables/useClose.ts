@@ -19,7 +19,8 @@ const useClose = () => {
     switch (primaryView.value.type) {
       case 'channel': {
         try {
-          const channelPath = channelIdToPathString(primaryView.value.channelId)
+          const channelPath =
+            channelIdToPathString(primaryView.value.channelId) ?? ''
           router.push(constructChannelPath(channelPath))
         } catch {
           router.push(constructChannelPath(defaultChannelName.value))

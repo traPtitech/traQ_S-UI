@@ -1,31 +1,31 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="スタンプ画像の編集"
     subtitle="画像の位置・サイズを編集できます"
   >
     <div :class="$style.container">
-      <image-upload v-model="stampImage" />
+      <ImageUpload v-model="stampImage" />
     </div>
     <div :class="$style.buttonContainer">
-      <form-button label="キャンセル" type="tertiary" @click="cancel" />
-      <form-button
+      <FormButton label="キャンセル" type="tertiary" @click="cancel" />
+      <FormButton
         label="更新する"
         :loading="isEditing"
         @click="editStampImage"
       />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>
 import { ref, type Ref } from 'vue'
-import apis, { formatResizeError } from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
+import ModalFrame from '../Common/ModalFrame.vue'
+import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import { imageSize } from '/@/components/Settings/StampTab/imageSize'
 import FormButton from '/@/components/UI/FormButton.vue'
-import ModalFrame from '../Common/ModalFrame.vue'
+import apis, { formatResizeError } from '/@/lib/apis'
 import { useModalStore } from '/@/store/ui/modal'
-import ImageUpload from '/@/components/Settings/ImageUpload.vue'
+import { useToastStore } from '/@/store/ui/toast'
 import type { StampId } from '/@/types/entity-ids'
 
 const props = defineProps<{

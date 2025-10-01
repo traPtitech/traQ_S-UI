@@ -6,7 +6,8 @@
     "jsx": "preserve",
     "allowJs": true,
     "importHelpers": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -31,7 +32,7 @@
   "vueCompilerOptions": {
     "strictTemplates": true,
     "fallthroughAttributes": true,
-    "strictVModel": false
+    "strictVModel": true
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "public/**/*.js"],
   "exclude": ["node_modules"]

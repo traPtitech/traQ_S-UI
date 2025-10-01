@@ -9,7 +9,7 @@
       @mouseleave="onMouseLeave"
     >
       <transition name="scale-reaction">
-        <a-stamp
+        <AStamp
           :key="stamp.id"
           :stamp-id="stamp.id"
           :size="48"
@@ -18,7 +18,7 @@
         />
       </transition>
       <span :class="$style.stampname">{{ `:${stampName}:` }}</span>
-      <stamp-detail-element
+      <StampDetailElement
         :class="$style.detail"
         :stamp="stamp"
         @click-user="emit('end-scaled-hover')"

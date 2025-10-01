@@ -1,8 +1,8 @@
 <template>
   <div>
     <div :class="$style.buttons">
-      <form-button label="キャンセル" type="tertiary" @click="emit('cancel')" />
-      <form-button
+      <FormButton label="キャンセル" type="tertiary" @click="emit('cancel')" />
+      <FormButton
         label="確定"
         type="primary"
         :disabled="!isPaletteValid"
@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampPalette } from '@traptitech/traq'
+import type { StampPalette } from '/@/types/entity'
 import { computed } from 'vue'
 import { isStampPaletteValid } from './utils'
 import FormButton from '/@/components/UI/FormButton.vue'

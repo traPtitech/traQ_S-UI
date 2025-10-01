@@ -15,7 +15,7 @@ const performLoginCheck = createSingleflight(
         name: RouteName.Login,
         query: { redirect: `${location.pathname}${location.search}` }
       })
-      throw 'Login required'
+      throw new Error('Login required')
     }
   }
 )

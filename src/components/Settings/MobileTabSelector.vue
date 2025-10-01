@@ -3,18 +3,18 @@
     <div>
       <div :class="$style.header">
         <h2 :class="$style.title">設定</h2>
-        <close-button :size="36" @close="close" />
+        <CloseButton :size="36" @close="close" />
       </div>
-      <mobile-tab-selector-item
+      <MobileTabSelectorItem
         v-for="navigation in navigations"
         :key="navigation.routeName"
         :route-name="navigation.routeName"
         :icon-name="navigation.iconName"
         :icon-mdi="navigation.iconMdi"
       />
-      <safari-warning :class="$style.safariWarning" />
+      <SafariWarning :class="$style.safariWarning" />
     </div>
-    <version-info :class="$style.version" />
+    <VersionInfo :class="$style.version" />
   </section>
 </template>
 

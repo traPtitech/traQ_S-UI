@@ -2,12 +2,12 @@
   <section :class="$style.section">
     <div :class="$style.sectionHeader">
       <h3>パレット一覧</h3>
-      <stamp-palette-description />
+      <StampPaletteDescription />
     </div>
-    <stamp-palette-create-link />
+    <StampPaletteCreateLink />
     <div :class="$style.stampPaletteList">
       <div v-for="palette in stampPalettes" :key="palette.id">
-        <stamp-palette-list-item :palette="palette" />
+        <StampPaletteListItem :palette="palette" />
       </div>
     </div>
   </section>

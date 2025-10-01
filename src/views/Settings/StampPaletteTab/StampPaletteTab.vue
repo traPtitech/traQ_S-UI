@@ -1,6 +1,6 @@
 <template>
   <div>
-    <stamp-palette-list v-if="isPathStampPalette" />
+    <StampPaletteList v-if="isPathStampPalette" />
     <router-view />
   </div>
 </template>

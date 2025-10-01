@@ -4,7 +4,7 @@
     :data-on-secondary="$boolAttr(onSecondary)"
     @click="focus"
   >
-    <a-icon mdi name="search" :size="18" :class="$style.icon" />
+    <AIcon mdi name="search" :size="18" :class="$style.icon" />
     <input
       ref="inputRef"
       :class="$style.input"

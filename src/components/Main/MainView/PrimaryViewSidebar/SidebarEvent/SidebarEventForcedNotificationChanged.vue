@@ -1,5 +1,5 @@
 <template>
-  <sidebar-event-frame
+  <SidebarEventFrame
     title="強制通知状態変更"
     icon-name="forced"
     :user-id="details.userId"
@@ -10,7 +10,7 @@
         ? '強制通知チャンネルに変更されました'
         : '強制通知チャンネルから解除されました'
     }}
-  </sidebar-event-frame>
+  </SidebarEventFrame>
 </template>
 
 <script lang="ts" setup>

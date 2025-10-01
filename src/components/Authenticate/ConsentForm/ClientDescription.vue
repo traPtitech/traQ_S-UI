@@ -7,7 +7,7 @@
       <div :class="$style.descTitle">開発者</div>
       <div :class="$style.descContent">
         <template v-if="developer">
-          <user-icon
+          <UserIcon
             :class="$style.developerIcon"
             :user-id="developer.id"
             :fallback-icon-file-id="developer.iconFileId"

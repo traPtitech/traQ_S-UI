@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.stamps">
     <div v-for="stampId in stampsToShow" :key="stampId">
-      <a-stamp :stamp-id="stampId" />
+      <AStamp :stamp-id="stampId" />
     </div>
     <div v-if="needsToggle">
-      <icon-button
+      <IconButton
         v-if="isExpanded"
         icon-name="chevron-left"
         icon-mdi

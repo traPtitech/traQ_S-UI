@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :data-is-white="$boolAttr(isWhite)">
-    <file-type-icon
+    <FileTypeIcon
       :type="fileType"
       :size="36"
       :is-animated-image="isAnimatedImage"
@@ -16,7 +16,7 @@
     <div :class="$style.fileSize">
       {{ fileSize }}
     </div>
-    <a-icon
+    <AIcon
       mdi
       name="download"
       :size="24"

@@ -1,15 +1,11 @@
 <template>
   <div>
     <div :class="$style.container">
-      <image-upload v-model="stampImage" />
+      <ImageUpload v-model="stampImage" />
     </div>
     <div :class="$style.buttonContainer">
-      <form-button label="キャンセル" type="tertiary" @click="cancel" />
-      <form-button
-        label="次へ"
-        :loading="isChecking"
-        @click="checkStampImage"
-      />
+      <FormButton label="キャンセル" type="tertiary" @click="cancel" />
+      <FormButton label="次へ" :loading="isChecking" @click="checkStampImage" />
     </div>
   </div>
 </template>

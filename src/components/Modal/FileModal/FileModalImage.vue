@@ -1,15 +1,15 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.header">
-      <file-modal-content-header :file-id="fileMeta?.id ?? ''" is-white />
+      <FileModalContentHeader :file-id="fileMeta?.id ?? ''" is-white />
     </div>
-    <image-viewer
+    <ImageViewer
       :class="$style.img"
       :src="fileRawPath"
       :alt="fileMeta?.name ?? 'unknown'"
     />
     <div :class="$style.footer">
-      <file-modal-content-footer :file-id="fileMeta?.id ?? ''" is-white />
+      <FileModalContentFooter :file-id="fileMeta?.id ?? ''" is-white />
     </div>
   </div>
 </template>

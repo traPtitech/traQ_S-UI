@@ -1,9 +1,9 @@
 <template>
   <div>
-    <account-state :class="$style.element" />
-    <view-states :class="$style.element" />
-    <password-change :class="$style.element" />
-    <token-manager :class="$style.element" />
+    <AccountState :class="$style.element" />
+    <ViewStates :class="$style.element" />
+    <PasswordChange :class="$style.element" />
+    <TokenManager :class="$style.element" />
   </div>
 </template>
 

@@ -7,9 +7,9 @@
       :class="$style.link"
       :to="constructSettingsStampPaletteDetailPath(palette.id)"
     >
-      <a-icon mdi name="pencil" />
+      <AIcon mdi name="pencil" />
     </router-link>
-    <icon-button
+    <IconButton
       :class="$style.icon"
       icon-name="delete"
       icon-mdi
@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampPalette } from '@traptitech/traq'
+import type { StampPalette } from '/@/types/entity'
 import AIcon from '/@/components/UI/AIcon.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'

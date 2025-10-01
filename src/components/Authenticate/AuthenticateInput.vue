@@ -20,7 +20,7 @@
         :class="$style.toggle"
         @click.prevent="togglePassword"
       >
-        <a-icon
+        <AIcon
           :name="isPasswordShown ? 'eye-off-outline' : 'eye-outline'"
           mdi
           :class="$style.toggleIcon"

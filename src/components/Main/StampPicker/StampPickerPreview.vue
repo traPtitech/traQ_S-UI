@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.wrapper">
-      <markdown-content :content="rendered" />
+      <MarkdownContent :content="rendered" />
     </div>
     <div :class="$style.previewText">
       {{ previewText }}

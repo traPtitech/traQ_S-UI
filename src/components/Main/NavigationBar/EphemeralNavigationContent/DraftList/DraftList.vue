@@ -1,7 +1,7 @@
 <template>
   <div>
-    <draft-list-details-panel :input-channels="inputChannels" />
-    <draft-list-title-panel />
+    <DraftListDetailsPanel :input-channels="inputChannels" />
+    <DraftListTitlePanel />
   </div>
 </template>
 

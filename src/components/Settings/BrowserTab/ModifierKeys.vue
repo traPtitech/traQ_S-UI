@@ -2,24 +2,24 @@
   <div :class="$style.container">
     <h3>修飾キーとして利用するキー</h3>
     <div :class="$style.checkbox" :data-is-checked="modelValue.shift">
-      <form-checkbox v-model="modelValue.shift">
+      <FormCheckbox v-model="modelValue.shift">
         {{ getModifierKeyName('shift') }}
-      </form-checkbox>
+      </FormCheckbox>
     </div>
     <div :class="$style.checkbox" :data-is-checked="modelValue.alt">
-      <form-checkbox v-model="modelValue.alt">
+      <FormCheckbox v-model="modelValue.alt">
         {{ getModifierKeyName('alt') }}
-      </form-checkbox>
+      </FormCheckbox>
     </div>
     <div :class="$style.checkbox" :data-is-checked="modelValue.ctrl">
-      <form-checkbox v-model="modelValue.ctrl">
+      <FormCheckbox v-model="modelValue.ctrl">
         {{ getModifierKeyName('ctrl') }}
-      </form-checkbox>
+      </FormCheckbox>
     </div>
     <div :class="$style.checkbox" :data-is-checked="modelValue.macCtrl">
-      <form-checkbox v-if="macFlag" v-model="modelValue.macCtrl">
+      <FormCheckbox v-if="macFlag" v-model="modelValue.macCtrl">
         {{ getModifierKeyName('macCtrl') }}
-      </form-checkbox>
+      </FormCheckbox>
     </div>
   </div>
 </template>

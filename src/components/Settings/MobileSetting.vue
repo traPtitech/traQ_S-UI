@@ -1,9 +1,9 @@
 <template>
   <div :class="$style.container">
-    <mobile-tab-selector v-show="isSettingsRoot" />
-    <mobile-tab-frame v-show="!isSettingsRoot">
+    <MobileTabSelector v-show="isSettingsRoot" />
+    <MobileTabFrame v-show="!isSettingsRoot">
       <slot />
-    </mobile-tab-frame>
+    </MobileTabFrame>
   </div>
 </template>
 

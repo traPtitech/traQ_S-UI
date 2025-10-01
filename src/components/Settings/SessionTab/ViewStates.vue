@@ -3,8 +3,8 @@
     <h3 :class="$style.header">
       他端末/ブラウザで最新のメッセージを開いているチャンネル
     </h3>
-    <ul v-if="monitoringChanelStrings.length > 0" :class="$style.list">
-      <li v-for="channel in monitoringChanelStrings" :key="channel">
+    <ul v-if="monitoringChannelStrings.length > 0" :class="$style.list">
+      <li v-for="channel in monitoringChannelStrings" :key="channel">
         {{ channel }}
       </li>
     </ul>
@@ -26,10 +26,10 @@ fetchViewStates()
 
 const { channelIdToPathString } = useChannelPath()
 
-const monitoringChanelStrings = computed(() =>
+const monitoringChannelStrings = computed(() =>
   [...monitoringChannels.value.values()].map(cId => {
     try {
-      return channelIdToPathString(cId, true)
+      return channelIdToPathString(cId, true) ?? ''
     } catch {
       return ''
     }

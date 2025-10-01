@@ -1,8 +1,8 @@
 <template>
-  <click-outside @click-outside="closeStampPicker">
+  <ClickOutside @click-outside="closeStampPicker">
     <div :class="$style.container">
       <div :class="$style.inputContainer">
-        <filter-input
+        <FilterInput
           ref="filterInputRef"
           v-model="filterState.query"
           :class="$style.filterInput"
@@ -11,7 +11,7 @@
           focus-on-mount
           @enter="onFilterEnter"
         />
-        <stamp-picker-effect-toggle-button
+        <StampPickerEffectToggleButton
           v-if="isEffectEnabled"
           :class="$style.effectButton"
           :is-active="shouldShowEffectSelector"
@@ -19,7 +19,7 @@
           @click="toggleShowEffect"
         />
       </div>
-      <stamp-picker-stamp-list
+      <StampPickerStampList
         v-show="!shouldShowEffectSelector"
         :class="$style.stampList"
         :stamps="stamps"
@@ -27,24 +27,24 @@
         @input-stamp="onInputStamp"
         @hover-stamp="onHoverStamp"
       />
-      <stamp-picker-effect-selector
+      <StampPickerEffectSelector
         v-if="shouldShowEffectSelector"
         v-model:size-effect="selectedSizeEffect"
         v-model:anime-effects="selectedAnimeEffects"
         :class="$style.effectSelector"
       />
-      <stamp-picker-preview
+      <StampPickerPreview
         :stamp-id="preselected"
         :size-effect="selectedSizeEffect"
         :anime-effects="selectedAnimeEffects"
       />
-      <stamp-picker-stamp-set-selector
+      <StampPickerStampSetSelector
         v-model:current-stamp-set="currentStampSet"
         :class="$style.paletteSelector"
         :stamp-sets="stampSetState.stampSets"
       />
     </div>
-  </click-outside>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>

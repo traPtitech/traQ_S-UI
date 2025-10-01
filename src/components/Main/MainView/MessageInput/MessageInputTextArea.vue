@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <textarea-autosize
+    <TextareaAutosize
       ref="textareaAutosizeRef"
       v-model="modelValue"
       :class="$style.textarea"
@@ -24,8 +24,9 @@
       @autosize-updated="updateShowIsInputTextareaExpandButtonVisibility"
     />
     <div :class="$style.over" />
-    <dropdown-suggester
+    <DropdownSuggester
       :is-shown="isSuggesterShown"
+      :width="suggesterWidth"
       :position="suggesterPosition"
       :candidates="suggestedCandidates"
       :selected-index="selectedCandidateIndex"
@@ -39,7 +40,7 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import usePaste from './composables/usePaste'
 import useSendKeyWatcher from './composables/useSendKeyWatcher'
-import useWordSuggester from './composables/useWordSuggester'
+import useSuggester from './composables/suggestion/useSuggester'
 import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import useInsertText from '/@/composables/dom/useInsertText'
@@ -102,12 +103,13 @@ const {
   onKeyDown: onKeyDownWordSuggester,
   onBlur: onBlurWordSuggester,
   isSuggesterShown,
+  suggesterWidth,
   position,
   suggestedCandidates,
   selectedCandidateIndex,
   confirmedPart,
   onSelect
-} = useWordSuggester(textareaRef, modelValue)
+} = useSuggester(textareaRef, modelValue)
 
 const {
   onBeforeInput,
