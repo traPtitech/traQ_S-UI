@@ -14,7 +14,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -28,7 +28,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -46,7 +46,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -64,7 +64,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -82,7 +82,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -106,7 +106,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -143,7 +143,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: ./.node-version
           cache: npm
