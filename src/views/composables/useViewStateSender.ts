@@ -30,7 +30,7 @@ const useViewStateSender = () => {
   })
 
   const state = computed(() => {
-    if (!shouldReceiveLatestMessages.value) return ChannelViewState.None
+    if (!shouldReceiveLatestMessages.value) return ChannelViewState.StaleViewing
     // 最新メッセージ閲覧中でない場合はタイピング中でもEditingにしてはいけない
     // (Editingにすると未読に追加されなくなるため)
     return isTyping.value
