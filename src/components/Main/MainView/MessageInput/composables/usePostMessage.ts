@@ -46,7 +46,7 @@ const uploadAttachments = async (
   return responses.map(res => buildFilePathForPost(res.data.id))
 }
 
-const createContent = async (
+export const createContent = async (
   embeddedText: string,
   fileUrls: string[]
 ) => {
