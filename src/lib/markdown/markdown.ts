@@ -34,7 +34,7 @@ const storeProvider: Store = {
   },
   generateChannelHref(id) {
     const { channelIdToLink } = useChannelPath()
-    return `${embeddingOrigin}${channelIdToLink(id)}`
+    return `${embeddingOrigin}${channelIdToLink(id) as string}`
   },
   generateUserHref(id) {
     return `javascript:openUserModal(${encodeURIComponent(JSON.stringify(id))})`

@@ -154,7 +154,7 @@ const title = computed(
 )
 const subtitle = computed(() =>
   props.parentChannelId
-    ? `${channelIdToPathString(props.parentChannelId, true)}/`
+    ? `${channelIdToPathString(props.parentChannelId, true) ?? ''}/`
     : ''
 )
 const newChannelPath = computed(() => {

@@ -14,12 +14,19 @@ const useDocumentTitle = () => {
     switch (primaryView.value.type) {
       case 'channel':
         try {
-          return `#${channelIdToShortPathString(primaryView.value.channelId)}`
+          const channel = channelIdToShortPathString(
+            primaryView.value.channelId,
+            true
+          )
+          if (channel) return channel
+          return ''
         } catch {
           return ''
         }
+
       case 'dm':
         return `@${primaryView.value.userName}`
+
       case 'clips':
         return (
           clipFoldersMap.value.get(primaryView.value.clipFolderId)?.name ??

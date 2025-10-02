@@ -31,7 +31,7 @@ export const usePath = (typedProps: TypedProps) => {
   )
   const pathTooltip = computed(() =>
     typedProps.showShortenedPath
-      ? `#${channelIdToPathString(typedProps.channel.id)}`
+      ? `${channelIdToPathString(typedProps.channel.id, true) ?? ''}`
       : undefined
   )
 
