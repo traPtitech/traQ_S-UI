@@ -129,6 +129,7 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
     messages: Message[],
     totalCount: number
   ) => {
+    console.log(totalCount)
     searchState.value.executed = executed
     searchState.value.searchResult = messages
     searchState.value.totalCount = totalCount

@@ -50,7 +50,7 @@ $command-palette-max-width: min(1000px, calc(100vw - 16px));
 
   &:not([data-is-mobile]) {
     max-width: $command-palette-max-width;
-    max-height: calc(100vh - 56px);
+    height: calc(100vh - 56px);
     margin: 32px auto 24px auto;
     border-radius: 8px;
     border: 2px solid $theme-background-secondary-border;

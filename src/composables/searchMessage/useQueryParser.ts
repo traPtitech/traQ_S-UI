@@ -3,10 +3,7 @@ import { computed } from 'vue'
 import type { ChannelTree } from '/@/lib/channelTree'
 import { channelPathToId } from '/@/lib/channelTree'
 import type { StoreForParser } from '/@/lib/searchMessage/parserBase'
-import {
-  createQueryParser,
-  toSearchMessageParam
-} from '/@/lib/searchMessage/queryParser'
+import { createQueryParser } from '/@/lib/searchMessage/queryParser'
 import type { PrimaryViewInformation } from '/@/store/ui/mainView'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import { useChannelTree } from '/@/store/domain/channelTree'
@@ -69,7 +66,7 @@ const useQueryParser = () => {
     })
   )
 
-  return { parseQuery, toSearchMessageParam }
+  return { parseQuery }
 }
 
 export default useQueryParser

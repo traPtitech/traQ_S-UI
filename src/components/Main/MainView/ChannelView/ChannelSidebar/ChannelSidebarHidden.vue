@@ -3,7 +3,7 @@
     <AIcon
       :class="$style.icon"
       mdi
-      name="chevron-double"
+      name="chevron-double-left"
       :size="28"
       @click="emit('open')"
     />
