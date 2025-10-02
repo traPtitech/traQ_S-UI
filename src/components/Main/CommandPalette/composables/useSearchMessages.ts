@@ -4,7 +4,10 @@ import type { Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
 import useQueryParser from '/@/composables/searchMessage/useQueryParser'
-import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
+import {
+  toSearchMessageParam,
+  type SearchMessageSortKey
+} from '/@/lib/searchMessage/queryParser'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useMessagesStore } from '/@/store/entities/messages'
 
@@ -68,7 +71,7 @@ const usePaging = (
 
 const useSearchMessages = () => {
   const limit = 20
-  const { parseQuery, toSearchMessageParam } = useQueryParser()
+  const { parseQuery } = useQueryParser()
   const { query, searchState, setSearchResult, resetPaging, addSearchHistory } =
     useCommandPalette()
   const { extendMessagesMap } = useMessagesStore()
@@ -116,6 +119,7 @@ const useSearchMessages = () => {
       offset: currentOffset.value,
       sort: currentSortKey.value
     }
+
     const {
       data: { hits, totalHits }
     } = await apis.searchMessages(...toSearchMessageParam(queryObject, option))

@@ -42,6 +42,12 @@ export type SearchMessageQueryObject = {
   hasAudio?: boolean
 }
 
+export type SearchMessageOptions = Partial<{
+  limit: number
+  offset: number
+  sort: SearchMessageSortKey
+}>
+
 /** is:系のフィルターで使う */
 type AttrFlagFilterKey = 'bot'
 
@@ -286,11 +292,7 @@ const parsedFilterToNormalizedString = (
 
 export const toSearchMessageParam = (
   obj: SearchMessageQueryObject,
-  options?: Partial<{
-    limit: number
-    offset: number
-    sort: SearchMessageSortKey
-  }>
+  options?: SearchMessageOptions
 ): SearchMessageQuery => [
   obj.word,
   obj.after,

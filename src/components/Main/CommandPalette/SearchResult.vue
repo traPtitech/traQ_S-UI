@@ -1,5 +1,5 @@
 <template>
-  <div v-if="fetchingSearchResult" :class="$style.empty">
+  <div v-if="fetchingSearchResult || debouncing" :class="$style.empty">
     <LoadingSpinner :class="$style.spinner" color="ui-secondary" />
   </div>
   <div v-else-if="searchResult.length > 0" :class="$style.container">
@@ -23,37 +23,28 @@
         />
       </div>
     </div>
-    <div :class="$style.navigation">
-      <div
-        :class="$style.navigationButton"
-        data-direction="previous"
-        :aria-hidden="currentPage <= 0"
-        @click="jumpToPage(currentPage - 1)"
-      >
-        <AIcon name="chevron-left" mdi /> 戻る
-      </div>
-      <span :class="$style.page">
-        {{ currentPage + 1 }} / {{ pageCount }} ページ
-      </span>
-      <div
-        :class="$style.navigationButton"
-        data-direction="next"
-        :aria-hidden="currentPage >= pageCount - 1"
-        @click="jumpToPage(currentPage + 1)"
-      >
-        次へ <AIcon name="chevron-right" mdi />
-      </div>
-    </div>
   </div>
   <div v-else-if="queryEntered" :class="$style.empty">見つかりませんでした</div>
+
+  <PageNavigator
+    v-model:page="currentPage"
+    :page-count="pageCount"
+    @update:page="jumpToPage"
+  />
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+  watchEffect
+} from 'vue'
 import useKeepScrollPosition from './composables/useKeepScrollPosition'
 import useSearchMessages from './composables/useSearchMessages'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import type { PopupSelectorItem } from '/@/components/UI/PopupSelector.vue'
 import PopupSelector from '/@/components/UI/PopupSelector.vue'
@@ -62,6 +53,8 @@ import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { constructMessagesPath } from '/@/router'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import type { MessageId } from '/@/types/entity-ids'
+import PageNavigator from './Pagination/PageNavigator.vue'
+import { debounce } from 'throttle-debounce'
 
 const selectorItems: PopupSelectorItem<SearchMessageSortKey>[] &
   { value: SearchMessageSortKey }[] = [
@@ -75,7 +68,7 @@ const {
   fetchingSearchResult,
   searchResult,
   currentPage,
-  jumpToPage: changePage,
+  jumpToPage,
   resetPaging,
   pageCount,
   currentSortKey,
@@ -83,15 +76,23 @@ const {
   executed
 } = useSearchMessages()
 
+const debouncing = ref(false)
+
+const changeState = debounce(256, ([query, key], [oldQuery, oldKey], _page) => {
+  // クエリの変更時・ソートキーの変更時はページングをリセット
+  if (query !== oldQuery || key !== oldKey) {
+    resetPaging()
+  }
+  executeSearchForCurrentPage(query)
+  debouncing.value = false
+})
+
 watch(
   // クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
   () => [query.value, currentSortKey.value, currentPage.value] as const,
-  ([query, key], [oldQuery, oldKey]) => {
-    // クエリの変更時・ソートキーの変更時はページングをリセット
-    if (query !== oldQuery || key !== oldKey) {
-      resetPaging()
-    }
-    executeSearchForCurrentPage(query)
+  (...inputs) => {
+    debouncing.value = true
+    changeState(...inputs)
   }
 )
 
@@ -119,13 +120,12 @@ const openMessage = async (e: MouseEvent, messageId: MessageId) => {
     closeCommandPalette()
   })
 }
-
-const jumpToPage = (page: number) => {
-  changePage(page)
+watchEffect(() => {
+  jumpToPage(currentPage.value)
   if (resultListEle.value) {
     resultListEle.value.scrollTop = 0
   }
-}
+})
 
 const { didRender, noRestore } = useKeepScrollPosition(
   resultListEle,
