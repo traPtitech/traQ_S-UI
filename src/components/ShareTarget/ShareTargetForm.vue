@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <FormSelector
+    <FormSelectorFilterable
       v-model="channelId"
       :class="$style.item"
       label="投稿先チャンネル"
@@ -21,7 +21,7 @@ import { computed, ref, watch } from 'vue'
 import ShareTargetMessageInput from './ShareTargetMessageInput.vue'
 import usePostMessage from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
 import FormButton from '/@/components/UI/FormButton.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useChannelOptions from '/@/composables/useChannelOptions'
 import { nullUuid } from '/@/lib/basic/uuid'
