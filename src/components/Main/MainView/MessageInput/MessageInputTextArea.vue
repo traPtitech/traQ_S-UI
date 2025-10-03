@@ -29,7 +29,7 @@
       :width="suggesterWidth"
       :position="suggesterPosition"
       :candidates="suggestedCandidates"
-      :selected-index="selectedCandidateIndex"
+      :selected-index="selectedIndex"
       :confirmed-part="confirmedPart"
       @select="onSelect"
     />
@@ -91,7 +91,9 @@ const firefoxFlag = isFirefox()
 const { isMobile } = useResponsiveStore()
 
 const textareaAutosizeRef = ref<InstanceType<typeof TextareaAutosize>>()
-const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
+const textareaRef = computed<HTMLTextAreaElement>(
+  () => textareaAutosizeRef.value?.$el
+)
 
 defineExpose({ textareaAutosizeRef })
 
@@ -106,10 +108,10 @@ const {
   suggesterWidth,
   position,
   suggestedCandidates,
-  selectedCandidateIndex,
+  selectedIndex,
   confirmedPart,
   onSelect
-} = useSuggester(textareaRef, modelValue)
+} = useSuggester(textareaRef)
 
 const {
   onBeforeInput,

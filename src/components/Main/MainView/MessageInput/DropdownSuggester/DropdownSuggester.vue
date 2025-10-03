@@ -31,12 +31,9 @@
 
 <script lang="ts" setup>
 import { computed, type ComponentPublicInstance } from 'vue'
-import type {
-  Candidate,
-  WordOrConfirmedPart
-} from '../composables/suggestion/useWordSuggester'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 import { isIOS } from '/@/lib/dom/browser'
+import type { Candidate, WordOrConfirmedPart } from '/@/lib/suggestion/basic'
 
 const props = withDefaults(
   defineProps<{
