@@ -8,6 +8,7 @@
       :data-is-pinned="$boolAttr(message.pinned)"
       :data-is-entry="$boolAttr(isEntryMessage)"
       :data-is-editing="$boolAttr(isEditing)"
+      :data-is-active="$boolAttr(isActive)"
       @pointerenter="onPointerEnter"
       @click="onClick"
       @mouseleave="onMouseLeave"
@@ -18,10 +19,20 @@
         :class="$style.pinned"
       />
       <MessageTools
-        :show="showMessageTools"
+        v-if="showMessageTools"
+        ref="messageToolsRef"
         :class="$style.tools"
         :message-id="messageId"
         :is-minimum="isArchived"
+        :context-menu-position="contextMenuPosition"
+        @toggle-stamp-picker="toggleStampPicker"
+        @open-context-menu="
+          openContextMenu({
+            x: $event.pageX,
+            y: $event.pageY
+          })
+        "
+        @close-context-menu="closeContextMenu"
       />
       <MessageContents
         :class="$style.messageContents"
@@ -53,6 +64,9 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageId, UserId } from '/@/types/entity-ids'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+import { useStampUpdater } from '/@/lib/updater/stamp'
+import useContextMenu from '/@/composables/useContextMenu'
 
 const props = withDefaults(
   defineProps<{
@@ -92,7 +106,33 @@ useElementRenderObserver(
 
 const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
   useMessageToolsHover()
-const showMessageTools = computed(() => isHovered.value && !isEditing.value)
+
+const { addStampOptimistically } = useStampUpdater()
+
+const messageToolsRef = shallowRef<InstanceType<typeof MessageTools> | null>(
+  null
+)
+
+const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
+  useStampPickerInvoker(
+    async stampData => addStampOptimistically(props.messageId, stampData.id),
+    computed(() => messageToolsRef.value?.$el),
+    false
+  )
+
+const {
+  position: contextMenuPosition,
+  open: openContextMenu,
+  close: closeContextMenu
+} = useContextMenu()
+
+const isActive = computed(
+  () => isStampPickerOpen.value || !!contextMenuPosition.value
+)
+
+const showMessageTools = computed(
+  () => (isHovered.value && !isEditing.value) || isActive.value
+)
 </script>
 
 <style lang="scss" module>
@@ -116,8 +156,11 @@ $messagePaddingMobile: 16px;
     // TODO: 色を正しくする
     background: $common-background-pin;
   }
-  &:not([data-is-editing]):not([data-is-pinned]):not([data-is-entry]):hover {
-    background: var(--specific-message-hover-background);
+  &:not([data-is-editing]):not([data-is-pinned]):not([data-is-entry]) {
+    &[data-is-active],
+    &:hover {
+      background: var(--specific-message-hover-background);
+    }
   }
 }
 
