@@ -107,24 +107,22 @@ const handleScroll = () => {
             </messages-scroller>
           </div>
         </transition>
-        <div>
-          <IconButton
-            :icon-name="`chevron-double-${isMessageShow ? 'down' : 'up'}`"
-            icon-mdi
-            :class="$style.uiToggleButton"
-            @click="
-              () => {
-                if (isMessageShow) {
-                  isMessageShow = false
-                  toNewMessage('smooth')
-                } else {
-                  isMessageShow = true
-                  nextTick(() => toNewMessage())
-                }
+        <IconButton
+          :icon-name="`chevron-double-${isMessageShow ? 'down' : 'up'}`"
+          icon-mdi
+          :class="$style.toggleButton"
+          @click="
+            () => {
+              if (isMessageShow) {
+                isMessageShow = false
+                toNewMessage('smooth')
+              } else {
+                isMessageShow = true
+                nextTick(() => toNewMessage())
               }
-            "
-          />
-        </div>
+            }
+          "
+        />
       </div>
       <slot name="default" />
     </div>
@@ -208,7 +206,7 @@ const handleScroll = () => {
   contain: content;
 }
 
-.uiToggleButton {
+.toggleButton {
   @include color-ui-secondary;
   @include background-primary;
   pointer-events: all;
