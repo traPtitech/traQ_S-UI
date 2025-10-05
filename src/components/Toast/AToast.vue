@@ -33,14 +33,16 @@ const useAutoHide = (props: { toast: Toast }) => {
     deleteToast(props.toast.id)
   }
 
-  onMounted(() => {
-    timer = setTimeout(() => {
-      remove()
-    }, props.toast.timeout)
-  })
-  onUnmounted(() => {
-    clearTimeout(timer)
-  })
+  if (props.toast.timeout < Infinity) {
+    onMounted(() => {
+      timer = setTimeout(() => {
+        remove()
+      }, props.toast.timeout)
+    })
+    onUnmounted(() => {
+      clearTimeout(timer)
+    })
+  }
 
   return { remove }
 }
