@@ -27,19 +27,19 @@ const iconNameMap: Record<Toast['type'], string> = {
 const useAutoHide = (props: { toast: Toast }) => {
   const { deleteToast } = useToastStore()
 
-  let timer: number | undefined
+  let timer: NodeJS.Timeout
 
   const remove = () => {
     deleteToast(props.toast.id)
   }
 
   onMounted(() => {
-    timer = window.setTimeout(() => {
+    timer = setTimeout(() => {
       remove()
     }, props.toast.timeout)
   })
   onUnmounted(() => {
-    window.clearTimeout(timer)
+    clearTimeout(timer)
   })
 
   return { remove }
@@ -57,7 +57,7 @@ const { remove } = useAutoHide(props)
 
 const onClick = () => {
   if (props.toast.onClick) {
-    props.toast.onClick()
+    props.toast.onClick(props.toast.id)
   } else {
     remove()
   }
