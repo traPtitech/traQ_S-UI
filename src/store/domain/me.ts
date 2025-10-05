@@ -38,6 +38,7 @@ const useMeStorePinia = defineStore('domain/me', () => {
         state.detail = undefined
 
         if (!isAxiosError(error)) {
+          // eslint-disable-next-line no-console
           console.error(new Error('Failed to fetchMe:', { cause: error }))
           return undefined
         }
@@ -46,11 +47,14 @@ const useMeStorePinia = defineStore('domain/me', () => {
           return undefined
         }
 
+        // FIXME: エラーハンドリングのためにとりあえず retry しています
+        // eslint-disable-next-line no-console
         console.warn('Failed to fetchMe, retrying...', { cause: error })
         await new Promise(resolve => setTimeout(resolve, retryDelayMs))
       }
     }
 
+    // eslint-disable-next-line no-console
     console.error(new Error(`Failed to fetchMe after ${retryMaxCount} retry`))
     return undefined
   }
