@@ -1,23 +1,29 @@
 // APIに投げる検索クエリに対する実装
 import type apis from '/@/lib/apis'
-import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
+import type {
+  ChannelId,
+  MessageId,
+  UserGroupId,
+  UserId
+} from '/@/types/entity-ids'
 import type {
   ExtractedFilter,
   FilterExtractor,
   FilterParser,
   StoreForParser
 } from './parserBase'
-import { FromToMeToken } from './parserBase'
+import { MeToken } from './parserBase'
 import {
-  channelParser,
-  InHereToken,
+  channelOrDmChannelParser,
+  HereToken,
   dateParser,
   parseToFilter as parseToFilterBase,
   makePrefixedFilterExtractor,
   messageParser,
   rawQuery,
-  userParser
+  userOrUserGroupParser
 } from './parserBase'
+import { isDefined } from '../basic/array'
 
 /** APIに投げる型 */
 export type SearchMessageQuery = Parameters<typeof apis.searchMessages>
@@ -52,9 +58,18 @@ type MediaFlagFilterKey = 'attachments' | 'image' | 'audio' | 'video'
 export type Filter =
   | { type: 'after'; raw: string; value: Date }
   | { type: 'before'; raw: string; value: Date }
-  | { type: 'in'; raw: string; value: typeof InHereToken | ChannelId }
-  | { type: 'to'; raw: string; value: typeof FromToMeToken | UserId }
-  | { type: 'from'; raw: string; value: typeof FromToMeToken | UserId }
+  | {
+      type: 'in'
+      raw: string
+      value: typeof HereToken | typeof MeToken | ChannelId
+    }
+  | {
+      type: 'to'
+      raw: string
+      value: typeof MeToken | UserId | UserGroupId | UserGroupId[]
+      includeGroups?: boolean
+    }
+  | { type: 'from'; raw: string; value: typeof MeToken | UserId | UserId[] }
   | { type: 'citation'; raw: string; value: MessageId }
   | { type: 'attrFlag'; raw: string; value: AttrFlagFilterKey; negate: boolean }
   | {
@@ -70,7 +85,7 @@ const filterExtractors: FilterExtractor<FilterType>[] = [
   makePrefixedFilterExtractor('after', ['after:', 'since:']),
   makePrefixedFilterExtractor('before', ['before:', 'until:']),
   makePrefixedFilterExtractor('in', ['in:', '#']),
-  makePrefixedFilterExtractor('to', ['to:', '@']),
+  makePrefixedFilterExtractor('to', ['to:', 'to(groups):', '@']),
   makePrefixedFilterExtractor('from', ['from:', 'by:']),
   makePrefixedFilterExtractor('citation', ['citation:', 'cite:']),
   makePrefixedFilterExtractor('attrFlag', ['is:'], ['-is:', 'not:']),
@@ -134,17 +149,46 @@ const parser = async (
         : undefined
     }
     case 'in': {
-      const result = channelParser(store.channelPathToId, extracted)
+      const result = await channelOrDmChannelParser(store, extracted)
       return result
         ? { type, raw: rawQuery(extracted), value: result }
         : undefined
     }
-    case 'to':
+    case 'to': {
+      const { user, group } = await userOrUserGroupParser(store, extracted)
+
+      if (group) {
+        return { type, raw: rawQuery(extracted), value: group }
+      }
+
+      if (!user) return undefined
+
+      const includeGroups = extracted.prefix.includes('groups')
+
+      if (typeof user === 'symbol') {
+        return { type, raw: rawQuery(extracted), value: user, includeGroups }
+      }
+
+      const groups = store.userIdToUserGroupIds(user)
+      if (!isDefined(groups)) return undefined
+
+      return {
+        type,
+        raw: rawQuery(extracted),
+        value: [...(includeGroups ? groups : []), user],
+        includeGroups
+      }
+    }
     case 'from': {
-      const result = await userParser(store.usernameToId, extracted)
-      return result
-        ? { type, raw: rawQuery(extracted), value: result }
-        : undefined
+      const { user, group } = await userOrUserGroupParser(store, extracted)
+      if (user) return { type, raw: rawQuery(extracted), value: user }
+
+      if (!group) return undefined
+
+      const members = store.userGroupIdToUserIds(group)
+      if (!members) return undefined
+
+      return { type, raw: rawQuery(extracted), value: members }
     }
     case 'citation': {
       const result = messageParser(extracted)
@@ -187,9 +231,10 @@ const parseQueryFragmentToFilterWithoutStore = parseToFilterBase(
 /** 実際のクエリに対応するオブジェクトへの変換 */
 const filterOrStringToSearchMessageQuery = (
   currentChannelId: string | undefined,
+  myDmChannelId: string | undefined,
   myUserId: string | undefined,
   f: Filter | string
-): SearchMessageQueryObject => {
+): SearchMessageQueryObject | SearchMessageQueryObject[] => {
   if (typeof f === 'string') {
     return { word: f }
   }
@@ -201,13 +246,14 @@ const filterOrStringToSearchMessageQuery = (
         [f.type]: f.value.toISOString()
       }
     case 'in': {
-      const channelId = f.value === InHereToken ? currentChannelId : f.value
-      return { in: channelId }
+      if (f.value === HereToken) return { in: currentChannelId }
+      if (f.value === MeToken) return { in: myDmChannelId }
+      return { in: f.value }
     }
     case 'to':
     case 'from': {
-      const user = f.value === FromToMeToken ? myUserId : f.value
-      return { [f.type]: user }
+      const users = f.value === MeToken ? [myUserId] : [f.value]
+      return users.map(user => ({ [f.type]: user }))
     }
     case 'citation':
       return { [f.type]: f.value }
@@ -239,26 +285,34 @@ export const createQueryParser = (store: StoreForParser) => {
         .split(' ')
         .filter(q => q)
         .map(parseQueryFragmentToFilter)
-    )
+    ).then(results => results.flat())
 
-    const currentChannelPath = store.getCurrentChannelPath()
-    const currentChannelId = currentChannelPath
-      ? store.channelPathToId(currentChannelPath)
-      : undefined
+    const currentChannelPathOrUsername = store.getCurrentChannelPathOrUsername()
+    const currentChannelId = store.getCurrentChannelId()
+    const myDmChannelId = store.getMyDmChannelId()
     const myUsername = store.getMyUsername()
-    const myUserId = myUsername
-      ? await store.usernameToId(myUsername)
-      : undefined
+    const myUserId = store.getMyUserId()
 
     const normalizedQuery = parseds
       .map(q =>
-        parsedFilterToNormalizedString(q, currentChannelPath, myUsername)
+        parsedFilterToNormalizedString(
+          q,
+          currentChannelPathOrUsername,
+          myUsername
+        )
       )
       .join(' ')
+
     const queryObject = parseds
       .map(f =>
-        filterOrStringToSearchMessageQuery(currentChannelId, myUserId, f)
+        filterOrStringToSearchMessageQuery(
+          currentChannelId,
+          myDmChannelId,
+          myUserId,
+          f
+        )
       )
+      .flat()
       .reduce(mergeSearchMessageQueryObject, emptySearchMessageQueryObject)
 
     return { normalizedQuery, queryObject }
@@ -267,17 +321,18 @@ export const createQueryParser = (store: StoreForParser) => {
 
 const parsedFilterToNormalizedString = (
   f: string | Filter,
-  currentChannelPath: string | undefined,
+  currentChannelPathOrUsername: string | undefined,
   myUsername: string | undefined
 ) => {
-  if (typeof f === 'string') {
-    return f
+  if (typeof f === 'string') return f
+
+  if (f.type === 'in') {
+    if (f.value === HereToken) return `in:${currentChannelPathOrUsername}`
+    if (f.value === MeToken) return `in:@${myUsername}`
   }
-  if (f.type === 'in' && f.value === InHereToken) {
-    return `in:${currentChannelPath}`
-  }
-  if ((f.type === 'from' || f.type === 'to') && f.value === FromToMeToken) {
-    return `${f.type}:${myUsername}`
+
+  if ((f.type === 'from' || f.type === 'to') && f.value === MeToken) {
+    return `${f.type}${f.type === 'to' && f.includeGroups ? '(groups)' : ''}:@!${myUsername}`
   }
   return f.raw
 }
