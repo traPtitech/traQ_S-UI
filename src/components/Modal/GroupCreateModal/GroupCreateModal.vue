@@ -5,7 +5,9 @@
       :class="$style.item"
       label="グループ名"
       :max-length="30"
+      :error-message="errorMessage"
       focus-on-mount
+      @input="validateName"
     />
     <FormInput
       v-model="desc"
@@ -26,7 +28,11 @@
       自分自身をメンバーに追加する
     </FormCheckbox>
     <div :class="$style.createButtonWrapper">
-      <FormButton label="作成" @click="create" />
+      <FormButton
+        :disabled="!name || !!errorMessage"
+        label="作成"
+        @click="create"
+      />
     </div>
   </ModalFrame>
 </template>
@@ -51,6 +57,18 @@ const name = ref('')
 const desc = ref('')
 const type = ref('')
 const addMember = ref(true)
+const errorMessage = ref<string | null>(null)
+
+// eslint-disable-next-line no-irregular-whitespace
+const VALID_REG_EXP = /^[^@＠#＃:： 　]*$/ // @, #, :, 空白 (全角・半角) は使用不可
+
+const validateName = () => {
+  if (!VALID_REG_EXP.test(name.value)) {
+    errorMessage.value = '「@」「#」「:」と空白は使用できません'
+  } else {
+    errorMessage.value = null
+  }
+}
 
 const create = async () => {
   const myIdV = myId.value
