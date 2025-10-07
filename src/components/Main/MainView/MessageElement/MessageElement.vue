@@ -19,20 +19,10 @@
         :class="$style.pinned"
       />
       <MessageTools
-        v-if="showMessageTools"
-        ref="messageToolsRef"
+        :show="showMessageTools"
         :class="$style.tools"
         :message-id="messageId"
         :is-minimum="isArchived"
-        :context-menu-position="contextMenuPosition"
-        @toggle-stamp-picker="toggleStampPicker"
-        @open-context-menu="
-          openContextMenu({
-            x: $event.pageX,
-            y: $event.pageY
-          })
-        "
-        @close-context-menu="closeContextMenu"
       />
       <MessageContents
         :class="$style.messageContents"
@@ -64,9 +54,6 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageId, UserId } from '/@/types/entity-ids'
-import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
-import { useStampUpdater } from '/@/lib/updater/stamp'
-import useContextMenu from '/@/composables/useContextMenu'
 
 const props = withDefaults(
   defineProps<{
@@ -106,33 +93,7 @@ useElementRenderObserver(
 
 const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
   useMessageToolsHover()
-
-const { addStampOptimistically } = useStampUpdater()
-
-const messageToolsRef = shallowRef<InstanceType<typeof MessageTools> | null>(
-  null
-)
-
-const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
-  useStampPickerInvoker(
-    async stampData => addStampOptimistically(props.messageId, stampData.id),
-    computed(() => messageToolsRef.value?.$el),
-    false
-  )
-
-const {
-  position: contextMenuPosition,
-  open: openContextMenu,
-  close: closeContextMenu
-} = useContextMenu()
-
-const isActive = computed(
-  () => isStampPickerOpen.value || !!contextMenuPosition.value
-)
-
-const showMessageTools = computed(
-  () => (isHovered.value && !isEditing.value) || isActive.value
-)
+const showMessageTools = computed(() => isHovered.value && !isEditing.value)
 </script>
 
 <style lang="scss" module>

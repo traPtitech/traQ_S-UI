@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="show || isStampPickerOpen || contextMenuPosition"
     ref="containerEle"
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
@@ -47,7 +48,7 @@
         name="emoticon-outline"
         :size="28"
         :class="$style.icon"
-        @click="emit('toggleStampPicker', $event)"
+        @click="toggleStampPicker"
       />
       <AIcon
         v-if="isMine"
@@ -69,7 +70,7 @@
         :size="28"
         mdi
         name="dots-horizontal"
-        @click="emit('openContextMenu', $event)"
+        @click="onDotsClick"
       />
     </div>
     <MessageContextMenu
@@ -77,7 +78,7 @@
       :position="contextMenuPosition"
       :message-id="messageId"
       :is-minimum="isMinimum"
-      @close="emit('closeContextMenu')"
+      @close="closeContextMenu"
     />
   </div>
 </template>
@@ -89,6 +90,7 @@ import MessageContextMenu from './MessageContextMenu.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
+import useContextMenu from '/@/composables/useContextMenu'
 import useToggle from '/@/composables/utils/useToggle'
 import { useStampUpdater } from '/@/lib/updater/stamp'
 import { useMeStore } from '/@/store/domain/me'
@@ -97,25 +99,20 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import type { MessageId, StampId } from '/@/types/entity-ids'
-import type { Point } from '/@/lib/basic/point'
 
 const props = withDefaults(
   defineProps<{
     messageId: MessageId
     isMinimum?: boolean
-    contextMenuPosition?: Point
+    show?: boolean
   }>(),
   {
-    isMinimum: false
+    isMinimum: false,
+    show: false
   }
 )
-
-const emit = defineEmits([
-  'toggleStampPicker',
-  'openContextMenu',
-  'closeContextMenu'
-])
 
 const { recentStampIds } = useStampHistory()
 const { addStampOptimistically } = useStampUpdater()
@@ -144,6 +141,14 @@ const recentStamps = computed(() => {
 const addStamp = async (stampId: StampId) =>
   addStampOptimistically(props.messageId, stampId)
 
+const containerEle = ref<HTMLDivElement>()
+const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
+  useStampPickerInvoker(
+    async stampData => addStampOptimistically(props.messageId, stampData.id),
+    containerEle,
+    false
+  )
+
 const { messagesMap } = useMessagesStore()
 const { myId } = useMeStore()
 const isMine = computed(
@@ -156,6 +161,19 @@ const editMessage = () => {
 }
 
 const { copyLink } = useCopyLink(toRef(props, 'messageId'))
+
+const {
+  position: contextMenuPosition,
+  open: openContextMenu,
+  close: closeContextMenu
+} = useContextMenu()
+
+const onDotsClick = (e: MouseEvent) => {
+  openContextMenu({
+    x: e.pageX,
+    y: e.pageY
+  })
+}
 
 const { isMobile } = useResponsiveStore()
 
