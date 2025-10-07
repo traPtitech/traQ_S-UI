@@ -1,14 +1,15 @@
 <template>
   <div
     :role="isClickable ? 'button' : 'img'"
-    :class="[$style.container]"
+    :class="$style.container"
     :style="styles.container"
+    :data-is-inactive="$boolAttr(isInactive)"
     @click.prevent.stop="openModal"
   >
     <div v-if="hasNotification" :class="$style.indicator">
       <NotificationIndicator :size="indicatorSize" />
     </div>
-    <div v-if="isInactive" :class="$style.mask" />
+    <!-- <div v-if="isInactive" :class="$style.mask" /> -->
   </div>
 </template>
 
@@ -20,6 +21,8 @@ import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
+import { SvgPathBuilder } from '/@/lib/svg/path'
+import type { Point } from '/@/lib/basic/point'
 
 export type IconSize =
   | 200
@@ -41,6 +44,7 @@ const props = withDefaults(
     fallbackIconFileId?: FileId
     size?: IconSize
     indicatorSize?: number
+    overlap?: number
     preventModal?: boolean
     hasNotification?: boolean
     isInactive?: boolean
@@ -48,6 +52,7 @@ const props = withDefaults(
   {
     size: 36,
     indicatorSize: 10,
+    overlap: 0,
     preventModal: false,
     hasNotification: false,
     isInactive: false
@@ -72,6 +77,27 @@ const user = computed(() =>
 const userIconFileId = computed(
   () => user.value?.iconFileId ?? props.fallbackIconFileId ?? ''
 )
+
+const clipPath = computed(() => {
+  const radius = props.size
+  const chord = 2 * Math.sqrt(props.overlap * (radius - props.overlap / 4))
+
+  const begin: Point = {
+    x: radius - chord / 2,
+    y: props.overlap / 2
+  }
+
+  return new SvgPathBuilder()
+    .moveTo(begin)
+    .arcToRelative(
+      { x: radius, y: radius },
+      { x: chord, y: 0 },
+      { large: true }
+    )
+    .arcTo({ x: radius, y: radius }, begin)
+    .build()
+})
+
 const styles = reactive({
   container: computed(() => ({
     width: `${props.size}px`,
@@ -79,7 +105,8 @@ const styles = reactive({
     backgroundImage: userIconFileId.value
       ? `url(${buildUserIconPath(userIconFileId.value)})`
       : undefined,
-    pointerEvents: props.preventModal ? ('none' as const) : undefined
+    pointerEvents: props.preventModal ? ('none' as const) : undefined,
+    clipPath: clipPath.value
   }))
 })
 
@@ -94,18 +121,25 @@ const { isClickable, openModal } = useUserModalOpener(
   @include color-ui-secondary;
   position: relative;
   border-radius: 100vw;
+
   flex: {
     shrink: 0;
     grow: 0;
   }
+
   background: {
     position: center;
     repeat: no-repeat;
     size: cover;
   }
+
   &[role='button'] {
     cursor: pointer;
   }
+
+  //   &[data-is-inactive] {
+  //     opacity: 0.5;
+  //   }
 }
 .indicator {
   position: absolute;

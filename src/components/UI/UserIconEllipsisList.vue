@@ -23,6 +23,7 @@
         :size="iconSize"
         :prevent-modal="preventModal"
         :style="styles.userIcon"
+        :overlap="overlap"
         is-inactive
       />
       <UserIcon
@@ -32,6 +33,7 @@
         :user-id="userId"
         :size="iconSize"
         :prevent-modal="preventModal"
+        :overlap="overlap"
         :style="styles.userIcon"
       />
     </transition-group>
@@ -100,13 +102,12 @@ const styles = computed(() => {
   }
 })
 
-const visibleIconIds = computed(() =>
-  [...props.userIds].reverse().slice(0, props.max)
-)
+const visibleIconIds = computed(() => [...props.userIds].slice(0, props.max))
 const visibleInactiveIconIds = computed(() =>
-  [...props.inactiveUserIds]
-    .reverse()
-    .slice(0, props.max - visibleIconIds.value.length)
+  [...props.inactiveUserIds].slice(
+    0,
+    Math.max(0, props.max - visibleIconIds.value.length)
+  )
 )
 const inVisibleCount = computed(
   () => props.userIds.length + props.inactiveUserIds.length - props.max

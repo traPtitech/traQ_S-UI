@@ -9,7 +9,7 @@
     />
     <UserIconEllipsisList
       direction="col"
-      transition="fade-bottom"
+      transition="fade-top"
       count-clickable
       show-count
       :user-ids="viewerIds"
