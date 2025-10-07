@@ -5,25 +5,15 @@
       ref="bodyRef"
       :class="$style.body"
       :data-is-mobile="$boolAttr(isMobile)"
-      :data-is-editing="$boolAttr(isEditing)"
-      :data-is-active="$boolAttr(!!contextMenuPosition)"
       @pointerenter="onPointerEnter"
       @click="onClick"
       @mouseleave="onMouseLeave"
     >
       <MessageTools
-        v-if="showMessageTools"
         :class="$style.tools"
+        :show="isHovered"
         :message-id="messageId"
         is-minimum
-        :context-menu-position="contextMenuPosition"
-        @open-context-menu="
-          openContextMenu({
-            x: $event.pageX,
-            y: $event.pageY
-          })
-        "
-        @close-context-menu="closeContextMenu"
       />
       <MessageContents
         :class="$style.messageContents"
@@ -46,8 +36,6 @@ import useEmbeddings from '/@/composables/message/useEmbeddings'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageId } from '/@/types/entity-ids'
-import useContextMenu from '/@/composables/useContextMenu'
-import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 
 const props = defineProps<{
   messageId: MessageId
@@ -74,21 +62,8 @@ useElementRenderObserver(
   emit
 )
 
-const { editingMessageId } = useMessageEditingStateStore()
-const isEditing = computed(() => props.messageId === editingMessageId.value)
-
 const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
   useMessageToolsHover()
-
-const {
-  position: contextMenuPosition,
-  open: openContextMenu,
-  close: closeContextMenu
-} = useContextMenu()
-
-const showMessageTools = computed(
-  () => (isHovered.value && !isEditing.value) || !!contextMenuPosition.value
-)
 </script>
 
 <style lang="scss" module>
@@ -105,11 +80,8 @@ $messagePaddingMobile: 16px;
   &[data-is-mobile] {
     padding: 8px $messagePaddingMobile;
   }
-  &:not([data-is-editing]) {
-    &:hover,
-    &[data-is-active] {
-      background: var(--specific-message-hover-background);
-    }
+  &:hover {
+    background: var(--specific-message-hover-background);
   }
 }
 
