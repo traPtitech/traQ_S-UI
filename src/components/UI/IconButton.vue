@@ -1,6 +1,6 @@
 <template>
   <button :class="$style.container" :title="title" :aria-disabled="disabled">
-    <AIcon :class="$style.icon" :mdi="iconMdi" :name="iconName" />
+    <AIcon :class="$style['icon']" :mdi="iconMdi" :name="iconName" />
   </button>
 </template>
 
@@ -24,8 +24,6 @@ withDefaults(
 <style lang="scss" module>
 .container {
   display: flex;
-}
-.icon {
   cursor: pointer;
   .container[aria-disabled='true'] & {
     cursor: not-allowed;
