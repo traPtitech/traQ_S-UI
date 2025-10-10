@@ -1,5 +1,5 @@
 <template>
-  <sidebar-event-frame
+  <SidebarEventFrame
     title="子チャンネル作成"
     icon-name="hash"
     :user-id="details.userId"
@@ -7,7 +7,7 @@
     :link="newChildLink"
   >
     {{ newChildPath }}
-  </sidebar-event-frame>
+  </SidebarEventFrame>
 </template>
 
 <script lang="ts" setup>
@@ -27,5 +27,7 @@ const newChildPath = computed(() =>
   channelIdToShortPathString(props.details.channelId, true)
 )
 
-const newChildLink = computed(() => channelIdToLink(props.details.channelId))
+const newChildLink = computed(
+  () => channelIdToLink(props.details.channelId) ?? ''
+)
 </script>

@@ -1,24 +1,24 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="グループメンバー追加"
     :subtitle="groupName"
     icon-name="group"
   >
-    <users-selector
+    <UsersSelector
       v-model="userIds"
       :exclude-ids="members"
       :class="[$style.users, $style.item]"
     />
-    <form-input
+    <FormInput
       v-model="role"
       :class="$style.item"
       label="役割"
       :max-length="30"
     />
     <div :class="$style.addButtonWrapper">
-      <form-button label="追加" :loading="isAdding" @click="add" />
+      <FormButton label="追加" :loading="isAdding" @click="add" />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>

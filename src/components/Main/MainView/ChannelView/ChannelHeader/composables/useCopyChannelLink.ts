@@ -9,7 +9,7 @@ const useCopyChannelLink = (props: { channelId: ChannelId }) => {
   const { channelIdToPathString } = useChannelPath()
 
   const copyLink = async () => {
-    const channelPath = channelIdToPathString(props.channelId)
+    const channelPath = channelIdToPathString(props.channelId) as string
     const channelUrl = `${embeddingOrigin}${constructChannelPath(channelPath)}`
 
     await copyText(`[#${channelPath}](${channelUrl})`, 'チャンネルリンク')

@@ -1,7 +1,7 @@
 <template>
   <section data-testid="usermodal-bio">
-    <profile-header text="ひとこと" />
-    <markdown-preview
+    <ProfileHeader text="ひとこと" />
+    <MarkdownPreview
       :class="$style.bio"
       :aria-busy="isLoading"
       :data-is-empty="$boolAttr(isEmpty)"

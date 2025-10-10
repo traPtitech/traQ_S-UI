@@ -1,7 +1,7 @@
 <template>
   <div>
-    <audio-controller-detail-panel />
-    <audio-controller-title-panel />
+    <AudioControllerDetailPanel />
+    <AudioControllerTitlePanel />
   </div>
 </template>
 

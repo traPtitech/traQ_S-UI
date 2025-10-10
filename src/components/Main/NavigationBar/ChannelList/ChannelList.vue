@@ -1,6 +1,6 @@
 <template>
   <div>
-    <channel-element
+    <ChannelElement
       v-for="channel in channelTreeNodes"
       :key="channel.id"
       :class="$style.element"
@@ -9,12 +9,12 @@
       :show-star="props.showStar"
       :show-notified="props.showNotified"
     >
-      <channel-element-topic
+      <ChannelElementTopic
         v-if="showTopic"
         :class="$style.topic"
         :channel-id="channel.id"
       />
-    </channel-element>
+    </ChannelElement>
   </div>
 </template>
 
@@ -23,11 +23,11 @@ import type { ChannelTreeNode } from '/@/lib/channelTree'
 import type { Channel } from '@traptitech/traq'
 import ChannelElementTopic from './ChannelElementTopic.vue'
 import ChannelElement from './ChannelElement.vue'
-import { computed } from 'vue'
+import { computed, type DeepReadonly } from 'vue'
 
 const props = withDefaults(
   defineProps<{
-    channels: ReadonlyArray<Channel>
+    channels: DeepReadonly<Channel[]>
     showTopic?: boolean
     showStar?: boolean
     showNotified?: boolean

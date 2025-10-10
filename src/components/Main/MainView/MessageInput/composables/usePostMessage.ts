@@ -66,8 +66,9 @@ const usePostMessage = (
   const isForce = computed(() => channelsMap.value.get(unref(channelId))?.force)
   const confirmString = computed(
     () =>
-      `#${channelIdToShortPathString(
-        unref(channelId)
+      `${channelIdToShortPathString(
+        unref(channelId),
+        true
       )}に投稿されたメッセージは全員に通知されます。メッセージを投稿しますか？\n注) このチャンネルは重要な連絡以外には使用しないでください。`
   )
 

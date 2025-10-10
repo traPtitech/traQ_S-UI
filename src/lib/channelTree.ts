@@ -127,7 +127,7 @@ export const channelPathToId = (
   channelTree: Readonly<ChannelTree | ChannelTreeNode>
 ): string => {
   if (separatedPath[0] === undefined) {
-    throw 'channelPathToId: Empty path'
+    throw new Error('channelPathToId: Empty path')
   }
 
   const loweredChildName = separatedPath[0].toLowerCase()
@@ -135,7 +135,7 @@ export const channelPathToId = (
     child => child.name.toLowerCase() === loweredChildName
   )
   if (!nextTree) {
-    throw `channelPathToId: No channel: ${separatedPath[0]}`
+    throw new Error(`channelPathToId: No channel: ${separatedPath[0]}`)
   }
   if (separatedPath.length === 1) {
     return nextTree.id

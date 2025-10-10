@@ -1,13 +1,13 @@
 <template>
-  <ephemeral-navigation-content-container :transparent="transparent">
+  <EphemeralNavigationContentContainer :transparent="transparent">
     <transition name="fade-bottom" mode="out-in">
       <SubQallView v-if="currentEphemeralNavigation === 'qallController'" />
       <DraftList v-else-if="currentEphemeralNavigation === 'draftList'" />
-      <audio-controller
+      <AudioController
         v-else-if="currentEphemeralNavigation === 'audioController'"
       />
     </transition>
-  </ephemeral-navigation-content-container>
+  </EphemeralNavigationContentContainer>
 </template>
 
 <script lang="ts" setup>

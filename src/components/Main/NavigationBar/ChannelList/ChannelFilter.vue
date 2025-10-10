@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.input">
-      <filter-input
+      <FilterInput
         v-model="modelValue"
         on-secondary
         disable-ime

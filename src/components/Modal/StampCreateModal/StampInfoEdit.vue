@@ -5,7 +5,7 @@
         <img :class="$style.img" :src="imageUrl" width="136" height="136" />
       </div>
       <div>
-        <form-input
+        <FormInput
           v-model="newStampName"
           label="スタンプ名"
           prefix=":"
@@ -19,8 +19,8 @@
       </div>
     </div>
     <div :class="$style.buttonContainer">
-      <form-button label="戻る" type="tertiary" @click="back" />
-      <form-button
+      <FormButton label="戻る" type="tertiary" @click="back" />
+      <FormButton
         label="登録する"
         :disabled="!isNameValid"
         :loading="isCreating"

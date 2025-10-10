@@ -1,5 +1,5 @@
 <template>
-  <markdown-preview v-if="isShown && content" :content="content" inline />
+  <MarkdownPreview v-if="isShown && content" :content="content" inline />
 </template>
 
 <script lang="ts" setup>

@@ -1,15 +1,15 @@
 <template>
   <div :aria-expanded="!isFolding">
-    <users-separator
+    <UsersSeparator
       :name="nameWithCount"
       :is-open="!isFolding"
       :has-notification="hasNotification"
       :class="$style.separator"
       @click="toggleFolding"
     />
-    <slide-down :class="$style.users" :is-open="!isFolding">
-      <users-element v-for="user in users" :key="user.id" :user="user" />
-    </slide-down>
+    <SlideDown :class="$style.users" :is-open="!isFolding">
+      <UsersElement v-for="user in users" :key="user.id" :user="user" />
+    </SlideDown>
   </div>
 </template>
 

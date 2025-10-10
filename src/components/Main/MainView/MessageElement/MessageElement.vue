@@ -1,50 +1,58 @@
 <template>
-  <div
-    v-if="message"
-    ref="bodyRef"
-    :class="$style.body"
-    :data-is-mobile="$boolAttr(isMobile)"
-    :data-is-pinned="$boolAttr(message.pinned)"
-    :data-is-entry="$boolAttr(isEntryMessage)"
-    :data-is-editing="$boolAttr(isEditing)"
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
-  >
-    <message-pinned
-      v-if="pinnedUserId"
-      :pinned-user-id="pinnedUserId"
-      :class="$style.pinned"
-    />
-    <message-tools
-      :show="isHovered && !isEditing"
-      :class="$style.tools"
-      :message-id="messageId"
-      :is-minimum="isArchived"
-    />
-    <message-contents :class="$style.messageContents" :message-id="messageId" />
-    <message-stamp-list
-      :show-detail-button="isHovered || isMobile"
-      :message-id="messageId"
-      :stamps="message.stamps"
-      :is-archived="isArchived"
-    />
-  </div>
+  <ClickOutside :enabled="showMessageTools" @click-outside="onClickOutside">
+    <div
+      v-if="message"
+      ref="bodyRef"
+      :class="$style.body"
+      :data-is-mobile="$boolAttr(isMobile)"
+      :data-is-pinned="$boolAttr(message.pinned)"
+      :data-is-entry="$boolAttr(isEntryMessage)"
+      :data-is-editing="$boolAttr(isEditing)"
+      @pointerenter="onPointerEnter"
+      @click="onClick"
+      @mouseleave="onMouseLeave"
+    >
+      <MessagePinned
+        v-if="pinnedUserId"
+        :pinned-user-id="pinnedUserId"
+        :class="$style.pinned"
+      />
+      <MessageTools
+        :show="showMessageTools"
+        :class="$style.tools"
+        :message-id="messageId"
+        :is-minimum="isArchived"
+      />
+      <MessageContents
+        :class="$style.messageContents"
+        :message-id="messageId"
+      />
+      <MessageStampList
+        :show-detail-button="isHovered || isMobile"
+        :message-id="messageId"
+        :stamps="message.stamps"
+        :is-archived="isArchived"
+      />
+    </div>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>
-import MessageStampList from './MessageStampList.vue'
-import MessagePinned from './MessagePinned.vue'
-import MessageContents from './MessageContents.vue'
-import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
 import { computed, shallowRef, toRef } from 'vue'
-import type { MessageId, UserId } from '/@/types/entity-ids'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { ChangeHeightData } from './composables/useElementRenderObserver'
 import useElementRenderObserver from './composables/useElementRenderObserver'
+import MessageContents from './MessageContents.vue'
+import MessagePinned from './MessagePinned.vue'
+import MessageStampList from './MessageStampList.vue'
+import MessageTools, {
+  useMessageToolsHover
+} from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
-import useHover from '/@/composables/dom/useHover'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import type { MessageId, UserId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{
@@ -82,7 +90,9 @@ useElementRenderObserver(
   emit
 )
 
-const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
+  useMessageToolsHover()
+const showMessageTools = computed(() => isHovered.value && !isEditing.value)
 </script>
 
 <style lang="scss" module>

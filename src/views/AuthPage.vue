@@ -1,5 +1,5 @@
 <template>
-  <authenticate-main-view :show="state.show" :type="type" />
+  <AuthenticateMainView :show="state.show" :type="type" />
 </template>
 
 <script lang="ts">

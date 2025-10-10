@@ -1,4 +1,4 @@
-import type { StampPalette } from '@traptitech/traq'
+import type { StampPalette } from '/@/types/entity'
 import router from '/@/router'
 import { settingsStampPaletteRouteName } from '/@/router/settings'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'

@@ -1,31 +1,31 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="クリップフォルダ作成"
     subtitle="メッセージを保存するフォルダを作成します"
     icon-name="bookmark"
     icon-mdi
   >
-    <form-input
+    <FormInput
       v-model="name.val"
       label="名前"
       :class="$style.input"
       :max-length="30"
       focus-on-mount
     />
-    <form-text-area
+    <FormTextArea
       v-model="description.val"
       label="説明"
       :class="$style.input"
       :max-height="160"
       :max-length="1000"
     />
-    <form-button
+    <FormButton
       label="作成"
       :disabled="!isCreateEnabled"
       :class="$style.button"
       @click="createClipFolder(name.val, description.val)"
     />
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">

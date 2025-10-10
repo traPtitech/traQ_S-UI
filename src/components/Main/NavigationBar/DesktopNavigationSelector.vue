@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" role="tablist">
-    <popup-navigator :class="$style.logo" :title="`traQ ${VERSION}`" />
-    <navigation-selector-item
+    <PopupNavigator :class="$style.logo" :title="`traQ ${VERSION}`" />
+    <NavigationSelectorItem
       v-for="item in entries"
       :key="item.type"
       :class="$style.item"
@@ -12,7 +12,7 @@
       @click="onNavigationItemClick(item.type)"
     />
     <div v-if="showSeparator" :class="$style.separator" />
-    <navigation-selector-item
+    <NavigationSelectorItem
       v-for="item in ephemeralEntries"
       :key="item.type"
       :class="$style.item"

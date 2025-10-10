@@ -5,7 +5,7 @@
       :data-is-selected="sendWithModifierKeyValue === 'modifier'"
       :class="$style.radio"
     >
-      <form-radio
+      <FormRadio
         v-model="sendWithModifierKeyString"
         label="修飾キー+Enterで送信 / Enterで改行"
         input-value="modifier"
@@ -15,7 +15,7 @@
       :data-is-selected="sendWithModifierKeyValue === 'none'"
       :class="$style.radio"
     >
-      <form-radio
+      <FormRadio
         v-model="sendWithModifierKeyString"
         label="Enterで送信 / 修飾キー+Enterで改行"
         input-value="none"
