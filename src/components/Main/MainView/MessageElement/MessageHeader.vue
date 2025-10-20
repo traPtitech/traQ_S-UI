@@ -26,28 +26,21 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, onUnmounted, watchEffect } from 'vue'
-import { getDateRepresentation } from '/@/lib/basic/date'
+import { useDateRepresentation } from '/@/composables/useDateRepresentation'
 
-const useDateRepresentation = (updatedAt: string) => {
-  const dateTimeout = ref<ReturnType<typeof setTimeout>>()
-  const date = ref<string>('')
-  watchEffect(() => {
-    date.value = getDateRepresentation(updatedAt)
-  })
-  const subscribeDateChange = () => {
-    const now = new Date()
-    const tomorrow = new Date()
-    tomorrow.setDate(now.getDate() + 1)
-    tomorrow.setHours(0, 0, 0, 0)
-    dateTimeout.value = setTimeout(() => {
-      date.value = getDateRepresentation(updatedAt)
-      subscribeDateChange()
-    }, tomorrow.getTime() - now.getTime())
+export default {
+  setup() {
+    const date = useDateRepresentation(updatedAt)
+     onMounted(() => {
+      timeMitt.on('midnight', date)
+    })
+
+     onUnmounted(() => {
+      timeMitt.off('midnight', date)
+    })
+    return { date }
   }
-  onMounted(() => subscribeDateChange())
-  onUnmounted(() => clearTimeout(dateTimeout.value))
-  return date
+
 }
 </script>
 
