@@ -96,7 +96,7 @@ export class SvgPathBuilder {
     return this
   }
 
-  build(): string {
+  toString(): string {
     return this.path.join(' ')
   }
 }

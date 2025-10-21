@@ -79,7 +79,7 @@ const userIconFileId = computed(
 )
 
 const clipPath = computed(() => {
-  const radius = props.size
+  const radius = props.size / 2
   const chord = 2 * Math.sqrt(props.overlap * (radius - props.overlap / 4))
 
   const begin: Point = {
@@ -94,8 +94,7 @@ const clipPath = computed(() => {
       { x: chord, y: 0 },
       { large: true }
     )
-    .arcTo({ x: radius, y: radius }, begin)
-    .build()
+    .arcTo({ x: radius, y: radius }, begin, { sweep: true })
 })
 
 const styles = reactive({
@@ -106,7 +105,7 @@ const styles = reactive({
       ? `url(${buildUserIconPath(userIconFileId.value)})`
       : undefined,
     pointerEvents: props.preventModal ? ('none' as const) : undefined,
-    clipPath: clipPath.value
+    clipPath: `path('${clipPath.value}')`
   }))
 })
 
@@ -137,9 +136,9 @@ const { isClickable, openModal } = useUserModalOpener(
     cursor: pointer;
   }
 
-  //   &[data-is-inactive] {
-  //     opacity: 0.5;
-  //   }
+  &[data-is-inactive] {
+    opacity: 0.5;
+  }
 }
 .indicator {
   position: absolute;

@@ -127,6 +127,11 @@ $countSize: 1.15rem;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+
+  :last-child {
+    clip-path: none !important;
+    transition-delay: 1s !important;
+  }
 }
 
 .userIcon {
