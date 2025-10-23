@@ -89,7 +89,7 @@
     "fake-indexeddb": "^6.2.2",
     "fonteditor-core": "^2.6.1",
     "jsdom": "^26.1.0",
-    "patch-package": "^8.0.0",
+    "patch-package": "^8.0.1",
     "pinia": "^3.0.1",
     "postcss": "^8.5.3",
     "prettier": "^3.6.2",
