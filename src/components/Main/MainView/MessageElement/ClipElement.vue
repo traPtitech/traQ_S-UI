@@ -5,13 +5,16 @@
       ref="bodyRef"
       :class="$style.body"
       :data-is-mobile="$boolAttr(isMobile)"
+      :data-is-editing="$boolAttr(isEditing)"
+      :data-is-active="$boolAttr(isActive)"
       @pointerenter="onPointerEnter"
       @click="onClick"
       @mouseleave="onMouseLeave"
     >
       <MessageTools
+        v-model:is-active="isActive"
         :class="$style.tools"
-        :show="isHovered"
+        :show="showMessageTools"
         :message-id="messageId"
         is-minimum
       />
@@ -36,6 +39,8 @@ import useEmbeddings from '/@/composables/message/useEmbeddings'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageId } from '/@/types/entity-ids'
+import { ref } from 'vue'
+import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 
 const props = defineProps<{
   messageId: MessageId
@@ -46,7 +51,12 @@ const emit = defineEmits<{
   (e: 'changeHeight', _data: ChangeHeightData): void
 }>()
 
+const isActive = ref(false)
+
 const { messagesMap } = useMessagesStore()
+
+const { editingMessageId } = useMessageEditingStateStore()
+const isEditing = computed(() => props.messageId === editingMessageId.value)
 
 const bodyRef = shallowRef<HTMLDivElement | null>(null)
 const { isMobile } = useResponsiveStore()
@@ -64,6 +74,9 @@ useElementRenderObserver(
 
 const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
   useMessageToolsHover()
+const showMessageTools = computed(
+  () => (isHovered.value && !isEditing.value) || isActive.value
+)
 </script>
 
 <style lang="scss" module>
@@ -80,8 +93,11 @@ $messagePaddingMobile: 16px;
   &[data-is-mobile] {
     padding: 8px $messagePaddingMobile;
   }
-  &:hover {
-    background: var(--specific-message-hover-background);
+  &:not([data-is-editing]) {
+    &[data-is-active],
+    &:hover {
+      background: var(--specific-message-hover-background);
+    }
   }
 }
 

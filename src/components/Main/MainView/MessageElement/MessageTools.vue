@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="show || isStampPickerOpen || contextMenuPosition"
+    v-if="show"
     ref="containerEle"
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
@@ -85,7 +85,7 @@
 
 <script lang="ts" setup>
 import type { Stamp } from '@traptitech/traq'
-import { computed, ref, toRef } from 'vue'
+import { computed, ref, toRef, watch } from 'vue'
 import MessageContextMenu from './MessageContextMenu.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
@@ -101,6 +101,7 @@ import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStor
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import type { MessageId, StampId } from '/@/types/entity-ids'
+import { isDefined } from '/@/lib/basic/array'
 
 const props = withDefaults(
   defineProps<{
@@ -113,6 +114,8 @@ const props = withDefaults(
     show: false
   }
 )
+
+const isActive = defineModel<boolean>('isActive', { default: false })
 
 const { recentStampIds } = useStampHistory()
 const { addStampOptimistically } = useStampUpdater()
@@ -174,6 +177,14 @@ const onDotsClick = (e: MouseEvent) => {
     y: e.pageY
   })
 }
+
+watch(
+  () => isStampPickerOpen.value || isDefined(contextMenuPosition.value),
+  value => {
+    isActive.value = value
+  },
+  { immediate: true }
+)
 
 const { isMobile } = useResponsiveStore()
 
