@@ -11,7 +11,9 @@ import useInnerWindowSize from '/@/composables/dom/useInnerWindowSize'
 const useNavigationResizer = () => {
   const animationFrame = createAnimationFrameController()
 
-  const { width: windowWidth } = useInnerWindowSize({ width: Infinity })
+  const { width: windowWidth } = useInnerWindowSize({
+    fallback: { width: Infinity }
+  })
 
   const {
     resizerRef,
