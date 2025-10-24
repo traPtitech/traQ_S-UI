@@ -33,7 +33,7 @@ const toggle = () => {
 <style lang="scss" module>
 .container {
   @include background-primary;
-  padding: 4px 28px;
+  padding: 4px 14px;
   border-radius: 4px;
   text-align: center;
   cursor: pointer;
