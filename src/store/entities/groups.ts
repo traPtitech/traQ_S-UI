@@ -36,6 +36,11 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
       userGroup => userGroup?.name.toLowerCase() === loweredName
     )
   }
+  const getUserGroupsByUserId = (userId: UserId) => {
+    return [...userGroupsMap.value.values()].filter(userGroup =>
+      userGroup.members.some(member => member.id === userId)
+    )
+  }
   const deleteUserGroup = (userGroupId: UserGroupId) => {
     userGroupsMap.value.delete(userGroupId)
     entityMitt.emit('deleteUserGroup')
@@ -98,6 +103,7 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
     userGroupsMapInitialFetchPromise,
     gradeGroups,
     getGradeGroupsByUserId,
+    getUserGroupsByUserId,
     getUserGroupByName,
     fetchUserGroups
   }

@@ -1,5 +1,10 @@
-// 実際のフィルタに依存しない関数群
-import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
+import type {
+  ChannelId,
+  DMChannelId,
+  MessageId,
+  UserGroupId,
+  UserId
+} from '/@/types/entity-ids'
 
 const dateOnlyFormRegex = /^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$/
 
@@ -83,15 +88,32 @@ export const makePrefixedFilterExtractor =
 
 export type StoreForParser = {
   channelPathToId: ChannelPathToId
+  usernameToDmChannelId: UsernameToDmChannelId
   usernameToId: UsernameToId
-  getCurrentChannelPath: () => string | undefined
+  userIdToName: UserIdToName
+  userGroupNameToId: UserGroupNameToId
+  userGroupIdToUserIds: UserGroupIdToUserIds
+  userIdToUserGroupIds: UserIdToUserGroupIds
+  getCurrentChannelPathOrUsername: () => string | undefined
+  getCurrentChannelId: () => ChannelId | undefined
+  getMyDmChannelId: () => DMChannelId | undefined
   getMyUsername: () => string | undefined
+  getMyUserId: () => UserId | undefined
 }
 
 type ChannelPathToId = (path: string) => ChannelId | undefined
+type UserIdToName = (userId: UserId) => string | undefined
+type UsernameToDmChannelId =
+  | ((username: string) => DMChannelId | undefined)
+  | ((username: string) => Promise<DMChannelId | undefined>)
 type UsernameToId =
   | ((username: string) => UserId | undefined)
   | ((username: string) => Promise<UserId | undefined>)
+type UserGroupNameToId =
+  | ((username: string) => UserGroupId | undefined)
+  | ((username: string) => Promise<UserGroupId | undefined>)
+type UserGroupIdToUserIds = (userGroupId: UserGroupId) => UserId[] | undefined
+type UserIdToUserGroupIds = (userId: UserId) => UserGroupId[] | undefined
 
 /**
  * `string`から`ExtractedFilter`を経由して実際のフィルターを作る
@@ -150,36 +172,50 @@ export const dateParser = <T extends string>(
   return date
 }
 
-export const InHereToken = Symbol('in:here')
-export const FromToMeToken = Symbol('from:me / to:me')
+export const HereToken = Symbol('in:here')
+export const MeToken = Symbol('in:me / from:me / to:me')
 
-export const channelParser = <T extends string>(
-  channelPathToId: ChannelPathToId,
+export const channelOrDmChannelParser = async <T extends string>(
+  { channelPathToId, usernameToDmChannelId }: StoreForParser,
   extracted: ExtractedFilter<T>
-): ChannelId | typeof InHereToken | undefined => {
-  if (extracted.body === 'here') {
-    return InHereToken
-  }
+): Promise<ChannelId | typeof HereToken | typeof MeToken | undefined> => {
+  const body = extracted.prefix === '#' ? `#${extracted.body}` : extracted.body
+  if (body === 'here') return HereToken
+  if (body === 'me') return MeToken
 
-  const channelName = extracted.body.startsWith('#')
-    ? extracted.body.slice(1)
-    : extracted.body
-  return channelPathToId(channelName)
+  const channelName = body.startsWith('#') ? body.slice(1) : body
+  const channelPath = channelPathToId(channelName)
+  if (channelPath) return channelPath
+
+  const username = body.slice(
+    Number(body.startsWith('@')) + Number(body.startsWith('@!'))
+  )
+  return usernameToDmChannelId(username)
 }
 
-export const userParser = async <T extends string>(
-  usernameToId: UsernameToId,
+export const userOrUserGroupParser = async <T extends string>(
+  { usernameToId, userGroupNameToId }: StoreForParser,
   extracted: ExtractedFilter<T>
-): Promise<UserId | typeof FromToMeToken | undefined> => {
-  const username = extracted.body.startsWith('@')
-    ? extracted.body.slice(1)
-    : extracted.body
+): Promise<{ user?: UserId | typeof MeToken; group?: UserGroupId }> => {
+  const body = extracted.prefix === '@' ? `@${extracted.body}` : extracted.body
+  if (body === 'me') return { user: MeToken }
 
-  if (username === 'me') {
-    return FromToMeToken
-  }
+  const userOrUserGroupName = body.startsWith('@') ? body.slice(1) : body
 
-  return usernameToId(username)
+  const userName = body.startsWith('@!')
+    ? userOrUserGroupName.slice(1)
+    : userOrUserGroupName
+
+  const userId = await usernameToId(userName)
+  if (userId) return { user: userId }
+
+  const userGroupName = body.startsWith('@&')
+    ? userOrUserGroupName.slice(1)
+    : userOrUserGroupName
+
+  const userGroupId = await userGroupNameToId(userGroupName)
+
+  return { group: userGroupId }
 }
 
 export const messageParser = <T extends string>(
