@@ -52,7 +52,7 @@ const useChannelMessageFetcher = (
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const firstMessage = messagesAsc[0]!
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const lastMessage = messagesAsc[messagesAsc.length - 1]!
+    const lastMessage = messagesAsc.at(-1)!
 
     const firstMessageDate = new Date(firstMessage.createdAt)
     const lastMessageDate = new Date(lastMessage.createdAt)

@@ -28,8 +28,7 @@ const stampName = computed(
   () => stampsMap.value.get(props.stamp.id)?.name ?? 'unknown stamp'
 )
 
-const isLastUser = (user: StampUser) =>
-  user === props.stamp.users[props.stamp.users.length - 1]
+const isLastUser = (user: StampUser) => user === props.stamp.users.at(-1)
 </script>
 
 <style lang="scss" module>
