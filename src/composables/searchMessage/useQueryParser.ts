@@ -16,6 +16,7 @@ import { channelIdToPathString } from '/@/lib/channel'
 import type { ChannelId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useMeStore } from '/@/store/domain/me'
+import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 
 const getStoreForParser = ({
   primaryView,
@@ -30,13 +31,10 @@ const getStoreForParser = ({
   myUsername: ComputedRef<string | undefined>
   fetchUserByName: (param: { username: string }) => Promise<User | undefined>
 }): StoreForParser => ({
-  channelPathToId: path => {
-    try {
-      return channelPathToId(path.split('/'), channelTree.value)
-    } catch {
-      return undefined
-    }
-  },
+  channelPathToId: path =>
+    setFallbackForNullishOrOnError(undefined).exec(() =>
+      channelPathToId(path.split('/'), channelTree.value)
+    ),
   usernameToId: async username => {
     const user = await fetchUserByName({ username })
     return user?.id
