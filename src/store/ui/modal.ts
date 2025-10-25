@@ -59,7 +59,7 @@ const useModalStorePinia = defineStore('ui/modal', () => {
       {
         ...history.state,
         // historyのstateにはproxyされたobjectは入らないのでtoRawする
-        modalState: [...toRaw(modalState.value), newModalState]
+        modalState: [...toRaw(modalState.value).slice(0, -1), newModalState]
       },
       ''
     )
