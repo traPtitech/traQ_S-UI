@@ -25,15 +25,31 @@
   </div>
 </template>
 
+<script lang="ts">
+import { useDateRepresentation } from '/@/composables/useDateRepresentation'
+
+export default {
+  setup() {
+    const date = useDateRepresentation(updatedAt)
+     onMounted(() => {
+      timeMitt.on('midnight', date)
+    })
+
+     onUnmounted(() => {
+      timeMitt.off('midnight', date)
+    })
+    return { date }
+  }
+
+}
+</script>
+
 <script lang="ts" setup>
 import GradeBadge from './GradeBadge.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
 import type { UserId } from '/@/types/entity-ids'
-import {
-  getDateRepresentation,
-  getFullDayWithTimeString
-} from '/@/lib/basic/date'
+import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
@@ -52,7 +68,7 @@ if (user.value === undefined) {
 const createdDate = computed(() =>
   getFullDayWithTimeString(new Date(props.createdAt))
 )
-const date = computed(() => getDateRepresentation(props.updatedAt))
+const date = useDateRepresentation(props.updatedAt)
 </script>
 
 <style lang="scss" module>
