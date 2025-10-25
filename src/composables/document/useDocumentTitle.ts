@@ -2,6 +2,7 @@ import { computed, watchEffect } from 'vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 
 const appName = window.traQConfig.name || 'traQ'
 
@@ -12,17 +13,13 @@ const useDocumentTitle = () => {
 
   const primaryViewTitle = computed(() => {
     switch (primaryView.value.type) {
-      case 'channel':
-        try {
-          const channel = channelIdToShortPathString(
-            primaryView.value.channelId,
-            true
-          )
-          if (channel) return channel
-          return ''
-        } catch {
-          return ''
-        }
+      case 'channel': {
+        const channelId = primaryView.value.channelId
+
+        return setFallbackForNullishOrOnError('').exec(() =>
+          channelIdToShortPathString(channelId, true)
+        )
+      }
 
       case 'dm':
         return `@${primaryView.value.userName}`
