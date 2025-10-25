@@ -1,6 +1,6 @@
 <template>
-  <primary-view-header-popup-frame>
-    <header-tools-menu-item
+  <PrimaryViewHeaderPopupFrame>
+    <HeaderToolsMenuItem
       v-if="isMobile"
       :icon-name="isCallingHere ? 'phone' : 'phone-outline'"
       icon-mdi
@@ -11,21 +11,21 @@
       @click="joinQall(props.channelId)"
       @click-item="emit('clickItem')"
     />
-    <header-tools-menu-item
+    <HeaderToolsMenuItem
       v-if="isChildChannelCreatable"
       icon-name="hash"
       label="子チャンネルを作成"
       @click="openChannelCreateModal"
       @click-item="emit('clickItem')"
     />
-    <header-tools-menu-item
+    <HeaderToolsMenuItem
       v-if="showNotificationSettingBtn"
       icon-name="notified-or-subscribed"
       label="通知設定"
       @click="openNotificationModal"
       @click-item="emit('clickItem')"
     />
-    <header-tools-menu-item
+    <HeaderToolsMenuItem
       v-if="isSearchEnabled"
       icon-name="search"
       icon-mdi
@@ -33,14 +33,14 @@
       @click="openCommandPalette('search', 'in:here ')"
       @click-item="emit('clickItem')"
     />
-    <header-tools-menu-item
+    <HeaderToolsMenuItem
       icon-name="link"
       icon-mdi
       label="チャンネルリンクをコピー"
       @click="copyLink"
       @click-item="emit('clickItem')"
     />
-    <header-tools-menu-item
+    <HeaderToolsMenuItem
       v-if="hasChannelEditPermission"
       icon-name="hash"
       :class="$style.manageChannel"
@@ -48,14 +48,14 @@
       @click="openChannelManageModal"
       @click-item="emit('clickItem')"
     />
-    <header-tools-menu-item
+    <HeaderToolsMenuItem
       icon-name="phone-outline"
       icon-mdi
       label="ウェビナーモードでQallを開始"
       @click="() => joinQall(props.channelId, true)"
       @click-item="emit('clickItem')"
     />
-  </primary-view-header-popup-frame>
+  </PrimaryViewHeaderPopupFrame>
 </template>
 
 <script lang="ts" setup>

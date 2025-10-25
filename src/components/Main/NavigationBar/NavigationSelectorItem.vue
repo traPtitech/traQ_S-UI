@@ -5,9 +5,9 @@
     :aria-selected="isSelected"
     role="tab"
   >
-    <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
+    <AIcon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
     <div v-if="hasNotification" :class="$style.indicator">
-      <notification-indicator :size="6" />
+      <NotificationIndicator :size="6" />
     </div>
   </button>
 </template>
@@ -66,7 +66,7 @@ const containerStyle = computed(() => ({
   }
   &[aria-selected='true']::after,
   &:hover::after,
-  &:focus::after {
+  &:active::after {
     opacity: 0.1;
   }
 }

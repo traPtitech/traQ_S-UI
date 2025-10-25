@@ -19,7 +19,7 @@ $margin: 30px;
   width: 100%;
   height: 32px;
   padding: 4px 12px;
-  contain: strict;
+  contain: var(--contain-strict);
 }
 .title {
   display: flex;

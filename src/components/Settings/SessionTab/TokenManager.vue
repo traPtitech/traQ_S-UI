@@ -2,7 +2,7 @@
   <section>
     <h3 :class="$style.header">アクセスを許可しているアプリ</h3>
     <ul v-if="tokensWithClientData.length > 0" :class="$style.content">
-      <token-info
+      <TokenInfo
         v-for="token in tokensWithClientData"
         :key="token.id"
         :token="token"

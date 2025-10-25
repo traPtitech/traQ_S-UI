@@ -1,10 +1,10 @@
 <template>
-  <modal-frame title="カスタムテーマ" icon-name="">
+  <ModalFrame title="カスタムテーマ" icon-name="">
     <div :class="$style.content">
-      <textarea-autosize v-model="editedTheme" :class="$style.jsonField" />
+      <TextareaAutosize v-model="editedTheme" :class="$style.jsonField" />
       <div :class="$style.buttonContainer">
-        <form-button label="キャンセル" type="tertiary" @click="clearModal" />
-        <form-button
+        <FormButton label="キャンセル" type="tertiary" @click="clearModal" />
+        <FormButton
           label="更新する"
           :disabled="!isChanged"
           type="primary"
@@ -12,7 +12,7 @@
         />
       </div>
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">

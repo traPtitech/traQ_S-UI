@@ -1,7 +1,7 @@
 <template>
   <router-link :to="fileLink" :class="$style.container">
     <div :class="$style.header">
-      <audio-player-play-button
+      <AudioPlayerPlayButton
         v-model:is-playing="isPlaying"
         :class="$style.icon"
         :size="32"
@@ -11,24 +11,24 @@
         {{ name }}
       </div>
       <div :class="$style.headerTools">
-        <audio-player-time
+        <AudioPlayerTime
           :class="$style.time"
           :current-time="currentTime"
           :duration="duration"
         />
-        <audio-player-volume-slider
+        <AudioPlayerVolumeSlider
           v-model:volume="volume"
           :class="$style.volumeSlider"
           :disabled="cantPlay"
           keep-expanded
         />
-        <audio-player-loop-button
+        <AudioPlayerLoopButton
           v-model:loop="loop"
           :class="$style.icon"
           :size="20"
           :disabled="cantPlay"
         />
-        <audio-player-pin-p-button
+        <AudioPlayerPinPButton
           :class="$style.icon"
           :is-pin-p-shown="isPinPShown"
           :size="20"
@@ -37,14 +37,14 @@
         />
       </div>
     </div>
-    <audio-player-waveform
+    <AudioPlayerWaveform
       v-if="fileWaveformPath"
       v-model:current-time="currentTime"
       :class="$style.waveform"
       :waveform-path="fileWaveformPath"
       :duration="duration"
     />
-    <audio-player-time-slider
+    <AudioPlayerTimeSlider
       v-else
       v-model:current-time="currentTime"
       :class="$style.timeSlider"

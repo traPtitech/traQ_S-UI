@@ -1,8 +1,8 @@
 <template>
   <section>
-    <profile-header text="アカウント" />
+    <ProfileHeader text="アカウント" />
     <p v-if="showWikiPageLink" :class="$style.p">
-      <circle-icon
+      <CircleIcon
         title="wiki"
         name="crowi"
         :color="iconColor"
@@ -18,7 +18,7 @@
       >
     </p>
     <p v-if="blogPageLink" :class="$style.p">
-      <circle-icon
+      <CircleIcon
         title="ブログ"
         name="traP"
         :color="iconColor"
@@ -34,7 +34,7 @@
       >
     </p>
     <p v-if="twitterId !== ''" :class="$style.p">
-      <circle-icon
+      <CircleIcon
         title="𝕏"
         name="x"
         :color="iconColor"

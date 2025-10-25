@@ -1,39 +1,36 @@
 <template>
-  <modal-frame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
+  <ModalFrame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
     <div :class="$style.container">
-      <form-input
+      <FormInput
         v-model="manageState.name"
         label="チャンネル名"
         :max-length="20"
         focus-on-mount
       />
-      <form-selector
+      <FormSelectorFilterable
         v-model="manageState.parent"
         label="親チャンネル"
         :options="channelOptions"
       />
       <label :class="$style.toggle">
         アーカイブ
-        <a-toggle
-          v-model="manageState.archived"
-          :disabled="!canToggleArchive"
-        />
+        <AToggle v-model="manageState.archived" :disabled="!canToggleArchive" />
       </label>
       <p v-if="!canToggleArchive" :class="$style.cantToggleArchiveMessage">
         このチャンネルはアーカイブチャンネルの子チャンネルなので、アーカイブ状態を解除できません。
       </p>
       <label :class="$style.toggle">
         強制通知
-        <a-toggle v-model="manageState.force" />
+        <AToggle v-model="manageState.force" />
       </label>
-      <form-button
+      <FormButton
         label="変更"
         :disabled="!isManageEnabled"
         :class="$style.button"
         @click="manageChannel"
       />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">
@@ -93,7 +90,7 @@ import ModalFrame from '../Common/ModalFrame.vue'
 import AToggle from '/@/components/UI/AToggle.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 
 const props = defineProps<{
   id: string
@@ -110,7 +107,7 @@ const channel = computed((): Required<PatchChannelRequest> => {
   }
 })
 const { channelIdToPathString } = useChannelPath()
-const subtitle = computed(() => channelIdToPathString(props.id, true))
+const subtitle = computed(() => channelIdToPathString(props.id, true) ?? '')
 
 const manageState = reactive({ ...channel.value })
 const { manageChannel } = useManageChannel(props, manageState, channel)

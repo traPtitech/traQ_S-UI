@@ -15,7 +15,7 @@
       :class="$style.viewport"
       data-testid="channel-viewport"
     >
-      <messages-scroller-separator
+      <MessagesScrollerSeparator
         v-if="isReachedEnd"
         title="これ以上メッセージはありません"
         :class="$style.noMoreSeparator"
@@ -36,7 +36,6 @@
 import { throttle } from 'throttle-debounce'
 import type { Ref } from 'vue'
 import {
-  computed,
   nextTick,
   onMounted,
   onUnmounted,
@@ -114,11 +113,12 @@ const useScrollRestoration = (
   const { lastScrollPosition } = useMainViewStore()
   const route = useRoute()
   watch(
-    computed(() => route.name),
+    () => route.name,
     async (to, from) => {
       if (isMessageScrollerRoute(from)) {
-        lastScrollPosition.value = rootRef.value?.scrollTop ?? 0
+        lastScrollPosition.value = state.scrollTop
       }
+
       if (isMessageScrollerRoute(to)) {
         state.scrollTop = lastScrollPosition.value
         await nextTick()
@@ -279,7 +279,7 @@ useScrollRestoration(rootRef, state)
   overflow-y: scroll;
   padding: 12px 0;
   backface-visibility: hidden;
-  contain: strict;
+  contain: var(--contain-strict);
   // overflow-anchorはデフォルトでautoだが、Safariが対応していないので、
   // 手動で調節しているため明示的に無効化する
   overflow-anchor: none;

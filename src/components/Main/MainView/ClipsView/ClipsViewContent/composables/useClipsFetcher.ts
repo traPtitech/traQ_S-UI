@@ -70,7 +70,7 @@ const useClipsFetcher = (
       state.nextLoadOffset += fetchLimit.value
     }
 
-    return clips.map(clip => clip.message.id)
+    return clips.toReversed().map(clip => clip.message.id)
   }
 
   const messagesFetcher = useMessageFetcher(

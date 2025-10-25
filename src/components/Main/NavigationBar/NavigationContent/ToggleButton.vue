@@ -5,7 +5,7 @@
     :aria-pressed="modelValue"
     @click="toggle"
   >
-    <a-icon :size="22" :class="$style.icon" :name="iconName" :mdi="iconMdi" />
+    <AIcon :size="22" :class="$style.icon" :name="iconName" :mdi="iconMdi" />
   </button>
 </template>
 
@@ -33,7 +33,7 @@ const toggle = () => {
 <style lang="scss" module>
 .container {
   @include background-primary;
-  padding: 4px 28px;
+  padding: 4px 14px;
   border-radius: 4px;
   text-align: center;
   cursor: pointer;

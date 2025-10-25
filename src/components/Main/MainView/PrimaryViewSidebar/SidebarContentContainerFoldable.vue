@@ -1,5 +1,5 @@
 <template>
-  <sidebar-content-container
+  <SidebarContentContainer
     :title="title"
     :clickable="!isOpen"
     title-clickable
@@ -7,7 +7,7 @@
     @toggle="toggle"
   >
     <template #header-control>
-      <a-icon
+      <AIcon
         :size="20"
         name="rounded-triangle"
         :class="$style.icon"
@@ -15,11 +15,11 @@
       />
     </template>
     <template #default>
-      <slide-down :is-open="isOpen">
+      <SlideDown :is-open="isOpen">
         <slot />
-      </slide-down>
+      </SlideDown>
     </template>
-  </sidebar-content-container>
+  </SidebarContentContainer>
 </template>
 
 <script lang="ts" setup>

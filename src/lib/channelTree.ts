@@ -32,10 +32,8 @@ const channelNameSortFunction = (
   node2: ChannelTreeNode
 ) => {
   // sort by last ancestor name
-  const lastAncestorName1 =
-    node1.skippedAncestorNames?.[node1.skippedAncestorNames?.length - 1]
-  const lastAncestorName2 =
-    node2.skippedAncestorNames?.[node2.skippedAncestorNames?.length - 1]
+  const lastAncestorName1 = node1.skippedAncestorNames?.at(-1)
+  const lastAncestorName2 = node2.skippedAncestorNames?.at(-1)
   return compareStringInsensitive(
     lastAncestorName1 ?? node1.name,
     lastAncestorName2 ?? node2.name
@@ -127,7 +125,7 @@ export const channelPathToId = (
   channelTree: Readonly<ChannelTree | ChannelTreeNode>
 ): string => {
   if (separatedPath[0] === undefined) {
-    throw 'channelPathToId: Empty path'
+    throw new Error('channelPathToId: Empty path')
   }
 
   const loweredChildName = separatedPath[0].toLowerCase()
@@ -135,7 +133,7 @@ export const channelPathToId = (
     child => child.name.toLowerCase() === loweredChildName
   )
   if (!nextTree) {
-    throw `channelPathToId: No channel: ${separatedPath[0]}`
+    throw new Error(`channelPathToId: No channel: ${separatedPath[0]}`)
   }
   if (separatedPath.length === 1) {
     return nextTree.id

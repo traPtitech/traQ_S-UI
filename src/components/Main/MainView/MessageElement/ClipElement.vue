@@ -1,35 +1,46 @@
 <template>
-  <div
-    v-if="message"
-    ref="bodyRef"
-    :class="$style.body"
-    :data-is-mobile="$boolAttr(isMobile)"
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
-  >
-    <message-tools
-      :class="$style.tools"
-      :show="isHovered"
-      :message-id="messageId"
-      is-minimum
-    />
-    <message-contents :class="$style.messageContents" :message-id="messageId" />
-    <message-quote-list-item-footer :class="$style.footer" :message="message" />
-  </div>
+  <ClickOutside :enabled="isHovered" @click-outside="onClickOutside">
+    <div
+      v-if="message"
+      ref="bodyRef"
+      :class="$style.body"
+      :data-is-mobile="$boolAttr(isMobile)"
+      :data-is-editing="$boolAttr(isEditing)"
+      :data-is-active="$boolAttr(isActive)"
+      @pointerenter="onPointerEnter"
+      @click="onClick"
+      @mouseleave="onMouseLeave"
+    >
+      <MessageTools
+        v-model:is-active="isActive"
+        :class="$style.tools"
+        :show="showMessageTools"
+        :message-id="messageId"
+        is-minimum
+      />
+      <MessageContents
+        :class="$style.messageContents"
+        :message-id="messageId"
+      />
+      <MessageQuoteListItemFooter :class="$style.footer" :message="message" />
+    </div>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>
-import MessageContents from './MessageContents.vue'
-import MessageTools from './MessageTools.vue'
-import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import { computed, shallowRef, toRef } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { ChangeHeightData } from './composables/useElementRenderObserver'
 import useElementRenderObserver from './composables/useElementRenderObserver'
+import MessageContents from './MessageContents.vue'
+import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
+import MessageTools, { useMessageToolsHover } from './MessageTools.vue'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
-import useHover from '/@/composables/dom/useHover'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import type { MessageId } from '/@/types/entity-ids'
+import { ref } from 'vue'
+import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 
 const props = defineProps<{
   messageId: MessageId
@@ -40,7 +51,12 @@ const emit = defineEmits<{
   (e: 'changeHeight', _data: ChangeHeightData): void
 }>()
 
+const isActive = ref(false)
+
 const { messagesMap } = useMessagesStore()
+
+const { editingMessageId } = useMessageEditingStateStore()
+const isEditing = computed(() => props.messageId === editingMessageId.value)
 
 const bodyRef = shallowRef<HTMLDivElement | null>(null)
 const { isMobile } = useResponsiveStore()
@@ -56,7 +72,11 @@ useElementRenderObserver(
   emit
 )
 
-const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
+  useMessageToolsHover()
+const showMessageTools = computed(
+  () => (isHovered.value && !isEditing.value) || isActive.value
+)
 </script>
 
 <style lang="scss" module>
@@ -73,8 +93,11 @@ $messagePaddingMobile: 16px;
   &[data-is-mobile] {
     padding: 8px $messagePaddingMobile;
   }
-  &:hover {
-    background: var(--specific-message-hover-background);
+  &:not([data-is-editing]) {
+    &[data-is-active],
+    &:hover {
+      background: var(--specific-message-hover-background);
+    }
   }
 }
 

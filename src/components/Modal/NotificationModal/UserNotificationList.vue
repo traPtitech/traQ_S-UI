@@ -1,8 +1,8 @@
 <template>
   <div v-if="subscribers" :class="$style.container">
-    <filter-input v-model="query" />
+    <FilterInput v-model="query" />
     <div :class="$style.list">
-      <user-notification-list-item
+      <UserNotificationListItem
         v-for="entry in subscriptionStateSorted"
         :key="entry.userId"
         :class="$style.item"

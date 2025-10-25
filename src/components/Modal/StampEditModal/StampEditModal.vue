@@ -1,11 +1,11 @@
 <template>
-  <modal-frame title="スタンプ編集">
+  <ModalFrame title="スタンプ編集">
     <div :class="$style.container">
       <div :class="$style.leftContainer">
         <img :src="imageUrl" :class="$style.img" width="136" height="136" />
       </div>
       <div>
-        <form-input
+        <FormInput
           v-model="state.name"
           label="スタンプ名"
           prefix=":"
@@ -14,7 +14,7 @@
           :class="$style.form"
           focus-on-mount
         />
-        <form-selector
+        <FormSelectorFilterable
           v-model="state.creatorId"
           label="所有者"
           :options="creatorOptions"
@@ -22,8 +22,8 @@
       </div>
     </div>
     <div :class="$style.buttonContainer">
-      <form-button label="キャンセル" type="tertiary" @click="cancel" />
-      <form-button
+      <FormButton label="キャンセル" type="tertiary" @click="cancel" />
+      <FormButton
         label="更新する"
         :disabled="!stampChanged || !isNameValid"
         :loading="isEditing"
@@ -31,7 +31,7 @@
         @click="editStamp"
       />
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>
@@ -43,7 +43,7 @@ import ModalFrame from '../Common/ModalFrame.vue'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormSelectorFilterable from '../../UI/FormSelectorFilterable.vue'
 import useUserList from '/@/composables/users/useUserList'
 import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
 import { isValidStampName } from '/@/lib/validate'

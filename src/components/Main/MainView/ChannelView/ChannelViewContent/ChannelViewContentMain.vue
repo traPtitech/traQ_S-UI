@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
-    <scroll-loading-bar :class="$style.loadingBar" :show="isLoading" />
-    <messages-scroller
+    <ScrollLoadingBar :class="$style.loadingBar" :show="isLoading" />
+    <MessagesScroller
       ref="scrollerEle"
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
@@ -15,17 +15,17 @@
       @reset-is-reached-latest="resetIsReachedLatest"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
-        <messages-scroller-separator
+        <MessagesScrollerSeparator
           v-if="messageId === firstUnreadMessageId"
           title="ここから未読"
           :class="$style.unreadSeparator"
         />
-        <messages-scroller-separator
+        <MessagesScrollerSeparator
           v-if="dayDiffMessages.has(messageId)"
           :title="createdDate(messageId)"
           :class="$style.dateSeparator"
         />
-        <message-element
+        <MessageElement
           :class="$style.element"
           :message-id="messageId"
           :is-archived="isArchived"
@@ -35,8 +35,8 @@
           @entry-message-loaded="onEntryMessageLoaded"
         />
       </template>
-    </messages-scroller>
-    <message-input
+    </MessagesScroller>
+    <MessageInput
       :channel-id="channelId"
       :typing-users="typingUsers"
       :show-to-new-message-button="showToNewMessageButton"
@@ -123,7 +123,7 @@ const showToNewMessageButton = ref(false)
 const { channelIdToPathString } = useChannelPath()
 const toNewMessage = () => {
   if (props.entryMessageId) {
-    const channelPath = channelIdToPathString(props.channelId)
+    const channelPath = channelIdToPathString(props.channelId) as string
     if (dmChannelsMap.value.has(props.channelId)) {
       router.replace(constructUserPath(channelPath))
     } else {

@@ -1,52 +1,52 @@
 <template>
   <div>
-    <navigation-content-container
+    <NavigationContentContainer
       v-if="homeChannelWithTree.length > 0"
       subtitle="ホームチャンネル"
       :class="$style.item"
     >
-      <channel-tree :channels="homeChannelWithTree" show-shortened-path />
-    </navigation-content-container>
+      <ChannelTree :channels="homeChannelWithTree" show-shortened-path />
+    </NavigationContentContainer>
     <div>
-      <navigation-content-container
+      <NavigationContentContainer
         v-if="
           dmChannelsWithNotification.length + noticeableChannels.length !== 0
         "
         subtitle="メンション"
         :class="$style.item"
       >
-        <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
-        <channel-list
+        <DMChannelList :dm-channels="dmChannelsWithNotification" />
+        <ChannelList
           :channels="noticeableChannels"
           :show-star="prioritizeStarredChannel"
         />
-      </navigation-content-container>
-      <navigation-content-container
+      </NavigationContentContainer>
+      <NavigationContentContainer
         v-if="unreadChannels.length > 0"
         subtitle="未読"
         :class="$style.item"
       >
-        <channel-list
+        <ChannelList
           :channels="unreadChannels"
           :show-star="prioritizeStarredChannel"
           :show-notified="prioritizeNotifiedChannel"
         />
-      </navigation-content-container>
+      </NavigationContentContainer>
     </div>
-    <navigation-content-container subtitle="チャンネル" :class="$style.item">
-      <channel-tree
+    <NavigationContentContainer subtitle="チャンネル" :class="$style.item">
+      <ChannelTree
         v-if="topLevelChannels.length > 0"
         :channels="topLevelChannels"
       />
-      <empty-state v-else> 購読していません </empty-state>
-    </navigation-content-container>
-    <navigation-content-container
+      <EmptyState v-else> 購読していません </EmptyState>
+    </NavigationContentContainer>
+    <NavigationContentContainer
       v-if="qallingChannels.length > 0"
       subtitle="Qall中チャンネル"
       :class="$style.item"
     >
-      <channel-list :channels="qallingChannels" />
-    </navigation-content-container>
+      <ChannelList :channels="qallingChannels" />
+    </NavigationContentContainer>
   </div>
 </template>
 

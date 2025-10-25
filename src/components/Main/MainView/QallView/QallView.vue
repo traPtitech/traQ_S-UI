@@ -194,9 +194,15 @@ const toggleDanmaku = () => {
         <IconButton
           :icon-name="`comment${showDanmaku ? '' : '-off'}-outline`"
           icon-mdi
+          :class="$style.headerButton"
           @click="toggleDanmaku"
         />
-        <IconButton icon-name="close" icon-mdi @click="isSubView = true" />
+        <IconButton
+          icon-name="close"
+          icon-mdi
+          :class="$style.headerButton"
+          @click="isSubView = true"
+        />
       </div>
       <div :class="$style.stackContainer">
         <UserList :class="$style.userList" />
@@ -269,7 +275,7 @@ const toggleDanmaku = () => {
                 <ClickOutside @click-outside="showParticipants = false">
                   <div v-if="showParticipants" :class="$style.participantsList">
                     <div :class="$style.participantsContent">
-                      <participant-list
+                      <ParticipantList
                         v-for="participant in filteredParticipants"
                         :key="participant.user.id"
                         :participant="participant.user"
@@ -378,10 +384,8 @@ const toggleDanmaku = () => {
   margin: 0 16px;
 }
 
-.closeButton {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+.headerButton {
+  @include color-ui-primary;
 }
 
 .iconContainer {

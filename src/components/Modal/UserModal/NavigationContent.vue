@@ -1,12 +1,12 @@
 <template>
   <section :class="$style.container">
-    <profile-tab
+    <ProfileTab
       v-if="currentNavigation === 'profile'"
       :user="user"
       :detail="detail"
     />
-    <groups-tab v-if="currentNavigation === 'groups'" :detail="detail" />
-    <tags-tab v-if="currentNavigation === 'tags'" :detail="detail" />
+    <GroupsTab v-if="currentNavigation === 'groups'" :detail="detail" />
+    <TagsTab v-if="currentNavigation === 'tags'" :detail="detail" />
   </section>
 </template>
 

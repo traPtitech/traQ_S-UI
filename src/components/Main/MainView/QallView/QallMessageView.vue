@@ -69,7 +69,7 @@ const handleScroll = () => {
         :class="$style.messageContainer"
         :data-is-not-messages-show="$boolAttr(!isMessageShow)"
       >
-        <scroll-loading-bar
+        <ScrollLoadingBar
           :class="$style.loadingBar"
           :show="isLoading && isMessageShow"
         />
@@ -80,7 +80,7 @@ const handleScroll = () => {
           >
             <div :class="$style.messageContainerBackground" />
 
-            <messages-scroller
+            <MessagesScroller
               v-if="isMessageShow"
               ref="scrollerEle"
               :message-ids="messageIds"
@@ -96,7 +96,7 @@ const handleScroll = () => {
               <template
                 #default="{ messageId, onChangeHeight, onEntryMessageLoaded }"
               >
-                <message-element
+                <MessageElement
                   :class="$style.element"
                   :message-id="messageId"
                   :is-archived="isArchived"
@@ -104,30 +104,29 @@ const handleScroll = () => {
                   @entry-message-loaded="onEntryMessageLoaded"
                 />
               </template>
-            </messages-scroller>
+            </MessagesScroller>
           </div>
         </transition>
-        <div :class="[$style.uiElement, $style.uiToggleButton]">
-          <IconButton
-            :icon-name="`chevron-double-${isMessageShow ? 'down' : 'up'}`"
-            icon-mdi
-            @click="
-              () => {
-                if (isMessageShow) {
-                  isMessageShow = false
-                  toNewMessage('smooth')
-                } else {
-                  isMessageShow = true
-                  nextTick(() => toNewMessage())
-                }
+        <IconButton
+          :icon-name="`chevron-double-${isMessageShow ? 'down' : 'up'}`"
+          icon-mdi
+          :class="$style.toggleButton"
+          @click="
+            () => {
+              if (isMessageShow) {
+                isMessageShow = false
+                toNewMessage('smooth')
+              } else {
+                isMessageShow = true
+                nextTick(() => toNewMessage())
               }
-            "
-          />
-        </div>
+            }
+          "
+        />
       </div>
       <slot name="default" />
     </div>
-    <message-input
+    <MessageInput
       :channel-id="channelId"
       :typing-users="typingUsers"
       :show-to-new-message-button="false"
@@ -206,13 +205,11 @@ const handleScroll = () => {
   margin: 4px 0;
   contain: content;
 }
-.uiElement {
-  pointer-events: all;
-}
 
-.uiToggleButton {
+.toggleButton {
   @include color-ui-secondary;
   @include background-primary;
+  pointer-events: all;
   padding: 0.5rem;
   border-radius: 2rem;
   position: absolute;

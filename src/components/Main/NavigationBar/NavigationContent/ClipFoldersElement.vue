@@ -1,6 +1,11 @@
 <template>
   <router-link :to="clipFolderPath" :class="$style.container">
-    <a-icon name="bookmark" mdi :class="$style.icon" />
+    <AIcon
+      name="bookmark"
+      mdi
+      :class="$style.icon"
+      :data-is-selected="$boolAttr(isSelected)"
+    />
     <span :class="$style.name">
       {{ clipFolder.name }}
     </span>
@@ -12,13 +17,19 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
 import type { ClipFolder } from '@traptitech/traq'
 import { constructClipFoldersPath } from '/@/router'
+import { useMainViewStore } from '/@/store/ui/mainView'
 
 const props = defineProps<{
   clipFolder: ClipFolder
 }>()
-
+const { primaryView } = useMainViewStore()
 const clipFolderPath = computed(() =>
   constructClipFoldersPath(props.clipFolder.id)
+)
+const isSelected = computed(
+  () =>
+    primaryView.value.type === 'clips' &&
+    props.clipFolder.id === primaryView.value.clipFolderId
 )
 </script>
 
@@ -33,6 +44,9 @@ const clipFolderPath = computed(() =>
 .icon {
   flex-shrink: 0;
   margin-right: 16px;
+  &[data-is-selected] {
+    @include color-accent-primary;
+  }
 }
 .name {
   width: 100%;

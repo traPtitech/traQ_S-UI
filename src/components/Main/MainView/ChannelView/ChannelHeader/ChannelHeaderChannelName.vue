@@ -42,19 +42,20 @@ type ChannelPathInfo = {
   link: string
 }
 /** 現在のチャンネルに至るまでのフルパスたち */
-const pathInfoList = computed((): ChannelPathInfo[] =>
-  channelIdToPath(props.channelId).map((p, i, arr) => {
-    const path = arr.slice(0, i + 1)
-    return {
-      name: p,
-      link: constructChannelPath(path.join('/'))
-    }
-  })
+const pathInfoList = computed(
+  (): ChannelPathInfo[] =>
+    channelIdToPath(props.channelId)?.map((p, i, arr) => {
+      const path = arr.slice(0, i + 1)
+      return {
+        name: p,
+        link: constructChannelPath(path.join('/'))
+      }
+    }) ?? []
 )
 
 const ancestorsPath = computed(() => pathInfoList.value.slice(0, -1))
 const currentChannelLastPath = computed(
-  () => pathInfoList.value[pathInfoList.value.length - 1]?.name ?? ''
+  () => pathInfoList.value.at(-1)?.name ?? ''
 )
 </script>
 

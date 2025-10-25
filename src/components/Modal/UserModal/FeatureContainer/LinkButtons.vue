@@ -1,12 +1,12 @@
 <template>
   <div :class="$style.container">
-    <link-button
+    <LinkButton
       :title="`${showTitle ? 'DM' : ''}`"
       icon-name="email"
       icon-mdi
       @mousedown="onDMClick"
     />
-    <link-button
+    <LinkButton
       v-if="homeChannelId !== null"
       :title="`${showTitle ? 'ホーム' : ''}`"
       icon-name="home"
@@ -42,8 +42,7 @@ const onDMClick = async (event: MouseEvent) => {
 
 const onHomeChannelClick = async (event: MouseEvent) => {
   if (!props.homeChannelId) return
-
-  openLinkAndClearModal(event, channelIdToLink(props.homeChannelId))
+  openLinkAndClearModal(event, channelIdToLink(props.homeChannelId) as string)
 }
 </script>
 

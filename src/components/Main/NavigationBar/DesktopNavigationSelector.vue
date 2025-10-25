@@ -1,22 +1,22 @@
 <template>
   <div :class="$style.container" role="tablist">
-    <popup-navigator :class="$style.logo" :title="`traQ ${VERSION}`" />
-    <navigation-selector-item
+    <PopupNavigator :class="$style.logo" :title="`traQ ${VERSION}`" />
+    <NavigationSelectorItem
       v-for="item in entries"
       :key="item.type"
       :class="$style.item"
-      :is-selected="currentNavigation === item.type"
+      :is-selected="showCurrent && currentNavigation === item.type"
       :has-notification="item.hasNotification"
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
       @click="onNavigationItemClick(item.type)"
     />
     <div v-if="showSeparator" :class="$style.separator" />
-    <navigation-selector-item
+    <NavigationSelectorItem
       v-for="item in ephemeralEntries"
       :key="item.type"
       :class="$style.item"
-      :is-selected="currentEphemeralNavigation === item.type"
+      :is-selected="showCurrent && currentEphemeralNavigation === item.type"
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
       :color-claim="item.colorClaim"
@@ -40,14 +40,17 @@ import {
 import type { EphemeralNavigationSelectorEntry } from './composables/useNavigationSelectorEntry'
 import useNavigationSelectorEntry from './composables/useNavigationSelectorEntry'
 import { VERSION } from '/@/lib/define'
+import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     currentNavigation?: NavigationItemType
     currentEphemeralNavigation?: EphemeralNavigationItemType
+    showCurrent?: boolean
   }>(),
   {
-    currentNavigation: 'home' as const
+    currentNavigation: 'home' as const,
+    showCurrent: true as const
   }
 )
 
@@ -58,11 +61,38 @@ const emit = defineEmits<{
   (e: 'ephemeralEntryAdd', _entry: EphemeralNavigationSelectorEntry): void
 }>()
 
-const { onNavigationItemClick } = useNavigationSelectorItem(emit)
-const { onNavigationItemClick: onEphemeralNavigationItemClick } =
+const { onNavigationItemClick: onNavigationItemClickImpl } =
+  useNavigationSelectorItem(emit)
+const { onNavigationItemClick: onEphemeralNavigationItemClickImpl } =
   useEphemeralNavigationSelectorItem(emit)
 const { entries, ephemeralEntries } = useNavigationSelectorEntry()
 const showSeparator = computed(() => ephemeralEntries.value.length > 0)
+const { isNavigationClosed, restoreNavigationWidth } =
+  useNavigationLayoutStore()
+
+const onNavigationItemClick = (item: NavigationItemType) => {
+  onNavigationItemClickImpl(item)
+  restoreNavigationWidth()
+}
+
+let previousEphemeralNavigation: EphemeralNavigationItemType | null = null
+
+const onEphemeralNavigationItemClick = (item: EphemeralNavigationItemType) => {
+  previousEphemeralNavigation = null
+  onEphemeralNavigationItemClickImpl(item)
+  restoreNavigationWidth()
+}
+
+watch(isNavigationClosed, closed => {
+  if (closed) {
+    if (!props.currentEphemeralNavigation) return
+    previousEphemeralNavigation = props.currentEphemeralNavigation
+  } else {
+    if (!previousEphemeralNavigation) return
+  }
+
+  onEphemeralNavigationItemClickImpl(previousEphemeralNavigation)
+})
 
 watch(ephemeralEntries, (entries, prevEntries) => {
   prevEntries

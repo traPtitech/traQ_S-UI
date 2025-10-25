@@ -5,7 +5,7 @@
     @keydown.left="onKeydown"
     @keydown.right="onKeydown"
   >
-    <a-tab
+    <ATab
       ref="allTabRef"
       label="すべて"
       :aria-selected="!isStarred"
@@ -13,7 +13,8 @@
       :tabindex="isStarred ? -1 : 0"
       @click="unselectStarFilter"
     />
-    <a-tab
+    <div :class="$style.spacer" />
+    <ATab
       ref="staredTabRef"
       label="お気に入り"
       :aria-selected="isStarred"
@@ -79,8 +80,17 @@ const unselectStarFilter = () => {
 <style lang="scss" module>
 .container {
   display: flex;
-  gap: 0.5rem;
+  padding-left: 0.2rem;
   margin-bottom: 0.75rem;
-  flex-wrap: wrap;
+
+  .spacer {
+    width: 0.9rem;
+    flex-shrink: 1;
+  }
+
+  button {
+    flex-shrink: 0;
+    padding-inline: 0.8rem;
+  }
 }
 </style>

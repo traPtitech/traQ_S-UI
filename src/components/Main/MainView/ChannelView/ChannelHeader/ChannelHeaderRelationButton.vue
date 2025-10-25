@@ -9,11 +9,11 @@
     :class="$style.trigger"
     @click="toggle"
   >
-    <a-icon :size="20" name="rounded-triangle" :class="$style.icon" />
+    <AIcon :size="20" name="rounded-triangle" :class="$style.icon" />
   </button>
   <!-- NOTE: ボタンから Tab 移動した際に popup のはじめに飛べるように Focus を管理する -->
   <div v-if="isOpen" ref="focusPopupRef" tabindex="0" @focus="focusPopup" />
-  <channel-header-relation-popup
+  <ChannelHeaderRelationPopup
     v-if="isOpen"
     ref="popup"
     :popup-id="popupId"
@@ -91,14 +91,14 @@ const focusTrigger = () => {
 
   cursor: pointer;
   overflow: hidden;
-  height: 24px;
+  height: 32px;
   width: 24px;
   margin: 0 8px;
   display: grid;
   place-items: center;
   flex-shrink: 0;
   position: sticky;
-  right: 0;
+  right: -1px;
 
   transition: transform 0.1s;
 

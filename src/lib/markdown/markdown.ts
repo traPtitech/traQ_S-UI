@@ -34,7 +34,7 @@ const storeProvider: Store = {
   },
   generateChannelHref(id) {
     const { channelIdToLink } = useChannelPath()
-    return `${embeddingOrigin}${channelIdToLink(id)}`
+    return `${embeddingOrigin}${channelIdToLink(id) as string}`
   },
   generateUserHref(id) {
     return `javascript:openUserModal(${encodeURIComponent(JSON.stringify(id))})`
@@ -53,17 +53,17 @@ const loadMd = async () => {
   md = new traQMarkdownIt(storeProvider, [], embeddingOrigin)
 }
 
-const waitForInitialFetch = async () => {
+const waitForInitialFetch = () => {
   const { usersMapInitialFetchPromise } = useUsersStore()
   const { userGroupsMapInitialFetchPromise } = useGroupsStore()
   const { bothChannelsMapInitialFetchPromise } = useChannelsStore()
   const { stampsMapInitialFetchPromise } = useStampsStore()
 
-  await Promise.all([
-    usersMapInitialFetchPromise,
-    userGroupsMapInitialFetchPromise,
-    bothChannelsMapInitialFetchPromise,
-    stampsMapInitialFetchPromise,
+  return Promise.all([
+    usersMapInitialFetchPromise.value,
+    userGroupsMapInitialFetchPromise.value,
+    bothChannelsMapInitialFetchPromise.value,
+    stampsMapInitialFetchPromise.value,
     loadMd()
   ])
 }

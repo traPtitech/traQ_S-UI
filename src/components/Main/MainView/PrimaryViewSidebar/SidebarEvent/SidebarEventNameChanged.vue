@@ -1,12 +1,12 @@
 <template>
-  <sidebar-event-frame
+  <SidebarEventFrame
     title="チャンネル名変更"
     icon-name="hash"
     :user-id="details.userId"
     :datetime="datetime"
   >
     {{ details.after }}
-  </sidebar-event-frame>
+  </SidebarEventFrame>
 </template>
 
 <script lang="ts" setup>

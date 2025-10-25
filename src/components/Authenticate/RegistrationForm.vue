@@ -1,14 +1,14 @@
 <template>
   <div>
-    <authenticate-header :class="$style.header" title="新規登録" />
-    <authenticate-input
+    <AuthenticateHeader :class="$style.header" title="新規登録" />
+    <AuthenticateInput
       v-model="registerState.name"
       label="traQ ID"
       :class="$style.item"
       autocomplete="username"
       autofocus
     />
-    <authenticate-input
+    <AuthenticateInput
       v-model="registerState.password"
       label="パスワード"
       type="password"
@@ -20,7 +20,7 @@
       <span v-if="error">{{ error }}</span>
     </div>
     <div :class="$style.buttons">
-      <authenticate-button
+      <AuthenticateButton
         type="primary"
         label="アカウント作成"
         is-submit

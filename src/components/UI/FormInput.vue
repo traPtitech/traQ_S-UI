@@ -1,11 +1,18 @@
 <template>
   <div>
-    <label v-if="label" :for="id" :class="$style.label">
-      {{ label }}
-    </label>
+    <div :class="$style.labelContainer">
+      <label v-if="label" :for="id" :class="$style.label">
+        {{ label }}
+      </label>
+      <span v-if="errorMessage" :class="$style.errorMessage">
+        {{ errorMessage }}
+      </span>
+    </div>
+
     <div
       :class="$style.inputContainer"
       :data-on-secondary="$boolAttr(onSecondary)"
+      :data-has-error="$boolAttr(errorMessage !== null)"
     >
       <span v-if="prefix" :class="$style.prefix" @click="focus">
         {{ prefix }}
@@ -29,7 +36,7 @@
       <span v-if="suffix" :class="$style.suffix" @click="focus">
         {{ suffix }}
       </span>
-      <length-count
+      <LengthCount
         v-if="maxLength && typeof modelValue === 'string'"
         :class="$style.count"
         :val="modelValue"
@@ -41,7 +48,7 @@
         :class="$style.toggle"
         @click.prevent="togglePassword"
       >
-        <a-icon
+        <AIcon
           :name="isPasswordShown ? 'eye-off-outline' : 'eye-outline'"
           mdi
           :class="$style.toggleIcon"
@@ -75,6 +82,7 @@ const props = withDefaults(
     min?: string
     max?: string
     step?: string
+    errorMessage?: string | null
     maxLength?: number
     useChangeEvent?: boolean
     focusOnMount?: boolean
@@ -86,7 +94,8 @@ const props = withDefaults(
     placeholder: '',
     useChangeEvent: false,
     focusOnMount: false,
-    selectOnFocus: false
+    selectOnFocus: false,
+    errorMessage: null
   }
 )
 
@@ -126,9 +135,17 @@ defineExpose({ focus })
 </script>
 
 <style lang="scss" module>
+.labelContainer {
+  display: flex;
+  gap: 8px;
+}
 .label {
   @include color-ui-primary;
   display: block;
+  margin-bottom: 4px;
+}
+.errorMessage {
+  color: $theme-accent-error-default;
   margin-bottom: 4px;
 }
 .inputContainer {
@@ -142,8 +159,11 @@ defineExpose({ focus })
   &[data-on-secondary] {
     @include background-primary;
   }
+  &[data-has-error] {
+    border-color: $theme-accent-error-default;
+  }
   border: solid 2px transparent;
-  &:focus-within {
+  &:not([data-has-error]):focus-within {
     border-color: $theme-accent-focus-default;
   }
 }

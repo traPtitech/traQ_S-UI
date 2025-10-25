@@ -1,5 +1,5 @@
 <template>
-  <message-panel
+  <MessagePanel
     :message="message"
     :title-type="titleType"
     line-clamp-content
@@ -26,7 +26,7 @@ const titleType = computed(() =>
 )
 const channelLink = computed(() =>
   props.type === 'channel'
-    ? channelIdToLink(props.message.channelId)
+    ? (channelIdToLink(props.message.channelId) ?? '')
     : constructMessagesPath(props.message.id)
 )
 </script>

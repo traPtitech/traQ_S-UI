@@ -5,11 +5,12 @@
     @dragover.prevent.stop="onDragOver"
     @drop.prevent.stop="onDrop"
   >
-    <channel-view-content-file-upload-overlay
+    <ChannelViewContentFileUploadOverlay
       v-if="canDrop"
       :class="$style.fileUploadOverlay"
     />
-    <channel-view-content-main
+    <ChannelViewContentMain
+      :key="renderKey"
       :channel-id="channelId"
       :entry-message-id="entryMessageId"
       :pinned-messages="pinnedMessages"
@@ -25,6 +26,9 @@ import type { ChannelId, UserId } from '/@/types/entity-ids'
 import { debounce, throttle } from 'throttle-debounce'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { useToastStore } from '/@/store/ui/toast'
+import { useRenderKey } from '/@/composables/dom/useRenderKey'
+
+const { key: renderKey } = useRenderKey('messages')
 
 const useDragDrop = (channelId: Ref<ChannelId>) => {
   const { addErrorToast } = useToastStore()

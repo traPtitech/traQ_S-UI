@@ -1,7 +1,7 @@
 <template>
   <div v-if="isLoginCheckDone" :class="$style.container">
-    <mobile-group-manager v-if="isMobile" />
-    <desktop-group-manager v-else />
+    <MobileGroupManager v-if="isMobile" />
+    <DesktopGroupManager v-else />
   </div>
   <div v-else />
 </template>

@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <label :class="$style.formGroup">
       <span :class="$style.label">パレット名</span>
-      <form-input
+      <FormInput
         v-model="nameModel"
         select-on-focus
         placeholder="パレット名は必須項目です"
@@ -12,7 +12,7 @@
     </label>
     <label :class="$style.formGroup">
       <span :class="$style.label">説明</span>
-      <form-text-area
+      <FormTextArea
         v-model="descriptionModel"
         :max-length="STAMP_PALETTE_DESCRIPTION_MAX_LENGTH"
         :class="$style.form"

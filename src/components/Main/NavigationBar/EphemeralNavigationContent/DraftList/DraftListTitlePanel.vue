@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <a-icon :class="$style.icon" name="pencil" mdi />
+    <AIcon :class="$style.icon" name="pencil" mdi />
     <div :class="$style.title">下書き</div>
   </div>
 </template>

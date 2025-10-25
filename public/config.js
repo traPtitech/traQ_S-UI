@@ -12,9 +12,7 @@
       vapidKey:
         'BPHegiDotHG7TlKhoW1qvwUYjOQj1C7RgKjvw3etUJZ_4x3LWUtFVXtRANWwckJX4G2w3CVj4zwi5QNThg7DZH4'
     },
-    skyway: {
-      apiKey: '55fd6e68-6e1b-492b-b57d-df0273c6e217'
-    },
+    enableQall: true,
     enableSearch: true,
     services: [
       {
@@ -91,6 +89,11 @@
         label: 'tpf-admin',
         iconPath: 'traPortfolio-admin.svg',
         appLink: 'https://portfolio-admin.trap.jp/'
+      },
+      {
+        label: 'rucQ',
+        iconPath: 'rucq.svg',
+        appLink: 'https://rucq.trap.jp/'
       }
     ],
     ogpIgnoreHostNames: [
@@ -107,7 +110,8 @@
       'drive.trapti.tech',
       'jomon.trap.jp',
       'ns.trap.jp',
-      'portfolio-admin.trap.jp'
+      'portfolio-admin.trap.jp',
+      'rucq.trap.jp'
     ],
     wikiPageOrigin: 'https://wiki.trap.jp',
     blogPagePrefix: 'https://trap.jp/author/',

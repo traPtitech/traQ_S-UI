@@ -1,10 +1,10 @@
 <template>
-  <router-link :id="linkId" :to="channelLink" :class="$style.wrap">
+  <RouterLink :id="linkId" :to="channelLink" :class="$style.wrap">
     <div :class="$style.channelName"># {{ props.channel.name }}</div>
     <div :class="[$style.topic, isTopicEmpty && $style.empty]">
       {{ topic }}
     </div>
-  </router-link>
+  </RouterLink>
 </template>
 
 <script setup lang="ts">
@@ -26,7 +26,7 @@ const focus = () => {
 }
 
 const { channelIdToLink } = useChannelPath()
-const channelLink = computed(() => channelIdToLink(props.channel.id))
+const channelLink = computed(() => channelIdToLink(props.channel.id) ?? '')
 
 const isTopicEmpty = computed(() => props.channel.topic.length === 0)
 const topic = computed(() =>
@@ -49,7 +49,7 @@ defineExpose({ focus })
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  contain: strict;
+  contain: var(--contain-strict);
   height: 1.5rem;
   line-height: 1.5rem;
 }

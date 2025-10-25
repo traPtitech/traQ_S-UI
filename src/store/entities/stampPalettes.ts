@@ -1,8 +1,8 @@
 import type {
   PatchStampPaletteRequest,
-  PostStampPaletteRequest,
-  StampPalette
+  PostStampPaletteRequest
 } from '@traptitech/traq'
+import type { StampPalette } from '/@/types/entity'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import type { CacheStrategy } from './utils'
@@ -14,15 +14,36 @@ import { wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { useTrueChangedPromise } from '/@/store/utils/promise'
 import type { StampPaletteId } from '/@/types/entity-ids'
+import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 
-const getStampPalette = createSingleflight(apis.getStampPalette.bind(apis))
-const getStampPalettes = createSingleflight(apis.getStampPalettes.bind(apis))
-const createStampPaletteSingleflight = createSingleflight(
-  apis.createStampPalette.bind(apis)
+// FIXME: 型定義では `StampPalette['stamps']` は `Set<string>` だが，実際には `Array<string>` が返る
+// openapi-generator のバグだが，どのように修正されるかわからないので一旦型の上書きによって対応する
+// https://github.com/traPtitech/traQ_S-UI/issues/4612
+
+const getStampPalette = createSingleflight(
+  apis.getStampPalette.bind(apis) as unknown as (
+    paletteId?: StampPaletteId,
+    options?: AxiosRequestConfig
+  ) => Promise<AxiosResponse<StampPalette>>
 )
+
+const getStampPalettes = createSingleflight(
+  apis.getStampPalettes.bind(apis) as unknown as (
+    options?: AxiosRequestConfig
+  ) => Promise<AxiosResponse<StampPalette[]>>
+)
+
+const createStampPaletteSingleflight = createSingleflight(
+  apis.createStampPalette.bind(apis) as unknown as (
+    postStampPaletteRequest?: PostStampPaletteRequest,
+    options?: AxiosRequestConfig
+  ) => Promise<AxiosResponse<StampPalette>>
+)
+
 const editStampPaletteSingleflight = createSingleflight(
   apis.editStampPalette.bind(apis)
 )
+
 const deleteStampPaletteSingleflight = createSingleflight(
   apis.deleteStampPalette.bind(apis)
 )
@@ -54,13 +75,8 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
       stampPalettesMapFetched.value,
       stampPalettesMapInitialFetchPromise.value,
       getStampPalette,
-      apiStampPalette => {
-        // レスポンスのStampPaletteはstampsが空配列の場合にnullになるバグがあるので、空配列をセットする
-        const normalizedPalette = {
-          ...apiStampPalette,
-          stamps: apiStampPalette.stamps ?? []
-        }
-        stampPalettesMap.value.set(stampPaletteId, normalizedPalette)
+      fetchedStampPalette => {
+        stampPalettesMap.value.set(stampPaletteId, fetchedStampPalette)
       }
     )
     if (stampPalette) {
@@ -79,13 +95,8 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
       return stampPalettesMap.value
     }
 
-    const [{ data: stampPalettesFromApi }, shared] = await getStampPalettes()
-    // レスポンスのStampPaletteはstampsが空配列の場合にnullになるバグがあるので、空配列をセットする
-    const normalizedStampPalettes = stampPalettesFromApi.map(palette => ({
-      ...palette,
-      stamps: palette.stamps ?? []
-    }))
-    const newStampPalettesMap = arrayToMap(normalizedStampPalettes, 'id')
+    const [{ data: fetchedStampPalettes }, shared] = await getStampPalettes()
+    const newStampPalettesMap = arrayToMap(fetchedStampPalettes, 'id')
     if (!shared) {
       stampPalettesMap.value = newStampPalettesMap
       stampPalettesMapFetched.value = true
@@ -103,19 +114,13 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
       description: postStampPaletteRequest.description,
       stamps: Array.from(postStampPaletteRequest.stamps)
     }
-    const [{ data: createdStampPaletteFromApi }, shared] =
+    const [{ data: createdStampPalette }, shared] =
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await createStampPaletteSingleflight(apiRequestPayload as any)
-
-    // レスポンスのStampPaletteはstampsが空配列の場合にnullになるバグがあるので、空配列をセットする
-    const normalizedPalette = {
-      ...createdStampPaletteFromApi,
-      stamps: createdStampPaletteFromApi.stamps ?? []
-    }
     if (!shared) {
-      stampPalettesMap.value.set(normalizedPalette.id, normalizedPalette)
+      stampPalettesMap.value.set(createdStampPalette.id, createdStampPalette)
     }
-    return normalizedPalette
+    return createdStampPalette
   }
 
   const editStampPalette = async (
@@ -146,7 +151,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
         paletteToUpdate.description = apiRequestPayload.description
       }
       if (apiRequestPayload.stamps) {
-        paletteToUpdate.stamps = apiRequestPayload.stamps ?? []
+        paletteToUpdate.stamps = apiRequestPayload.stamps
       }
       paletteToUpdate.updatedAt = new Date().toISOString()
       stampPalettesMap.value.set(stampPaletteId, paletteToUpdate)

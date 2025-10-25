@@ -1,16 +1,16 @@
 <template>
-  <click-outside stop @click-outside="clearModal">
+  <ClickOutside stop @click-outside="clearModal">
     <div :class="$style.wrapper" data-testid="usermodal">
       <div :class="$style.topButtons">
-        <user-modal-edit-button
+        <UserModalEditButton
           v-if="isThisMyProfile"
           :size="isMobile ? 24 : 32"
           @mousedown="onEditProfileClick"
         />
-        <close-button :size="isMobile ? 24 : 32" @close="clearModal" />
+        <CloseButton :size="isMobile ? 24 : 32" @close="clearModal" />
       </div>
 
-      <user-icon
+      <UserIcon
         v-if="!isMobile"
         :user-id="id"
         prevent-modal
@@ -18,19 +18,19 @@
         :style="styles.icon"
       />
       <div :class="$style.content" :style="styles.content">
-        <feature-container :user="user" :detail="userDetail" />
-        <navigation-selector
+        <FeatureContainer :user="user" :detail="userDetail" />
+        <NavigationSelector
           :current-navigation="currentNavigation"
           @navigation-change="onNavigationChange"
         />
-        <navigation-content
+        <NavigationContent
           :current-navigation="currentNavigation"
           :user="user"
           :detail="userDetail"
         />
       </div>
     </div>
-  </click-outside>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>

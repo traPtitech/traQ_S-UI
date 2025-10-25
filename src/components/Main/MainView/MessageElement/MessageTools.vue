@@ -1,13 +1,13 @@
 <template>
   <div
-    v-if="show || isStampPickerOpen || contextMenuPosition"
+    v-if="show"
     ref="containerEle"
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
   >
     <transition v-if="!isMinimum" name="quick-reaction">
       <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
-        <a-stamp
+        <AStamp
           v-for="stamp in recentStamps"
           :key="stamp"
           :stamp-id="stamp"
@@ -25,7 +25,7 @@
       "
     >
       <template v-if="!isMinimum && isMobile">
-        <a-icon
+        <AIcon
           v-if="showQuickReaction"
           mdi
           name="chevron-right"
@@ -33,7 +33,7 @@
           :class="$style.icon"
           @click="toggleQuickReaction"
         />
-        <a-icon
+        <AIcon
           v-else
           mdi
           name="chevron-left"
@@ -42,7 +42,7 @@
           @click="toggleQuickReaction"
         />
       </template>
-      <a-icon
+      <AIcon
         v-if="!isMinimum"
         mdi
         name="emoticon-outline"
@@ -50,7 +50,7 @@
         :class="$style.icon"
         @click="toggleStampPicker"
       />
-      <a-icon
+      <AIcon
         v-if="isMine"
         mdi
         name="pencil"
@@ -58,14 +58,14 @@
         :class="$style.icon"
         @click="editMessage"
       />
-      <a-icon
+      <AIcon
         mdi
         name="link"
         :size="28"
         :class="$style.icon"
         @click="copyLink"
       />
-      <a-icon
+      <AIcon
         :class="$style.icon"
         :size="28"
         mdi
@@ -73,7 +73,7 @@
         @click="onDotsClick"
       />
     </div>
-    <message-context-menu
+    <MessageContextMenu
       v-if="contextMenuPosition"
       :position="contextMenuPosition"
       :message-id="messageId"
@@ -85,7 +85,7 @@
 
 <script lang="ts" setup>
 import type { Stamp } from '@traptitech/traq'
-import { computed, ref, toRef } from 'vue'
+import { computed, ref, toRef, watch } from 'vue'
 import MessageContextMenu from './MessageContextMenu.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
@@ -101,6 +101,7 @@ import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStor
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import type { MessageId, StampId } from '/@/types/entity-ids'
+import { isDefined } from '/@/lib/basic/array'
 
 const props = withDefaults(
   defineProps<{
@@ -113,6 +114,8 @@ const props = withDefaults(
     show: false
   }
 )
+
+const isActive = defineModel<boolean>('isActive', { default: false })
 
 const { recentStampIds } = useStampHistory()
 const { addStampOptimistically } = useStampUpdater()
@@ -175,11 +178,47 @@ const onDotsClick = (e: MouseEvent) => {
   })
 }
 
+watch(
+  () => isStampPickerOpen.value || isDefined(contextMenuPosition.value),
+  value => {
+    isActive.value = value
+  },
+  { immediate: true }
+)
+
 const { isMobile } = useResponsiveStore()
 
 const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
   !isMobile.value
 )
+</script>
+
+<script lang="ts">
+export const useMessageToolsHover = () => {
+  const isHovered = ref(false)
+
+  const onPointerEnter = (e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') return
+    isHovered.value = true
+  }
+  const onClick = () => {
+    isHovered.value = true
+  }
+  const onMouseLeave = () => {
+    isHovered.value = false
+  }
+  const onClickOutside = () => {
+    isHovered.value = false
+  }
+
+  return {
+    isHovered,
+    onPointerEnter,
+    onClick,
+    onMouseLeave,
+    onClickOutside
+  }
+}
 </script>
 
 <style lang="scss" module>

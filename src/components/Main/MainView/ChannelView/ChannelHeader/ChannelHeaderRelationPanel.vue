@@ -7,13 +7,13 @@
     <template v-else>
       <ul :class="$style.list">
         <li v-for="channel in displayedChannels" :key="channel.id">
-          <channel-header-relation-list-item
+          <ChannelHeaderRelationListItem
             ref="listItemsRef"
             :channel="channel"
           />
         </li>
       </ul>
-      <form-button
+      <FormButton
         v-if="showExpandButton"
         :class="$style.expandButton"
         type="tertiary"

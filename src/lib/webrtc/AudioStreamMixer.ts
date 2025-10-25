@@ -81,7 +81,7 @@ export default class AudioStreamMixer {
 
   private addStream(key: string, stream: MediaStream) {
     if (stream.getAudioTracks().length === 0) {
-      throw 'Invalid audio stream'
+      throw new Error('Invalid audio stream')
     }
     this.streamMap.set(key, stream)
   }

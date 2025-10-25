@@ -4,15 +4,18 @@ import type { Ref } from 'vue'
 import { ref, onBeforeUnmount, computed, readonly, watchEffect } from 'vue'
 import type { EntityEventMap } from '/@/store/entities/mitt'
 import { entityMitt } from '/@/store/entities/mitt'
-import type { Target } from '/@/lib/suggestion'
+import type { Target } from '/@/lib/suggestion/basic'
 import {
   getDeterminedCharacters,
   getPrevCandidateIndex,
   getNextCandidateIndex
-} from '/@/lib/suggestion'
+} from '/@/lib/suggestion/basic'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import useUserList from '/@/composables/users/useUserList'
+import { useChannelsStore } from '/@/store/entities/channels'
+import useChannelPath from '/@/composables/useChannelPath'
+import { isDefined } from '/@/lib/basic/array'
 
 const events: Array<keyof EntityEventMap> = [
   'setUser',
@@ -23,17 +26,24 @@ const events: Array<keyof EntityEventMap> = [
   'deleteUserGroup',
   'setStamp',
   'setStamps',
-  'deleteStamp'
+  'deleteStamp',
+  'addChannel',
+  'setChannels',
+  'updateChannel'
 ]
 
-type WordWithId = {
-  type: 'user' | 'user-group' | 'stamp'
+interface WordBase {
+  delimiter?: string
   text: string
+}
+
+export interface WordWithId extends WordBase {
+  type: 'user' | 'user-group' | 'stamp' | 'channel'
   id: string
 }
-type WordWithoutId = {
+
+export interface WordWithoutId extends WordBase {
   type: 'stamp-effect'
-  text: string
 }
 
 export type Word = WordWithId | WordWithoutId
@@ -42,6 +52,8 @@ const useCandidateTree = () => {
   const userList = useUserList()
   const { userGroupsMap } = useGroupsStore()
   const { stampsMap } = useStampsStore()
+  const { channelsMap } = useChannelsStore()
+  const { channelIdToPathString } = useChannelPath()
 
   const constructTree = () =>
     new TrieTree<Word>(
@@ -50,23 +62,36 @@ const useCandidateTree = () => {
       // 重複を許す場合、優先するものから入れる
       userList.value.map(user => ({
         type: 'user',
-        text: '@' + user.name,
+        text: `@${user.name}`,
         id: user.id
       })),
       [...userGroupsMap.value.values()].map(userGroup => ({
         type: 'user-group',
-        text: '@' + userGroup.name,
+        text: `@${userGroup.name}`,
         id: userGroup.id
       })),
       [...stampsMap.value.values()].map(stamp => ({
         type: 'stamp',
-        text: ':' + stamp.name,
+        text: `:${stamp.name}`,
         id: stamp.id
       })),
       [...animeEffectSet, ...sizeEffectSet].map(effectName => ({
         type: 'stamp-effect',
-        text: '.' + effectName
-      }))
+        text: `.${effectName}`
+      })),
+      [...channelsMap.value.values()]
+        .map(channel => {
+          const path = channelIdToPathString(channel.id, true)
+          if (!path) return undefined
+
+          return {
+            type: 'channel',
+            text: path,
+            id: channel.id,
+            delimiter: '/'
+          } as const
+        })
+        .filter(isDefined)
     )
 
   const tree = ref<TrieTree<Word>>(constructTree())
@@ -86,6 +111,13 @@ const useCandidateTree = () => {
   return tree
 }
 
+const replaceMap: Record<string, string | undefined> = {
+  '＠': '@',
+  '＃': '#'
+}
+
+const replaceRegex = new RegExp(`[${Object.keys(replaceMap).join('|')}]`, 'g')
+
 /**
  * @param minLength 補完が利用できるようになる最小の文字数
  */
@@ -97,10 +129,13 @@ const useWordSuggestionList = (
   const tree = useCandidateTree()
   const candidates = computed(() =>
     target.value.word.length >= minLength
-      ? tree.value.search(target.value.word.replaceAll('＠', '@'))
+      ? tree.value.search(
+          target.value.word.replace(replaceRegex, c => replaceMap[c] ?? c),
+          { stopAtNextDelimiter: target.value.word.startsWith('#') }
+        )
       : []
   )
-  const confirmedPart = computed(() =>
+  const confirmedText = computed(() =>
     getDeterminedCharacters(candidates.value.map(obj => obj.text))
   )
 
@@ -113,7 +148,7 @@ const useWordSuggestionList = (
   watchEffect(() => {
     const i = candidates.value.findIndex(c => c.text === currentInputWord.value)
     // 候補に存在せず確定部とも一致していなかったら選択状態を解除
-    if (i === -1 && confirmedPart.value !== currentInputWord.value) {
+    if (i === -1 && confirmedText.value !== currentInputWord.value) {
       selectedIndex.value = null
       return
     }
@@ -122,7 +157,7 @@ const useWordSuggestionList = (
   })
 
   const getCandidateTextFromIndex = (i: number) => {
-    if (i === -1) return confirmedPart.value
+    if (i === -1) return confirmedText.value
     return candidates.value[i]?.text ?? ''
   }
   const prevCandidateText = computed(() =>
@@ -137,8 +172,8 @@ const useWordSuggestionList = (
   )
 
   return {
-    suggestedCandidates: candidates,
-    confirmedPart,
+    suggestedCandidateWords: candidates,
+    confirmedText,
     selectedCandidateIndex: readonly(selectedIndex),
     prevCandidateText,
     nextCandidateText
