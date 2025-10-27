@@ -11,10 +11,18 @@ import type {
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
+import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import { watch } from 'vue'
+import { useResponsiveStore } from './responsive'
 
 interface ViewInformationBase {
   type: string
 }
+
+type State = {
+  currentMainViewComponentState: MainViewComponentState
+}
+
 export type PrimaryViewInformation = ChannelView | ClipsView | DMView
 export type SecondaryViewInformation = QallView
 export type ViewInformation = ChannelView | QallView | ClipsView | DMView
@@ -65,7 +73,19 @@ export enum MainViewComponentState {
 
 export type HeaderStyle = 'default' | 'dark'
 
+const { isMobile } = useResponsiveStore()
+
 const useMainViewStorePinia = defineStore('ui/mainView', () => {
+  const initialValue: State = {
+    currentMainViewComponentState: MainViewComponentState.Hidden
+  }
+
+  const [state, _restoring, restoringPromise] = useIndexedDbValue(
+    'store/ui/mainView',
+    1,
+    {},
+    initialValue
+  )
   const { lastOpenChannelName } = useBrowserSettings()
   const channelsStore = useChannelsStore()
   const usersStore = useUsersStore()
@@ -73,6 +93,13 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
   const layout = ref<LayoutType>('single')
 
   const currentMainViewComponentState = ref(MainViewComponentState.Hidden)
+
+  if (!isMobile.value) {
+    restoringPromise.value.then(() => {
+      currentMainViewComponentState.value = state.currentMainViewComponentState
+    })
+  }
+
   const isSidebarOpen = computed(
     () =>
       currentMainViewComponentState.value ===
@@ -85,6 +112,10 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
   const isNoComponentOpen = computed(
     () => currentMainViewComponentState.value === MainViewComponentState.Hidden
   )
+
+  watch(currentMainViewComponentState, newState => {
+    state.currentMainViewComponentState = newState
+  })
 
   const lastScrollPosition = ref(0)
   const primaryView = ref<PrimaryViewInformation>({
