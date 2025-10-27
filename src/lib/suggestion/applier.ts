@@ -6,9 +6,7 @@ import {
   type MaybeRefOrGetter,
   type UnwrapRef
 } from 'vue'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Invocable = (...args: any[]) => any
+import type { Invocable } from '/@/types/utility'
 
 type Condition = MaybeRefOrGetter<boolean>
 type Overrides = Record<string, MaybeRefOrGetter<unknown>>

@@ -21,6 +21,7 @@ import useChannelPath from '/@/composables/useChannelPath'
 import { getDateRepresentation } from '/@/lib/basic/date'
 import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
 import { useUsersStore } from '/@/store/entities/users'
+import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 
 const props = withDefaults(
   defineProps<{
@@ -45,15 +46,16 @@ const createdAt = computed(() =>
 )
 
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
-const channelPath = computed(() => {
-  try {
-    return fileMeta.value?.channelId
-      ? (channelIdToPathString(fileMeta.value?.channelId, true) ?? '')
-      : ''
-  } catch {
-    return ''
-  }
-})
+
+const channelPath = computed(() =>
+  setFallbackForNullishOrOnError('').exec(() => {
+    const channelId = fileMeta.value?.channelId
+    if (!channelId) return null
+
+    return channelIdToPathString(channelId, true)
+  })
+)
+
 const channelLink = computed(() => {
   try {
     return fileMeta.value?.channelId
