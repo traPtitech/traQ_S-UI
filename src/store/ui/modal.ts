@@ -11,9 +11,7 @@ const useModalStorePinia = defineStore('ui/modal', () => {
   const mainViewStore = useMainViewStore()
 
   const modalState = ref<ModalState[]>([])
-  const currentState = computed(
-    () => modalState.value[modalState.value.length - 1]
-  )
+  const currentState = computed(() => modalState.value.at(-1))
   window.addEventListener('popstate', event => {
     // history.stateとstoreの同期をとる
     if (event.state?.modalState) {

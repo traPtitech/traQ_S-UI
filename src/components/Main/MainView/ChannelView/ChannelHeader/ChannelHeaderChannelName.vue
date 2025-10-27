@@ -55,7 +55,7 @@ const pathInfoList = computed(
 
 const ancestorsPath = computed(() => pathInfoList.value.slice(0, -1))
 const currentChannelLastPath = computed(
-  () => pathInfoList.value[pathInfoList.value.length - 1]?.name ?? ''
+  () => pathInfoList.value.at(-1)?.name ?? ''
 )
 </script>
 

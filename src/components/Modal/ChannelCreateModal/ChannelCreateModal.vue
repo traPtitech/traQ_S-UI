@@ -1,6 +1,6 @@
 <template>
   <ModalFrame :title="title" :subtitle="subtitle" icon-name="hash">
-    <FormSelector
+    <FormSelectorFilterable
       v-if="parentChannelId === undefined"
       v-model="state.parentChannelId"
       label="親チャンネル"
@@ -127,7 +127,7 @@ const useChannelOptionsForSelector = () => {
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 
 const props = defineProps<{
   parentChannelId?: string
@@ -154,7 +154,7 @@ const title = computed(
 )
 const subtitle = computed(() =>
   props.parentChannelId
-    ? `${channelIdToPathString(props.parentChannelId, true)}/`
+    ? `${channelIdToPathString(props.parentChannelId, true) ?? ''}/`
     : ''
 )
 const newChannelPath = computed(() => {

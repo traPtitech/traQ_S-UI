@@ -8,6 +8,7 @@
       :data-is-pinned="$boolAttr(message.pinned)"
       :data-is-entry="$boolAttr(isEntryMessage)"
       :data-is-editing="$boolAttr(isEditing)"
+      :data-is-active="$boolAttr(isActive)"
       @pointerenter="onPointerEnter"
       @click="onClick"
       @mouseleave="onMouseLeave"
@@ -18,6 +19,7 @@
         :class="$style.pinned"
       />
       <MessageTools
+        v-model:is-active="isActive"
         :show="showMessageTools"
         :class="$style.tools"
         :message-id="messageId"
@@ -38,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, shallowRef, toRef } from 'vue'
+import { computed, ref, shallowRef, toRef } from 'vue'
 import type { ChangeHeightData } from './composables/useElementRenderObserver'
 import useElementRenderObserver from './composables/useElementRenderObserver'
 import MessageContents from './MessageContents.vue'
@@ -72,6 +74,8 @@ const emit = defineEmits<{
   (e: 'changeHeight', _data: ChangeHeightData): void
 }>()
 
+const isActive = ref(false)
+
 const bodyRef = shallowRef<HTMLDivElement | null>(null)
 const { isMobile } = useResponsiveStore()
 const { messagesMap } = useMessagesStore()
@@ -92,7 +96,9 @@ useElementRenderObserver(
 
 const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
   useMessageToolsHover()
-const showMessageTools = computed(() => isHovered.value && !isEditing.value)
+const showMessageTools = computed(
+  () => (isHovered.value && !isEditing.value) || isActive.value
+)
 </script>
 
 <style lang="scss" module>
@@ -116,8 +122,11 @@ $messagePaddingMobile: 16px;
     // TODO: 色を正しくする
     background: $common-background-pin;
   }
-  &:not([data-is-editing]):not([data-is-pinned]):not([data-is-entry]):hover {
-    background: var(--specific-message-hover-background);
+  &:not([data-is-editing]):not([data-is-pinned]):not([data-is-entry]) {
+    &[data-is-active],
+    &:hover {
+      background: var(--specific-message-hover-background);
+    }
   }
 }
 

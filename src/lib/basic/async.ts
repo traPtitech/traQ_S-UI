@@ -50,7 +50,7 @@ export const createMutex = () => {
   }
 
   const lock = async () => {
-    const last = queue[queue.length - 1]
+    const last = queue.at(-1)
     queue.push(createTask())
     await last?.promise
   }
