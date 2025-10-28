@@ -24,6 +24,9 @@ import { isEmbeddedLink } from '/@/lib/markdown/markdown'
  */
 type ProgressCallback = (progress: number) => void
 
+// eslint-disable-next-line no-irregular-whitespace
+const ONLY_SPACE_REG_EXP = /^[ 　]*$/
+
 const uploadAttachments = async (
   attachments: ReadonlyArray<Readonly<Attachment>>,
   channelId: ChannelId,
@@ -56,6 +59,10 @@ export const createContent = async (
   const embeddedUrls = fileUrls.join('\n')
   const trimmedEmbeddedText = embeddedText.trimEnd()
 
+  if (ONLY_SPACE_REG_EXP.test(embeddedText) && embeddedUrls) {
+    return embeddedUrls
+  }
+
   if (trimmedEmbeddedText === '') {
     return joinContents('\n', [embeddedText, embeddedUrls])
   }
@@ -63,8 +70,8 @@ export const createContent = async (
   const trimmedEmbeddedTextLines = trimmedEmbeddedText.split(`\n`)
 
   if (
-    (await isEmbeddedLink(trimmedEmbeddedTextLines.at(-1) as string)) &&
-    embeddedUrls
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await isEmbeddedLink(trimmedEmbeddedTextLines.at(-1)!)
   ) {
     return joinContents('\n', [trimmedEmbeddedText, embeddedUrls])
   }
