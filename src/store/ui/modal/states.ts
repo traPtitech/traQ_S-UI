@@ -1,4 +1,3 @@
-import type { NavigationItemType as UserModalNavigationItemType } from '/@/components/Modal/UserModal/composables/useNavigation'
 import type { RouteName } from '/@/router'
 import type {
   UserId,
@@ -9,6 +8,8 @@ import type {
   MessageId,
   StampId
 } from '/@/types/entity-ids'
+
+export type UserModalNavigationItemType = 'profile' | 'groups' | 'tags'
 
 export type ModalStateType =
   | 'user'

@@ -15,11 +15,11 @@ import ProfileTab from './ProfileTab/ProfileTab.vue'
 import GroupsTab from './GroupsTab.vue'
 import TagsTab from './TagsTab.vue'
 import type { User, UserDetail } from '@traptitech/traq'
-import type { NavigationItemType } from './composables/useNavigation'
+import type { UserModalNavigationItemType } from '/@/store/ui/modal/states'
 
 withDefaults(
   defineProps<{
-    currentNavigation?: NavigationItemType
+    currentNavigation?: UserModalNavigationItemType
     user: User
     detail?: UserDetail
   }>(),

@@ -32,7 +32,6 @@
 <script lang="ts" setup>
 import { computed, reactive } from 'vue'
 import type { UserId } from '/@/types/entity-ids'
-import { type NavigationItemType } from './composables/useNavigation'
 import useUserDetail from './composables/useUserDetail'
 import { useModalStore } from '/@/store/ui/modal'
 import { useResponsiveStore } from '/@/store/ui/responsive'
@@ -43,10 +42,11 @@ import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
 import NavigationSelector from './NavigationSelector.vue'
 import NavigationContent from './NavigationContent.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
+import type { UserModalNavigationItemType } from '/@/store/ui/modal/states'
 
 const props = defineProps<{
   id: UserId
-  navigation?: NavigationItemType
+  navigation?: UserModalNavigationItemType
 }>()
 
 const { clearModal, replaceModal } = useModalStore()
@@ -65,7 +65,7 @@ const styles = reactive({
   }))
 })
 
-const onNavigationChange = (type: NavigationItemType) => {
+const onNavigationChange = (type: UserModalNavigationItemType) => {
   replaceModal({
     type: 'user',
     id: props.id,
