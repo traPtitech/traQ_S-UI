@@ -23,7 +23,10 @@
           <template v-else-if="filterStarChannel">
             <template v-if="staredChannels.length > 0">
               <ChannelTreeComponent
-                v-if="constructStrictStarredChannelTree"
+                v-if="
+                  featureFlags.dose_construct_strict_starred_channel_tree
+                    .enabled
+                "
                 :id="staredPanelId"
                 :channels="starredTopLevelChannels"
               />
@@ -72,6 +75,7 @@ import { useChannelTree } from '/@/store/domain/channelTree'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useModalStore } from '/@/store/ui/modal'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
 const { pushModal } = useModalStore()
 const { channelTree, starredChannelTree } = useChannelTree()
@@ -116,8 +120,9 @@ const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
     .filter((v): v is ChannelTreeNode => v !== undefined)
 }
 
-const { filterStarChannel, constructStrictStarredChannelTree } =
-  useBrowserSettings()
+const { featureFlags } = useFeatureFlagSettings()
+
+const { filterStarChannel } = useBrowserSettings()
 const channelListForFilter = computed(() =>
   [...channelsMap.value.values()].filter(channel => !channel.archived)
 )

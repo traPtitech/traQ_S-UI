@@ -21,11 +21,6 @@
       title="未読画面で通知を優先表示"
       description="未読チャンネル一覧で通知オンのチャンネルを優先的に表示するようにします。"
     />
-    <SimpleToggle
-      v-model="state.constructStrictStarredChannelTree"
-      title="お気に入りチャンネルをツリー表示"
-      description="お気に入りチャンネル一覧を厳密なツリー表示にします。"
-    />
     <SendKey v-model:send-with-modifier-key="state.sendWithModifierKey" />
     <ModifierKeys v-model:modifier-key="state.modifierKey" />
     <CacheManager />
