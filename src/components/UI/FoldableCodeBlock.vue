@@ -24,7 +24,7 @@
     />
 
     <div :class="$style.copyButton">
-      <CopyButton :contents-source="() => preContent.textContent" />
+      <CopyButton :contents-source="() => content" />
     </div>
   </div>
 </template>
@@ -44,10 +44,14 @@ const props = defineProps<{
 
 const isFold = ref(true)
 
+const content = computed(() => {
+  return props.preContent.textContent?.replace(/\n$/, '')
+})
+
 const line_count = computed(() => {
-  const content = props.preContent.textContent
-  if (content === null) return 0
-  const lines = content.split('\n')
+  if (!content.value) return 0
+
+  const lines = content.value.split('\n')
   return lines.length - (lines.at(-1) === '' ? 1 : 0) // 末尾の改行は行数に含めない
 })
 
