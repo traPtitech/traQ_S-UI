@@ -47,7 +47,7 @@ import {
   onBeforeUnmount
 } from 'vue'
 import { connectFirebase } from '/@/lib/notification/notification'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import useNavigationController from '/@/composables/mainView/useNavigationController'
 import useMainViewLayout from './composables/useMainViewLayout'
 import useRouteWatcher from './composables/useRouteWatcher'
@@ -136,7 +136,7 @@ const { addToast } = useToastStore()
 
 useCommandPaletteShortcutKey()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const shouldShowNav = computed(() => !isMobile.value || isNavAppeared.value)
 const { closeNav } = useNavigationController()
 const hideOuter = computed(

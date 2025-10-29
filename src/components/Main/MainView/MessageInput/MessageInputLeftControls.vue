@@ -34,7 +34,7 @@ import { computed } from 'vue'
 import MessageInputPreviewButton from './MessageInputPreviewButton.vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 
 const isLeftControlsExpanded = defineModel<boolean>('isLeftControlsExpanded', {
   required: true
@@ -58,7 +58,7 @@ const emit = defineEmits<{
   (e: 'toggleLeftControlsExpanded'): void
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const toggleLeftControlsExpanded = () => {
   isLeftControlsExpanded.value = !isLeftControlsExpanded.value
   emit('toggleLeftControlsExpanded')

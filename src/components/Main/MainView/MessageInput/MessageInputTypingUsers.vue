@@ -25,7 +25,7 @@
 <script lang="ts" setup>
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import MessageInputTypingAnimation from './MessageInputTypingAnimation.vue'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import { computed } from 'vue'
 import type { UserId } from '/@/types/entity-ids'
 
@@ -33,7 +33,7 @@ const props = defineProps<{
   typingUsers: readonly UserId[]
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const text = computed(
   () =>

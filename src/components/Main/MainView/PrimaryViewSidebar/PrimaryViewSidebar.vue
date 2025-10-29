@@ -15,12 +15,12 @@
 
 <script lang="ts" setup>
 import useSidebar from '/@/composables/mainView/useSidebar'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 
 defineProps<{
   isSidebarOpenerReady: boolean
 }>()
 
 const { shouldShowSidebar, shouldShowHiddenSidebar } = useSidebar()
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 </script>

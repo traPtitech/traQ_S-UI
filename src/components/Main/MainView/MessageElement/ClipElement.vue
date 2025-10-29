@@ -37,7 +37,7 @@ import MessageTools, { useMessageToolsHover } from './MessageTools.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
 import { useMessagesStore } from '/@/store/entities/messages'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import type { MessageId } from '/@/types/entity-ids'
 import { ref } from 'vue'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
@@ -59,7 +59,7 @@ const { editingMessageId } = useMessageEditingStateStore()
 const isEditing = computed(() => props.messageId === editingMessageId.value)
 
 const bodyRef = shallowRef<HTMLDivElement | null>(null)
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const message = computed(() => messagesMap.value.get(props.messageId))
 
 const { embeddingsState } = useEmbeddings(props)

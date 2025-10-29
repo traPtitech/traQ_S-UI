@@ -14,7 +14,7 @@
 import { ref, watchEffect } from 'vue'
 import { isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import MessageQuoteList from '/@/components/Main/MainView/MessageElement/MessageQuoteList.vue'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import type { MessageId } from '/@/types/entity-ids'
@@ -24,7 +24,7 @@ const props = defineProps<{
   text: string
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const previewRendered = ref('')
 const quoteMessageIds = ref<MessageId[]>([])

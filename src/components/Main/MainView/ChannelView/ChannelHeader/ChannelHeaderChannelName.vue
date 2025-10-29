@@ -27,13 +27,13 @@ import { computed } from 'vue'
 import type { ChannelId } from '/@/types/entity-ids'
 import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 
 const props = defineProps<{
   channelId: ChannelId
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const { channelIdToPath } = useChannelPath()
 

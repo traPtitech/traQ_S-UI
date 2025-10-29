@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 
@@ -36,7 +36,7 @@ const emit = defineEmits<{
   (e: 'clickStamp'): void
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const onClickSendButton = () => {
   if (props.canPostMessage) {

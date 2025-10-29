@@ -60,7 +60,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import { UserPermission } from '@traptitech/traq'
 import { useMeStore } from '/@/store/domain/me'
 import PrimaryViewHeaderPopupFrame from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderPopupFrame.vue'
@@ -89,7 +89,7 @@ const props = withDefaults(
   }
 )
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const { joinQall, callingChannel } = useQall()
 const isCallingHere = computed(() => callingChannel.value === props.channelId)

@@ -87,7 +87,7 @@ import useMessageInputStateAttachment from '/@/composables/messageInputState/use
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
 import { useChannelsStore } from '/@/store/entities/channels'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import { useToastStore } from '/@/store/ui/toast'
 import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 
@@ -101,7 +101,7 @@ const emit = defineEmits<{
   (e: 'clickToNewMessageButton'): void
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const channelId = toRef(props, 'channelId')
 const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
 const { addErrorToast } = useToastStore()

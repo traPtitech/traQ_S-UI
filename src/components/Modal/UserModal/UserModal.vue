@@ -34,7 +34,7 @@ import { computed, reactive } from 'vue'
 import type { UserId } from '/@/types/entity-ids'
 import useUserDetail from './composables/useUserDetail'
 import { useModalStore } from '/@/store/ui/modal'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import { useUsersStore } from '/@/store/entities/users'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import UserIcon from '/@/components/UI/UserIcon.vue'
@@ -50,7 +50,7 @@ const props = defineProps<{
 }>()
 
 const { clearModal, replaceModal } = useModalStore()
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const { usersMap } = useUsersStore()
 
 const iconSize = 160

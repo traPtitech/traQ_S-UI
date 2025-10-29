@@ -33,7 +33,7 @@ import SpinNumber from '/@/components/UI/SpinNumber.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import { ref, computed, watch, onMounted } from 'vue'
 import { useStampsStore } from '/@/store/entities/stamps'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import type { MessageStampById } from '/@/lib/messageStampList'
 import StampScaledElement from './StampScaledElement.vue'
 import useHover from '/@/composables/dom/useHover'
@@ -50,7 +50,7 @@ const emit = defineEmits<{
   (e: 'removeStamp', _stampId: string): void
 }>()
 
-const { isTouchDevice } = useResponsiveStore()
+const { isTouchDevice } = useResponsive()
 const { stampsMap } = useStampsStore()
 const { addErrorToast } = useToastStore()
 
