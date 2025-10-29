@@ -1,3 +1,5 @@
+import type { MaybeArray } from '/@/types/utility'
+
 /**
  * 一致するキーの一覧を返す
  * priorityが0のとき完全一致
@@ -58,6 +60,9 @@ export const pickSomeAroundIndex = <T>(
 
   return arr.slice(first, last + 1)
 }
+
+export const toArray = <T>(array: MaybeArray<T>): T[] =>
+  Array.isArray(array) ? array : [array]
 
 export const isDefined = <T>(o: T): o is Exclude<T, undefined> => {
   return o !== undefined
