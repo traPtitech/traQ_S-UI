@@ -21,6 +21,7 @@
 import autosize from 'autosize'
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import useOnInput from '/@/composables/useOnInput'
+import useEventListener from '/@/composables/dom/useEventListener'
 
 const modelValue = defineModel<string>({
   required: true
@@ -58,12 +59,13 @@ const autosizeUpdateTextarea = async () => {
   }
 }
 
+useEventListener(textareaEle, 'autosize:resized', () => {
+  emit('autosize-updated')
+})
+
 onMounted(() => {
   if (textareaEle.value) {
     autosize(textareaEle.value)
-    textareaEle.value.addEventListener('autosize:resized', () => {
-      emit('autosize-updated')
-    })
   }
 })
 watch([modelValue], autosizeUpdateTextarea)

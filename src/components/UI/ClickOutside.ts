@@ -2,16 +2,14 @@ import type { ComponentPublicInstance, VNode } from 'vue'
 import {
   cloneVNode,
   Comment,
+  computed,
   defineComponent,
-  onBeforeUnmount,
-  onMounted,
   ref,
   shallowRef,
-  Text,
-  watch
+  Text
 } from 'vue'
-import { isIOS } from '/@/lib/dom/browser'
 import { useModalStore } from '/@/store/ui/modal'
+import useEventListener from '/@/composables/dom/useEventListener'
 
 /**
  * コメントや文字列のVNodeを取り除く
@@ -24,9 +22,6 @@ const filterChildren = <T extends VNode>(vnodes: T[]) =>
       return false
     return true
   })
-
-const startEventName = isIOS() ? 'touchstart' : 'mousedown'
-const endEventName = isIOS() ? 'touchend' : 'mouseup'
 
 /**
  * そのデフォルトスロットに指定した要素の外でクリックされたときにclickOutsideイベントを発火する
@@ -61,9 +56,8 @@ export default defineComponent({
 
     const { shouldShowModal } = useModalStore()
     const isMouseDown = ref(false)
-    let listening = false
 
-    const onMouseDown = (e: MouseEvent | TouchEvent) => {
+    const onPointerDown = (e: MouseEvent | TouchEvent) => {
       if (!element.value) return
 
       if (props.unableWhileModalOpen && shouldShowModal.value) return
@@ -80,7 +74,8 @@ export default defineComponent({
         e.stopPropagation()
       }
     }
-    const onMouseUp = (e: MouseEvent | TouchEvent) => {
+
+    const onPointerUp = (e: MouseEvent | TouchEvent) => {
       if (!isMouseDown.value) return
       isMouseDown.value = false
 
@@ -101,33 +96,11 @@ export default defineComponent({
       }
     }
 
-    const addListeners = () => {
-      if (listening) return
-      window.addEventListener(startEventName, onMouseDown, { capture: true })
-      window.addEventListener(endEventName, onMouseUp, { capture: true })
-      listening = true
-    }
-    const removeListeners = () => {
-      if (!listening) return
-      window.removeEventListener(startEventName, onMouseDown, { capture: true })
-      window.removeEventListener(endEventName, onMouseUp, { capture: true })
-      listening = false
-    }
+    const target = computed(() => (props.enabled ? window : null))
+    const listenerOptions = { capture: true }
 
-    onMounted(() => {
-      if (props.enabled) addListeners()
-    })
-    onBeforeUnmount(() => {
-      removeListeners()
-    })
-
-    watch(
-      () => props.enabled,
-      enabled => {
-        if (enabled) addListeners()
-        else removeListeners()
-      }
-    )
+    useEventListener(target, 'pointerdown', onPointerDown, listenerOptions)
+    useEventListener(target, 'pointerup', onPointerUp, listenerOptions)
 
     return () => {
       if (!slots['default']) {

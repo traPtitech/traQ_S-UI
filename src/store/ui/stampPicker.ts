@@ -2,13 +2,14 @@ import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { throttle } from 'throttle-debounce'
 import type { Ref } from 'vue'
-import { computed, ref, watch, watchEffect } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 import type { Point } from '/@/lib/basic/point'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { StampId } from '/@/types/entity-ids'
+import useEventListener from '/@/composables/dom/useEventListener'
 
 export type SelectedStampData = {
   id: StampId
@@ -149,13 +150,7 @@ export const useStampPickerInvoker = (
     position.value = getPositionFromAlignment(newAlignment, rect)
   })
 
-  watchEffect(() => {
-    if (isThisOpen.value) {
-      window.addEventListener('resize', setPosition)
-    } else {
-      window.removeEventListener('resize', setPosition)
-    }
-  })
+  useEventListener(isThisOpen.value ? window : null, 'resize', setPosition)
 
   const openStampPicker = () => {
     setPosition()

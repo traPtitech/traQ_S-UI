@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { computed, reactive, onMounted, onBeforeUnmount } from 'vue'
+import { computed, reactive } from 'vue'
 import type { Point } from '/@/lib/basic/point'
 import {
   diff,
@@ -7,6 +7,7 @@ import {
   getMidpoint,
   getAngleBetweenLines
 } from '/@/lib/basic/point'
+import useEventListener from '/@/composables/dom/useEventListener'
 
 const WHEEL_SCALE_DELTAX = new Map<number, number>([
   [0x00, 1], // WheelEvent.DOM_DELTA_PIXEL
@@ -102,32 +103,27 @@ const useMouseMove = (
 ) => {
   const onDown = (downEvent: MouseEvent) => {
     let lastPoint = clientXYToPoint(downEvent)
+
     const moveUpdate = (moveEvent: MouseEvent) => {
       const newPoint = clientXYToPoint(moveEvent)
       handler(newPoint, lastPoint)
       lastPoint = newPoint
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    containerEle.value!.addEventListener('mousemove', moveUpdate)
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    containerEle.value!.addEventListener(
-      'mouseup',
-      _upEvent => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        containerEle.value!.removeEventListener('mousemove', moveUpdate)
+    const stop = useEventListener(
+      containerEle,
+      'mousemove',
+      (moveEvent: MouseEvent) => {
+        stop()
+        moveUpdate(moveEvent)
       },
-      { once: true }
+      {
+        once: true
+      }
     )
   }
 
-  onMounted(() => {
-    containerEle.value?.addEventListener('mousedown', onDown)
-  })
-  onBeforeUnmount(() => {
-    containerEle.value?.removeEventListener('mousedown', onDown)
-  })
+  useEventListener(containerEle, 'mousedown', onDown)
 }
 
 const useMouseWheel = (
@@ -144,12 +140,7 @@ const useMouseWheel = (
     e.preventDefault()
   }
 
-  onMounted(() => {
-    containerEle.value?.addEventListener('wheel', onWheel)
-  })
-  onBeforeUnmount(() => {
-    containerEle.value?.removeEventListener('wheel', onWheel)
-  })
+  useEventListener(containerEle, 'wheel', onWheel)
 }
 
 const useTouch = (
@@ -229,16 +220,9 @@ const useTouch = (
     return newPinchTouches
   }
 
-  onMounted(() => {
-    containerEle.value?.addEventListener('touchstart', onTouchStart)
-    containerEle.value?.addEventListener('touchmove', onMove)
-    containerEle.value?.addEventListener('touchend', onTouchEnd)
-  })
-  onBeforeUnmount(() => {
-    containerEle.value?.removeEventListener('touchstart', onTouchStart)
-    containerEle.value?.removeEventListener('touchmove', onMove)
-    containerEle.value?.removeEventListener('touchend', onTouchEnd)
-  })
+  useEventListener(containerEle, 'touchstart', onTouchStart)
+  useEventListener(containerEle, 'touchmove', onMove)
+  useEventListener(containerEle, 'touchend', onTouchEnd)
 }
 
 const useImageViewer = (
