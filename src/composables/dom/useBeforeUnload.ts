@@ -1,21 +1,16 @@
-import { onMounted, onUnmounted, type ComputedRef, type Ref } from 'vue'
+import { toValue, type MaybeRefOrGetter } from 'vue'
+import useEventListener from './useEventListener'
 
 export const useBeforeUnload = (
-  isEnabled: Ref<boolean> | ComputedRef<boolean>,
+  isEnabled: MaybeRefOrGetter<boolean>,
   message: string,
   onBeforeUnload?: (event: BeforeUnloadEvent) => void
 ) => {
-  const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-    if (!isEnabled.value) return
+  useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
+    if (!toValue(isEnabled)) return
     onBeforeUnload?.(event)
     event.preventDefault()
     event.returnValue = message
     return message
-  }
-  onMounted(() => {
-    window.addEventListener('beforeunload', handleBeforeUnload)
-  })
-  onUnmounted(() => {
-    window.removeEventListener('beforeunload', handleBeforeUnload)
   })
 }
