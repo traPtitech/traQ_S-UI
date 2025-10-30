@@ -1,8 +1,23 @@
+export const getMonthString = (date: Readonly<Date>) =>
+  (date.getMonth() + 1).toString().padStart(2, '0')
+
+export const getDateString = (date: Readonly<Date>) =>
+  date.getDate().toString().padStart(2, '0')
+
+export const getHoursString = (date: Readonly<Date>) =>
+  date.getHours().toString().padStart(2, '0')
+
+export const getMinutesString = (date: Readonly<Date>) =>
+  date.getMinutes().toString().padStart(2, '0')
+
+export const getSecondsString = (date: Readonly<Date>) =>
+  date.getSeconds().toString().padStart(2, '0')
+
 export const getTimeString = (date: Readonly<Date>) =>
-  `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+  `${getHoursString(date)}:${getMinutesString(date)}`
 
 export const getDayString = (date: Readonly<Date>) =>
-  `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`
+  `${getMonthString(date)}/${getDateString(date)}`
 
 export const getFullDayString = (date: Readonly<Date>) =>
   `${date.getFullYear()}/${getDayString(date)}`
