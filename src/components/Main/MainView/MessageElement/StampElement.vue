@@ -20,7 +20,7 @@
     <SpinNumber :value="stamp.sum" :class="$style.count" />
   </div>
   <StampScaledElement
-    :show="(isLongHovered || RemainScaled) && !isDetailShown && !isTouchDevice"
+    :show="(isHovered || RemainScaled) && !isDetailShown && !isTouchDevice"
     :stamp="stamp"
     :target-rect="hoveredRect"
     @scaled-hover="onScaledElementHover"
@@ -36,8 +36,8 @@ import { useStampsStore } from '/@/store/entities/stamps'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageStampById } from '/@/lib/messageStampList'
 import StampScaledElement from './StampScaledElement.vue'
-import useHover from '/@/composables/dom/useHover'
 import { useToastStore } from '/@/store/ui/toast'
+import useHover from '/@/composables/dom/useHover'
 
 const props = defineProps<{
   stamp: MessageStampById
@@ -107,7 +107,8 @@ watch(
   }
 )
 
-const { isLongHovered, onMouseEnter, onMouseLeave } = useHover()
+const { isHovered, onMouseEnter, onMouseLeave } = useHover(500)
+
 const stampRoot = ref<HTMLElement | null>(null)
 const hoveredRect = ref<DOMRect | undefined>(undefined)
 const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
@@ -126,7 +127,7 @@ const leaveScaledElementHover = () => {
   hoveredRect.value = undefined
 }
 
-watch(isLongHovered, beginHover => {
+watch(isHovered, beginHover => {
   if (beginHover) {
     if (hoverTimeout.value) {
       clearTimeout(hoverTimeout.value)
