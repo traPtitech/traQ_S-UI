@@ -48,7 +48,7 @@ const content = computed(() => {
   return props.preContent.textContent?.replace(/\n$/, '')
 })
 
-const line_count = computed(() => {
+const lineCount = computed(() => {
   if (!content.value) return 0
 
   const lines = content.value.split('\n')
@@ -56,7 +56,7 @@ const line_count = computed(() => {
 })
 
 const isLong = computed(() => {
-  return line_count.value > MAX_LINES
+  return lineCount.value > MAX_LINES
 })
 
 const preWrapRef = ref<HTMLDivElement>()
