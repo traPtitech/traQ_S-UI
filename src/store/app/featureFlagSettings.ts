@@ -34,6 +34,13 @@ export const featureFlagDescriptions = {
       'WebKit 系ブラウザ (Safari など）でレイアウトが崩れる場合に有効にすることで不具合が解消される可能性があります。',
     defaultValue: isWebKit(),
     endAt: new Date('9999-12-31T00:00')
+  },
+  dose_construct_strict_starred_channel_tree: {
+    title: 'お気に入りチャンネルをツリー表示',
+    description:
+      'お気に入りチャンネル一覧を、お気に入りに登録されたチャンネルのみの木構造で表示します。',
+    defaultValue: false,
+    endAt: new Date('2025-12-31T23:59')
   }
 } as const satisfies Record<string, FeatureFlagDescription>
 
