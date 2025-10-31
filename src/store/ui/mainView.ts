@@ -14,6 +14,7 @@ import { useUsersStore } from '/@/store/entities/users'
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 import { watch } from 'vue'
 import { useResponsiveStore } from './responsive'
+import { useFeatureFlagSettings } from '../app/featureFlagSettings'
 
 interface ViewInformationBase {
   type: string
@@ -73,8 +74,6 @@ export enum MainViewComponentState {
 
 export type HeaderStyle = 'default' | 'dark'
 
-const { isMobile } = useResponsiveStore()
-
 const useMainViewStorePinia = defineStore('ui/mainView', () => {
   const initialValue: State = {
     currentMainViewComponentState: MainViewComponentState.Hidden
@@ -87,6 +86,8 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
     initialValue
   )
   const { lastOpenChannelName } = useBrowserSettings()
+  const { featureFlags } = useFeatureFlagSettings()
+  const { isMobile } = useResponsiveStore()
   const channelsStore = useChannelsStore()
   const usersStore = useUsersStore()
 
@@ -94,11 +95,17 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
 
   const currentMainViewComponentState = ref(MainViewComponentState.Hidden)
 
-  if (!isMobile.value) {
-    restoringPromise.value.then(() => {
-      currentMainViewComponentState.value = state.currentMainViewComponentState
-    })
-  }
+  watch(
+    () => featureFlags.value.does_save_sidebar_expansion_state.enabled,
+    async enabled => {
+      if (!isMobile.value && enabled) {
+        await restoringPromise.value
+        currentMainViewComponentState.value =
+          state.currentMainViewComponentState
+      }
+    },
+    { immediate: true }
+  )
 
   const isSidebarOpen = computed(
     () =>
