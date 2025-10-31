@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :class="$style.labelContainer">
-      <label v-if="label" :class="$style.label">
+      <label v-if="label" :for="id" :class="$style.label">
         {{ label }}
       </label>
       <span v-if="hasError" :class="$style.errorMessage">
@@ -10,6 +10,7 @@
     </div>
     <div v-if="isEditing" :class="$style.inputWrapper">
       <FormInput
+        :id="id"
         ref="inputRef"
         v-model="localValue"
         :class="$style.input"
@@ -43,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, useId } from 'vue'
 import type { ComponentExposed } from 'vue-component-type-helpers'
 import AIcon from '/@/components/UI/AIcon.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
@@ -51,6 +52,7 @@ import useLocalInput from '/@/composables/utils/useLocalInput'
 import useToggle from '/@/composables/utils/useToggle'
 
 const remoteValue = defineModel<string>({ required: true })
+const id = useId()
 
 const props = withDefaults(
   defineProps<{
