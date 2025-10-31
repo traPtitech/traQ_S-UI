@@ -8,7 +8,7 @@
     </div>
     <div
       v-if="stampIdsModel.length !== 0"
-      ref="stampListRef"
+      ref="containerRef"
       :class="$style.stampList"
     >
       <!-- FIXME: スタンプの総数が多い時に重くなる -->
@@ -43,13 +43,13 @@
 </template>
 
 <script lang="ts" setup>
-import Sortable, { type SortableEvent } from 'sortablejs'
-import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import StampPaletteEditorLimitIndicator from './StampPaletteEditorLimitIndicator.vue'
 import { STAMP_PALETTE_STAMPS_LIMIT } from './utils'
 import AStamp from '/@/components/UI/AStamp.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import type { StampId } from '/@/types/entity-ids'
+import { useSortable } from '/@/composables/dom/useSortable'
 
 const stampIdsModel = defineModel<StampId[]>('stamp-ids', { required: true })
 
@@ -70,41 +70,14 @@ const removeSelectedStamps = () => {
   selectedStampIds.value = []
 }
 
-const stampListRef = ref<HTMLElement | null>(null)
-let sortableInstance: Sortable | null = null
-
-const setupSortable = () => {
-  if (sortableInstance) return
-  if (!stampListRef.value) return
-  if (stampIdsModel.value.length === 0) return
-
-  sortableInstance = Sortable.create(stampListRef.value, {
-    animation: 150,
-    draggable: '.js-sortable-item',
-    onUpdate: (event: SortableEvent) => {
-      if (
-        event.newDraggableIndex === undefined ||
-        event.oldDraggableIndex === undefined
-      )
-        return
-      const newStampIds = [...stampIdsModel.value]
-      const movedStampId = newStampIds.splice(event.oldDraggableIndex, 1)[0]
-      if (movedStampId === undefined) return
-      newStampIds.splice(event.newDraggableIndex, 0, movedStampId)
-      stampIdsModel.value = newStampIds
+const { containerRef, setupSortable, destroySortableInstance } = useSortable({
+  store: {
+    set: sortable => {
+      stampIdsModel.value = sortable.toArray()
     }
-  })
-}
-
-const destroySortableInstance = () => {
-  if (sortableInstance) {
-    sortableInstance.destroy()
-    sortableInstance = null
   }
-}
+})
 
-onMounted(setupSortable)
-onUnmounted(destroySortableInstance)
 watch(
   () => stampIdsModel.value.length,
   (newLength, oldLength) => {
