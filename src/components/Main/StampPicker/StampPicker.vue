@@ -61,7 +61,7 @@ import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import { useStampHistory } from '/@/store/domain/stampHistory'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import { useStampPicker } from '/@/store/ui/stampPicker'
 import type { StampId } from '/@/types/entity-ids'
 
@@ -73,7 +73,7 @@ const {
   closeStampPicker
 } = useStampPicker()
 const { upsertLocalStampHistory } = useStampHistory()
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const animationKeys = ref(new Map<StampId, number>())
 const incrementAnimationKey = (id: StampId) => {

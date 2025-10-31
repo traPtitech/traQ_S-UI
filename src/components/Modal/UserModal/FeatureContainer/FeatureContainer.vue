@@ -7,14 +7,14 @@
 import DesktopFeatureContainer from './DesktopFeatureContainer.vue'
 import MobileFeatureContainer from './MobileFeatureContainer.vue'
 import type { User, UserDetail } from '@traptitech/traq'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 
 defineProps<{
   user: User
   detail?: UserDetail
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 </script>
 
 <style lang="scss" module>

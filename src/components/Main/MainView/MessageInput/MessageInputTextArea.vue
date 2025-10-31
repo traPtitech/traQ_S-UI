@@ -46,8 +46,9 @@ import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import useInsertText from '/@/composables/dom/useInsertText'
 import { isFirefox } from '/@/lib/dom/browser'
 import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import type { ChannelId } from '/@/types/entity-ids'
+import { unrefElement } from '/@/lib/dom/unrefElement'
 
 const modelValue = defineModel<string>({ default: '' })
 const showTextAreaExpandButton = defineModel<boolean>(
@@ -88,10 +89,10 @@ const emit = defineEmits<{
 
 const firefoxFlag = isFirefox()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const textareaAutosizeRef = ref<InstanceType<typeof TextareaAutosize>>()
-const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
+const textareaRef = computed(() => unrefElement(textareaAutosizeRef))
 
 defineExpose({ textareaAutosizeRef })
 

@@ -2,14 +2,17 @@ import { computed, ref, type ShallowRef } from 'vue'
 import useChannelMessageFetcher from './useChannelMessageFetcher'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { unrefElement } from '/@/lib/dom/unrefElement'
+import type { MessageScrollerInstance } from '../../../MessagesScroller/MessagesScroller.vue'
+
 export const useChannelView = ({
   channelId,
   entryMessageId,
-  scrollerEle
+  scrollerRef
 }: {
   channelId: string
   entryMessageId?: string
-  scrollerEle: ShallowRef<{ $el: HTMLDivElement } | undefined>
+  scrollerRef: ShallowRef<MessageScrollerInstance | undefined>
 }) => {
   const isMessageShow = ref(false)
 
@@ -21,7 +24,7 @@ export const useChannelView = ({
     lastLoadingDirection,
     onLoadFormerMessagesRequest,
     onLoadLatterMessagesRequest
-  } = useChannelMessageFetcher(scrollerEle, { channelId, entryMessageId })
+  } = useChannelMessageFetcher(scrollerRef, { channelId, entryMessageId })
 
   const { channelsMap } = useChannelsStore()
   const isArchived = computed(
@@ -36,17 +39,20 @@ export const useChannelView = ({
 
   const showToNewMessageButton = ref(false)
   const toNewMessage = (behavior?: ScrollBehavior) => {
-    if (!scrollerEle.value) return
+    if (!scrollerRef.value) return
     showToNewMessageButton.value = false
-    scrollerEle.value.$el.scrollTo({
-      top: scrollerEle.value.$el.scrollHeight,
+    const element = unrefElement(scrollerRef)
+    if (!element) return
+    element.scrollTo({
+      top: element.scrollHeight,
       behavior: behavior
     })
   }
 
   const handleScroll = () => {
-    if (scrollerEle.value === undefined || isLoading.value) return
-    const { scrollTop, scrollHeight, clientHeight } = scrollerEle.value.$el
+    const element = unrefElement(scrollerRef)
+    if (!element || isLoading.value) return
+    const { scrollTop, scrollHeight, clientHeight } = element
     showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop
     if (!isReachedLatest.value) {
       showToNewMessageButton.value = true

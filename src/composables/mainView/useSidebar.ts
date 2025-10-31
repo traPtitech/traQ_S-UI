@@ -1,11 +1,11 @@
 import { computed } from 'vue'
 import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 
 const useSidebar = () => {
   const { currentMainViewComponentState: state, isSidebarOpen } =
     useMainViewStore()
-  const { isMobile } = useResponsiveStore()
+  const { isMobile } = useResponsive()
 
   /**
    * サイドバーが表示されている必要があるか

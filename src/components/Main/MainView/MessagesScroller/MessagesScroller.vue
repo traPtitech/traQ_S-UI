@@ -34,15 +34,8 @@
 
 <script lang="ts">
 import { throttle } from 'throttle-debounce'
-import type { Ref } from 'vue'
-import {
-  nextTick,
-  onMounted,
-  onUnmounted,
-  reactive,
-  shallowRef,
-  watch
-} from 'vue'
+import type { ComponentPublicInstance, Ref } from 'vue'
+import { nextTick, onMounted, reactive, shallowRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
 import type { LoadingDirection } from './composables/useMessagesFetcher'
@@ -53,6 +46,11 @@ import { isMessageScrollerRoute, RouteName } from '/@/router'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import type { MessageId } from '/@/types/entity-ids'
+import useEventListener from '/@/composables/dom/useEventListener'
+
+export interface MessageScrollerInstance extends ComponentPublicInstance {
+  $el: HTMLDivElement
+}
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -262,12 +260,8 @@ const visibilitychangeListener = () => {
   }
   emit('resetIsReachedLatest')
 }
-onMounted(() => {
-  document.addEventListener('visibilitychange', visibilitychangeListener)
-})
-onUnmounted(() => {
-  document.removeEventListener('visibilitychange', visibilitychangeListener)
-})
+
+useEventListener(document, 'visibilitychange', visibilitychangeListener)
 
 const { onClick } = useMarkdownInternalHandler()
 useScrollRestoration(rootRef, state)
