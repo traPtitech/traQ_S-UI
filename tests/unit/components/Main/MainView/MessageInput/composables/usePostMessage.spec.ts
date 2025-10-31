@@ -34,7 +34,7 @@ interface TestCase {
   expected: string
 }
 
-const TEST_CASES = [
+const TEST_CASES: TestCase[] = [
   {
     description: 'empty',
     input: '',
@@ -139,7 +139,7 @@ const TEST_CASES = [
     description: 'spaces + files',
     input: SPACES,
     files: FILES,
-    expected: `${FILE_LINKS}`
+    expected: `${SPACES}\n${FILE_LINKS}`
   },
   {
     description: 'text ending with space',
@@ -174,4 +174,4 @@ const TEST_CASES = [
     files: FILES,
     expected: `${LINK}\n${FILE_LINKS}`
   }
-] as TestCase[]
+]
