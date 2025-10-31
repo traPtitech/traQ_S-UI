@@ -98,7 +98,8 @@ const endEditing = () => {
 <style lang="scss" module>
 .labelContainer {
   display: flex;
-  gap: 8px;
+  gap: 0px 8px;
+  flex-wrap: wrap;
 }
 .label {
   @include color-ui-primary;
