@@ -9,6 +9,8 @@ import type {
   StampId
 } from '/@/types/entity-ids'
 
+export type UserModalNavigationItemType = 'profile' | 'groups' | 'tags'
+
 export type ModalStateType =
   | 'user'
   | 'group'
@@ -62,6 +64,7 @@ interface BaseModalState {
 interface UserModalState extends BaseModalState {
   type: 'user'
   id: UserId
+  navigation?: UserModalNavigationItemType
 }
 
 interface NotificationModalState extends BaseModalState {

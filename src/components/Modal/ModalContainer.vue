@@ -50,6 +50,9 @@
             ? currentState.file
             : undefined
         "
+        :navigation="
+          currentState.type === 'user' ? currentState.navigation : undefined
+        "
       />
     </div>
   </transition>

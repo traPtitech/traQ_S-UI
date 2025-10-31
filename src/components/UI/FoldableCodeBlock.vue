@@ -1,31 +1,38 @@
 <template>
-  <div
-    v-if="isLong"
-    :class="[$style.wrap]"
-    :data-is-fold="isFold"
-    @click="unfold"
-  >
-    <div ref="preWrapRef" :class="wrapClass" v-html="preContent.outerHTML" />
-    <FoldButton
-      show-icon
-      :is-fold="isFold"
-      :class="$style.button"
-      :aria-controls="foldBlockId"
-      :aria-expanded="!isFold"
-      @click="toggle"
+  <div :class="$style.container">
+    <div
+      v-if="isLong"
+      :class="[$style.wrap]"
+      :data-is-fold="isFold"
+      @click="unfold"
+    >
+      <div ref="preWrapRef" :class="wrapClass" v-html="preContent.outerHTML" />
+      <FoldButton
+        show-icon
+        :is-fold="isFold"
+        :class="$style.foldButton"
+        :aria-controls="foldBlockId"
+        :aria-expanded="!isFold"
+        @click="toggle"
+      />
+    </div>
+    <div
+      v-else
+      ref="preWrapRef"
+      :class="wrapClass"
+      v-html="preContent.outerHTML"
     />
+
+    <div :class="$style.copyButton">
+      <CopyButton :contents-source="() => content" />
+    </div>
   </div>
-  <div
-    v-else
-    ref="preWrapRef"
-    :class="wrapClass"
-    v-html="preContent.outerHTML"
-  />
 </template>
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
 import FoldButton from '/@/components/UI/FoldButton.vue'
+import CopyButton from '/@/components/UI/CopyButton.vue'
 import { randomString } from '/@/lib/basic/randomString'
 
 const MAX_LINES = 5
@@ -37,15 +44,19 @@ const props = defineProps<{
 
 const isFold = ref(true)
 
-const line_count = computed(() => {
-  const content = props.preContent.textContent
-  if (content === null) return 0
-  const lines = content.split('\n')
+const content = computed(() => {
+  return props.preContent.textContent?.replace(/\n$/, '')
+})
+
+const lineCount = computed(() => {
+  if (!content.value) return 0
+
+  const lines = content.value.split('\n')
   return lines.length - (lines.at(-1) === '' ? 1 : 0) // 末尾の改行は行数に含めない
 })
 
 const isLong = computed(() => {
-  return line_count.value > MAX_LINES
+  return lineCount.value > MAX_LINES
 })
 
 const preWrapRef = ref<HTMLDivElement>()
@@ -72,12 +83,37 @@ const toggle = (e: MouseEvent) => {
 </script>
 
 <style lang="scss" module>
-.wrap {
+.container {
   position: relative;
+
+  code {
+    padding-right: 46px !important;
+  }
+}
+
+.copyButton {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+
+  padding: 8px 8px 4px 14px;
+
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--markdown-code-background) 30%
+  );
+
+  width: fit-content;
+}
+
+.wrap {
   overflow: hidden;
+
   pre {
     margin-bottom: 0;
   }
+
   margin-bottom: 16px;
 
   &[data-is-fold='true'] {
@@ -98,7 +134,7 @@ const toggle = (e: MouseEvent) => {
     }
   }
 
-  .button {
+  .foldButton {
     position: absolute;
     bottom: 8px;
     margin: auto;
@@ -109,13 +145,13 @@ const toggle = (e: MouseEvent) => {
   }
 
   @media (any-hover: hover) {
-    .button {
+    .foldButton {
       transform: translateY(-8px);
       opacity: 0;
     }
 
     &:hover {
-      .button {
+      .foldButton {
         transform: translateY(0);
         opacity: 1;
       }

@@ -6,7 +6,7 @@
     <AIcon
       v-if="showIcon"
       :name="isFold ? 'down' : 'up'"
-      :class="$style['icon']"
+      :class="$style.icon"
     />
     {{ isFold ? 'さらに表示' : '折りたたむ' }}
   </button>
