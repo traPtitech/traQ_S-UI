@@ -10,6 +10,7 @@ import {
 } from 'vue'
 import { useModalStore } from '/@/store/ui/modal'
 import useEventListener from '/@/composables/dom/useEventListener'
+import { unrefElement } from '/@/lib/dom/unrefElement'
 
 /**
  * コメントや文字列のVNodeを取り除く
@@ -62,9 +63,7 @@ export default defineComponent({
 
       if (props.unableWhileModalOpen && shouldShowModal.value) return
 
-      const ele =
-        element.value instanceof Element ? element.value : element.value.$el
-
+      const ele = unrefElement(element)
       if (ele === e.target || e.composedPath().includes(ele)) {
         return
       }
@@ -79,10 +78,7 @@ export default defineComponent({
       if (!isMouseDown.value) return
       isMouseDown.value = false
 
-      if (!element.value) return
-      const ele =
-        element.value instanceof Element ? element.value : element.value.$el
-
+      const ele = unrefElement(element)
       if (ele === e.target || e.composedPath().includes(ele)) {
         return
       }

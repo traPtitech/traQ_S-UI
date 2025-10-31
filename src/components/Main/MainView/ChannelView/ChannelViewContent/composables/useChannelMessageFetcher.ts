@@ -1,6 +1,6 @@
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import type { ChannelId, MessageId } from '/@/types/entity-ids'
-import type { Ref } from 'vue'
+import type { Ref, ShallowRef } from 'vue'
 import { watch, onMounted, onActivated, ref, computed } from 'vue'
 import type { Message } from '@traptitech/traq'
 import { wsListener } from '/@/lib/websocket'
@@ -10,6 +10,7 @@ import { useMessagesView } from '/@/store/domain/messagesView'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
+import type { MessageScrollerInstance } from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 60
@@ -25,7 +26,7 @@ interface GetMessagesParams {
 }
 
 const useChannelMessageFetcher = (
-  scrollerEle: Ref<{ $el: HTMLDivElement } | undefined>,
+  scrollerRef: ShallowRef<MessageScrollerInstance | undefined>,
   props: {
     channelId: ChannelId
     entryMessageId?: MessageId
@@ -39,7 +40,7 @@ const useChannelMessageFetcher = (
     deleteUnreadChannelWithSend
   } = useSubscriptionStore()
   const { fetchLimit, waitHeightResolved } = useFetchLimit(
-    scrollerEle,
+    scrollerRef,
     MESSAGE_HEIGHT
   )
   const loadedMessageLatestDate = ref<Date>()

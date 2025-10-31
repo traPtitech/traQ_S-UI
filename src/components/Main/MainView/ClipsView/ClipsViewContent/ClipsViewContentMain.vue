@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <ScrollLoadingBar :class="$style.loadingBar" :show="isLoading" />
     <MessagesScroller
-      ref="scrollerEle"
+      ref="scrollerRef"
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
       :is-reached-latest="isReachedLatest"
@@ -23,7 +23,9 @@
 </template>
 
 <script lang="ts" setup>
-import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
+import MessagesScroller, {
+  type MessageScrollerInstance
+} from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import { shallowRef } from 'vue'
 import type { ClipFolderId } from '/@/types/entity-ids'
@@ -34,7 +36,7 @@ const props = defineProps<{
   clipFolderId: ClipFolderId
 }>()
 
-const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
+const scrollerRef = shallowRef<MessageScrollerInstance>()
 const {
   messageIds,
   isReachedEnd,
@@ -42,7 +44,7 @@ const {
   isLoading,
   lastLoadingDirection,
   onLoadFormerMessagesRequest
-} = useClipsFetcher(scrollerEle, props)
+} = useClipsFetcher(scrollerRef, props)
 </script>
 
 <style lang="scss" module>
