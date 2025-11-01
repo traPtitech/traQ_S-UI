@@ -17,6 +17,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 import { useGroupsStore } from '/@/store/entities/groups'
 import type { AxiosProgressEvent } from 'axios'
+import { isEmbeddedLink } from '/@/lib/markdown/markdown'
 
 /**
  * @param progress アップロード進行状況 0～1
@@ -45,9 +46,30 @@ const uploadAttachments = async (
   return responses.map(res => buildFilePathForPost(res.data.id))
 }
 
-const createContent = (embededText: string, fileUrls: string[]) => {
-  const embededUrls = fileUrls.join('\n')
-  return embededText + (embededText && embededUrls ? '\n\n' : '') + embededUrls
+export const createContent = async (
+  embeddedText: string,
+  fileUrls: string[]
+) => {
+  const joinContents = (delimiter: string, contents: string[]) =>
+    contents.filter(Boolean).join(delimiter)
+
+  const embeddedUrls = fileUrls.join('\n')
+  const trimmedEmbeddedText = embeddedText.trimEnd()
+
+  if (trimmedEmbeddedText === '') {
+    return joinContents('\n', [embeddedText, embeddedUrls])
+  }
+
+  const trimmedEmbeddedTextLines = trimmedEmbeddedText.split(`\n`)
+
+  if (
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await isEmbeddedLink(trimmedEmbeddedTextLines.at(-1)!)
+  ) {
+    return joinContents('\n', [trimmedEmbeddedText, embeddedUrls])
+  }
+
+  return joinContents('\n\n', [embeddedText, embeddedUrls])
 }
 
 const usePostMessage = (
@@ -110,7 +132,7 @@ const usePostMessage = (
     const dummyFileUrls = state.attachments.map(() =>
       buildFilePathForPost(nullUuid)
     )
-    const dummyText = createContent(embededText, dummyFileUrls)
+    const dummyText = await createContent(embededText, dummyFileUrls)
     if (countLength(dummyText) > MESSAGE_MAX_LENGTH) {
       addErrorToast('メッセージが長すぎます')
       return
@@ -125,7 +147,7 @@ const usePostMessage = (
       })
 
       await apis.postMessage(cId, {
-        content: createContent(embededText, fileUrls)
+        content: await createContent(embededText, fileUrls)
       })
 
       clearState()
