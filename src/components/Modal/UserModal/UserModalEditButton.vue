@@ -1,6 +1,6 @@
 <template>
   <button :class="$style.button">
-    <a-icon name="pencil" mdi :size="iconSize" :class="$style.icon" />
+    <AIcon name="pencil" mdi :size="iconSize" :class="$style.icon" />
   </button>
 </template>
 
