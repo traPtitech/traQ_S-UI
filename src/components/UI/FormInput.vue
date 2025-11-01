@@ -137,16 +137,16 @@ defineExpose({ focus })
 <style lang="scss" module>
 .labelContainer {
   display: flex;
-  gap: 8px;
+  gap: 0px 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
 }
 .label {
   @include color-ui-primary;
   display: block;
-  margin-bottom: 4px;
 }
 .errorMessage {
   color: $theme-accent-error-default;
-  margin-bottom: 4px;
 }
 .inputContainer {
   @include color-ui-primary;

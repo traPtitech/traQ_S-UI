@@ -1,5 +1,7 @@
 <template>
-  <AIcon :size="size" mdi name="chevron-left" :class="$style.button" />
+  <button>
+    <AIcon :size="size" mdi name="chevron-left" />
+  </button>
 </template>
 
 <script lang="ts" setup>
@@ -14,9 +16,3 @@ withDefaults(
   }
 )
 </script>
-
-<style lang="scss" module>
-.button {
-  cursor: pointer;
-}
-</style>

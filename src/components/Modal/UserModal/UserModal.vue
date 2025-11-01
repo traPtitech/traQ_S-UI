@@ -20,11 +20,11 @@
       <div :class="$style.content" :style="styles.content">
         <FeatureContainer :user="user" :detail="userDetail" />
         <NavigationSelector
-          :current-navigation="currentNavigation"
+          :current-navigation="navigation"
           @navigation-change="onNavigationChange"
         />
         <NavigationContent
-          :current-navigation="currentNavigation"
+          :current-navigation="navigation"
           :user="user"
           :detail="userDetail"
         />
@@ -34,8 +34,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, toRef } from 'vue'
-import { useNavigation } from './composables/useNavigation'
+import { computed, reactive } from 'vue'
+import type { UserId } from '/@/types/entity-ids'
 import useUserDetail from './composables/useUserDetail'
 import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
 import NavigationContent from './NavigationContent.vue'
@@ -49,13 +49,14 @@ import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
 import { useModalStore } from '/@/store/ui/modal'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import type { UserId } from '/@/types/entity-ids'
+import type { UserModalNavigationItemType } from '/@/store/ui/modal/states'
 
 const props = defineProps<{
   id: UserId
+  navigation?: UserModalNavigationItemType
 }>()
 
-const { clearModal } = useModalStore()
+const { clearModal, replaceModal } = useModalStore()
 const { isMobile } = useResponsiveStore()
 const { usersMap } = useUsersStore()
 const { openLinkAndClearModal } = useOpenLinkAndClearModal()
@@ -72,8 +73,13 @@ const styles = reactive({
   }))
 })
 
-const { navigationSelectorState, onNavigationChange } = useNavigation()
-const currentNavigation = toRef(navigationSelectorState, 'currentNavigation')
+const onNavigationChange = (type: UserModalNavigationItemType) => {
+  replaceModal({
+    type: 'user',
+    id: props.id,
+    navigation: type
+  })
+}
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const user = computed(() => usersMap.value.get(props.id)!)

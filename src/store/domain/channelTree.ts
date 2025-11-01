@@ -10,6 +10,7 @@ import type { ChannelId } from '/@/types/entity-ids'
 import { entityMitt } from '/@/store/entities/mitt'
 import { useSubscriptionStore } from './subscription'
 import { useChannelsStore } from '../entities/channels'
+import { useStaredChannels } from './staredChannels'
 
 type ChannelTreeEventMap = {
   created: { id: ChannelId; path: string }
@@ -34,9 +35,11 @@ channelTreeMitt.on('moved', ({ oldPath, newPath }) => {
 const useChannelTreePinia = defineStore('domain/channelTree', () => {
   const subscriptionStore = useSubscriptionStore()
   const channelsStore = useChannelsStore()
+  const { staredChannelSet } = useStaredChannels()
 
   const channelTree = ref<Readonly<ChannelTree>>({ children: [] })
   const homeChannelTree = ref<Readonly<ChannelTree>>({ children: [] })
+  const starredChannelTree = ref<Readonly<ChannelTree>>({ children: [] })
 
   const topLevelChannels = computed(() =>
     [...channelsStore.channelsMap.value.values()].filter(
@@ -91,9 +94,31 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
     }
     homeChannelTree.value = tree
   }
+  const constructStarredChannelTree = () => {
+    const topLevelChannelIds = topLevelChannels.value.map(c => c.id)
+
+    const tree = {
+      children:
+        constructTree(
+          {
+            id: rootChannelId,
+            name: '',
+            parentId: null,
+            archived: false,
+            children: topLevelChannelIds
+          },
+          // constructTreeは重いのと内部ではreactiveである必要がないのでtoRawする
+          toRaw(channelsStore.channelsMap.value),
+          toRaw(staredChannelSet.value)
+        )?.children ?? []
+    }
+    starredChannelTree.value = tree
+  }
+
   const constructAllTrees = () => {
     constructChannelTree()
     constructHomeChannelTree()
+    constructStarredChannelTree()
   }
 
   constructAllTrees()
@@ -139,7 +164,15 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
     constructHomeChannelTree()
   })
 
-  return { channelTree, homeChannelTree, topLevelChannels }
+  watch(
+    staredChannelSet,
+    () => {
+      constructStarredChannelTree()
+    },
+    { deep: true }
+  )
+
+  return { channelTree, homeChannelTree, starredChannelTree, topLevelChannels }
 })
 
 export const useChannelTree = convertToRefsStore(useChannelTreePinia)
