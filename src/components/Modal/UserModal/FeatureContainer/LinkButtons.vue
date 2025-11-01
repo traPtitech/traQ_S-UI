@@ -1,6 +1,7 @@
 <template>
-  <div :class="$style.container">
+  <div>
     <LinkButton
+      :class="$style.button"
       :title="`${showTitle ? 'DM' : ''}`"
       icon-name="email"
       icon-mdi
@@ -8,6 +9,7 @@
     />
     <LinkButton
       v-if="homeChannelId !== null"
+      :class="$style.button"
       :title="`${showTitle ? 'ホーム' : ''}`"
       icon-name="home"
       icon-mdi
@@ -47,9 +49,13 @@ const onHomeChannelClick = async (event: MouseEvent) => {
 </script>
 
 <style lang="scss" module>
-.container {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
+.button {
+  margin: 8px 4px;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
 }
 </style>

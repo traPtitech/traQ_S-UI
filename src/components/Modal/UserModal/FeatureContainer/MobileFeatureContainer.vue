@@ -66,6 +66,5 @@ defineProps<{
 }
 .buttons {
   margin-right: 8px;
-  align-self: end;
 }
 </style>

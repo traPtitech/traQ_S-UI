@@ -1,7 +1,7 @@
 <template>
   <section :class="$style.feature">
-    <div :class="$style.infoContainer">
-      <h1 :class="$style.displayName">{{ user.displayName }}</h1>
+    <div>
+      <h1>{{ user.displayName }}</h1>
       <div :class="$style.onlineContainer">
         <p>@{{ user.name }}</p>
         <OnlineIndicator :user-id="user.id" has-text />
@@ -10,7 +10,6 @@
     <LinkButtons
       :home-channel-id="detail?.homeChannel"
       :user-name="user.name"
-      :class="$style.buttons"
       show-title
     />
   </section>
@@ -33,23 +32,11 @@ defineProps<{
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 1rem;
-}
-.infoContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 .onlineContainer {
   display: flex;
   flex-direction: column;
   gap: 2px;
-}
-.buttons {
-  margin: 8px 0;
-}
-.displayName {
-  width: 80%;
 }
 </style>
