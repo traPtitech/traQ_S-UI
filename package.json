@@ -61,7 +61,7 @@
     "@types/dom-screen-wake-lock": "^1.0.3",
     "@types/katex": "^0.16.7",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^24.1.0",
+    "@types/node": "^24.10.0",
     "@types/punycode": "^2.1.4",
     "@types/serviceworker": "^0.0.163",
     "@types/sortablejs": "^1.15.9",
