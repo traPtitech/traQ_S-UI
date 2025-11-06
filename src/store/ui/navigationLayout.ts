@@ -1,7 +1,9 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, onMounted, ref, shallowRef } from 'vue'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
 type State = {
   navigationWidth: number

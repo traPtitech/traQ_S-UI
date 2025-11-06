@@ -22,8 +22,8 @@
 </template>
 
 <script lang="ts" setup>
-import MessageOgpEmbed from './MessageOgpEmbed.vue'
 import MessageOgpDescription from './MessageOgpDescription.vue'
+import MessageOgpEmbed from './MessageOgpEmbed.vue'
 
 withDefaults(
   defineProps<{

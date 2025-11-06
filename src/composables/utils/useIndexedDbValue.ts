@@ -1,8 +1,10 @@
+import { reactive, ref, watch } from 'vue'
+
+import { get, set } from 'idb-keyval'
+
+import { toRawDeep } from '/@/lib/basic/reactive'
 import type { Migrations } from '/@/lib/dom/idb'
 import { createStoreWithMigrations } from '/@/lib/dom/idb'
-import { get, set } from 'idb-keyval'
-import { reactive, ref, watch } from 'vue'
-import { toRawDeep } from '/@/lib/basic/reactive'
 
 export const storeName = 'store'
 export const key = 'key'

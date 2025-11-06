@@ -53,9 +53,11 @@
 
 <script lang="ts">
 import type { UserDetail } from '@traptitech/traq'
+
 import type { Ref } from 'vue'
 import { computed, reactive, ref, toRef } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
+
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useFileSelect } from '/@/composables/dom/useFileSelect'

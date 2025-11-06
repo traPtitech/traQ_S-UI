@@ -26,6 +26,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
+
 import AStamp from '/@/components/UI/AStamp.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import type { StampId } from '/@/types/entity-ids'

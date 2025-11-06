@@ -91,11 +91,12 @@
 </template>
 
 <script lang="ts" setup>
+import { reactive } from 'vue'
+
 import EditTheme from '/@/components/Settings/ThemeTab/EditTheme.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import FormRadio from '/@/components/UI/FormRadio.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import { reactive } from 'vue'
+import FormRadio from '/@/components/UI/FormRadio.vue'
 import type { Theme } from '/@/lib/theme/schema'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 

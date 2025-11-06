@@ -49,26 +49,29 @@
 </template>
 
 <script lang="ts" setup>
+import type { Message } from '@traptitech/traq'
+import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
+
 import type { DeepReadonly } from 'vue'
 import { computed, ref, shallowRef, watchEffect } from 'vue'
-import { getDateRepresentation } from '/@/lib/basic/date'
-import type { MessageId } from '/@/types/entity-ids'
-import useChannelPath from '/@/composables/useChannelPath'
-import type { Message } from '@traptitech/traq'
-import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
-import { useUsersStore } from '/@/store/entities/users'
-import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
-import { render } from '/@/lib/markdown/markdown'
-import { isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
+
 import MessageQuoteList from '/@/components/Main/MainView/MessageElement/MessageQuoteList.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
-import useToggle from '/@/composables/utils/useToggle'
-import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import useBoxSize from '/@/composables/dom/useBoxSize'
+import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
+import useChannelPath from '/@/composables/useChannelPath'
+import useToggle from '/@/composables/utils/useToggle'
+import { getDateRepresentation } from '/@/lib/basic/date'
+import { isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
+import { render } from '/@/lib/markdown/markdown'
+import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useUsersStore } from '/@/store/entities/users'
+import type { MessageId } from '/@/types/entity-ids'
+
+import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
 
 const props = defineProps<{
   message: DeepReadonly<Message>

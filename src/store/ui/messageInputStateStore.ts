@@ -1,11 +1,13 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import type { Ref } from 'vue'
-import { computed, unref, toRef } from 'vue'
+import { computed, toRef, unref } from 'vue'
+
+import { promisifyRequest } from 'idb-keyval'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import useIndexedDbValue, { key } from '/@/composables/utils/useIndexedDbValue'
 import type { AttachmentType } from '/@/lib/basic/file'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
-import useIndexedDbValue, { key } from '/@/composables/utils/useIndexedDbValue'
-import { promisifyRequest } from 'idb-keyval'
 
 /**
  * 基本的に直接利用しないで`/@/composables/messageInputState`を利用する

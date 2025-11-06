@@ -1,21 +1,23 @@
-import type { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
+import {
+  deleteToken as deleteTokenFb,
+  getMessaging,
+  getToken as getTokenFb,
+  onMessage
+} from 'firebase/messaging'
+
 import apis from '/@/lib/apis'
-import router from '/@/router'
+import { wait } from '/@/lib/basic/timer'
 import { isIOSApp } from '/@/lib/dom/browser'
+import router from '/@/router'
+import type { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
 import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
+
+import type { FirebasePayloadData } from './firebase'
+import { getFirebaseApp, setupFirebaseApp } from './firebase'
 import { createNotificationArgumentsCreator } from './notificationArguments'
+import { requestNotificationPermission } from './requestPermission'
 import type { OnCanUpdate } from './updateToast'
 import { setupUpdateToast } from './updateToast'
-import type { FirebasePayloadData } from './firebase'
-import { setupFirebaseApp, getFirebaseApp } from './firebase'
-import { requestNotificationPermission } from './requestPermission'
-import {
-  getMessaging,
-  onMessage,
-  getToken as getTokenFb,
-  deleteToken as deleteTokenFb
-} from 'firebase/messaging'
-import { wait } from '/@/lib/basic/timer'
 
 const appName = window.traQConfig.name || 'traQ'
 const ignoredChannels = window.traQConfig.inlineReplyDisableChannels ?? []

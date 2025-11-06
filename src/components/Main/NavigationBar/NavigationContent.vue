@@ -22,13 +22,14 @@
 </template>
 
 <script lang="ts" setup>
-import NavigationContentTitle from './NavigationContentTitle.vue'
-import HomeTab from './NavigationContent/HomeTab.vue'
-import ChannelsTab from './NavigationContent/ChannelsTab.vue'
-import ActivityTab from './NavigationContent/ActivityTab.vue'
-import UsersTab from './NavigationContent/UsersTab.vue'
-import ClipFoldersTab from './NavigationContent/ClipFoldersTab.vue'
 import type { NavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
+
+import ActivityTab from './NavigationContent/ActivityTab.vue'
+import ChannelsTab from './NavigationContent/ChannelsTab.vue'
+import ClipFoldersTab from './NavigationContent/ClipFoldersTab.vue'
+import HomeTab from './NavigationContent/HomeTab.vue'
+import UsersTab from './NavigationContent/UsersTab.vue'
+import NavigationContentTitle from './NavigationContentTitle.vue'
 
 withDefaults(
   defineProps<{

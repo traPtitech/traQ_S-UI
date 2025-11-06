@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
-import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
-import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import { computed, nextTick, ref, shallowRef } from 'vue'
-import type { ChannelId, UserId } from '/@/types/entity-ids'
-import useChannelMessageFetcher from '../ChannelView/ChannelViewContent/composables/useChannelMessageFetcher'
-import { useChannelsStore } from '/@/store/entities/channels'
+
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
-import { useSubscriptionStore } from '/@/store/domain/subscription'
+import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
+import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
+import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useChannelsStore } from '/@/store/entities/channels'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
+
+import useChannelMessageFetcher from '../ChannelView/ChannelViewContent/composables/useChannelMessageFetcher'
 
 const props = defineProps<{
   channelId: ChannelId

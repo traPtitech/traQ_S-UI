@@ -35,8 +35,10 @@
 
 <script lang="ts">
 import type { PatchChannelRequest } from '@traptitech/traq'
+
 import type { Ref } from 'vue'
 import { computed, reactive } from 'vue'
+
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import useChannelOptions from '/@/composables/useChannelOptions'
 import useChannelPath from '/@/composables/useChannelPath'
@@ -86,11 +88,12 @@ const useManageChannel = (
 </script>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue'
 import AToggle from '/@/components/UI/AToggle.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
+
+import ModalFrame from '../Common/ModalFrame.vue'
 
 const props = defineProps<{
   id: string

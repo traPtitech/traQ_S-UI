@@ -47,10 +47,10 @@
 
 <script lang="ts" setup>
 import type { Pin } from '@traptitech/traq'
+
 import { computed, ref, shallowRef } from 'vue'
 import { useRouter } from 'vue-router'
-import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
-import useDayDiffMessages from './composables/useDayDiffMessages'
+
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
 import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
@@ -63,6 +63,9 @@ import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useMessagesStore } from '/@/store/entities/messages'
 import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
+
+import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
+import useDayDiffMessages from './composables/useDayDiffMessages'
 
 const props = defineProps<{
   channelId: ChannelId

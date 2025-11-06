@@ -18,10 +18,12 @@
 </template>
 
 <script lang="ts" setup>
-import { render, renderInline } from '/@/lib/markdown/markdown'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
+
 import { computed, nextTick, ref, watchEffect } from 'vue'
+
 import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
+import { render, renderInline } from '/@/lib/markdown/markdown'
 
 const props = withDefaults(
   defineProps<{

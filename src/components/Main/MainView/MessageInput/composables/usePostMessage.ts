@@ -1,23 +1,25 @@
-import type { ChannelId } from '/@/types/entity-ids'
-import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
-import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
-import useChannelPath from '/@/composables/useChannelPath'
 import { computed, ref, unref } from 'vue'
-import { nullUuid } from '/@/lib/basic/uuid'
-import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
+
+import type { AxiosProgressEvent } from 'axios'
+
+import useMessageInputStateStatic from '/@/composables/messageInputState/useMessageInputStateStatic'
+import useChannelPath from '/@/composables/useChannelPath'
+import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
-import { useToastStore } from '/@/store/ui/toast'
+import { nullUuid } from '/@/lib/basic/uuid'
+import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
+import { isEmbeddedLink } from '/@/lib/markdown/markdown'
+import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
+import { useChannelTree } from '/@/store/domain/channelTree'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useUsersStore } from '/@/store/entities/users'
 import type {
   Attachment,
   MessageInputStateKey
 } from '/@/store/ui/messageInputStateStore'
-import useMessageInputStateStatic from '/@/composables/messageInputState/useMessageInputStateStatic'
-import { useChannelTree } from '/@/store/domain/channelTree'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useUsersStore } from '/@/store/entities/users'
-import { useGroupsStore } from '/@/store/entities/groups'
-import type { AxiosProgressEvent } from 'axios'
-import { isEmbeddedLink } from '/@/lib/markdown/markdown'
+import { useToastStore } from '/@/store/ui/toast'
+import type { ChannelId } from '/@/types/entity-ids'
 
 /**
  * @param progress アップロード進行状況 0～1

@@ -1,5 +1,7 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
 const DEFAULT_TOAST_TIMEOUT = 1500

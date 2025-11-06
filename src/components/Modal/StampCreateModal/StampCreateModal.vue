@@ -10,8 +10,10 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, ref } from 'vue'
+
 import ModalFrame from '/@/components/Modal/Common/ModalFrame.vue'
-import { ref, computed } from 'vue'
+
 import StampImageEdit from './StampImageEdit.vue'
 import StampInfoEdit from './StampInfoEdit.vue'
 

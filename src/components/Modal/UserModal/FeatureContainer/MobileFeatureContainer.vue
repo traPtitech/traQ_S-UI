@@ -19,10 +19,12 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
-import LinkButtons from './LinkButtons.vue'
 import type { User, UserDetail } from '@traptitech/traq'
+
+import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+
+import LinkButtons from './LinkButtons.vue'
 
 defineProps<{
   user: User

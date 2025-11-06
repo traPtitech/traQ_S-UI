@@ -4,14 +4,18 @@ import type {
   QallRoomWithParticipants,
   User
 } from '@traptitech/traq'
-import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import { readonly, ref } from 'vue'
-import { createSingleflight } from '/@/lib/basic/async'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import apis from '/@/lib/apis'
+import { createSingleflight } from '/@/lib/basic/async'
 import { wsListener } from '/@/lib/websocket'
-import { convertToRefsStore } from '../utils/convertToRefsStore'
+
 import { useChannelsStore } from '../entities/channels'
 import { useUsersStore } from '../entities/users'
+import { convertToRefsStore } from '../utils/convertToRefsStore'
 
 type Participant = {
   user: User

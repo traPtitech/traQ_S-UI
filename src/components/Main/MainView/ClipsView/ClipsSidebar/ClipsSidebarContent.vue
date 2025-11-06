@@ -30,6 +30,7 @@
 
 <script lang="ts" setup>
 import { computed, watch } from 'vue'
+
 import ContentEditor from '/@/components/Main/MainView/PrimaryViewSidebar/ContentEditor.vue'
 import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
 import SidebarContentContainerFoldable from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerFoldable.vue'

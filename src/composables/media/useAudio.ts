@@ -1,8 +1,11 @@
-import type { Ref } from 'vue'
-import { ref, computed, watch, readonly, shallowRef, onUnmounted } from 'vue'
-import usePictureInPicture from './usePictureInPicture'
 import type { FileInfo } from '@traptitech/traq'
+
+import type { Ref } from 'vue'
+import { computed, onUnmounted, readonly, ref, shallowRef, watch } from 'vue'
+
 import { useAudioController } from '/@/store/ui/audioController'
+
+import usePictureInPicture from './usePictureInPicture'
 
 const toFinite = (n: number | undefined, def: number) =>
   Number.isFinite(n) ? (n as number) : def

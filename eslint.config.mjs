@@ -1,3 +1,6 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import stylistic from '@stylistic/eslint-plugin'
@@ -6,8 +9,6 @@ import cypress from 'eslint-plugin-cypress'
 import unusedImports from 'eslint-plugin-unused-imports'
 import vueLint from 'eslint-plugin-vue'
 import globals from 'globals'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

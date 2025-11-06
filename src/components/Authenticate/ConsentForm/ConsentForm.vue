@@ -33,14 +33,16 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+import { getFirstQuery } from '/@/lib/basic/url'
+
+import AuthenticateButton from '../AuthenticateButton.vue'
 import AuthenticateHeader from '../AuthenticateHeader.vue'
 import ClientDescription from './ClientDescription.vue'
 import ClientScopes from './ClientScopes.vue'
-import AuthenticateButton from '../AuthenticateButton.vue'
 import useConsent from './composables/useConsent'
-import { useRoute } from 'vue-router'
-import { getFirstQuery } from '/@/lib/basic/url'
-import { computed } from 'vue'
 
 const route = useRoute()
 const paramScopes = computed(

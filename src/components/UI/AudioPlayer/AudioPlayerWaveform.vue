@@ -19,8 +19,10 @@
 </template>
 
 <script lang="ts" setup>
-import { throttle } from 'throttle-debounce'
 import { computed, ref, shallowRef } from 'vue'
+
+import { throttle } from 'throttle-debounce'
+
 import useHover from '/@/composables/dom/useHover'
 
 const currentTime = defineModel<number>('currentTime', { required: true })

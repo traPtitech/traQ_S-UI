@@ -26,21 +26,23 @@
 </template>
 
 <script lang="ts" setup>
-import NavigationSelectorItem from '/@/components/Main/NavigationBar/NavigationSelectorItem.vue'
-import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
 import { computed, watch } from 'vue'
+
+import NavigationSelectorItem from '/@/components/Main/NavigationBar/NavigationSelectorItem.vue'
 import type {
-  NavigationItemType,
-  EphemeralNavigationItemType
+  EphemeralNavigationItemType,
+  NavigationItemType
 } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 import {
-  useNavigationSelectorItem,
-  useEphemeralNavigationSelectorItem
+  useEphemeralNavigationSelectorItem,
+  useNavigationSelectorItem
 } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
-import type { EphemeralNavigationSelectorEntry } from './composables/useNavigationSelectorEntry'
-import useNavigationSelectorEntry from './composables/useNavigationSelectorEntry'
+import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
 import { VERSION } from '/@/lib/define'
 import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
+
+import type { EphemeralNavigationSelectorEntry } from './composables/useNavigationSelectorEntry'
+import useNavigationSelectorEntry from './composables/useNavigationSelectorEntry'
 
 const props = withDefaults(
   defineProps<{

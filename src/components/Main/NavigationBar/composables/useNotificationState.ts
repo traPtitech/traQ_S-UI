@@ -1,10 +1,12 @@
+import { ChannelSubscribeLevel } from '@traptitech/traq'
+
 import type { Ref } from 'vue'
 import { computed, reactive } from 'vue'
+
 import { deepSome } from '/@/lib/basic/tree'
+import { useStaredChannels } from '/@/store/domain/staredChannels'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import type { ChannelId } from '/@/types/entity-ids'
-import { useStaredChannels } from '/@/store/domain/staredChannels'
-import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 const useNotificationState = <T extends { id: ChannelId; children: T[] }>(
   channelTree: Ref<{ id: ChannelId; children?: T[] }>

@@ -15,6 +15,7 @@
 
 <script lang="ts" setup>
 import { useResponsiveStore } from '/@/store/ui/responsive'
+
 defineProps<{
   description: string
   example: string

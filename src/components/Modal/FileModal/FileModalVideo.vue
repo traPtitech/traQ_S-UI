@@ -13,8 +13,8 @@
 </template>
 
 <script lang="ts" setup>
-import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
+import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
 import useFileMeta from '/@/composables/files/useFileMeta'
 
 const props = defineProps<{

@@ -1,19 +1,23 @@
-import { createTestingPinia } from '@pinia/testing'
 import {
-  UserAccountState,
   type Channel,
   type Stamp,
   type User,
+  UserAccountState,
   type UserGroup
 } from '@traptitech/traq'
+
 import { computed, ref } from 'vue'
+
+import { createTestingPinia } from '@pinia/testing'
+
 import useSuggesterWithoutSetup from '/@/components/Main/MainView/MessageInput/composables/suggestion/useSuggester'
+import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
-import { channels } from '../channels/useChannelPath.spec'
-import { useChannelsStore } from '/@/store/entities/channels'
+
 import { withSetup } from '../../testUtils'
+import { channels } from '../channels/useChannelPath.spec'
 
 const useSuggester = withSetup(useSuggesterWithoutSetup)
 

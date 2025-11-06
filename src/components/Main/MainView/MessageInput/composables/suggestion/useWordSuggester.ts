@@ -1,11 +1,13 @@
 import type { ComputedRef, Ref } from 'vue'
 import { computed, ref, watch } from 'vue'
-import type { Word } from './useWordSuggestionList'
-import useWordSuggesterList from './useWordSuggestionList'
+
 import useInsertText from '/@/composables/dom/useInsertText'
 import getCaretPosition from '/@/lib/dom/caretPosition'
 import type { Target } from '/@/lib/suggestion/basic'
 import { getCurrentWord } from '/@/lib/suggestion/basic'
+
+import type { Word } from './useWordSuggestionList'
+import useWordSuggesterList from './useWordSuggestionList'
 
 export type WordOrConfirmedPart =
   | Word

@@ -41,7 +41,8 @@
 ## テンプレート
 
 ```ts
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
 const useModalStorePinia = defineStore('ui/modal', () => {

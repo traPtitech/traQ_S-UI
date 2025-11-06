@@ -26,11 +26,13 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import ChannelHeaderRelationPopup from './ChannelHeaderRelationPopup.vue'
 import { reactive } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import type { Point } from '/@/lib/basic/point'
 import { randomString } from '/@/lib/basic/randomString'
+
+import ChannelHeaderRelationPopup from './ChannelHeaderRelationPopup.vue'
 
 const props = defineProps<{
   channelId: string

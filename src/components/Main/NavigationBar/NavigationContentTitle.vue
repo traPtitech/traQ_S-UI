@@ -6,6 +6,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
 import type { NavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 import { navigationTypeNameMap } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 

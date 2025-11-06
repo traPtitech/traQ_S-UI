@@ -10,13 +10,15 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampId } from '/@/types/entity-ids'
-import { useStampsStore } from '/@/store/entities/stamps'
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
+
 import { computed, ref, watchEffect } from 'vue'
-import { constructStampString } from '/@/lib/markdown/constructStampString'
+
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
+import { constructStampString } from '/@/lib/markdown/constructStampString'
 import { render } from '/@/lib/markdown/markdown'
+import { useStampsStore } from '/@/store/entities/stamps'
+import type { StampId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   stampId: StampId | undefined

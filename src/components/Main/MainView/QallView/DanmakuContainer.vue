@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { nextTick, ref, useTemplateRef } from 'vue'
-import DanmakuComment from './DanmakuComment.vue'
-import DanmakuStamp from './DanmakuStamp.vue'
 
 import party from 'party-js'
-import { useDanmakuSparkle } from './useDanmakuSparkle'
-import { useQall } from '/@/composables/qall/useQall'
 
-import { messageMitt } from '/@/store/entities/messages'
+import { useQall } from '/@/composables/qall/useQall'
 import useMittListener from '/@/composables/utils/useMittListener'
+import { messageMitt } from '/@/store/entities/messages'
+
+import DanmakuComment from './DanmakuComment.vue'
+import DanmakuStamp from './DanmakuStamp.vue'
+import { useDanmakuSparkle } from './useDanmakuSparkle'
 
 const { callingChannel, qallMitt } = useQall()
 

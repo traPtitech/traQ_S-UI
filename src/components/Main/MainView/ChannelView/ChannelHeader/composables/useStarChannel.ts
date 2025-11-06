@@ -1,5 +1,5 @@
-import type { ChannelId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const useStarChannel = (props: { channelId: ChannelId }) => {
   const starChannel = async () => {

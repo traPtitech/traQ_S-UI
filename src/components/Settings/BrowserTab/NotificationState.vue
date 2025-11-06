@@ -19,8 +19,9 @@
 
 <script lang="ts">
 import { ref } from 'vue'
-import { requestNotificationPermission } from '/@/lib/notification/requestPermission'
+
 import AToggle from '/@/components/UI/AToggle.vue'
+import { requestNotificationPermission } from '/@/lib/notification/requestPermission'
 
 const useNotificationPermission = () => {
   const permission = ref<NotificationPermission>()

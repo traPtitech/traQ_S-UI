@@ -35,19 +35,21 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted, ref, shallowRef, toRef } from 'vue'
+
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
-import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-import { onMounted, shallowRef, ref, toRef } from 'vue'
-import { randomString } from '/@/lib/basic/randomString'
-import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
-import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
+import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
-import { useToastStore } from '/@/store/ui/toast'
-import { useStampsStore } from '/@/store/entities/stamps'
-import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import { randomString } from '/@/lib/basic/randomString'
 import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { useToastStore } from '/@/store/ui/toast'
+
+import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
+import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
 
 const { fetchStampHistory } = useStampHistory()
 const { fetchStamps } = useStampsStore()

@@ -19,11 +19,14 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import type { Ogp } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import { ifIsHttps } from '/@/lib/basic/url'
+
 import MessageOgpContentVideo from './MessageOgpContentVideo.vue'
 import MessageOgpContentWebsite from './MessageOgpContentWebsite.vue'
-import { ifIsHttps } from '/@/lib/basic/url'
 
 const props = defineProps<{
   ogpData: Ogp

@@ -1,10 +1,12 @@
-import qallStartMp3 from '/@/assets/se/qall_start.mp3'
+import mitt from 'mitt'
+
 import qallEndMp3 from '/@/assets/se/qall_end.mp3'
 import qallJoinedMp3 from '/@/assets/se/qall_joined.mp3'
 import qallLeftMp3 from '/@/assets/se/qall_left.mp3'
+import qallStartMp3 from '/@/assets/se/qall_start.mp3'
+
 import type ExtendedAudioContext from './ExtendedAudioContext'
 import NodeMerger from './NodeMerger'
-import mitt from 'mitt'
 
 type StreamNodes = {
   source: MediaStreamAudioSourceNode

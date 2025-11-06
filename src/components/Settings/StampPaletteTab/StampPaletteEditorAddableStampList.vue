@@ -42,12 +42,14 @@
 
 <script lang="ts" setup>
 import { computed, onUnmounted, ref, watch } from 'vue'
-import StampPaletteEditorAddStampListItem from './StampPaletteEditorAddableStampListItem.vue'
+
 import useStampFilter from '/@/components/Main/StampPicker/composables/useStampFilter'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { StampId } from '/@/types/entity-ids'
+
+import StampPaletteEditorAddStampListItem from './StampPaletteEditorAddableStampListItem.vue'
 
 const ITEMS_PER_LOAD = 50
 

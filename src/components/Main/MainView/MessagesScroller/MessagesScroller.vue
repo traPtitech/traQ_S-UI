@@ -33,7 +33,6 @@
 </template>
 
 <script lang="ts">
-import { throttle } from 'throttle-debounce'
 import type { Ref } from 'vue'
 import {
   nextTick,
@@ -44,15 +43,19 @@ import {
   watch
 } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
-import type { LoadingDirection } from './composables/useMessagesFetcher'
+
+import { throttle } from 'throttle-debounce'
+
 import { useOpenLink } from '/@/composables/useOpenLink'
 import { embeddingOrigin } from '/@/lib/apis'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
-import { isMessageScrollerRoute, RouteName } from '/@/router'
+import { RouteName, isMessageScrollerRoute } from '/@/router'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import type { MessageId } from '/@/types/entity-ids'
+
+import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
+import type { LoadingDirection } from './composables/useMessagesFetcher'
 
 const LOAD_MORE_THRESHOLD = 10
 

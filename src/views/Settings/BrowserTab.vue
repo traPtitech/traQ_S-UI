@@ -29,13 +29,14 @@
 
 <script lang="ts" setup>
 import { reactive } from 'vue'
+
 import CacheManager from '/@/components/Settings/BrowserTab/CacheManager.vue'
 import CitationNotification from '/@/components/Settings/BrowserTab/CitationNotification.vue'
 import ModifierKeys from '/@/components/Settings/BrowserTab/ModifierKeys.vue'
 import NotificationState from '/@/components/Settings/BrowserTab/NotificationState.vue'
 import OpenMode from '/@/components/Settings/BrowserTab/OpenMode.vue'
-import SimpleToggle from '/@/components/Settings/BrowserTab/SimpleToggle.vue'
 import SendKey from '/@/components/Settings/BrowserTab/SendKey.vue'
+import SimpleToggle from '/@/components/Settings/BrowserTab/SimpleToggle.vue'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const state = reactive(useBrowserSettings())

@@ -13,11 +13,12 @@
 </template>
 
 <script lang="ts" setup>
-import AToggle from '/@/components/UI/AToggle.vue'
 import { onMounted } from 'vue'
+
+import AToggle from '/@/components/UI/AToggle.vue'
+import useToggle from '/@/composables/utils/useToggle'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
-import useToggle from '/@/composables/utils/useToggle'
 
 const { addErrorToast } = useToastStore()
 const { value, toggle } = useToggle()

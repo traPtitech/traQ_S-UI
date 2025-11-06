@@ -22,12 +22,12 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import ClipFoldersElement from '/@/components/Main/NavigationBar/NavigationContent/ClipFoldersElement.vue'
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
-import { useModalStore } from '/@/store/ui/modal'
 import useSortedClipFolders from '/@/composables/clips/useSortedClipFolders'
+import { useModalStore } from '/@/store/ui/modal'
 
 const { pushModal } = useModalStore()
 const sortedClipFolders = useSortedClipFolders()

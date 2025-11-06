@@ -1,4 +1,5 @@
 import { nextTick, ref } from 'vue'
+
 import useLocalInput from '/@/composables/utils/useLocalInput'
 
 describe('useLocalInput', () => {

@@ -20,11 +20,13 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import type { Message } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import MessageLink from '/@/components/UI/MessageLink.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getDateRepresentation } from '/@/lib/basic/date'
-import MessageLink from '/@/components/UI/MessageLink.vue'
 
 const props = withDefaults(
   defineProps<{

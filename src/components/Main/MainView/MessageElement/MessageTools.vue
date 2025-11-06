@@ -85,13 +85,15 @@
 
 <script lang="ts" setup>
 import type { Stamp } from '@traptitech/traq'
+
 import { computed, ref, toRef, watch } from 'vue'
-import MessageContextMenu from './MessageContextMenu.vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
 import useContextMenu from '/@/composables/useContextMenu'
 import useToggle from '/@/composables/utils/useToggle'
+import { isDefined } from '/@/lib/basic/array'
 import { useStampUpdater } from '/@/lib/updater/stamp'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampHistory } from '/@/store/domain/stampHistory'
@@ -101,7 +103,8 @@ import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStor
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import type { MessageId, StampId } from '/@/types/entity-ids'
-import { isDefined } from '/@/lib/basic/array'
+
+import MessageContextMenu from './MessageContextMenu.vue'
 
 const props = withDefaults(
   defineProps<{

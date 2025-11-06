@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
-import AudioTrack from './AudioTrack.vue'
 import { useUserVolume } from '/@/store/app/userVolume'
+
+import AudioTrack from './AudioTrack.vue'
 
 const { trackInfo } = defineProps<{
   trackInfo: TrackInfo

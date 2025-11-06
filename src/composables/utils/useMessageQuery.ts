@@ -1,6 +1,7 @@
-import { useRoute } from 'vue-router'
-import { getFirstQuery } from '/@/lib/basic/url'
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+import { getFirstQuery } from '/@/lib/basic/url'
 
 export const useMessageQuery = () => {
   const route = useRoute()

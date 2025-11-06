@@ -40,19 +40,22 @@
 </template>
 
 <script lang="ts" setup>
+import type { Pin } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
 import PrimaryViewSidebar from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebar.vue'
 import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
-import ChannelSidebarContent from './ChannelSidebarContent.vue'
-import SidebarPinnedPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarPinnedPage.vue'
-import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
-import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
 import SidebarEventsPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarEventsPage.vue'
-import { computed } from 'vue'
-import type { ChannelId, UserId } from '/@/types/entity-ids'
+import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
+import SidebarPinnedPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarPinnedPage.vue'
 import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
-import { useChannelsStore } from '/@/store/entities/channels'
 import useToggle from '/@/composables/utils/useToggle'
-import type { Pin } from '@traptitech/traq'
+import { useChannelsStore } from '/@/store/entities/channels'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
+
+import ChannelSidebarContent from './ChannelSidebarContent.vue'
+import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
 
 const props = defineProps<{
   channelId: ChannelId

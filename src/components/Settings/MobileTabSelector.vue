@@ -21,6 +21,7 @@
 <script lang="ts" setup>
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import VersionInfo from '/@/components/UI/VersionInfo.vue'
+
 import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
 import SafariWarning from './SafariWarning.vue'
 import useSettingsNavigation, { navigations } from './composables/useNavigation'

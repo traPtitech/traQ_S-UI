@@ -1,7 +1,9 @@
 import type { Ref } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import type { LoadingDirection } from './useMessagesFetcher'
+
 import type { ChangeHeightData } from '/@/components/Main/MainView/MessageElement/composables/useElementRenderObserver'
+import type { MessageId } from '/@/types/entity-ids'
+
+import type { LoadingDirection } from './useMessagesFetcher'
 
 const useMessageScrollerElementResizeObserver = (
   rootRef: Ref<HTMLElement | null>,

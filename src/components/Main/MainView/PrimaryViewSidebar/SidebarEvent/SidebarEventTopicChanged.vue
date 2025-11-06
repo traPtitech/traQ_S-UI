@@ -17,9 +17,11 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarEventFrame from './SidebarEventFrame.vue'
-import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import type { TopicChangedEvent } from '@traptitech/traq'
+
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
+
+import SidebarEventFrame from './SidebarEventFrame.vue'
 
 defineProps<{
   datetime: string

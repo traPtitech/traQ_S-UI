@@ -1,10 +1,12 @@
+import type { Message } from '@traptitech/traq'
+
 import type { Ref } from 'vue'
 import { ref, watchEffect } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import type { Message } from '@traptitech/traq'
+
 import { useMessagesView } from '/@/store/domain/messagesView'
-import { useMessagesStore } from '/@/store/entities/messages'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
+import { useMessagesStore } from '/@/store/entities/messages'
+import type { MessageId } from '/@/types/entity-ids'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 

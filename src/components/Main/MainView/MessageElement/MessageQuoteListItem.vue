@@ -43,19 +43,21 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
-import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import { computed, onBeforeMount, ref } from 'vue'
-import type { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
-import { useMessagesView } from '/@/store/domain/messagesView'
-import { useMessagesStore } from '/@/store/entities/messages'
-import { useChannelsStore } from '/@/store/entities/channels'
-import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
-import useToggle from '/@/composables/utils/useToggle'
+
 import FoldButton from '/@/components/UI/FoldButton.vue'
-import { randomString } from '/@/lib/basic/randomString'
+import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import useBoxSize from '/@/composables/dom/useBoxSize'
+import useToggle from '/@/composables/utils/useToggle'
+import { randomString } from '/@/lib/basic/randomString'
+import { useMessagesView } from '/@/store/domain/messagesView'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useMessagesStore } from '/@/store/entities/messages'
+import type { ChannelId, DMChannelId, MessageId } from '/@/types/entity-ids'
+
+import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
+import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 
 const props = defineProps<{
   parentMessageChannelId: ChannelId | DMChannelId
