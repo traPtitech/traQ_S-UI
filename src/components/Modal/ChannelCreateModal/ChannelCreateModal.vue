@@ -29,8 +29,10 @@
 
 <script lang="ts">
 import { UserPermission } from '@traptitech/traq'
+
 import { computed, reactive, toRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
+
 import useCanCreateChildChannel from '/@/composables/modal/useCanCreateChildChannel'
 import useChannelOptions from '/@/composables/useChannelOptions'
 import useChannelPath from '/@/composables/useChannelPath'
@@ -124,10 +126,11 @@ const useChannelOptionsForSelector = () => {
 </script>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
+
+import ModalFrame from '../Common/ModalFrame.vue'
 
 const props = defineProps<{
   parentChannelId?: string

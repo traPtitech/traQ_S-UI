@@ -1,11 +1,14 @@
 import type { EmbeddingOrUrl, ExternalUrl } from '@traptitech/traq-markdown-it'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+
 import { ref } from 'vue'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import { isExternalUrl, isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
+import { useMessagesStore } from '/@/store/entities/messages'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { MessageId } from '/@/types/entity-ids'
-import { useMessagesStore } from '/@/store/entities/messages'
 
 const ignoredHostNamesSet = new Set<string>(
   window.traQConfig.ogpIgnoreHostNames

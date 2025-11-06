@@ -2,19 +2,23 @@ import type {
   PatchStampPaletteRequest,
   PostStampPaletteRequest
 } from '@traptitech/traq'
-import type { StampPalette } from '/@/types/entity'
-import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import { computed, ref } from 'vue'
-import type { CacheStrategy } from './utils'
-import { fetchWithCacheStrategy } from './utils'
+
+import type { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import apis from '/@/lib/apis'
 import { createSingleflight } from '/@/lib/basic/async'
 import { arrayToMap } from '/@/lib/basic/map'
 import { wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { useTrueChangedPromise } from '/@/store/utils/promise'
+import type { StampPalette } from '/@/types/entity'
 import type { StampPaletteId } from '/@/types/entity-ids'
-import type { AxiosRequestConfig, AxiosResponse } from 'axios'
+
+import type { CacheStrategy } from './utils'
+import { fetchWithCacheStrategy } from './utils'
 
 // FIXME: 型定義では `StampPalette['stamps']` は `Set<string>` だが，実際には `Array<string>` が返る
 // openapi-generator のバグだが，どのように修正されるかわからないので一旦型の上書きによって対応する

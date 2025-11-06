@@ -1,11 +1,15 @@
 import type { FileInfo, Message, MessageStamp, Ogp } from '@traptitech/traq'
+
+import { ref } from 'vue'
+
 import type { AxiosError } from 'axios'
 import mitt from 'mitt'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+
 import apis from '/@/lib/apis'
 import { createSingleflight } from '/@/lib/basic/async'
 import { wsListener } from '/@/lib/websocket'
+import { useMeStore } from '/@/store/domain/me'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type {
   ExternalUrl,
@@ -13,7 +17,6 @@ import type {
   MessageId,
   StampId
 } from '/@/types/entity-ids'
-import { useMeStore } from '/@/store/domain/me'
 
 type MessageEventMap = {
   reconnect: void

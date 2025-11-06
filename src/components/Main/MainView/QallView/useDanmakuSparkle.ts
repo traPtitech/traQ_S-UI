@@ -1,5 +1,5 @@
-import { useStampsStore } from '/@/store/entities/stamps'
 import { buildFilePath } from '/@/lib/apis'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 export const useDanmakuSparkle = (
   showSparkle: (stampElement: HTMLElement) => void

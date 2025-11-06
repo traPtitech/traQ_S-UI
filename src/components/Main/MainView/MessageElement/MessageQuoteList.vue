@@ -12,8 +12,9 @@
 </template>
 
 <script lang="ts" setup>
+import type { ChannelId, DMChannelId, MessageId } from '/@/types/entity-ids'
+
 import MessageQuoteListItem from './MessageQuoteListItem.vue'
-import type { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 
 withDefaults(
   defineProps<{

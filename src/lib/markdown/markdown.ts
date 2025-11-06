@@ -1,11 +1,13 @@
 import type { Store, traQMarkdownIt } from '@traptitech/traq-markdown-it'
+
 import useChannelPath from '/@/composables/useChannelPath'
 import { embeddingOrigin } from '/@/lib/apis'
 import { useMeStore } from '/@/store/domain/me'
-import { useUsersStore } from '/@/store/entities/users'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
+import { useUsersStore } from '/@/store/entities/users'
+
 import { isDefined } from '../basic/array'
 
 const storeProvider: Store = {

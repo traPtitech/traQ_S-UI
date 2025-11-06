@@ -1,11 +1,13 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import { watchEffect } from 'vue'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import { embeddingOrigin } from '/@/lib/apis'
+import { parse } from '/@/lib/markdown/markdown'
+import { format } from '/@/lib/tts/format'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
-import { parse } from '/@/lib/markdown/markdown'
-import { format } from '/@/lib/tts/format'
-import { embeddingOrigin } from '/@/lib/apis'
-import { watchEffect } from 'vue'
 
 interface Speach {
   channelId: ChannelId

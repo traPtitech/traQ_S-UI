@@ -31,8 +31,9 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import FoldButton from '/@/components/UI/FoldButton.vue'
+
 import CopyButton from '/@/components/UI/CopyButton.vue'
+import FoldButton from '/@/components/UI/FoldButton.vue'
 import { randomString } from '/@/lib/basic/randomString'
 
 const MAX_LINES = 5

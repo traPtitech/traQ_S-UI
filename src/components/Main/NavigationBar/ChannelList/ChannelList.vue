@@ -19,11 +19,14 @@
 </template>
 
 <script lang="ts" setup>
-import type { ChannelTreeNode } from '/@/lib/channelTree'
 import type { Channel } from '@traptitech/traq'
-import ChannelElementTopic from './ChannelElementTopic.vue'
+
+import { type DeepReadonly, computed } from 'vue'
+
+import type { ChannelTreeNode } from '/@/lib/channelTree'
+
 import ChannelElement from './ChannelElement.vue'
-import { computed, type DeepReadonly } from 'vue'
+import ChannelElementTopic from './ChannelElementTopic.vue'
 
 const props = withDefaults(
   defineProps<{

@@ -1,5 +1,6 @@
+import { type ComputedRef, onMounted, onUnmounted, ref } from 'vue'
+
 import { debounce } from 'throttle-debounce'
-import { ref, onMounted, onUnmounted, type ComputedRef } from 'vue'
 
 type Fallback = {
   width?: number

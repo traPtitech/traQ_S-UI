@@ -46,16 +46,18 @@
 </template>
 
 <script lang="ts" setup>
-import type { ParsedChannelEvent } from '/@/lib/apis'
 import { ChannelEventTypeEnum } from '@traptitech/traq'
-import SidebarEventTopicChanged from './SidebarEventTopicChanged.vue'
-import SidebarEventSubscribersChanged from './SidebarEventSubscribersChanged.vue'
-import SidebarEventPinnedChanged from './SidebarEventPinnedChanged.vue'
+
+import type { ParsedChannelEvent } from '/@/lib/apis'
+
+import SidebarEventArchiveChanged from './SidebarEventArchiveChanged.vue'
+import SidebarEventChildCreated from './SidebarEventChildCreated.vue'
+import SidebarEventForcedNotificationChanged from './SidebarEventForcedNotificationChanged.vue'
 import SidebarEventNameChanged from './SidebarEventNameChanged.vue'
 import SidebarEventParentChanged from './SidebarEventParentChanged.vue'
-import SidebarEventArchiveChanged from './SidebarEventArchiveChanged.vue'
-import SidebarEventForcedNotificationChanged from './SidebarEventForcedNotificationChanged.vue'
-import SidebarEventChildCreated from './SidebarEventChildCreated.vue'
+import SidebarEventPinnedChanged from './SidebarEventPinnedChanged.vue'
+import SidebarEventSubscribersChanged from './SidebarEventSubscribersChanged.vue'
+import SidebarEventTopicChanged from './SidebarEventTopicChanged.vue'
 
 defineProps<{
   event: ParsedChannelEvent

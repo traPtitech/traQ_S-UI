@@ -22,12 +22,13 @@
 </template>
 
 <script lang="ts" setup>
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormTextArea from '/@/components/UI/FormTextArea.vue'
+
 import {
   STAMP_PALETTE_DESCRIPTION_MAX_LENGTH,
   STAMP_PALETTE_NAME_MAX_LENGTH
 } from './utils'
-import FormInput from '/@/components/UI/FormInput.vue'
-import FormTextArea from '/@/components/UI/FormTextArea.vue'
 
 const nameModel = defineModel<string>('name', { required: true })
 const descriptionModel = defineModel<string>('description', { required: true })

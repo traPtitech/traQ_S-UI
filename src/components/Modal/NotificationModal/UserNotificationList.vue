@@ -17,13 +17,14 @@
 
 <script lang="ts">
 import { computed, ref, watch } from 'vue'
-import apis from '/@/lib/apis'
-import type { UserId, ChannelId } from '/@/types/entity-ids'
-import { compareStringInsensitive } from '/@/lib/basic/string'
+
 import useChannelSubscribers from '/@/composables/subscription/useChannelSubscribers'
-import { useToastStore } from '/@/store/ui/toast'
 import useTextFilter from '/@/composables/utils/useTextFilter'
+import apis from '/@/lib/apis'
+import { compareStringInsensitive } from '/@/lib/basic/string'
 import { useMeStore } from '/@/store/domain/me'
+import { useToastStore } from '/@/store/ui/toast'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
 
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   const { myId } = useMeStore()
@@ -87,9 +88,10 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
 </script>
 
 <script lang="ts" setup>
-import UserNotificationListItem from './UserNotificationListItem.vue'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import useUserList from '/@/composables/users/useUserList'
+
+import UserNotificationListItem from './UserNotificationListItem.vue'
 
 const props = defineProps<{
   channelId: string

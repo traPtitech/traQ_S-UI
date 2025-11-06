@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import ModalFrame from '../Common/ModalFrame.vue'
+
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import apis from '/@/lib/apis'
@@ -27,6 +27,8 @@ import { useUsersStore } from '/@/store/entities/users'
 import { useModalStore } from '/@/store/ui/modal'
 import { useToastStore } from '/@/store/ui/toast'
 import type { UserGroupId, UserId } from '/@/types/entity-ids'
+
+import ModalFrame from '../Common/ModalFrame.vue'
 
 const props = defineProps<{
   groupId: UserGroupId

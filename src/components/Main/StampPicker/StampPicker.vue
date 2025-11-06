@@ -49,21 +49,23 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import useEffectSelector from './composables/useEffectSelector'
-import useStampList from './composables/useStampList'
-import useStampPreselector from './composables/useStampPreselector'
-import useStampSetSelector from './composables/useStampSetSelector'
-import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
-import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
-import StampPickerPreview from './StampPickerPreview.vue'
-import StampPickerStampList from './StampPickerStampList.vue'
-import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
+
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useStampPicker } from '/@/store/ui/stampPicker'
 import type { StampId } from '/@/types/entity-ids'
+
+import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
+import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
+import StampPickerPreview from './StampPickerPreview.vue'
+import StampPickerStampList from './StampPickerStampList.vue'
+import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
+import useEffectSelector from './composables/useEffectSelector'
+import useStampList from './composables/useStampList'
+import useStampPreselector from './composables/useStampPreselector'
+import useStampSetSelector from './composables/useStampSetSelector'
 
 const {
   selectHandler,

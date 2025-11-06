@@ -1,11 +1,14 @@
 import type { MyChannelViewState } from '@traptitech/traq'
 import { ChannelViewState } from '@traptitech/traq'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+
 import { computed, ref } from 'vue'
-import { useTrueChangedPromise } from '/@/store/utils/promise'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import { useTrueChangedPromise } from '/@/store/utils/promise'
 
 const useViewStatesStorePinia = defineStore('domain/viewStates', () => {
   const viewStates = ref(new Map<string, MyChannelViewState>())

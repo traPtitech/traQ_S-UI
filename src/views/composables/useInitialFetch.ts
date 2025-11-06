@@ -1,16 +1,18 @@
 import { ref } from 'vue'
-import useLoginCheck from './useLoginCheck'
-import { useUsersStore } from '/@/store/entities/users'
-import { useGroupsStore } from '/@/store/entities/groups'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useStampsStore } from '/@/store/entities/stamps'
-import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
-import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+
+import { useRoomsStore } from '/@/store/domain/rooms'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
-import { useViewStatesStore } from '/@/store/domain/viewStates'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
-import { useRoomsStore } from '/@/store/domain/rooms'
+import { useViewStatesStore } from '/@/store/domain/viewStates'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { useUsersStore } from '/@/store/entities/users'
+
+import useLoginCheck from './useLoginCheck'
 
 const useInitialFetch_ = () => {
   const { fetchUsers } = useUsersStore()

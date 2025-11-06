@@ -1,16 +1,18 @@
 import { computed, reactive } from 'vue'
-import type {
-  NavigationItemType,
-  EphemeralNavigationItemType
-} from './useNavigationConstructor'
-import type { ThemeClaim } from '/@/lib/styles'
-import { isDefined } from '/@/lib/basic/array'
-import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
-import { useAudioController } from '/@/store/ui/audioController'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useSubscriptionStore } from '/@/store/domain/subscription'
+
 import { useQall } from '/@/composables/qall/useQall'
+import { isDefined } from '/@/lib/basic/array'
+import type { ThemeClaim } from '/@/lib/styles'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useAudioController } from '/@/store/ui/audioController'
 import { useMainViewStore } from '/@/store/ui/mainView'
+import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
+
+import type {
+  EphemeralNavigationItemType,
+  NavigationItemType
+} from './useNavigationConstructor'
 
 export type NavigationSelectorEntry = {
   type: NavigationItemType

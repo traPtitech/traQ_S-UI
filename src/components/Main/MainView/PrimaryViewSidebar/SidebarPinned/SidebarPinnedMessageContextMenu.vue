@@ -16,12 +16,13 @@
 </template>
 
 <script lang="ts" setup>
-import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
 import { toRef } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import type { Point } from '/@/lib/basic/point'
+
+import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
 import usePinToggler from '/@/composables/contextMenu/usePinToggler'
+import type { Point } from '/@/lib/basic/point'
+import type { MessageId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{

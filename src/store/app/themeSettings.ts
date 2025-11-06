@@ -1,12 +1,14 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref, toRefs } from 'vue'
+
+import { promisifyRequest } from 'idb-keyval'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import { hasKey, isObjectAndHasKey } from '/@/lib/basic/object'
+import { resolveTheme } from '/@/lib/theme/resolve'
 import type { Theme } from '/@/lib/theme/schema'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
-import { resolveTheme } from '/@/lib/theme/resolve'
 import { getVuexData } from '/@/store/utils/migrateFromVuex'
-import { hasKey, isObjectAndHasKey } from '/@/lib/basic/object'
-import { promisifyRequest } from 'idb-keyval'
 
 type State = {
   type: ThemeType

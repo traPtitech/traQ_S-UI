@@ -1,16 +1,19 @@
-import mitt from 'mitt'
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref, toRaw, watch } from 'vue'
+
+import mitt from 'mitt'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import { channelIdToPathString } from '/@/lib/channel'
 import type { ChannelTree } from '/@/lib/channelTree'
 import { constructTree, rootChannelId } from '/@/lib/channelTree'
 import router, { rewriteChannelPath } from '/@/router'
+import { entityMitt } from '/@/store/entities/mitt'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
-import { entityMitt } from '/@/store/entities/mitt'
-import { useSubscriptionStore } from './subscription'
+
 import { useChannelsStore } from '../entities/channels'
 import { useStaredChannels } from './staredChannels'
+import { useSubscriptionStore } from './subscription'
 
 type ChannelTreeEventMap = {
   created: { id: ChannelId; path: string }

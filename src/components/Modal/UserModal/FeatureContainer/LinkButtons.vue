@@ -17,10 +17,11 @@
 </template>
 
 <script lang="ts" setup>
-import LinkButton from './LinkButton.vue'
-import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
-import { constructUserPath } from '/@/router'
 import useChannelPath from '/@/composables/useChannelPath'
+import { constructUserPath } from '/@/router'
+
+import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
+import LinkButton from './LinkButton.vue'
 
 const props = withDefaults(
   defineProps<{

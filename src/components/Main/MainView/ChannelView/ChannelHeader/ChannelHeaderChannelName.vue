@@ -24,10 +24,11 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import type { ChannelId } from '/@/types/entity-ids'
+
 import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
 import { useResponsiveStore } from '/@/store/ui/responsive'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId

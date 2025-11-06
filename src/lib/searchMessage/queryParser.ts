@@ -1,6 +1,7 @@
 // APIに投げる検索クエリに対する実装
 import type apis from '/@/lib/apis'
 import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
+
 import type {
   ExtractedFilter,
   FilterExtractor,
@@ -9,12 +10,12 @@ import type {
 } from './parserBase'
 import { FromToMeToken } from './parserBase'
 import {
-  channelParser,
   InHereToken,
+  channelParser,
   dateParser,
-  parseToFilter as parseToFilterBase,
   makePrefixedFilterExtractor,
   messageParser,
+  parseToFilter as parseToFilterBase,
   rawQuery,
   userParser
 } from './parserBase'

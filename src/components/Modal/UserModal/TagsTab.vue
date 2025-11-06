@@ -18,10 +18,12 @@
 </template>
 
 <script lang="ts" setup>
-import TagsTabTag from '/@/components/Modal/UserModal/TagsTabTag.vue'
-import TagsTabAdd from '/@/components/Modal/UserModal/TagsTabAdd.vue'
-import { computed } from 'vue'
 import type { UserDetail } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import TagsTabAdd from '/@/components/Modal/UserModal/TagsTabAdd.vue'
+import TagsTabTag from '/@/components/Modal/UserModal/TagsTabTag.vue'
 import { useMeStore } from '/@/store/domain/me'
 
 const props = defineProps<{

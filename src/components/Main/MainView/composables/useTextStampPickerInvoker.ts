@@ -1,12 +1,13 @@
+import type { Ref } from 'vue'
+
+import useInsertText from '/@/composables/dom/useInsertText'
+import { constructStampString } from '/@/lib/markdown/constructStampString'
+import { useStampsStore } from '/@/store/entities/stamps'
 import type {
   AlignmentPosition,
   StampSelectHandler
 } from '/@/store/ui/stampPicker'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
-import type { Ref } from 'vue'
-import useInsertText from '/@/composables/dom/useInsertText'
-import { useStampsStore } from '/@/store/entities/stamps'
-import { constructStampString } from '/@/lib/markdown/constructStampString'
 
 const useTextStampPickerInvoker = (
   text: Ref<string>,

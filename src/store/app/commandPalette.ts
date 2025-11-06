@@ -1,13 +1,16 @@
 import type { Message } from '@traptitech/traq'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+
 import { computed, ref, toRefs } from 'vue'
-import { getVuexData } from '/@/store/utils/migrateFromVuex'
-import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+
+import { promisifyRequest } from 'idb-keyval'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import useQueryParser from '/@/composables/searchMessage/useQueryParser'
 import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 import { isObjectAndHasKey } from '/@/lib/basic/object'
-import { promisifyRequest } from 'idb-keyval'
-import useQueryParser from '/@/composables/searchMessage/useQueryParser'
+import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import { getVuexData } from '/@/store/utils/migrateFromVuex'
 
 type CommandPaletteMode = 'command' | 'search'
 

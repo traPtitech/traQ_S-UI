@@ -14,12 +14,13 @@
 </template>
 
 <script lang="ts" setup>
-import ClickOutside from '/@/components/UI/ClickOutside'
-import FileModalImage from '/@/components/Modal/FileModal/FileModalImage.vue'
-import FileModalFile from '/@/components/Modal/FileModal/FileModalFile.vue'
-import FileModalVideo from '/@/components/Modal/FileModal/FileModalVideo.vue'
-import FileModalAudio from '/@/components/Modal/FileModal/FileModalAudio.vue'
 import { computed, reactive } from 'vue'
+
+import FileModalAudio from '/@/components/Modal/FileModal/FileModalAudio.vue'
+import FileModalFile from '/@/components/Modal/FileModal/FileModalFile.vue'
+import FileModalImage from '/@/components/Modal/FileModal/FileModalImage.vue'
+import FileModalVideo from '/@/components/Modal/FileModal/FileModalVideo.vue'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import useFileMeta from '/@/composables/files/useFileMeta'
 import { useModalStore } from '/@/store/ui/modal'
 

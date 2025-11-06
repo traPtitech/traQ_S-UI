@@ -1,8 +1,11 @@
-import useObjectURLWithoutSetup from '/@/composables/dom/useObjectURL'
-import { withSetup } from '../../testUtils'
-import { nextTick, ref } from 'vue'
-import path from 'node:path'
 import fs from 'node:fs/promises'
+import path from 'node:path'
+
+import { nextTick, ref } from 'vue'
+
+import useObjectURLWithoutSetup from '/@/composables/dom/useObjectURL'
+
+import { withSetup } from '../../testUtils'
 
 const useObjectURL = withSetup(useObjectURLWithoutSetup)
 

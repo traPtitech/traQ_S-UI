@@ -23,8 +23,9 @@
 </template>
 
 <script lang="ts">
-import { shallowRef, watch, computed } from 'vue'
+import { computed, shallowRef, watch } from 'vue'
 import type { Component, SVGAttributes } from 'vue'
+
 import mdiPaths from '/@/assets/mdi'
 
 type ComponentModule = {

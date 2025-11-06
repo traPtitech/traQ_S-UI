@@ -1,4 +1,5 @@
 import type { StampPalette as StampPalette_ } from '@traptitech/traq'
+
 import type { StampId } from './entity-ids'
 
 // FIXME: 型定義では `StampPalette['stamps']` は `Set<string>` だが，実際には `Array<string>` が返る

@@ -1,5 +1,5 @@
 import type { UseStore } from 'idb-keyval'
-import { promisifyRequest, createStore as idbCreateStore } from 'idb-keyval'
+import { createStore as idbCreateStore, promisifyRequest } from 'idb-keyval'
 
 export const dbPrefix = 'traQ_S-'
 

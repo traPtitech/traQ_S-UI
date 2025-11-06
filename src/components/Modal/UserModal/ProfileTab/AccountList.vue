@@ -56,10 +56,12 @@
 </template>
 
 <script lang="ts" setup>
-import ProfileHeader from './ProfileHeader.vue'
-import CircleIcon from '/@/components/UI/CircleIcon.vue'
 import { computed } from 'vue'
+
+import CircleIcon from '/@/components/UI/CircleIcon.vue'
 import { useThemeSettings } from '/@/store/app/themeSettings'
+
+import ProfileHeader from './ProfileHeader.vue'
 
 const props = defineProps<{
   bot: boolean

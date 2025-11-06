@@ -38,10 +38,11 @@
 </template>
 
 <script lang="ts" setup>
-import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue'
 import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue'
-import MobileToolBox from '/@/components/Main/NavigationBar/MobileToolBox.vue'
 import NavigationSelector from '/@/components/Main/NavigationBar/MobileNavigationSelector.vue'
+import MobileToolBox from '/@/components/Main/NavigationBar/MobileToolBox.vue'
+import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue'
+
 import useNavigation from './composables/useNavigation'
 
 const {

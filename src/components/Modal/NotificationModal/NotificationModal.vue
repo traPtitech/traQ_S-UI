@@ -20,13 +20,15 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, onMounted, ref } from 'vue'
+
+import useChannelPath from '/@/composables/useChannelPath'
+import type { ChannelId } from '/@/types/entity-ids'
+
 import ModalFrame from '../Common/ModalFrame.vue'
 import ModalSection from '../Common/ModalSection.vue'
 import NotificationStateSelector from './NotificationStateSelector.vue'
 import UserNotificationList from './UserNotificationList.vue'
-import { computed, onMounted, ref } from 'vue'
-import type { ChannelId } from '/@/types/entity-ids'
-import useChannelPath from '/@/composables/useChannelPath'
 
 const props = defineProps<{
   channelId: ChannelId

@@ -1,15 +1,17 @@
-import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
-import type { ChannelId, MessageId } from '/@/types/entity-ids'
-import type { Ref } from 'vue'
-import { watch, onMounted, onActivated, ref, computed } from 'vue'
 import type { Message } from '@traptitech/traq'
-import { wsListener } from '/@/lib/websocket'
+
+import type { Ref } from 'vue'
+import { computed, onActivated, onMounted, ref, watch } from 'vue'
+
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
-import { messageMitt, useMessagesStore } from '/@/store/entities/messages'
-import { useMessagesView } from '/@/store/domain/messagesView'
-import { useSubscriptionStore } from '/@/store/domain/subscription'
+import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
+import { wsListener } from '/@/lib/websocket'
+import { useMessagesView } from '/@/store/domain/messagesView'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { messageMitt, useMessagesStore } from '/@/store/entities/messages'
+import type { ChannelId, MessageId } from '/@/types/entity-ids'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 60

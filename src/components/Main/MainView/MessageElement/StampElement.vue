@@ -29,15 +29,17 @@
 </template>
 
 <script lang="ts" setup>
-import SpinNumber from '/@/components/UI/SpinNumber.vue'
+import { computed, onMounted, ref, watch } from 'vue'
+
 import AStamp from '/@/components/UI/AStamp.vue'
-import { ref, computed, watch, onMounted } from 'vue'
+import SpinNumber from '/@/components/UI/SpinNumber.vue'
+import useHover from '/@/composables/dom/useHover'
+import type { MessageStampById } from '/@/lib/messageStampList'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import type { MessageStampById } from '/@/lib/messageStampList'
-import StampScaledElement from './StampScaledElement.vue'
 import { useToastStore } from '/@/store/ui/toast'
-import useHover from '/@/composables/dom/useHover'
+
+import StampScaledElement from './StampScaledElement.vue'
 
 const props = defineProps<{
   stamp: MessageStampById

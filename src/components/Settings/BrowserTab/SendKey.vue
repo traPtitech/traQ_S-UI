@@ -26,8 +26,9 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
 import FormRadio from '/@/components/UI/FormRadio.vue'
-import { isSendKey, type SendKey } from '/@/store/app/browserSettings'
+import { type SendKey, isSendKey } from '/@/store/app/browserSettings'
 
 const sendWithModifierKeyValue = defineModel<SendKey>('sendWithModifierKey', {
   required: true

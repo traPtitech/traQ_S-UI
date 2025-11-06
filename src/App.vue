@@ -14,13 +14,14 @@
 <script lang="ts">
 import type { Ref } from 'vue'
 import { computed, watch, watchEffect } from 'vue'
+
+import useDocumentTitle from '/@/composables/document/useDocumentTitle'
 import useHtmlDataset from '/@/composables/document/useHtmlDataset'
 import { useThemeVariables } from '/@/composables/document/useThemeVariables'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useTts } from '/@/store/app/tts'
 import { useThemeSettings } from '/@/store/app/themeSettings'
-import useDocumentTitle from '/@/composables/document/useDocumentTitle'
+import { useTts } from '/@/store/app/tts'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const useQallConfirmer = () => {
   window.addEventListener('beforeunload', event => {
@@ -85,9 +86,9 @@ ${Object.entries(style.value)
 </script>
 
 <script lang="ts" setup>
-import ToastContainer from '/@/components/Toast/ToastContainer.vue'
-import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
+import ModalContainer from '/@/components/Modal/ModalContainer.vue'
+import ToastContainer from '/@/components/Toast/ToastContainer.vue'
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
 const { featureFlags } = useFeatureFlagSettings()

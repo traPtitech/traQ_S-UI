@@ -1,8 +1,9 @@
 import { computed, watchEffect } from 'vue'
-import { useMainViewStore } from '/@/store/ui/mainView'
+
 import useChannelPath from '/@/composables/useChannelPath'
-import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+import { useMainViewStore } from '/@/store/ui/mainView'
 
 const appName = window.traQConfig.name || 'traQ'
 

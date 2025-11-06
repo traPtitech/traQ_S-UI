@@ -20,9 +20,11 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
+
+import { P, match } from 'ts-pattern'
+
 import AIcon from '/@/components/UI/AIcon.vue'
-import { match, P } from 'ts-pattern'
+import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 
 interface Type {
   type?: 'primary' | 'secondary' | 'tertiary'

@@ -1,14 +1,16 @@
-import { watch, ref, onMounted } from 'vue'
-import { setTimelineStreamingState } from '/@/lib/websocket'
 import type { ActivityTimelineMessage } from '@traptitech/traq'
+
+import { onMounted, ref, watch } from 'vue'
+
+import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
+import { createSingleflight } from '/@/lib/basic/async'
+import { setTimelineStreamingState } from '/@/lib/websocket'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useChannelsStore } from '/@/store/entities/channels'
 import { messageMitt } from '/@/store/entities/messages'
 import type { ChannelId } from '/@/types/entity-ids'
-import { createSingleflight } from '/@/lib/basic/async'
-import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useSubscriptionStore } from '/@/store/domain/subscription'
-import useMittListener from '/@/composables/utils/useMittListener'
 
 export const ACTIVITY_LENGTH = 50
 

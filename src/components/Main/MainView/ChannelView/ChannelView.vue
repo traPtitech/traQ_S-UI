@@ -27,16 +27,18 @@
 </template>
 
 <script lang="ts" setup>
-import PrimaryViewFrame from '../PrimaryViewFrame.vue'
-import ChannelHeader from './ChannelHeader/ChannelHeader.vue'
-import ChannelViewContent from './ChannelViewContent/ChannelViewContent.vue'
-import ChannelSidebar from './ChannelSidebar/ChannelSidebar.vue'
-import type { ChannelId, MessageId } from '/@/types/entity-ids'
 import { toRef } from 'vue'
+
 import usePinnedMessages from '/@/composables/message/usePinnedMessages'
-import useCurrentViewers from '/@/composables/useCurrentViewers'
 import { useQall } from '/@/composables/qall/useQall'
+import useCurrentViewers from '/@/composables/useCurrentViewers'
+import type { ChannelId, MessageId } from '/@/types/entity-ids'
+
+import PrimaryViewFrame from '../PrimaryViewFrame.vue'
 import QallView from '../QallView/QallView.vue'
+import ChannelHeader from './ChannelHeader/ChannelHeader.vue'
+import ChannelSidebar from './ChannelSidebar/ChannelSidebar.vue'
+import ChannelViewContent from './ChannelViewContent/ChannelViewContent.vue'
 
 const props = defineProps<{
   isReady: boolean

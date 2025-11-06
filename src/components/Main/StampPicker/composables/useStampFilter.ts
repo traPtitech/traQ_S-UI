@@ -1,7 +1,9 @@
-import { reactive, computed, ref } from 'vue'
 import type { Stamp } from '@traptitech/traq'
-import { compareStringInsensitive } from '/@/lib/basic/string'
+
+import { computed, reactive, ref } from 'vue'
+
 import { getMatchedWithPriority } from '/@/lib/basic/array'
+import { compareStringInsensitive } from '/@/lib/basic/string'
 import { useStampsStore } from '/@/store/entities/stamps'
 
 const emojiAltnameTable = import('/@/assets/emoji_altname_table.json')

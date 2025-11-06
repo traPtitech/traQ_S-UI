@@ -42,18 +42,21 @@
 </template>
 
 <script lang="ts" setup>
-import LineEditor from './LineEditor.vue'
+import type { UserGroup } from '@traptitech/traq'
+
+import { computed, ref } from 'vue'
+
+import FormButton from '/@/components/UI/FormButton.vue'
+import apis from '/@/lib/apis'
+import {
+  INVALID_GROUP_NAME_ERROR_MESSAGE,
+  isValidGroupName
+} from '/@/lib/validate'
+import { useToastStore } from '/@/store/ui/toast'
+
 import GroupAdminList from './GroupAdminList.vue'
 import GroupMemberList from './GroupMemberList.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
-import type { UserGroup } from '@traptitech/traq'
-import apis from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
-import { computed, ref } from 'vue'
-import {
-  isValidGroupName,
-  INVALID_GROUP_NAME_ERROR_MESSAGE
-} from '/@/lib/validate'
+import LineEditor from './LineEditor.vue'
 
 const props = defineProps<{
   group: UserGroup

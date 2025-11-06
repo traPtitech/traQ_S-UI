@@ -43,13 +43,16 @@
 </template>
 
 <script lang="ts" setup>
-import Sortable, { type SortableEvent } from 'sortablejs'
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
-import StampPaletteEditorLimitIndicator from './StampPaletteEditorLimitIndicator.vue'
-import { STAMP_PALETTE_STAMPS_LIMIT } from './utils'
+
+import Sortable, { type SortableEvent } from 'sortablejs'
+
 import AStamp from '/@/components/UI/AStamp.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import type { StampId } from '/@/types/entity-ids'
+
+import StampPaletteEditorLimitIndicator from './StampPaletteEditorLimitIndicator.vue'
+import { STAMP_PALETTE_STAMPS_LIMIT } from './utils'
 
 const stampIdsModel = defineModel<StampId[]>('stamp-ids', { required: true })
 

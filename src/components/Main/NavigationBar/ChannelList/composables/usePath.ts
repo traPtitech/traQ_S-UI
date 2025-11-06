@@ -1,5 +1,7 @@
 import type { Channel } from '@traptitech/traq'
+
 import { computed } from 'vue'
+
 import useChannelPath from '/@/composables/useChannelPath'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 

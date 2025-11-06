@@ -9,6 +9,7 @@
 
 <script lang="ts" setup>
 import { createVNode, onMounted, ref, render, watch } from 'vue'
+
 import FoldableCodeBlock from './FoldableCodeBlock.vue'
 
 const props = defineProps<{

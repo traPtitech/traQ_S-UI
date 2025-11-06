@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, reactive, computed } from 'vue'
+import { computed, reactive, watch } from 'vue'
 
 const props = defineProps<{
   value: number

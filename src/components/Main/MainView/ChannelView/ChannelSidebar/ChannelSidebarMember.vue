@@ -13,15 +13,17 @@
 </template>
 
 <script lang="ts" setup>
-import EmptyState from '/@/components/UI/EmptyState.vue'
-import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
-import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 import { computed } from 'vue'
-import type { ChannelId, UserId } from '/@/types/entity-ids'
+
+import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
+import EmptyState from '/@/components/UI/EmptyState.vue'
 import useChannelSubscribers from '/@/composables/subscription/useChannelSubscribers'
+import { isDefined } from '/@/lib/basic/array'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
-import { isDefined } from '/@/lib/basic/array'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
+
+import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 
 const props = withDefaults(
   defineProps<{

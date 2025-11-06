@@ -7,8 +7,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = withDefaults(

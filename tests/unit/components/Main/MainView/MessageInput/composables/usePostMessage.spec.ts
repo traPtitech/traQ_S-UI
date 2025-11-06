@@ -1,8 +1,9 @@
 import { createTestingPinia } from '@pinia/testing'
-import { createContent } from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
-import { nullUuid } from '/@/lib/basic/uuid'
-import { buildFilePathForPost, embeddingOrigin } from '/@/lib/apis'
 import { vi } from 'vitest'
+
+import { createContent } from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
+import { buildFilePathForPost, embeddingOrigin } from '/@/lib/apis'
+import { nullUuid } from '/@/lib/basic/uuid'
 
 vi.mock('/@/lib/markdown/markdown', () => ({
   isEmbeddedLink: vi.fn((text: string) => text.startsWith(embeddingOrigin))

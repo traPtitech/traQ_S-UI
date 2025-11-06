@@ -1,7 +1,9 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import apis from '/@/lib/apis'
+
 import type { AxiosError } from 'axios'
+
+import apis from '/@/lib/apis'
 
 const useRegister = () => {
   const router = useRouter()

@@ -57,11 +57,7 @@
 
 <script lang="ts" setup>
 import { computed, toRaw } from 'vue'
-import ChannelFilter from '../ChannelList/ChannelFilter.vue'
-import ChannelList from '../ChannelList/ChannelList.vue'
-import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
-import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
-import useChannelFilter from './composables/useChannelFilter'
+
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
@@ -71,11 +67,17 @@ import { filterTrees } from '/@/lib/basic/tree'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 import { constructTreeFromIds } from '/@/lib/channelTree'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useModalStore } from '/@/store/ui/modal'
-import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
+
+import ChannelFilter from '../ChannelList/ChannelFilter.vue'
+import ChannelList from '../ChannelList/ChannelList.vue'
+import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
+import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
+import useChannelFilter from './composables/useChannelFilter'
 
 const { pushModal } = useModalStore()
 const { channelTree, starredChannelTree } = useChannelTree()

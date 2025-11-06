@@ -49,13 +49,14 @@
 </template>
 
 <script lang="ts" setup>
-import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue'
-import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue'
 import DesktopNavigationSelector from '/@/components/Main/NavigationBar/DesktopNavigationSelector.vue'
 import DesktopToolBox from '/@/components/Main/NavigationBar/DesktopToolBox.vue'
+import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue'
+import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue'
+import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
+
 import useNavigation from './composables/useNavigation'
 import useNavigationResizer from './composables/useNavigationResizer'
-import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
 
 const {
   navigationSelectorState,

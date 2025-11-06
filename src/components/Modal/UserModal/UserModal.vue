@@ -35,12 +35,7 @@
 
 <script lang="ts" setup>
 import { computed, reactive } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
-import useUserDetail from './composables/useUserDetail'
-import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
-import NavigationContent from './NavigationContent.vue'
-import NavigationSelector from './NavigationSelector.vue'
-import UserModalEditButton from './UserModalEditButton.vue'
+
 import { useOpenLinkAndClearModal } from '/@/components/Modal/composables/useOpenLinkFromModal'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import CloseButton from '/@/components/UI/CloseButton.vue'
@@ -48,8 +43,15 @@ import UserIcon from '/@/components/UI/UserIcon.vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
 import { useModalStore } from '/@/store/ui/modal'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { UserModalNavigationItemType } from '/@/store/ui/modal/states'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import type { UserId } from '/@/types/entity-ids'
+
+import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
+import NavigationContent from './NavigationContent.vue'
+import NavigationSelector from './NavigationSelector.vue'
+import UserModalEditButton from './UserModalEditButton.vue'
+import useUserDetail from './composables/useUserDetail'
 
 const props = defineProps<{
   id: UserId

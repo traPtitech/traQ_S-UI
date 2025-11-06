@@ -1,5 +1,10 @@
-import type { Ref, ComputedRef } from 'vue'
+import type { Channel, User } from '@traptitech/traq'
+
+import type { ComputedRef, Ref } from 'vue'
 import { computed } from 'vue'
+
+import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import { channelIdToPathString } from '/@/lib/channel'
 import type { ChannelTree } from '/@/lib/channelTree'
 import { channelPathToId } from '/@/lib/channelTree'
 import type { StoreForParser } from '/@/lib/searchMessage/parserBase'
@@ -7,16 +12,13 @@ import {
   createQueryParser,
   toSearchMessageParam
 } from '/@/lib/searchMessage/queryParser'
+import { useChannelTree } from '/@/store/domain/channelTree'
+import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
 import type { PrimaryViewInformation } from '/@/store/ui/mainView'
 import { useMainViewStore } from '/@/store/ui/mainView'
-import { useChannelTree } from '/@/store/domain/channelTree'
-import { useUsersStore } from '/@/store/entities/users'
-import type { Channel, User } from '@traptitech/traq'
-import { channelIdToPathString } from '/@/lib/channel'
 import type { ChannelId } from '/@/types/entity-ids'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useMeStore } from '/@/store/domain/me'
-import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 
 const getStoreForParser = ({
   primaryView,

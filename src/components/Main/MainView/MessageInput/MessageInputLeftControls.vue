@@ -31,10 +31,12 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import MessageInputPreviewButton from './MessageInputPreviewButton.vue'
-import MessageInputUploadButton from './MessageInputUploadButton.vue'
+
 import IconButton from '/@/components/UI/IconButton.vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
+
+import MessageInputPreviewButton from './MessageInputPreviewButton.vue'
+import MessageInputUploadButton from './MessageInputUploadButton.vue'
 
 const isLeftControlsExpanded = defineModel<boolean>('isLeftControlsExpanded', {
   required: true

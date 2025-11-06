@@ -17,9 +17,11 @@
 </template>
 
 <script lang="ts" setup>
-import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
-import LinkButtons from './LinkButtons.vue'
 import type { User, UserDetail } from '@traptitech/traq'
+
+import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
+
+import LinkButtons from './LinkButtons.vue'
 
 defineProps<{
   user: User

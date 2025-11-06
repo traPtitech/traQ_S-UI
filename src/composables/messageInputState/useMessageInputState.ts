@@ -1,4 +1,5 @@
 import { computed, reactive, watch } from 'vue'
+
 import type {
   MessageInputState,
   MessageInputStateKey

@@ -1,8 +1,9 @@
 import type { Ref } from 'vue'
 import { computed, unref } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
-import { useModalStore } from '/@/store/ui/modal'
+
 import { useUsersStore } from '/@/store/entities/users'
+import { useModalStore } from '/@/store/ui/modal'
+import type { UserId } from '/@/types/entity-ids'
 
 export const useUserModalOpener = (
   userId: Ref<UserId | undefined>,

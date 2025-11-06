@@ -1,12 +1,13 @@
-import { ref, onUnmounted, computed } from 'vue'
-import {
-  useNavigationLayoutStore,
-  MIN_NAVIGATION_WIDTH,
-  MAX_NAVIGATION_WIDTH_RATIO,
-  NAVIGATION_CLOSING_THRESHOLD
-} from '/@/store/ui/navigationLayout'
-import { createAnimationFrameController } from '/@/lib/dom/animationFrame'
+import { computed, onUnmounted, ref } from 'vue'
+
 import useInnerWindowSize from '/@/composables/dom/useInnerWindowSize'
+import { createAnimationFrameController } from '/@/lib/dom/animationFrame'
+import {
+  MAX_NAVIGATION_WIDTH_RATIO,
+  MIN_NAVIGATION_WIDTH,
+  NAVIGATION_CLOSING_THRESHOLD,
+  useNavigationLayoutStore
+} from '/@/store/ui/navigationLayout'
 
 const useNavigationResizer = () => {
   const animationFrame = createAnimationFrameController()
