@@ -41,6 +41,12 @@ export const featureFlagDescriptions = {
       'お気に入りチャンネル一覧を、お気に入りに登録されたチャンネルのみの木構造で表示します。',
     defaultValue: false,
     endAt: new Date('2025-12-31T23:59')
+  },
+  does_save_sidebar_expansion_state: {
+    title: 'サイドバーの展開状態を保持',
+    description: 'サイドバーが展開されているかどうかを保持します。',
+    defaultValue: false,
+    endAt: new Date('2025-12-31T23:59')
   }
 } as const satisfies Record<string, FeatureFlagDescription>
 
