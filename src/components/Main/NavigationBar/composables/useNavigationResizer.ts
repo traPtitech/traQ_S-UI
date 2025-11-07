@@ -21,6 +21,7 @@ const useNavigationResizer = () => {
     navigationWidth,
     isNavigationClosed,
     saveNavigationWidth,
+    closeNavigation,
     navigationLeft,
     updateNavigationLeft
   } = useNavigationLayoutStore()
@@ -74,7 +75,7 @@ const useNavigationResizer = () => {
       const width = e.clientX - navigationLeft.value
 
       if (width <= NAVIGATION_CLOSING_THRESHOLD) {
-        navigationWidth.value = 0
+        closeNavigation()
       } else {
         setNavigationWidth(width)
       }
