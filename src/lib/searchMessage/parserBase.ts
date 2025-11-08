@@ -83,12 +83,18 @@ export const makePrefixedFilterExtractor =
 
 export type StoreForParser = {
   channelPathToId: ChannelPathToId
+  usernameToDmChannelId: UsernameToDmChannelId
   usernameToId: UsernameToId
-  getCurrentChannelPath: () => string | undefined
+  getCurrentChannelPathOrUsername: () => string | undefined
+  getCurrentChannelId: () => ChannelId | undefined
   getMyUsername: () => string | undefined
+  getMyUserId: () => UserId | undefined
 }
 
 type ChannelPathToId = (path: string) => ChannelId | undefined
+type UsernameToDmChannelId =
+  | ((username: string) => DMChannelId | undefined)
+  | ((username: string) => Promise<DMChannelId | undefined>)
 type UsernameToId =
   | ((username: string) => UserId | undefined)
   | ((username: string) => Promise<UserId | undefined>)
@@ -153,18 +159,20 @@ export const dateParser = <T extends string>(
 export const InHereToken = Symbol('in:here')
 export const FromToMeToken = Symbol('from:me / to:me')
 
-export const channelParser = <T extends string>(
+export const channelOrDmChannelParser = async <T extends string>(
   channelPathToId: ChannelPathToId,
+  usernameToDmChannelId: UsernameToDmChannelId,
   extracted: ExtractedFilter<T>
-): ChannelId | typeof InHereToken | undefined => {
-  if (extracted.body === 'here') {
-    return InHereToken
-  }
+): Promise<ChannelId | typeof InHereToken | undefined> => {
+  const body = extracted.prefix === '#' ? `#${extracted.body}` : extracted.body
+  if (body === 'here') return InHereToken
 
-  const channelName = extracted.body.startsWith('#')
-    ? extracted.body.slice(1)
-    : extracted.body
-  return channelPathToId(channelName)
+  const channelName = body.startsWith('#') ? body.slice(1) : body
+  const channelPath = channelPathToId(channelName)
+  if (channelPath) return channelPath
+
+  const username = body.startsWith('@') ? body.slice(1) : body
+  return usernameToDmChannelId(username)
 }
 
 export const userParser = async <T extends string>(
