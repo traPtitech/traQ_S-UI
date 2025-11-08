@@ -166,8 +166,7 @@ export const HereToken = Symbol('in:here')
 export const MeToken = Symbol('in:me / from:me / to:me')
 
 export const channelOrDmChannelParser = async <T extends string>(
-  channelPathToId: ChannelPathToId,
-  usernameToDmChannelId: UsernameToDmChannelId,
+  { channelPathToId, usernameToDmChannelId }: StoreForParser,
   extracted: ExtractedFilter<T>
 ): Promise<ChannelId | typeof HereToken | typeof MeToken | undefined> => {
   const body = extracted.prefix === '#' ? `#${extracted.body}` : extracted.body
