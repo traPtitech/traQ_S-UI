@@ -5,7 +5,7 @@
       v-for="item in entries"
       :key="item.type"
       :class="$style.item"
-      :is-selected="showCurrent && currentNavigation === item.type"
+      :is-selected="!isNavigationClosed && currentNavigation === item.type"
       :has-notification="item.hasNotification"
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
@@ -16,7 +16,9 @@
       v-for="item in ephemeralEntries"
       :key="item.type"
       :class="$style.item"
-      :is-selected="showCurrent && currentEphemeralNavigation === item.type"
+      :is-selected="
+        !isNavigationClosed && currentEphemeralNavigation === item.type
+      "
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
       :color-claim="item.colorClaim"
@@ -48,11 +50,9 @@ const props = withDefaults(
   defineProps<{
     currentNavigation?: NavigationItemType
     currentEphemeralNavigation?: EphemeralNavigationItemType
-    showCurrent?: boolean
   }>(),
   {
-    currentNavigation: 'home' as const,
-    showCurrent: true as const
+    currentNavigation: 'home' as const
   }
 )
 
@@ -69,12 +69,17 @@ const { onNavigationItemClick: onEphemeralNavigationItemClickImpl } =
   useEphemeralNavigationSelectorItem(emit)
 const { entries, ephemeralEntries } = useNavigationSelectorEntry()
 const showSeparator = computed(() => ephemeralEntries.value.length > 0)
-const { isNavigationClosed, restoreNavigationWidth } =
+const { isNavigationClosed, restoreNavigationWidth, closeNavigation } =
   useNavigationLayoutStore()
 
 const onNavigationItemClick = (item: NavigationItemType) => {
+  if (item === props.currentNavigation && !isNavigationClosed.value) {
+    closeNavigation()
+  } else {
+    restoreNavigationWidth()
+  }
+
   onNavigationItemClickImpl(item)
-  restoreNavigationWidth()
 }
 
 let previousEphemeralNavigation: EphemeralNavigationItemType | null = null
