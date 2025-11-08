@@ -8,10 +8,10 @@ import type {
   FilterParser,
   StoreForParser
 } from './parserBase'
-import { FromToMeToken } from './parserBase'
+import { MeToken } from './parserBase'
 import {
-  InHereToken,
-  channelParser,
+  HereToken,
+  channelOrDmChannelParser,
   dateParser,
   makePrefixedFilterExtractor,
   messageParser,
@@ -53,9 +53,13 @@ type MediaFlagFilterKey = 'attachments' | 'image' | 'audio' | 'video'
 export type Filter =
   | { type: 'after'; raw: string; value: Date }
   | { type: 'before'; raw: string; value: Date }
-  | { type: 'in'; raw: string; value: typeof InHereToken | ChannelId }
-  | { type: 'to'; raw: string; value: typeof FromToMeToken | UserId }
-  | { type: 'from'; raw: string; value: typeof FromToMeToken | UserId }
+  | {
+      type: 'in'
+      raw: string
+      value: typeof HereToken | typeof MeToken | ChannelId
+    }
+  | { type: 'to'; raw: string; value: typeof MeToken | UserId }
+  | { type: 'from'; raw: string; value: typeof MeToken | UserId }
   | { type: 'citation'; raw: string; value: MessageId }
   | { type: 'attrFlag'; raw: string; value: AttrFlagFilterKey; negate: boolean }
   | {
@@ -135,7 +139,7 @@ const parser = async (
         : undefined
     }
     case 'in': {
-      const result = channelParser(store.channelPathToId, extracted)
+      const result = await channelOrDmChannelParser(store, extracted)
       return result
         ? { type, raw: rawQuery(extracted), value: result }
         : undefined
@@ -188,6 +192,7 @@ const parseQueryFragmentToFilterWithoutStore = parseToFilterBase(
 /** 実際のクエリに対応するオブジェクトへの変換 */
 const filterOrStringToSearchMessageQuery = (
   currentChannelId: string | undefined,
+  myDmChannelId: string | undefined,
   myUserId: string | undefined,
   f: Filter | string
 ): SearchMessageQueryObject => {
@@ -202,12 +207,13 @@ const filterOrStringToSearchMessageQuery = (
         [f.type]: f.value.toISOString()
       }
     case 'in': {
-      const channelId = f.value === InHereToken ? currentChannelId : f.value
-      return { in: channelId }
+      if (f.value === HereToken) return { in: currentChannelId }
+      if (f.value === MeToken) return { in: myDmChannelId }
+      return { in: f.value }
     }
     case 'to':
     case 'from': {
-      const user = f.value === FromToMeToken ? myUserId : f.value
+      const user = f.value === MeToken ? myUserId : f.value
       return { [f.type]: user }
     }
     case 'citation':
@@ -242,23 +248,30 @@ export const createQueryParser = (store: StoreForParser) => {
         .map(parseQueryFragmentToFilter)
     )
 
-    const currentChannelPath = store.getCurrentChannelPath()
-    const currentChannelId = currentChannelPath
-      ? store.channelPathToId(currentChannelPath)
-      : undefined
+    const currentChannelPathOrUsername = store.getCurrentChannelPathOrUsername()
+    const currentChannelId = store.getCurrentChannelId()
+    const myDmChannelId = store.getMyDmChannelId()
     const myUsername = store.getMyUsername()
-    const myUserId = myUsername
-      ? await store.usernameToId(myUsername)
-      : undefined
+    const myUserId = store.getMyUserId()
 
     const normalizedQuery = parseds
       .map(q =>
-        parsedFilterToNormalizedString(q, currentChannelPath, myUsername)
+        parsedFilterToNormalizedString(
+          q,
+          currentChannelPathOrUsername,
+          myUsername
+        )
       )
       .join(' ')
+
     const queryObject = parseds
       .map(f =>
-        filterOrStringToSearchMessageQuery(currentChannelId, myUserId, f)
+        filterOrStringToSearchMessageQuery(
+          currentChannelId,
+          myDmChannelId,
+          myUserId,
+          f
+        )
       )
       .reduce(mergeSearchMessageQueryObject, emptySearchMessageQueryObject)
 
@@ -268,16 +281,17 @@ export const createQueryParser = (store: StoreForParser) => {
 
 const parsedFilterToNormalizedString = (
   f: string | Filter,
-  currentChannelPath: string | undefined,
+  currentChannelPathOrUsername: string | undefined,
   myUsername: string | undefined
 ) => {
-  if (typeof f === 'string') {
-    return f
+  if (typeof f === 'string') return f
+
+  if (f.type === 'in') {
+    if (f.value === HereToken) return `in:${currentChannelPathOrUsername}`
+    if (f.value === MeToken) return `in:${myUsername}`
   }
-  if (f.type === 'in' && f.value === InHereToken) {
-    return `in:${currentChannelPath}`
-  }
-  if ((f.type === 'from' || f.type === 'to') && f.value === FromToMeToken) {
+
+  if ((f.type === 'from' || f.type === 'to') && f.value === MeToken) {
     return `${f.type}:${myUsername}`
   }
   return f.raw

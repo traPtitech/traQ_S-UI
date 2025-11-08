@@ -1,12 +1,11 @@
-import type { Channel, User } from '@traptitech/traq'
+import type { Channel, DMChannel, User } from '@traptitech/traq'
 
-import type { ComputedRef, Ref } from 'vue'
-import { computed } from 'vue'
+import type { Ref } from 'vue'
 
 import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 import { channelIdToPathString } from '/@/lib/channel'
 import type { ChannelTree } from '/@/lib/channelTree'
-import { channelPathToId } from '/@/lib/channelTree'
+import { channelPathToId as channelPathToIdImpl } from '/@/lib/channelTree'
 import type { StoreForParser } from '/@/lib/searchMessage/parserBase'
 import {
   createQueryParser,
@@ -18,53 +17,113 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 import type { PrimaryViewInformation } from '/@/store/ui/mainView'
 import { useMainViewStore } from '/@/store/ui/mainView'
-import type { ChannelId } from '/@/types/entity-ids'
+import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 
 const getStoreForParser = ({
   primaryView,
   channelsMap,
+  dmChannelsMap,
+  userIdToDmChannelIdMap,
   channelTree,
-  myUsername,
+  usersMap,
+  me,
   fetchUserByName
 }: {
   primaryView: Ref<PrimaryViewInformation>
   channelsMap: Ref<ReadonlyMap<ChannelId, Channel>>
+  dmChannelsMap: Ref<ReadonlyMap<DMChannelId, DMChannel>>
+  userIdToDmChannelIdMap: Ref<ReadonlyMap<UserId, DMChannelId>>
   channelTree: Ref<ChannelTree>
-  myUsername: ComputedRef<string | undefined>
+  usersMap: Ref<ReadonlyMap<UserId, User>>
+  me: Ref<User | undefined>
   fetchUserByName: (param: { username: string }) => Promise<User | undefined>
-}): StoreForParser => ({
-  channelPathToId: path =>
-    setFallbackForNullishOrOnError(undefined).exec(() =>
-      channelPathToId(path.split('/'), channelTree.value)
-    ),
-  usernameToId: async username => {
+}): StoreForParser => {
+  const getMyUsername = () => `@${me.value?.name}`
+  const getMyUserId = () => me.value?.id
+
+  const userIdToDmChannelId = (userId: UserId): DMChannelId | undefined => {
+    return userIdToDmChannelIdMap.value.get(userId)
+  }
+
+  const channelIdToPath = (channelId: ChannelId): string | undefined => {
+    return channelIdToPathString(channelId, channelsMap.value)
+  }
+
+  const usernameToId = async (
+    username: string
+  ): Promise<UserId | undefined> => {
     const user = await fetchUserByName({ username })
     return user?.id
-  },
-  getCurrentChannelPath: () => {
-    const channelId =
-      primaryView.value.type === 'channel' || primaryView.value.type === 'dm'
-        ? primaryView.value.channelId
-        : undefined
-    return channelId
-      ? channelIdToPathString(channelId, channelsMap.value)
+  }
+
+  const getCurrentChannelId = () => {
+    return primaryView.value.type === 'channel' ||
+      primaryView.value.type === 'dm'
+      ? primaryView.value.channelId
       : undefined
-  },
-  getMyUsername: () => myUsername.value
-})
+  }
+
+  const usernameToDmChannelId = async (
+    username: string
+  ): Promise<DMChannelId | undefined> => {
+    const id = await usernameToId(username)
+    if (!id) return undefined
+    return userIdToDmChannelId(id)
+  }
+
+  const getCurrentChannelPathOrUsername = () => {
+    const channelId = getCurrentChannelId()
+    if (!channelId) return undefined
+
+    const path = channelIdToPath(channelId)
+    if (path) return `#${path}`
+
+    const userId = dmChannelsMap.value.get(channelId)?.userId
+    if (!userId) return undefined
+
+    const username = usersMap.value.get(userId)?.name
+    if (username) return `@${username}`
+  }
+
+  const getMyDmChannelId = () => {
+    const myUserId = getMyUserId()
+    if (!myUserId) return undefined
+    return userIdToDmChannelId(myUserId)
+  }
+
+  const channelPathToId = (path: string): ChannelId | undefined =>
+    setFallbackForNullishOrOnError(undefined).exec(() =>
+      channelPathToIdImpl(path.split('/'), channelTree.value)
+    )
+
+  return {
+    channelPathToId,
+    usernameToDmChannelId,
+    usernameToId,
+    getCurrentChannelPathOrUsername,
+    getCurrentChannelId,
+    getMyDmChannelId,
+    getMyUsername,
+    getMyUserId
+  }
+}
 
 const useQueryParser = () => {
-  const { channelsMap } = useChannelsStore()
+  const { channelsMap, dmChannelsMap, userIdToDmChannelIdMap } =
+    useChannelsStore()
   const { channelTree } = useChannelTree()
   const { primaryView } = useMainViewStore()
-  const { fetchUserByName } = useUsersStore()
+  const { fetchUserByName, usersMap } = useUsersStore()
   const { detail: me } = useMeStore()
   const parseQuery = createQueryParser(
     getStoreForParser({
       primaryView,
       channelsMap,
+      dmChannelsMap,
+      userIdToDmChannelIdMap,
       channelTree,
-      myUsername: computed(() => me.value?.name),
+      usersMap,
+      me,
       fetchUserByName
     })
   )
