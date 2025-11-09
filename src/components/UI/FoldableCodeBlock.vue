@@ -1,8 +1,12 @@
 <template>
-  <div :class="$style.container">
+  <div
+    :class="$style.container"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+  >
     <div
       v-if="isLong"
-      :class="[$style.wrap]"
+      :class="$style.wrap"
       :data-is-fold="isFold"
       @click="unfold"
     >
@@ -23,8 +27,8 @@
       v-html="preContent.outerHTML"
     />
 
-    <div :class="$style.copyButton">
-      <CopyButton :contents-source="() => content" />
+    <div v-if="isHovered" :class="$style.copyButton">
+      <CopyButton description="コード" :contents-source="() => content" />
     </div>
   </div>
 </template>
@@ -34,6 +38,7 @@ import { computed, onMounted, ref } from 'vue'
 
 import CopyButton from '/@/components/UI/CopyButton.vue'
 import FoldButton from '/@/components/UI/FoldButton.vue'
+import useHover from '/@/composables/dom/useHover'
 import { randomString } from '/@/lib/basic/randomString'
 
 const MAX_LINES = 5
@@ -81,6 +86,8 @@ const toggle = (e: MouseEvent) => {
   isFold.value = !isFold.value
   e.stopPropagation()
 }
+
+const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 </script>
 
 <style lang="scss" module>
@@ -97,7 +104,7 @@ const toggle = (e: MouseEvent) => {
   top: 0px;
   right: 0px;
 
-  padding: 8px 8px 4px 14px;
+  padding: 8px 4px 4px 14px;
 
   background: linear-gradient(
     to right,
