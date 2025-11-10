@@ -15,6 +15,7 @@
     - Main
       - CommandPalette: メッセージ検索やコマンドパレット周り
       - MainView
+        - Embeddings
       - NavigationBar
       - PopupNavigator
       - StampPicker

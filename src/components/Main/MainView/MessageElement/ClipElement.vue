@@ -28,8 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, shallowRef, toRef } from 'vue'
-import { ref } from 'vue'
+import { computed, ref, shallowRef, toRef } from 'vue'
 
 import ClickOutside from '/@/components/UI/ClickOutside'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
@@ -38,8 +37,8 @@ import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStor
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageId } from '/@/types/entity-ids'
 
+import MessageQuoteListItemFooter from './Embeddings/MessageQuoteListItemFooter.vue'
 import MessageContents from './MessageContents.vue'
-import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import MessageTools, { useMessageToolsHover } from './MessageTools.vue'
 import type { ChangeHeightData } from './composables/useElementRenderObserver'
 import useElementRenderObserver from './composables/useElementRenderObserver'
@@ -118,5 +117,6 @@ $messagePaddingMobile: 16px;
 .footer {
   margin-top: 4px;
   margin-left: 42px;
+  padding-left: 8px;
 }
 </style>

@@ -53,9 +53,9 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
             messageId: e.id
           })
 
-          // テキスト部分のみレンダリング
           const rendered = await render(message.content)
           renderedContentMap.value.set(message.id, rendered.renderedText)
+          embeddingsMap.value.set(message.id, rendered.embeddings)
         } catch {
           // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
         }

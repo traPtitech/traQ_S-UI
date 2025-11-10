@@ -47,11 +47,11 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 import type { MessageId } from '/@/types/entity-ids'
 
+import MessageFileList from './Embeddings/MessageFileList.vue'
+import MessageOgpList from './Embeddings/MessageOgpList.vue'
+import MessageQuoteList from './Embeddings/MessageQuoteList.vue'
 import MessageEditor from './MessageEditor.vue'
-import MessageFileList from './MessageFileList.vue'
 import MessageHeader from './MessageHeader.vue'
-import MessageOgpList from './MessageOgpList.vue'
-import MessageQuoteList from './MessageQuoteList.vue'
 
 const props = defineProps<{
   messageId: MessageId

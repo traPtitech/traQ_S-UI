@@ -13,12 +13,13 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 
-import MessageQuoteList from '/@/components/Main/MainView/MessageElement/MessageQuoteList.vue'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import { isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageId } from '/@/types/entity-ids'
+
+import MessageQuoteList from '../MessageElement/Embeddings/MessageQuoteList.vue'
 
 const props = defineProps<{
   channelId: string
