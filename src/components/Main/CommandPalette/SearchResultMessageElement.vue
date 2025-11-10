@@ -41,10 +41,12 @@
         :class="$style.fileList"
       />
     </div>
-    <div :class="$style.channelAndDate">
-      <span :class="$style.channelName">{{ channelName }}</span> -
-      <time>{{ date }}</time>
-    </div>
+    <MessageQuoteListItemFooter
+      :class="$style.footer"
+      :message="message"
+      :date="date"
+      disable-links
+    />
   </div>
 </template>
 
@@ -61,9 +63,7 @@ import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import useBoxSize from '/@/composables/dom/useBoxSize'
 import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
-import useChannelPath from '/@/composables/useChannelPath'
 import useToggle from '/@/composables/utils/useToggle'
-import { getDateRepresentation } from '/@/lib/basic/date'
 import { isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
 import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
@@ -72,6 +72,7 @@ import { useUsersStore } from '/@/store/entities/users'
 import type { MessageId } from '/@/types/entity-ids'
 
 import MessageFileSummary from '../MainView/MessageElement/Embeddings/MessageFileSummary.vue'
+import MessageQuoteListItemFooter from '../MainView/MessageElement/Embeddings/MessageQuoteListItemFooter.vue'
 
 const props = defineProps<{
   message: DeepReadonly<Message>
@@ -88,22 +89,17 @@ const { usersMap, fetchUser } = useUsersStore()
 // 検索によって出てきたメッセージなので、ユーザーが取得できていない場合がある
 fetchUser({ userId: props.message.userId })
 
-const { channelIdToPathString } = useChannelPath()
 const user = computed(() => usersMap.value.get(props.message.userId))
-const channelName = computed(() =>
-  channelIdToPathString(props.message.channelId, true)
-)
+
 const date = computed(() => {
-  let _date: string
   if (
     props.currentSortKey === 'createdAt' ||
     props.currentSortKey === '-createdAt'
   ) {
-    _date = props.message.createdAt
-  } else {
-    _date = props.message.updatedAt
+    return new Date(props.message.createdAt)
   }
-  return getDateRepresentation(_date)
+
+  return new Date(props.message.updatedAt)
 })
 const { fetchFileMetaData } = useMessagesStore()
 
@@ -250,12 +246,7 @@ $expand-button-height: 32px;
 .fileList {
   margin-top: 0.5rem;
 }
-.channelAndDate {
-  @include color-ui-secondary;
-  @include size-body2;
+.footer {
   grid-area: channelAndDate;
-}
-.channelName {
-  word-break: break-all;
 }
 </style>

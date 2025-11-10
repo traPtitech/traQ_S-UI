@@ -232,5 +232,6 @@ $mask-image: linear-gradient(
 .footer {
   grid-area: footer;
   margin-top: 4px;
+  padding-left: 8px;
 }
 </style>
