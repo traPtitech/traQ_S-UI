@@ -1,5 +1,6 @@
 /// <reference types="vitest" />
 import * as path from 'path'
+import fs from 'fs'
 import { Agent as HttpsAgent } from 'https'
 
 import VuePlugin from '@vitejs/plugin-vue'
@@ -17,6 +18,16 @@ import packageJson from './package.json'
 import webManifest from './webmanifest'
 
 const keepAliveAgent = new HttpsAgent({ keepAlive: true })
+
+const localhostCerts =
+  fs.existsSync('.certs/localhost.crt') && fs.existsSync('.certs/localhost.key')
+    ? {
+        https: {
+          key: fs.readFileSync('.certs/localhost.key'),
+          cert: fs.readFileSync('.certs/localhost.crt')
+        }
+      }
+    : {}
 
 export default defineConfig(({ mode }) => ({
   resolve: {
@@ -39,7 +50,8 @@ export default defineConfig(({ mode }) => ({
         ws: true,
         agent: keepAliveAgent
       }
-    }
+    },
+    ...localhostCerts
   },
   build: {
     target: resolveToEsbuildTarget(browserslist(), {

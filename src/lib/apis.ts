@@ -46,8 +46,7 @@ export const buildFileWaveformPath = (fileId: FileId) =>
   `${buildFileThumbnailPath(fileId)}?type=waveform`
 
 export const embeddingOrigin =
-  DEV_SERVER !== '' &&
-  (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+  DEV_SERVER !== '' && import.meta.env.MODE === 'development'
     ? DEV_SERVER
     : `${location.protocol}//${location.host}`
 
