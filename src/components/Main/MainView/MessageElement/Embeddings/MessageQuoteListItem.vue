@@ -24,7 +24,7 @@
         >
           引用メッセージ
         </div>
-        <SearchResultMessageFileList
+        <MessageFileSummary
           v-if="embeddingsState.fileIds.length > 0"
           :file-ids="embeddingsState.fileIds"
           :class="$style.fileList"
@@ -68,7 +68,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useMessagesStore } from '/@/store/entities/messages'
 import type { ChannelId, DMChannelId, MessageId } from '/@/types/entity-ids'
 
-import SearchResultMessageFileList from '../../CommandPalette/SearchResultMessageFileList.vue'
+import MessageFileSummary from './MessageFileSummary.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 

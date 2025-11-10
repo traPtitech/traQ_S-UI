@@ -35,7 +35,7 @@
           <AIcon name="arrow-expand-vertical" mdi :size="20" />全て表示
         </div>
       </div>
-      <SearchResultMessageFileList
+      <MessageFileSummary
         v-if="fileIds.length > 0"
         :file-ids="fileIds"
         :class="$style.fileList"
@@ -55,7 +55,7 @@ import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import type { DeepReadonly } from 'vue'
 import { computed, ref, shallowRef, watchEffect } from 'vue'
 
-import MessageQuoteList from '/@/components/Main/MainView/MessageElement/MessageQuoteList.vue'
+import MessageQuoteList from '/@/components/Main/MainView/MessageElement/Embeddings/MessageQuoteList.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
@@ -71,7 +71,7 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import { useUsersStore } from '/@/store/entities/users'
 import type { MessageId } from '/@/types/entity-ids'
 
-import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
+import MessageFileSummary from '../MainView/MessageElement/Embeddings/MessageFileSummary.vue'
 
 const props = defineProps<{
   message: DeepReadonly<Message>
