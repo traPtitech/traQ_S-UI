@@ -2,7 +2,8 @@ import { onMounted, ref, shallowRef, toRef, watch } from 'vue'
 
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
+import useLocalStorageValue from '/@/composables/storage/useLocalStorage'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
 type State = {
@@ -21,10 +22,21 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
     isNavigationClosed: false
   }
 
-  const [state, _restoring, restoringPromise] = useIndexedDbValue(
+  const state = useLocalStorageValue<State>(
     'store/ui/navigationLayout',
     1,
-    {},
+    {
+      1: async store => {
+        const [dbState, _restoring, restoringPromise] = useIndexedDbValue(
+          'store/ui/navigationLayout',
+          1,
+          {},
+          initialValue
+        )
+        await restoringPromise.value
+        return { ...store, ...dbState }
+      }
+    },
     initialValue
   )
 
@@ -62,9 +74,7 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
     saveNavigationWidth()
   }
 
-  onMounted(async () => {
-    await restoringPromise.value
-
+  onMounted(() => {
     if (state.isNavigationClosed) return
     restoreNavigationWidth()
   })
