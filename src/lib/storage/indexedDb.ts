@@ -27,7 +27,7 @@ const outputLog = (
 ) => {
   // eslint-disable-next-line no-console
   console[level](
-    `[migration] ${message} for "${dbName}" v${version} to v${version + 1}`,
+    `[IndexedDB:migration] ${message} for "${dbName}" v${version} to v${version + 1}`,
     ...args
   )
 }

@@ -7,7 +7,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { throttle } from 'throttle-debounce'
 
 import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import type { Point } from '/@/lib/basic/point'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'

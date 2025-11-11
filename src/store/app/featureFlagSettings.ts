@@ -2,7 +2,7 @@ import { computed } from 'vue'
 
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import { isWebKit } from '/@/lib/dom/browser'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 

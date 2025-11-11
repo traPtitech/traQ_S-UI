@@ -4,7 +4,9 @@ import { computed, toRef, unref } from 'vue'
 import { promisifyRequest } from 'idb-keyval'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
-import useIndexedDbValue, { key } from '/@/composables/utils/useIndexedDbValue'
+import useIndexedDbValue, {
+  key
+} from '/@/composables/storage/useIndexedDbValue'
 import type { AttachmentType } from '/@/lib/basic/file'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'

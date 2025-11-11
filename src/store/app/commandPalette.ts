@@ -6,7 +6,7 @@ import { promisifyRequest } from 'idb-keyval'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import useQueryParser from '/@/composables/searchMessage/useQueryParser'
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import { isObjectAndHasKey } from '/@/lib/basic/object'
 import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
