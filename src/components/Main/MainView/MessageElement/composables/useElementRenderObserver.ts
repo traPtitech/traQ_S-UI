@@ -18,6 +18,7 @@ const useElementRenderObserver = (
   isEntryMessage: Ref<boolean> | boolean,
   messageId: Ref<string>,
   embeddingsState: Readonly<{
+    quoteMessageIds: readonly MessageId[]
     fileIds: readonly FileId[]
     externalUrls: readonly ExternalUrl[]
   }>,
@@ -33,6 +34,16 @@ const useElementRenderObserver = (
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const entry = entries[0]!
     const { height, bottom, top } = entry.target.getBoundingClientRect()
+
+    emit('changeHeight', {
+      id: messageId.value,
+      heightDiff: height - lastHeight,
+      top,
+      bottom,
+      lastTop,
+      lastBottom
+    })
+
     if (lastHeight === 0) {
       // 初回に高さが変化した場合、初期レンダリング完了とみなす
       // これ以降新規にobserveしないためにwatcherを止める
@@ -45,16 +56,8 @@ const useElementRenderObserver = (
         const { top } = bodyRef.value.getBoundingClientRect()
         emit('entryMessageLoaded', top - parentTop)
       }
-    } else {
-      emit('changeHeight', {
-        id: messageId.value,
-        heightDiff: height - lastHeight,
-        top,
-        bottom,
-        lastTop,
-        lastBottom
-      })
     }
+
     lastHeight = height
     lastBottom = bottom
     lastTop = top
@@ -63,12 +66,13 @@ const useElementRenderObserver = (
     () => {
       if (
         (unref(isEntryMessage) ||
+          embeddingsState.quoteMessageIds.length > 0 ||
           embeddingsState.fileIds.length > 0 ||
           embeddingsState.externalUrls.length > 0) &&
         bodyRef.value
       ) {
         /*
-          添付ファイル/外部URLがある場合か
+          引用 / 添付ファイル / 外部URL がある場合か
           エントリーメッセージは
           高さ監視をする
         */
