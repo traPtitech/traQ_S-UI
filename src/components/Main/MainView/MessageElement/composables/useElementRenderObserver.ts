@@ -18,6 +18,7 @@ const useElementRenderObserver = (
   isEntryMessage: Ref<boolean> | boolean,
   messageId: Ref<string>,
   embeddingsState: Readonly<{
+    quoteMessageIds: readonly MessageId[]
     fileIds: readonly FileId[]
     externalUrls: readonly ExternalUrl[]
   }>,
@@ -65,12 +66,13 @@ const useElementRenderObserver = (
     () => {
       if (
         (unref(isEntryMessage) ||
+          embeddingsState.quoteMessageIds.length > 0 ||
           embeddingsState.fileIds.length > 0 ||
           embeddingsState.externalUrls.length > 0) &&
         bodyRef.value
       ) {
         /*
-          添付ファイル/外部URLがある場合か
+          引用 / 添付ファイル / 外部URL がある場合か
           エントリーメッセージは
           高さ監視をする
         */
