@@ -1,7 +1,12 @@
 <template>
-  <div :class="$style.container" :style="containerStyle">
+  <RouterLink
+    :to="fileLink"
+    :class="$style.container"
+    :style="containerStyle"
+    @click.stop
+  >
     <PlayIcon v-if="isAnimatedImage" :class="$style.playIcon" />
-  </div>
+  </RouterLink>
 </template>
 
 <script lang="ts" setup>
@@ -15,7 +20,7 @@ const props = defineProps<{
   fileId: FileId
 }>()
 
-const { fileThumbnailPath, isAnimatedImage } = useFileThumbnail(props)
+const { fileLink, fileThumbnailPath, isAnimatedImage } = useFileThumbnail(props)
 const containerStyle = computed(() => ({
   backgroundImage: `url(${fileThumbnailPath.value})`
 }))
