@@ -5,6 +5,7 @@ import type {
   MessageId,
   UserId
 } from '/@/types/entity-ids'
+import type { MaybePromise } from '/@/types/utility'
 
 const dateOnlyFormRegex = /^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$/
 
@@ -98,12 +99,12 @@ export type StoreForParser = {
 }
 
 type ChannelPathToId = (path: string) => ChannelId | undefined
-type UsernameToDmChannelId =
-  | ((username: string) => DMChannelId | undefined)
-  | ((username: string) => Promise<DMChannelId | undefined>)
-type UsernameToId =
-  | ((username: string) => UserId | undefined)
-  | ((username: string) => Promise<UserId | undefined>)
+
+type UsernameToDmChannelId = (
+  username: string
+) => MaybePromise<DMChannelId | undefined>
+
+type UsernameToId = (username: string) => MaybePromise<UserId | undefined>
 
 /**
  * `string`から`ExtractedFilter`を経由して実際のフィルターを作る

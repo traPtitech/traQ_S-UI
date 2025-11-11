@@ -23,6 +23,7 @@ import useCopyLink from '/@/composables/contextMenu/useCopyLink'
 import usePinToggler from '/@/composables/contextMenu/usePinToggler'
 import type { Point } from '/@/lib/basic/point'
 import type { MessageId } from '/@/types/entity-ids'
+import type { MaybePromise } from '/@/types/utility'
 
 const props = withDefaults(
   defineProps<{
@@ -47,7 +48,7 @@ const { removePinned } = usePinToggler(messageId)
 const close = () => {
   emit('close')
 }
-const withClose = async (func: () => void | Promise<void>) => {
+const withClose = async (func: () => MaybePromise<void>) => {
   await func()
   close()
 }

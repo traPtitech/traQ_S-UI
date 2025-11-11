@@ -1,3 +1,5 @@
+import type { MaybePromise } from '/@/types/utility'
+
 /**
  * 取得中の処理があればその処理を行わずに実行中の処理が完了した結果を受け取る
  *
@@ -42,7 +44,7 @@ export const createMutex = () => {
   const queue: Task<void>[] = []
 
   const createTask = <T>(): Task<T> => {
-    let resolve!: (v: T | PromiseLike<T>) => void
+    let resolve!: (v: MaybePromise<T>) => void
     const promise = new Promise<T>(res => {
       resolve = res
     })

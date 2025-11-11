@@ -36,6 +36,7 @@ import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useModalStore } from '/@/store/ui/modal'
 import type { StampId } from '/@/types/entity-ids'
+import type { MaybePromise } from '/@/types/utility'
 
 const props = defineProps<{
   position: Point
@@ -78,7 +79,7 @@ const acceptImageType = [
 const close = () => {
   emit('close')
 }
-const withClose = async (func: () => void | Promise<void>) => {
+const withClose = async (func: () => MaybePromise<void>) => {
   await func()
   close()
 }

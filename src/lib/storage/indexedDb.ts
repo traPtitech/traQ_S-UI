@@ -1,6 +1,8 @@
 import type { UseStore } from 'idb-keyval'
 import { createStore as idbCreateStore, promisifyRequest } from 'idb-keyval'
 
+import type { MaybePromise } from '/@/types/utility'
+
 export const dbPrefix = 'traQ_S-'
 
 /**
@@ -16,7 +18,7 @@ export type Migrations = Record<number, Migration>
  * asyncにできないのはtransactionが終わってしまうため
  * 参考: https://stackoverflow.com/q/42700663
  */
-type Migration = (getStore: () => IDBObjectStore) => void | Promise<void>
+type Migration = (getStore: () => IDBObjectStore) => MaybePromise<void>
 
 const outputLog = (
   level: 'log' | 'error',
