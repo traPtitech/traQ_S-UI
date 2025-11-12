@@ -1,5 +1,7 @@
 import { onBeforeUnmount } from 'vue'
 
+import type { MaybePromise } from '/@/types/utility'
+
 type FileSelectOptions = {
   accept?: string
   multiple?: boolean
@@ -7,7 +9,7 @@ type FileSelectOptions = {
 
 export const useFileSelect = (
   options: FileSelectOptions,
-  onChange: (files: FileList) => Promise<void> | void
+  onChange: (files: FileList) => MaybePromise<void>
 ) => {
   const input = document.createElement('input')
   input.type = 'file'

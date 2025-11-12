@@ -4,7 +4,9 @@ import { promisifyRequest } from 'idb-keyval'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { debounce } from 'throttle-debounce'
 
-import useIndexedDbValue, { key } from '/@/composables/utils/useIndexedDbValue'
+import useIndexedDbValue, {
+  key
+} from '/@/composables/storage/useIndexedDbValue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
 const useUserVolumePinia = defineStore('store/app/userVolume', () => {

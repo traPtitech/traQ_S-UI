@@ -36,10 +36,7 @@ const useRouteWatcher = () => {
   const { closeNav } = useNavigationController()
   const { isOnInitialModalRoute, replaceModal, clearModalState } =
     useModalStore()
-  const {
-    defaultChannelName,
-    restoringPromise: browserSettingsRestoringPromise
-  } = useBrowserSettings()
+  const { defaultChannelName } = useBrowserSettings()
   const { channelTree } = useChannelTree()
   const {
     channelsMap,
@@ -66,15 +63,9 @@ const useRouteWatcher = () => {
     isInitialView: true
   })
 
-  const useOpenChannel = async () => {
-    await browserSettingsRestoringPromise.value
-    return defaultChannelName
-  }
-
   const onRouteChangedToIndex = async () => {
-    const openChannelPath = await useOpenChannel()
     await router
-      .replace(constructChannelPath(openChannelPath.value))
+      .replace(constructChannelPath(defaultChannelName.value))
       // 同じ場所に移動しようとした際のエラーを消す
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {})
@@ -165,14 +156,13 @@ const useRouteWatcher = () => {
       return
     }
 
-    const openChannelPath = await useOpenChannel()
     let channelPath = ''
     let channelId = ''
     if (file.channelId) {
       channelPath = channelIdToPathString(file.channelId, true) ?? ''
       channelId = file.channelId
     } else {
-      channelPath = openChannelPath.value
+      channelPath = defaultChannelName.value
       try {
         channelId = channelPathToId(channelPath.split('/'), channelTree.value)
       } catch (_) {

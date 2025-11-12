@@ -19,7 +19,7 @@ const getActivityTimeline = createSingleflight(
 )
 
 const useActivityStream = () => {
-  const { restoringPromise, activityMode: mode } = useBrowserSettings()
+  const { activityMode: mode } = useBrowserSettings()
   const { isChannelSubscribed } = useSubscriptionStore()
   const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
 
@@ -30,8 +30,6 @@ const useActivityStream = () => {
   const timelineChannelMap = ref(new Map<ChannelId, ActivityTimelineMessage>())
 
   const fetch = async () => {
-    // 無駄な取得を減らすために保存されてる情報が復元されるのを待つ
-    await restoringPromise.value
     // ログイン前に取得されるのを回避するために、チャンネル取得を待つ
     // チャンネル取得である必要性はない
     await bothChannelsMapInitialFetchPromise.value

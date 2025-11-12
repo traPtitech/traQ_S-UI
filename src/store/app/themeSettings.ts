@@ -3,7 +3,7 @@ import { computed, ref, toRefs } from 'vue'
 import { promisifyRequest } from 'idb-keyval'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import { hasKey, isObjectAndHasKey } from '/@/lib/basic/object'
 import { resolveTheme } from '/@/lib/theme/resolve'
 import type { Theme } from '/@/lib/theme/schema'

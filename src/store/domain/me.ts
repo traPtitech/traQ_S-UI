@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 import { isAxiosError } from 'axios'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import apis from '/@/lib/apis'
 import { deleteToken } from '/@/lib/notification/notification'
 import { wsListener } from '/@/lib/websocket'
