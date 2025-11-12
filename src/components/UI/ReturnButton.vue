@@ -1,6 +1,6 @@
 <template>
   <button>
-    <AIcon :size="size" mdi name="chevron-left" />
+    <AIcon :class="$style.button" :size="size" mdi name="chevron-left" />
   </button>
 </template>
 
@@ -16,3 +16,9 @@ withDefaults(
   }
 )
 </script>
+
+<style lang="scss" module>
+.button {
+  @include color-ui-primary;
+}
+</style>
