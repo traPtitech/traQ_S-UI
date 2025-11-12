@@ -40,6 +40,7 @@ defineProps<{
   display: flex;
   align-items: center;
   overflow-x: auto;
+  overflow-y: hidden;
   margin-bottom: -6px;
 }
 .topic {
