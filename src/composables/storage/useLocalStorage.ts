@@ -10,11 +10,11 @@ const useLocalStorageValue = <T extends Record<string, unknown>>(
   initialValue: T
 ) => {
   const store = createStore<T>(storeName, version)
-  const value = reactive({ ...initialValue, ...store.getAllData() })
+  const value = reactive({ ...initialValue, ...store.loadAll() })
 
   // LocalStorage の読み取りの同期性を維持したいので，migration は非同期で実行する
   const migrationPromise = store.runMigrations(migrations).then(() => {
-    for (const [key, val] of Object.entries(store.getAllData())) {
+    for (const [key, val] of Object.entries(store.loadAll())) {
       // @ts-expect-error valueとvは型が一致する
       value[key] = val
     }
@@ -22,7 +22,7 @@ const useLocalStorageValue = <T extends Record<string, unknown>>(
     watch(
       value,
       () => {
-        store.saveAllData(toRawDeep(value))
+        store.saveAll(toRawDeep(value))
       },
       { deep: true }
     )

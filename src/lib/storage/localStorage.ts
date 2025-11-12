@@ -5,8 +5,8 @@ export const localStoragePrefix = 'traQ_S-'
 type State = Record<string, unknown>
 
 /**
- * インデックスが1のものは作成時に実行される
- * インデックスが2のものはバージョン1から2になるときに実行される
+ * インデックスが 1 のものは作成時に実行される
+ * インデックスが 2 のものはバージョン 1 から 2 になるときに実行される
  */
 export type Migrations<T extends State> = Record<number, Migration<T>>
 
@@ -30,18 +30,18 @@ export class LocalStorageStore<T extends State> {
   }
 
   private setCurrentVersion(version: number) {
-    const data = this.getAllData()
+    const data = this.loadAll()
     localStorage.setItem(this.fullStoreName, JSON.stringify({ version, data }))
   }
 
-  getAllData(): Partial<T> {
+  loadAll(): Partial<T> {
     const item = localStorage.getItem(this.fullStoreName)
     if (item === null) return {}
     const { data } = JSON.parse(item)
     return data ?? {}
   }
 
-  saveAllData(data: Partial<T>) {
+  saveAll(data: Partial<T>) {
     localStorage.setItem(
       this.fullStoreName,
       JSON.stringify({ version: this.version, data })
@@ -49,29 +49,29 @@ export class LocalStorageStore<T extends State> {
   }
 
   set<K extends keyof T>(key: K, value: T[K]) {
-    const data = this.getAllData()
+    const data = this.loadAll()
     data[key] = value
-    this.saveAllData(data)
+    this.saveAll(data)
   }
 
   get<K extends keyof T>(key: K) {
-    const data = this.getAllData()
+    const data = this.loadAll()
     return data[key]
   }
 
   delete<K extends keyof T>(key: K) {
-    const data = this.getAllData()
+    const data = this.loadAll()
     delete data[key]
-    this.saveAllData(data)
+    this.saveAll(data)
   }
 
   keys(): (keyof T)[] {
-    const data = this.getAllData()
+    const data = this.loadAll()
     return Object.keys(data)
   }
 
   clear() {
-    this.saveAllData({})
+    this.saveAll({})
   }
 
   destroy() {
@@ -82,7 +82,7 @@ export class LocalStorageStore<T extends State> {
     const currentVersion = this.getCurrentVersion()
     const isNewStore = currentVersion === 0
 
-    let data = this.getAllData()
+    let data = this.loadAll()
 
     if (isNewStore) {
       // 新規作成時のマイグレーションを実行
@@ -119,7 +119,7 @@ export class LocalStorageStore<T extends State> {
       }
     }
 
-    this.saveAllData(data)
+    this.saveAll(data)
   }
 
   outputLog(

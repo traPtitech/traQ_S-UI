@@ -6,16 +6,16 @@ import type { MaybePromise } from '/@/types/utility'
 export const dbPrefix = 'traQ_S-'
 
 /**
- * インデックスが1のものは作成時に実行される
- * インデックスが2のものはバージョン1から2になるときに実行される
+ * インデックスが 1 のものは作成時に実行される
+ * インデックスが 2 のものはバージョン 1 から 2 になるときに実行される
  */
 export type Migrations = Record<number, Migration>
 
 /**
- * migration内ではasyncにできないので独自に行う
- * ここではIDBのストア自体のスキーマが変わることはないので、
+ * migration 内では async にできないので独自に行う
+ * ここでは IDB のストア自体のスキーマが変わることはないので、
  * バージョンをあげてから行うことにする
- * asyncにできないのはtransactionが終わってしまうため
+ * async にできないのは transaction が終わってしまうため
  * 参考: https://stackoverflow.com/q/42700663
  */
 type Migration = (getStore: () => IDBObjectStore) => MaybePromise<void>
@@ -59,6 +59,7 @@ export function createStoreWithMigrations(
         try {
           const getStore = () =>
             db.transaction(storeName, 'readwrite').objectStore(storeName)
+
           await migration(getStore)
           outputLog('log', 'Ran migration', dbNameWithPrefix, 0)
         } catch (e) {
@@ -66,11 +67,6 @@ export function createStoreWithMigrations(
           throw e
         }
       }
-    }
-
-    if (db.version === version) {
-      // migrationが必要ないのでそのまま返す
-      return db
     }
 
     // run migration
@@ -81,6 +77,7 @@ export function createStoreWithMigrations(
       try {
         const getStore = () =>
           db.transaction(storeName, 'readwrite').objectStore(storeName)
+
         await migration(getStore)
         outputLog('log', 'Ran migration', dbNameWithPrefix, v)
       } catch (e) {
