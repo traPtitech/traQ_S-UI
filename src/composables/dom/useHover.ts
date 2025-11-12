@@ -8,6 +8,8 @@ const useHover = (delay: number = 0) => {
     if (delay <= 0) {
       open()
     } else {
+      if (timeoutId) clearTimeout(timeoutId)
+
       timeoutId = setTimeout(() => {
         open()
       }, delay)
