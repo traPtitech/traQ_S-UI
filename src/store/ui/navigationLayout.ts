@@ -22,7 +22,7 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
     isNavigationClosed: false
   }
 
-  const state = useLocalStorageValue<State>(
+  const [state, migrationPromise] = useLocalStorageValue<State>(
     'store/ui/navigationLayout',
     1,
     {
@@ -74,7 +74,9 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
     saveNavigationWidth()
   }
 
-  onMounted(() => {
+  onMounted(async () => {
+    await migrationPromise
+
     if (state.isNavigationClosed) return
     restoreNavigationWidth()
   })

@@ -66,7 +66,7 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     filterStarChannel: false
   }
 
-  const state = useLocalStorageValue(
+  const [state] = useLocalStorageValue(
     'store/app/browserSettings',
     1,
     {
