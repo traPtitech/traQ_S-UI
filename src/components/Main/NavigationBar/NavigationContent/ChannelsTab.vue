@@ -14,6 +14,7 @@
           :all-panel-id="allPanelId"
           :stared-panel-id="staredPanelId"
         />
+        <ChannelListArchivedToggle v-model:show-archived="showArchived" />
         <template v-if="topLevelChannels.length > 0">
           <ChannelList
             v-if="query.length > 0"
@@ -56,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRaw } from 'vue'
+import { computed, ref, toRaw } from 'vue'
 
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
@@ -75,6 +76,7 @@ import { useModalStore } from '/@/store/ui/modal'
 
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import ChannelList from '../ChannelList/ChannelList.vue'
+import ChannelListArchivedToggle from '../ChannelList/ChannelListArchivedToggle.vue'
 import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
 import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
 import useChannelFilter from './composables/useChannelFilter'
@@ -85,12 +87,20 @@ const { staredChannelSet } = useStaredChannels()
 const { channelsMap } = useChannelsStore()
 const { channelIdToPathString } = useChannelPath()
 
+const showArchived = ref(false)
+
 // filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
 const topLevelChannels = computed(() =>
-  filterTrees(toRaw(channelTree.value.children), channel => !channel.archived)
+  filterTrees(
+    toRaw(channelTree.value.children),
+    channel => showArchived.value || !channel.archived
+  )
 )
 const starredTopLevelChannels = computed(() =>
-  filterTrees(toRaw(starredChannelTree.value.children), node => !node.archived)
+  filterTrees(
+    toRaw(starredChannelTree.value.children),
+    node => showArchived.value || !node.archived
+  )
 )
 
 const staredChannels = computed(() => {
@@ -99,7 +109,10 @@ const staredChannels = computed(() => {
     channelsMap.value
   )
   const sortedTrees = sortChannelTree(trees)
-  return filterTrees(sortedTrees, channel => !channel.archived)
+  return filterTrees(
+    sortedTrees,
+    channel => showArchived.value || !channel.archived
+  )
 })
 
 const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
