@@ -1,8 +1,10 @@
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useStampCategory } from '/@/store/domain/stampCategory'
 import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { StampId } from '/@/types/entity-ids'
@@ -13,12 +15,16 @@ import type { StampSet } from './useStampSetSelector'
 const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { traQStampCategory, unicodeStampCategories } = useStampCategory()
   const { recentStampIds } = useStampHistory()
+  const { stampRecommendations } = useStampRecommendations()
   const { stampsMap } = useStampsStore()
   const { stampPalettesMap } = useStampPalettesStore()
+  const { featureFlags } = useFeatureFlagSettings()
 
   const stampIds = computed((): readonly StampId[] => {
     if (currentStampSet.value.type === 'history') {
-      return recentStampIds.value
+      return featureFlags.value.stamp_recommendation.enabled
+        ? stampRecommendations.value
+        : recentStampIds.value
     }
     if (currentStampSet.value.type === 'palette') {
       const id = currentStampSet.value.id

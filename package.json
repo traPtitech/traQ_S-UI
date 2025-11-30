@@ -31,7 +31,7 @@
     "@mdi/js": "^7.4.47",
     "@sapphi-red/web-noise-suppressor": "^0.3.5",
     "@shiguredo/virtual-background": "^2023.2.0",
-    "@traptitech/traq": "^3.25.1-5",
+    "@traptitech/traq": "^3.26.1-1",
     "@traptitech/traq-markdown-it": "^7.0.2",
     "autosize": "^6.0.1",
     "browser-image-compression": "^2.0.2",
