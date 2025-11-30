@@ -33,6 +33,9 @@ const useStampRecommendationsPinia = defineStore(
         recentlyRecorded.delete(stampId)
       }, 50)
 
+      // このスコア更新はバックエンドでのスコア計算アルゴリズムの簡易的な模倣です。
+      // バックエンドのアルゴリズムが変更された場合はここも合わせて変更する必要があります。
+      // 正確なスコアは fetchStampRecommendations() で同期されます。
       stampToRecommendationScore.value.set(
         stampId,
         (stampToRecommendationScore.value.get(stampId) || 0) + 1
