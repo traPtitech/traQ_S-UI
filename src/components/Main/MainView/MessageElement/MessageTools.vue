@@ -95,10 +95,8 @@ import useContextMenu from '/@/composables/useContextMenu'
 import useToggle from '/@/composables/utils/useToggle'
 import { isDefined } from '/@/lib/basic/array'
 import { useStampUpdater } from '/@/lib/updater/stamp'
-import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useMeStore } from '/@/store/domain/me'
-import { useStampHistory } from '/@/store/domain/stampHistory'
-import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
+import { useTopStampIds } from '/@/store/domain/stampRecommendations'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
@@ -122,11 +120,9 @@ const props = withDefaults(
 
 const isActive = defineModel<boolean>('isActive', { default: false })
 
-const { recentStampIds } = useStampHistory()
-const { stampRecommendations } = useStampRecommendations()
+const { topStampIds } = useTopStampIds()
 const { addStampOptimistically } = useStampUpdater()
 const { initialRecentStamps } = useStampsStore()
-const { featureFlags } = useFeatureFlagSettings()
 
 const pushInitialRecentStampsIfNeeded = (
   initialRecentStamps: Stamp[],
@@ -144,11 +140,7 @@ const pushInitialRecentStampsIfNeeded = (
 }
 
 const topStamps = computed(() => {
-  const tops = (
-    featureFlags.value.stamp_recommendation.enabled
-      ? stampRecommendations
-      : recentStampIds
-  ).value.slice(0, 3)
+  const tops = topStampIds.value.slice(0, 3)
   pushInitialRecentStampsIfNeeded(initialRecentStamps.value, tops)
   return tops
 })

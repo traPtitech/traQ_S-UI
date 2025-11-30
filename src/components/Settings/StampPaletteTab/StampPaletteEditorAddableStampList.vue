@@ -45,9 +45,11 @@ import { computed, onUnmounted, ref, watch } from 'vue'
 
 import useStampFilter from '/@/components/Main/StampPicker/composables/useStampFilter'
 import FilterInput from '/@/components/UI/FilterInput.vue'
-import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useStampHistory } from '/@/store/domain/stampHistory'
-import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
+import {
+  useStampRecommendations,
+  useTopStampIds
+} from '/@/store/domain/stampRecommendations'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { StampId } from '/@/types/entity-ids'
 
@@ -60,22 +62,15 @@ const currentStampIds = defineModel<StampId[]>('current-stamp-ids', {
 })
 
 const { stampsMap, stampsMapFetched } = useStampsStore()
-const { recentStampIds, fetchStampHistory } = useStampHistory()
-const { stampRecommendations, fetchStampRecommendations } =
-  useStampRecommendations()
+const { fetchStampHistory } = useStampHistory()
+const { fetchStampRecommendations } = useStampRecommendations()
+const { topStampIds } = useTopStampIds()
 const { filterState } = useStampFilter()
-const { featureFlags } = useFeatureFlagSettings()
 
 const displayCount = ref(ITEMS_PER_LOAD)
 
 fetchStampHistory()
 fetchStampRecommendations()
-
-const topStampIds = computed(() =>
-  featureFlags.value.stamp_recommendation.enabled
-    ? stampRecommendations.value
-    : recentStampIds.value
-)
 const allAddableStamps = computed(() => {
   if (!stampsMapFetched.value) {
     return []
