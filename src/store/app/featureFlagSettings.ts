@@ -43,6 +43,13 @@ export const featureFlagDescriptions = {
       'お気に入りチャンネル一覧を、お気に入りに登録されたチャンネルのみの木構造で表示します。',
     defaultValue: false,
     endAt: new Date('2025-12-31T23:59')
+  },
+  stamp_recommendation: {
+    title: 'スタンプのレコメンド機能',
+    description:
+      'スタンプのレコメンド機能を有効にします。スタンプ履歴が用いられている部分をレコメンドで置き換えます。',
+    defaultValue: false,
+    endAt: new Date('2026-01-31T23:59')
   }
 } as const satisfies Record<string, FeatureFlagDescription>
 

@@ -53,6 +53,7 @@ import { onMounted, ref } from 'vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useStampPicker } from '/@/store/ui/stampPicker'
 import type { StampId } from '/@/types/entity-ids'
@@ -75,6 +76,7 @@ const {
   closeStampPicker
 } = useStampPicker()
 const { upsertLocalStampHistory } = useStampHistory()
+const { recordStampUsage } = useStampRecommendations()
 const { isMobile } = useResponsiveStore()
 
 const animationKeys = ref(new Map<StampId, number>())
@@ -99,6 +101,7 @@ const filterInputRef = ref<InstanceType<typeof FilterInput> | null>(null)
 
 const onInputStamp = (id: StampId) => {
   upsertLocalStampHistory(id, new Date())
+  recordStampUsage(id)
   selectHandler.value({
     id,
     sizeEffect: selectedSizeEffect.value,

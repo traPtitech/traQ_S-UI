@@ -44,6 +44,7 @@ import useMessageInputState from '/@/composables/messageInputState/useMessageInp
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { randomString } from '/@/lib/basic/randomString'
 import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useToastStore } from '/@/store/ui/toast'
@@ -52,6 +53,7 @@ import useAttachments from '../Main/MainView/MessageInput/composables/useAttachm
 import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
 
 const { fetchStampHistory } = useStampHistory()
+const { fetchStampRecommendations } = useStampRecommendations()
 const { fetchStamps } = useStampsStore()
 const { fetchStampPalettes } = useStampPalettesStore()
 const { state } = useMessageInputState('share-target')
@@ -81,6 +83,7 @@ const { toggleStampPicker } = useTextStampPickerInvoker(
 fetchStamps()
 fetchStampPalettes()
 fetchStampHistory()
+fetchStampRecommendations()
 
 const id = randomString()
 </script>
