@@ -41,7 +41,7 @@
     "firebase": "^12.5.0",
     "highlight.js": "^11.11.1",
     "idb-keyval": "^6.2.2",
-    "livekit-client": "^2.15.14",
+    "livekit-client": "^2.16.0",
     "mitt": "^3.0.0",
     "party-js": "^2.2.0",
     "sortablejs": "^1.15.6",
