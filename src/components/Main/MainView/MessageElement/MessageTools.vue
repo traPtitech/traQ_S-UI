@@ -8,7 +8,7 @@
     <transition v-if="!isMinimum" name="quick-reaction">
       <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
         <AStamp
-          v-for="stamp in recentStamps"
+          v-for="stamp in topStamps"
           :key="stamp"
           :stamp-id="stamp"
           :size="28"
@@ -96,7 +96,7 @@ import useToggle from '/@/composables/utils/useToggle'
 import { isDefined } from '/@/lib/basic/array'
 import { useStampUpdater } from '/@/lib/updater/stamp'
 import { useMeStore } from '/@/store/domain/me'
-import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useTopStampIds } from '/@/store/domain/stampRecommendations'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
@@ -120,7 +120,7 @@ const props = withDefaults(
 
 const isActive = defineModel<boolean>('isActive', { default: false })
 
-const { recentStampIds } = useStampHistory()
+const { topStampIds } = useTopStampIds()
 const { addStampOptimistically } = useStampUpdater()
 const { initialRecentStamps } = useStampsStore()
 
@@ -139,10 +139,10 @@ const pushInitialRecentStampsIfNeeded = (
   }
 }
 
-const recentStamps = computed(() => {
-  const recents = recentStampIds.value.slice(0, 3)
-  pushInitialRecentStampsIfNeeded(initialRecentStamps.value, recents)
-  return recents
+const topStamps = computed(() => {
+  const tops = topStampIds.value.slice(0, 3)
+  pushInitialRecentStampsIfNeeded(initialRecentStamps.value, tops)
+  return tops
 })
 const addStamp = async (stampId: StampId) =>
   addStampOptimistically(props.messageId, stampId)
