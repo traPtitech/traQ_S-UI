@@ -80,7 +80,7 @@
     "@vue/test-utils": "^2.4.6",
     "autoprefixer": "^10.4.21",
     "axios": "^1.13.1",
-    "browserslist": "^4.27.0",
+    "browserslist": "^4.28.0",
     "cypress": "^15.5.0",
     "esbuild": "^0.25.12",
     "esbuild-plugin-browserslist": "^1.0.2",
