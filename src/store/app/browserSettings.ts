@@ -58,7 +58,7 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     lastOpenChannelName: 'general',
     openChannelName: 'general',
     sendWithModifierKey: 'modifier',
-    modifierKey: { alt: true, ctrl: true, shift: true, macCtrl: true },
+    modifierKey: { alt: true, ctrl: true, shift: false, macCtrl: true },
     ecoMode: false,
     prioritizeStarredChannel: true,
     prioritizeNotifiedChannel: true,
