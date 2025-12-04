@@ -39,7 +39,14 @@ const props = withDefaults(
     disableIme?: boolean
     title?: string
     focusOnMount?: boolean
-    enterkeyhint?: string
+    enterkeyhint?:
+      | 'done'
+      | 'send'
+      | 'search'
+      | 'enter'
+      | 'go'
+      | 'next'
+      | 'previous'
   }>(),
   {
     onSecondary: false,
