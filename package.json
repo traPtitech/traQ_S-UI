@@ -81,7 +81,7 @@
     "autoprefixer": "^10.4.22",
     "axios": "^1.13.2",
     "browserslist": "^4.28.1",
-    "cypress": "^15.5.0",
+    "cypress": "^15.7.1",
     "esbuild": "^0.25.12",
     "esbuild-plugin-browserslist": "^1.0.2",
     "eslint": "^9.39.1",
