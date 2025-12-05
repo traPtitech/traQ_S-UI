@@ -46,8 +46,6 @@ const useMessageScrollerElementResizeObserver = (
       scrollerProps.lastLoadingDirection === 'former'
     ) {
       // 古いメッセージを読み込んですぐはここで高さの調整をしない
-      // 
-
       if (viewPortState.skipResizeAdjustment) {
         return
       }

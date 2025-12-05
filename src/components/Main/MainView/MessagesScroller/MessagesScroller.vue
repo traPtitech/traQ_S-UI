@@ -167,7 +167,7 @@ const rootRef = shallowRef<HTMLElement | null>(null)
 const state = reactive({
   height: 0,
   scrollTop: lastScrollPosition.value,
-  /* 古いメッセージを読み込むとき、 */
+  // 古いメッセージを読み込むとき、読み込み開始直後は高さの調整を無効化する
   skipResizeAdjustment: false
 })
 
