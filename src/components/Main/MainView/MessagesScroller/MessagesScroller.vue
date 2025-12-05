@@ -239,8 +239,8 @@ watch(
         state.height = newHeight
         // 十分に DOMが更新されたら無効化を解除
         requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              state.skipResizeAdjustment = false
+          requestAnimationFrame(() => {
+            state.skipResizeAdjustment = false
           })
         })
       }
