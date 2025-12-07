@@ -14,6 +14,7 @@ const useMessageScrollerElementResizeObserver = (
   },
   viewPortState: {
     height: number
+    skipResizeAdjustment?: boolean
   }
 ) => {
   const onChangeHeight = (payload: ChangeHeightData) => {
@@ -44,6 +45,10 @@ const useMessageScrollerElementResizeObserver = (
       scrollerProps.lastLoadingDirection === 'latest' ||
       scrollerProps.lastLoadingDirection === 'former'
     ) {
+      // 古いメッセージを読み込んですぐはここで高さの調整をしない
+      if (viewPortState.skipResizeAdjustment) {
+        return
+      }
       rootRef.value.scrollTop += payload.heightDiff
       viewPortState.height = rootRef.value.scrollHeight
     }
