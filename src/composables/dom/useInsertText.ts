@@ -1,27 +1,22 @@
-import { toValue, type MaybeRefOrGetter } from 'vue'
+import { type MaybeRefOrGetter, toValue } from 'vue'
 
-/**
- * これを利用したときはCtrl+Zなどがきく
- */
+import { insertText } from '/@/lib/dom/insertText'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+
 const useInsertText = (
   textareaRef: MaybeRefOrGetter<HTMLTextAreaElement | undefined>,
   targetRef?: MaybeRefOrGetter<{ begin: number; end: number }>
 ) => {
-  const insertText = (text: string) => {
-    const textarea = toValue(textareaRef)
-    if (!textarea) return
+  const { isMobile } = useResponsiveStore()
 
-    const target = toValue(targetRef)
+  return {
+    insertText: (text: string) => {
+      const textarea = toValue(textareaRef)
+      if (!textarea) return
 
-    textarea.setRangeText(
-      text,
-      target?.begin ?? textarea.selectionStart,
-      target?.end ?? textarea.selectionEnd,
-      'end'
-    )
+      insertText(textarea, text, toValue(targetRef), isMobile.value)
+    }
   }
-
-  return { insertText }
 }
 
 export default useInsertText
