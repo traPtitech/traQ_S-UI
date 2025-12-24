@@ -76,7 +76,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
           return new Promise<NotificationPermission>((resolve, reject) => {
             addToast({
               type: 'info',
-              text: '【通知を有効にしてください】\nメッセージ受信時に通知が届くようになります。(クリックで許可)',
+              text: '【通知を有効にしてください】\nメッセージ受信時に通知が届くようになります。（クリックで許可）',
               timeout: Infinity,
               onClick: id => {
                 deleteToast(id)
