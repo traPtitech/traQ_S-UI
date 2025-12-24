@@ -1,27 +1,24 @@
-import type { Ref } from 'vue'
-
-import { insert } from 'text-field-edit'
+import { toValue, type MaybeRefOrGetter } from 'vue'
 
 /**
  * これを利用したときはCtrl+Zなどがきく
  */
 const useInsertText = (
-  textareaRef: Ref<HTMLTextAreaElement | undefined>,
-  target?: Ref<{ begin: number; end: number }>
+  textareaRef: MaybeRefOrGetter<HTMLTextAreaElement | undefined>,
+  targetRef?: MaybeRefOrGetter<{ begin: number; end: number }>
 ) => {
   const insertText = (text: string) => {
-    if (!textareaRef.value) return
+    const textarea = toValue(textareaRef)
+    if (!textarea) return
 
-    if (target) {
-      textareaRef.value.selectionStart = target.value.begin
-      textareaRef.value.selectionEnd = target.value.end
-    }
+    const target = toValue(targetRef)
 
-    // Windowsでの\r\nを含む文字列を貼り付けた後に
-    // Ctrl+Zでアンドゥすると、キャレットの位置がずれるので
-    // ずれないように\nに統一しておく
-    const normalizedText = text.replaceAll('\r\n', '\n')
-    insert(textareaRef.value, normalizedText)
+    textarea.setRangeText(
+      text,
+      target?.begin ?? textarea.selectionStart,
+      target?.end ?? textarea.selectionEnd,
+      'end'
+    )
   }
 
   return { insertText }
