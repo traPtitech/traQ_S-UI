@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_レイヤー_2" data-name="レイヤー 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 145">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: currentColor;
+      }
+    </style>
+  </defs>
+  <g id="_レイヤー_1-2" data-name="レイヤー 1">
+    <rect class="cls-1" x="5" width="65" height="30"/>
+    <rect class="cls-1" x="80" width="65" height="30"/>
+    <polygon class="cls-1" points="80 35 80 65 120 65 120 80 150 80 150 35 80 35"/>
+    <polygon class="cls-1" points="70 65 70 35 0 35 0 85 30 85 30 65 70 65"/>
+    <polygon class="cls-1" points="0 95 0 145 70 145 70 115 30 115 30 95 0 95"/>
+    <polygon class="cls-1" points="80 115 120 115 120 100 150 100 150 145 80 145 80 115"/>
+    <rect class="cls-1" x="85" y="80" width="10" height="20"/>
+    <rect class="cls-1" x="55" y="80" width="10" height="20"/>
+  </g>
+</svg>
