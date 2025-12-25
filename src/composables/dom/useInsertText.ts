@@ -1,29 +1,22 @@
-import type { Ref } from 'vue'
-import { insert } from 'text-field-edit'
+import { type MaybeRefOrGetter, toValue } from 'vue'
 
-/**
- * これを利用したときはCtrl+Zなどがきく
- */
+import useResponsive from '/@/composables/useResponsive'
+import { insertText } from '/@/lib/dom/insertText'
+
 const useInsertText = (
-  textareaRef: Ref<HTMLTextAreaElement | undefined>,
-  target?: Ref<{ begin: number; end: number }>
+  textareaRef: MaybeRefOrGetter<HTMLTextAreaElement | undefined>,
+  targetRef?: MaybeRefOrGetter<{ begin: number; end: number }>
 ) => {
-  const insertText = (text: string) => {
-    if (!textareaRef.value) return
+  const { isMobile } = useResponsive()
 
-    if (target) {
-      textareaRef.value.selectionStart = target.value.begin
-      textareaRef.value.selectionEnd = target.value.end
+  return {
+    insertText: (text: string) => {
+      const textarea = toValue(textareaRef)
+      if (!textarea) return
+
+      insertText(textarea, text, toValue(targetRef), isMobile.value)
     }
-
-    // Windowsでの\r\nを含む文字列を貼り付けた後に
-    // Ctrl+Zでアンドゥすると、キャレットの位置がずれるので
-    // ずれないように\nに統一しておく
-    const normalizedText = text.replaceAll('\r\n', '\n')
-    insert(textareaRef.value, normalizedText)
   }
-
-  return { insertText }
 }
 
 export default useInsertText

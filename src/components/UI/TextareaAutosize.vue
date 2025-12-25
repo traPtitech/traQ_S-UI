@@ -18,10 +18,12 @@
 </template>
 
 <script lang="ts" setup>
-import autosize from 'autosize'
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import useOnInput from '/@/composables/useOnInput'
+
+import autosize from 'autosize'
+
 import useEventListener from '/@/composables/dom/useEventListener'
+import useOnInput from '/@/composables/useOnInput'
 
 const modelValue = defineModel<string>({
   required: true

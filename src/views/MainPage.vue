@@ -39,16 +39,18 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { reactive, computed, defineAsyncComponent } from 'vue'
-import { connectFirebase } from '/@/lib/notification/notification'
-import useResponsive from '/@/composables/useResponsive'
+import { computed, defineAsyncComponent, reactive } from 'vue'
+
 import useNavigationController from '/@/composables/mainView/useNavigationController'
+import useResponsive from '/@/composables/useResponsive'
+import { connectFirebase } from '/@/lib/notification/notification'
+import { useCommandPalette } from '/@/store/app/commandPalette'
+import { useToastStore } from '/@/store/ui/toast'
+
+import useEventListener from '../composables/dom/useEventListener'
+import useInitialFetch from './composables/useInitialFetch'
 import useMainViewLayout from './composables/useMainViewLayout'
 import useRouteWatcher from './composables/useRouteWatcher'
-import useInitialFetch from './composables/useInitialFetch'
-import { useToastStore } from '/@/store/ui/toast'
-import { useCommandPalette } from '/@/store/app/commandPalette'
-import useEventListener from '../composables/dom/useEventListener'
 
 const useStyles = (
   mainViewPosition: Readonly<Ref<number>>,
@@ -102,10 +104,11 @@ const NotFoundPage = defineAsyncComponent(
 </script>
 
 <script lang="ts" setup>
+import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue'
 import MainView from '/@/components/Main/MainView/MainView.vue'
 import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue'
 import NavigationBar from '/@/components/Main/NavigationBar/NavigationBar.vue'
-import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue'
+
 import useViewStateSender from './composables/useViewStateSender'
 
 const navWidth = 320

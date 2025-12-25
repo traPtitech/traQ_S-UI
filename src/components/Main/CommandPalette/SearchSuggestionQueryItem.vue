@@ -15,6 +15,7 @@
 
 <script lang="ts" setup>
 import useResponsive from '/@/composables/useResponsive'
+
 defineProps<{
   description: string
   example: string

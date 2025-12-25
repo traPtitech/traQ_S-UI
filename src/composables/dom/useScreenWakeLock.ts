@@ -1,4 +1,5 @@
 import { onMounted, onUnmounted } from 'vue'
+
 import useEventListener from './useEventListener'
 
 const useScreenWakeLock = () => {

@@ -41,20 +41,22 @@
 
 <script lang="ts" setup>
 import { computed, ref, shallowRef, toRef } from 'vue'
-import type { ChangeHeightData } from './composables/useElementRenderObserver'
-import useElementRenderObserver from './composables/useElementRenderObserver'
-import MessageContents from './MessageContents.vue'
-import MessagePinned from './MessagePinned.vue'
-import MessageStampList from './MessageStampList.vue'
+
 import MessageTools, {
   useMessageToolsHover
 } from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
+import useResponsive from '/@/composables/useResponsive'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
-import useResponsive from '/@/composables/useResponsive'
 import type { MessageId, UserId } from '/@/types/entity-ids'
+
+import MessageContents from './MessageContents.vue'
+import MessagePinned from './MessagePinned.vue'
+import MessageStampList from './MessageStampList.vue'
+import type { ChangeHeightData } from './composables/useElementRenderObserver'
+import useElementRenderObserver from './composables/useElementRenderObserver'
 
 const props = withDefaults(
   defineProps<{

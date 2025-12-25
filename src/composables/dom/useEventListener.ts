@@ -1,15 +1,16 @@
 import {
+  type MaybeRef,
+  type MaybeRefOrGetter,
   computed,
   onScopeDispose,
   toValue,
   unref,
-  watch,
-  type MaybeRef,
-  type MaybeRefOrGetter
+  watch
 } from 'vue'
-import type { Invocable, MaybeArray } from '/@/types/utility'
+
 import { toArray } from '/@/lib/basic/array'
 import { unrefElement } from '/@/lib/dom/unrefElement'
+import type { Invocable, MaybeArray } from '/@/types/utility'
 
 type Targetable = Window | Document | ShadowRoot | HTMLElement | MediaQueryList
 

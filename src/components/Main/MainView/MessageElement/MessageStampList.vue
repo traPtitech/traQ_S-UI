@@ -41,17 +41,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
 import type { MessageStamp } from '@traptitech/traq'
-import type { StampId } from '/@/types/entity-ids'
-import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
-import { useMeStore } from '/@/store/domain/me'
-import StampElement from './StampElement.vue'
-import StampDetailElement from './StampDetailElement.vue'
+
+import { computed, ref } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import useToggle from '/@/composables/utils/useToggle'
 import { createStampList } from '/@/lib/messageStampList'
 import { useStampUpdater } from '/@/lib/updater/stamp'
+import { useMeStore } from '/@/store/domain/me'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+import type { StampId } from '/@/types/entity-ids'
+
+import StampDetailElement from './StampDetailElement.vue'
+import StampElement from './StampElement.vue'
 
 const props = withDefaults(
   defineProps<{

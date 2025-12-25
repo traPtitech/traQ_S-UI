@@ -1,13 +1,20 @@
-import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
-import type { MessageId, ClipFolderId } from '/@/types/entity-ids'
-import type { Ref, ShallowRef } from 'vue'
-import { reactive, watch, onMounted, computed } from 'vue'
+import {
+  type Ref,
+  type ShallowRef,
+  computed,
+  onMounted,
+  reactive,
+  watch
+} from 'vue'
+
+import type { MessageScrollerInstance } from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
-import { wsListener } from '/@/lib/websocket'
-import { useMessagesStore } from '/@/store/entities/messages'
+import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
-import type { MessageScrollerInstance } from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
+import { wsListener } from '/@/lib/websocket'
+import { useMessagesStore } from '/@/store/entities/messages'
+import type { ClipFolderId, MessageId } from '/@/types/entity-ids'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 80

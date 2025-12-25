@@ -6,6 +6,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const props = withDefaults(

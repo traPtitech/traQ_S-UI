@@ -32,8 +32,10 @@
 </template>
 
 <script lang="ts" setup>
+import { type Ref, computed, ref } from 'vue'
+
 import type { AxiosError } from 'axios'
-import { computed, ref, type Ref } from 'vue'
+
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import apis, { formatResizeError } from '/@/lib/apis'

@@ -3,8 +3,9 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import type { AttachmentType } from '/@/lib/basic/file'
 
 const props = withDefaults(

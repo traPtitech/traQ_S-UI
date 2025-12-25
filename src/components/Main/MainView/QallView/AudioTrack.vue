@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, useTemplateRef, watchEffect } from 'vue'
+
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
+
 const { trackInfo, volume } = defineProps<{
   trackInfo: TrackInfo
   volume: number

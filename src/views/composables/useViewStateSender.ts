@@ -1,11 +1,13 @@
 import { ChannelViewState } from '@traptitech/traq'
+
 import { computed, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
+
+import useEventListener from '/@/composables/dom/useEventListener'
 import { changeViewState } from '/@/lib/websocket'
 import { RouteName } from '/@/router'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
 import { useMainViewStore } from '/@/store/ui/mainView'
-import useEventListener from '/@/composables/dom/useEventListener'
 
 const useViewStateSender = () => {
   const route = useRoute()

@@ -1,6 +1,8 @@
 import { ref } from 'vue'
+
 import { mobileMinBreakpoint } from '/@/lib/media'
 import createSharedComposable from '/@/lib/utils/createSharedComposable'
+
 import useEventListener from './dom/useEventListener'
 
 const useResponsive = () => {

@@ -23,11 +23,13 @@
 </template>
 
 <script lang="ts" setup>
-import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
-import MessageInputTypingAnimation from './MessageInputTypingAnimation.vue'
-import useResponsive from '/@/composables/useResponsive'
 import { computed } from 'vue'
+
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
+import useResponsive from '/@/composables/useResponsive'
 import type { UserId } from '/@/types/entity-ids'
+
+import MessageInputTypingAnimation from './MessageInputTypingAnimation.vue'
 
 const props = defineProps<{
   typingUsers: readonly UserId[]

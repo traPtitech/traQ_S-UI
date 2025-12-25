@@ -71,17 +71,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, useTemplateRef } from 'vue'
-import FormButton from '/@/components/UI/FormButton.vue'
-import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
-import AStamp from '/@/components/UI/AStamp.vue'
-
-// UI imports
-import { useToastStore } from '/@/store/ui/toast'
-
 // Qall関連のcomposableを利用
 import type { SoundboardItem } from '@traptitech/traq'
+
+import { onMounted, ref, useTemplateRef } from 'vue'
+
+import AStamp from '/@/components/UI/AStamp.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 import apis from '/@/lib/apis'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+// UI imports
+import { useToastStore } from '/@/store/ui/toast'
 
 // UI・状態
 const fileInput = ref<HTMLInputElement | null>(null)

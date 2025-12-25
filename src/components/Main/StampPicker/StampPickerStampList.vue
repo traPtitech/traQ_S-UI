@@ -16,10 +16,13 @@
 </template>
 
 <script lang="ts" setup>
-import StampPickerStampListItem from './StampPickerStampListItem.vue'
-import type { StampId } from '/@/types/entity-ids'
 import type { Stamp } from '@traptitech/traq'
+
 import { computed, shallowRef } from 'vue'
+
+import type { StampId } from '/@/types/entity-ids'
+
+import StampPickerStampListItem from './StampPickerStampListItem.vue'
 import useStampListVirtualScroll from './composables/useStampListVirtualScroll'
 
 const props = defineProps<{

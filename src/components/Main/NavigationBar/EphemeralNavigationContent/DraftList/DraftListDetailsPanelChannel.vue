@@ -17,12 +17,13 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed, ref, watchEffect } from 'vue'
-import type { MessageInputState } from '/@/store/ui/messageInputStateStore'
-import type { ChannelId } from '/@/types/entity-ids'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { renderInline } from '/@/lib/markdown/markdown'
+import type { MessageInputState } from '/@/store/ui/messageInputStateStore'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId

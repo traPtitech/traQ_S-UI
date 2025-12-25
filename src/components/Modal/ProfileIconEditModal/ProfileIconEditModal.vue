@@ -18,14 +18,17 @@
 </template>
 
 <script lang="ts" setup>
+import { type Ref, ref } from 'vue'
+
 import imageCompression, { type Options } from 'browser-image-compression'
-import { ref, type Ref } from 'vue'
-import ModalFrame from '../Common/ModalFrame.vue'
+
 import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { useModalStore } from '/@/store/ui/modal'
 import { useToastStore } from '/@/store/ui/toast'
+
+import ModalFrame from '../Common/ModalFrame.vue'
 
 const props = defineProps<{
   file: File

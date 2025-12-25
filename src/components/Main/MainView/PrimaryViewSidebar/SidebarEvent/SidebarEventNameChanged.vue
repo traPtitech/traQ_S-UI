@@ -10,8 +10,9 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarEventFrame from './SidebarEventFrame.vue'
 import type { NameChangedEvent } from '@traptitech/traq'
+
+import SidebarEventFrame from './SidebarEventFrame.vue'
 
 defineProps<{
   datetime: string

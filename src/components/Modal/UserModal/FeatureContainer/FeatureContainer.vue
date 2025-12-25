@@ -4,10 +4,12 @@
 </template>
 
 <script lang="ts" setup>
+import type { User, UserDetail } from '@traptitech/traq'
+
+import useResponsive from '/@/composables/useResponsive'
+
 import DesktopFeatureContainer from './DesktopFeatureContainer.vue'
 import MobileFeatureContainer from './MobileFeatureContainer.vue'
-import type { User, UserDetail } from '@traptitech/traq'
-import useResponsive from '/@/composables/useResponsive'
 
 defineProps<{
   user: User

@@ -26,7 +26,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, type Ref } from 'vue'
+import { type Ref, ref } from 'vue'
+
 import ATab from '/@/components/UI/ATab.vue'
 
 const isStarred = defineModel<boolean>('isStarred', {

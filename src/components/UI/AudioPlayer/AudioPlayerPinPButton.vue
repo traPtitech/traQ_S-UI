@@ -11,6 +11,7 @@
 
 <script lang="ts" setup>
 import { checkPinPSupport, isSafari } from '/@/lib/dom/browser'
+
 import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
 withDefaults(

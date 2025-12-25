@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type ButtonHTMLAttributes } from 'vue'
+import { type ButtonHTMLAttributes, ref } from 'vue'
 
 interface Props extends /* @vue-ignore */ ButtonHTMLAttributes {
   label: string

@@ -1,12 +1,13 @@
-import { ref, onUnmounted, computed } from 'vue'
-import {
-  useNavigationLayoutStore,
-  MIN_NAVIGATION_WIDTH,
-  MAX_NAVIGATION_WIDTH_RATIO,
-  NAVIGATION_CLOSING_THRESHOLD
-} from '/@/store/ui/navigationLayout'
-import { createAnimationFrameController } from '/@/lib/dom/animationFrame'
+import { computed, onUnmounted, ref } from 'vue'
+
 import useInnerWindowSize from '/@/composables/dom/useInnerWindowSize'
+import { createAnimationFrameController } from '/@/lib/dom/animationFrame'
+import {
+  MAX_NAVIGATION_WIDTH_RATIO,
+  MIN_NAVIGATION_WIDTH,
+  NAVIGATION_CLOSING_THRESHOLD,
+  useNavigationLayoutStore
+} from '/@/store/ui/navigationLayout'
 
 const useNavigationResizer = () => {
   const animationFrame = createAnimationFrameController()
@@ -20,6 +21,7 @@ const useNavigationResizer = () => {
     navigationWidth,
     isNavigationClosed,
     saveNavigationWidth,
+    closeNavigation,
     navigationLeft,
     updateNavigationLeft
   } = useNavigationLayoutStore()
@@ -73,7 +75,7 @@ const useNavigationResizer = () => {
       const width = e.clientX - navigationLeft.value
 
       if (width <= NAVIGATION_CLOSING_THRESHOLD) {
-        navigationWidth.value = 0
+        closeNavigation()
       } else {
         setNavigationWidth(width)
       }

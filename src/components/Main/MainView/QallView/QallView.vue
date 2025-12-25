@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import { useQall } from '/@/composables/qall/useQall'
-import { onMounted, ref, useTemplateRef, computed } from 'vue'
-import DanmakuContainer from './DanmakuContainer.vue'
-import CallControlButtonSmall from './CallControlButtonSmall.vue'
-import CallControlButton from './CallControlButton.vue'
-import SoundBoard from './SoundBoard.vue'
+import { computed, onMounted, ref, useTemplateRef } from 'vue'
+
 import ClickOutside from '/@/components/UI/ClickOutside'
-import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
-import ParticipantList from './ParticipantList.vue'
-import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
-import UserList from './UserList.vue'
-import CameraDetailSetting from './CameraDetailSetting.vue'
-import ScreenShareDetailSetting from './ScreenShareDetailSetting.vue'
-import DetailButton from './DetailButton.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
-import QallMessageView from './QallMessageView.vue'
+import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
+import { useQall } from '/@/composables/qall/useQall'
 import { useUsersStore } from '/@/store/entities/users'
+import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+
+import CallControlButton from './CallControlButton.vue'
+import CallControlButtonSmall from './CallControlButtonSmall.vue'
+import CameraDetailSetting from './CameraDetailSetting.vue'
+import DanmakuContainer from './DanmakuContainer.vue'
+import DetailButton from './DetailButton.vue'
+import ParticipantList from './ParticipantList.vue'
+import QallMessageView from './QallMessageView.vue'
+import ScreenShareDetailSetting from './ScreenShareDetailSetting.vue'
+import SoundBoard from './SoundBoard.vue'
+import UserList from './UserList.vue'
 
 const {
   tracksMap,

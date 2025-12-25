@@ -25,13 +25,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
-import ChannelHeaderRelationPopup from './ChannelHeaderRelationPopup.vue'
-import { reactive } from 'vue'
+import useEventListener from '/@/composables/dom/useEventListener'
 import type { Point } from '/@/lib/basic/point'
 import { randomString } from '/@/lib/basic/randomString'
-import useEventListener from '/@/composables/dom/useEventListener'
+
+import ChannelHeaderRelationPopup from './ChannelHeaderRelationPopup.vue'
 
 const props = defineProps<{
   channelId: string
@@ -90,7 +91,7 @@ const focusTrigger = () => {
 
   cursor: pointer;
   overflow: hidden;
-  height: 32px;
+  height: 100%;
   width: 24px;
   margin: 0 8px;
   display: grid;

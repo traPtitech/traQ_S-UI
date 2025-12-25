@@ -9,8 +9,9 @@
 <script lang="ts" setup>
 import DesktopGroupManager from '/@/components/GroupManager/DesktopGroupManager.vue'
 import MobileGroupManager from '/@/components/GroupManager/MobileGroupManager.vue'
-import useLoginCheck from './composables/useLoginCheck'
 import useResponsive from '/@/composables/useResponsive'
+
+import useLoginCheck from './composables/useLoginCheck'
 
 const { isMobile } = useResponsive()
 

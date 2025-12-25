@@ -1,21 +1,23 @@
 import { computed, reactive, watch } from 'vue'
-import router, { RouteName, constructChannelPath } from '/@/router'
-import useNavigationController from '/@/composables/mainView/useNavigationController'
-import useChannelPath from '/@/composables/useChannelPath'
 import type { LocationQuery } from 'vue-router'
 import { useRoute } from 'vue-router'
-import { getFirstParam } from '/@/lib/basic/url'
+
 import { dequal } from 'dequal'
-import { useMainViewStore } from '/@/store/ui/mainView'
-import { useModalStore } from '/@/store/ui/modal'
+
+import { useRenderKey } from '/@/composables/dom/useRenderKey'
+import useNavigationController from '/@/composables/mainView/useNavigationController'
+import useChannelPath from '/@/composables/useChannelPath'
+import { useMessageQuery } from '/@/composables/utils/useMessageQuery'
+import { getFirstParam } from '/@/lib/basic/url'
+import router, { RouteName, constructChannelPath } from '/@/router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
-import { useMessagesStore } from '/@/store/entities/messages'
 import { useChannelsStore } from '/@/store/entities/channels'
-import { useUsersStore } from '/@/store/entities/users'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
-import { useRenderKey } from '/@/composables/dom/useRenderKey'
-import { useMessageQuery } from '/@/composables/utils/useMessageQuery'
+import { useMessagesStore } from '/@/store/entities/messages'
+import { useUsersStore } from '/@/store/entities/users'
+import { useMainViewStore } from '/@/store/ui/mainView'
+import { useModalStore } from '/@/store/ui/modal'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -34,10 +36,7 @@ const useRouteWatcher = () => {
   const { closeNav } = useNavigationController()
   const { isOnInitialModalRoute, replaceModal, clearModalState } =
     useModalStore()
-  const {
-    defaultChannelName,
-    restoringPromise: browserSettingsRestoringPromise
-  } = useBrowserSettings()
+  const { defaultChannelName } = useBrowserSettings()
   const { channelTree } = useChannelTree()
   const {
     channelsMap,
@@ -64,15 +63,9 @@ const useRouteWatcher = () => {
     isInitialView: true
   })
 
-  const useOpenChannel = async () => {
-    await browserSettingsRestoringPromise.value
-    return defaultChannelName
-  }
-
   const onRouteChangedToIndex = async () => {
-    const openChannelPath = await useOpenChannel()
     await router
-      .replace(constructChannelPath(openChannelPath.value))
+      .replace(constructChannelPath(defaultChannelName.value))
       // 同じ場所に移動しようとした際のエラーを消す
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {})
@@ -163,14 +156,13 @@ const useRouteWatcher = () => {
       return
     }
 
-    const openChannelPath = await useOpenChannel()
     let channelPath = ''
     let channelId = ''
     if (file.channelId) {
       channelPath = channelIdToPathString(file.channelId, true) ?? ''
       channelId = file.channelId
     } else {
-      channelPath = openChannelPath.value
+      channelPath = defaultChannelName.value
       try {
         channelId = channelPathToId(channelPath.split('/'), channelTree.value)
       } catch (_) {

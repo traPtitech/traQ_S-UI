@@ -5,10 +5,11 @@
 </template>
 
 <script lang="ts" setup>
-import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import { computed } from 'vue'
-import type { ChannelId } from '/@/types/entity-ids'
+
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import { useChannelsStore } from '/@/store/entities/channels'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId

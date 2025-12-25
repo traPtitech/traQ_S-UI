@@ -47,10 +47,10 @@
 
 <script lang="ts" setup>
 import type { Pin } from '@traptitech/traq'
+
 import { computed, ref, shallowRef } from 'vue'
 import { useRouter } from 'vue-router'
-import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
-import useDayDiffMessages from './composables/useDayDiffMessages'
+
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
 import MessagesScroller, {
@@ -60,12 +60,15 @@ import MessagesScrollerSeparator from '/@/components/Main/MainView/MessagesScrol
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getFullDayString } from '/@/lib/basic/date'
+import { unrefElement } from '/@/lib/dom/unrefElement'
 import { constructChannelPath, constructUserPath } from '/@/router'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useMessagesStore } from '/@/store/entities/messages'
 import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
-import { unrefElement } from '/@/lib/dom/unrefElement'
+
+import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
+import useDayDiffMessages from './composables/useDayDiffMessages'
 
 const props = defineProps<{
   channelId: ChannelId

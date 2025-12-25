@@ -18,8 +18,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, type Ref } from 'vue'
-import ModalFrame from '../Common/ModalFrame.vue'
+import { type Ref, ref } from 'vue'
+
 import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import { imageSize } from '/@/components/Settings/StampTab/imageSize'
 import FormButton from '/@/components/UI/FormButton.vue'
@@ -27,6 +27,8 @@ import apis, { formatResizeError } from '/@/lib/apis'
 import { useModalStore } from '/@/store/ui/modal'
 import { useToastStore } from '/@/store/ui/toast'
 import type { StampId } from '/@/types/entity-ids'
+
+import ModalFrame from '../Common/ModalFrame.vue'
 
 const props = defineProps<{
   file: File

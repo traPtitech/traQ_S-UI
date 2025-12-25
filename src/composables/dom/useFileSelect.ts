@@ -1,3 +1,5 @@
+import type { MaybePromise } from '/@/types/utility'
+
 import useEventListener from './useEventListener'
 
 type FileSelectOptions = {
@@ -7,7 +9,7 @@ type FileSelectOptions = {
 
 export const useFileSelect = (
   options: FileSelectOptions,
-  onChange: (files: FileList) => Promise<void> | void
+  onChange: (files: FileList) => MaybePromise<void>
 ) => {
   const input = document.createElement('input')
   input.type = 'file'

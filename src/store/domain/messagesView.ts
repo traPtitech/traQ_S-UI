@@ -1,11 +1,14 @@
 import type { EmbeddingOrUrl, ExternalUrl } from '@traptitech/traq-markdown-it'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+
 import { ref } from 'vue'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import { isExternalUrl, isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
+import { useMessagesStore } from '/@/store/entities/messages'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { MessageId } from '/@/types/entity-ids'
-import { useMessagesStore } from '/@/store/entities/messages'
 
 const ignoredHostNamesSet = new Set<string>(
   window.traQConfig.ogpIgnoreHostNames
@@ -50,9 +53,9 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
             messageId: e.id
           })
 
-          // テキスト部分のみレンダリング
           const rendered = await render(message.content)
           renderedContentMap.value.set(message.id, rendered.renderedText)
+          embeddingsMap.value.set(message.id, rendered.embeddings)
         } catch {
           // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
         }

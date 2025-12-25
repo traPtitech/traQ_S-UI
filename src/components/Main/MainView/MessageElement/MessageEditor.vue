@@ -44,18 +44,21 @@
 </template>
 
 <script lang="ts">
-import type { AxiosProgressEvent } from 'axios'
 import type { Ref } from 'vue'
 import { computed, onMounted, ref, shallowRef } from 'vue'
-import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
+
+import type { AxiosProgressEvent } from 'axios'
+
 import useAttachments from '/@/components/Main/MainView/MessageInput/composables/useAttachments'
 import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
+import { unrefElement } from '/@/lib/dom/unrefElement'
 import { getResizedFile } from '/@/lib/resize'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
-import { unrefElement } from '/@/lib/dom/unrefElement'
+
+import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
 
 const useEditMessage = (
   props: { messageId: string },

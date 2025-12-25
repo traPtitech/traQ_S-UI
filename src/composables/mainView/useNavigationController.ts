@@ -1,5 +1,5 @@
-import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'
 import useResponsive from '/@/composables/useResponsive'
+import { MainViewComponentState, useMainViewStore } from '/@/store/ui/mainView'
 
 /**
  * モバイル用にナビゲーションの開閉を行う

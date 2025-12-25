@@ -12,9 +12,11 @@
 </template>
 
 <script lang="ts" setup>
-import ProfileHeader from './ProfileHeader.vue'
-import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import { computed } from 'vue'
+
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
+
+import ProfileHeader from './ProfileHeader.vue'
 
 const props = defineProps<{
   bio?: string

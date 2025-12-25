@@ -22,9 +22,11 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import MessageFileListItemContent from './MessageFileListItemContent.vue'
+
 import useFileMeta from '/@/composables/files/useFileMeta'
-import type { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
+import type { ChannelId, DMChannelId, FileId } from '/@/types/entity-ids'
+
+import MessageFileListItemContent from './MessageFileListItemContent.vue'
 
 const props = withDefaults(
   defineProps<{

@@ -50,9 +50,7 @@
 
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import useKeepScrollPosition from './composables/useKeepScrollPosition'
-import useSearchMessages from './composables/useSearchMessages'
-import SearchResultMessageElement from './SearchResultMessageElement.vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import type { PopupSelectorItem } from '/@/components/UI/PopupSelector.vue'
@@ -62,6 +60,10 @@ import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { constructMessagesPath } from '/@/router'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import type { MessageId } from '/@/types/entity-ids'
+
+import SearchResultMessageElement from './SearchResultMessageElement.vue'
+import useKeepScrollPosition from './composables/useKeepScrollPosition'
+import useSearchMessages from './composables/useSearchMessages'
 
 const selectorItems: PopupSelectorItem<SearchMessageSortKey>[] &
   { value: SearchMessageSortKey }[] = [

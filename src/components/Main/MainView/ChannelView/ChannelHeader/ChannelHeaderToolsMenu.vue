@@ -59,19 +59,22 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import useResponsive from '/@/composables/useResponsive'
 import { UserPermission } from '@traptitech/traq'
-import { useMeStore } from '/@/store/domain/me'
+
+import { computed } from 'vue'
+
 import PrimaryViewHeaderPopupFrame from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderPopupMenuItem.vue'
 import { useQall } from '/@/composables/qall/useQall'
-import type { ChannelId } from '/@/types/entity-ids'
-import useChannelCreateModal from './composables/useChannelCreateModal'
-import useNotificationModal from './composables/useNotificationModal'
+import useResponsive from '/@/composables/useResponsive'
 import { useCommandPalette } from '/@/store/app/commandPalette'
+import { useMeStore } from '/@/store/domain/me'
+import type { ChannelId } from '/@/types/entity-ids'
+
+import useChannelCreateModal from './composables/useChannelCreateModal'
 import useChannelManageModal from './composables/useChannelManageModal'
 import useCopyChannelLink from './composables/useCopyChannelLink'
+import useNotificationModal from './composables/useNotificationModal'
 
 const emit = defineEmits<{
   (e: 'clickItem'): void

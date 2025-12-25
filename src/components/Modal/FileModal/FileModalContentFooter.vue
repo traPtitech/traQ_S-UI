@@ -14,14 +14,16 @@
 </template>
 
 <script lang="ts" setup>
-import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
 import { computed } from 'vue'
+
 import useFileMeta from '/@/composables/files/useFileMeta'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getDateRepresentation } from '/@/lib/basic/date'
-import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
-import { useUsersStore } from '/@/store/entities/users'
 import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import { useUsersStore } from '/@/store/entities/users'
+
+import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
+import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
 
 const props = withDefaults(
   defineProps<{

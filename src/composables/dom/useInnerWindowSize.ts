@@ -1,6 +1,9 @@
+import { type ComputedRef, ref } from 'vue'
+
 import { debounce } from 'throttle-debounce'
-import { ref, type ComputedRef } from 'vue'
+
 import createSharedComposable from '/@/lib/utils/createSharedComposable'
+
 import useEventListener from './useEventListener'
 
 type Fallback = {

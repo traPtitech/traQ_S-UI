@@ -1,6 +1,7 @@
 import { computed, reactive } from 'vue'
-import { isImage, isNonPreviewable, isVideo, isAudio } from '/@/lib/basic/file'
+
 import { isDefined } from '/@/lib/basic/array'
+import { isAudio, isImage, isNonPreviewable, isVideo } from '/@/lib/basic/file'
 import { useMessagesStore } from '/@/store/entities/messages'
 
 const useFileMetaList = (props: { fileIds: string[] }) => {

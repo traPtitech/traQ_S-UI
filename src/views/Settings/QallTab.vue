@@ -116,6 +116,7 @@
 
 <script lang="ts">
 import { computed, reactive, ref, watchEffect } from 'vue'
+
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 
 const useDevicesInfo = () => {

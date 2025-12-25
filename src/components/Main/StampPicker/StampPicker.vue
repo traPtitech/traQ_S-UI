@@ -49,21 +49,24 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import useEffectSelector from './composables/useEffectSelector'
-import useStampList from './composables/useStampList'
-import useStampPreselector from './composables/useStampPreselector'
-import useStampSetSelector from './composables/useStampSetSelector'
+
+import ClickOutside from '/@/components/UI/ClickOutside'
+import FilterInput from '/@/components/UI/FilterInput.vue'
+import useResponsive from '/@/composables/useResponsive'
+import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
+import { useStampPicker } from '/@/store/ui/stampPicker'
+import type { StampId } from '/@/types/entity-ids'
+
 import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
 import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
 import StampPickerPreview from './StampPickerPreview.vue'
 import StampPickerStampList from './StampPickerStampList.vue'
 import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
-import ClickOutside from '/@/components/UI/ClickOutside'
-import FilterInput from '/@/components/UI/FilterInput.vue'
-import { useStampHistory } from '/@/store/domain/stampHistory'
-import useResponsive from '/@/composables/useResponsive'
-import { useStampPicker } from '/@/store/ui/stampPicker'
-import type { StampId } from '/@/types/entity-ids'
+import useEffectSelector from './composables/useEffectSelector'
+import useStampList from './composables/useStampList'
+import useStampPreselector from './composables/useStampPreselector'
+import useStampSetSelector from './composables/useStampSetSelector'
 
 const {
   selectHandler,
@@ -93,10 +96,13 @@ const {
 } = useEffectSelector()
 const { preselected, onHoverStamp } = useStampPreselector()
 
+const { recordStampUsage } = useStampRecommendations()
+
 const filterInputRef = ref<InstanceType<typeof FilterInput> | null>(null)
 
 const onInputStamp = (id: StampId) => {
   upsertLocalStampHistory(id, new Date())
+  recordStampUsage(id)
   selectHandler.value({
     id,
     sizeEffect: selectedSizeEffect.value,

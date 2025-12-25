@@ -1,12 +1,13 @@
+import { ThumbnailType } from '@traptitech/traq'
+
 import {
-  mimeToFileType,
-  isImage,
   isAudio,
-  isVideo,
+  isImage,
   isNonPreviewable,
+  isVideo,
+  mimeToFileType,
   prettifyFileSize
 } from '/@/lib/basic/file'
-import { ThumbnailType } from '@traptitech/traq'
 
 describe('mimeToFileType', () => {
   it('can get filetype (1)', () => {

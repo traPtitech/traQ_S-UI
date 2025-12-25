@@ -16,11 +16,12 @@
 </template>
 
 <script lang="ts" setup>
+import type { ClipFolderId } from '/@/types/entity-ids'
+
 import PrimaryViewFrame from '../PrimaryViewFrame.vue'
 import ClipsHeader from './ClipsHeader/ClipsHeader.vue'
-import ClipsViewContent from './ClipsViewContent/ClipsViewContent.vue'
 import ClipsSidebar from './ClipsSidebar/ClipsSidebar.vue'
-import type { ClipFolderId } from '/@/types/entity-ids'
+import ClipsViewContent from './ClipsViewContent/ClipsViewContent.vue'
 
 defineProps<{
   isReady: boolean

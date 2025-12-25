@@ -30,6 +30,7 @@
 
 <script lang="ts">
 import { computed, reactive } from 'vue'
+
 import useMaxLength from '/@/composables/utils/useMaxLength'
 import apis from '/@/lib/apis'
 import { useModalStore } from '/@/store/ui/modal'
@@ -55,10 +56,11 @@ const useCreateClipFolder = () => {
 </script>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
+
+import ModalFrame from '../Common/ModalFrame.vue'
 
 const name = reactive({ val: '', maxLength: 30 })
 const description = reactive({ val: '', maxLength: 1000 })

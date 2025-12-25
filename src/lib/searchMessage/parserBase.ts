@@ -1,5 +1,11 @@
 // 実際のフィルタに依存しない関数群
-import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
+import type {
+  ChannelId,
+  DMChannelId,
+  MessageId,
+  UserId
+} from '/@/types/entity-ids'
+import type { MaybePromise } from '/@/types/utility'
 
 const dateOnlyFormRegex = /^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$/
 
@@ -83,15 +89,22 @@ export const makePrefixedFilterExtractor =
 
 export type StoreForParser = {
   channelPathToId: ChannelPathToId
+  usernameToDmChannelId: UsernameToDmChannelId
   usernameToId: UsernameToId
-  getCurrentChannelPath: () => string | undefined
+  getCurrentChannelPathOrUsername: () => string | undefined
+  getCurrentChannelId: () => ChannelId | undefined
+  getMyDmChannelId: () => DMChannelId | undefined
   getMyUsername: () => string | undefined
+  getMyUserId: () => UserId | undefined
 }
 
 type ChannelPathToId = (path: string) => ChannelId | undefined
-type UsernameToId =
-  | ((username: string) => UserId | undefined)
-  | ((username: string) => Promise<UserId | undefined>)
+
+type UsernameToDmChannelId = (
+  username: string
+) => MaybePromise<DMChannelId | undefined>
+
+type UsernameToId = (username: string) => MaybePromise<UserId | undefined>
 
 /**
  * `string`から`ExtractedFilter`を経由して実際のフィルターを作る
@@ -150,34 +163,34 @@ export const dateParser = <T extends string>(
   return date
 }
 
-export const InHereToken = Symbol('in:here')
-export const FromToMeToken = Symbol('from:me / to:me')
+export const HereToken = Symbol('in:here')
+export const MeToken = Symbol('in:me / from:me / to:me')
 
-export const channelParser = <T extends string>(
-  channelPathToId: ChannelPathToId,
+export const channelOrDmChannelParser = async <T extends string>(
+  { channelPathToId, usernameToDmChannelId }: StoreForParser,
   extracted: ExtractedFilter<T>
-): ChannelId | typeof InHereToken | undefined => {
-  if (extracted.body === 'here') {
-    return InHereToken
-  }
+): Promise<ChannelId | typeof HereToken | typeof MeToken | undefined> => {
+  const body = extracted.prefix === '#' ? `#${extracted.body}` : extracted.body
+  if (body === 'here') return HereToken
+  if (body === 'me') return MeToken
 
-  const channelName = extracted.body.startsWith('#')
-    ? extracted.body.slice(1)
-    : extracted.body
-  return channelPathToId(channelName)
+  const channelName = body.startsWith('#') ? body.slice(1) : body
+  const channelPath = channelPathToId(channelName)
+  if (channelPath) return channelPath
+
+  const username = body.startsWith('@') ? body.slice(1) : body
+  return usernameToDmChannelId(username)
 }
 
 export const userParser = async <T extends string>(
   usernameToId: UsernameToId,
   extracted: ExtractedFilter<T>
-): Promise<UserId | typeof FromToMeToken | undefined> => {
+): Promise<UserId | typeof MeToken | undefined> => {
+  if (extracted.body === 'me') return MeToken
+
   const username = extracted.body.startsWith('@')
     ? extracted.body.slice(1)
     : extracted.body
-
-  if (username === 'me') {
-    return FromToMeToken
-  }
 
   return usernameToId(username)
 }

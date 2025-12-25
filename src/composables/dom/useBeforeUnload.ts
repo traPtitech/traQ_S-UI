@@ -1,4 +1,5 @@
-import { toValue, type MaybeRefOrGetter } from 'vue'
+import { type MaybeRefOrGetter, toValue } from 'vue'
+
 import useEventListener from './useEventListener'
 
 export const useBeforeUnload = (

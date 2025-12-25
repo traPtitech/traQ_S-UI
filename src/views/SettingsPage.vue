@@ -12,11 +12,13 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { ref, watch, toRef } from 'vue'
+import { ref, toRef, watch } from 'vue'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
+
+import useResponsive from '/@/composables/useResponsive'
 import { RouteName } from '/@/router'
 import { defaultSettingsName } from '/@/router/settings'
-import useResponsive from '/@/composables/useResponsive'
+
 import useLoginCheck from './composables/useLoginCheck'
 
 const useSettingsRootPathWatcher = (

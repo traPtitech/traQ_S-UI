@@ -13,13 +13,14 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed, watch, toRef } from 'vue'
-import { buildUserIconPath } from '/@/lib/apis'
-import type { UserId, FileId } from '/@/types/entity-ids'
+import { computed, reactive, toRef, watch } from 'vue'
+
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
+import { buildUserIconPath } from '/@/lib/apis'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
-import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
+import type { FileId, UserId } from '/@/types/entity-ids'
 
 export type IconSize =
   | 200

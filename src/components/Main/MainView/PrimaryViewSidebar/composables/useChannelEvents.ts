@@ -1,9 +1,12 @@
+import type { ChannelEvent } from '@traptitech/traq'
+
 import type { Ref } from 'vue'
 import { ref, watch } from 'vue'
-import type { ChannelId } from '/@/types/entity-ids'
-import apis from '/@/lib/apis'
-import type { ChannelEvent } from '@traptitech/traq'
+
 import { throttle } from 'throttle-debounce'
+
+import apis from '/@/lib/apis'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const FETCH_LIMIT = 50
 const FETCH_NEXT_BOTTOM_HEIGHT = 100

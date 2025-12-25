@@ -42,9 +42,11 @@ export type PopupSelectorItem<U extends PropertyKey | undefined> = {
 
 <script lang="ts" setup generic="T extends PropertyKey | undefined">
 import { computed } from 'vue'
+
+import useToggle from '/@/composables/utils/useToggle'
+
 import AIcon from './AIcon.vue'
 import ClickOutside from './ClickOutside'
-import useToggle from '/@/composables/utils/useToggle'
 
 const modelValue = defineModel<T>()
 

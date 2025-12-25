@@ -1,4 +1,5 @@
-import { effectScope, onScopeDispose, type EffectScope } from 'vue'
+import { type EffectScope, effectScope, onScopeDispose } from 'vue'
+
 import type { Invocable } from '/@/types/utility'
 
 const createSharedComposable = <Fn extends Invocable>(fn: Fn) => {
