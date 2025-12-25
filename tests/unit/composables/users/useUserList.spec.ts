@@ -1,7 +1,10 @@
-import { createTestingPinia } from '@pinia/testing'
 import type { User } from '@traptitech/traq'
 import { UserAccountState } from '@traptitech/traq'
+
 import { ref } from 'vue'
+
+import { createTestingPinia } from '@pinia/testing'
+
 import useUserList from '/@/composables/users/useUserList'
 import { useUsersStore } from '/@/store/entities/users'
 

@@ -40,12 +40,14 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import type { ActiveOAuth2Token, User } from '@traptitech/traq'
-import { getFullDayString, getISOFullDayString } from '/@/lib/basic/date'
-import { scopeInfoMap } from '/@/lib/clientScope'
+
+import { computed } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
+import { getFullDayString, getISOFullDayString } from '/@/lib/basic/date'
+import { scopeInfoMap } from '/@/lib/clientScope'
 
 interface TokenInfo extends ActiveOAuth2Token {
   clientName?: string

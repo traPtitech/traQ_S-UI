@@ -18,14 +18,16 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
-import { computed } from 'vue'
 import type { UserDetail } from '@traptitech/traq'
-import type { UserGroupId } from '/@/types/entity-ids'
+
+import { computed } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import { isDefined } from '/@/lib/basic/array'
-import { useModalStore } from '/@/store/ui/modal'
-import { useGroupsStore } from '/@/store/entities/groups'
 import { compareString } from '/@/lib/basic/string'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useModalStore } from '/@/store/ui/modal'
+import type { UserGroupId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   detail?: UserDetail

@@ -32,13 +32,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
-import { useToastStore } from '/@/store/ui/toast'
-import { wait } from '/@/lib/basic/timer'
-import ModalFrame from '../Common/ModalFrame.vue'
+import { computed, ref } from 'vue'
+
 import FormButton from '/@/components/UI/FormButton.vue'
-import { useModalStore } from '/@/store/ui/modal'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
+import { wait } from '/@/lib/basic/timer'
+import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
+
+import ModalFrame from '../Common/ModalFrame.vue'
 
 declare global {
   interface StorageEstimate {

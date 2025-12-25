@@ -20,11 +20,11 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  useFeatureFlagSettings,
-  type FeatureFlagKey
-} from '/@/store/app/featureFlagSettings'
 import FeatureFlag from '/@/components/Settings/FeatureFlagTab/FeatureFlag.vue'
+import {
+  type FeatureFlagKey,
+  useFeatureFlagSettings
+} from '/@/store/app/featureFlagSettings'
 
 const { updateFeatureFlagStatus, featureFlags, restoring } =
   useFeatureFlagSettings()

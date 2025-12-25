@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
+
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 
 const { trackInfo } = defineProps<{

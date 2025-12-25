@@ -20,10 +20,11 @@
 </template>
 
 <script lang="ts" setup>
-import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
-import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'
+
 import type { WordOrConfirmedPart } from '../composables/suggestion/useWordSuggester'
+import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'
+import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 
 withDefaults(
   defineProps<{

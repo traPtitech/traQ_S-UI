@@ -11,7 +11,6 @@
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
         "
-        :show-current="!isNavigationClosed"
         @navigation-change="onNavigationChange"
         @ephemeral-navigation-change="onEphemeralNavigationChange"
         @ephemeral-entry-remove="onEphemeralEntryRemove"
@@ -49,13 +48,14 @@
 </template>
 
 <script lang="ts" setup>
-import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue'
-import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue'
 import DesktopNavigationSelector from '/@/components/Main/NavigationBar/DesktopNavigationSelector.vue'
 import DesktopToolBox from '/@/components/Main/NavigationBar/DesktopToolBox.vue'
+import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue'
+import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue'
+import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
+
 import useNavigation from './composables/useNavigation'
 import useNavigationResizer from './composables/useNavigationResizer'
-import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
 
 const {
   navigationSelectorState,
@@ -127,16 +127,19 @@ $ephemeralNavigationMinHeight: 64px;
   background-color: transparent;
   cursor: e-resize;
 
-  transition: background-color 125ms linear;
+  background-color: $theme-accent-primary-default;
+
+  opacity: 0;
+  transition: opacity 125ms linear;
 
   &:hover {
-    background-color: $theme-accent-focus-default;
-    transition: background-color 0.1s ease-out;
+    opacity: 0.7;
+    transition: opacity 100ms ease-out 350ms;
   }
 
   &:active {
-    background-color: $theme-accent-primary-default;
-    transition: background-color 0.1s ease-out;
+    opacity: 1;
+    transition: opacity 100ms ease-out;
   }
 
   // ヒット領域を拡張

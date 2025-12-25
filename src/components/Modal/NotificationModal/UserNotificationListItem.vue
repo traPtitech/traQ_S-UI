@@ -7,11 +7,12 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
+
 import AToggle from '/@/components/UI/AToggle.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import { computed } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
 import { useUsersStore } from '/@/store/entities/users'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   userId: UserId

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
+
 import AudioTrack from './AudioTrack.vue'
 import VideoComponent from './VideoComponent.vue'
 

@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+
 import useToggle from '/@/composables/utils/useToggle'
 
 describe('useToggle', () => {

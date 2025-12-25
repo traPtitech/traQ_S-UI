@@ -22,12 +22,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampPalette } from '/@/types/entity'
 import AIcon from '/@/components/UI/AIcon.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import { constructSettingsStampPaletteDetailPath } from '/@/router/settingsStampPalette'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import type { StampPalette } from '/@/types/entity'
 
 const { palette } = defineProps<{
   palette: StampPalette

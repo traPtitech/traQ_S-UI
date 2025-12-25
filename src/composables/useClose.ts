@@ -1,12 +1,14 @@
+import { useRouter } from 'vue-router'
+
+import useChannelPath from '/@/composables/useChannelPath'
 import {
   constructChannelPath,
   constructClipFoldersPath,
   constructUserPath
 } from '/@/router'
-import { useRouter } from 'vue-router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
-import useChannelPath from '/@/composables/useChannelPath'
 import { useMainViewStore } from '/@/store/ui/mainView'
+
 import { setFallbackForNullishOrOnError } from '../lib/basic/fallback'
 
 const useClose = () => {

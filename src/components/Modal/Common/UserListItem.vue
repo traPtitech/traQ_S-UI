@@ -22,9 +22,10 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed, toRef } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
 import { useUsersStore } from '/@/store/entities/users'
 

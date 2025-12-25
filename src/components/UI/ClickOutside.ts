@@ -1,16 +1,17 @@
 import type { ComponentPublicInstance, VNode } from 'vue'
 import {
-  cloneVNode,
   Comment,
+  Text,
+  cloneVNode,
   computed,
   defineComponent,
   ref,
-  shallowRef,
-  Text
+  shallowRef
 } from 'vue'
-import { useModalStore } from '/@/store/ui/modal'
+
 import useEventListener from '/@/composables/dom/useEventListener'
 import { unrefElement } from '/@/lib/dom/unrefElement'
+import { useModalStore } from '/@/store/ui/modal'
 
 /**
  * コメントや文字列のVNodeを取り除く

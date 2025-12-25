@@ -13,9 +13,11 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
-import { computed } from 'vue'
 import type { ClipFolder } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import { constructClipFoldersPath } from '/@/router'
 import { useMainViewStore } from '/@/store/ui/mainView'
 

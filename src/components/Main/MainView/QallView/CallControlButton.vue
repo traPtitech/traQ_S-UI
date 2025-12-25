@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, useCssModule } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = defineProps({

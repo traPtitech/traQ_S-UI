@@ -25,12 +25,13 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
 import { computed } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
+
+import AIcon from '/@/components/UI/AIcon.vue'
+import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{

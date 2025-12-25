@@ -1,7 +1,10 @@
-import { computed } from 'vue'
-import { buildFileWaveformPath } from '/@/lib/apis'
-import useFileMeta from './useFileMeta'
 import { ThumbnailType } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import { buildFileWaveformPath } from '/@/lib/apis'
+
+import useFileMeta from './useFileMeta'
 
 const useFileWaveform = (props: { fileId: string }) => {
   const { fileMeta, fileLink } = useFileMeta(props)

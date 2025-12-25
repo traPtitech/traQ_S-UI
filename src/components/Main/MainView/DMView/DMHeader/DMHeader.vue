@@ -14,10 +14,11 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
+
 import PrimaryViewHeader from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeader.vue'
 import PrimaryViewHeaderTitle from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderTitle.vue'
 import PrimaryViewHeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
-import { computed } from 'vue'
 import useSidebar from '/@/composables/mainView/useSidebar'
 
 const props = defineProps<{

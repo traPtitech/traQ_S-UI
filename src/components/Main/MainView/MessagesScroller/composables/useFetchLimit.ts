@@ -1,5 +1,6 @@
 import type { ShallowRef } from 'vue'
 import { computed, watch } from 'vue'
+
 import useBoxSize from '/@/composables/dom/useBoxSize'
 import { unrefElement } from '/@/lib/dom/unrefElement'
 import type { MessageScrollerInstance } from '../MessagesScroller.vue'

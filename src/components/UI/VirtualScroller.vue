@@ -16,7 +16,6 @@
 </template>
 
 <script lang="ts">
-import { throttle } from 'throttle-debounce'
 import {
   computed,
   nextTick,
@@ -26,6 +25,8 @@ import {
   ref,
   watch
 } from 'vue'
+
+import { throttle } from 'throttle-debounce'
 
 const binarySearch = (arr: number[], x: number) => {
   let low = 0

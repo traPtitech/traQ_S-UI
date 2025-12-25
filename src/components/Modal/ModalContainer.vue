@@ -60,27 +60,29 @@
 
 <script lang="ts" setup>
 import { type Component, computed } from 'vue'
+
 import { useModalStore } from '/@/store/ui/modal'
-import UserModal from './UserModal/UserModal.vue'
-import NotificationModal from './NotificationModal/NotificationModal.vue'
-import TagModal from './TagModal/TagModal.vue'
-import GroupModal from './GroupModal/GroupModal.vue'
+import type { ModalStateType } from '/@/store/ui/modal/states'
+
 import ChannelCreateModal from './ChannelCreateModal/ChannelCreateModal.vue'
-import FileModal from './FileModal/FileModal.vue'
+import ChannelManageModal from './ChannelManageModal/ChannelManageModal.vue'
 import ClipCreateModal from './ClipCreateModal/ClipCreateModal.vue'
 import ClipFolderCreateModal from './ClipFolderCreateModal/ClipFolderCreateModal.vue'
-import ChannelManageModal from './ChannelManageModal/ChannelManageModal.vue'
-import GroupCreateModal from './GroupCreateModal/GroupCreateModal.vue'
-import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vue'
+import FileModal from './FileModal/FileModal.vue'
 import GroupAdminAddModal from './GroupAdminAddModal/GroupAdminAddModal.vue'
+import GroupCreateModal from './GroupCreateModal/GroupCreateModal.vue'
 import GroupMemberAddModal from './GroupMemberAddModal/GroupMemberAddModal.vue'
-import StampCreateModal from './StampCreateModal/StampCreateModal.vue'
-import StampEditModal from './StampEditModal/StampEditModal.vue'
-import StampImageEditModal from './StampImageEditModal/StampImageEditModal.vue'
+import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vue'
+import GroupModal from './GroupModal/GroupModal.vue'
+import NotificationModal from './NotificationModal/NotificationModal.vue'
 import ProfileIconEditModal from './ProfileIconEditModal/ProfileIconEditModal.vue'
 import SettingsCacheClearModal from './SettingsCacheClearModal/SettingsCacheClearModal.vue'
 import SettingsThemeEditModal from './SettingsThemeEditModal/SettingsThemeEditModal.vue'
-import type { ModalStateType } from '/@/store/ui/modal/states'
+import StampCreateModal from './StampCreateModal/StampCreateModal.vue'
+import StampEditModal from './StampEditModal/StampEditModal.vue'
+import StampImageEditModal from './StampImageEditModal/StampImageEditModal.vue'
+import TagModal from './TagModal/TagModal.vue'
+import UserModal from './UserModal/UserModal.vue'
 
 const { shouldShowModal, currentState } = useModalStore()
 

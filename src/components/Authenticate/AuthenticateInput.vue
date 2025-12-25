@@ -45,7 +45,14 @@ const props = withDefaults(
     autocomplete?: string
     autofocus?: boolean
     autocapitalize?: string
-    enterkeyhint?: string
+    enterkeyhint?:
+      | 'search'
+      | 'done'
+      | 'enter'
+      | 'go'
+      | 'next'
+      | 'previous'
+      | 'send'
   }>(),
   {
     label: '',

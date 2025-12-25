@@ -26,11 +26,12 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
+
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import { useUsersStore } from '/@/store/entities/users'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{

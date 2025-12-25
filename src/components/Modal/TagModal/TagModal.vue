@@ -16,12 +16,14 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, watchEffect } from 'vue'
 import type { Tag } from '@traptitech/traq'
+
+import { computed, ref, watchEffect } from 'vue'
+
+import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
 import { useUsersStore } from '/@/store/entities/users'
-import useMittListener from '/@/composables/utils/useMittListener'
 
 const useTag = (props: { id: string }) => {
   const tag = ref<Tag | null>()

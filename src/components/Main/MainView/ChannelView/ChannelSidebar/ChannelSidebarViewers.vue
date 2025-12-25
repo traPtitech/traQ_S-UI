@@ -23,11 +23,13 @@
 
 <script lang="ts" setup>
 import { onUnmounted } from 'vue'
-import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'
+
 import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import useToggle from '/@/composables/utils/useToggle'
 import type { UserId } from '/@/types/entity-ids'
+
+import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'
 
 const modelValue = defineModel<boolean>({ required: true })
 

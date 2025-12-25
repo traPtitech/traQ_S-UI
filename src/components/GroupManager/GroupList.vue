@@ -15,14 +15,17 @@
 </template>
 
 <script lang="ts" setup>
-import GroupListGroup from './GroupListGroup.vue'
-import { computed, ref } from 'vue'
-import type { UserGroupId } from '/@/types/entity-ids'
 import { UserPermission } from '@traptitech/traq'
-import { useMeStore } from '/@/store/domain/me'
-import { useUsersStore } from '/@/store/entities/users'
-import { useGroupsStore } from '/@/store/entities/groups'
+
+import { computed, ref } from 'vue'
+
 import { compareString } from '/@/lib/basic/string'
+import { useMeStore } from '/@/store/domain/me'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useUsersStore } from '/@/store/entities/users'
+import type { UserGroupId } from '/@/types/entity-ids'
+
+import GroupListGroup from './GroupListGroup.vue'
 
 const { detail, myId } = useMeStore()
 const { fetchUsers } = useUsersStore()

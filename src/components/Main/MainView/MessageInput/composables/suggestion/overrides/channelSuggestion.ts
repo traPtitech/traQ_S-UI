@@ -1,4 +1,5 @@
-import { computed, toValue, type MaybeRefOrGetter } from 'vue'
+import { type MaybeRefOrGetter, computed, toValue } from 'vue'
+
 import type { Candidate, ConfirmedPart } from '../useWordSuggester'
 
 const CHANNEL_PATH_TRIMMING_REGEXP = /^#|\/$/

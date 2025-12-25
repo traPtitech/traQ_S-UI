@@ -12,9 +12,10 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
-import { useModalStore } from '/@/store/ui/modal'
+
 import { useGroupsStore } from '/@/store/entities/groups'
+import { useModalStore } from '/@/store/ui/modal'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{

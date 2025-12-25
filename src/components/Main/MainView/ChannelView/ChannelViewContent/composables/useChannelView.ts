@@ -1,9 +1,11 @@
-import { computed, ref, type ShallowRef } from 'vue'
-import useChannelMessageFetcher from './useChannelMessageFetcher'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { type ShallowRef, computed, ref } from 'vue'
+
 import { unrefElement } from '/@/lib/dom/unrefElement'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useChannelsStore } from '/@/store/entities/channels'
+
 import type { MessageScrollerInstance } from '../../../MessagesScroller/MessagesScroller.vue'
+import useChannelMessageFetcher from './useChannelMessageFetcher'
 
 export const useChannelView = ({
   channelId,

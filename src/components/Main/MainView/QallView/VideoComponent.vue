@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
-import VideoTrack from './VideoTrack.vue'
 import { useUsersStore } from '/@/store/entities/users'
+
+import VideoTrack from './VideoTrack.vue'
 
 const { trackInfo } = defineProps<{
   trackInfo: TrackInfo

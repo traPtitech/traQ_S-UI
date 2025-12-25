@@ -3,10 +3,11 @@
 </template>
 
 <script lang="ts">
-import { onMounted, reactive, computed, watch } from 'vue'
-import { RouteName } from '/@/router'
-import useRedirectParam from '/@/components/Authenticate/composables/useRedirectParam'
+import { computed, onMounted, reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
+
+import useRedirectParam from '/@/components/Authenticate/composables/useRedirectParam'
+import { RouteName } from '/@/router'
 import { useMeStore } from '/@/store/domain/me'
 
 export type PageType =

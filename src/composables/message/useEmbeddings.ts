@@ -1,7 +1,8 @@
 import { computed, reactive } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import { isFile, isMessage, isExternalUrl } from '/@/lib/guard/embeddingOrUrl'
+
+import { isExternalUrl, isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { useMessagesView } from '/@/store/domain/messagesView'
+import type { MessageId } from '/@/types/entity-ids'
 
 const useEmbeddings = (props: { messageId: MessageId }) => {
   const { embeddingsMap } = useMessagesView()

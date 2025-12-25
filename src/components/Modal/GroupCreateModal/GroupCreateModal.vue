@@ -38,16 +38,23 @@
 </template>
 
 <script lang="ts" setup>
-import { AxiosError } from 'axios'
 import { ref } from 'vue'
-import ModalFrame from '../Common/ModalFrame.vue'
+
+import { AxiosError } from 'axios'
+
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import apis from '/@/lib/apis'
+import {
+  INVALID_GROUP_NAME_ERROR_MESSAGE,
+  isValidGroupName
+} from '/@/lib/validate'
 import { useMeStore } from '/@/store/domain/me'
 import { useModalStore } from '/@/store/ui/modal'
 import { useToastStore } from '/@/store/ui/toast'
+
+import ModalFrame from '../Common/ModalFrame.vue'
 
 const { myId } = useMeStore()
 const { addErrorToast } = useToastStore()
@@ -59,15 +66,10 @@ const type = ref('')
 const addMember = ref(true)
 const errorMessage = ref<string | null>(null)
 
-// eslint-disable-next-line no-irregular-whitespace
-const VALID_REG_EXP = /^[^@＠#＃:： 　]*$/ // @, #, :, 空白 (全角・半角) は使用不可
-
 const validateName = () => {
-  if (!VALID_REG_EXP.test(name.value)) {
-    errorMessage.value = '「@」「#」「:」と空白は使用できません'
-  } else {
-    errorMessage.value = null
-  }
+  errorMessage.value = isValidGroupName(name.value)
+    ? null
+    : INVALID_GROUP_NAME_ERROR_MESSAGE
 }
 
 const create = async () => {

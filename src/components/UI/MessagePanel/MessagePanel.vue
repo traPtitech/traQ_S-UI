@@ -47,15 +47,18 @@
 </template>
 
 <script lang="ts" setup>
-import UserName from './UserName.vue'
+import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
+import useChannelPath from '/@/composables/useChannelPath'
+import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import { useUsersStore } from '/@/store/entities/users'
+
 import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import { computed } from 'vue'
-import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
-import useChannelPath from '/@/composables/useChannelPath'
-import { useUsersStore } from '/@/store/entities/users'
-import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import UserName from './UserName.vue'
 
 const props = withDefaults(
   defineProps<{

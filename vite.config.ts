@@ -1,21 +1,33 @@
 /// <reference types="vitest" />
-
-import { defineConfig } from 'vite'
 import * as path from 'path'
-import packageJson from './package.json'
-import { VitePWA } from 'vite-plugin-pwa'
-import VuePlugin from '@vitejs/plugin-vue'
-import brotli from 'rollup-plugin-brotli'
-import svgLoader from 'vite-svg-loader'
+import fs from 'fs'
 import { Agent as HttpsAgent } from 'https'
-import webManifest from './webmanifest'
-import { DEV_SERVER_PROXY_HOST } from './dev.config'
+
+import VuePlugin from '@vitejs/plugin-vue'
+import autoprefixer from 'autoprefixer'
 import browserslist from 'browserslist'
 import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
+import brotli from 'rollup-plugin-brotli'
+import { defineConfig } from 'vite'
+import { VitePWA } from 'vite-plugin-pwa'
+import svgLoader from 'vite-svg-loader'
 import GithubActionsReporter from 'vitest-github-actions-reporter'
-import autoprefixer from 'autoprefixer'
+
+import { DEV_SERVER_PROXY_HOST } from './dev.config'
+import packageJson from './package.json'
+import webManifest from './webmanifest'
 
 const keepAliveAgent = new HttpsAgent({ keepAlive: true })
+
+const localhostCerts =
+  fs.existsSync('.certs/localhost.crt') && fs.existsSync('.certs/localhost.key')
+    ? {
+        https: {
+          key: fs.readFileSync('.certs/localhost.key'),
+          cert: fs.readFileSync('.certs/localhost.crt')
+        }
+      }
+    : {}
 
 export default defineConfig(({ mode }) => ({
   resolve: {
@@ -38,7 +50,8 @@ export default defineConfig(({ mode }) => ({
         ws: true,
         agent: keepAliveAgent
       }
-    }
+    },
+    ...localhostCerts
   },
   build: {
     target: resolveToEsbuildTarget(browserslist(), {

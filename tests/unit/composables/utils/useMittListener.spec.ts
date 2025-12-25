@@ -1,6 +1,8 @@
 import mitt from 'mitt'
-import { withSetup } from '../../testUtils'
+
 import useMittListenerWithoutSetup from '/@/composables/utils/useMittListener'
+
+import { withSetup } from '../../testUtils'
 
 const useMittListener = withSetup(useMittListenerWithoutSetup)
 

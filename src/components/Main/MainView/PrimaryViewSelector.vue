@@ -21,11 +21,12 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelView from './ChannelView/ChannelView.vue'
-import DMView from './DMView/DMView.vue'
-import ClipsView from './ClipsView/ClipsView.vue'
-import NullView from './NullView/NullView.vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
+
+import ChannelView from './ChannelView/ChannelView.vue'
+import ClipsView from './ClipsView/ClipsView.vue'
+import DMView from './DMView/DMView.vue'
+import NullView from './NullView/NullView.vue'
 
 const { primaryView } = useMainViewStore()
 

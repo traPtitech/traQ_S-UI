@@ -1,4 +1,16 @@
 {
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "<BUILTIN_MODULES>",
+    "^@traptitech",
+    "^vue",
+    "<THIRD_PARTY_MODULES>",
+    "^/@/",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "importOrderGroupNamespaceSpecifiers": true,
   "printWidth": 80,
   "tabWidth": 2,
   "useTabs": false,
@@ -11,7 +23,6 @@
   "bracketSameLine": false,
   "arrowParens": "avoid",
   "rangeStart": 0,
-  "filepath": "none",
   "requirePragma": false,
   "insertPragma": false,
   "proseWrap": "preserve",

@@ -28,19 +28,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, shallowRef, toRef } from 'vue'
-import type { ChangeHeightData } from './composables/useElementRenderObserver'
-import useElementRenderObserver from './composables/useElementRenderObserver'
-import MessageContents from './MessageContents.vue'
-import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
-import MessageTools, { useMessageToolsHover } from './MessageTools.vue'
+import { computed, ref, shallowRef, toRef } from 'vue'
+
 import ClickOutside from '/@/components/UI/ClickOutside'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
-import { useMessagesStore } from '/@/store/entities/messages'
 import useResponsive from '/@/composables/useResponsive'
-import type { MessageId } from '/@/types/entity-ids'
-import { ref } from 'vue'
+import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
+import type { MessageId } from '/@/types/entity-ids'
+
+import MessageQuoteListItemFooter from './Embeddings/MessageQuoteListItemFooter.vue'
+import MessageContents from './MessageContents.vue'
+import MessageTools, { useMessageToolsHover } from './MessageTools.vue'
+import type { ChangeHeightData } from './composables/useElementRenderObserver'
+import useElementRenderObserver from './composables/useElementRenderObserver'
 
 const props = defineProps<{
   messageId: MessageId
@@ -116,5 +117,6 @@ $messagePaddingMobile: 16px;
 .footer {
   margin-top: 4px;
   margin-left: 42px;
+  padding-left: 8px;
 }
 </style>

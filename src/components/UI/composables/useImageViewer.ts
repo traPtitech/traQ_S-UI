@@ -1,13 +1,14 @@
 import type { Ref } from 'vue'
 import { computed, reactive } from 'vue'
+
+import useEventListener from '/@/composables/dom/useEventListener'
 import type { Point } from '/@/lib/basic/point'
 import {
   diff,
+  getAngleBetweenLines,
   getDistance,
-  getMidpoint,
-  getAngleBetweenLines
+  getMidpoint
 } from '/@/lib/basic/point'
-import useEventListener from '/@/composables/dom/useEventListener'
 
 const WHEEL_SCALE_DELTAX = new Map<number, number>([
   [0x00, 1], // WheelEvent.DOM_DELTA_PIXEL

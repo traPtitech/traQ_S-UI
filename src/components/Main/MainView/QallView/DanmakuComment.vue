@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
+
 import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 
 const { markdown } = defineProps<{

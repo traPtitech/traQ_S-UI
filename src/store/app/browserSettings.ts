@@ -1,12 +1,12 @@
-import { promisifyRequest } from 'idb-keyval'
-import { acceptHMRUpdate, defineStore } from 'pinia'
 import { computed, toRefs } from 'vue'
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
-import { isObjectAndHasKey } from '/@/lib/basic/object'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
+import useLocalStorageValue from '/@/composables/storage/useLocalStorage'
 import { replacePrefix } from '/@/lib/basic/string'
 import { channelTreeMitt } from '/@/store/domain/channelTree'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import { getVuexData } from '/@/store/utils/migrateFromVuex'
 
 type State = {
   openMode: OpenMode
@@ -58,7 +58,7 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     lastOpenChannelName: 'general',
     openChannelName: 'general',
     sendWithModifierKey: 'modifier',
-    modifierKey: { alt: true, ctrl: true, shift: true, macCtrl: true },
+    modifierKey: { alt: true, ctrl: true, shift: false, macCtrl: true },
     ecoMode: false,
     prioritizeStarredChannel: true,
     prioritizeNotifiedChannel: true,
@@ -66,18 +66,19 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     filterStarChannel: false
   }
 
-  const [state, restoring, restoringPromise] = useIndexedDbValue(
+  const [state] = useLocalStorageValue(
     'store/app/browserSettings',
     1,
     {
-      // migrate from vuex
-      1: async getStore => {
-        const vuexStore = await getVuexData()
-        if (!vuexStore) return
-        if (!isObjectAndHasKey(vuexStore, 'app')) return
-        if (!isObjectAndHasKey(vuexStore.app, 'browserSettings')) return
-        const addReq = getStore().add(vuexStore.app.browserSettings, 'key')
-        await promisifyRequest(addReq)
+      1: async store => {
+        const [dbState, _restoring, restoringPromise] = useIndexedDbValue(
+          'store/app/browserSettings',
+          1,
+          {},
+          initialValue
+        )
+        await restoringPromise.value
+        return { ...store, ...dbState }
       }
     },
     initialValue
@@ -98,15 +99,13 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     }
   })
 
-  const updateOpenChannelNames = async ({
+  const updateOpenChannelNames = ({
     oldName,
     newName
   }: {
     oldName: string
     newName: string
   }) => {
-    await restoringPromise.value
-
     state.openChannelName = replacePrefix(
       state.openChannelName,
       oldName,
@@ -128,8 +127,6 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
 
   return {
     ...toRefs(state),
-    restoring,
-    restoringPromise,
     defaultChannelName
   }
 })

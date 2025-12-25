@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+
 import type { StampId } from '/@/types/entity-ids'
 
 const useStampPreselector = () => {

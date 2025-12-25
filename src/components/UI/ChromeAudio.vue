@@ -35,14 +35,15 @@
 </template>
 
 <script lang="ts" setup>
+import useFileMeta from '/@/composables/files/useFileMeta'
+import useAudio from '/@/composables/media/useAudio'
+import { useUsersStore } from '/@/store/entities/users'
+
+import AudioPlayerPinPButton from './AudioPlayer/AudioPlayerPinPButton.vue'
 import AudioPlayerPlayButton from './AudioPlayer/AudioPlayerPlayButton.vue'
 import AudioPlayerTime from './AudioPlayer/AudioPlayerTime.vue'
 import AudioPlayerTimeSlider from './AudioPlayer/AudioPlayerTimeSlider.vue'
 import AudioPlayerVolumeSlider from './AudioPlayer/AudioPlayerVolumeSlider.vue'
-import AudioPlayerPinPButton from './AudioPlayer/AudioPlayerPinPButton.vue'
-import useFileMeta from '/@/composables/files/useFileMeta'
-import useAudio from '/@/composables/media/useAudio'
-import { useUsersStore } from '/@/store/entities/users'
 
 const props = withDefaults(
   defineProps<{

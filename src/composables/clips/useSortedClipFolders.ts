@@ -1,4 +1,5 @@
 import { computed } from 'vue'
+
 import { compareString } from '/@/lib/basic/string'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 

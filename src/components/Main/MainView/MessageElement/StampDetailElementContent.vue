@@ -12,11 +12,12 @@
 
 <script lang="ts" setup>
 import { computed, toRef } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
-import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
-import { useUsersStore } from '/@/store/entities/users'
+
 import SpinNumber from '/@/components/UI/SpinNumber.vue'
+import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
 import { makeInvisibleCharactersRemover } from '/@/lib/basic/string'
+import { useUsersStore } from '/@/store/entities/users'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   userId: UserId

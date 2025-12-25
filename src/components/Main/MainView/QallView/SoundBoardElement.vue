@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AStamp from '/@/components/UI/AStamp.vue'
+
 const { soundName, stampId } = defineProps<{
   soundName: string
   stampId: string

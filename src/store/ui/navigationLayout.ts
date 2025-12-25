@@ -1,10 +1,14 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { computed, onMounted, ref, shallowRef } from 'vue'
+import { onMounted, ref, shallowRef, toRef, watch } from 'vue'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
+import useLocalStorageValue from '/@/composables/storage/useLocalStorage'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
 
 type State = {
   navigationWidth: number
+  isNavigationClosed: boolean
 }
 
 export const MIN_NAVIGATION_WIDTH = 200
@@ -14,13 +18,25 @@ export const MAX_NAVIGATION_WIDTH_RATIO = 0.5
 
 const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
   const initialValue: State = {
-    navigationWidth: DEFAULT_NAVIGATION_WIDTH
+    navigationWidth: DEFAULT_NAVIGATION_WIDTH,
+    isNavigationClosed: false
   }
 
-  const [state, _restoring, restoringPromise] = useIndexedDbValue(
+  const [state, migrationPromise] = useLocalStorageValue<State>(
     'store/ui/navigationLayout',
     1,
-    {},
+    {
+      1: async store => {
+        const [dbState, _restoring, restoringPromise] = useIndexedDbValue(
+          'store/ui/navigationLayout',
+          1,
+          {},
+          initialValue
+        )
+        await restoringPromise.value
+        return { ...store, ...dbState }
+      }
+    },
     initialValue
   )
 
@@ -34,23 +50,23 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
       navigationRef.value?.getBoundingClientRect().left ?? 0
   }
 
-  const navigationWidth = ref(state.navigationWidth)
+  const navigationWidth = ref(0)
 
-  const isNavigationClosed = computed(() => {
-    return navigationWidth.value === 0
+  watch(navigationWidth, width => {
+    state.isNavigationClosed = width === 0
   })
 
   const saveNavigationWidth = () => {
     state.navigationWidth = navigationWidth.value
   }
 
-  const restoreNavigationWidthImpl = () => {
-    navigationWidth.value = state.navigationWidth
+  const closeNavigation = () => {
+    navigationWidth.value = 0
   }
 
   const restoreNavigationWidth = () => {
     if (navigationWidth.value > 0) return
-    restoreNavigationWidthImpl()
+    navigationWidth.value = state.navigationWidth
   }
 
   const initializeNavigationWidth = () => {
@@ -58,10 +74,11 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
     saveNavigationWidth()
   }
 
-  onMounted(() => {
-    restoringPromise.value.then(() => {
-      restoreNavigationWidthImpl()
-    })
+  onMounted(async () => {
+    await migrationPromise
+
+    if (state.isNavigationClosed) return
+    restoreNavigationWidth()
   })
 
   return {
@@ -69,10 +86,11 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
     resizerRef,
     navigationLeft,
     navigationWidth,
-    isNavigationClosed,
+    isNavigationClosed: toRef(state, 'isNavigationClosed'),
     saveNavigationWidth,
     restoreNavigationWidth,
     initializeNavigationWidth,
+    closeNavigation,
     updateNavigationLeft
   }
 })

@@ -11,8 +11,9 @@
 </template>
 
 <script lang="ts" setup>
-import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 import type { User } from '@traptitech/traq'
+
+import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 
 defineProps<{
   user: User

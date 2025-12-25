@@ -1,12 +1,12 @@
 <template>
-  <div :class="$style.container">
+  <RouterLink :to="fileLink" :class="$style.container" @click.stop>
     <FileTypeIcon
       :type="fileType"
       :size="24"
       :is-animated-image="isAnimatedImage"
     />
     <div>{{ fileMeta?.name ?? 'unknown' }}</div>
-  </div>
+  </RouterLink>
 </template>
 
 <script lang="ts" setup>
@@ -18,7 +18,7 @@ const props = defineProps<{
   fileId: FileId
 }>()
 
-const { fileType, fileMeta, isAnimatedImage } = useFileMeta(props)
+const { fileType, fileMeta, fileLink, isAnimatedImage } = useFileMeta(props)
 </script>
 
 <style lang="scss" module>

@@ -1,6 +1,7 @@
 import { count } from '/@/lib/basic/string'
-import type { ChannelId } from '/@/types/entity-ids'
 import { dmParentUuid } from '/@/lib/basic/uuid'
+import type { ChannelId } from '/@/types/entity-ids'
+
 import type { ChannelLike } from './channelTree'
 
 const MAX_CHANNEL_DEPTH = 5

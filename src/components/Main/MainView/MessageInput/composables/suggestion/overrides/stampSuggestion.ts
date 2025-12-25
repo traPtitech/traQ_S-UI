@@ -1,10 +1,13 @@
-import { computed, toValue, type MaybeRefOrGetter } from 'vue'
+import { type MaybeRefOrGetter, computed, toValue } from 'vue'
+
+import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
+
 import type {
   Candidate,
   ConfirmedPart,
   WordOrConfirmedPart
 } from '../useWordSuggester'
-import { useStampHistory } from '/@/store/domain/stampHistory'
 import type { WordWithId } from '../useWordSuggestionList'
 
 const stampSuggestionOverride = <
@@ -17,6 +20,7 @@ const stampSuggestionOverride = <
   input: Params
 ) => {
   const { upsertLocalStampHistory } = useStampHistory()
+  const { recordStampUsage } = useStampRecommendations()
 
   const isStampSuggestion = computed(() =>
     toValue(input.confirmedPart).text.startsWith(':')
@@ -33,6 +37,7 @@ const stampSuggestionOverride = <
 
   const onSelect = (word: WordWithId) => {
     upsertLocalStampHistory(word.id, new Date())
+    recordStampUsage(word.id)
     input.onSelect({ ...word, text: `${word.text}:` })
   }
 

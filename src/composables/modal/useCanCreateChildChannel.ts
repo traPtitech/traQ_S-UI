@@ -1,8 +1,8 @@
 import useChannelPath from '/@/composables/useChannelPath'
-import { canCreateChildChannel as canCreateChildChannel_ } from '/@/lib/channel'
-import type { ChannelId } from '/@/types/entity-ids'
 import { nullUuid } from '/@/lib/basic/uuid'
+import { canCreateChildChannel as canCreateChildChannel_ } from '/@/lib/channel'
 import { useChannelsStore } from '/@/store/entities/channels'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const useCanCreateChildChannel = () => {
   const { channelsMap } = useChannelsStore()

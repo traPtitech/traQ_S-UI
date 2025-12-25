@@ -26,15 +26,17 @@
 </template>
 
 <script lang="ts" setup>
-import GradeBadge from './GradeBadge.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import {
   getDateRepresentation,
   getFullDayWithTimeString
 } from '/@/lib/basic/date'
 import { useUsersStore } from '/@/store/entities/users'
+import type { UserId } from '/@/types/entity-ids'
+
+import GradeBadge from './GradeBadge.vue'
 
 const props = defineProps<{
   userId: UserId

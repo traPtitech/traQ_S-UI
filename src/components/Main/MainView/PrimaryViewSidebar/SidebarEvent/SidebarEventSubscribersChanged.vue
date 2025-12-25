@@ -17,9 +17,11 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarEventFrame from './SidebarEventFrame.vue'
-import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import type { SubscribersChangedEvent } from '@traptitech/traq'
+
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
+
+import SidebarEventFrame from './SidebarEventFrame.vue'
 
 defineProps<{
   datetime: string

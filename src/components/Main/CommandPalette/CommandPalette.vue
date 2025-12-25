@@ -17,9 +17,11 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useCommandPalette } from '/@/store/app/commandPalette'
-import useResponsive from '/@/composables/useResponsive'
+
 import ClickOutside from '/@/components/UI/ClickOutside'
+import useResponsive from '/@/composables/useResponsive'
+import { useCommandPalette } from '/@/store/app/commandPalette'
+
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import SearchResult from './SearchResult.vue'
 import SearchSuggestion from './SearchSuggestion.vue'

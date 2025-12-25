@@ -1,8 +1,11 @@
-import { computed } from 'vue'
-import { buildFileThumbnailPath } from '/@/lib/apis'
-import useFileMeta from './useFileMeta'
 import { ThumbnailType } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import { buildFileThumbnailPath } from '/@/lib/apis'
 import type { ChannelId, FileId } from '/@/types/entity-ids'
+
+import useFileMeta from './useFileMeta'
 
 const useFileThumbnail = (props: { fileId: FileId; channelId?: ChannelId }) => {
   const { fileMeta, fileLink, fileRawPath, canShow } = useFileMeta(props)

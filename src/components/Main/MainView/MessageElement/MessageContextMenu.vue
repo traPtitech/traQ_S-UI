@@ -52,6 +52,7 @@
 <script lang="ts">
 import type { Ref } from 'vue'
 import { computed, toRef } from 'vue'
+
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
 import usePinToggler from '/@/composables/contextMenu/usePinToggler'
 import useCopyText from '/@/composables/toast/useCopyText'
@@ -64,6 +65,7 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 import { useModalStore } from '/@/store/ui/modal'
 import type { MessageId } from '/@/types/entity-ids'
+import type { MaybePromise } from '/@/types/utility'
 
 const useMessageChanger = (messageId: Ref<MessageId>) => {
   const { execWithToast } = useExecWithToast()
@@ -148,7 +150,7 @@ const { showClipCreateModal } = useShowClipCreateModal(messageId)
 const close = () => {
   emit('close')
 }
-const withClose = async (func: () => void | Promise<void>) => {
+const withClose = async (func: () => MaybePromise<void>) => {
   await func()
   close()
 }

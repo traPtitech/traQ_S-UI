@@ -50,13 +50,16 @@
 
 <script lang="ts" setup>
 import { ChannelSubscribeLevel } from '@traptitech/traq'
+
 import { computed, toRef } from 'vue'
-import useStarChannel from './composables/useStarChannel'
+
 import HeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
 import { useQall } from '/@/composables/qall/useQall'
 import useChannelSubscriptionState from '/@/composables/subscription/useChannelSubscriptionState'
 import useResponsive from '/@/composables/useResponsive'
 import type { ChannelId } from '/@/types/entity-ids'
+
+import useStarChannel from './composables/useStarChannel'
 
 const props = withDefaults(
   defineProps<{

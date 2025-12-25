@@ -11,8 +11,10 @@
 </template>
 
 <script lang="ts" setup>
+import { type Ref, ref } from 'vue'
+
 import imageCompression, { type Options } from 'browser-image-compression'
-import { ref, type Ref } from 'vue'
+
 import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import { imageSize } from '/@/components/Settings/StampTab/imageSize'
 import FormButton from '/@/components/UI/FormButton.vue'

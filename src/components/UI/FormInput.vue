@@ -60,6 +60,7 @@
 
 <script lang="ts" setup generic="T extends string | number">
 import { onMounted, shallowRef } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import useShowPassword from '/@/composables/dom/useShowPassword'
@@ -137,16 +138,16 @@ defineExpose({ focus })
 <style lang="scss" module>
 .labelContainer {
   display: flex;
-  gap: 8px;
+  gap: 0px 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
 }
 .label {
   @include color-ui-primary;
   display: block;
-  margin-bottom: 4px;
 }
 .errorMessage {
   color: $theme-accent-error-default;
-  margin-bottom: 4px;
 }
 .inputContainer {
   @include color-ui-primary;

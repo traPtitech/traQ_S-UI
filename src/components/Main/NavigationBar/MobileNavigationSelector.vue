@@ -25,16 +25,18 @@
 </template>
 
 <script lang="ts" setup>
-import NavigationSelectorItem from '/@/components/Main/NavigationBar/NavigationSelectorItem.vue'
 import { computed, watch } from 'vue'
+
+import NavigationSelectorItem from '/@/components/Main/NavigationBar/NavigationSelectorItem.vue'
 import type {
-  NavigationItemType,
-  EphemeralNavigationItemType
+  EphemeralNavigationItemType,
+  NavigationItemType
 } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 import {
-  useNavigationSelectorItem,
-  useEphemeralNavigationSelectorItem
+  useEphemeralNavigationSelectorItem,
+  useNavigationSelectorItem
 } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
+
 import type { EphemeralNavigationSelectorEntry } from './composables/useNavigationSelectorEntry'
 import useNavigationSelectorEntry from './composables/useNavigationSelectorEntry'
 

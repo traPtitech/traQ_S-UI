@@ -17,11 +17,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { ChannelId } from '/@/types/entity-ids'
-import type { ChannelTreeNode } from '/@/lib/channelTree'
-import ChannelElement from './ChannelElement.vue'
+import { type HTMLAttributes, ref } from 'vue'
+
 import SlideDown from '/@/components/UI/SlideDown.vue'
-import { ref, type HTMLAttributes } from 'vue'
+import type { ChannelTreeNode } from '/@/lib/channelTree'
+import type { ChannelId } from '/@/types/entity-ids'
+
+import ChannelElement from './ChannelElement.vue'
 
 interface Props extends /* @vue-ignore */ HTMLAttributes {
   channels: ReadonlyArray<ChannelTreeNode>

@@ -1,7 +1,7 @@
-import type { UserId, UserGroupId } from '/@/types/entity-ids'
-import { useModalStore } from '/@/store/ui/modal'
-import { useUsersStore } from '/@/store/entities/users'
 import { useGroupsStore } from '/@/store/entities/groups'
+import { useUsersStore } from '/@/store/entities/users'
+import { useModalStore } from '/@/store/ui/modal'
+import type { UserGroupId, UserId } from '/@/types/entity-ids'
 
 interface ExtendedWindow extends Window {
   /**

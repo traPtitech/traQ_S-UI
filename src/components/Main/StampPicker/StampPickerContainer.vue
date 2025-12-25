@@ -8,7 +8,9 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
 import { useStampPicker } from '/@/store/ui/stampPicker'
+
 import StampPicker from './StampPicker.vue'
 
 const { position, alignment, isStampPickerShown } = useStampPicker()

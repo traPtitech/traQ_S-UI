@@ -9,9 +9,9 @@
 
 <script lang="ts" setup>
 import AccountState from '/@/components/Settings/SessionTab/AccountState.vue'
-import ViewStates from '/@/components/Settings/SessionTab/ViewStates.vue'
 import PasswordChange from '/@/components/Settings/SessionTab/PasswordChange.vue'
 import TokenManager from '/@/components/Settings/SessionTab/TokenManager.vue'
+import ViewStates from '/@/components/Settings/SessionTab/ViewStates.vue'
 </script>
 
 <style lang="scss" module>

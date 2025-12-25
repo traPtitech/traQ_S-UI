@@ -13,10 +13,12 @@
 </template>
 
 <script lang="ts" setup>
-import StampDetailElementContent from './StampDetailElementContent.vue'
 import { computed } from 'vue'
+
+import type { MessageStampById, StampUser } from '/@/lib/messageStampList'
 import { useStampsStore } from '/@/store/entities/stamps'
-import type { StampUser, MessageStampById } from '/@/lib/messageStampList'
+
+import StampDetailElementContent from './StampDetailElementContent.vue'
 
 const props = defineProps<{
   stamp: MessageStampById

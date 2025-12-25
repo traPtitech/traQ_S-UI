@@ -29,11 +29,14 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import useHover from '/@/composables/dom/useHover'
+
 import AStamp from '/@/components/UI/AStamp.vue'
+import useHover from '/@/composables/dom/useHover'
 import type { MessageStampById } from '/@/lib/messageStampList'
 import { useStampsStore } from '/@/store/entities/stamps'
+
 import StampDetailElement from './StampScaledDetailElement.vue'
+
 const props = defineProps<{
   stamp: MessageStampById
   show: boolean

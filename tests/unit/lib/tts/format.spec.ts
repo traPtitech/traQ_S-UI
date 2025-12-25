@@ -1,6 +1,7 @@
-import { format } from '/@/lib/tts/format'
 import type { Store } from '@traptitech/traq-markdown-it'
 import { traQMarkdownIt } from '@traptitech/traq-markdown-it'
+
+import { format } from '/@/lib/tts/format'
 
 const embeddingOrigin = 'https://example.com'
 const storeProvider: Store = {

@@ -19,12 +19,14 @@
 </template>
 
 <script lang="ts" setup>
-import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
-import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
-import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
-import type { Attachment } from '/@/store/ui/messageInputStateStore'
-import useObjectURL from '/@/composables/dom/useObjectURL'
 import { computed } from 'vue'
+
+import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
+import useObjectURL from '/@/composables/dom/useObjectURL'
+import type { Attachment } from '/@/store/ui/messageInputStateStore'
+
+import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
+import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 
 const props = defineProps<{
   attachment: Attachment

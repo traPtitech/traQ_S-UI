@@ -16,14 +16,16 @@
 </template>
 
 <script lang="ts" setup>
-import AuthenticateModal from './AuthenticateModal.vue'
-import LoginForm from './LoginForm.vue'
-import RegistrationForm from './RegistrationForm.vue'
-import ConsentForm from './ConsentForm/ConsentForm.vue'
 import { computed } from 'vue'
-import type { PageType } from '/@/views/AuthPage.vue'
+
 import useVersion from '/@/composables/useVersion'
 import { RouteName } from '/@/router'
+import type { PageType } from '/@/views/AuthPage.vue'
+
+import AuthenticateModal from './AuthenticateModal.vue'
+import ConsentForm from './ConsentForm/ConsentForm.vue'
+import LoginForm from './LoginForm.vue'
+import RegistrationForm from './RegistrationForm.vue'
 
 const props = withDefaults(
   defineProps<{

@@ -38,10 +38,7 @@
 
 <script lang="ts" setup>
 import { computed, nextTick, ref, watch } from 'vue'
-import usePaste from './composables/usePaste'
-import useSendKeyWatcher from './composables/useSendKeyWatcher'
-import useSuggester from './composables/suggestion/useSuggester'
-import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
+
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import useInsertText from '/@/composables/dom/useInsertText'
 import { isFirefox } from '/@/lib/dom/browser'
@@ -49,6 +46,11 @@ import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
 import useResponsive from '/@/composables/useResponsive'
 import type { ChannelId } from '/@/types/entity-ids'
 import { unrefElement } from '/@/lib/dom/unrefElement'
+
+import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
+import useSuggester from './composables/suggestion/useSuggester'
+import usePaste from './composables/usePaste'
+import useSendKeyWatcher from './composables/useSendKeyWatcher'
 
 const modelValue = defineModel<string>({ default: '' })
 const showTextAreaExpandButton = defineModel<boolean>(

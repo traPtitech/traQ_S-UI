@@ -21,13 +21,16 @@
 </template>
 
 <script lang="ts" setup>
-import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
-import SidebarPinnedMessageContextMenu from './SidebarPinnedMessageContextMenu.vue'
-import { computed } from 'vue'
 import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
-import { constructMessagesPath } from '/@/router'
+
+import { computed } from 'vue'
+
+import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
 import useContextMenu from '/@/composables/useContextMenu'
+import { constructMessagesPath } from '/@/router'
 import { useChannelsStore } from '/@/store/entities/channels'
+
+import SidebarPinnedMessageContextMenu from './SidebarPinnedMessageContextMenu.vue'
 
 const props = defineProps<{
   message: Message | ActivityTimelineMessage

@@ -22,13 +22,14 @@
 </template>
 
 <script lang="ts" setup>
-import useTextFilter from '/@/composables/utils/useTextFilter'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import FilterInput from '/@/components/UI/FilterInput.vue'
+import useUserList from '/@/composables/users/useUserList'
+import useTextFilter from '/@/composables/utils/useTextFilter'
+
 import UsersElement from './UsersElement.vue'
 import UsersGradeList from './UsersGradeList.vue'
-import FilterInput from '/@/components/UI/FilterInput.vue'
 import useUserListByGrade from './composables/useUserListByGrade'
-import useUserList from '/@/composables/users/useUserList'
 
 const userListsByGrade = useUserListByGrade()
 

@@ -1,7 +1,9 @@
 import type { Ref } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import type { LoadingDirection } from './useMessagesFetcher'
+
 import type { ChangeHeightData } from '/@/components/Main/MainView/MessageElement/composables/useElementRenderObserver'
+import type { MessageId } from '/@/types/entity-ids'
+
+import type { LoadingDirection } from './useMessagesFetcher'
 
 const useMessageScrollerElementResizeObserver = (
   rootRef: Ref<HTMLElement | null>,
@@ -12,6 +14,7 @@ const useMessageScrollerElementResizeObserver = (
   },
   viewPortState: {
     height: number
+    skipResizeAdjustment?: boolean
   }
 ) => {
   const onChangeHeight = (payload: ChangeHeightData) => {
@@ -42,6 +45,10 @@ const useMessageScrollerElementResizeObserver = (
       scrollerProps.lastLoadingDirection === 'latest' ||
       scrollerProps.lastLoadingDirection === 'former'
     ) {
+      // 古いメッセージを読み込んですぐはここで高さの調整をしない
+      if (viewPortState.skipResizeAdjustment) {
+        return
+      }
       rootRef.value.scrollTop += payload.heightDiff
       viewPortState.height = rootRef.value.scrollHeight
     }

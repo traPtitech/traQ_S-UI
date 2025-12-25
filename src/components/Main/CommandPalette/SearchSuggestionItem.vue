@@ -13,12 +13,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { ChannelId, UserId } from '/@/types/entity-ids'
 import { computed } from 'vue'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useUsersStore } from '/@/store/entities/users'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
 
 export type SuggestionItem =
   | { type: 'search'; value: string }

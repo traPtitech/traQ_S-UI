@@ -1,10 +1,12 @@
+import { ChannelSubscribeLevel } from '@traptitech/traq'
+
 import { computed } from 'vue'
+
 import { isDefined } from '/@/lib/basic/array'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useStaredChannels } from '/@/store/domain/staredChannels'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
-import { useStaredChannels } from '/@/store/domain/staredChannels'
-import { ChannelSubscribeLevel } from '@traptitech/traq'
-import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const useChannelsWithNotification = () => {
   const { unreadChannelsMap, subscriptionMap } = useSubscriptionStore()

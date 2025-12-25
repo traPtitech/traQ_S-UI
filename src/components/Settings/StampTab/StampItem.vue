@@ -27,12 +27,15 @@
 
 <script lang="ts" setup>
 import type { Stamp } from '@traptitech/traq'
+
 import { computed } from 'vue'
-import { buildFilePath } from '/@/lib/apis'
-import useContextMenu from '/@/composables/useContextMenu'
-import StampContextMenu from './StampContextMenu.vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
+import useContextMenu from '/@/composables/useContextMenu'
+import { buildFilePath } from '/@/lib/apis'
 import { useUsersStore } from '/@/store/entities/users'
+
+import StampContextMenu from './StampContextMenu.vue'
 
 const props = withDefaults(
   defineProps<{

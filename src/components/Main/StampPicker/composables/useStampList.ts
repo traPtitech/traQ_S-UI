@@ -1,22 +1,24 @@
 import type { Ref } from 'vue'
 import { computed } from 'vue'
-import type { StampId } from '/@/types/entity-ids'
-import type { StampSet } from './useStampSetSelector'
-import useStampFilter from './useStampFilter'
+
 import { useStampCategory } from '/@/store/domain/stampCategory'
+import { useTopStampIds } from '/@/store/domain/stampRecommendations'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
-import { useStampHistory } from '/@/store/domain/stampHistory'
+import type { StampId } from '/@/types/entity-ids'
+
+import useStampFilter from './useStampFilter'
+import type { StampSet } from './useStampSetSelector'
 
 const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { traQStampCategory, unicodeStampCategories } = useStampCategory()
-  const { recentStampIds } = useStampHistory()
+  const { topStampIds } = useTopStampIds()
   const { stampsMap } = useStampsStore()
   const { stampPalettesMap } = useStampPalettesStore()
 
   const stampIds = computed((): readonly StampId[] => {
     if (currentStampSet.value.type === 'history') {
-      return recentStampIds.value
+      return topStampIds.value
     }
     if (currentStampSet.value.type === 'palette') {
       const id = currentStampSet.value.id

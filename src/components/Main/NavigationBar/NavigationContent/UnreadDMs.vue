@@ -16,8 +16,9 @@
 
 <script lang="ts" setup>
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
-import DMActivityElement from './DMActivityElement.vue'
 import useChannelsWithNotification from '/@/composables/subscription/useChannelsWithNotification'
+
+import DMActivityElement from './DMActivityElement.vue'
 
 const { dmChannelsWithNotification } = useChannelsWithNotification()
 </script>

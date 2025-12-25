@@ -17,6 +17,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
 import ASlider from '/@/components/UI/ASlider.vue'
 
 const currentTime = defineModel<number>('currentTime', { required: true })

@@ -25,10 +25,11 @@
 </template>
 
 <script lang="ts">
-import { reactive, shallowRef, watch, computed, readonly } from 'vue'
+import { computed, reactive, readonly, shallowRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import useToggle from '/@/composables/utils/useToggle'
+
 import useEventListener from '/@/composables/dom/useEventListener'
+import useToggle from '/@/composables/utils/useToggle'
 
 const popupNavigatorButtonId = 'popup-navigation-button'
 const popupNavigatorId = 'popup-navigator'

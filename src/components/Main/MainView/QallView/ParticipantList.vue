@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import type { User } from '@traptitech/traq'
+
+import { computed, ref, useCssModule, watch } from 'vue'
+
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useUserVolume } from '/@/store/app/userVolume'
-import { ref, watch, useCssModule, computed } from 'vue'
-import type { User } from '@traptitech/traq'
 
 const { participant, trackInfo } = defineProps<{
   participant: User

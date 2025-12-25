@@ -53,11 +53,14 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import type { Channel } from '@traptitech/traq'
-import { pickSomeAroundIndex } from '/@/lib/basic/array'
-import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
+
+import { computed } from 'vue'
+
 import useToggle from '/@/composables/utils/useToggle'
+import { pickSomeAroundIndex } from '/@/lib/basic/array'
+
+import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
 
 const props = withDefaults(
   defineProps<{

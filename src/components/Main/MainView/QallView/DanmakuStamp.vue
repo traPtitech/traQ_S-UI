@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, useTemplateRef } from 'vue'
+
 import AStamp from '/@/components/UI/AStamp.vue'
 
 const { stampId } = defineProps<{

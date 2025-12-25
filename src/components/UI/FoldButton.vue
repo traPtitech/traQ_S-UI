@@ -6,7 +6,7 @@
     <AIcon
       v-if="showIcon"
       :name="isFold ? 'down' : 'up'"
-      :class="$style['icon']"
+      :class="$style.icon"
     />
     {{ isFold ? 'さらに表示' : '折りたたむ' }}
   </button>
@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 import type { ButtonHTMLAttributes } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 
 interface Props extends /* @vue-ignore */ ButtonHTMLAttributes {

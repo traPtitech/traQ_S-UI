@@ -1,7 +1,8 @@
-import type { ChannelId } from '/@/types/entity-ids'
 import { computed } from 'vue'
+
 import useCanCreateChildChannel from '/@/composables/modal/useCanCreateChildChannel'
 import { useModalStore } from '/@/store/ui/modal'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const useChannelCreateModal = (props: { channelId: ChannelId }) => {
   const { pushModal } = useModalStore()

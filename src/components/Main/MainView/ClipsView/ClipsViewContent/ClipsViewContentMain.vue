@@ -23,14 +23,16 @@
 </template>
 
 <script lang="ts" setup>
+import { shallowRef } from 'vue'
+
 import MessagesScroller, {
   type MessageScrollerInstance
 } from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
-import { shallowRef } from 'vue'
 import type { ClipFolderId } from '/@/types/entity-ids'
+
+import ClipElement from '../../MessageElement/ClipElement.vue'
 import useClipsFetcher from './composables/useClipsFetcher'
-import ClipElement from '/@/components/Main/MainView/MessageElement/ClipElement.vue'
 
 const props = defineProps<{
   clipFolderId: ClipFolderId

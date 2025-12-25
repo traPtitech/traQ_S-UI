@@ -11,11 +11,13 @@
 </template>
 
 <script lang="ts" setup>
-import ProfileTab from './ProfileTab/ProfileTab.vue'
-import GroupsTab from './GroupsTab.vue'
-import TagsTab from './TagsTab.vue'
 import type { User, UserDetail } from '@traptitech/traq'
+
 import type { UserModalNavigationItemType } from '/@/store/ui/modal/states'
+
+import GroupsTab from './GroupsTab.vue'
+import ProfileTab from './ProfileTab/ProfileTab.vue'
+import TagsTab from './TagsTab.vue'
 
 withDefaults(
   defineProps<{

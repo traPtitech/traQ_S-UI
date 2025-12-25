@@ -1,6 +1,7 @@
 import { computed } from 'vue'
-import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'
+
 import useResponsive from '/@/composables/useResponsive'
+import { MainViewComponentState, useMainViewStore } from '/@/store/ui/mainView'
 
 const useSidebar = () => {
   const { currentMainViewComponentState: state, isSidebarOpen } =

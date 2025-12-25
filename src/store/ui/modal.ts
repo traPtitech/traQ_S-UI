@@ -1,11 +1,13 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref, toRaw } from 'vue'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import useChannelPath from '/@/composables/useChannelPath'
 import { wait } from '/@/lib/basic/timer'
 import router, { constructChannelPath, constructUserPath } from '/@/router'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import type { ModalState } from '/@/store/ui/modal/states'
 import { useMainViewStore } from '/@/store/ui/mainView'
-import useChannelPath from '/@/composables/useChannelPath'
+import type { ModalState } from '/@/store/ui/modal/states'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
 const useModalStorePinia = defineStore('ui/modal', () => {
   const mainViewStore = useMainViewStore()

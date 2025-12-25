@@ -6,8 +6,8 @@ import {
   resolveMarkdownTheme
 } from '/@/lib/theme/resolve/markdown'
 import type {
-  MarkdownDefaultTheme,
-  ExtendedOptionalMarkdownTheme
+  ExtendedOptionalMarkdownTheme,
+  MarkdownDefaultTheme
 } from '/@/lib/theme/schema'
 
 const basic: ResolvedBasicTheme = {

@@ -26,9 +26,12 @@
 
 <script lang="ts" setup>
 import type { Channel } from '@traptitech/traq'
-import { computed, ref, type HTMLAttributes, nextTick } from 'vue'
-import ChannelHeaderRelationListItem from './ChannelHeaderRelationListItem.vue'
+
+import { type HTMLAttributes, computed, nextTick, ref } from 'vue'
+
 import FormButton from '/@/components/UI/FormButton.vue'
+
+import ChannelHeaderRelationListItem from './ChannelHeaderRelationListItem.vue'
 
 interface Props extends /* @vue-ignore */ HTMLAttributes {
   channels: Channel[]

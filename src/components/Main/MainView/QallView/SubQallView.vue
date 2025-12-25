@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+import { Track } from 'livekit-client'
+
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.vue'
 import { useQall } from '/@/composables/qall/useQall'
-import { useRouter } from 'vue-router'
-import { constructChannelPath } from '/@/router'
 import useChannelPath from '/@/composables/useChannelPath'
-import { Track } from 'livekit-client'
-import UserCard from './UserCard.vue'
+import { constructChannelPath } from '/@/router'
+
 import ScreenShareComponent from './ScreenShareComponent.vue'
+import UserCard from './UserCard.vue'
 
 const {
   tracksMap,
