@@ -7,15 +7,15 @@ import {
 
 import apis from '/@/lib/apis'
 import { wait } from '/@/lib/basic/timer'
-import { isIOSApp } from '/@/lib/dom/browser'
+import { isIOSApp, isPWA, isWebKit } from '/@/lib/dom/browser'
 import router from '/@/router'
+import { useToastStore } from '/@/store/ui/toast'
 import type { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
 import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
 
 import type { FirebasePayloadData } from './firebase'
 import { getFirebaseApp, setupFirebaseApp } from './firebase'
 import { createNotificationArgumentsCreator } from './notificationArguments'
-import { requestNotificationPermission } from './requestPermission'
 import type { OnCanUpdate } from './updateToast'
 import { setupUpdateToast } from './updateToast'
 
@@ -50,7 +50,7 @@ const notify = async (
       return regist.showNotification(notificationTitle, notificationOptions)
     }
   }
-  if (window.Notification?.permission === 'granted') {
+  if (Notification?.permission === 'granted') {
     return new Notification(notificationTitle, notificationOptions)
   }
   return null
@@ -65,10 +65,30 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     }
   }
 
-  if (window.Notification) {
+  if (Notification) {
     if (Notification.permission === 'default') {
-      // 上でNotificationが存在していることを確認している
-      const permission = await requestNotificationPermission()
+      // 上で Notification が存在していることを確認している
+      const permission = await (() => {
+        // WebKit ではユーザージェスチャーを起点としたポップアップのみ許可される
+        if (isWebKit() && isPWA()) {
+          const { addToast, deleteToast } = useToastStore()
+
+          return new Promise<NotificationPermission>((resolve, reject) => {
+            addToast({
+              type: 'info',
+              text: '【通知を有効にしてください】\nメッセージ受信時に通知が届くようになります。（クリックで許可）',
+              timeout: Infinity,
+              onClick: id => {
+                deleteToast(id)
+                Notification.requestPermission().then(resolve).catch(reject)
+              }
+            })
+          })
+        } else {
+          return Notification.requestPermission()
+        }
+      })()
+
       if (permission === 'granted') {
         notify({ title: `ようこそ${appName}へ！！` }, true)
       } else {
@@ -104,9 +124,9 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 
   setupUpdateToast(registration, onCanUpdate)
 
-  if (window.Notification?.permission !== 'granted') {
+  if (Notification?.permission !== 'granted') {
     // eslint-disable-next-line no-console
-    console.warn(`[Notification] permission ${window.Notification?.permission}`)
+    console.warn(`[Notification] permission ${Notification?.permission}`)
     return
   }
   if (!firebaseApp) {
@@ -164,7 +184,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 }
 
 export const deleteToken = () => {
-  if (window.Notification?.permission !== 'granted') return
+  if (Notification?.permission !== 'granted') return
 
   const firebaseApp = getFirebaseApp()
   const messaging = getMessaging(firebaseApp)
