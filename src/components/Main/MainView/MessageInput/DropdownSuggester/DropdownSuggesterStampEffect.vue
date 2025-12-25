@@ -3,8 +3,9 @@
 </template>
 
 <script lang="ts" setup>
-import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import { computed } from 'vue'
+
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 
 const props = defineProps<{

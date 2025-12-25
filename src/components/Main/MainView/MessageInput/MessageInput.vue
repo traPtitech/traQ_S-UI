@@ -67,18 +67,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, toRef, watch, watchEffect } from 'vue'
-import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
-import useAttachments from './composables/useAttachments'
-import useModifierKey from './composables/useModifierKey'
-import usePostMessage from './composables/usePostMessage'
-import MessageInputFileList from './MessageInputFileList.vue'
-import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
-import MessageInputLeftControls from './MessageInputLeftControls.vue'
-import MessageInputPreview from './MessageInputPreview.vue'
-import MessageInputRightControls from './MessageInputRightControls.vue'
-import MessageInputTextArea from './MessageInputTextArea.vue'
-import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
-import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
+
 import { $boolAttr } from '/@/bool-attr'
 import AIcon from '/@/components/UI/AIcon.vue'
 import useFocus from '/@/composables/dom/useFocus'
@@ -90,6 +79,19 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useToastStore } from '/@/store/ui/toast'
 import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
+
+import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
+import MessageInputFileList from './MessageInputFileList.vue'
+import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
+import MessageInputLeftControls from './MessageInputLeftControls.vue'
+import MessageInputPreview from './MessageInputPreview.vue'
+import MessageInputRightControls from './MessageInputRightControls.vue'
+import MessageInputTextArea from './MessageInputTextArea.vue'
+import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
+import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
+import useAttachments from './composables/useAttachments'
+import useModifierKey from './composables/useModifierKey'
+import usePostMessage from './composables/usePostMessage'
 
 const props = defineProps<{
   channelId: ChannelId | DMChannelId

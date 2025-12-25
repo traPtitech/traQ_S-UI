@@ -10,8 +10,9 @@
 </template>
 
 <script lang="ts" setup>
-import DMChannelElement from './DMChannelElement.vue'
 import type { DMChannel } from '@traptitech/traq'
+
+import DMChannelElement from './DMChannelElement.vue'
 
 withDefaults(
   defineProps<{

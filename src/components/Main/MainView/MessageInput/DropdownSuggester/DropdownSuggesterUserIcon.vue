@@ -6,8 +6,8 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
 import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 defineProps<{
   userId: string

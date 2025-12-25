@@ -20,14 +20,16 @@
 </template>
 
 <script lang="ts" setup>
+import { reactive, ref } from 'vue'
+
+import { AxiosError } from 'axios'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
-import { ref, reactive } from 'vue'
-import apis from '/@/lib/apis'
-import type { UserId } from '/@/types/entity-ids'
 import useMaxLength from '/@/composables/utils/useMaxLength'
+import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
-import { AxiosError } from 'axios'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   userId: UserId

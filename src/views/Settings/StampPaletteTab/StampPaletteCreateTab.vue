@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampPalette } from '@traptitech/traq'
 import { computed, onBeforeUnmount, ref } from 'vue'
+
 import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/StampPaletteActionButtons.vue'
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
@@ -26,6 +26,7 @@ import {
 } from '/@/components/Settings/StampPaletteTab/utils'
 import { useBeforeUnload } from '/@/composables/dom/useBeforeUnload'
 import { useToastStore } from '/@/store/ui/toast'
+import type { StampPalette } from '/@/types/entity'
 import type { StampId, StampPaletteId } from '/@/types/entity-ids'
 
 const { addInfoToast, addErrorToast } = useToastStore()

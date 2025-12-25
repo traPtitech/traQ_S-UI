@@ -25,14 +25,16 @@
 </template>
 
 <script lang="ts" setup>
-import PrimaryViewFrame from '../PrimaryViewFrame.vue'
-import DMHeader from './DMHeader/DMHeader.vue'
-import ChannelViewContent from '../ChannelView/ChannelViewContent/ChannelViewContent.vue'
-import DMSidebar from './DMSidebar/DMSidebar.vue'
-import type { ChannelId, MessageId } from '/@/types/entity-ids'
 import { toRef } from 'vue'
+
 import usePinnedMessages from '/@/composables/message/usePinnedMessages'
 import useCurrentViewers from '/@/composables/useCurrentViewers'
+import type { ChannelId, MessageId } from '/@/types/entity-ids'
+
+import ChannelViewContent from '../ChannelView/ChannelViewContent/ChannelViewContent.vue'
+import PrimaryViewFrame from '../PrimaryViewFrame.vue'
+import DMHeader from './DMHeader/DMHeader.vue'
+import DMSidebar from './DMSidebar/DMSidebar.vue'
 
 const props = defineProps<{
   isReady: boolean

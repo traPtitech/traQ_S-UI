@@ -21,14 +21,17 @@
 </template>
 
 <script lang="ts" setup>
-import type { ChannelTreeNode } from '/@/lib/channelTree'
 import type { Channel } from '@traptitech/traq'
-import type { TypedProps } from './composables/usePath'
-import { usePath } from './composables/usePath'
+
+import { computed } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import { useQall } from '/@/composables/qall/useQall'
-import { computed } from 'vue'
+import type { ChannelTreeNode } from '/@/lib/channelTree'
+
+import type { TypedProps } from './composables/usePath'
+import { usePath } from './composables/usePath'
 
 const props = withDefaults(
   defineProps<{

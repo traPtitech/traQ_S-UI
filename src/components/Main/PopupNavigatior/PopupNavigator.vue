@@ -26,15 +26,16 @@
 
 <script lang="ts">
 import {
-  reactive,
-  shallowRef,
-  watch,
   computed,
   onMounted,
   onUnmounted,
-  readonly
+  reactive,
+  readonly,
+  shallowRef,
+  watch
 } from 'vue'
 import { useRouter } from 'vue-router'
+
 import useToggle from '/@/composables/utils/useToggle'
 
 const popupNavigatorButtonId = 'popup-navigation-button'

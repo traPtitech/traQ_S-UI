@@ -58,14 +58,17 @@
 </template>
 
 <script lang="ts" setup>
-import StampItem from './StampItem.vue'
-import { computed, ref, type Ref } from 'vue'
+import { UserPermission } from '@traptitech/traq'
+
+import { type Ref, computed, ref } from 'vue'
+
+import ATab from '/@/components/UI/ATab.vue'
+import { randomString } from '/@/lib/basic/randomString'
+import { compareString } from '/@/lib/basic/string'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
-import { randomString } from '/@/lib/basic/randomString'
-import ATab from '/@/components/UI/ATab.vue'
-import { UserPermission } from '@traptitech/traq'
-import { compareString } from '/@/lib/basic/string'
+
+import StampItem from './StampItem.vue'
 
 const { myId } = useMeStore()
 const { stampsMap } = useStampsStore()

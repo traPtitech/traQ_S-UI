@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useQall } from '/@/composables/qall/useQall'
-import FormButton from '/@/components/UI/FormButton.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
+import FormButton from '/@/components/UI/FormButton.vue'
+import { useQall } from '/@/composables/qall/useQall'
 
 defineProps<{
   open: boolean

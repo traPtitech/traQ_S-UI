@@ -58,15 +58,15 @@
 </template>
 
 <script lang="ts" setup>
-import AudioPlayerPlayButton from '/@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue'
-import AudioPlayerTimeSlider from '/@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
-import AudioPlayerTime from '/@/components/UI/AudioPlayer/AudioPlayerTime.vue'
-import AudioPlayerVolumeSlider from '/@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue'
 import AudioPlayerLoopButton from '/@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
 import AudioPlayerPinPButton from '/@/components/UI/AudioPlayer/AudioPlayerPinPButton.vue'
+import AudioPlayerPlayButton from '/@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue'
+import AudioPlayerTime from '/@/components/UI/AudioPlayer/AudioPlayerTime.vue'
+import AudioPlayerTimeSlider from '/@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
+import AudioPlayerVolumeSlider from '/@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue'
 import AudioPlayerWaveform from '/@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
-import useFileWaveform from '/@/composables/files/useFileWaveform'
 import useFileMeta from '/@/composables/files/useFileMeta'
+import useFileWaveform from '/@/composables/files/useFileWaveform'
 import useAudio from '/@/composables/media/useAudio'
 import { useUsersStore } from '/@/store/entities/users'
 import type { ChannelId, DMChannelId } from '/@/types/entity-ids'

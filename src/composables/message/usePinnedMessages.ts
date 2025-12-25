@@ -1,6 +1,8 @@
-import type { Pin, Message } from '@traptitech/traq'
+import type { Message, Pin } from '@traptitech/traq'
+
 import type { Ref } from 'vue'
 import { ref, watch } from 'vue'
+
 import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'

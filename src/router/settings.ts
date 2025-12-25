@@ -1,8 +1,9 @@
 import type { Component } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
+
 import {
-  settingsStampPaletteRoutes,
-  type SettingsStampPaletteRouteName
+  type SettingsStampPaletteRouteName,
+  settingsStampPaletteRoutes
 } from './settingsStampPalette'
 
 const settingsRouteNamePrefix = 'settings'

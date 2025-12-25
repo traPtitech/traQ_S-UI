@@ -12,10 +12,13 @@
 </template>
 
 <script lang="ts" setup>
-import { toRef } from 'vue'
-import useChannelSubscriptionState from '/@/composables/subscription/useChannelSubscriptionState'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
+
+import { toRef } from 'vue'
+
+import useChannelSubscriptionState from '/@/composables/subscription/useChannelSubscriptionState'
 import type { ChannelId } from '/@/types/entity-ids'
+
 import NotificationStateSelectorItem from './NotificationStateSelectorItem.vue'
 
 const props = defineProps<{

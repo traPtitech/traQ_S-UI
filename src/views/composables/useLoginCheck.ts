@@ -1,8 +1,9 @@
-import { createSingleflight } from '/@/lib/basic/async'
-import router, { RouteName } from '/@/router'
 import { onActivated, onBeforeMount, ref } from 'vue'
-import { useMeStore } from '/@/store/domain/me'
+
+import { createSingleflight } from '/@/lib/basic/async'
 import { setupWebSocket } from '/@/lib/websocket'
+import router, { RouteName } from '/@/router'
+import { useMeStore } from '/@/store/domain/me'
 
 /**
  * ログイン状態かを確認し、ログインしていなかった場合はログイン画面へ遷移する

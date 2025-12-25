@@ -1,7 +1,6 @@
 <template>
-  <div>
+  <div :class="$style.container">
     <LinkButton
-      :class="$style.button"
       :title="`${showTitle ? 'DM' : ''}`"
       icon-name="email"
       icon-mdi
@@ -9,7 +8,6 @@
     />
     <LinkButton
       v-if="homeChannelId !== null"
-      :class="$style.button"
       :title="`${showTitle ? 'ホーム' : ''}`"
       icon-name="home"
       icon-mdi
@@ -19,10 +17,11 @@
 </template>
 
 <script lang="ts" setup>
-import LinkButton from './LinkButton.vue'
-import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
-import { constructUserPath } from '/@/router'
 import useChannelPath from '/@/composables/useChannelPath'
+import { constructUserPath } from '/@/router'
+
+import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
+import LinkButton from './LinkButton.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -49,13 +48,9 @@ const onHomeChannelClick = async (event: MouseEvent) => {
 </script>
 
 <style lang="scss" module>
-.button {
-  margin: 8px 4px;
-  &:first-child {
-    margin-left: 0;
-  }
-  &:last-child {
-    margin-right: 0;
-  }
+.container {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
 }
 </style>

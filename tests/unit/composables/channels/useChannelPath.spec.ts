@@ -1,7 +1,9 @@
-import { createTestingPinia } from '@pinia/testing'
-import { useChannelsStore } from '/@/store/entities/channels'
 import type { Channel } from '@traptitech/traq'
+
+import { createTestingPinia } from '@pinia/testing'
+
 import useChannel from '/@/composables/useChannelPath'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 describe('useChannelPath', () => {
   beforeEach(() => {

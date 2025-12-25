@@ -31,9 +31,9 @@
 </template>
 
 <script lang="ts" setup>
-import AuthenticateInput from './AuthenticateInput.vue'
-import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButton from './AuthenticateButton.vue'
+import AuthenticateHeader from './AuthenticateHeader.vue'
+import AuthenticateInput from './AuthenticateInput.vue'
 import useRegister from './composables/useRegister'
 
 const { registerState, error, register } = useRegister()

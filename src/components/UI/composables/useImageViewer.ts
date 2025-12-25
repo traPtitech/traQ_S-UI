@@ -1,11 +1,12 @@
 import type { Ref } from 'vue'
-import { computed, reactive, onMounted, onBeforeUnmount } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive } from 'vue'
+
 import type { Point } from '/@/lib/basic/point'
 import {
   diff,
+  getAngleBetweenLines,
   getDistance,
-  getMidpoint,
-  getAngleBetweenLines
+  getMidpoint
 } from '/@/lib/basic/point'
 
 const WHEEL_SCALE_DELTAX = new Map<number, number>([

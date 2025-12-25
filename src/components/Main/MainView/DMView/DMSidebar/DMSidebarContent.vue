@@ -19,11 +19,12 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
+
+import ChannelSidebarEvents from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelSidebarEvents.vue'
 import ChannelSidebarPinned from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelSidebarPinned.vue'
 import ChannelSidebarViewers from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelSidebarViewers.vue'
-import ChannelSidebarEvents from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelSidebarEvents.vue'
 import type { UserId } from '/@/types/entity-ids'
-import { ref } from 'vue'
 
 withDefaults(
   defineProps<{

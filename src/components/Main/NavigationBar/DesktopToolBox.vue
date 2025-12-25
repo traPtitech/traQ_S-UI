@@ -25,10 +25,10 @@
 </template>
 
 <script lang="ts" setup>
-import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
 import AppList from '/@/components/Main/NavigationBar/AppList.vue'
+import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
 import useToolBox from '/@/components/Main/NavigationBar/composables/useToolBox'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import { useMeStore } from '/@/store/domain/me'
 
 const { myId } = useMeStore()

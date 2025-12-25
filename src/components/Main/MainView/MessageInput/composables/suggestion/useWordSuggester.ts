@@ -1,6 +1,6 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { computed, ref, toValue, watch } from 'vue'
-import useWordSuggesterList from './useWordSuggestionList'
+
 import useInsertText from '/@/composables/dom/useInsertText'
 import getCaretPosition from '/@/lib/dom/caretPosition'
 import type { Target, WordOrConfirmedPart } from '/@/lib/suggestion/basic'
@@ -10,6 +10,8 @@ import {
   getPrevCandidateIndex,
   getSelectedCandidateIndex
 } from '/@/lib/suggestion/basic'
+
+import useWordSuggesterList from './useWordSuggestionList'
 
 /**
  * 補完を表示する最小の文字数

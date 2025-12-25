@@ -13,10 +13,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampPalette } from '@traptitech/traq'
 import { computed } from 'vue'
-import { isStampPaletteValid } from './utils'
+
 import FormButton from '/@/components/UI/FormButton.vue'
+import type { StampPalette } from '/@/types/entity'
+
+import { isStampPaletteValid } from './utils'
 
 const { palette } = defineProps<{
   palette: StampPalette

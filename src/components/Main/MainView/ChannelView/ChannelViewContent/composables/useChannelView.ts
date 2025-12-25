@@ -1,7 +1,10 @@
-import { computed, ref, type ShallowRef } from 'vue'
-import useChannelMessageFetcher from './useChannelMessageFetcher'
-import { useChannelsStore } from '/@/store/entities/channels'
+import { type ShallowRef, computed, ref } from 'vue'
+
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useChannelsStore } from '/@/store/entities/channels'
+
+import useChannelMessageFetcher from './useChannelMessageFetcher'
+
 export const useChannelView = ({
   channelId,
   entryMessageId,

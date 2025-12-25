@@ -26,8 +26,9 @@
 
 <script lang="ts" setup>
 import ClickOutside from '/@/components/UI/ClickOutside'
-import CommonModalHeader from './ModalHeader.vue'
 import { useModalStore } from '/@/store/ui/modal'
+
+import CommonModalHeader from './ModalHeader.vue'
 
 withDefaults(
   defineProps<{

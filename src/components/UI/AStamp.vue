@@ -14,9 +14,10 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import type { StampId } from '/@/types/entity-ids'
+
 import { buildFilePath } from '/@/lib/apis'
 import { useStampsStore } from '/@/store/entities/stamps'
+import type { StampId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{

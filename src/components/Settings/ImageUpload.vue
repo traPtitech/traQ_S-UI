@@ -9,9 +9,11 @@
 </template>
 
 <script lang="ts" setup>
+import { onUnmounted, ref, shallowRef, watchEffect } from 'vue'
+
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
-import { onUnmounted, ref, shallowRef, watchEffect } from 'vue'
+
 import useObjectURL from '/@/composables/dom/useObjectURL'
 
 const modelValue = defineModel<File>({ required: true })

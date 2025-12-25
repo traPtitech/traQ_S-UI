@@ -29,12 +29,14 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import type { SuggestionItem } from './SearchSuggestionItem.vue'
-import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
-import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
-import SearchSuggestionItem from './SearchSuggestionItem.vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
+
+import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
+import type { SuggestionItem } from './SearchSuggestionItem.vue'
+import SearchSuggestionItem from './SearchSuggestionItem.vue'
+import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
 
 const emit = defineEmits<{
   (e: 'queryInsert'): void

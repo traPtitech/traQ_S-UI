@@ -27,9 +27,10 @@
 </template>
 
 <script lang="ts" setup>
-import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
+import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
 import useFileMeta from '/@/composables/files/useFileMeta'
 
 const props = withDefaults(

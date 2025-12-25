@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useQall } from '/@/composables/qall/useQall'
+
 import VoiceComponent from './VoiceComponent.vue'
 
 const { tracksMap, screenShareTracks } = useQall()

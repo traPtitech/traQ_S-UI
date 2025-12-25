@@ -1,6 +1,7 @@
+import { ref, watchEffect } from 'vue'
+
 import apis from '/@/lib/apis'
 import type { ChannelId } from '/@/types/entity-ids'
-import { ref, watchEffect } from 'vue'
 
 const useChannelBots = (props: { channelId: ChannelId }) => {
   const botUserIds = ref<string[] | undefined>()

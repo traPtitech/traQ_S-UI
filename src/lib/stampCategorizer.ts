@@ -1,7 +1,8 @@
-import type { StampId } from '/@/types/entity-ids'
 import type { Stamp } from '@traptitech/traq'
-import { compareStringInsensitive } from '/@/lib/basic/string'
+
 import { isDefined } from '/@/lib/basic/array'
+import { compareStringInsensitive } from '/@/lib/basic/string'
+import type { StampId } from '/@/types/entity-ids'
 
 type StampName = string
 

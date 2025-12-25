@@ -1,4 +1,4 @@
-import { toValue, type MaybeRefOrGetter, type Ref } from 'vue'
+import { type MaybeRefOrGetter, type Ref, toValue } from 'vue'
 
 /**
  * これを利用したときはCtrl+Zなどがきく

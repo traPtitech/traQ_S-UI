@@ -39,6 +39,10 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
+import { useQall } from '/@/composables/qall/useQall'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
+
 import ChannelSidebarBots from './ChannelSidebarBots.vue'
 import ChannelSidebarEvents from './ChannelSidebarEvents.vue'
 import ChannelSidebarMember from './ChannelSidebarMember.vue'
@@ -47,8 +51,6 @@ import ChannelSidebarQall from './ChannelSidebarQall.vue'
 import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
 import ChannelSidebarTopic from './ChannelSidebarTopic.vue'
 import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
-import { useQall } from '/@/composables/qall/useQall'
-import type { ChannelId, UserId } from '/@/types/entity-ids'
 
 const isViewersDetailOpen = defineModel<boolean>('isViewersDetailOpen', {
   required: true

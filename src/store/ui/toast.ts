@@ -1,5 +1,7 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
 const DEFAULT_TOAST_TIMEOUT = 1500
@@ -23,7 +25,7 @@ export interface Toast {
    *
    * デフォルトはトーストの削除
    */
-  onClick?: () => unknown
+  onClick?: (id: number) => unknown
   /**
    * 自動付与されるid
    */
@@ -39,27 +41,23 @@ const useToastStorePinia = defineStore('ui/toast', () => {
   let nextId = 0
 
   const addToast = (toast: ToastOption) => {
+    const id = nextId++
     toasts.value.unshift({
       ...toast,
       timeout: toast.timeout ?? DEFAULT_TOAST_TIMEOUT,
-      id: nextId
+      id
     })
-    nextId++
 
     while (MAX_TOAST_COUNT < toasts.value.length) {
       toasts.value.pop()
     }
+
+    return id
   }
 
-  const addSuccessToast = (text: string) => {
-    addToast({ type: 'success', text })
-  }
-  const addErrorToast = (text: string) => {
-    addToast({ type: 'error', text })
-  }
-  const addInfoToast = (text: string) => {
-    addToast({ type: 'info', text })
-  }
+  const addSuccessToast = (text: string) => addToast({ type: 'success', text })
+  const addErrorToast = (text: string) => addToast({ type: 'error', text })
+  const addInfoToast = (text: string) => addToast({ type: 'info', text })
 
   const deleteToast = (id: number) => {
     const index = toasts.value.findIndex(toast => toast.id === id)

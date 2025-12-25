@@ -23,8 +23,9 @@
 </template>
 
 <script lang="ts">
-import { shallowRef, watch, computed } from 'vue'
-import type { Component } from 'vue'
+import { computed, shallowRef, watch } from 'vue'
+import type { Component, SVGAttributes } from 'vue'
+
 import mdiPaths from '/@/assets/mdi'
 
 type ComponentModule = {
@@ -60,6 +61,11 @@ const props = withDefaults(
     mdi: false
   }
 )
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-empty-object-type
+interface Attributes extends /* @vue-ignore */ SVGAttributes {}
+
+defineEmits<Attributes>()
 
 const getComponent = async (name: string) => {
   const moduleFunc = iconModules[`/src/assets/icons/${name}.svg`]

@@ -1,6 +1,7 @@
-import { deleteCanvas, loadImage, resetCanvas } from './canvas'
-import { needResize, getThumbnailDimensions } from './size'
 import { mimeToFileType } from '/@/lib/basic/file'
+
+import { deleteCanvas, loadImage, resetCanvas } from './canvas'
+import { getThumbnailDimensions, needResize } from './size'
 
 export const canResize = (mime: string) =>
   ['image/png', 'image/jpeg'].includes(mime)

@@ -1,17 +1,18 @@
 /* eslint-env node */
 /* eslint-disable no-console */
-import axios from 'axios'
-import postcss from 'postcss'
-import { createFont, woff2 } from 'fonteditor-core'
 import fs from 'fs/promises'
+import { Buffer } from 'node:buffer'
 import path from 'path'
-import zlib from 'zlib'
+import process from 'process'
 import util from 'util'
+import zlib from 'zlib'
+
+import axios from 'axios'
+import browserslist from 'browserslist'
 import esbuild from 'esbuild'
 import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
-import browserslist from 'browserslist'
-import { Buffer } from 'node:buffer'
-import process from 'process'
+import { createFont, woff2 } from 'fonteditor-core'
+import postcss from 'postcss'
 
 const brotliCompress = util.promisify(zlib.brotliCompress)
 

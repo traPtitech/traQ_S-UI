@@ -24,6 +24,7 @@
 
 <script lang="ts">
 import { computed } from 'vue'
+
 import useUserList from '/@/composables/users/useUserList'
 import useTextFilter from '/@/composables/utils/useTextFilter'
 import type { UserId } from '/@/types/entity-ids'

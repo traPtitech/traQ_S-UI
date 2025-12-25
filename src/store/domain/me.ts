@@ -1,12 +1,17 @@
-import type { UserId } from '/@/types/entity-ids'
 import type { MyUserDetail } from '@traptitech/traq'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+
 import { computed, toRefs } from 'vue'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
+import { useRouter } from 'vue-router'
+
+import { isAxiosError } from 'axios'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
+import apis from '/@/lib/apis'
 import { deleteToken } from '/@/lib/notification/notification'
 import { wsListener } from '/@/lib/websocket'
-import apis from '/@/lib/apis'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import type { UserId } from '/@/types/entity-ids'
 
 export type IDBState = {
   detail: Readonly<MyUserDetail> | undefined
@@ -16,21 +21,45 @@ const useMeStorePinia = defineStore('domain/me', () => {
   const initialValue: IDBState = {
     detail: undefined
   }
+  const router = useRouter()
 
   // TODO: ログインチェック時にrestoreを待つ必要があるかもしれない
   const [state] = useIndexedDbValue('store/domain/me', 1, {}, initialValue)
 
   const myId = computed(() => state.detail?.id)
 
-  const fetchMe = async () => {
-    try {
-      const { data } = await apis.getMe()
-      state.detail = data
-      return data
-    } catch {
-      state.detail = undefined
-      return undefined
+  const fetchMe = async (): Promise<MyUserDetail | undefined> => {
+    const retryDelayMs = 1000 // 1 sec
+    const retryMaxCount = 10
+
+    for (let i = 0; i < retryMaxCount; i++) {
+      try {
+        const { data } = await apis.getMe()
+        state.detail = data
+        return data
+      } catch (error) {
+        state.detail = undefined
+
+        if (!isAxiosError(error)) {
+          // eslint-disable-next-line no-console
+          console.error(new Error('Failed to fetchMe:', { cause: error }))
+          return undefined
+        }
+        if (error.status === 401) {
+          router.push('/login')
+          return undefined
+        }
+
+        // FIXME: エラーハンドリングのためにとりあえず retry しています
+        // eslint-disable-next-line no-console
+        console.warn('Failed to fetchMe, retrying...', { cause: error })
+        await new Promise(resolve => setTimeout(resolve, retryDelayMs))
+      }
     }
+
+    // eslint-disable-next-line no-console
+    console.error(new Error(`Failed to fetchMe after ${retryMaxCount} retry`))
+    return undefined
   }
   const logout = async ({
     allSession = false

@@ -3,7 +3,8 @@
  */
 
 // URLの一部になっているときは置換しない (URLの正規表現は完全ではない)
-const urlRegexStr = '(?:https?://)?(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]+(?:/[^/]+)*/?'
+const urlRegexStr =
+  '(?:https?://)?(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]+(?:/[^/\\s]*)*/?'
 const urlStartRegex = new RegExp(`^${urlRegexStr}`)
 const mentionRegex = new RegExp(
   `(${urlRegexStr})?:?[@＠]([^\\s@＠.]{0,31}[^\\s@＠:.])\\.?`,

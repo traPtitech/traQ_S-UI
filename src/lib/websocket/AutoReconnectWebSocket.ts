@@ -1,5 +1,6 @@
-import type { WebSocketCommand } from '.'
 import { wait } from '/@/lib/basic/timer'
+
+import type { WebSocketCommand } from '.'
 
 export interface Options {
   maxReconnectionDelay: number

@@ -1,22 +1,25 @@
-import type { ChannelId } from '/@/types/entity-ids'
-import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
-import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
-import useChannelPath from '/@/composables/useChannelPath'
 import { computed, ref, unref } from 'vue'
-import { nullUuid } from '/@/lib/basic/uuid'
-import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
+
+import type { AxiosProgressEvent } from 'axios'
+
+import useMessageInputStateStatic from '/@/composables/messageInputState/useMessageInputStateStatic'
+import useChannelPath from '/@/composables/useChannelPath'
+import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
-import { useToastStore } from '/@/store/ui/toast'
+import { nullUuid } from '/@/lib/basic/uuid'
+import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
+import { isEmbeddedLink } from '/@/lib/markdown/markdown'
+import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
+import { useChannelTree } from '/@/store/domain/channelTree'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useUsersStore } from '/@/store/entities/users'
 import type {
   Attachment,
   MessageInputStateKey
 } from '/@/store/ui/messageInputStateStore'
-import useMessageInputStateStatic from '/@/composables/messageInputState/useMessageInputStateStatic'
-import { useChannelTree } from '/@/store/domain/channelTree'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useUsersStore } from '/@/store/entities/users'
-import { useGroupsStore } from '/@/store/entities/groups'
-import type { AxiosProgressEvent } from 'axios'
+import { useToastStore } from '/@/store/ui/toast'
+import type { ChannelId } from '/@/types/entity-ids'
 
 /**
  * @param progress アップロード進行状況 0～1
@@ -45,9 +48,30 @@ const uploadAttachments = async (
   return responses.map(res => buildFilePathForPost(res.data.id))
 }
 
-const createContent = (embededText: string, fileUrls: string[]) => {
-  const embededUrls = fileUrls.join('\n')
-  return embededText + (embededText && embededUrls ? '\n\n' : '') + embededUrls
+export const createContent = async (
+  embeddedText: string,
+  fileUrls: string[]
+) => {
+  const joinContents = (delimiter: string, contents: string[]) =>
+    contents.filter(Boolean).join(delimiter)
+
+  const embeddedUrls = fileUrls.join('\n')
+  const trimmedEmbeddedText = embeddedText.trimEnd()
+
+  if (trimmedEmbeddedText === '') {
+    return joinContents('\n', [embeddedText, embeddedUrls])
+  }
+
+  const trimmedEmbeddedTextLines = trimmedEmbeddedText.split(`\n`)
+
+  if (
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await isEmbeddedLink(trimmedEmbeddedTextLines.at(-1)!)
+  ) {
+    return joinContents('\n', [trimmedEmbeddedText, embeddedUrls])
+  }
+
+  return joinContents('\n\n', [embeddedText, embeddedUrls])
 }
 
 const usePostMessage = (
@@ -66,8 +90,9 @@ const usePostMessage = (
   const isForce = computed(() => channelsMap.value.get(unref(channelId))?.force)
   const confirmString = computed(
     () =>
-      `#${channelIdToShortPathString(
-        unref(channelId)
+      `${channelIdToShortPathString(
+        unref(channelId),
+        true
       )}に投稿されたメッセージは全員に通知されます。メッセージを投稿しますか？\n注) このチャンネルは重要な連絡以外には使用しないでください。`
   )
 
@@ -109,7 +134,7 @@ const usePostMessage = (
     const dummyFileUrls = state.attachments.map(() =>
       buildFilePathForPost(nullUuid)
     )
-    const dummyText = createContent(embededText, dummyFileUrls)
+    const dummyText = await createContent(embededText, dummyFileUrls)
     if (countLength(dummyText) > MESSAGE_MAX_LENGTH) {
       addErrorToast('メッセージが長すぎます')
       return
@@ -124,7 +149,7 @@ const usePostMessage = (
       })
 
       await apis.postMessage(cId, {
-        content: createContent(embededText, fileUrls)
+        content: await createContent(embededText, fileUrls)
       })
 
       clearState()

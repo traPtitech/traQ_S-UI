@@ -17,12 +17,14 @@
 </template>
 
 <script lang="ts" setup>
-import ProfileHeader from './ProfileHeader.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
+
 import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
+import ProfileHeader from './ProfileHeader.vue'
 
 const props = defineProps<{
   channelId?: string | null

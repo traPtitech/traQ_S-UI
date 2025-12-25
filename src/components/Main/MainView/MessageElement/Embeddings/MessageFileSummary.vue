@@ -1,14 +1,14 @@
 <template>
   <div :class="$style.container">
     <div v-if="fileMetaDataState.images.length > 0" :class="$style.list">
-      <SearchResultMessageImage
+      <MessageFileSummaryImage
         v-for="image in fileMetaDataState.images"
         :key="image.id"
         :file-id="image.id"
       />
     </div>
     <div v-if="files.length > 0" :class="$style.list">
-      <SearchResultMessageFile
+      <MessageFileSummaryFile
         v-for="file in files"
         :key="file.id"
         :file-id="file.id"
@@ -18,11 +18,13 @@
 </template>
 
 <script lang="ts" setup>
-import SearchResultMessageImage from './SearchResultMessageImage.vue'
-import SearchResultMessageFile from './SearchResultMessageFile.vue'
 import { computed } from 'vue'
+
 import useFileMetaList from '/@/composables/message/useFileMetaList'
 import type { FileId } from '/@/types/entity-ids'
+
+import MessageFileSummaryFile from './MessageFileSummaryFile.vue'
+import MessageFileSummaryImage from './MessageFileSummaryImage.vue'
 
 const props = withDefaults(
   defineProps<{

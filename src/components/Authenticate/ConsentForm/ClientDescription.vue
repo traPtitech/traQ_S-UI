@@ -28,8 +28,9 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
 import type { OAuth2Client, User } from '@traptitech/traq'
+
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 defineProps<{
   client: OAuth2Client

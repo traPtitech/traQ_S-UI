@@ -24,10 +24,11 @@
 </template>
 
 <script lang="ts" setup>
-import CloseButton from '/@/components/UI/CloseButton.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import { useCommandPalette } from '/@/store/app/commandPalette'
 import { computed, onMounted, shallowRef, watch } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
+import CloseButton from '/@/components/UI/CloseButton.vue'
+import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const { isMobile } = useResponsiveStore()

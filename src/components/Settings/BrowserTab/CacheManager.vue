@@ -18,8 +18,9 @@
 
 <script lang="ts">
 import { onMounted, ref } from 'vue'
-import { checkStorageManagerSupport } from '/@/lib/dom/browser'
+
 import { prettifyFileSize } from '/@/lib/basic/file'
+import { checkStorageManagerSupport } from '/@/lib/dom/browser'
 
 const isStorageManagerSupported = checkStorageManagerSupport()
 const getStorageUsage = async () => {

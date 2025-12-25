@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:24.7.0-alpine AS build
+FROM --platform=$BUILDPLATFORM node:25.1.0-alpine AS build
 WORKDIR /app
 
 ENV CYPRESS_INSTALL_BINARY=0

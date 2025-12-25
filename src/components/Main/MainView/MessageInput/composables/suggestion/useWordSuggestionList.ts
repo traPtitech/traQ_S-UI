@@ -1,16 +1,17 @@
+import { computed, onBeforeUnmount, ref, toValue } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
+
+import useChannelPath from '/@/composables/useChannelPath'
+import useUserList from '/@/composables/users/useUserList'
+import { isDefined } from '/@/lib/basic/array'
 import TrieTree from '/@/lib/basic/trieTree'
 import { animeEffectSet, sizeEffectSet } from '/@/lib/markdown/effects'
-import type { MaybeRefOrGetter } from 'vue'
-import { ref, onBeforeUnmount, computed, toValue } from 'vue'
+import { type Word, getDeterminedCharacters } from '/@/lib/suggestion/basic'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useGroupsStore } from '/@/store/entities/groups'
 import type { EntityEventMap } from '/@/store/entities/mitt'
 import { entityMitt } from '/@/store/entities/mitt'
-import { getDeterminedCharacters, type Word } from '/@/lib/suggestion/basic'
-import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
-import useUserList from '/@/composables/users/useUserList'
-import { useChannelsStore } from '/@/store/entities/channels'
-import useChannelPath from '/@/composables/useChannelPath'
-import { isDefined } from '/@/lib/basic/array'
 
 const events: Array<keyof EntityEventMap> = [
   'setUser',

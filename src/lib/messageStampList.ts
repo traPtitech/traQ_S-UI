@@ -1,4 +1,5 @@
 import type { MessageStamp } from '@traptitech/traq'
+
 import type { StampId, UserId } from '/@/types/entity-ids'
 
 /**

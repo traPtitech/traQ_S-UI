@@ -12,11 +12,13 @@
 </template>
 
 <script lang="ts" setup>
-import ShareTargetForm from './ShareTargetForm.vue'
-import AuthenticateHeader from '/@/components/Authenticate/AuthenticateHeader.vue'
 import { computed, ref, watchEffect } from 'vue'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+
+import AuthenticateHeader from '/@/components/Authenticate/AuthenticateHeader.vue'
 import { wait } from '/@/lib/basic/timer'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+
+import ShareTargetForm from './ShareTargetForm.vue'
 
 const props = withDefaults(
   defineProps<{

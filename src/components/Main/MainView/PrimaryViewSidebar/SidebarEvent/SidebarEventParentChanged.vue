@@ -11,10 +11,13 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarEventFrame from './SidebarEventFrame.vue'
-import { computed } from 'vue'
 import type { ParentChangedEvent } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
 import useChannelPath from '/@/composables/useChannelPath'
+
+import SidebarEventFrame from './SidebarEventFrame.vue'
 
 const props = defineProps<{
   datetime: string

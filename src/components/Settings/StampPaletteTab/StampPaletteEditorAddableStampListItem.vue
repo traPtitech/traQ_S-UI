@@ -6,6 +6,7 @@
 
 <script lang="ts" setup>
 import type { Stamp } from '@traptitech/traq'
+
 import AStamp from '/@/components/UI/AStamp.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
 

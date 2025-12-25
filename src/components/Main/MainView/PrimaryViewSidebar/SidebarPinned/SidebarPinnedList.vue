@@ -13,9 +13,11 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarPinnedMessage from './SidebarPinnedMessage.vue'
-import { computed } from 'vue'
 import type { Pin } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import SidebarPinnedMessage from './SidebarPinnedMessage.vue'
 
 const props = withDefaults(
   defineProps<{

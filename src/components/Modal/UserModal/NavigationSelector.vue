@@ -6,19 +6,18 @@
       :icon-name="item.iconName"
       :icon-mdi="item.iconMdi"
       :is-selected="currentNavigation === item.type"
-      @click="onNavigationItemClick(item.type)"
+      @click="emit('navigationChange', item.type)"
     />
   </section>
 </template>
 
 <script lang="ts" setup>
 import NavigationSelectorItem from '/@/components/Modal/UserModal/NavigationSelectorItem.vue'
-import type { NavigationItemType } from './composables/useNavigation'
-import { useNavigationSelectorItem } from './composables/useNavigation'
+import type { UserModalNavigationItemType } from '/@/store/ui/modal/states'
 
 withDefaults(
   defineProps<{
-    currentNavigation?: NavigationItemType
+    currentNavigation?: UserModalNavigationItemType
   }>(),
   {
     currentNavigation: 'profile' as const
@@ -26,11 +25,11 @@ withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'navigationChange', _type: NavigationItemType): void
+  (e: 'navigationChange', _type: UserModalNavigationItemType): void
 }>()
 
 const items: {
-  type: NavigationItemType
+  type: UserModalNavigationItemType
   iconName: string
   iconMdi?: true
 }[] = [
@@ -48,7 +47,6 @@ const items: {
     iconMdi: true
   }
 ]
-const { onNavigationItemClick } = useNavigationSelectorItem(emit)
 </script>
 
 <style lang="scss" module>

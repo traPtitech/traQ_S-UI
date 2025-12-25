@@ -1,8 +1,9 @@
 import type { Ref } from 'vue'
 import { computed, watch } from 'vue'
+
 import useSwipeDetector from '/@/composables/mainView/useSwipeDetector'
 import useSwipeDrawer from '/@/composables/mainView/useSwipeDrawer'
-import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'
+import { MainViewComponentState, useMainViewStore } from '/@/store/ui/mainView'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 type DrawerType = 'none' | 'nav' | 'sidebar'

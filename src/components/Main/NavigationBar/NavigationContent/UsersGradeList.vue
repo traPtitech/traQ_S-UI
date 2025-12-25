@@ -14,15 +14,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import type { User } from '@traptitech/traq'
-import { isDefined } from '/@/lib/basic/array'
-import { useChannelsStore } from '/@/store/entities/channels'
-import UsersSeparator from './UsersSeparator.vue'
-import UsersElement from './UsersElement.vue'
+
+import { computed } from 'vue'
+
 import SlideDown from '/@/components/UI/SlideDown.vue'
 import useToggle from '/@/composables/utils/useToggle'
+import { isDefined } from '/@/lib/basic/array'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useChannelsStore } from '/@/store/entities/channels'
+
+import UsersElement from './UsersElement.vue'
+import UsersSeparator from './UsersSeparator.vue'
 
 const props = defineProps<{
   name: string

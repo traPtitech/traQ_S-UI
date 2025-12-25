@@ -4,7 +4,6 @@
  *
  * ただし、hwb、lab、lch、oklab、oklch、colorには未対応
  */
-
 import { trimEnd } from './string'
 
 export type Color = RGBColor | HSLColor

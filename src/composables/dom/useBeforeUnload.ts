@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, type ComputedRef, type Ref } from 'vue'
+import { type ComputedRef, type Ref, onMounted, onUnmounted } from 'vue'
 
 export const useBeforeUnload = (
   isEnabled: Ref<boolean> | ComputedRef<boolean>,

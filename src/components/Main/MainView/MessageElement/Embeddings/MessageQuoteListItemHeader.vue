@@ -6,6 +6,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
 import { useUsersStore } from '/@/store/entities/users'
 import type { UserId } from '/@/types/entity-ids'
 

@@ -1,6 +1,8 @@
 import { ChannelViewState } from '@traptitech/traq'
+
 import { computed, onMounted, onUnmounted, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
+
 import { changeViewState } from '/@/lib/websocket'
 import { RouteName } from '/@/router'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
@@ -30,7 +32,7 @@ const useViewStateSender = () => {
   })
 
   const state = computed(() => {
-    if (!shouldReceiveLatestMessages.value) return ChannelViewState.None
+    if (!shouldReceiveLatestMessages.value) return ChannelViewState.StaleViewing
     // 最新メッセージ閲覧中でない場合はタイピング中でもEditingにしてはいけない
     // (Editingにすると未読に追加されなくなるため)
     return isTyping.value

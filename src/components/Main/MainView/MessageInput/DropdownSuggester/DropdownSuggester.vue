@@ -30,10 +30,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, type ComponentPublicInstance } from 'vue'
-import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
+import { type ComponentPublicInstance, computed } from 'vue'
+
 import { isIOS } from '/@/lib/dom/browser'
 import type { Candidate, WordOrConfirmedPart } from '/@/lib/suggestion/basic'
+
+import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 
 const props = withDefaults(
   defineProps<{

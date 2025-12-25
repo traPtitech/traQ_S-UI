@@ -1,19 +1,23 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
-import type { UnreadChannel, Message } from '@traptitech/traq'
+import type { Message, UnreadChannel } from '@traptitech/traq'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
+
 import { computed, ref } from 'vue'
-import { checkBadgeAPISupport } from '/@/lib/dom/browser'
-import { removeNotification } from '/@/lib/notification/notification'
-import { messageMitt } from '/@/store/entities/messages'
-import { detectMentionOfMe } from '/@/lib/markdown/detector'
-import { wsListener } from '/@/lib/websocket'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import apis from '/@/lib/apis'
-import { useTrueChangedPromise } from '/@/store/utils/promise'
+import { checkBadgeAPISupport } from '/@/lib/dom/browser'
+import { detectMentionOfMe } from '/@/lib/markdown/detector'
+import { removeNotification } from '/@/lib/notification/notification'
+import { wsListener } from '/@/lib/websocket'
 import { useChannelsStore } from '/@/store/entities/channels'
-import { useViewStatesStore } from './viewStates'
+import { messageMitt } from '/@/store/entities/messages'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import { useTrueChangedPromise } from '/@/store/utils/promise'
+import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
+
 import { useMeStore } from './me'
+import { useViewStatesStore } from './viewStates'
 
 const isBadgingAPISupported = checkBadgeAPISupport()
 

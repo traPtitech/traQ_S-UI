@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import { parseColor } from '/@/lib/basic/color'
 
 /**

@@ -24,6 +24,7 @@
 
 <script lang="ts" setup>
 import { onMounted, shallowRef } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import useOnInput from '/@/composables/useOnInput'
 import { isTouchDevice } from '/@/lib/dom/browser'
@@ -38,7 +39,14 @@ const props = withDefaults(
     disableIme?: boolean
     title?: string
     focusOnMount?: boolean
-    enterkeyhint?: string
+    enterkeyhint?:
+      | 'done'
+      | 'send'
+      | 'search'
+      | 'enter'
+      | 'go'
+      | 'next'
+      | 'previous'
   }>(),
   {
     onSecondary: false,

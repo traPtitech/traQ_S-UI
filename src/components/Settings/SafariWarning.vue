@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { isSafari, isIOSApp, isPWA } from '/@/lib/dom/browser'
+import { isIOSApp, isPWA, isSafari } from '/@/lib/dom/browser'
 
 const showSafariWarning = isSafari() && !isIOSApp(window) && !isPWA()
 </script>

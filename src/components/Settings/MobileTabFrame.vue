@@ -12,9 +12,10 @@
 </template>
 
 <script lang="ts" setup>
-import TabContentTitle from './TabContentTitle.vue'
-import ReturnButton from '/@/components/UI/ReturnButton.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
+import ReturnButton from '/@/components/UI/ReturnButton.vue'
+
+import TabContentTitle from './TabContentTitle.vue'
 import useSettingsNavigation from './composables/useNavigation'
 
 const { showRoot, close } = useSettingsNavigation()

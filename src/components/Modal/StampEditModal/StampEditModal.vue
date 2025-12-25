@@ -14,7 +14,7 @@
           :class="$style.form"
           focus-on-mount
         />
-        <FormSelector
+        <FormSelectorFilterable
           v-model="state.creatorId"
           label="所有者"
           :options="creatorOptions"
@@ -36,14 +36,15 @@
 
 <script lang="ts" setup>
 import type { Stamp } from '@traptitech/traq'
-import type { AxiosError } from 'axios'
+
 import type { Ref } from 'vue'
 import { computed, reactive, ref } from 'vue'
-import ModalFrame from '../Common/ModalFrame.vue'
+
+import type { AxiosError } from 'axios'
+
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
 import useUserList from '/@/composables/users/useUserList'
 import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
 import { isValidStampName } from '/@/lib/validate'
@@ -51,6 +52,9 @@ import { useStampsStore } from '/@/store/entities/stamps'
 import { useModalStore } from '/@/store/ui/modal'
 import { useToastStore } from '/@/store/ui/toast'
 import type { StampId } from '/@/types/entity-ids'
+
+import FormSelectorFilterable from '../../UI/FormSelectorFilterable.vue'
+import ModalFrame from '../Common/ModalFrame.vue'
 
 type StampEditState = Pick<Stamp, 'name' | 'creatorId'>
 

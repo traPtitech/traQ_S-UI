@@ -94,6 +94,11 @@
         label: 'rucQ',
         iconPath: 'rucq.svg',
         appLink: 'https://rucq.trap.jp/'
+      },
+      {
+        label: 'traP Collection',
+        iconPath: 'traPCollection.svg',
+        appLink: 'https://collection.trap.jp/'
       }
     ],
     ogpIgnoreHostNames: [

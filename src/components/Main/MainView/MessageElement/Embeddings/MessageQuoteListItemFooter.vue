@@ -7,7 +7,10 @@
       <router-link v-else :to="channelLink">
         {{ channelPath }}
       </router-link>
-      - {{ date }}
+      -
+      <time :datetime="date.toISOString()">{{
+        getDateRepresentation(date)
+      }}</time>
     </span>
     <MessageLink
       v-if="!disableLinks"
@@ -20,15 +23,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import type { Message } from '@traptitech/traq'
+
+import { type DeepReadonly, computed } from 'vue'
+
+import MessageLink from '/@/components/UI/MessageLink.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getDateRepresentation } from '/@/lib/basic/date'
-import MessageLink from '/@/components/UI/MessageLink.vue'
 
 const props = withDefaults(
   defineProps<{
-    message: Message
+    message: DeepReadonly<Message>
+    date?: Date
     disableLinks?: boolean
   }>(),
   {
@@ -44,19 +50,15 @@ const channelPath = computed(
 const channelLink = computed(
   () => channelIdToLink(props.message.channelId) ?? ''
 )
-const date = computed(
-  () => getDateRepresentation(props.message.createdAt) ?? ''
-)
+const date = computed(() => props.date ?? new Date(props.message.createdAt))
 </script>
 
 <style lang="scss" module>
 .container {
   @include color-ui-secondary;
   @include size-body2;
-  padding-left: 8px;
   align-self: end;
   word-break: keep-all;
-  overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
   min-width: 0;
 }

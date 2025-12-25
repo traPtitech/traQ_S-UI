@@ -20,8 +20,10 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import SemiFixedSizeText from './SemiFixedSizeText.vue'
+
 import ASlider from '/@/components/UI/ASlider.vue'
+
+import SemiFixedSizeText from './SemiFixedSizeText.vue'
 
 const modelValue = defineModel<number>({ required: true })
 

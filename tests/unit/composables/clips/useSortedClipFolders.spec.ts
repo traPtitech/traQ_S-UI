@@ -1,5 +1,7 @@
-import { createTestingPinia } from '@pinia/testing'
 import type { ClipFolder } from '@traptitech/traq'
+
+import { createTestingPinia } from '@pinia/testing'
+
 import useSortedClipFolders from '/@/composables/clips/useSortedClipFolders'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 

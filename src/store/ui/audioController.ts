@@ -1,5 +1,7 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import { destroyAudio } from '/@/lib/dom/audio'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { FileId } from '/@/types/entity-ids'

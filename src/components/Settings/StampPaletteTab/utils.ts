@@ -1,7 +1,7 @@
-import type { StampPalette } from '@traptitech/traq'
 import router from '/@/router'
 import { settingsStampPaletteRouteName } from '/@/router/settings'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import type { StampPalette } from '/@/types/entity'
 
 const { createStampPalette, editStampPalette } = useStampPalettesStore()
 

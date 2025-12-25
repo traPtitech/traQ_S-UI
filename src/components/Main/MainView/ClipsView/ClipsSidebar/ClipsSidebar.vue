@@ -14,13 +14,15 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
+
 import PrimaryViewSidebar from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebar.vue'
 import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
 import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
-import ClipsSidebarContent from './ClipsSidebarContent.vue'
-import { computed } from 'vue'
-import type { ClipFolderId } from '/@/types/entity-ids'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+import type { ClipFolderId } from '/@/types/entity-ids'
+
+import ClipsSidebarContent from './ClipsSidebarContent.vue'
 
 const props = defineProps<{
   clipFolderId: ClipFolderId

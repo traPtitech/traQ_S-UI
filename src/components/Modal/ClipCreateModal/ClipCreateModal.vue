@@ -22,12 +22,14 @@
 <script lang="ts">
 import type { Ref } from 'vue'
 import { computed, ref } from 'vue'
-import apis from '/@/lib/apis'
-import type { MessageId, ClipFolderId } from '/@/types/entity-ids'
-import { useToastStore } from '/@/store/ui/toast'
+
 import type { AxiosError } from 'axios'
-import { useMessagesStore } from '/@/store/entities/messages'
+
 import useSortedClipFolders from '/@/composables/clips/useSortedClipFolders'
+import apis from '/@/lib/apis'
+import { useMessagesStore } from '/@/store/entities/messages'
+import { useToastStore } from '/@/store/ui/toast'
+import type { ClipFolderId, MessageId } from '/@/types/entity-ids'
 
 const useCreateClip = (
   props: { messageId: MessageId },
@@ -70,9 +72,10 @@ const useCreateClip = (
 </script>
 
 <script lang="ts" setup>
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
+
 import ModalFrame from '../Common/ModalFrame.vue'
 import ClipFolderElement from './ClipFolderElement.vue'
-import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 
 const props = defineProps<{
   messageId: string

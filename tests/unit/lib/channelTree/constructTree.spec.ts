@@ -1,4 +1,4 @@
-import type { ChannelTree, ChannelLike } from '/@/lib/channelTree'
+import type { ChannelLike, ChannelTree } from '/@/lib/channelTree'
 import { constructTree, constructTreeFromIds } from '/@/lib/channelTree'
 import type { ChannelId } from '/@/types/entity-ids'
 

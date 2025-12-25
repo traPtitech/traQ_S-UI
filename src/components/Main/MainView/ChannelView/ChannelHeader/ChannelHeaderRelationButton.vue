@@ -26,11 +26,13 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import ChannelHeaderRelationPopup from './ChannelHeaderRelationPopup.vue'
 import { reactive } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import type { Point } from '/@/lib/basic/point'
 import { randomString } from '/@/lib/basic/randomString'
+
+import ChannelHeaderRelationPopup from './ChannelHeaderRelationPopup.vue'
 
 const props = defineProps<{
   channelId: string
@@ -91,14 +93,14 @@ const focusTrigger = () => {
 
   cursor: pointer;
   overflow: hidden;
-  height: 24px;
+  height: 100%;
   width: 24px;
   margin: 0 8px;
   display: grid;
   place-items: center;
   flex-shrink: 0;
   position: sticky;
-  right: 0;
+  right: -1px;
 
   transition: transform 0.1s;
 

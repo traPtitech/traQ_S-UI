@@ -1,6 +1,11 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref } from 'vue'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import { channelIdToPathString } from '/@/lib/channel'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type {
   ChannelId,
@@ -8,9 +13,6 @@ import type {
   DMChannelId,
   MessageId
 } from '/@/types/entity-ids'
-import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useUsersStore } from '/@/store/entities/users'
 
 interface ViewInformationBase {
   type: string

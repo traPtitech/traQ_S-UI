@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="show || isStampPickerOpen || contextMenuPosition"
+    v-if="show"
     ref="containerEle"
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
@@ -8,7 +8,7 @@
     <transition v-if="!isMinimum" name="quick-reaction">
       <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
         <AStamp
-          v-for="stamp in recentStamps"
+          v-for="stamp in topStamps"
           :key="stamp"
           :stamp-id="stamp"
           :size="28"
@@ -85,22 +85,26 @@
 
 <script lang="ts" setup>
 import type { Stamp } from '@traptitech/traq'
-import { computed, ref, toRef } from 'vue'
-import MessageContextMenu from './MessageContextMenu.vue'
+
+import { computed, ref, toRef, watch } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
 import useContextMenu from '/@/composables/useContextMenu'
 import useToggle from '/@/composables/utils/useToggle'
+import { isDefined } from '/@/lib/basic/array'
 import { useStampUpdater } from '/@/lib/updater/stamp'
 import { useMeStore } from '/@/store/domain/me'
-import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useTopStampIds } from '/@/store/domain/stampRecommendations'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import type { MessageId, StampId } from '/@/types/entity-ids'
+
+import MessageContextMenu from './MessageContextMenu.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -114,7 +118,9 @@ const props = withDefaults(
   }
 )
 
-const { recentStampIds } = useStampHistory()
+const isActive = defineModel<boolean>('isActive', { default: false })
+
+const { topStampIds } = useTopStampIds()
 const { addStampOptimistically } = useStampUpdater()
 const { initialRecentStamps } = useStampsStore()
 
@@ -133,10 +139,10 @@ const pushInitialRecentStampsIfNeeded = (
   }
 }
 
-const recentStamps = computed(() => {
-  const recents = recentStampIds.value.slice(0, 3)
-  pushInitialRecentStampsIfNeeded(initialRecentStamps.value, recents)
-  return recents
+const topStamps = computed(() => {
+  const tops = topStampIds.value.slice(0, 3)
+  pushInitialRecentStampsIfNeeded(initialRecentStamps.value, tops)
+  return tops
 })
 const addStamp = async (stampId: StampId) =>
   addStampOptimistically(props.messageId, stampId)
@@ -174,6 +180,14 @@ const onDotsClick = (e: MouseEvent) => {
     y: e.pageY
   })
 }
+
+watch(
+  () => isStampPickerOpen.value || isDefined(contextMenuPosition.value),
+  value => {
+    isActive.value = value
+  },
+  { immediate: true }
+)
 
 const { isMobile } = useResponsiveStore()
 

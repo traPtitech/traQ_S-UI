@@ -1,6 +1,7 @@
+import { isReactive, isRef, toRaw } from 'vue'
+
 import type { Pinia, Store, StoreGeneric } from 'pinia'
 import { storeToRefs } from 'pinia'
-import { isReactive, isRef, toRaw } from 'vue'
 
 type StoreToRefs<SS extends Store> = ReturnType<typeof storeToRefs<SS>>
 type ToRefsedStore<SS extends Store> = Omit<SS, keyof StoreToRefs<SS>> &

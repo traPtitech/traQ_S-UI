@@ -51,20 +51,21 @@
 </template>
 
 <script lang="ts" setup>
-import EmptyState from '/@/components/UI/EmptyState.vue'
+import { computed, toRaw } from 'vue'
+
 import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
 import ChannelTree from '/@/components/Main/NavigationBar/ChannelList/ChannelTree.vue'
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
-import { computed, toRaw } from 'vue'
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import EmptyState from '/@/components/UI/EmptyState.vue'
+import { useQall } from '/@/composables/qall/useQall'
+import useChannelsWithNotification from '/@/composables/subscription/useChannelsWithNotification'
+import { filterTrees } from '/@/lib/basic/tree'
 import { constructTreeFromIds } from '/@/lib/channelTree'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
-import useChannelsWithNotification from '/@/composables/subscription/useChannelsWithNotification'
-import { filterTrees } from '/@/lib/basic/tree'
-import { useQall } from '/@/composables/qall/useQall'
-import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const { homeChannelTree } = useChannelTree()
 const { detail } = useMeStore()

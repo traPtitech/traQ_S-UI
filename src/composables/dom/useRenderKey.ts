@@ -1,7 +1,8 @@
 import { computed } from 'vue'
+
 import {
-  useRenderKeyStore,
-  type RenderKeyStoreId
+  type RenderKeyStoreId,
+  useRenderKeyStore
 } from '/@/store/ui/renderKeys'
 
 export const useRenderKey = (id: RenderKeyStoreId) => {
