@@ -45,7 +45,6 @@
     "mitt": "^3.0.0",
     "party-js": "^2.2.0",
     "sortablejs": "^1.15.6",
-    "text-field-edit": "^4.1.1",
     "throttle-debounce": "^5.0.2",
     "ts-pattern": "^5.9.0",
     "turndown": "^7.2.2",

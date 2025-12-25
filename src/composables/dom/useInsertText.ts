@@ -1,22 +1,29 @@
-import { type MaybeRefOrGetter, toValue } from 'vue'
+import { type MaybeRefOrGetter, type Ref, toValue } from 'vue'
 
-import { insertText } from '/@/lib/dom/insertText'
-import { useResponsiveStore } from '/@/store/ui/responsive'
-
+/**
+ * これを利用したときはCtrl+Zなどがきく
+ */
 const useInsertText = (
   textareaRef: MaybeRefOrGetter<HTMLTextAreaElement | undefined>,
-  targetRef?: MaybeRefOrGetter<{ begin: number; end: number }>
+  target?: Ref<{ begin: number; end: number }>
 ) => {
-  const { isMobile } = useResponsiveStore()
+  const insertText = (text: string) => {
+    const textarea = toValue(textareaRef)
+    if (!textarea) return
 
-  return {
-    insertText: (text: string) => {
-      const textarea = toValue(textareaRef)
-      if (!textarea) return
-
-      insertText(textarea, text, toValue(targetRef), isMobile.value)
-    }
+    // Windowsでの\r\nを含む文字列を貼り付けた後に
+    // Ctrl+Zでアンドゥすると、キャレットの位置がずれるので
+    // ずれないように\nに統一しておく
+    const normalizedText = text.replaceAll('\r\n', '\n')
+    textarea.setRangeText(
+      normalizedText,
+      target?.value.begin ?? textarea.selectionStart,
+      target?.value.end ?? textarea.selectionEnd,
+      'end'
+    )
   }
+
+  return { insertText }
 }
 
 export default useInsertText
