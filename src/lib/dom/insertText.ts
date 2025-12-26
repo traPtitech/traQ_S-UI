@@ -1,7 +1,3 @@
-import { insert } from 'text-field-edit'
-
-import { isDefined } from '/@/lib/basic/array'
-
 export const insertText = (
   textarea: HTMLTextAreaElement,
   text: string,
@@ -21,12 +17,12 @@ export const insertText = (
       'end'
     )
   } else {
-    if (isDefined(target?.begin)) textarea.selectionStart = target.begin
-    if (isDefined(target?.end)) textarea.selectionEnd = target.end
+    if (target?.begin) textarea.selectionStart = target.begin
+    if (target?.end) textarea.selectionEnd = target.end
 
     // Windowsでの\r\nを含む文字列を貼り付けた後に
     // Ctrl+Zでアンドゥすると、キャレットの位置がずれるので
     // ずれないように\nに統一しておく
-    insert(textarea, text.replaceAll('\r\n', '\n'))
+    document.execCommand('insertText', false, text.replaceAll('\r\n', '\n'))
   }
 }
