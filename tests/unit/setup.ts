@@ -1,5 +1,3 @@
-import './mocks'
-
 window.traQConfig = {
   firebase: {
     apiKey: '',
