@@ -1,6 +1,13 @@
-import type { Ref } from 'vue'
-import { computed, onMounted, reactive, watch } from 'vue'
+import {
+  type Ref,
+  type ShallowRef,
+  computed,
+  onMounted,
+  reactive,
+  watch
+} from 'vue'
 
+import type { MessageScrollerInstance } from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import useMittListener from '/@/composables/utils/useMittListener'
@@ -20,7 +27,7 @@ interface GetClipsParam {
 }
 
 const useClipsFetcher = (
-  scrollerEle: Ref<{ $el: HTMLDivElement } | undefined>,
+  scrollerRef: ShallowRef<MessageScrollerInstance | undefined>,
   props: {
     clipFolderId: ClipFolderId
     entryMessageId?: MessageId
@@ -28,7 +35,7 @@ const useClipsFetcher = (
 ) => {
   const { fetchMessage, extendMessagesMap } = useMessagesStore()
   const { fetchLimit, waitHeightResolved } = useFetchLimit(
-    scrollerEle,
+    scrollerRef,
     MESSAGE_HEIGHT
   )
   const state = reactive({

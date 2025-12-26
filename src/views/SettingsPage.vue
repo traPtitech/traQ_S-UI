@@ -15,9 +15,9 @@ import type { Ref } from 'vue'
 import { ref, toRef, watch } from 'vue'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 
+import useResponsive from '/@/composables/useResponsive'
 import { RouteName } from '/@/router'
 import { defaultSettingsName } from '/@/router/settings'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 
 import useLoginCheck from './composables/useLoginCheck'
 
@@ -47,7 +47,7 @@ const useSettingsRootPathWatcher = (
 import DesktopSettingModal from '/@/components/Settings/DesktopSetting.vue'
 import MobileSettingModal from '/@/components/Settings/MobileSetting.vue'
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const settingsRootShown = ref(false)
 onBeforeRouteLeave(() => {

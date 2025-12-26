@@ -100,7 +100,7 @@ import { useTopStampIds } from '/@/store/domain/stampRecommendations'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import type { MessageId, StampId } from '/@/types/entity-ids'
 
@@ -189,7 +189,7 @@ watch(
   { immediate: true }
 )
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
   !isMobile.value

@@ -19,14 +19,14 @@
 import { computed } from 'vue'
 
 import ClickOutside from '/@/components/UI/ClickOutside'
+import useResponsive from '/@/composables/useResponsive'
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import SearchResult from './SearchResult.vue'
 import SearchSuggestion from './SearchSuggestion.vue'
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const { mode, query, closeCommandPalette } = useCommandPalette()
 
 type SupplementalViewType = 'search-result' | 'search-suggestion' | undefined

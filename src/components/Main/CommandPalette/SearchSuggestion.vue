@@ -30,8 +30,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 
+import useResponsive from '/@/composables/useResponsive'
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 
 import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
 import type { SuggestionItem } from './SearchSuggestionItem.vue'
@@ -42,7 +42,7 @@ const emit = defineEmits<{
   (e: 'queryInsert'): void
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const querySuggestions = computed(() => [
   {

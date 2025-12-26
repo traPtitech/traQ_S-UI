@@ -7,6 +7,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { throttle } from 'throttle-debounce'
 
 import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
+import useEventListener from '/@/composables/dom/useEventListener'
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import type { Point } from '/@/lib/basic/point'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
@@ -152,13 +153,7 @@ export const useStampPickerInvoker = (
     position.value = getPositionFromAlignment(newAlignment, rect)
   })
 
-  watchEffect(() => {
-    if (isThisOpen.value) {
-      window.addEventListener('resize', setPosition)
-    } else {
-      window.removeEventListener('resize', setPosition)
-    }
-  })
+  useEventListener(isThisOpen.value ? window : null, 'resize', setPosition)
 
   const openStampPicker = () => {
     setPosition()

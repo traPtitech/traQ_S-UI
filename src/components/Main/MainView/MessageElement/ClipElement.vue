@@ -32,9 +32,9 @@ import { computed, ref, shallowRef, toRef } from 'vue'
 
 import ClickOutside from '/@/components/UI/ClickOutside'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
+import useResponsive from '/@/composables/useResponsive'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { MessageId } from '/@/types/entity-ids'
 
 import MessageQuoteListItemFooter from './Embeddings/MessageQuoteListItemFooter.vue'
@@ -60,7 +60,7 @@ const { editingMessageId } = useMessageEditingStateStore()
 const isEditing = computed(() => props.messageId === editingMessageId.value)
 
 const bodyRef = shallowRef<HTMLDivElement | null>(null)
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const message = computed(() => messagesMap.value.get(props.messageId))
 
 const { embeddingsState } = useEmbeddings(props)

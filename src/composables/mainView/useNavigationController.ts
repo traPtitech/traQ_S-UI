@@ -1,11 +1,11 @@
+import useResponsive from '/@/composables/useResponsive'
 import { MainViewComponentState, useMainViewStore } from '/@/store/ui/mainView'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 
 /**
  * モバイル用にナビゲーションの開閉を行う
  */
 const useNavigationController = () => {
-  const { isMobile } = useResponsiveStore()
+  const { isMobile } = useResponsive()
   const { currentMainViewComponentState, isNavOpen, isNoComponentOpen } =
     useMainViewStore()
 

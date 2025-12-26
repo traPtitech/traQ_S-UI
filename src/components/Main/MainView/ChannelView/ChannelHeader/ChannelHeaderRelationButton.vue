@@ -25,13 +25,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
-import { reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
+import useEventListener from '/@/composables/dom/useEventListener'
 import type { Point } from '/@/lib/basic/point'
 import { randomString } from '/@/lib/basic/randomString'
-
 import ChannelHeaderRelationPopup from './ChannelHeaderRelationPopup.vue'
 
 const props = defineProps<{
@@ -70,12 +69,10 @@ const updateTriggerPosition = () => {
   triggerBottomRightPosition.y = rect.bottom
 }
 
+useEventListener(window, 'resize', updateTriggerPosition)
+
 onMounted(() => {
   updateTriggerPosition()
-  window.addEventListener('resize', updateTriggerPosition)
-})
-onUnmounted(() => {
-  window.removeEventListener('resize', updateTriggerPosition)
 })
 
 const focusPopup = () => {

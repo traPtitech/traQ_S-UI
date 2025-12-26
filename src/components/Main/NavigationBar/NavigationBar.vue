@@ -8,9 +8,9 @@
 <script lang="ts" setup>
 import DesktopNavigationBar from '/@/components/Main/NavigationBar/DesktopNavigationBar.vue'
 import MobileNavigationBar from '/@/components/Main/NavigationBar/MobileNavigationBar.vue'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 </script>
 
 <style lang="scss" module>

@@ -33,19 +33,13 @@
 </template>
 
 <script lang="ts">
-import type { Ref } from 'vue'
-import {
-  nextTick,
-  onMounted,
-  onUnmounted,
-  reactive,
-  shallowRef,
-  watch
-} from 'vue'
+import type { ComponentPublicInstance, Ref } from 'vue'
+import { nextTick, onMounted, reactive, shallowRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { throttle } from 'throttle-debounce'
 
+import useEventListener from '/@/composables/dom/useEventListener'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import { embeddingOrigin } from '/@/lib/apis'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
@@ -56,6 +50,10 @@ import type { MessageId } from '/@/types/entity-ids'
 
 import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
 import type { LoadingDirection } from './composables/useMessagesFetcher'
+
+export interface MessageScrollerInstance extends ComponentPublicInstance {
+  $el: HTMLDivElement
+}
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -282,12 +280,8 @@ const visibilitychangeListener = () => {
   }
   emit('resetIsReachedLatest')
 }
-onMounted(() => {
-  document.addEventListener('visibilitychange', visibilitychangeListener)
-})
-onUnmounted(() => {
-  document.removeEventListener('visibilitychange', visibilitychangeListener)
-})
+
+useEventListener(document, 'visibilitychange', visibilitychangeListener)
 
 const { onClick } = useMarkdownInternalHandler()
 useScrollRestoration(rootRef, state)

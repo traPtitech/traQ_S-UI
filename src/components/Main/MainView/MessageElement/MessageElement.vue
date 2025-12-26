@@ -49,7 +49,7 @@ import ClickOutside from '/@/components/UI/ClickOutside'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import type { MessageId, UserId } from '/@/types/entity-ids'
 
 import MessageContents from './MessageContents.vue'
@@ -79,7 +79,7 @@ const emit = defineEmits<{
 const isActive = ref(false)
 
 const bodyRef = shallowRef<HTMLDivElement | null>(null)
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const { messagesMap } = useMessagesStore()
 const message = computed(() => messagesMap.value.get(props.messageId))
 

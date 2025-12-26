@@ -26,7 +26,7 @@
 import { computed } from 'vue'
 
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import type { UserId } from '/@/types/entity-ids'
 
 import MessageInputTypingAnimation from './MessageInputTypingAnimation.vue'
@@ -35,7 +35,7 @@ const props = defineProps<{
   typingUsers: readonly UserId[]
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const text = computed(
   () =>
