@@ -20,6 +20,8 @@ export const insertText = (
       target?.end ?? textarea.selectionEnd,
       'end'
     )
+
+    textarea.dispatchEvent(new Event('input'))
   } else {
     if (isDefined(target?.begin)) textarea.selectionStart = target.begin
     if (isDefined(target?.end)) textarea.selectionEnd = target.end
