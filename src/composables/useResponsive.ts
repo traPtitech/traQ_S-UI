@@ -6,13 +6,11 @@ import createSharedComposable from '/@/lib/utils/createSharedComposable'
 import useEventListener from './dom/useEventListener'
 
 const useResponsive = () => {
-  const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
-  const isHoverSupported = window.matchMedia(
-    '(hover: hover) and (pointer: fine)'
-  )
+  const isMobileQuery = matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
+  const isHoverSupportedQuery = matchMedia('(hover: hover) and (pointer: fine)')
 
-  const isMobile = ref(queryList.matches)
-  const isTouchDevice = ref(!isHoverSupported.matches)
+  const isMobile = ref(isMobileQuery.matches)
+  const isTouchDevice = ref(!isHoverSupportedQuery.matches)
 
   const updateIsMobile = (event: MediaQueryListEvent) => {
     isMobile.value = event.matches
@@ -22,8 +20,8 @@ const useResponsive = () => {
     isTouchDevice.value = event.matches
   }
 
-  useEventListener(queryList, 'change', updateIsMobile)
-  useEventListener(isHoverSupported, 'change', updateIsTouchDevice)
+  useEventListener(isMobileQuery, 'change', updateIsMobile)
+  useEventListener(isHoverSupportedQuery, 'change', updateIsTouchDevice)
 
   return { isMobile, isTouchDevice }
 }
