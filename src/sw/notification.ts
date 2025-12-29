@@ -3,7 +3,6 @@ import { getMessaging, onBackgroundMessage } from 'firebase/messaging/sw'
 
 import { wait } from '/@/lib/basic/timer'
 import type { FirebasePayloadData } from '/@/lib/notification/firebase'
-import type { ServiceWorkerNavigateMessage } from '/@/lib/notification/notification'
 import { createNotificationArgumentsCreator } from '/@/lib/notification/notificationArguments'
 import { getMeStore } from '/@/sw/store'
 import type { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
@@ -22,18 +21,22 @@ const postMessage = (channelId: ChannelId, text: string) =>
   })
 
 const openChannel = async (event: NotificationClickEvent) => {
+  // iOSのPWAでincludeUncontrolled: trueを使うと、
+  // 通知クリック時にNotification.permissionがdefaultに戻る問題がある
+  // https://stackoverflow.com/questions/76590928/pwa-on-ios-notification-permission-return-default-whatever-we-chose
   const clientsArr = await self.clients.matchAll({
-    type: 'window',
-    includeUncontrolled: true
+    type: 'window'
+    // includeUncontrolled: trueを使わないことで、Service Workerに制御されている
+    // クライアントのみを対象とし、client.navigate()が正しく動作するようにする
   })
   if (clientsArr[0]) {
-    const client = await clientsArr[0].focus()
-    const message: ServiceWorkerNavigateMessage = {
-      type: 'navigate',
-      to: event.notification.data.path
-    }
-    return client.postMessage(message)
+    const client = clientsArr[0]
+    // navigate()を使うことで新しいウィンドウを開かずに遷移する
+    // これにはクライアントがService Workerに制御されている必要がある
+    await client.navigate(event.notification.data.path)
+    return client.focus()
   } else {
+    // 制御されているクライアントがない場合のみopenWindowを使用
     return self.clients.openWindow(event.notification.data.path)
   }
 }
