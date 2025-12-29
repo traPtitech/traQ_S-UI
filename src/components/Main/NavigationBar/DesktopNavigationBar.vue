@@ -42,6 +42,7 @@
       @pointerdown="onDragStart"
       @pointermove="onDragging"
       @pointerup="onDragEnd"
+      @pointercancel="onDragEnd"
       @dblclick="initializeNavigationWidth"
     />
   </div>
