@@ -12,7 +12,7 @@
     <AIcon :size="20" name="rounded-triangle" :class="$style.icon" />
   </button>
   <!-- NOTE: ボタンから Tab 移動した際に popup のはじめに飛べるように Focus を管理する -->
-  <div v-if="isOpen" ref="focusPopupRef" tabindex="0" @focus="focusPopup" />
+  <div v-if="isOpen" tabindex="0" @focus="focusPopup" />
   <ChannelHeaderRelationPopup
     v-if="isOpen"
     ref="popup"
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
 import useEventListener from '/@/composables/dom/useEventListener'
@@ -39,7 +39,6 @@ const props = defineProps<{
 }>()
 
 const trigger = ref<HTMLElement | null>(null)
-const focusPopupRef = ref<HTMLElement | null>(null)
 const popup = ref<InstanceType<typeof ChannelHeaderRelationPopup> | null>(null)
 
 const popupId = randomString()
@@ -70,6 +69,11 @@ const updateTriggerPosition = () => {
   triggerBottomRightPosition.y = rect.bottom
 }
 
+useEventListener(
+  computed(() => (isOpen.value ? window : null)),
+  'resize',
+  updateTriggerPosition
+)
 useEventListener(window, 'resize', updateTriggerPosition)
 
 onMounted(() => {

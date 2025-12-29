@@ -153,7 +153,11 @@ export const useStampPickerInvoker = (
     position.value = getPositionFromAlignment(newAlignment, rect)
   })
 
-  useEventListener(isThisOpen.value ? window : null, 'resize', setPosition)
+  useEventListener(
+    computed(() => (isThisOpen.value ? window : null)),
+    'resize',
+    setPosition
+  )
 
   const openStampPicker = () => {
     setPosition()

@@ -51,7 +51,7 @@ export default defineComponent({
     }
   },
   emits: {
-    clickOutside: (_e: MouseEvent | TouchEvent) => true
+    clickOutside: (_e: PointerEvent) => true
   },
   setup(props, { slots, emit }) {
     const element = shallowRef<Element | ComponentPublicInstance>()
@@ -59,7 +59,7 @@ export default defineComponent({
     const { shouldShowModal } = useModalStore()
     const isMouseDown = ref(false)
 
-    const onPointerDown = (e: MouseEvent | TouchEvent) => {
+    const onPointerDown = (e: PointerEvent) => {
       if (!element.value) return
 
       if (props.unableWhileModalOpen && shouldShowModal.value) return
@@ -75,7 +75,7 @@ export default defineComponent({
       }
     }
 
-    const onPointerUp = (e: MouseEvent | TouchEvent) => {
+    const onPointerUp = (e: PointerEvent) => {
       if (!isMouseDown.value) return
       isMouseDown.value = false
 

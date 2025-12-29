@@ -104,24 +104,22 @@ const useMouseMove = (
 ) => {
   const onDown = (downEvent: MouseEvent) => {
     let lastPoint = clientXYToPoint(downEvent)
-
     const moveUpdate = (moveEvent: MouseEvent) => {
       const newPoint = clientXYToPoint(moveEvent)
       handler(newPoint, lastPoint)
       lastPoint = newPoint
     }
 
-    const stop = useEventListener(
+    const stopWatchMousemove = useEventListener(
       containerEle,
       'mousemove',
-      (moveEvent: MouseEvent) => {
-        stop()
-        moveUpdate(moveEvent)
-      },
-      {
-        once: true
-      }
+      moveUpdate
     )
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    useEventListener(containerEle, 'mouseup', stopWatchMousemove, {
+      once: true
+    })
   }
 
   useEventListener(containerEle, 'mousedown', onDown)
