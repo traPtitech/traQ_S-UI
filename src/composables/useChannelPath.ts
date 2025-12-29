@@ -1,13 +1,15 @@
-import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
-import { constructUserPath, constructChannelPath } from '/@/router'
+import { watch } from 'vue'
+
 import type { SimpleChannel } from '/@/lib/channel'
 import { channelIdToSimpleChannelPath as libChannelIdToSimpleChannelPath } from '/@/lib/channel'
 import { channelPathToId } from '/@/lib/channelTree'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useUsersStore } from '../store/entities/users'
-import { useChannelTree } from '/@/store/domain/channelTree'
 import { memoizeWithPurge } from '/@/lib/memoize'
-import { watch } from 'vue'
+import { constructChannelPath, constructUserPath } from '/@/router'
+import { useChannelTree } from '/@/store/domain/channelTree'
+import { useChannelsStore } from '/@/store/entities/channels'
+import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
+
+import { useUsersStore } from '../store/entities/users'
 
 const MAX_SHORT_PATH_LENGTH = 20
 

@@ -1,18 +1,22 @@
 import type { User } from '@traptitech/traq'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+
 import { computed, ref } from 'vue'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import apis from '/@/lib/apis'
+import { createSingleflight } from '/@/lib/basic/async'
+import { arrayToMap } from '/@/lib/basic/map'
+import type { ActiveUser } from '/@/lib/user'
+import { isActive } from '/@/lib/user'
+import { wsListener } from '/@/lib/websocket'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import { useTrueChangedPromise } from '/@/store/utils/promise'
+import type { UserId } from '/@/types/entity-ids'
+
 import { entityMitt } from './mitt'
 import type { CacheStrategy } from './utils'
 import { fetchWithCacheStrategy } from './utils'
-import apis from '/@/lib/apis'
-import { createSingleflight } from '/@/lib/basic/async'
-import type { ActiveUser } from '/@/lib/user'
-import { isActive } from '/@/lib/user'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import type { UserId } from '/@/types/entity-ids'
-import { useTrueChangedPromise } from '/@/store/utils/promise'
-import { arrayToMap } from '/@/lib/basic/map'
-import { wsListener } from '/@/lib/websocket'
 
 const getUser = createSingleflight(apis.getUser.bind(apis))
 const getUserByName = createSingleflight(

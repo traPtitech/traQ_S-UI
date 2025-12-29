@@ -11,8 +11,10 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
 import { isDefined } from '/@/lib/basic/array'
 import { useMessagesStore } from '/@/store/entities/messages'
+
 import MessageOgpListItem from './MessageOgpListItem.vue'
 
 const props = withDefaults(

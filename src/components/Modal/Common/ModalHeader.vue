@@ -27,8 +27,9 @@
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
-import ModalReturnButton from './ModalReturnButton.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
+
+import ModalReturnButton from './ModalReturnButton.vue'
 
 withDefaults(
   defineProps<{

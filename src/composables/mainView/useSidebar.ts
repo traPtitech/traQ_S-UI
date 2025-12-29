@@ -1,5 +1,6 @@
 import { computed } from 'vue'
-import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'
+
+import { MainViewComponentState, useMainViewStore } from '/@/store/ui/mainView'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const useSidebar = () => {

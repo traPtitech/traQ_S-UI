@@ -5,7 +5,9 @@
       :class="$style.item"
       label="グループ名"
       :max-length="30"
+      :error-message="errorMessage"
       focus-on-mount
+      @input="validateName"
     />
     <FormInput
       v-model="desc"
@@ -26,22 +28,33 @@
       自分自身をメンバーに追加する
     </FormCheckbox>
     <div :class="$style.createButtonWrapper">
-      <FormButton label="作成" @click="create" />
+      <FormButton
+        :disabled="!name || !!errorMessage"
+        label="作成"
+        @click="create"
+      />
     </div>
   </ModalFrame>
 </template>
 
 <script lang="ts" setup>
-import { AxiosError } from 'axios'
 import { ref } from 'vue'
-import ModalFrame from '../Common/ModalFrame.vue'
+
+import { AxiosError } from 'axios'
+
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import apis from '/@/lib/apis'
+import {
+  INVALID_GROUP_NAME_ERROR_MESSAGE,
+  isValidGroupName
+} from '/@/lib/validate'
 import { useMeStore } from '/@/store/domain/me'
 import { useModalStore } from '/@/store/ui/modal'
 import { useToastStore } from '/@/store/ui/toast'
+
+import ModalFrame from '../Common/ModalFrame.vue'
 
 const { myId } = useMeStore()
 const { addErrorToast } = useToastStore()
@@ -51,6 +64,13 @@ const name = ref('')
 const desc = ref('')
 const type = ref('')
 const addMember = ref(true)
+const errorMessage = ref<string | null>(null)
+
+const validateName = () => {
+  errorMessage.value = isValidGroupName(name.value)
+    ? null
+    : INVALID_GROUP_NAME_ERROR_MESSAGE
+}
 
 const create = async () => {
   const myIdV = myId.value

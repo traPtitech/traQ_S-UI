@@ -1,4 +1,5 @@
 import { useRouter } from 'vue-router'
+
 import useClose from '/@/composables/useClose'
 import { RouteName } from '/@/router'
 import type { SettingsRouteName } from '/@/router/settings'

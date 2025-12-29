@@ -21,11 +21,12 @@
 <script lang="ts" setup generic="T extends string | null">
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
+
 import { randomString } from '/@/lib/basic/randomString'
 
 const selectedOptionValue = defineModel<T>({ required: true })
 
-type Option = { key: string; value: T }
+type Option = { key: string; value: T | null }
 type Background = 'primary' | 'secondary'
 withDefaults(
   defineProps<{

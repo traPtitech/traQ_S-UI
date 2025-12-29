@@ -7,11 +7,13 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
-import { navigationRouteNameTitleMap } from './composables/useNavigation'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import type { SettingsRouteName } from '/@/router/settings'
 import { constructSettingsPath } from '/@/router/settings'
+
+import { navigationRouteNameTitleMap } from './composables/useNavigation'
 
 const props = defineProps<{
   routeName: SettingsRouteName

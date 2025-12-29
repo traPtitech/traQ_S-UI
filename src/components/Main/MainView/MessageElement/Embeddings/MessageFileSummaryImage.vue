@@ -1,20 +1,26 @@
 <template>
-  <div :class="$style.container" :style="containerStyle">
+  <RouterLink
+    :to="fileLink"
+    :class="$style.container"
+    :style="containerStyle"
+    @click.stop
+  >
     <PlayIcon v-if="isAnimatedImage" :class="$style.playIcon" />
-  </div>
+  </RouterLink>
 </template>
 
 <script lang="ts" setup>
-import useFileThumbnail from '/@/composables/files/useFileThumbnail'
 import { computed } from 'vue'
+
 import PlayIcon from '/@/components/UI/PlayIcon.vue'
+import useFileThumbnail from '/@/composables/files/useFileThumbnail'
 import type { FileId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   fileId: FileId
 }>()
 
-const { fileThumbnailPath, isAnimatedImage } = useFileThumbnail(props)
+const { fileLink, fileThumbnailPath, isAnimatedImage } = useFileThumbnail(props)
 const containerStyle = computed(() => ({
   backgroundImage: `url(${fileThumbnailPath.value})`
 }))

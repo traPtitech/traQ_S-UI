@@ -9,9 +9,11 @@
 
 <script setup lang="ts">
 import type { Channel } from '@traptitech/traq'
+
 import { computed } from 'vue'
-import useChannelPath from '/@/composables/useChannelPath'
 import { RouterLink } from 'vue-router'
+
+import useChannelPath from '/@/composables/useChannelPath'
 import { randomString } from '/@/lib/basic/randomString'
 
 const props = defineProps<{

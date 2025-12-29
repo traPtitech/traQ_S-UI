@@ -1,4 +1,8 @@
+import type { Channel, DMChannel, User, UserGroup } from '@traptitech/traq'
+
 import type { Ref } from 'vue'
+
+import { channelIdToPathString } from '/@/lib/channel'
 import type { ChannelTree } from '/@/lib/channelTree'
 import { channelPathToId as channelPathToIdImpl } from '/@/lib/channelTree'
 import type { StoreForParser } from '/@/lib/searchMessage/parserBase'
@@ -6,21 +10,19 @@ import {
   createQueryParser,
   toSearchMessageParam
 } from '/@/lib/searchMessage/queryParser'
+import { useChannelTree } from '/@/store/domain/channelTree'
+import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useUsersStore } from '/@/store/entities/users'
 import type { PrimaryViewInformation } from '/@/store/ui/mainView'
 import { useMainViewStore } from '/@/store/ui/mainView'
-import { useChannelTree } from '/@/store/domain/channelTree'
-import { useUsersStore } from '/@/store/entities/users'
-import type { Channel, DMChannel, User, UserGroup } from '@traptitech/traq'
-import { channelIdToPathString } from '/@/lib/channel'
 import type {
   ChannelId,
   DMChannelId,
   UserGroupId,
   UserId
 } from '/@/types/entity-ids'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useMeStore } from '/@/store/domain/me'
-import { useGroupsStore } from '/@/store/entities/groups'
 
 const getStoreForParser = ({
   primaryView,

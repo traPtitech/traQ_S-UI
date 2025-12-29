@@ -1,28 +1,53 @@
 import type {
   PatchStampPaletteRequest,
-  PostStampPaletteRequest,
-  StampPalette
+  PostStampPaletteRequest
 } from '@traptitech/traq'
-import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import { computed, ref } from 'vue'
-import type { CacheStrategy } from './utils'
-import { fetchWithCacheStrategy } from './utils'
+
+import type { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import apis from '/@/lib/apis'
 import { createSingleflight } from '/@/lib/basic/async'
 import { arrayToMap } from '/@/lib/basic/map'
 import { wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { useTrueChangedPromise } from '/@/store/utils/promise'
+import type { StampPalette } from '/@/types/entity'
 import type { StampPaletteId } from '/@/types/entity-ids'
 
-const getStampPalette = createSingleflight(apis.getStampPalette.bind(apis))
-const getStampPalettes = createSingleflight(apis.getStampPalettes.bind(apis))
-const createStampPaletteSingleflight = createSingleflight(
-  apis.createStampPalette.bind(apis)
+import type { CacheStrategy } from './utils'
+import { fetchWithCacheStrategy } from './utils'
+
+// FIXME: 型定義では `StampPalette['stamps']` は `Set<string>` だが，実際には `Array<string>` が返る
+// openapi-generator のバグだが，どのように修正されるかわからないので一旦型の上書きによって対応する
+// https://github.com/traPtitech/traQ_S-UI/issues/4612
+
+const getStampPalette = createSingleflight(
+  apis.getStampPalette.bind(apis) as unknown as (
+    paletteId?: StampPaletteId,
+    options?: AxiosRequestConfig
+  ) => Promise<AxiosResponse<StampPalette>>
 )
+
+const getStampPalettes = createSingleflight(
+  apis.getStampPalettes.bind(apis) as unknown as (
+    options?: AxiosRequestConfig
+  ) => Promise<AxiosResponse<StampPalette[]>>
+)
+
+const createStampPaletteSingleflight = createSingleflight(
+  apis.createStampPalette.bind(apis) as unknown as (
+    postStampPaletteRequest?: PostStampPaletteRequest,
+    options?: AxiosRequestConfig
+  ) => Promise<AxiosResponse<StampPalette>>
+)
+
 const editStampPaletteSingleflight = createSingleflight(
   apis.editStampPalette.bind(apis)
 )
+
 const deleteStampPaletteSingleflight = createSingleflight(
   apis.deleteStampPalette.bind(apis)
 )

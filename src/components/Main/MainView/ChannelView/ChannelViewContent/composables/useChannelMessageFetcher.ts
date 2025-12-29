@@ -1,15 +1,17 @@
-import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
-import type { ChannelId, MessageId } from '/@/types/entity-ids'
-import type { Ref } from 'vue'
-import { watch, onMounted, onActivated, ref, computed } from 'vue'
 import type { Message } from '@traptitech/traq'
-import { wsListener } from '/@/lib/websocket'
+
+import type { Ref } from 'vue'
+import { computed, onActivated, onMounted, ref, watch } from 'vue'
+
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
-import { messageMitt, useMessagesStore } from '/@/store/entities/messages'
-import { useMessagesView } from '/@/store/domain/messagesView'
-import { useSubscriptionStore } from '/@/store/domain/subscription'
+import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
+import { wsListener } from '/@/lib/websocket'
+import { useMessagesView } from '/@/store/domain/messagesView'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { messageMitt, useMessagesStore } from '/@/store/entities/messages'
+import type { ChannelId, MessageId } from '/@/types/entity-ids'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 60
@@ -46,13 +48,13 @@ const useChannelMessageFetcher = (
   const loadedMessageOldestDate = ref<Date>()
   const unreadSince = ref()
 
-  const updateDates = (messages: Message[]) => {
-    if (messages.length <= 0) return
+  const updateDates = (messagesAsc: Message[]) => {
+    if (messagesAsc.length <= 0) return
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const firstMessage = messages[0]!
+    const firstMessage = messagesAsc[0]!
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const lastMessage = messages[messages.length - 1]!
+    const lastMessage = messagesAsc.at(-1)!
 
     const firstMessageDate = new Date(firstMessage.createdAt)
     const lastMessageDate = new Date(lastMessage.createdAt)
@@ -95,7 +97,7 @@ const useChannelMessageFetcher = (
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
     await waitHeightResolved
-    const { messages, hasMore } = await fetchMessagesByChannelId({
+    const { messages: messagesDesc, hasMore } = await fetchMessagesByChannelId({
       channelId: props.channelId,
       limit: fetchLimit.value,
       order: 'desc',
@@ -106,7 +108,7 @@ const useChannelMessageFetcher = (
       isReachedEnd.value = true
     }
 
-    const messagesAsc = messages.reverse()
+    const messagesAsc = messagesDesc.toReversed()
     updateDates(messagesAsc)
 
     return messagesAsc.map(message => message.id)
@@ -154,7 +156,7 @@ const useChannelMessageFetcher = (
   // 直近のメッセージを取得し作成日時昇順で並べ替えて返す
   const fetchNewMessages = async (isReachedLatest: Ref<boolean>) => {
     await waitHeightResolved
-    const { messages, hasMore } = await fetchMessagesByChannelId({
+    const { messages: messagesDesc, hasMore } = await fetchMessagesByChannelId({
       channelId: props.channelId,
       limit: fetchLimit.value,
       order: 'desc',
@@ -165,7 +167,7 @@ const useChannelMessageFetcher = (
       isReachedLatest.value = true
     }
 
-    const messagesAsc = messages.reverse()
+    const messagesAsc = messagesDesc.toReversed()
     updateDates(messagesAsc)
 
     return messagesAsc.map(message => message.id)

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
-import { useUsersStore } from '/@/store/entities/users'
-import { buildUserIconPath } from '/@/lib/apis'
 import { useQall } from '/@/composables/qall/useQall'
+import { buildUserIconPath } from '/@/lib/apis'
+import { useUsersStore } from '/@/store/entities/users'
 
 const { trackInfo } = defineProps<{
   trackInfo: TrackInfo

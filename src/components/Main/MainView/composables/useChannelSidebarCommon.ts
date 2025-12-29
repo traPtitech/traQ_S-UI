@@ -1,4 +1,5 @@
 import { ref, watch } from 'vue'
+
 import useSidebar from '/@/composables/mainView/useSidebar'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 

@@ -16,8 +16,9 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import type { MessageStampById } from '/@/lib/messageStampList'
+
 import UserIcon from '/@/components/UI/UserIcon.vue'
+import type { MessageStampById } from '/@/lib/messageStampList'
 
 const props = defineProps<{ stamp: MessageStampById }>()
 

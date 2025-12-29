@@ -1,7 +1,9 @@
+import type { Version } from '@traptitech/traq'
+
 import type { Ref } from 'vue'
 import { computed, readonly, ref, unref, watchEffect } from 'vue'
+
 import apis from '/@/lib/apis'
-import type { Version } from '@traptitech/traq'
 
 const useVersion = (needed: Ref<boolean> | boolean = true) => {
   const version = ref<Version>()

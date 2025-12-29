@@ -1,5 +1,7 @@
 import type { Channel } from '@traptitech/traq'
+
 import { computed } from 'vue'
+
 import useChannelPath from '/@/composables/useChannelPath'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 
@@ -31,7 +33,7 @@ export const usePath = (typedProps: TypedProps) => {
   )
   const pathTooltip = computed(() =>
     typedProps.showShortenedPath
-      ? `#${channelIdToPathString(typedProps.channel.id)}`
+      ? `${channelIdToPathString(typedProps.channel.id, true) ?? ''}`
       : undefined
   )
 

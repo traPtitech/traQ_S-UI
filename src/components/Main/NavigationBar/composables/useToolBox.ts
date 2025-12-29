@@ -1,7 +1,8 @@
 import { computed } from 'vue'
-import { useCommandPalette } from '/@/store/app/commandPalette'
+
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useToggle from '/@/composables/utils/useToggle'
+import { useCommandPalette } from '/@/store/app/commandPalette'
 
 interface Tool {
   iconName: string

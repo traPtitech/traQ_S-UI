@@ -21,12 +21,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useMainViewStore } from '/@/store/ui/mainView'
-import PrimaryViewSelector from './PrimaryViewSelector.vue'
-import SecondaryViewSelector from './SecondaryViewSelector.vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+
 import { isIOSApp } from '/@/lib/dom/browser'
+import { useMainViewStore } from '/@/store/ui/mainView'
+
+import PrimaryViewSelector from './PrimaryViewSelector.vue'
 import QallAudio from './QallView/QallAudio.vue'
+import SecondaryViewSelector from './SecondaryViewSelector.vue'
 
 const iosAppFlag = isIOSApp(window)
 const iosAppDeprecatedMessage =

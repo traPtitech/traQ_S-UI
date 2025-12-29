@@ -22,18 +22,21 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampId } from '/@/types/entity-ids'
-import type { Point } from '/@/lib/basic/point'
-import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
-import { useModalStore } from '/@/store/ui/modal'
-import { useFileSelect } from '/@/composables/dom/useFileSelect'
-import apis from '/@/lib/apis'
-import useExecWithToast from '/@/composables/toast/useExecWithToast'
+import { UserPermission } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
+import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
+import { useFileSelect } from '/@/composables/dom/useFileSelect'
+import useExecWithToast from '/@/composables/toast/useExecWithToast'
+import apis from '/@/lib/apis'
+import type { Point } from '/@/lib/basic/point'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
-import { UserPermission } from '@traptitech/traq'
-import { computed } from 'vue'
+import { useModalStore } from '/@/store/ui/modal'
+import type { StampId } from '/@/types/entity-ids'
+import type { MaybePromise } from '/@/types/utility'
 
 const props = defineProps<{
   position: Point
@@ -76,7 +79,7 @@ const acceptImageType = [
 const close = () => {
   emit('close')
 }
-const withClose = async (func: () => void | Promise<void>) => {
+const withClose = async (func: () => MaybePromise<void>) => {
   await func()
   close()
 }

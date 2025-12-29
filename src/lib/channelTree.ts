@@ -1,7 +1,8 @@
 import type { Channel } from '@traptitech/traq'
-import type { ChannelId } from '/@/types/entity-ids'
-import { nullUuid } from '/@/lib/basic/uuid'
+
 import { compareStringInsensitive } from '/@/lib/basic/string'
+import { nullUuid } from '/@/lib/basic/uuid'
+import type { ChannelId } from '/@/types/entity-ids'
 
 export const rootChannelId = nullUuid
 export type RootChannelId = typeof rootChannelId
@@ -32,10 +33,8 @@ const channelNameSortFunction = (
   node2: ChannelTreeNode
 ) => {
   // sort by last ancestor name
-  const lastAncestorName1 =
-    node1.skippedAncestorNames?.[node1.skippedAncestorNames?.length - 1]
-  const lastAncestorName2 =
-    node2.skippedAncestorNames?.[node2.skippedAncestorNames?.length - 1]
+  const lastAncestorName1 = node1.skippedAncestorNames?.at(-1)
+  const lastAncestorName2 = node2.skippedAncestorNames?.at(-1)
   return compareStringInsensitive(
     lastAncestorName1 ?? node1.name,
     lastAncestorName2 ?? node2.name

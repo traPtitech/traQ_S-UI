@@ -25,9 +25,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { StampPalette } from '@traptitech/traq'
-import { isAxiosError } from 'axios'
 import { computed, onBeforeMount, onBeforeUnmount, ref, toRaw } from 'vue'
+
+import { isAxiosError } from 'axios'
+
 import StampPaletteActionButtons from '/@/components/Settings/StampPaletteTab/StampPaletteActionButtons.vue'
 import StampPaletteDescription from '/@/components/Settings/StampPaletteTab/StampPaletteDescription.vue'
 import StampPaletteEditor from '/@/components/Settings/StampPaletteTab/StampPaletteEditor.vue'
@@ -40,6 +41,7 @@ import { useBeforeUnload } from '/@/composables/dom/useBeforeUnload'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useToastStore } from '/@/store/ui/toast'
+import type { StampPalette } from '/@/types/entity'
 import type { StampPaletteId } from '/@/types/entity-ids'
 
 const { paletteId } = defineProps<{

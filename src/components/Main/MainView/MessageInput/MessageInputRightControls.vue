@@ -16,9 +16,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useResponsiveStore } from '/@/store/ui/responsive'
-import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+
+import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
 
 const props = withDefaults(
   defineProps<{

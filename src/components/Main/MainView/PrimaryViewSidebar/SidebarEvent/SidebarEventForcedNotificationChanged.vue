@@ -14,8 +14,9 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarEventFrame from './SidebarEventFrame.vue'
 import type { ForcedNotificationChangedEvent } from '@traptitech/traq'
+
+import SidebarEventFrame from './SidebarEventFrame.vue'
 
 defineProps<{
   datetime: string

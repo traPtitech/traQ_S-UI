@@ -1,9 +1,11 @@
+import type { Channel } from '@traptitech/traq'
+
 import type { Ref } from 'vue'
 import { computed, unref } from 'vue'
+
 import useChannelPath from '/@/composables/useChannelPath'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { nullUuid } from '/@/lib/basic/uuid'
-import type { Channel } from '@traptitech/traq'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const channelToChannelId = (channel?: Channel) => channel?.id ?? nullUuid

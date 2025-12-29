@@ -1,12 +1,14 @@
+import { type Ref, computed, ref } from 'vue'
+
 import {
-  loadRnnoise as loadRnnoiseLib,
-  loadSpeex as loadSpeexLib,
   RnnoiseWorkletNode,
-  SpeexWorkletNode
+  SpeexWorkletNode,
+  loadRnnoise as loadRnnoiseLib,
+  loadSpeex as loadSpeexLib
 } from '@sapphi-red/web-noise-suppressor'
 import rnnoiseWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise.wasm?url'
-import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.wasm?url'
 import rnnoiseWorkletPath from '@sapphi-red/web-noise-suppressor/rnnoiseWorklet.js?url'
+import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.wasm?url'
 import speexWasmPath from '@sapphi-red/web-noise-suppressor/speex.wasm?url'
 import speexWorkletPath from '@sapphi-red/web-noise-suppressor/speexWorklet.js?url'
 import { VirtualBackgroundProcessor } from '@shiguredo/virtual-background'
@@ -21,15 +23,15 @@ import type {
 } from 'livekit-client'
 import {
   AudioPresets,
-  createLocalScreenTracks,
   LocalAudioTrack,
   LocalVideoTrack,
   Room,
   RoomEvent,
-  Track
+  Track,
+  createLocalScreenTracks
 } from 'livekit-client'
 import mitt from 'mitt'
-import { computed, ref, type Ref } from 'vue'
+
 import apis from '/@/lib/apis'
 import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
 import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'

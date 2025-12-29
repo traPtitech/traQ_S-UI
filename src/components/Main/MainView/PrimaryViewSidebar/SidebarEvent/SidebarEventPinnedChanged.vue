@@ -18,16 +18,20 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarEventFrame from './SidebarEventFrame.vue'
-import UserName from '/@/components/UI/MessagePanel/UserName.vue'
-import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
-import { computed, ref, watch } from 'vue'
 import type { Message, PinAddedEvent, PinRemovedEvent } from '@traptitech/traq'
 import { ChannelEventTypeEnum } from '@traptitech/traq'
+
+import { computed, ref, watch } from 'vue'
+
 import type { AxiosError } from 'axios'
+
+import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
+import UserName from '/@/components/UI/MessagePanel/UserName.vue'
 import { constructMessagesPath } from '/@/router'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useUsersStore } from '/@/store/entities/users'
+
+import SidebarEventFrame from './SidebarEventFrame.vue'
 
 const props = defineProps<{
   type:

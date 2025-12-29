@@ -1,9 +1,11 @@
 import type { OAuth2Client, User } from '@traptitech/traq'
 import { OAuth2Scope } from '@traptitech/traq'
-import type { OAuthClientId } from '/@/types/entity-ids'
-import apis, { OAuthDecidePath } from '/@/lib/apis'
+
 import type { Ref } from 'vue'
 import { computed, ref } from 'vue'
+
+import apis, { OAuthDecidePath } from '/@/lib/apis'
+import type { OAuthClientId } from '/@/types/entity-ids'
 
 const validScopes = new Set<string>(Object.values(OAuth2Scope))
 

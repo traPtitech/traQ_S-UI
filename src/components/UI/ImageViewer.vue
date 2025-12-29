@@ -15,6 +15,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+
 import useImageViewer from './composables/useImageViewer'
 
 defineProps<{

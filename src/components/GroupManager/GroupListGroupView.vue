@@ -23,9 +23,10 @@
 </template>
 
 <script lang="ts" setup>
+import type { UserGroup } from '@traptitech/traq'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
-import type { UserGroup } from '@traptitech/traq'
 
 defineProps<{
   group: UserGroup

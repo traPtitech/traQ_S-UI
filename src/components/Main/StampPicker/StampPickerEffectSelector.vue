@@ -20,8 +20,10 @@
 
 <script lang="ts" setup>
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
-import StampPickerEffectSelectorItem from './StampPickerEffectSelectorItem.vue'
+
 import { animeEffectSet, sizeEffectSet } from '/@/lib/markdown/effects'
+
+import StampPickerEffectSelectorItem from './StampPickerEffectSelectorItem.vue'
 
 const sizeEffect = defineModel<SizeEffect | undefined>('sizeEffect', {
   required: true

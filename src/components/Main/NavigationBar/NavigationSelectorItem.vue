@@ -14,11 +14,12 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 import type { ThemeClaim } from '/@/lib/styles'
 import { commonStyles } from '/@/lib/styles'
 import { useThemeSettings } from '/@/store/app/themeSettings'
-import AIcon from '/@/components/UI/AIcon.vue'
-import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -66,7 +67,7 @@ const containerStyle = computed(() => ({
   }
   &[aria-selected='true']::after,
   &:hover::after,
-  &:focus::after {
+  &:active::after {
     opacity: 0.1;
   }
 }

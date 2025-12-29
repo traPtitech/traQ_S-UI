@@ -1,13 +1,15 @@
 import type { RouteName } from '/@/router'
 import type {
-  UserId,
   ChannelId,
   FileId,
-  UserGroupId,
-  TagId,
   MessageId,
-  StampId
+  StampId,
+  TagId,
+  UserGroupId,
+  UserId
 } from '/@/types/entity-ids'
+
+export type UserModalNavigationItemType = 'profile' | 'groups' | 'tags'
 
 export type ModalStateType =
   | 'user'
@@ -62,6 +64,7 @@ interface BaseModalState {
 interface UserModalState extends BaseModalState {
   type: 'user'
   id: UserId
+  navigation?: UserModalNavigationItemType
 }
 
 interface NotificationModalState extends BaseModalState {

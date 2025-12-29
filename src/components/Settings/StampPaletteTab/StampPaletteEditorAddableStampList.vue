@@ -42,12 +42,18 @@
 
 <script lang="ts" setup>
 import { computed, onUnmounted, ref, watch } from 'vue'
-import StampPaletteEditorAddStampListItem from './StampPaletteEditorAddableStampListItem.vue'
+
 import useStampFilter from '/@/components/Main/StampPicker/composables/useStampFilter'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import { useStampHistory } from '/@/store/domain/stampHistory'
+import {
+  useStampRecommendations,
+  useTopStampIds
+} from '/@/store/domain/stampRecommendations'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { StampId } from '/@/types/entity-ids'
+
+import StampPaletteEditorAddStampListItem from './StampPaletteEditorAddableStampListItem.vue'
 
 const ITEMS_PER_LOAD = 50
 
@@ -56,13 +62,15 @@ const currentStampIds = defineModel<StampId[]>('current-stamp-ids', {
 })
 
 const { stampsMap, stampsMapFetched } = useStampsStore()
-const { recentStampIds, fetchStampHistory } = useStampHistory()
+const { fetchStampHistory } = useStampHistory()
+const { fetchStampRecommendations } = useStampRecommendations()
+const { topStampIds } = useTopStampIds()
 const { filterState } = useStampFilter()
 
 const displayCount = ref(ITEMS_PER_LOAD)
 
 fetchStampHistory()
-
+fetchStampRecommendations()
 const allAddableStamps = computed(() => {
   if (!stampsMapFetched.value) {
     return []
@@ -70,11 +78,11 @@ const allAddableStamps = computed(() => {
   return (
     filterState.query === ''
       ? [
-          ...recentStampIds.value
+          ...topStampIds.value
             .map(id => stampsMap.value.get(id))
             .filter(stamp => stamp !== undefined),
           ...filterState.filteredItems
-            .filter(stamp => !recentStampIds.value.includes(stamp.id))
+            .filter(stamp => !topStampIds.value.includes(stamp.id))
             .sort((a, b) => a.name.localeCompare(b.name))
         ]
       : filterState.filteredItems

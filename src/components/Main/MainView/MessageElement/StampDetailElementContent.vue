@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.clickable" @click="openModal">
-    <span>{{ displayName }}</span>
+    <span>{{ removeInvisibleCharacters(displayName) }}</span>
     <span :class="$style.tails">
       <span v-if="count > 1" :class="$style.numberWrap">
         <SpinNumber :value="count" />
@@ -12,10 +12,12 @@
 
 <script lang="ts" setup>
 import { computed, toRef } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
-import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
-import { useUsersStore } from '/@/store/entities/users'
+
 import SpinNumber from '/@/components/UI/SpinNumber.vue'
+import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
+import { makeInvisibleCharactersRemover } from '/@/lib/basic/string'
+import { useUsersStore } from '/@/store/entities/users'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   userId: UserId
@@ -27,6 +29,8 @@ const user = computed(() => usersMap.value.get(props.userId))
 const displayName = computed(() => user.value?.displayName ?? 'unknown')
 
 const { openModal } = useUserModalOpener(toRef(props, 'userId'))
+
+const removeInvisibleCharacters = makeInvisibleCharactersRemover()
 </script>
 
 <style lang="scss" module>

@@ -1,9 +1,10 @@
+import { ref, watchEffect } from 'vue'
+
+import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
 import { createSingleflight } from '/@/lib/basic/async'
 import { wsListener } from '/@/lib/websocket'
 import type { ChannelId } from '/@/types/entity-ids'
-import { ref, watchEffect } from 'vue'
-import useMittListener from '/@/composables/utils/useMittListener'
 
 const getChannelSubscribers = createSingleflight(
   apis.getChannelSubscribers.bind(apis)

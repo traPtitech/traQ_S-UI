@@ -5,10 +5,12 @@
 </template>
 
 <script lang="ts" setup>
-import ShareTargetComponent from '/@/components/ShareTarget/ShareTarget.vue'
 import { computed } from 'vue'
-import { getFirstQuery } from '/@/lib/basic/url'
 import { useRoute } from 'vue-router'
+
+import ShareTargetComponent from '/@/components/ShareTarget/ShareTarget.vue'
+import { getFirstQuery } from '/@/lib/basic/url'
+
 import useLoginCheck from './composables/useLoginCheck'
 
 const route = useRoute()

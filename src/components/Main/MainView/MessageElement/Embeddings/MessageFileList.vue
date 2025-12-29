@@ -32,13 +32,15 @@
 </template>
 
 <script lang="ts" setup>
-import MessageFileListImage from './MessageFileListImage.vue'
-import MessageFileListVideo from './MessageFileListVideo.vue'
+import { computed } from 'vue'
+
+import useFileMetaList from '/@/composables/message/useFileMetaList'
+import type { ChannelId, DMChannelId, FileId } from '/@/types/entity-ids'
+
 import MessageFileListAudio from './MessageFileListAudio.vue'
 import MessageFileListFile from './MessageFileListFile.vue'
-import { computed } from 'vue'
-import type { ChannelId, DMChannelId, FileId } from '/@/types/entity-ids'
-import useFileMetaList from '/@/composables/message/useFileMetaList'
+import MessageFileListImage from './MessageFileListImage.vue'
+import MessageFileListVideo from './MessageFileListVideo.vue'
 
 const props = withDefaults(
   defineProps<{

@@ -5,6 +5,8 @@
       :class="$style.item"
       label="グループ名"
       :max-length="30"
+      :error-message="errorMessage"
+      @update:local-value="validateName"
     />
     <LineEditor
       v-model="description"
@@ -40,14 +42,21 @@
 </template>
 
 <script lang="ts" setup>
-import LineEditor from './LineEditor.vue'
+import type { UserGroup } from '@traptitech/traq'
+
+import { computed, ref } from 'vue'
+
+import FormButton from '/@/components/UI/FormButton.vue'
+import apis from '/@/lib/apis'
+import {
+  INVALID_GROUP_NAME_ERROR_MESSAGE,
+  isValidGroupName
+} from '/@/lib/validate'
+import { useToastStore } from '/@/store/ui/toast'
+
 import GroupAdminList from './GroupAdminList.vue'
 import GroupMemberList from './GroupMemberList.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
-import type { UserGroup } from '@traptitech/traq'
-import apis from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
-import { computed } from 'vue'
+import LineEditor from './LineEditor.vue'
 
 const props = defineProps<{
   group: UserGroup
@@ -87,6 +96,15 @@ const type = computed<string>({
     update('type', v)
   }
 })
+
+const errorMessage = ref<string | null>(null)
+
+const validateName = (name: string) => {
+  if (name === '') errorMessage.value = 'グループ名は空にできません'
+  else if (!isValidGroupName(name))
+    errorMessage.value = INVALID_GROUP_NAME_ERROR_MESSAGE
+  else errorMessage.value = null
+}
 
 const onDelete = async () => {
   if (!confirm('本当にこのグループを削除しますか？')) return

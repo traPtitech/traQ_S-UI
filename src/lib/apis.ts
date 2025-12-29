@@ -13,10 +13,12 @@ import type {
   VisibilityChangedEvent
 } from '@traptitech/traq'
 import { Apis, Configuration } from '@traptitech/traq'
-import type { FileId } from '/@/types/entity-ids'
-import { DEV_SERVER } from '/@/lib/define'
+
 import type { AxiosError } from 'axios'
+
+import { DEV_SERVER } from '/@/lib/define'
 import { constructFilesPath } from '/@/router'
+import type { FileId } from '/@/types/entity-ids'
 
 export type { Session as WebRTCUserStateSessions }
 
@@ -44,8 +46,7 @@ export const buildFileWaveformPath = (fileId: FileId) =>
   `${buildFileThumbnailPath(fileId)}?type=waveform`
 
 export const embeddingOrigin =
-  DEV_SERVER !== '' &&
-  (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+  DEV_SERVER !== '' && import.meta.env.MODE === 'development'
     ? DEV_SERVER
     : `${location.protocol}//${location.host}`
 

@@ -25,13 +25,17 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import type { UserGroupMember } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
+
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
 import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
+
 const props = defineProps<{
   id: string
 }>()

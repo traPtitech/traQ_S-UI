@@ -1,11 +1,14 @@
 import type { Store, traQMarkdownIt } from '@traptitech/traq-markdown-it'
+
 import useChannelPath from '/@/composables/useChannelPath'
 import { embeddingOrigin } from '/@/lib/apis'
 import { useMeStore } from '/@/store/domain/me'
-import { useUsersStore } from '/@/store/entities/users'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
+import { useUsersStore } from '/@/store/entities/users'
+
+import { isDefined } from '../basic/array'
 
 const storeProvider: Store = {
   getUser(id) {
@@ -34,7 +37,7 @@ const storeProvider: Store = {
   },
   generateChannelHref(id) {
     const { channelIdToLink } = useChannelPath()
-    return `${embeddingOrigin}${channelIdToLink(id)}`
+    return `${embeddingOrigin}${channelIdToLink(id) as string}`
   },
   generateUserHref(id) {
     return `javascript:openUserModal(${encodeURIComponent(JSON.stringify(id))})`
@@ -53,17 +56,17 @@ const loadMd = async () => {
   md = new traQMarkdownIt(storeProvider, [], embeddingOrigin)
 }
 
-const waitForInitialFetch = async () => {
+const waitForInitialFetch = () => {
   const { usersMapInitialFetchPromise } = useUsersStore()
   const { userGroupsMapInitialFetchPromise } = useGroupsStore()
   const { bothChannelsMapInitialFetchPromise } = useChannelsStore()
   const { stampsMapInitialFetchPromise } = useStampsStore()
 
-  await Promise.all([
-    usersMapInitialFetchPromise,
-    userGroupsMapInitialFetchPromise,
-    bothChannelsMapInitialFetchPromise,
-    stampsMapInitialFetchPromise,
+  return Promise.all([
+    usersMapInitialFetchPromise.value,
+    userGroupsMapInitialFetchPromise.value,
+    bothChannelsMapInitialFetchPromise.value,
+    stampsMapInitialFetchPromise.value,
     loadMd()
   ])
 }
@@ -81,4 +84,9 @@ export const renderInline = async (text: string) => {
 export const parse = async (text: string) => {
   await waitForInitialFetch()
   return md.md.parse(text, {})
+}
+
+export const isEmbeddedLink = async (text: string) => {
+  await waitForInitialFetch()
+  return isDefined(md.embeddingExtractor.urlToEmbeddingData(text))
 }

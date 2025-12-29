@@ -6,7 +6,6 @@
       :class="$style.content"
       allowfullscreen
       allow="fullscreen; autoplay; encrypted-media; picture-in-picture"
-      referrerpolicy="no-referrer"
     />
     <template v-else>
       <img :src="previewUrl" :class="$style.image" />
@@ -19,6 +18,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import useToggle from '/@/composables/utils/useToggle'
 

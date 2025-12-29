@@ -40,20 +40,22 @@
 <script lang="ts">
 import type { Ref } from 'vue'
 import {
-  reactive,
   computed,
   defineAsyncComponent,
+  onBeforeUnmount,
   onMounted,
-  onBeforeUnmount
+  reactive
 } from 'vue'
-import { connectFirebase } from '/@/lib/notification/notification'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+
 import useNavigationController from '/@/composables/mainView/useNavigationController'
+import { connectFirebase } from '/@/lib/notification/notification'
+import { useCommandPalette } from '/@/store/app/commandPalette'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useToastStore } from '/@/store/ui/toast'
+
+import useInitialFetch from './composables/useInitialFetch'
 import useMainViewLayout from './composables/useMainViewLayout'
 import useRouteWatcher from './composables/useRouteWatcher'
-import useInitialFetch from './composables/useInitialFetch'
-import { useToastStore } from '/@/store/ui/toast'
-import { useCommandPalette } from '/@/store/app/commandPalette'
 
 const useStyles = (
   mainViewPosition: Readonly<Ref<number>>,
@@ -112,10 +114,11 @@ const NotFoundPage = defineAsyncComponent(
 </script>
 
 <script lang="ts" setup>
+import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue'
 import MainView from '/@/components/Main/MainView/MainView.vue'
 import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue'
 import NavigationBar from '/@/components/Main/NavigationBar/NavigationBar.vue'
-import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue'
+
 import useViewStateSender from './composables/useViewStateSender'
 
 const navWidth = 320
@@ -170,18 +173,6 @@ useViewStateSender()
 </script>
 
 <style lang="scss" module>
-// ナビゲーションバーの幅
-$min-nav-width: 260px;
-$max-nav-width: 400px;
-// ナビゲーションバーの幅が最小・最大になる画面幅
-$min-nav-width-display-width: 700px;
-$max-nav-width-display-width: 2560px;
-// それぞれの差と二つの比率
-$nav-width-diff: $max-nav-width - $min-nav-width;
-$nav-width-display-width-diff: $max-nav-width-display-width -
-  $min-nav-width-display-width;
-$nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
-
 .homeWrapper {
   height: 100%;
 }
@@ -195,12 +186,7 @@ $nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
 }
 .navigationWrapper {
   height: 100%;
-  max-width: 400px;
-  min-width: 260px;
-  flex-shrink: 0;
-  flex-basis: calc(
-    260px + ((100vw - #{$min-nav-width-display-width}) * #{$nav-width-ratio})
-  );
+  width: fit-content;
   [data-is-mobile] & {
     position: absolute;
     top: 0;
@@ -210,6 +196,7 @@ $nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
 }
 .mainViewWrapper {
   z-index: $z-index-main-view-wrapper;
+  flex: 1;
 }
 .sidebarWrapper {
   @include background-secondary;

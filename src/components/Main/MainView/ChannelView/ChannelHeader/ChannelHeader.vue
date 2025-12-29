@@ -15,11 +15,12 @@
 
 <script lang="ts" setup>
 import PrimaryViewHeader from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeader.vue'
+import type { ChannelId } from '/@/types/entity-ids'
+
 import ChannelHeaderChannelName from './ChannelHeaderChannelName.vue'
 import ChannelHeaderRelationButton from './ChannelHeaderRelationButton.vue'
-import ChannelHeaderTopic from './ChannelHeaderTopic.vue'
 import ChannelHeaderTools from './ChannelHeaderTools.vue'
-import type { ChannelId } from '/@/types/entity-ids'
+import ChannelHeaderTopic from './ChannelHeaderTopic.vue'
 
 defineProps<{
   channelId: ChannelId
@@ -39,6 +40,7 @@ defineProps<{
   display: flex;
   align-items: center;
   overflow-x: auto;
+  overflow-y: hidden;
   margin-bottom: -6px;
 }
 .topic {

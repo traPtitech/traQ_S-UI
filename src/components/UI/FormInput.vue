@@ -1,11 +1,18 @@
 <template>
   <div>
-    <label v-if="label" :for="id" :class="$style.label">
-      {{ label }}
-    </label>
+    <div :class="$style.labelContainer">
+      <label v-if="label" :for="id" :class="$style.label">
+        {{ label }}
+      </label>
+      <span v-if="errorMessage" :class="$style.errorMessage">
+        {{ errorMessage }}
+      </span>
+    </div>
+
     <div
       :class="$style.inputContainer"
       :data-on-secondary="$boolAttr(onSecondary)"
+      :data-has-error="$boolAttr(errorMessage !== null)"
     >
       <span v-if="prefix" :class="$style.prefix" @click="focus">
         {{ prefix }}
@@ -53,6 +60,7 @@
 
 <script lang="ts" setup generic="T extends string | number">
 import { onMounted, shallowRef } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import useShowPassword from '/@/composables/dom/useShowPassword'
@@ -75,6 +83,7 @@ const props = withDefaults(
     min?: string
     max?: string
     step?: string
+    errorMessage?: string | null
     maxLength?: number
     useChangeEvent?: boolean
     focusOnMount?: boolean
@@ -86,7 +95,8 @@ const props = withDefaults(
     placeholder: '',
     useChangeEvent: false,
     focusOnMount: false,
-    selectOnFocus: false
+    selectOnFocus: false,
+    errorMessage: null
   }
 )
 
@@ -126,10 +136,18 @@ defineExpose({ focus })
 </script>
 
 <style lang="scss" module>
+.labelContainer {
+  display: flex;
+  gap: 0px 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
 .label {
   @include color-ui-primary;
   display: block;
-  margin-bottom: 4px;
+}
+.errorMessage {
+  color: $theme-accent-error-default;
 }
 .inputContainer {
   @include color-ui-primary;
@@ -142,8 +160,11 @@ defineExpose({ focus })
   &[data-on-secondary] {
     @include background-primary;
   }
+  &[data-has-error] {
+    border-color: $theme-accent-error-default;
+  }
   border: solid 2px transparent;
-  &:focus-within {
+  &:not([data-has-error]):focus-within {
     border-color: $theme-accent-focus-default;
   }
 }

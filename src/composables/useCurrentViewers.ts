@@ -1,11 +1,13 @@
 import type { ChannelViewer } from '@traptitech/traq'
 import { ChannelViewState } from '@traptitech/traq'
+
 import type { Ref } from 'vue'
-import { ref, computed } from 'vue'
-import type { ChannelId } from '/@/types/entity-ids'
+import { computed, ref } from 'vue'
+
+import useMittListener from '/@/composables/utils/useMittListener'
 import { wsListener } from '/@/lib/websocket'
 import { useMeStore } from '/@/store/domain/me'
-import useMittListener from '/@/composables/utils/useMittListener'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const useCurrentViewers = (channelId: Ref<ChannelId>) => {
   const meStore = useMeStore()
@@ -22,17 +24,14 @@ const useCurrentViewers = (channelId: Ref<ChannelId>) => {
         v =>
           v.state === ChannelViewState.Monitoring ||
           v.state === ChannelViewState.Editing ||
-          v.userId === meStore.myId.value
+          v.state === ChannelViewState.StaleViewing
       )
       .map(v => v.userId)
   )
 
   const inactiveViewingUsers = computed(() =>
     currentViewers.value
-      .filter(
-        v =>
-          v.state === ChannelViewState.None && v.userId !== meStore.myId.value
-      )
+      .filter(v => v.state === ChannelViewState.None)
       .map(v => v.userId)
   )
 

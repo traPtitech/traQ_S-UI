@@ -11,11 +11,12 @@
 </template>
 
 <script lang="ts" setup>
-import EphemeralNavigationContentContainer from './EphemeralNavigationContentContainer.vue'
-import AudioController from './AudioController/AudioController.vue'
 import type { EphemeralNavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
+
 import SubQallView from '../../MainView/QallView/SubQallView.vue'
+import AudioController from './AudioController/AudioController.vue'
 import DraftList from './DraftList/DraftList.vue'
+import EphemeralNavigationContentContainer from './EphemeralNavigationContentContainer.vue'
 
 withDefaults(
   defineProps<{
