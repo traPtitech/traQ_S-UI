@@ -41,13 +41,14 @@
 import type { Ref } from 'vue'
 import { computed, defineAsyncComponent, reactive } from 'vue'
 
+import { useEventListener } from '@vueuse/core'
+
 import useNavigationController from '/@/composables/mainView/useNavigationController'
 import useResponsive from '/@/composables/useResponsive'
 import { connectFirebase } from '/@/lib/notification/notification'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useToastStore } from '/@/store/ui/toast'
 
-import useEventListener from '../composables/dom/useEventListener'
 import useInitialFetch from './composables/useInitialFetch'
 import useMainViewLayout from './composables/useMainViewLayout'
 import useRouteWatcher from './composables/useRouteWatcher'
@@ -95,7 +96,7 @@ const useCommandPaletteShortcutKey = () => {
     }
   }
 
-  useEventListener(window, 'keydown', onKeyDown)
+  useEventListener('keydown', onKeyDown)
 }
 
 const NotFoundPage = defineAsyncComponent(

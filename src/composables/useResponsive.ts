@@ -1,9 +1,8 @@
 import { ref } from 'vue'
 
-import { mobileMinBreakpoint } from '/@/lib/media'
-import createSharedComposable from '/@/lib/utils/createSharedComposable'
+import { createSharedComposable, useEventListener } from '@vueuse/core'
 
-import useEventListener from './dom/useEventListener'
+import { mobileMinBreakpoint } from '/@/lib/media'
 
 const useResponsive = () => {
   const isMobileQuery = matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)

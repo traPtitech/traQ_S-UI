@@ -1,7 +1,8 @@
 import type { Ref } from 'vue'
 import { computed, reactive } from 'vue'
 
-import useEventListener from '/@/composables/dom/useEventListener'
+import { useEventListener } from '@vueuse/core'
+
 import type { Point } from '/@/lib/basic/point'
 import {
   diff,
@@ -116,7 +117,6 @@ const useMouseMove = (
       moveUpdate
     )
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     useEventListener(containerEle, 'mouseup', stopWatchMousemove, {
       once: true
     })

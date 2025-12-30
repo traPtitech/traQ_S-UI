@@ -9,7 +9,8 @@ import {
   shallowRef
 } from 'vue'
 
-import useEventListener from '/@/composables/dom/useEventListener'
+import { useEventListener } from '@vueuse/core'
+
 import { unrefElement } from '/@/lib/dom/unrefElement'
 import { useModalStore } from '/@/store/ui/modal'
 
@@ -54,7 +55,7 @@ export default defineComponent({
     clickOutside: (_e: PointerEvent) => true
   },
   setup(props, { slots, emit }) {
-    const element = shallowRef<Element | ComponentPublicInstance>()
+    const element = shallowRef<HTMLElement | ComponentPublicInstance>()
 
     const { shouldShowModal } = useModalStore()
     const isMouseDown = ref(false)

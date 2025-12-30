@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted } from 'vue'
 
-import useEventListener from './useEventListener'
+import { useEventListener } from '@vueuse/core'
 
 const useScreenWakeLock = () => {
   if (!navigator.wakeLock) return

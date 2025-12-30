@@ -3,11 +3,11 @@ import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
 import type { Ref } from 'vue'
 import { computed, ref, watch } from 'vue'
 
+import { useEventListener } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { throttle } from 'throttle-debounce'
 
 import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
-import useEventListener from '/@/composables/dom/useEventListener'
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import type { Point } from '/@/lib/basic/point'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'

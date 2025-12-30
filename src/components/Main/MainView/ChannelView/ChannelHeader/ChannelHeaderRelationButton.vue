@@ -27,8 +27,9 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 
+import { useEventListener } from '@vueuse/core'
+
 import AIcon from '/@/components/UI/AIcon.vue'
-import useEventListener from '/@/composables/dom/useEventListener'
 import type { Point } from '/@/lib/basic/point'
 import { randomString } from '/@/lib/basic/randomString'
 

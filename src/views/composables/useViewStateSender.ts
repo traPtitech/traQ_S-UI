@@ -3,7 +3,8 @@ import { ChannelViewState } from '@traptitech/traq'
 import { computed, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
-import useEventListener from '/@/composables/dom/useEventListener'
+import { useEventListener } from '@vueuse/core'
+
 import { changeViewState } from '/@/lib/websocket'
 import { RouteName } from '/@/router'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
@@ -77,8 +78,8 @@ const useViewStateSender = () => {
   }
 
   useEventListener(document, 'visibilitychange', visibilitychangeListener)
-  useEventListener(window, 'focus', focusListener)
-  useEventListener(window, 'blur', blurListener)
+  useEventListener('focus', focusListener)
+  useEventListener('blur', blurListener)
 }
 
 export default useViewStateSender

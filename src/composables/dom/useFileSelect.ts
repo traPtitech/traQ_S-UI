@@ -1,6 +1,6 @@
-import type { MaybePromise } from '/@/types/utility'
+import { useEventListener } from '@vueuse/core'
 
-import useEventListener from './useEventListener'
+import type { MaybePromise } from '/@/types/utility'
 
 type FileSelectOptions = {
   accept?: string

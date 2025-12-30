@@ -53,7 +53,6 @@ import useAttachments from '/@/components/Main/MainView/MessageInput/composables
 import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
-import { unrefElement } from '/@/lib/dom/unrefElement'
 import { getResizedFile } from '/@/lib/resize'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
@@ -166,14 +165,12 @@ const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
 const textareaComponentRef =
   shallowRef<InstanceType<typeof MessageInputTextArea>>()
 
-const textareaElement = computed(() =>
-  unrefElement(textareaComponentRef.value?.textareaAutosizeRef)
-)
+const textareaRef = computed(() => textareaComponentRef.value?.textareaRef)
 
 const containerEle = ref<HTMLDivElement>()
 const { toggleStampPicker } = useTextStampPickerInvoker(
   text,
-  textareaElement,
+  textareaRef,
   containerEle
 )
 
@@ -185,7 +182,7 @@ const {
 } = useAttachmentsEditor(props, text)
 
 onMounted(() => {
-  textareaElement.value?.focus()
+  textareaRef.value?.focus()
 })
 </script>
 

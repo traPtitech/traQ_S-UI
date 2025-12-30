@@ -28,7 +28,8 @@
 import { computed, reactive, readonly, shallowRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import useEventListener from '/@/composables/dom/useEventListener'
+import { useEventListener } from '@vueuse/core'
+
 import useToggle from '/@/composables/utils/useToggle'
 
 const popupNavigatorButtonId = 'popup-navigation-button'
@@ -48,8 +49,8 @@ const useWindowPointer = (
   },
   options?: boolean | AddEventListenerOptions | undefined
 ) => {
-  useEventListener(window, 'pointerdown', onPointerDown, options)
-  useEventListener(window, 'pointerup', onPointerUp, options)
+  useEventListener('pointerdown', onPointerDown, options)
+  useEventListener('pointerup', onPointerUp, options)
 }
 
 /**

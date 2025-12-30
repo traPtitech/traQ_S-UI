@@ -37,9 +37,9 @@ import type { ComponentPublicInstance, Ref } from 'vue'
 import { nextTick, onMounted, reactive, shallowRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+import { useEventListener } from '@vueuse/core'
 import { throttle } from 'throttle-debounce'
 
-import useEventListener from '/@/composables/dom/useEventListener'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import { embeddingOrigin } from '/@/lib/apis'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'

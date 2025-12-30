@@ -1,6 +1,7 @@
 import { computed, onUnmounted, ref } from 'vue'
 
-import useInnerWindowSize from '/@/composables/dom/useInnerWindowSize'
+import { useWindowSize } from '@vueuse/core'
+
 import { createAnimationFrameController } from '/@/lib/dom/animationFrame'
 import {
   MAX_NAVIGATION_WIDTH_RATIO,
@@ -12,9 +13,7 @@ import {
 const useNavigationResizer = () => {
   const animationFrame = createAnimationFrameController()
 
-  const { width: windowWidth } = useInnerWindowSize({
-    fallback: { width: Infinity }
-  })
+  const { width: windowWidth } = useWindowSize({ initialWidth: Infinity })
 
   const {
     resizerRef,

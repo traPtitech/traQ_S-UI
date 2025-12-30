@@ -74,7 +74,6 @@ import useFocus from '/@/composables/dom/useFocus'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import useResponsive from '/@/composables/useResponsive'
-import { unrefElement } from '/@/lib/dom/unrefElement'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -164,7 +163,7 @@ const textareaComponentRef = ref<InstanceType<typeof MessageInputTextArea>>()
 const containerEle = ref<HTMLDivElement>()
 const { toggleStampPicker } = useTextStampPickerInvoker(
   toRef(state, 'text'),
-  computed(() => unrefElement(textareaComponentRef.value?.textareaAutosizeRef)),
+  computed(() => textareaComponentRef.value?.textareaRef),
   containerEle
 )
 

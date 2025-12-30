@@ -20,9 +20,9 @@
 <script lang="ts" setup>
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
+import { useEventListener } from '@vueuse/core'
 import autosize from 'autosize'
 
-import useEventListener from '/@/composables/dom/useEventListener'
 import useOnInput from '/@/composables/useOnInput'
 
 const modelValue = defineModel<string>({
@@ -79,7 +79,8 @@ onBeforeUnmount(() => {
 
 defineExpose({
   focus,
-  autosizeUpdateTextarea
+  autosizeUpdateTextarea,
+  textareaEle
 })
 </script>
 
