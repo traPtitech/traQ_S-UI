@@ -1,7 +1,4 @@
-import {
-  ChannelSubscribeLevel,
-  type PutChannelSubscribeLevelRequest
-} from '@traptitech/traq'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 import type { Ref } from 'vue'
 import { computed, onBeforeUnmount, watch } from 'vue'
@@ -13,27 +10,31 @@ import flushableDebounce from '/@/lib/flushableDebounce'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import type { ChannelId } from '/@/types/entity-ids'
 
+import createOptimisticUpdater from '../../lib/optimisticUpdate'
+
 const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
-  const { subscriptionMap, changeSubscriptionLevel: changeLevel } =
+  const { getSubscriptionLevel, changeSubscriptionLevel: changeLevel } =
     useSubscriptionStore()
 
   const setChannelSubscribeLevel = flushableDebounce(
     5_000,
-    (channelId: ChannelId, request: PutChannelSubscribeLevelRequest) => {
-      apis.setChannelSubscribeLevel(channelId, request, { adapter: beacon })
-    }
+    createOptimisticUpdater({
+      getState: (channelId: ChannelId) => getSubscriptionLevel(channelId),
+      setState: (level: ChannelSubscribeLevel, channelId: ChannelId) =>
+        changeLevel(channelId, level),
+      execute: (level: ChannelSubscribeLevel, channelId: ChannelId) =>
+        apis.setChannelSubscribeLevel(channelId, { level }, { adapter: beacon })
+    })
   )
 
-  const currentChannelSubscription = computed(
-    () =>
-      subscriptionMap.value.get(channelId.value ?? '') ??
-      ChannelSubscribeLevel.none
+  const currentChannelSubscription = computed(() =>
+    getSubscriptionLevel(channelId.value)
   )
 
   const changeSubscriptionLevel = (level: ChannelSubscribeLevel) => {
     if (!channelId.value) return
     changeLevel(channelId.value, level)
-    setChannelSubscribeLevel(channelId.value, { level })
+    setChannelSubscribeLevel(level, channelId.value)
   }
 
   useEventListener(document, 'visibilitychange', () => {
