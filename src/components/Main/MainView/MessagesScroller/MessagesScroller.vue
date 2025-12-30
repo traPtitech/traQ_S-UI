@@ -178,23 +178,16 @@ onMounted(() => {
     state.height = rootRef.value?.scrollHeight ?? 0
   }
 })
-
 // マウント後にstampの取得が完了した場合
-watch(
-  stampsMapFetched,
-  async fetched => {
-    if (!fetched || !rootRef.value) return
-
+watch(stampsMapFetched, async fetched => {
+  if (fetched && rootRef.value) {
     await nextTick()
     const scrollHeight = rootRef.value.scrollHeight
     rootRef.value.scrollTop = scrollHeight
     state.height = scrollHeight
     state.scrollTop = scrollHeight
-  },
-  {
-    flush: 'post'
   }
-)
+})
 
 watch(
   () => props.messageIds,
