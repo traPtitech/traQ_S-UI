@@ -14,7 +14,7 @@ import type {
 } from '@traptitech/traq'
 import { Apis, Configuration } from '@traptitech/traq'
 
-import type { AxiosError } from 'axios'
+import { type AxiosAdapter, type AxiosError, getAdapter } from 'axios'
 
 import { DEV_SERVER } from '/@/lib/define'
 import { constructFilesPath } from '/@/router'
@@ -25,13 +25,17 @@ export type { Session as WebRTCUserStateSessions }
 export const BASE_PATH = '/api/v3'
 export const WEBSOCKET_ENDPOINT = '/api/v3/ws'
 
-const apis = new Apis(
-  new Configuration({
-    basePath: BASE_PATH
-  })
-)
-
+const apis = new Apis(new Configuration({ basePath: BASE_PATH }))
 export default apis
+
+const fetchAdaptor = getAdapter('fetch')
+
+export const beacon: AxiosAdapter = async config => {
+  return fetchAdaptor({
+    ...config,
+    fetchOptions: { keepalive: true }
+  })
+}
 
 export const buildFilePath = (fileId: FileId, withDlParam = false) =>
   `${BASE_PATH}/files/${fileId}${withDlParam ? '?dl=1' : ''}`
