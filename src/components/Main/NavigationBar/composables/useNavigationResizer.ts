@@ -1,7 +1,8 @@
-import { computed, onUnmounted, ref } from 'vue'
+import { computed, onUnmounted } from 'vue'
 
 import { useWindowSize } from '@vueuse/core'
 
+import useDragging from '/@/composables/dom/useDragging'
 import { createAnimationFrameController } from '/@/lib/dom/animationFrame'
 import {
   MAX_NAVIGATION_WIDTH_RATIO,
@@ -40,62 +41,37 @@ const useNavigationResizer = () => {
     return clampWidth(navigationWidth.value)
   })
 
-  const isResizing = ref(false)
-  let pointerId: null | number = null
+  const { isDragging, onDragStart, onDragging, onDragEnd } = useDragging({
+    targetRef: resizerRef,
+    onDragStart: () => {
+      document.body.style.cursor = 'e-resize'
+      document.body.style.userSelect = 'none'
+      if (!isNavigationClosed.value) updateNavigationLeft()
+    },
+    onDragging: (e: PointerEvent) => {
+      animationFrame.request(() => {
+        const width = e.clientX - navigationLeft.value
 
-  const cleanup = () => {
+        if (width <= NAVIGATION_CLOSING_THRESHOLD) {
+          closeNavigation()
+        } else {
+          setNavigationWidth(width)
+        }
+      })
+    },
+    onDragEnd: () => {
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+      if (navigationWidth.value > 0) saveNavigationWidth()
+    }
+  })
+
+  onUnmounted(() => {
     animationFrame.cancel()
-
-    document.body.style.cursor = ''
-    document.body.style.userSelect = ''
-
-    if (!pointerId || !resizerRef.value?.hasPointerCapture(pointerId)) return
-    resizerRef.value?.releasePointerCapture(pointerId)
-  }
-
-  const onDragStart = (e: PointerEvent) => {
-    isResizing.value = true
-
-    if (!isNavigationClosed.value) updateNavigationLeft()
-
-    document.body.style.cursor = 'e-resize'
-    document.body.style.userSelect = 'none'
-
-    pointerId = e.pointerId
-    resizerRef.value?.setPointerCapture(pointerId)
-
-    e.preventDefault()
-  }
-
-  const onDragging = (e: PointerEvent) => {
-    if (!isResizing.value) return
-
-    animationFrame.request(() => {
-      const width = e.clientX - navigationLeft.value
-
-      if (width <= NAVIGATION_CLOSING_THRESHOLD) {
-        closeNavigation()
-      } else {
-        setNavigationWidth(width)
-      }
-    })
-
-    e.preventDefault()
-  }
-
-  const onDragEnd = () => {
-    if (!isResizing.value) return
-
-    if (navigationWidth.value > 0) saveNavigationWidth()
-
-    isResizing.value = false
-    cleanup()
-  }
-
-  onUnmounted(cleanup)
+  })
 
   return {
-    isNavigationResizing: isResizing,
+    isNavigationResizing: isDragging,
     navigationWidth: clampedNavigationWidth,
     onDragStart,
     onDragging,
