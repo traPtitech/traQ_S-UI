@@ -164,9 +164,7 @@ const { stampsMapFetched } = useStampsStore()
 const rootRef = shallowRef<HTMLElement | null>(null)
 const state = reactive({
   height: 0,
-  scrollTop: lastScrollPosition.value,
-  // 古いメッセージを読み込むとき、読み込み開始直後は高さの調整を無効化する
-  skipResizeAdjustment: false
+  scrollTop: lastScrollPosition.value
 })
 
 const { onChangeHeight, onEntryMessageLoaded } =
@@ -222,18 +220,10 @@ watch(
       }
       //上に追加された時はスクロール位置を変更する。
       if (props.lastLoadingDirection === 'former') {
-        // onChangeHeight の調整を一時的に無効化
-        state.skipResizeAdjustment = true
         rootRef.value.scrollTo({
           top: newHeight - state.height
         })
         state.height = newHeight
-        // 十分に DOMが更新されたら無効化を解除
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            state.skipResizeAdjustment = false
-          })
-        })
       }
 
       if (props.lastLoadingDirection === 'latest') {
