@@ -145,13 +145,18 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
     subscriptionMap.value = new Map(res.data.map(s => [s.channelId, s.level]))
     subscriptionMapFetched.value = true
   }
-  const changeSubscriptionLevel = async (
+
+  /**
+   * WARNING: store の書き換えのみを行い API リクエストは飛ばさないので，
+   * `useChannelSubscriptionState` composable 以外で呼び出さないこと．
+   *
+   * 通知設定を変更したいときは `useChannelSubscriptionState` の
+   * `changeSubscriptionLevel` を利用する．
+   */
+  const changeSubscriptionLevel = (
     channelId: ChannelId,
     subscriptionLevel: ChannelSubscribeLevel
   ) => {
-    await apis.setChannelSubscribeLevel(channelId, {
-      level: subscriptionLevel
-    })
     subscriptionMap.value.set(channelId, subscriptionLevel)
   }
 
