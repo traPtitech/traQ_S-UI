@@ -143,8 +143,7 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
   )
 
   const isChannelSubscribed = (channelId: ChannelId) =>
-    (subscriptionMap.value.get(channelId) ?? ChannelSubscribeLevel.none) !==
-    ChannelSubscribeLevel.none
+    getSubscriptionLevel(channelId) !== ChannelSubscribeLevel.none
 
   const fetchSubscriptions = async ({
     ignoreCache = false
@@ -155,6 +154,9 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
     subscriptionMap.value = new Map(res.data.map(s => [s.channelId, s.level]))
     subscriptionMapFetched.value = true
   }
+
+  const getSubscriptionLevel = (channelId: ChannelId) =>
+    subscriptionMap.value.get(channelId) ?? ChannelSubscribeLevel.none
 
   /**
    * WARNING: store の書き換えのみを行い API リクエストは飛ばさないので，
@@ -215,6 +217,7 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
     fetchUnreadChannels,
     isChannelSubscribed,
     fetchSubscriptions,
+    getSubscriptionLevel,
     changeSubscriptionLevel
   }
 })
