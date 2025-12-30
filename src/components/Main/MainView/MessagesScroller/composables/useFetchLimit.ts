@@ -1,16 +1,19 @@
-import type { Ref } from 'vue'
+import type { ShallowRef } from 'vue'
 import { computed, watch } from 'vue'
 
 import useBoxSize from '/@/composables/dom/useBoxSize'
+import { unrefElement } from '/@/lib/dom/unrefElement'
+
+import type { MessageScrollerInstance } from '../MessagesScroller.vue'
 
 const MAX_COUNT = 20
 
 const useFetchLimit = (
-  scrollerEle: Ref<{ $el: HTMLDivElement } | undefined>,
+  scrollerRef: ShallowRef<MessageScrollerInstance | undefined>,
   messageHeight: number
 ) => {
   const { height } = useBoxSize(
-    computed(() => scrollerEle.value?.$el ?? null),
+    computed(() => unrefElement(scrollerRef) ?? null),
     false
   )
 

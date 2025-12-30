@@ -1,8 +1,9 @@
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
 
 import type { Ref } from 'vue'
-import { computed, ref, watch, watchEffect } from 'vue'
+import { computed, ref, watch } from 'vue'
 
+import { useEventListener } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { throttle } from 'throttle-debounce'
 
@@ -152,13 +153,11 @@ export const useStampPickerInvoker = (
     position.value = getPositionFromAlignment(newAlignment, rect)
   })
 
-  watchEffect(() => {
-    if (isThisOpen.value) {
-      window.addEventListener('resize', setPosition)
-    } else {
-      window.removeEventListener('resize', setPosition)
-    }
-  })
+  useEventListener(
+    computed(() => (isThisOpen.value ? window : null)),
+    'resize',
+    setPosition
+  )
 
   const openStampPicker = () => {
     setPosition()

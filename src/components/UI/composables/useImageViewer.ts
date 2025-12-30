@@ -1,5 +1,7 @@
 import type { Ref } from 'vue'
-import { computed, onBeforeUnmount, onMounted, reactive } from 'vue'
+import { computed, reactive } from 'vue'
+
+import { useEventListener } from '@vueuse/core'
 
 import type { Point } from '/@/lib/basic/point'
 import {
@@ -109,26 +111,18 @@ const useMouseMove = (
       lastPoint = newPoint
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    containerEle.value!.addEventListener('mousemove', moveUpdate)
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    containerEle.value!.addEventListener(
-      'mouseup',
-      _upEvent => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        containerEle.value!.removeEventListener('mousemove', moveUpdate)
-      },
-      { once: true }
+    const stopWatchMousemove = useEventListener(
+      containerEle,
+      'mousemove',
+      moveUpdate
     )
+
+    useEventListener(containerEle, 'mouseup', stopWatchMousemove, {
+      once: true
+    })
   }
 
-  onMounted(() => {
-    containerEle.value?.addEventListener('mousedown', onDown)
-  })
-  onBeforeUnmount(() => {
-    containerEle.value?.removeEventListener('mousedown', onDown)
-  })
+  useEventListener(containerEle, 'mousedown', onDown)
 }
 
 const useMouseWheel = (
@@ -145,12 +139,7 @@ const useMouseWheel = (
     e.preventDefault()
   }
 
-  onMounted(() => {
-    containerEle.value?.addEventListener('wheel', onWheel)
-  })
-  onBeforeUnmount(() => {
-    containerEle.value?.removeEventListener('wheel', onWheel)
-  })
+  useEventListener(containerEle, 'wheel', onWheel)
 }
 
 const useTouch = (
@@ -230,16 +219,9 @@ const useTouch = (
     return newPinchTouches
   }
 
-  onMounted(() => {
-    containerEle.value?.addEventListener('touchstart', onTouchStart)
-    containerEle.value?.addEventListener('touchmove', onMove)
-    containerEle.value?.addEventListener('touchend', onTouchEnd)
-  })
-  onBeforeUnmount(() => {
-    containerEle.value?.removeEventListener('touchstart', onTouchStart)
-    containerEle.value?.removeEventListener('touchmove', onMove)
-    containerEle.value?.removeEventListener('touchend', onTouchEnd)
-  })
+  useEventListener(containerEle, 'touchstart', onTouchStart)
+  useEventListener(containerEle, 'touchmove', onMove)
+  useEventListener(containerEle, 'touchend', onTouchEnd)
 }
 
 const useImageViewer = (

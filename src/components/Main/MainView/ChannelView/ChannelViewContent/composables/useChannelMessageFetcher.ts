@@ -1,8 +1,9 @@
 import type { Message } from '@traptitech/traq'
 
-import type { Ref } from 'vue'
+import type { Ref, ShallowRef } from 'vue'
 import { computed, onActivated, onMounted, ref, watch } from 'vue'
 
+import type { MessageScrollerInstance } from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import useMittListener from '/@/composables/utils/useMittListener'
@@ -27,7 +28,7 @@ interface GetMessagesParams {
 }
 
 const useChannelMessageFetcher = (
-  scrollerEle: Ref<{ $el: HTMLDivElement } | undefined>,
+  scrollerRef: ShallowRef<MessageScrollerInstance | undefined>,
   props: {
     channelId: ChannelId
     entryMessageId?: MessageId
@@ -41,7 +42,7 @@ const useChannelMessageFetcher = (
     deleteUnreadChannelWithSend
   } = useSubscriptionStore()
   const { fetchLimit, waitHeightResolved } = useFetchLimit(
-    scrollerEle,
+    scrollerRef,
     MESSAGE_HEIGHT
   )
   const loadedMessageLatestDate = ref<Date>()

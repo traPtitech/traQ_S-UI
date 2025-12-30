@@ -15,8 +15,8 @@
 import { computed, ref, watchEffect } from 'vue'
 
 import AuthenticateHeader from '/@/components/Authenticate/AuthenticateHeader.vue'
+import useResponsive from '/@/composables/useResponsive'
 import { wait } from '/@/lib/basic/timer'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 
 import ShareTargetForm from './ShareTargetForm.vue'
 
@@ -36,7 +36,7 @@ const props = withDefaults(
 const defaultText = computed(() =>
   [props.title, props.text, props.url].filter(text => text !== '').join('\n')
 )
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const donePost = ref(false)
 const onPost = () => {

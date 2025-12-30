@@ -52,9 +52,9 @@ import { onMounted, ref } from 'vue'
 
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'
+import useResponsive from '/@/composables/useResponsive'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useStampPicker } from '/@/store/ui/stampPicker'
 import type { StampId } from '/@/types/entity-ids'
 
@@ -76,8 +76,7 @@ const {
   closeStampPicker
 } = useStampPicker()
 const { upsertLocalStampHistory } = useStampHistory()
-const { recordStampUsage } = useStampRecommendations()
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const animationKeys = ref(new Map<StampId, number>())
 const incrementAnimationKey = (id: StampId) => {
@@ -96,6 +95,8 @@ const {
   toggleShowEffect
 } = useEffectSelector()
 const { preselected, onHoverStamp } = useStampPreselector()
+
+const { recordStampUsage } = useStampRecommendations()
 
 const filterInputRef = ref<InstanceType<typeof FilterInput> | null>(null)
 

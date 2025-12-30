@@ -66,9 +66,9 @@ import { computed } from 'vue'
 import PrimaryViewHeaderPopupFrame from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderPopupMenuItem.vue'
 import { useQall } from '/@/composables/qall/useQall'
+import useResponsive from '/@/composables/useResponsive'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useMeStore } from '/@/store/domain/me'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import type { ChannelId } from '/@/types/entity-ids'
 
 import useChannelCreateModal from './composables/useChannelCreateModal'
@@ -92,7 +92,7 @@ const props = withDefaults(
   }
 )
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const { joinQall, callingChannel } = useQall()
 const isCallingHere = computed(() => callingChannel.value === props.channelId)

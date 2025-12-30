@@ -56,7 +56,7 @@ import { computed, toRef } from 'vue'
 import HeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
 import { useQall } from '/@/composables/qall/useQall'
 import useChannelSubscriptionState from '/@/composables/subscription/useChannelSubscriptionState'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 import type { ChannelId } from '/@/types/entity-ids'
 
 import useStarChannel from './composables/useStarChannel'
@@ -79,7 +79,7 @@ const emit = defineEmits<{
   (e: 'clickMore'): void
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const { joinQall, callingChannel } = useQall()
 const isCallingHere = computed(() => callingChannel.value === props.channelId)

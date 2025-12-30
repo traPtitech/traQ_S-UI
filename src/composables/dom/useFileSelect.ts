@@ -1,4 +1,4 @@
-import { onBeforeUnmount } from 'vue'
+import { useEventListener } from '@vueuse/core'
 
 import type { MaybePromise } from '/@/types/utility'
 
@@ -28,10 +28,7 @@ export const useFileSelect = (
     input.value = ''
   }
 
-  input.addEventListener('change', onChangeInternal)
-  onBeforeUnmount(() => {
-    input.removeEventListener('change', onChangeInternal)
-  })
+  useEventListener(input, 'change', onChangeInternal)
 
   const selectImage = () => {
     input.click()

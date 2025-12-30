@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <ScrollLoadingBar :class="$style.loadingBar" :show="isLoading" />
     <MessagesScroller
-      ref="scrollerEle"
+      ref="scrollerRef"
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
       :is-reached-latest="isReachedLatest"
@@ -53,11 +53,14 @@ import { useRouter } from 'vue-router'
 
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
-import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
+import MessagesScroller, {
+  type MessageScrollerInstance
+} from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessagesScrollerSeparator from '/@/components/Main/MainView/MessagesScroller/MessagesScrollerSeparator.vue'
 import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getFullDayString } from '/@/lib/basic/date'
+import { unrefElement } from '/@/lib/dom/unrefElement'
 import { constructChannelPath, constructUserPath } from '/@/router'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -76,7 +79,7 @@ const props = defineProps<{
 
 const router = useRouter()
 
-const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
+const scrollerRef = shallowRef<MessageScrollerInstance>()
 const {
   messageIds,
   isReachedEnd,
@@ -86,7 +89,7 @@ const {
   unreadSince,
   onLoadFormerMessagesRequest,
   onLoadLatterMessagesRequest
-} = useChannelMessageFetcher(scrollerEle, props)
+} = useChannelMessageFetcher(scrollerRef, props)
 
 const { messagesMap } = useMessagesStore()
 const firstUnreadMessageId = computed(() => {
@@ -134,15 +137,18 @@ const toNewMessage = () => {
     }
   }
 
-  if (scrollerEle.value === undefined) return
-  scrollerEle.value.$el.scrollTo({
-    top: scrollerEle.value.$el.scrollHeight
+  const element = unrefElement(scrollerRef)
+  if (!element) return
+
+  element.scrollTo({
+    top: element.scrollHeight
   })
 }
 
 const handleScroll = () => {
-  if (scrollerEle.value === undefined || isLoading.value) return
-  const { scrollTop, scrollHeight, clientHeight } = scrollerEle.value.$el
+  const element = unrefElement(scrollerRef)
+  if (!element || isLoading.value) return
+  const { scrollTop, scrollHeight, clientHeight } = element
   showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop
   if (!isReachedLatest.value) {
     showToNewMessageButton.value = true

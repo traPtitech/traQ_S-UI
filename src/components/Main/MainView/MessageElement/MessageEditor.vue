@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, shallowRef } from 'vue'
 
 import type { AxiosProgressEvent } from 'axios'
 
@@ -162,13 +162,15 @@ const { editMessage, cancel } = useEditMessage(props, text, emit)
 const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
   useModifierKey()
 
-const textareaComponentRef = ref<{
-  textareaAutosizeRef: { $el: HTMLTextAreaElement }
-}>()
+const textareaComponentRef =
+  shallowRef<InstanceType<typeof MessageInputTextArea>>()
+
+const textareaRef = computed(() => textareaComponentRef.value?.textareaRef)
+
 const containerEle = ref<HTMLDivElement>()
 const { toggleStampPicker } = useTextStampPickerInvoker(
   text,
-  computed(() => textareaComponentRef.value?.textareaAutosizeRef.$el),
+  textareaRef,
   containerEle
 )
 
@@ -180,7 +182,7 @@ const {
 } = useAttachmentsEditor(props, text)
 
 onMounted(() => {
-  textareaComponentRef.value?.textareaAutosizeRef.$el?.focus()
+  textareaRef.value?.focus()
 })
 </script>
 

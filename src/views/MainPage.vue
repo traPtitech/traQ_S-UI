@@ -39,18 +39,14 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import {
-  computed,
-  defineAsyncComponent,
-  onBeforeUnmount,
-  onMounted,
-  reactive
-} from 'vue'
+import { computed, defineAsyncComponent, reactive } from 'vue'
+
+import { useEventListener } from '@vueuse/core'
 
 import useNavigationController from '/@/composables/mainView/useNavigationController'
+import useResponsive from '/@/composables/useResponsive'
 import { connectFirebase } from '/@/lib/notification/notification'
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useToastStore } from '/@/store/ui/toast'
 
 import useInitialFetch from './composables/useInitialFetch'
@@ -100,12 +96,7 @@ const useCommandPaletteShortcutKey = () => {
     }
   }
 
-  onMounted(() => {
-    window.addEventListener('keydown', onKeyDown)
-  })
-  onBeforeUnmount(() => {
-    window.removeEventListener('keydown', onKeyDown)
-  })
+  useEventListener('keydown', onKeyDown)
 }
 
 const NotFoundPage = defineAsyncComponent(
@@ -139,7 +130,7 @@ const { addToast } = useToastStore()
 
 useCommandPaletteShortcutKey()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const shouldShowNav = computed(() => !isMobile.value || isNavAppeared.value)
 const { closeNav } = useNavigationController()
 const hideOuter = computed(

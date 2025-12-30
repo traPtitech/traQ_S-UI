@@ -73,10 +73,10 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import useFocus from '/@/composables/dom/useFocus'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
+import useResponsive from '/@/composables/useResponsive'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
 import { useChannelsStore } from '/@/store/entities/channels'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useToastStore } from '/@/store/ui/toast'
 import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 
@@ -103,7 +103,7 @@ const emit = defineEmits<{
   (e: 'clickToNewMessageButton'): void
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const channelId = toRef(props, 'channelId')
 const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
 const { addErrorToast } = useToastStore()
@@ -163,7 +163,7 @@ const textareaComponentRef = ref<InstanceType<typeof MessageInputTextArea>>()
 const containerEle = ref<HTMLDivElement>()
 const { toggleStampPicker } = useTextStampPickerInvoker(
   toRef(state, 'text'),
-  computed(() => textareaComponentRef.value?.textareaAutosizeRef?.$el),
+  computed(() => textareaComponentRef.value?.textareaRef),
   containerEle
 )
 

@@ -20,6 +20,7 @@
 <script lang="ts" setup>
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
+import { useEventListener } from '@vueuse/core'
 import autosize from 'autosize'
 
 import useOnInput from '/@/composables/useOnInput'
@@ -60,12 +61,13 @@ const autosizeUpdateTextarea = async () => {
   }
 }
 
+useEventListener(textareaEle, 'autosize:resized', () => {
+  emit('autosize-updated')
+})
+
 onMounted(() => {
   if (textareaEle.value) {
     autosize(textareaEle.value)
-    textareaEle.value.addEventListener('autosize:resized', () => {
-      emit('autosize-updated')
-    })
   }
 })
 watch([modelValue], autosizeUpdateTextarea)
@@ -77,7 +79,8 @@ onBeforeUnmount(() => {
 
 defineExpose({
   focus,
-  autosizeUpdateTextarea
+  autosizeUpdateTextarea,
+  textareaEle
 })
 </script>
 

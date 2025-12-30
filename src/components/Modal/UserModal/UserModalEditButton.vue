@@ -8,9 +8,9 @@
 import { computed } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const props = defineProps<{
   size: number
 }>()

@@ -92,6 +92,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
 import useContextMenu from '/@/composables/useContextMenu'
+import useResponsive from '/@/composables/useResponsive'
 import useToggle from '/@/composables/utils/useToggle'
 import { isDefined } from '/@/lib/basic/array'
 import { useStampUpdater } from '/@/lib/updater/stamp'
@@ -100,7 +101,6 @@ import { useTopStampIds } from '/@/store/domain/stampRecommendations'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import type { MessageId, StampId } from '/@/types/entity-ids'
 
@@ -189,7 +189,7 @@ watch(
   { immediate: true }
 )
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
   !isMobile.value
