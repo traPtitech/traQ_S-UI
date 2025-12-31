@@ -1,67 +1,68 @@
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 
-import type { Ref } from 'vue'
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import type { ComputedRef, WatchSource } from 'vue'
+import { computed, toValue, watch } from 'vue'
 
 import { useEventListener } from '@vueuse/core'
-import { debounce } from 'throttle-debounce'
 
 import apis from '/@/lib/apis'
 import createBeaconDispatcher from '/@/lib/beacon'
+import { IterableCache } from '/@/lib/cache'
 import flushableDebounce from '/@/lib/flushableDebounce'
 import createOptimisticUpdater from '/@/lib/optimisticUpdate'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import type { ChannelId } from '/@/types/entity-ids'
 import type { Invocable } from '/@/types/utility'
 
-const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
+type ChannelSubscriptionState = {
+  currentChannelSubscription: ComputedRef<ChannelSubscribeLevel>
+  flush: () => void
+  fastFlush: Invocable
+  changeSubscriptionLevel: (level: ChannelSubscribeLevel) => Promise<void>
+  changeToNextSubscriptionLevel: () => void
+}
+
+const factory = (channelId: ChannelId): ChannelSubscriptionState => {
   const { getSubscriptionLevel, changeSubscriptionLevel: changeLevel } =
     useSubscriptionStore()
 
-  const flushChannelSubscribeLevel: Ref<Invocable> = ref(() => void 0)
+  const currentChannelSubscription = computed(() =>
+    getSubscriptionLevel(channelId)
+  )
+
+  let fastFlush: Invocable = () => void 0
 
   const applyChannelSubscribeLevel = flushableDebounce(
     5_000,
-    (level: ChannelSubscribeLevel) =>
-      apis.setChannelSubscribeLevel(channelId.value, { level })
+    (level: ChannelSubscribeLevel) => {
+      apis
+        .setChannelSubscribeLevel(channelId, { level })
+        .catch(setChannelSubscribeLevel.rollback)
+    }
   )
 
   const setChannelSubscribeLevel = createOptimisticUpdater({
-    getState: () => getSubscriptionLevel(channelId.value),
-    setState: (level: ChannelSubscribeLevel) =>
-      changeLevel(channelId.value, level),
+    getState: () => currentChannelSubscription.value,
+    setState: level => changeLevel(channelId, level),
     execute: applyChannelSubscribeLevel
   })
 
-  const currentChannelSubscription = computed(() =>
-    getSubscriptionLevel(channelId.value)
-  )
-
   const changeSubscriptionLevel = async (level: ChannelSubscribeLevel) => {
-    if (!channelId.value) return
+    if (!channelId) return
     setChannelSubscribeLevel(level)
 
     // NOTE: 非同期処理はページのリロード等によって中断される場合があるので flush は同期的に行う必要がある
     const dispatch = await createBeaconDispatcher(
       apis.setChannelSubscribeLevel.bind(apis),
-      channelId.value,
+      channelId,
       { level }
     )
 
-    flushChannelSubscribeLevel.value = () => {
+    fastFlush = () => {
       applyChannelSubscribeLevel.cancel({ upcomingOnly: true })
       dispatch().catch(setChannelSubscribeLevel.rollback)
     }
   }
-
-  useEventListener(document, 'visibilitychange', () => {
-    if (document.hidden) flushChannelSubscribeLevel.value()
-  })
-
-  useEventListener('blur', applyChannelSubscribeLevel.flush)
-  useEventListener(['pagehide', 'beforeunload'], flushChannelSubscribeLevel)
-
-  watch(channelId, applyChannelSubscribeLevel.flush)
 
   const changeToNextSubscriptionLevel = () => {
     const level =
@@ -70,8 +71,46 @@ const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
         : currentChannelSubscription.value === ChannelSubscribeLevel.subscribed
           ? ChannelSubscribeLevel.notified
           : ChannelSubscribeLevel.subscribed
+
     changeSubscriptionLevel(level)
   }
+
+  return {
+    currentChannelSubscription,
+    changeSubscriptionLevel,
+    changeToNextSubscriptionLevel,
+    flush: () => applyChannelSubscribeLevel.flush(),
+    fastFlush: () => fastFlush()
+  }
+}
+
+const useChannelSubscriptionState = (channelIdRef: WatchSource<ChannelId>) => {
+  const cache = new IterableCache<ChannelId, ChannelSubscriptionState>(factory)
+
+  const currentState = computed(() => cache.getOrCreate(toValue(channelIdRef)))
+
+  const currentChannelSubscription = computed(
+    () => currentState.value.currentChannelSubscription.value
+  )
+
+  const changeSubscriptionLevel = (level: ChannelSubscribeLevel) =>
+    currentState.value.changeSubscriptionLevel(level)
+
+  const changeToNextSubscriptionLevel = () =>
+    currentState.value.changeToNextSubscriptionLevel()
+
+  const flushAll = () => cache.forEach(state => state.flush())
+  const fastFlushAll = () => cache.forEach(state => state.fastFlush())
+
+  watch(channelIdRef, (_newId, prevId) => cache.get(prevId)?.flush())
+
+  useEventListener(document, 'visibilitychange', () => {
+    if (document.hidden) flushAll()
+  })
+
+  useEventListener('blur', flushAll)
+  useEventListener(['pagehide', 'beforeunload'], fastFlushAll)
+
   return {
     currentChannelSubscription,
     changeSubscriptionLevel,
