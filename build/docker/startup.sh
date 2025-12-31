@@ -19,6 +19,20 @@ if [ $? -eq 0 ]; then
 fi
 
 ###
+# config.js のマウント確認
+###
+echo "Startup: check config.js mount"
+
+if [ ! -f /app/override/config.js ]; then
+  echo "ERROR: config.js is not mounted at /app/override/config.js"
+  echo "Please mount config.js when starting the container:"
+  echo "  docker run -v /path/to/config.js:/app/override/config.js ..."
+  exit 1
+fi
+
+echo "Startup: config.js is mounted"
+
+###
 # アプリ名設定
 ###
 echo "Startup: set app name to $APP_NAME"

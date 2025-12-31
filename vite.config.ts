@@ -78,7 +78,16 @@ export default defineConfig(({ mode }) => ({
             return 'hljs3'
           }
         }
-      }
+      },
+      plugins: [
+        {
+          name: 'exclude-config-js',
+          generateBundle(options, bundle) {
+            // config.js をビルド成果物から除外
+            delete bundle['config.js']
+          }
+        }
+      ]
     }
   },
   css: {
