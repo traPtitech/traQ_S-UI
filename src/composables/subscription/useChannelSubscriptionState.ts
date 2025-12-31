@@ -23,8 +23,8 @@ type ChannelSubscriptionState = {
   fastFlush: Invocable
 }
 
-const CACHE_EXPIRE_TIME = 60 * 1000
-const FLUSH_DELAY = 5 * 1000
+export const CACHE_EXPIRE_TIME = 60 * 1000
+export const FLUSH_DELAY = 5 * 1000
 
 const factory = (
   channelId: ChannelId,
