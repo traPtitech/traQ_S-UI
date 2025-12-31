@@ -13,7 +13,7 @@ updates:
         patterns:
           - '*eslint*'
           - '*prettier*'
-      workboxes:
+      workbox:
         patterns:
           - 'workbox-*'
       patches:
