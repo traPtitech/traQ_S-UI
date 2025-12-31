@@ -6,6 +6,8 @@ interface Options<State> {
   execute: CallableWith<[State]>
 }
 
+const NULL = Symbol('null')
+
 /**
  * optimistic updates を簡単に行うための関数を生成する
  *
@@ -23,12 +25,12 @@ const createOptimisticUpdater = <State>({
   setState,
   execute
 }: Options<State>) => {
-  let previousState: State | null = null
+  let previousState: State | typeof NULL = NULL
 
   const rollback = () => {
-    if (!previousState) return
+    if (previousState === NULL) return
     setState(previousState)
-    previousState = null
+    previousState = NULL
   }
 
   const update = async (newState: State) => {
