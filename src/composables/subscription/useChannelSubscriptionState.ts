@@ -19,16 +19,18 @@ const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
 
   const flushChannelSubscribeLevel: Ref<Invocable> = ref(() => void 0)
 
-  const setChannelSubscribeLevel = debounce(
+  const applyChannelSubscribeLevel = debounce(
     5_000,
-    createOptimisticUpdater({
-      getState: (channelId: ChannelId) => getSubscriptionLevel(channelId),
-      setState: (level: ChannelSubscribeLevel, channelId: ChannelId) =>
-        changeLevel(channelId, level),
-      execute: (level: ChannelSubscribeLevel, channelId: ChannelId) =>
-        apis.setChannelSubscribeLevel(channelId, { level })
-    })
+    (level: ChannelSubscribeLevel, channelId: ChannelId) =>
+      apis.setChannelSubscribeLevel(channelId, { level })
   )
+
+  const setChannelSubscribeLevel = createOptimisticUpdater({
+    getState: getSubscriptionLevel,
+    setState: (level: ChannelSubscribeLevel, channelId: ChannelId) =>
+      changeLevel(channelId, level),
+    execute: applyChannelSubscribeLevel
+  })
 
   const currentChannelSubscription = computed(() =>
     getSubscriptionLevel(channelId.value)
@@ -36,7 +38,6 @@ const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
 
   const changeSubscriptionLevel = async (level: ChannelSubscribeLevel) => {
     if (!channelId.value) return
-    changeLevel(channelId.value, level)
     setChannelSubscribeLevel(level, channelId.value)
 
     // NOTE: 非同期処理はページのリロード等によって中断される場合があるので flush は同期的に行う必要がある
@@ -47,7 +48,7 @@ const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
     )
 
     flushChannelSubscribeLevel.value = () => {
-      setChannelSubscribeLevel.cancel()
+      applyChannelSubscribeLevel.cancel({ upcomingOnly: true })
       dispatch()
     }
   }
