@@ -3,7 +3,7 @@ import { computed, ref, toValue, watch } from 'vue'
 
 import useInsertText from '/@/composables/dom/useInsertText'
 import getCaretPosition from '/@/lib/dom/caretPosition'
-import type { Target, WordOrConfirmedPart } from '/@/lib/suggestion/basic'
+import type { Target, Word } from '/@/lib/suggestion/basic'
 import {
   getCurrentWord,
   getNextCandidateIndex,
@@ -11,7 +11,12 @@ import {
   getSelectedCandidateIndex
 } from '/@/lib/suggestion/basic'
 
-import useWordSuggesterList from './useWordSuggestionList'
+import useWordSuggestionList from './useWordSuggestionList'
+
+export interface Candidate {
+  word: Word
+  display?: string
+}
 
 /**
  * 補完を表示する最小の文字数
@@ -44,7 +49,7 @@ const useWordSuggester = (
    */
   const currentInputWord = ref('')
 
-  const { suggestedCandidateWords, confirmedText } = useWordSuggesterList(
+  const { suggestedCandidateWords, confirmedText } = useWordSuggestionList(
     () => target.value.word,
     MIN_LENGTH
   )
@@ -155,7 +160,7 @@ const useWordSuggester = (
     }
   }
 
-  const onSelect = (word: WordOrConfirmedPart) => {
+  const onSelect = (word: Word) => {
     insertText(word.text)
     isSuggesterShown.value = false
   }
@@ -168,9 +173,7 @@ const useWordSuggester = (
     return suggestedCandidateWords.value.map(word => ({ word }))
   })
 
-  const confirmedPart = computed(() => ({
-    text: confirmedText.value
-  }))
+  const confirmedPart = confirmedText
 
   return {
     onKeyDown,

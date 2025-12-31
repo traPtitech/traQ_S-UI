@@ -30,7 +30,6 @@
       :position="suggesterPosition"
       :candidates="suggestedCandidates"
       :selected-index="selectedIndex"
-      :confirmed-part="confirmedPart"
       @select="onSelect"
     />
   </div>
@@ -111,7 +110,6 @@ const {
   position,
   suggestedCandidates,
   selectedIndex,
-  confirmedPart,
   onSelect
 } = useSuggester(textareaRef)
 

@@ -63,6 +63,7 @@ import { UserPermission } from '@traptitech/traq'
 import { type Ref, computed, ref } from 'vue'
 
 import ATab from '/@/components/UI/ATab.vue'
+import { safeMod } from '/@/lib/basic/arithmetic'
 import { randomString } from '/@/lib/basic/randomString'
 import { compareString } from '/@/lib/basic/string'
 import { useMeStore } from '/@/store/domain/me'
@@ -120,7 +121,7 @@ const onKeydown = (e: KeyboardEvent) => {
     return
   }
 
-  nextIndex = (nextIndex + tabNames.length) % tabNames.length
+  nextIndex = safeMod(nextIndex, tabNames.length)
 
   currentTab.value = tabNames[nextIndex] ?? currentTab.value
   tabNameRefs[currentTab.value].value?.focus()

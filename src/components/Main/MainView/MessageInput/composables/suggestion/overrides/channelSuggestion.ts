@@ -1,25 +1,25 @@
 import { type MaybeRefOrGetter, computed, toValue } from 'vue'
 
-import type { Candidate, ConfirmedPart } from '/@/lib/suggestion/basic'
+import type { Candidate } from '/@/lib/suggestion/basic'
 
 const CHANNEL_PATH_TRIMMING_REGEXP = /^#|\/$/
 
 const channelSuggestionOverride = <
   Params extends {
     suggesterWidth: MaybeRefOrGetter<number>
-    confirmedPart: MaybeRefOrGetter<ConfirmedPart>
+    confirmedPart: MaybeRefOrGetter<string>
     suggestedCandidates: MaybeRefOrGetter<Candidate[]>
   }
 >(
   input: Params
 ) => {
   const isChannelSuggestion = computed(() =>
-    toValue(input.confirmedPart).text.startsWith('#')
+    toValue(input.confirmedPart).startsWith('#')
   )
 
   const confirmedChannelPath = computed(() => {
     return toValue(input.confirmedPart)
-      .text.replace(CHANNEL_PATH_TRIMMING_REGEXP, '')
+      .replace(CHANNEL_PATH_TRIMMING_REGEXP, '')
       .split('/')
   })
 
@@ -47,27 +47,10 @@ const channelSuggestionOverride = <
     })
   })
 
-  const confirmedPartDisplay = computed(() => {
-    const confirmedPath = [
-      confirmedChannelShortenedPathString.value,
-      confirmedChannelPath.value.at(-1)
-    ]
-      .filter(Boolean)
-      .join('/')
-
-    return `#${confirmedPath}`
-  })
-
-  const confirmedPart = computed(() => ({
-    ...toValue(input.confirmedPart),
-    display: confirmedPartDisplay.value
-  }))
-
   return {
     condition: isChannelSuggestion,
     overrides: {
       suggesterWidth: 360,
-      confirmedPart,
       suggestedCandidates
     }
   }

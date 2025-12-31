@@ -1,3 +1,4 @@
+import { safeMod } from '/@/lib/basic/arithmetic'
 import { lastIndexOf } from '/@/lib/basic/string'
 
 interface WordBase {
@@ -107,8 +108,8 @@ export const getPrevCandidateIndex = (
     if (length === 1) return 0
     return -1
   }
-  if (selectedIndex < 0) return length - 1
-  return selectedIndex - 1
+
+  return safeMod(Math.max(0, selectedIndex) - 1, length)
 }
 
 export const getNextCandidateIndex = (
@@ -121,6 +122,6 @@ export const getNextCandidateIndex = (
     if (length === 1) return 0
     return -1
   }
-  if (selectedIndex >= length - 1) return -1
-  return selectedIndex + 1
+
+  return safeMod(selectedIndex + 1, length)
 }

@@ -1,18 +1,13 @@
 import { type MaybeRefOrGetter, computed, toValue } from 'vue'
 
-import type {
-  Candidate,
-  ConfirmedPart,
-  WordOrConfirmedPart,
-  WordWithId
-} from '/@/lib/suggestion/basic'
+import type { Candidate, Word, WordWithId } from '/@/lib/suggestion/basic'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 
 const stampSuggestionOverride = <
   Params extends {
-    onSelect: (word: WordOrConfirmedPart) => void
-    confirmedPart: MaybeRefOrGetter<ConfirmedPart>
+    onSelect: (word: Word) => void
+    confirmedPart: MaybeRefOrGetter<string>
     suggestedCandidates: MaybeRefOrGetter<Candidate[]>
   }
 >(
@@ -22,7 +17,7 @@ const stampSuggestionOverride = <
   const { recordStampUsage } = useStampRecommendations()
 
   const isStampSuggestion = computed(() =>
-    toValue(input.confirmedPart).text.startsWith(':')
+    toValue(input.confirmedPart).startsWith(':')
   )
 
   const suggestedCandidates = computed(() => {
