@@ -1,14 +1,13 @@
 import { type MaybeRefOrGetter, computed, toValue } from 'vue'
 
-import { useStampHistory } from '/@/store/domain/stampHistory'
-import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
-
 import type {
   Candidate,
   ConfirmedPart,
-  WordOrConfirmedPart
-} from '../useWordSuggester'
-import type { WordWithId } from '../useWordSuggestionList'
+  WordOrConfirmedPart,
+  WordWithId
+} from '/@/lib/suggestion/basic'
+import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 
 const stampSuggestionOverride = <
   Params extends {

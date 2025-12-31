@@ -6,8 +6,6 @@ import {
   type UserGroup
 } from '@traptitech/traq'
 
-import { computed, ref } from 'vue'
-
 import { createTestingPinia } from '@pinia/testing'
 
 import useSuggesterWithoutSetup from '/@/components/Main/MainView/MessageInput/composables/suggestion/useSuggester'
@@ -61,14 +59,11 @@ describe('useSuggester', () => {
 
   test('stamps', async () => {
     const $textarea = document.createElement('textarea')
-    const textarea = computed(() => $textarea)
-    const text = ref('')
+    const [{ suggestedCandidates, onKeyUp }] = useSuggester($textarea)
 
-    const [{ suggestedCandidates, onKeyUp }] = useSuggester(textarea, text)
-
-    text.value = $textarea.textContent = 'prev :gM'
-    $textarea.selectionStart = $textarea.textContent.length
-    $textarea.selectionEnd = $textarea.textContent.length + 1
+    $textarea.value = 'prev :gM'
+    $textarea.selectionStart = $textarea.value.length
+    $textarea.selectionEnd = $textarea.value.length
     onKeyUp(new KeyboardEvent('keyup'))
 
     expect(suggestedCandidates.value).toStrictEqualArrayIgnoringOrder([
@@ -82,9 +77,9 @@ describe('useSuggester', () => {
       }
     ])
 
-    text.value = $textarea.textContent = 'prev :Cg'
-    $textarea.selectionStart = $textarea.textContent.length
-    $textarea.selectionEnd = $textarea.textContent.length + 1
+    $textarea.value = 'prev :Cg'
+    $textarea.selectionStart = $textarea.value.length
+    $textarea.selectionEnd = $textarea.value.length
     onKeyUp(new KeyboardEvent('keyup'))
 
     expect(suggestedCandidates.value).toStrictEqualArrayIgnoringOrder([
@@ -101,14 +96,11 @@ describe('useSuggester', () => {
 
   test('groups and users', async () => {
     const $textarea = document.createElement('textarea')
-    const textarea = computed(() => $textarea)
-    const text = ref('')
+    const [{ suggestedCandidates, onKeyUp }] = useSuggester($textarea)
 
-    const [{ suggestedCandidates, onKeyUp }] = useSuggester(textarea, text)
-
-    text.value = $textarea.textContent = 'prev @gM'
-    $textarea.selectionStart = $textarea.textContent.length
-    $textarea.selectionEnd = $textarea.textContent.length + 1
+    $textarea.value = 'prev @gM'
+    $textarea.selectionStart = $textarea.value.length
+    $textarea.selectionEnd = $textarea.value.length
     onKeyUp(new KeyboardEvent('keyup'))
 
     expect(suggestedCandidates.value).toStrictEqualArrayIgnoringOrder([
@@ -116,9 +108,9 @@ describe('useSuggester', () => {
       { word: { type: 'user-group', text: '@Gm5G9atrDx', id: 'Gm5G9atrDx' } }
     ])
 
-    text.value = $textarea.textContent = 'prev @Cg'
-    $textarea.selectionStart = $textarea.textContent.length
-    $textarea.selectionEnd = $textarea.textContent.length + 1
+    $textarea.value = 'prev @Cg'
+    $textarea.selectionStart = $textarea.value.length
+    $textarea.selectionEnd = $textarea.value.length
     onKeyUp(new KeyboardEvent('keyup'))
 
     expect(suggestedCandidates.value).toStrictEqualArrayIgnoringOrder([
@@ -129,14 +121,17 @@ describe('useSuggester', () => {
 
   test('channels', async () => {
     const $textarea = document.createElement('textarea')
-    const textarea = computed(() => $textarea)
-    const text = ref('')
+    // jsdom では要素が DOM に追加されていないと focus() が正しく動作しない．
+    // text-field-edit は execCommand を呼び出す前に focus() を呼び出すため，
+    // textarea を DOM に追加する必要がある
+    document.body.appendChild($textarea)
 
-    const [{ suggestedCandidates, onKeyUp }] = useSuggester(textarea, text)
+    const [{ suggestedCandidates, onKeyUp, onKeyDown }] =
+      useSuggester($textarea)
 
-    text.value = $textarea.textContent = 'prev #gp'
-    $textarea.selectionStart = $textarea.textContent.length
-    $textarea.selectionEnd = $textarea.textContent.length + 1
+    $textarea.value = 'prev #gp'
+    $textarea.selectionStart = $textarea.value.length
+    $textarea.selectionEnd = $textarea.value.length
     onKeyUp(new KeyboardEvent('keyup'))
 
     expect(suggestedCandidates.value).toStrictEqualArrayIgnoringOrder([
@@ -151,9 +146,14 @@ describe('useSuggester', () => {
       }
     ])
 
-    text.value = $textarea.textContent = 'prev #gps/ti'
-    $textarea.selectionStart = $textarea.textContent.length
-    $textarea.selectionEnd = $textarea.textContent.length + 1
+    onKeyDown(new KeyboardEvent('keydown', { key: 'Tab' }))
+    onKeyUp(new KeyboardEvent('keyup', { key: 'Tab' }))
+
+    expect($textarea.value).toEqual('prev #gps')
+
+    $textarea.value = 'prev #gps/ti'
+    $textarea.selectionStart = $textarea.value.length
+    $textarea.selectionEnd = $textarea.value.length
     onKeyUp(new KeyboardEvent('keyup'))
 
     expect(suggestedCandidates.value).toStrictEqualArrayIgnoringOrder([
@@ -177,9 +177,9 @@ describe('useSuggester', () => {
       }
     ])
 
-    text.value = $textarea.textContent = 'prev #gps/times/'
-    $textarea.selectionStart = $textarea.textContent.length
-    $textarea.selectionEnd = $textarea.textContent.length + 1
+    $textarea.value = 'prev #gps/times/'
+    $textarea.selectionStart = $textarea.value.length
+    $textarea.selectionEnd = $textarea.value.length
     onKeyUp(new KeyboardEvent('keyup'))
 
     expect(suggestedCandidates.value).toStrictEqualArrayIgnoringOrder([
@@ -229,6 +229,14 @@ describe('useSuggester', () => {
         display: '#g/t/user1'
       }
     ])
+
+    onKeyDown(new KeyboardEvent('keydown', { key: 'ArrowDown' }))
+    onKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }))
+
+    onKeyDown(new KeyboardEvent('keydown', { key: 'ArrowDown' }))
+    onKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }))
+
+    expect($textarea.value).toEqual('prev #gps/times/ParentLongNameMayBeCut')
   })
 })
 

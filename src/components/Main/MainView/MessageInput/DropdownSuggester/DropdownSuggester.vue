@@ -33,11 +33,8 @@
 import { type ComponentPublicInstance, computed } from 'vue'
 
 import { isIOS } from '/@/lib/dom/browser'
+import type { Candidate, WordOrConfirmedPart } from '/@/lib/suggestion/basic'
 
-import type {
-  Candidate,
-  WordOrConfirmedPart
-} from '../composables/suggestion/useWordSuggester'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 
 const props = withDefaults(

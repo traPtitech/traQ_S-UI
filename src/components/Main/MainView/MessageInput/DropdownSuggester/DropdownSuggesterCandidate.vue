@@ -21,8 +21,8 @@
 
 <script lang="ts" setup>
 import AStamp from '/@/components/UI/AStamp.vue'
+import type { WordOrConfirmedPart } from '/@/lib/suggestion/basic'
 
-import type { WordOrConfirmedPart } from '../composables/suggestion/useWordSuggester'
 import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 
