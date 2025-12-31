@@ -31,7 +31,6 @@ const flushableDebounce = <Fn extends Invocable>(
     cancel()
 
     if (params) return callback(...params)
-    return Promise.resolve()
   }
 
   const register = (...args: CallbackParams) => {

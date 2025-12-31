@@ -17,10 +17,10 @@ import type { Invocable } from '/@/types/utility'
 
 type ChannelSubscriptionState = {
   currentChannelSubscription: ComputedRef<ChannelSubscribeLevel>
-  flush: () => void
-  fastFlush: Invocable
   changeSubscriptionLevel: (level: ChannelSubscribeLevel) => Promise<void>
   changeToNextSubscriptionLevel: () => void
+  flush: Invocable
+  fastFlush: Invocable
 }
 
 const CACHE_EXPIRE_TIME = 60 * 1000
@@ -85,7 +85,7 @@ const factory = (
     currentChannelSubscription,
     changeSubscriptionLevel,
     changeToNextSubscriptionLevel,
-    flush: () => applyChannelSubscribeLevel.flush().finally(onDispose),
+    flush: () => applyChannelSubscribeLevel.flush()?.finally(onDispose),
     fastFlush: () => fastFlush().finally(onDispose)
   }
 }
