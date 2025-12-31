@@ -4,6 +4,7 @@ import type { ComputedRef, WatchSource } from 'vue'
 import { computed, toValue, watch } from 'vue'
 
 import { useEventListener } from '@vueuse/core'
+import { debounce } from 'throttle-debounce'
 
 import apis from '/@/lib/apis'
 import createBeaconDispatcher from '/@/lib/beacon'
@@ -22,7 +23,13 @@ type ChannelSubscriptionState = {
   changeToNextSubscriptionLevel: () => void
 }
 
-const factory = (channelId: ChannelId): ChannelSubscriptionState => {
+const CACHE_EXPIRE_TIME = 60 * 1000
+const FLUSH_DELAY = 5 * 1000
+
+const factory = (
+  channelId: ChannelId,
+  onDispose: () => void
+): ChannelSubscriptionState => {
   const { getSubscriptionLevel, changeSubscriptionLevel: changeLevel } =
     useSubscriptionStore()
 
@@ -30,15 +37,14 @@ const factory = (channelId: ChannelId): ChannelSubscriptionState => {
     getSubscriptionLevel(channelId)
   )
 
-  let fastFlush: Invocable = () => void 0
+  let fastFlush = () => Promise.resolve()
 
   const applyChannelSubscribeLevel = flushableDebounce(
-    5_000,
-    (level: ChannelSubscribeLevel) => {
+    FLUSH_DELAY,
+    (level: ChannelSubscribeLevel) =>
       apis
         .setChannelSubscribeLevel(channelId, { level })
         .catch(setChannelSubscribeLevel.rollback)
-    }
   )
 
   const setChannelSubscribeLevel = createOptimisticUpdater({
@@ -60,7 +66,7 @@ const factory = (channelId: ChannelId): ChannelSubscriptionState => {
 
     fastFlush = () => {
       applyChannelSubscribeLevel.cancel({ upcomingOnly: true })
-      dispatch().catch(setChannelSubscribeLevel.rollback)
+      return dispatch().catch(setChannelSubscribeLevel.rollback)
     }
   }
 
@@ -79,13 +85,19 @@ const factory = (channelId: ChannelId): ChannelSubscriptionState => {
     currentChannelSubscription,
     changeSubscriptionLevel,
     changeToNextSubscriptionLevel,
-    flush: () => applyChannelSubscribeLevel.flush(),
-    fastFlush: () => fastFlush()
+    flush: () => applyChannelSubscribeLevel.flush().finally(onDispose),
+    fastFlush: () => fastFlush().finally(onDispose)
   }
 }
 
 const useChannelSubscriptionState = (channelIdRef: WatchSource<ChannelId>) => {
-  const cache = new IterableCache<ChannelId, ChannelSubscriptionState>(factory)
+  const cache = new IterableCache<ChannelId, ChannelSubscriptionState>(
+    channelId =>
+      factory(
+        channelId,
+        debounce(CACHE_EXPIRE_TIME, () => cache.delete(channelId))
+      )
+  )
 
   const currentState = computed(() => cache.getOrCreate(toValue(channelIdRef)))
 

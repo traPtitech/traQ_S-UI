@@ -1,16 +1,20 @@
 import { debounce } from 'throttle-debounce'
 
-type DebounceParams = Parameters<typeof debounce>
+import type { Invocable } from '../types/utility'
 
-const flushableDebounce = (
-  ...[delay, callbackImpl, options]: DebounceParams
+type DebounceOptions = Parameters<typeof debounce>[2]
+
+const flushableDebounce = <Fn extends Invocable>(
+  delay: number,
+  callbackImpl: Fn,
+  options?: DebounceOptions
 ) => {
-  type CallbackParams = Parameters<typeof callbackImpl>
+  type CallbackParams = Parameters<Fn>
   let pendingParams: CallbackParams | null = null
 
-  const callback = (...args: CallbackParams) => {
+  const callback = (...args: CallbackParams): ReturnType<Fn> => {
     pendingParams = null
-    callbackImpl(...args)
+    return callbackImpl(...args)
   }
 
   const debounced = debounce(delay, callback, options)
@@ -22,8 +26,12 @@ const flushableDebounce = (
   }
 
   const flush = () => {
-    if (pendingParams) callback(...pendingParams)
+    const params = pendingParams
+
     cancel()
+
+    if (params) return callback(...params)
+    return Promise.resolve()
   }
 
   const register = (...args: CallbackParams) => {
