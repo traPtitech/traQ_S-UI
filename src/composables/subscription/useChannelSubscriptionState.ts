@@ -21,14 +21,14 @@ const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
 
   const applyChannelSubscribeLevel = debounce(
     5_000,
-    (level: ChannelSubscribeLevel, channelId: ChannelId) =>
-      apis.setChannelSubscribeLevel(channelId, { level })
+    (level: ChannelSubscribeLevel) =>
+      apis.setChannelSubscribeLevel(channelId.value, { level })
   )
 
   const setChannelSubscribeLevel = createOptimisticUpdater({
-    getState: getSubscriptionLevel,
-    setState: (level: ChannelSubscribeLevel, channelId: ChannelId) =>
-      changeLevel(channelId, level),
+    getState: () => getSubscriptionLevel(channelId.value),
+    setState: (level: ChannelSubscribeLevel) =>
+      changeLevel(channelId.value, level),
     execute: applyChannelSubscribeLevel
   })
 
@@ -38,7 +38,7 @@ const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
 
   const changeSubscriptionLevel = async (level: ChannelSubscribeLevel) => {
     if (!channelId.value) return
-    setChannelSubscribeLevel(level, channelId.value)
+    setChannelSubscribeLevel(level)
 
     // NOTE: 非同期処理はページのリロード等によって中断される場合があるので flush は同期的に行う必要がある
     const dispatch = await createBeaconDispatcher(
