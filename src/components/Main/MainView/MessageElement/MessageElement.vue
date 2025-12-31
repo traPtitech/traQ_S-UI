@@ -55,8 +55,9 @@ import type { MessageId, UserId } from '/@/types/entity-ids'
 import MessageContents from './MessageContents.vue'
 import MessagePinned from './MessagePinned.vue'
 import MessageStampList from './MessageStampList.vue'
-import type { ChangeHeightData } from './composables/useElementRenderObserver'
-import useElementRenderObserver from './composables/useElementRenderObserver'
+import useElementRenderObserver, {
+  type ChangeHeightData
+} from './composables/useElementRenderObserver'
 
 const props = withDefaults(
   defineProps<{

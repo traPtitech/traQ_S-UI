@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import type { ComponentPublicInstance, Ref } from 'vue'
-import { nextTick, onMounted, reactive, shallowRef, watch } from 'vue'
+import { nextTick, onMounted, shallowRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { useEventListener } from '@vueuse/core'
@@ -48,7 +48,7 @@ import { useStampsStore } from '/@/store/entities/stamps'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import type { MessageId } from '/@/types/entity-ids'
 
-import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
+import useMessageScroller from './composables/useMessageScroller'
 import type { LoadingDirection } from './composables/useMessagesFetcher'
 
 export interface MessageScrollerInstance extends ComponentPublicInstance {
@@ -162,15 +162,14 @@ const { lastScrollPosition } = useMainViewStore()
 const { stampsMapFetched } = useStampsStore()
 
 const rootRef = shallowRef<HTMLElement | null>(null)
-const state = reactive({
-  height: 0,
-  scrollTop: lastScrollPosition.value,
-  // 古いメッセージを読み込むとき、読み込み開始直後は高さの調整を無効化する
-  skipResizeAdjustment: false
-})
 
-const { onChangeHeight, onEntryMessageLoaded } =
-  useMessageScrollerElementResizeObserver(rootRef, props, state)
+const { onChangeHeight, onEntryMessageLoaded, state } = useMessageScroller(
+  rootRef,
+  props
+)
+
+// 初期スクロール位置を設定
+state.scrollTop = lastScrollPosition.value
 
 onMounted(() => {
   // 表示されている
@@ -194,65 +193,6 @@ watch(
   {
     flush: 'post'
   }
-)
-
-watch(
-  () => props.messageIds,
-  (ids, prevIds) => {
-    if (!rootRef.value) return
-    /* state.height の更新を忘れないようにすること */
-
-    const newHeight = rootRef.value.scrollHeight
-    if (
-      props.lastLoadingDirection === 'latest' ||
-      props.lastLoadingDirection === 'former'
-    ) {
-      if (ids.length - prevIds.length === -1) {
-        // 削除された場合は何もしない
-        state.height = newHeight
-        return
-      }
-      // XXX: 追加時にここは0になる
-      if (ids.length - prevIds.length === 0) {
-        const scrollBottom =
-          rootRef.value.scrollTop + rootRef.value.clientHeight
-
-        // 一番下のメッセージあたりを見ているときに、
-        // 新規に一つ追加された場合は一番下までスクロール
-        if (state.height - 50 <= scrollBottom) {
-          rootRef.value.scrollTo({
-            top: newHeight
-          })
-        }
-        state.height = newHeight
-        return
-      }
-      //上に追加された時はスクロール位置を変更する。
-      if (props.lastLoadingDirection === 'former') {
-        // onChangeHeight の調整を一時的に無効化
-        state.skipResizeAdjustment = true
-        rootRef.value.scrollTo({
-          top: newHeight - state.height
-        })
-        state.height = newHeight
-        // 十分に DOMが更新されたら無効化を解除
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            state.skipResizeAdjustment = false
-          })
-        })
-      }
-
-      if (props.lastLoadingDirection === 'latest') {
-        // チャンネルを移動したとき、
-        rootRef.value.scrollTo({
-          top: newHeight
-        })
-        state.height = newHeight
-      }
-    } else state.height = newHeight
-  },
-  { deep: true, flush: 'post' }
 )
 
 const requestLoadMessages = () => {
@@ -299,6 +239,8 @@ useScrollRestoration(rootRef, state)
   overflow-anchor: none;
   // iOSで無限にロードが走るのを防止する
   -webkit-overflow-scrolling: auto;
+  // scroll-behavior: auto;
+  overscroll-behavior: none;
 }
 
 .viewport {
