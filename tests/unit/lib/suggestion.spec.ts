@@ -122,7 +122,7 @@ describe('suggestion', () => {
     })
     it('can get prev of 0', () => {
       const actual = getPrevCandidateIndex(list.length, 0)
-      expect(actual).toEqual(-1)
+      expect(actual).toEqual(3)
     })
     it('can get prev of 2', () => {
       const actual = getPrevCandidateIndex(list.length, 2)
@@ -144,7 +144,7 @@ describe('suggestion', () => {
     })
     it('can get next of 3', () => {
       const actual = getNextCandidateIndex(list.length, 3)
-      expect(actual).toEqual(-1)
+      expect(actual).toEqual(0)
     })
     it('can get next of 2', () => {
       const actual = getNextCandidateIndex(list.length, 2)
