@@ -8,6 +8,7 @@ import { debounce } from 'throttle-debounce'
 
 import apis from '/@/lib/apis'
 import createBeaconDispatcher from '/@/lib/beacon'
+import flushableDebounce from '/@/lib/flushableDebounce'
 import createOptimisticUpdater from '/@/lib/optimisticUpdate'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import type { ChannelId } from '/@/types/entity-ids'
@@ -19,7 +20,7 @@ const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
 
   const flushChannelSubscribeLevel: Ref<Invocable> = ref(() => void 0)
 
-  const applyChannelSubscribeLevel = debounce(
+  const applyChannelSubscribeLevel = flushableDebounce(
     5_000,
     (level: ChannelSubscribeLevel) =>
       apis.setChannelSubscribeLevel(channelId.value, { level })
@@ -49,7 +50,7 @@ const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
 
     flushChannelSubscribeLevel.value = () => {
       applyChannelSubscribeLevel.cancel({ upcomingOnly: true })
-      dispatch()
+      dispatch().catch(setChannelSubscribeLevel.rollback)
     }
   }
 
@@ -57,12 +58,10 @@ const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
     if (document.hidden) flushChannelSubscribeLevel.value()
   })
 
-  useEventListener(
-    ['blur', 'pagehide', 'beforeunload'],
-    flushChannelSubscribeLevel
-  )
-  onBeforeUnmount(flushChannelSubscribeLevel)
-  watch(channelId, () => flushChannelSubscribeLevel.value())
+  useEventListener('blur', applyChannelSubscribeLevel.flush)
+  useEventListener(['pagehide', 'beforeunload'], flushChannelSubscribeLevel)
+
+  watch(channelId, applyChannelSubscribeLevel.flush)
 
   const changeToNextSubscriptionLevel = () => {
     const level =

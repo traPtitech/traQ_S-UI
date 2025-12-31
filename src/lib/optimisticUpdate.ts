@@ -23,16 +23,26 @@ const createOptimisticUpdater = <State>({
   setState,
   execute
 }: Options<State>) => {
+  let previousState: State | null = null
+
+  const rollback = () => {
+    if (!previousState) return
+    setState(previousState)
+    previousState = null
+  }
+
   const update = async (newState: State) => {
-    const previousState = getState()
+    previousState = getState()
     setState(newState)
 
     try {
       await execute(newState)
     } catch {
-      setState(previousState)
+      rollback()
     }
   }
+
+  update.rollback = rollback
 
   return update
 }

@@ -53,8 +53,8 @@ const createBeaconDispatcher = async <Fn extends AxiosRequestFn>(
 ) => {
   const config = await getConfig(request, ...args)
   return () => {
-    if (!config.url) return
-    fetch(config.url, {
+    if (!config.url) return Promise.reject(new Error('URL must not be empty'))
+    return fetch(config.url, {
       ...config,
       body: config.data,
       keepalive: true
