@@ -13,13 +13,16 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v6
+
       - name: setup Node
         uses: actions/setup-node@v6
         with:
           node-version-file: ./.node-version
           cache: npm
+
       - name: check npm ci
         run: npm ci
+
   lint:
     name: run lint
     runs-on: ubuntu-latest
@@ -27,11 +30,13 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v6
+
       - name: setup Node
         uses: actions/setup-node@v6
         with:
           node-version-file: ./.node-version
           cache: npm
+
       - name: restore ESLint cache
         uses: actions/cache@v5
         with:
@@ -39,24 +44,30 @@ jobs:
           key: eslint-cache-${{ runner.os }}-${{ hashFiles('eslint.config.mjs', '.eslintignore', 'package-lock.json') }}
           restore-keys: |
             eslint-cache-${{ runner.os }}-
+
       - name: npm ci
         run: npm ci
         env:
           CYPRESS_INSTALL_BINARY: 0
+
       - name: run lint
         run: npm run lint:no-fix -- --max-warnings=0
+
   format:
     name: run format
     runs-on: ubuntu-latest
     needs: [packages]
+
     steps:
       - name: checkout
         uses: actions/checkout@v6
+
       - name: setup Node
         uses: actions/setup-node@v6
         with:
           node-version-file: ./.node-version
           cache: npm
+
       - name: restore Prettier cache
         uses: actions/cache@v5
         with:
@@ -64,80 +75,101 @@ jobs:
           key: prettier-cache-${{ runner.os }}-${{ hashFiles('.prettierrc', '.prettierignore', 'package-lock.json') }}
           restore-keys: |
             prettier-cache-${{ runner.os }}-
+
       - name: npm ci
         run: npm ci
         env:
           CYPRESS_INSTALL_BINARY: 0
+
       - name: run format
         run: npx prettier --cache --check .
+
   type-check:
     name: run type-check
     runs-on: ubuntu-latest
     needs: [packages]
+
     steps:
       - name: checkout
         uses: actions/checkout@v6
+
       - name: setup Node
         uses: actions/setup-node@v6
         with:
           node-version-file: ./.node-version
           cache: npm
+
       - name: npm ci
         run: npm ci
         env:
           CYPRESS_INSTALL_BINARY: 0
+
       - name: run type-check
         run: npm run type-check
+
   build:
     name: run build
     runs-on: ubuntu-latest
     needs: [packages]
+
     steps:
       - name: checkout
         uses: actions/checkout@v6
+
       - name: setup Node
         uses: actions/setup-node@v6
         with:
           node-version-file: ./.node-version
           cache: npm
+
       - uses: actions/cache@v5
         with:
           path: ./public/fonts
           key: font-build-${{ runner.os }}
           restore-keys: |
             font-build-${{ runner.os }}
+
       - name: npm ci
         run: npm ci
         env:
           CYPRESS_INSTALL_BINARY: 0
+
       - name: run build
         run: npm run build:may-with-font
+
   test-unit:
     name: run test:unit
     runs-on: ubuntu-latest
     needs: [packages]
+
     steps:
       - name: checkout
         uses: actions/checkout@v6
+
       - name: setup Node
         uses: actions/setup-node@v6
         with:
           node-version-file: ./.node-version
           cache: npm
+
       - name: npm ci
         run: npm ci
         env:
           CYPRESS_INSTALL_BINARY: 0
+
       - name: run test:unit
         run: npm run test:unit
+
       - uses: actions/upload-artifact@v6
         with:
           name: coverage
           path: ./coverage
+
   codecov:
     name: Upload coverage to Codecov
     runs-on: ubuntu-latest
     needs: [test-unit]
+
     steps:
       - name: checkout
         uses: actions/checkout@v6
@@ -145,30 +177,37 @@ jobs:
         with:
           name: coverage
           path: ./coverage
+
       - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
   test-e2e:
     name: run test:e2e
     runs-on: ubuntu-latest
     needs: [packages]
+
     if: (github.repository_owner == 'traPtitech' && github.actor != 'dependabot[bot]')
     steps:
       - name: checkout
         uses: actions/checkout@v6
+
       - name: setup Node
         uses: actions/setup-node@v6
         with:
           node-version-file: ./.node-version
           cache: npm
+
       - uses: actions/cache@v5
         with:
           path: ./public/fonts
           key: font-build-${{ runner.os }}
           restore-keys: |
             font-build-${{ runner.os }}
+
       - name: npm ci
         run: npm ci
+
       - name: run test:e2e
         run: npm run test:e2e-headless
         if: env.CYPRESS_username != null
