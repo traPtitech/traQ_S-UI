@@ -116,7 +116,7 @@ jobs:
           CYPRESS_INSTALL_BINARY: 0
       - name: run test:unit
         run: npm run test:unit
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: coverage
           path: ./coverage
@@ -161,7 +161,7 @@ jobs:
         env:
           CYPRESS_username: ${{ secrets.traQ_username }}
           CYPRESS_password: ${{ secrets.traQ_password }}
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: failed-screenshots
           path: ./tests/e2e/screenshots
