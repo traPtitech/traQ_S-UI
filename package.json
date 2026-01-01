@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "./build/setup-dev-config.sh && vite",
     "build": "vite build",
     "build:with-font": "npm run gen-fonts && npm run build",
     "build:may-with-font": "MAY_SKIP_FONT_GEN=1 npm run gen-fonts && npm run build",
-    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "preview": "./build/setup-dev-config.sh && vite preview --host 127.0.0.1 --port 4173",
     "test:unit": "vitest run --coverage",
     "test:unit:watch": "vitest -w",
     "test:e2e": "npm run build && npm run test:e2e:only-run",
