@@ -92,7 +92,7 @@
     "eslint-plugin-vue": "^10.6.2",
     "fake-indexeddb": "^6.2.5",
     "fonteditor-core": "^2.6.3",
-    "jsdom": "^27.2.0",
+    "jsdom": "^27.4.0",
     "patch-package": "^8.0.1",
     "pinia": "^3.0.1",
     "postcss": "^8.5.3",
