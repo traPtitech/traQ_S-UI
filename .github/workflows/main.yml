@@ -32,6 +32,13 @@ jobs:
         with:
           node-version-file: ./.node-version
           cache: npm
+      - name: restore ESLint cache
+        uses: actions/cache@v5
+        with:
+          path: .eslintcache
+          key: eslint-cache-${{ runner.os }}-${{ hashFiles('eslint.config.mjs', '.eslintignore', 'package-lock.json') }}
+          restore-keys: |
+            eslint-cache-${{ runner.os }}-
       - name: npm ci
         run: npm ci
         env:
@@ -50,12 +57,19 @@ jobs:
         with:
           node-version-file: ./.node-version
           cache: npm
+      - name: restore Prettier cache
+        uses: actions/cache@v5
+        with:
+          path: node_modules/.cache/prettier
+          key: prettier-cache-${{ runner.os }}-${{ hashFiles('.prettierrc', '.prettierignore', 'package-lock.json') }}
+          restore-keys: |
+            prettier-cache-${{ runner.os }}-
       - name: npm ci
         run: npm ci
         env:
           CYPRESS_INSTALL_BINARY: 0
       - name: run format
-        run: npx prettier --check .
+        run: npx prettier --cache --check .
   type-check:
     name: run type-check
     runs-on: ubuntu-latest
