@@ -1,0 +1,13 @@
+{
+  "$schema": "../config.schema.json",
+  "enableQall": true,
+  "enableSearch": true,
+  "services": [
+    {
+      "label": "Official Website",
+      "iconPath": "traP.svg",
+      "appLink": "https://trap.jp/"
+    }
+  ],
+  "isRootChannelSelectableAsParentChannel": false
+}
