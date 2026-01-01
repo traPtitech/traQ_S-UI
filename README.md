@@ -26,6 +26,8 @@ docker run -d \
   traq-ui:latest
 ```
 
+See [`config.json` in the manifest repository](https://github.com/traPtitech/manifest/blob/main/traq/frontend/config.json) for an example. Refer to [`config.d.ts`](./config.d.ts) for the TypeScript type definition and [`config.schema.json`](./config.schema.json) for the JSON Schema.
+
 ### Other Deployment Methods
 
 If you want to deploy your own instance of traQ, then follow the instructions in backend [deployment.md](https://github.com/traPtitech/traQ/blob/master/docs/deployment.md).

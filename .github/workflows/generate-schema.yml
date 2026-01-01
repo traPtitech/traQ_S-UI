@@ -1,0 +1,54 @@
+name: Generate Config Schema
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'config.d.ts'
+
+jobs:
+  generate-schema:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: master
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate JSON Schema from config.d.ts
+        run: |
+          npx ts-json-schema-generator \
+            --path config.d.ts \
+            --type Config \
+            --out config.schema.json \
+            --no-top-ref
+
+          jq -c '.properties["$schema"] = {"type": "string"}' \
+            config.schema.json > config.schema.json.tmp && \
+            mv config.schema.json.tmp config.schema.json
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --exit-code config.schema.json || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push schema
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add config.schema.json
+          git commit -m "chore: auto-generate config.schema.json from config.d.ts"
+          git push
