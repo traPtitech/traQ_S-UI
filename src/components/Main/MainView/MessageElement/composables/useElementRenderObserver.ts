@@ -27,14 +27,20 @@ const useElementRenderObserver = (
 ) => {
   const route = useRoute()
 
-  let lastHeight = 0
-  let lastBottom = 0
-  let lastTop = 0
+  type State = {
+    height: number
+    bottom: number
+    top: number
+  }
+
+  let prevState: State | null = null
+
   const resizeObserver = new ResizeObserver(entries => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const entry = entries[0]!
     const { height, bottom, top } = entry.target.getBoundingClientRect()
-    if (lastHeight === 0) {
+
+    if (prevState === null) {
       // 初回に高さが変化した場合、初期レンダリング完了とみなす
       // これ以降新規にobserveしないためにwatcherを止める
       stop()
@@ -49,17 +55,17 @@ const useElementRenderObserver = (
     } else {
       emit('changeHeight', {
         id: messageId.value,
-        heightDiff: height - lastHeight,
+        heightDiff: height - prevState.height,
         top,
         bottom,
-        lastTop,
-        lastBottom
+        lastTop: prevState.top,
+        lastBottom: prevState.bottom
       })
     }
-    lastHeight = height
-    lastBottom = bottom
-    lastTop = top
+
+    prevState = { height, bottom, top }
   })
+
   const stop = watchEffect(
     () => {
       if (
@@ -80,6 +86,7 @@ const useElementRenderObserver = (
     // 監視前に高さが変わってしまうのを防止するためにsyncを指定する
     { flush: 'sync' }
   )
+
   watch(
     () => route.path,
     () =>
