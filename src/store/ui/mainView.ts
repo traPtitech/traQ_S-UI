@@ -2,7 +2,6 @@ import { computed, ref } from 'vue'
 
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
-import { channelIdToPathString } from '/@/lib/channel'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
@@ -68,7 +67,7 @@ export enum MainViewComponentState {
 export type HeaderStyle = 'default' | 'dark'
 
 const useMainViewStorePinia = defineStore('ui/mainView', () => {
-  const { lastOpenChannelName } = useBrowserSettings()
+  const { lastOpenChannelId } = useBrowserSettings()
   const channelsStore = useChannelsStore()
   const usersStore = useUsersStore()
 
@@ -149,11 +148,9 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
     }
 
     // 通常のチャンネルは最後に開いたチャンネルとして保持
-    const channelPath = channelIdToPathString(
-      channelId,
-      channelsStore.channelsMap.value
-    )
-    lastOpenChannelName.value = channelPath
+    if (channelsStore.channelsMap.value.has(channelId)) {
+      lastOpenChannelId.value = channelId
+    }
   }
 
   const changePrimaryViewToDM = ({

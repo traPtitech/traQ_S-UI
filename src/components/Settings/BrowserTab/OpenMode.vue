@@ -7,7 +7,7 @@
       </p>
       <FormSelectorFilterable
         v-if="openMode === 'particular'"
-        v-model="openChannelNameValue"
+        v-model="openChannelIdValue"
         :options="channelOptions"
       />
     </div>
@@ -24,18 +24,16 @@
 import AToggle from '/@/components/UI/AToggle.vue'
 import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 import useChannelOptions from '/@/composables/useChannelOptions'
-import useChannelPath from '/@/composables/useChannelPath'
 import type { OpenMode } from '/@/store/app/browserSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const { fetchChannels } = useChannelsStore()
 // 起動時チャンネルの選択に必要
 fetchChannels()
 
-const { channelIdToPathString } = useChannelPath()
-
 const openModeValue = defineModel<OpenMode>('openMode', { required: true })
-const openChannelNameValue = defineModel<string>('openChannelName', {
+const openChannelIdValue = defineModel<ChannelId | null>('startupChannelId', {
   required: true
 })
 
@@ -47,9 +45,7 @@ const toggleOpenMode = () => {
   }
 }
 
-const { channelOptions } = useChannelOptions(undefined, channel =>
-  channel ? (channelIdToPathString(channel.id) ?? '') : '(unknown)'
-)
+const { channelOptions } = useChannelOptions(undefined)
 </script>
 
 <style lang="scss" module>

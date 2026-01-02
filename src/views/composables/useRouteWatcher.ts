@@ -8,6 +8,7 @@ import { useRenderKey } from '/@/composables/dom/useRenderKey'
 import useNavigationController from '/@/composables/mainView/useNavigationController'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useMessageQuery } from '/@/composables/utils/useMessageQuery'
+import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 import { getFirstParam } from '/@/lib/basic/url'
 import router, { RouteName, constructChannelPath } from '/@/router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
@@ -31,12 +32,11 @@ const useRouteWatcher = () => {
     changePrimaryViewToChannelOrDM
   } = useMainViewStore()
   const { fetchMessage, fetchFileMetaData } = useMessagesStore()
-  const { channelPathToId, channelIdToPathString, channelIdToLink } =
-    useChannelPath()
+  const { channelPathStringToId, channelIdToLink } = useChannelPath()
   const { closeNav } = useNavigationController()
   const { isOnInitialModalRoute, replaceModal, clearModalState } =
     useModalStore()
-  const { defaultChannelName } = useBrowserSettings()
+  const { getStartupChannelId, getStartupChannelPath } = useBrowserSettings()
   const { channelTree } = useChannelTree()
   const {
     channelsMap,
@@ -65,35 +65,42 @@ const useRouteWatcher = () => {
 
   const onRouteChangedToIndex = async () => {
     await router
-      .replace(constructChannelPath(defaultChannelName.value))
+      .replace(constructChannelPath(await getStartupChannelPath()))
       // 同じ場所に移動しようとした際のエラーを消す
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {})
-    return
   }
 
   const onRouteChangedToChannel = async () => {
     // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
+
     if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
-    try {
-      const id = channelPathToId(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        state.channelParam!.split('/'),
-        channelTree.value
-      )
 
-      changePrimaryViewToChannel({
-        channelId: id,
-        entryMessageId: messageQuery.value
-      })
-    } catch (_) {
-      state.view = 'not-found'
-      return
+    const pathOrId = state.channelParam ?? ''
+
+    const id = (() => {
+      if (channelsMap.value.has(pathOrId)) {
+        return pathOrId
+      }
+
+      return setFallbackForNullishOrOnError(null).exec(() =>
+        channelPathStringToId(pathOrId)
+      )
+    })()
+
+    if (!id) {
+      return router.replace(constructChannelPath(await getStartupChannelPath()))
     }
+
+    changePrimaryViewToChannel({
+      channelId: id,
+      entryMessageId: messageQuery.value
+    })
+
     state.view = 'main'
   }
 
@@ -151,25 +158,19 @@ const useRouteWatcher = () => {
 
     // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
+
     if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
 
-    let channelPath = ''
-    let channelId = ''
-    if (file.channelId) {
-      channelPath = channelIdToPathString(file.channelId, true) ?? ''
-      channelId = file.channelId
-    } else {
-      channelPath = defaultChannelName.value
-      try {
-        channelId = channelPathToId(channelPath.split('/'), channelTree.value)
-      } catch (_) {
-        state.view = 'not-found'
-        return
+    const channelId = await (() => {
+      if (file.channelId) {
+        return file.channelId
+      } else {
+        return getStartupChannelId()
       }
-    }
+    })()
 
     // チャンネルが表示されていないときはそのファイルのチャンネルを表示する
     if (
@@ -233,13 +234,18 @@ const useRouteWatcher = () => {
     useRenderKey('messages').refresh()
   }
 
-  type RouteParamWithQuery = readonly [routeParam: string, query: LocationQuery]
+  type RouteParamWithQuery = readonly [
+    routeParam: string | null,
+    query: LocationQuery
+  ]
+
   const onRouteParamChange = async (
     [routeParam, query]: RouteParamWithQuery,
     [prevRouteParam, prevQuery]: RouteParamWithQuery
   ) => {
     isOnInitialModalRoute.value = false
     const routeName = state.currentRouteName
+
     if (routeName === RouteName.Index) {
       await onRouteChangedToIndex()
       return
@@ -290,7 +296,7 @@ const useRouteWatcher = () => {
 
   const triggerRouteParamChange = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    onRouteParamChange([state.channelParam!, {}], ['', {}])
+    onRouteParamChange([state.channelParam!, {}], [null, {}])
   }
 
   return {

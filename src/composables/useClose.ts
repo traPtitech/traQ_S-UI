@@ -15,7 +15,7 @@ const useClose = () => {
   const router = useRouter()
 
   const { primaryView } = useMainViewStore()
-  const { defaultChannelName } = useBrowserSettings()
+  const { startupChannelPath } = useBrowserSettings()
   const { channelIdToPathString } = useChannelPath()
 
   const close = () => {
@@ -24,7 +24,7 @@ const useClose = () => {
         const channelId = primaryView.value.channelId
 
         const channelPath = setFallbackForNullishOrOnError(
-          defaultChannelName.value
+          startupChannelPath.value
         ).exec(() => channelIdToPathString(channelId))
 
         router.push(constructChannelPath(channelPath))

@@ -57,7 +57,7 @@ const routes: RouteRecordRaw[] = [
     component: MainPage
   },
   {
-    path: constructChannelPath(':channel(.*)'),
+    path: constructChannelPath(':channel(.*)?'),
     name: RouteName.Channel,
     component: MainPage
   },

@@ -110,6 +110,23 @@ export type Config = Readonly<{
    * 省略時はリンクへの誘導テキストが載らない
    */
   iosPwaInfoLink?: string
+
+  /**
+   * デフォルトチャンネルのチャンネル ID
+   * 起動時チャンネルが 設定されていない / 見つからない / 解決できない 場合に使用される
+   * 配列を与えた場合は先頭から優先して考慮され，最初に見つかったチャンネルが使用される
+   * 省略時は fallbackChannelPath にフォールバックする
+   */
+  defaultChannelId?: string | string[]
+
+  /**
+   * どうしてもパスを解決できなかった場合など，最後に使用されるフォールバック (ID ではなくパス)
+   * `defaultChannelId` が設定されている場合はそちらが優先される
+   * 省略時は空文字列（チャンネルが選択されていない状態）
+   *
+   * @example 'general'
+   */
+  fallbackChannelPath?: string
 }>
 
 declare global {

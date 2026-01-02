@@ -86,13 +86,15 @@ const {
 })
 watch(() => props.clipFolderId, sync)
 
-const { defaultChannelName } = useBrowserSettings()
+const { startupChannelPath } = useBrowserSettings()
 
 const deleteClip = async () => {
   if (!window.confirm('本当に削除しますか？')) {
     return
   }
+
   await apis.deleteClipFolder(props.clipFolderId)
+
   const clipFolders = [...clipFoldersMap.value.values()]
     .filter(v => v.id !== props.clipFolderId)
     .sort((a, b) => {
@@ -102,11 +104,13 @@ const deleteClip = async () => {
       else if (aDate > bDate) return 1
       else return 0
     })
+
   if (clipFolders[0]) {
     router.push(constructClipFoldersPath(clipFolders[0].id))
     return
   }
-  router.push(constructChannelPath(defaultChannelName.value))
+
+  router.push(constructChannelPath(startupChannelPath.value))
 }
 </script>
 
