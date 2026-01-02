@@ -30,9 +30,7 @@ const getUsers = createSingleflight(apis.getUsers.bind(apis))
 const useUsersStorePinia = defineStore('entities/users', () => {
   const usersMap = ref(new Map<UserId, User>())
   const usersMapFetched = ref(false)
-  const usersMapInitialFetchPromise = ref(
-    useTrueChangedPromise(usersMapFetched)
-  )
+  const usersMapInitialFetchPromise = useTrueChangedPromise(usersMapFetched)
 
   const activeUsersMap = computed(
     () =>
@@ -70,7 +68,7 @@ const useUsersStorePinia = defineStore('entities/users', () => {
       usersMap,
       userId,
       usersMapFetched.value,
-      usersMapInitialFetchPromise.value,
+      usersMapInitialFetchPromise,
       getUser,
       setUser
     )
@@ -99,7 +97,7 @@ const useUsersStorePinia = defineStore('entities/users', () => {
       // キャッシュに存在してなかったかつ、全取得が完了してない場合は
       // 全取得を待って含まれてるか確認する
       if (cacheStrategy === 'waitForAllFetch' && !usersMapFetched.value) {
-        await usersMapInitialFetchPromise.value
+        await usersMapInitialFetchPromise
 
         const res = findUserByName(username)
         if (res) {

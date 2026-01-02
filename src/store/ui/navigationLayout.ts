@@ -33,7 +33,7 @@ const useNavigationLayoutStorePinia = defineStore('ui/navigationLayout', () => {
           {},
           initialValue
         )
-        await restoringPromise.value
+        await restoringPromise
         return { ...store, ...dbState }
       }
     },

@@ -48,8 +48,8 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
 
   const unreadChannelsMapFetched = ref(false)
 
-  const unreadChannelsMapInitialFetchPromise = ref(
-    useTrueChangedPromise(unreadChannelsMapFetched)
+  const unreadChannelsMapInitialFetchPromise = useTrueChangedPromise(
+    unreadChannelsMapFetched
   )
 
   const setUnreadChannelsMap = (
@@ -100,7 +100,7 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
    */
   const deleteUnreadChannelWithSend = async (channelId: ChannelId) => {
     // 未読を取得していないと未読を表示できないため (また既読にできないため)
-    await unreadChannelsMapInitialFetchPromise.value
+    await unreadChannelsMapInitialFetchPromise
 
     const isUnreadChannel = unreadChannelsMap.value.has(channelId)
     if (isUnreadChannel) {
@@ -187,7 +187,7 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
 
   messageMitt.on('addMessage', async ({ message, isCiting }) => {
     // 他端末の閲覧状態の取得が完了するのを待つ
-    await viewStatesStore.viewStatesInitialFetchPromise.value
+    await viewStatesStore.viewStatesInitialFetchPromise
 
     // 閲覧中のチャンネルは未読に追加しない
     if (viewStatesStore.monitoringChannels.value.has(message.channelId)) return

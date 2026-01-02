@@ -33,9 +33,7 @@ const initialRecentStampNames = ['ok_hand', 'thumbsup', 'eyes'] as const
 const useStampsStorePinia = defineStore('entities/stamps', () => {
   const stampsMap = ref(new Map<StampId, Stamp>())
   const stampsMapFetched = ref(false)
-  const stampsMapInitialFetchPromise = ref(
-    useTrueChangedPromise(stampsMapFetched)
-  )
+  const stampsMapInitialFetchPromise = useTrueChangedPromise(stampsMapFetched)
 
   const stampNameTable = computed(
     () =>
@@ -65,7 +63,7 @@ const useStampsStorePinia = defineStore('entities/stamps', () => {
       stampsMap,
       stampId,
       stampsMapFetched.value,
-      stampsMapInitialFetchPromise.value,
+      stampsMapInitialFetchPromise,
       getStamp,
       stamp => {
         stampsMap.value.set(stamp.id, stamp)

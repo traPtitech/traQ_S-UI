@@ -98,7 +98,7 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
     flag: FeatureFlagKey,
     enabled: boolean
   ) => {
-    await restoringPromise.value
+    await restoringPromise
     state.status.set(flag, enabled)
   }
 

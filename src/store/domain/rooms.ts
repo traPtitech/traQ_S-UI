@@ -47,7 +47,7 @@ const useRoomsStorePinia = defineStore('domain/rooms', () => {
       | QallRoomWithParticipants[]
   ): Promise<Rooms> => {
     if (!data) return []
-    await bothChannelsMapInitialFetchPromise.value
+    await bothChannelsMapInitialFetchPromise
     return data
       .filter(room => room.participants && room.participants.length > 0)
       .map(room => {

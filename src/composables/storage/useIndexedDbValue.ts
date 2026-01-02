@@ -24,18 +24,16 @@ const useIndexedDbValue = <T extends object>(
 
   const value = reactive(initialValue)
   const restoring = ref(true)
-  const restoringPromise = ref(
-    (async () => {
-      const v = await get<T | undefined>(key, store)
-      if (v) {
-        for (const [key, val] of Object.entries(v)) {
-          // @ts-expect-error valueとvは型が一致する
-          value[key] = val
-        }
+  const restoringPromise = (async () => {
+    const v = await get<T | undefined>(key, store)
+    if (v) {
+      for (const [key, val] of Object.entries(v)) {
+        // @ts-expect-error valueとvは型が一致する
+        value[key] = val
       }
-      restoring.value = false
-    })()
-  )
+    }
+    restoring.value = false
+  })()
 
   watch(
     value,

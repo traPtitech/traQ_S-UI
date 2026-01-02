@@ -23,8 +23,8 @@ const useChannelsStorePinia = defineStore('entities/channels', () => {
   const channelsMap = ref(new Map<ChannelId, Channel>())
   const dmChannelsMap = ref(new Map<DMChannelId, DMChannel>())
   const bothChannelsMapFetched = ref(false)
-  const bothChannelsMapInitialFetchPromise = ref(
-    useTrueChangedPromise(bothChannelsMapFetched)
+  const bothChannelsMapInitialFetchPromise = useTrueChangedPromise(
+    bothChannelsMapFetched
   )
 
   const userIdToDmChannelIdMap = computed(

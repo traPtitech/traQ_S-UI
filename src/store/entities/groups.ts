@@ -22,9 +22,8 @@ const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
 const useGroupsStorePinia = defineStore('entities/groups', () => {
   const userGroupsMap = ref(new Map<UserGroupId, UserGroup>())
   const userGroupsMapFetched = ref(false)
-  const userGroupsMapInitialFetchPromise = ref(
+  const userGroupsMapInitialFetchPromise =
     useTrueChangedPromise(userGroupsMapFetched)
-  )
 
   const gradeGroups = computed(() =>
     [...userGroupsMap.value.values()].filter(group => group.type === 'grade')
@@ -57,7 +56,7 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
       userGroupsMap,
       userGroupId,
       userGroupsMapFetched.value,
-      userGroupsMapInitialFetchPromise.value,
+      userGroupsMapInitialFetchPromise,
       getUserGroup,
       userGroup => {
         userGroupsMap.value.set(userGroup.id, userGroup)

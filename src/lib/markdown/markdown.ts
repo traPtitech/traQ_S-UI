@@ -63,10 +63,10 @@ const waitForInitialFetch = () => {
   const { stampsMapInitialFetchPromise } = useStampsStore()
 
   return Promise.all([
-    usersMapInitialFetchPromise.value,
-    userGroupsMapInitialFetchPromise.value,
-    bothChannelsMapInitialFetchPromise.value,
-    stampsMapInitialFetchPromise.value,
+    usersMapInitialFetchPromise,
+    userGroupsMapInitialFetchPromise,
+    bothChannelsMapInitialFetchPromise,
+    stampsMapInitialFetchPromise,
     loadMd()
   ])
 }
