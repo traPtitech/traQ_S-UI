@@ -1,5 +1,3 @@
-import { ChannelSubscribeLevel } from '@traptitech/traq'
-
 import type { Ref } from 'vue'
 import { computed, reactive } from 'vue'
 
@@ -11,7 +9,7 @@ import type { ChannelId } from '/@/types/entity-ids'
 const useNotificationState = <T extends { id: ChannelId; children: T[] }>(
   channelTree: Ref<{ id: ChannelId; children?: T[] }>
 ) => {
-  const { unreadChannelsMap, subscriptionMap } = useSubscriptionStore()
+  const { unreadChannelsMap, getSubscriptionLevel } = useSubscriptionStore()
   const unreadChannel = computed(() =>
     unreadChannelsMap.value.get(channelTree.value.id)
   )
@@ -33,10 +31,8 @@ const useNotificationState = <T extends { id: ChannelId; children: T[] }>(
           unreadChannel.value.channelId
         )
     ),
-    subscriptionLevel: computed(
-      () =>
-        subscriptionMap.value.get(channelTree.value.id) ??
-        ChannelSubscribeLevel.none
+    subscriptionLevel: computed(() =>
+      getSubscriptionLevel(channelTree.value.id)
     )
   })
   return notificationState
