@@ -78,7 +78,7 @@ const usePostMessage = (
   inputStateKey = channelId
 ) => {
   const { getMessageInputState } = useMessageInputStateStatic()
-  const { channelPathToId, channelIdToShortPathString } = useChannelPath()
+  const { channelPathStringToId, channelIdToShortPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
   const { bothChannelsMapInitialFetchPromise, channelsMap } = useChannelsStore()
   const { usersMapInitialFetchPromise, findUserByName } = useUsersStore()
@@ -121,7 +121,7 @@ const usePostMessage = (
       getGroup: getUserGroupByName,
       getChannel: path => {
         try {
-          const id = channelPathToId(path.split('/'))
+          const id = channelPathStringToId(path)
           return { id }
         } catch {
           return undefined

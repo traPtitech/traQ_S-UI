@@ -32,7 +32,7 @@ const useRouteWatcher = () => {
     changePrimaryViewToChannelOrDM
   } = useMainViewStore()
   const { fetchMessage, fetchFileMetaData } = useMessagesStore()
-  const { channelPathToId, channelIdToLink } = useChannelPath()
+  const { channelPathStringToId, channelIdToLink } = useChannelPath()
   const { closeNav } = useNavigationController()
   const { isOnInitialModalRoute, replaceModal, clearModalState } =
     useModalStore()
@@ -88,7 +88,7 @@ const useRouteWatcher = () => {
       }
 
       return setFallbackForNullishOrOnError(null).exec(() =>
-        channelPathToId(pathOrId.split('/'))
+        channelPathStringToId(pathOrId)
       )
     })()
 
