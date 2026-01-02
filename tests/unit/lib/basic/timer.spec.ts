@@ -1,4 +1,4 @@
-import { rAF, wait } from '/@/lib/basic/timer'
+import { nextFrame, wait } from '/@/lib/basic/timer'
 
 describe('wait', () => {
   it('can wait', async () => {
@@ -11,14 +11,14 @@ describe('wait', () => {
   })
 })
 
-describe('rAF', () => {
+describe('nextFrame', () => {
   beforeEach(() => {
     const spy = vi.spyOn(global, 'requestAnimationFrame')
     spy.mockClear()
   })
 
   it('can wait', async () => {
-    const p = rAF()
+    const p = nextFrame()
 
     expect(requestAnimationFrame).toHaveBeenCalledTimes(1)
     expect(requestAnimationFrame).toHaveBeenLastCalledWith(expect.any(Function))
