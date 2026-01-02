@@ -2,9 +2,6 @@ import { type MaybeRefOrGetter, type Ref, toValue } from 'vue'
 
 import { insert } from 'text-field-edit'
 
-/**
- * これを利用したときはCtrl+Zなどがきく
- */
 const useInsertText = (
   textareaRef: MaybeRefOrGetter<HTMLTextAreaElement | undefined>,
   target?: Ref<{ begin: number; end: number }>

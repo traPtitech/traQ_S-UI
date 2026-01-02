@@ -63,6 +63,7 @@ import ATab from '/@/components/UI/ATab.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import useBoxSize from '/@/composables/dom/useBoxSize'
 import useRelatedChannels from '/@/composables/useRelatedChannels'
+import { safeMod } from '/@/lib/basic/arithmetic'
 import type { Point } from '/@/lib/basic/point'
 import { randomString } from '/@/lib/basic/randomString'
 
@@ -117,7 +118,7 @@ const onKeydown = (e: KeyboardEvent) => {
     return
   }
 
-  nextIndex = (nextIndex + tabNames.length) % tabNames.length
+  nextIndex = safeMod(nextIndex, tabNames.length)
 
   currentTab.value = tabNames[nextIndex] ?? currentTab.value
   tabNameRefs[currentTab.value].value?.focus()

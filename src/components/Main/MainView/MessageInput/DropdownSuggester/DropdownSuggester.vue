@@ -5,12 +5,6 @@
         mousedownイベントでやっているのはclickイベントだとフォーカスが外れるため
         preventをすることでclickイベントでフォーカスが外れるのを回避している
       -->
-      <DropdownSuggesterCandidate
-        :candidate="confirmedPartCandidate"
-        :display="confirmedPart.display"
-        :is-selected="selectedIndex === -1"
-        @mousedown.prevent="select(confirmedPartCandidate)"
-      />
       <div :class="$style.scroll">
         <div
           v-for="(candidate, index) in candidates"
@@ -33,11 +27,8 @@
 import { type ComponentPublicInstance, computed } from 'vue'
 
 import { isIOS } from '/@/lib/dom/browser'
+import type { Candidate, Word } from '/@/lib/suggestion/basic'
 
-import type {
-  Candidate,
-  WordOrConfirmedPart
-} from '../composables/suggestion/useWordSuggester'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 
 const props = withDefaults(
@@ -47,18 +38,16 @@ const props = withDefaults(
     position?: { top: number; left: number }
     candidates?: Candidate[]
     selectedIndex: number | null
-    confirmedPart?: { text: string; display?: string }
   }>(),
   {
     isShown: false,
     position: () => ({ top: 0, left: 0 }),
-    candidates: () => [],
-    confirmedPart: () => ({ text: '', display: '' })
+    candidates: () => []
   }
 )
 
 const emit = defineEmits<{
-  (e: 'select', _word: WordOrConfirmedPart): void
+  (e: 'select', _word: Word): void
 }>()
 
 const MARGIN = 8
@@ -75,14 +64,7 @@ const styledPosition = computed(() => ({
   width: `${props.width}px`
 }))
 
-const confirmedPartCandidate = computed(
-  (): WordOrConfirmedPart => ({
-    type: 'confirmed-part',
-    text: props.confirmedPart.text
-  })
-)
-
-const select = (word: WordOrConfirmedPart) => {
+const select = (word: Word) => {
   emit('select', word)
 }
 
@@ -110,6 +92,5 @@ const scrollToSelectedCandidate = (
 .scroll {
   overflow-y: scroll;
   max-height: 32px * 4.5;
-  border-top: 2px solid $theme-background-secondary-border;
 }
 </style>

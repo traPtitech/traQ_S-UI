@@ -29,8 +29,7 @@
       :width="suggesterWidth"
       :position="suggesterPosition"
       :candidates="suggestedCandidates"
-      :selected-index="selectedCandidateIndex"
-      :confirmed-part="confirmedPart"
+      :selected-index="selectedIndex"
       @select="onSelect"
     />
   </div>
@@ -110,10 +109,9 @@ const {
   suggesterWidth,
   position,
   suggestedCandidates,
-  selectedCandidateIndex,
-  confirmedPart,
+  selectedIndex,
   onSelect
-} = useSuggester(textareaRef, modelValue)
+} = useSuggester(textareaRef)
 
 const {
   onBeforeInput,

@@ -29,6 +29,7 @@
 import { type Ref, ref } from 'vue'
 
 import ATab from '/@/components/UI/ATab.vue'
+import { safeMod } from '/@/lib/basic/arithmetic'
 
 const isStarred = defineModel<boolean>('isStarred', {
   required: true
@@ -63,7 +64,7 @@ const onKeydown = (e: KeyboardEvent) => {
     return
   }
 
-  nextIndex = (nextIndex + tabNames.length) % tabNames.length
+  nextIndex = safeMod(nextIndex, tabNames.length)
 
   const nextTabName = tabNames[nextIndex] ?? tabNames[index]
   isStarred.value = tabNames[nextIndex] === 'stared'

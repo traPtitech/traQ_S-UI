@@ -1,28 +1,20 @@
-import type { ComputedRef, Ref } from 'vue'
-import { computed, ref, watch } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
+import { computed, ref, toValue, watch } from 'vue'
 
 import useInsertText from '/@/composables/dom/useInsertText'
 import getCaretPosition from '/@/lib/dom/caretPosition'
-import type { Target } from '/@/lib/suggestion/basic'
-import { getCurrentWord } from '/@/lib/suggestion/basic'
+import type { Target, Word } from '/@/lib/suggestion/basic'
+import {
+  getCurrentWord,
+  getNextCandidateIndex,
+  getPrevCandidateIndex,
+  getSelectedCandidateIndex
+} from '/@/lib/suggestion/basic'
 
-import type { Word } from './useWordSuggestionList'
-import useWordSuggesterList from './useWordSuggestionList'
-
-export type WordOrConfirmedPart =
-  | Word
-  | {
-      type: 'confirmed-part'
-      text: string
-    }
+import useWordSuggestionList from './useWordSuggestionList'
 
 export interface Candidate {
   word: Word
-  display?: string
-}
-
-export interface ConfirmedPart {
-  text: string
   display?: string
 }
 
@@ -33,51 +25,79 @@ export interface ConfirmedPart {
 const MIN_LENGTH = 3
 
 const useWordSuggester = (
-  textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
-  value: Ref<string>
+  textareaRef: MaybeRefOrGetter<HTMLTextAreaElement | undefined>
 ) => {
   const isSuggesterShown = ref(false)
+
   const target = ref<Target>({
     word: '',
     begin: 0,
     end: 0
   })
+
+  /**
+   * nullのときは未選択
+   * -1のときは確定部分が選択されている
+   * 0～のときは候補が選択されている
+   */
+  const selectedIndex = ref<number | null>(null)
+
   /**
    * targetは補完をしたときに更新されないがこれは更新する
    * これはtargetを更新すると候補リストが変わってしまうため
    * (補完をしたときは候補リストを変化させたくない)
    */
   const currentInputWord = ref('')
+
+  const { suggestedCandidateWords, confirmedText } = useWordSuggestionList(
+    () => target.value.word,
+    MIN_LENGTH
+  )
+
   watch(
     () => target.value.word,
     word => {
       currentInputWord.value = word
+
+      selectedIndex.value = getSelectedCandidateIndex(
+        suggestedCandidateWords.value,
+        confirmedText.value,
+        word
+      )
+    },
+    {
+      immediate: true
     }
   )
 
+  const { insertText } = useInsertText(textareaRef, target)
+
   const position = computed(() => {
-    if (!textareaRef.value) return { top: 0, left: 0 }
-    return getCaretPosition(textareaRef.value, target.value.begin)
+    const textarea = toValue(textareaRef)
+    if (!textarea) return { top: 0, left: 0 }
+    return getCaretPosition(textarea, target.value.begin)
   })
 
-  const {
-    suggestedCandidateWords,
-    confirmedText,
-    selectedCandidateIndex,
-    prevCandidateText,
-    nextCandidateText
-  } = useWordSuggesterList(target, currentInputWord, MIN_LENGTH)
+  const getCandidateTextFromIndex = (i: number) => {
+    if (i === -1) return confirmedText.value
+    return suggestedCandidateWords.value[i]?.text ?? ''
+  }
 
-  const { insertText } = useInsertText(textareaRef, target)
-  const insertTextAndMoveTarget = (text: string) => {
+  const insertTextAndMoveTarget = (index: number) => {
+    selectedIndex.value = index
+    const text = getCandidateTextFromIndex(index)
+
     insertText(text)
     target.value.end = target.value.begin + text.length
     currentInputWord.value = text
   }
 
   const updateTarget = () => {
-    if (!textareaRef.value) return
-    target.value = getCurrentWord(textareaRef.value, value.value)
+    const textarea = toValue(textareaRef)
+    if (!textarea) return
+
+    target.value = getCurrentWord(textarea)
+
     if (target.value.word.length < MIN_LENGTH) {
       isSuggesterShown.value = false
       return
@@ -90,6 +110,16 @@ const useWordSuggester = (
     if (e.isComposing) return
     if (!isSuggesterShown.value) return
 
+    const prevIndex = getPrevCandidateIndex(
+      suggestedCandidateWords.value.length,
+      selectedIndex.value
+    )
+
+    const nextIndex = getNextCandidateIndex(
+      suggestedCandidateWords.value.length,
+      selectedIndex.value
+    )
+
     // Tabによるフォーカスの移動を防止するため、長押しで連続移動できるようにするためにkeyDownで行う必要がある
     if (e.key === 'Tab') {
       e.preventDefault()
@@ -100,24 +130,25 @@ const useWordSuggester = (
 
       // 未選択状態では確定部分が補完される
       if (e.shiftKey) {
-        insertTextAndMoveTarget(prevCandidateText.value)
+        insertTextAndMoveTarget(prevIndex)
       } else {
-        insertTextAndMoveTarget(nextCandidateText.value)
+        insertTextAndMoveTarget(nextIndex)
       }
       return
     }
 
     if (e.key === 'ArrowUp') {
       e.preventDefault()
-      insertTextAndMoveTarget(prevCandidateText.value)
+      insertTextAndMoveTarget(prevIndex)
       return
     }
     if (e.key === 'ArrowDown') {
       e.preventDefault()
-      insertTextAndMoveTarget(nextCandidateText.value)
+      insertTextAndMoveTarget(nextIndex)
       return
     }
   }
+
   const onKeyUp = (e: KeyboardEvent) => {
     if (e.key === 'Tab' || e.key === 'ArrowUp' || e.key === 'ArrowDown') return
     // 文字入力後の状態をとるためkeyUpで行う必要がある
@@ -129,7 +160,7 @@ const useWordSuggester = (
     }
   }
 
-  const onSelect = (word: WordOrConfirmedPart) => {
+  const onSelect = (word: Word) => {
     insertText(word.text)
     isSuggesterShown.value = false
   }
@@ -142,9 +173,7 @@ const useWordSuggester = (
     return suggestedCandidateWords.value.map(word => ({ word }))
   })
 
-  const confirmedPart = computed(() => ({
-    text: confirmedText.value
-  }))
+  const confirmedPart = confirmedText
 
   return {
     onKeyDown,
@@ -155,7 +184,7 @@ const useWordSuggester = (
     suggesterWidth: 240,
     position,
     suggestedCandidates,
-    selectedCandidateIndex,
+    selectedIndex,
     confirmedPart
   }
 }

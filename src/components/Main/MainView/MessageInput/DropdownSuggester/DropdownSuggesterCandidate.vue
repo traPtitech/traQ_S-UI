@@ -21,14 +21,14 @@
 
 <script lang="ts" setup>
 import AStamp from '/@/components/UI/AStamp.vue'
+import type { Word } from '/@/lib/suggestion/basic'
 
-import type { WordOrConfirmedPart } from '../composables/suggestion/useWordSuggester'
 import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 
 withDefaults(
   defineProps<{
-    candidate: WordOrConfirmedPart
+    candidate: Word
     display?: string
     isSelected?: boolean
   }>(),

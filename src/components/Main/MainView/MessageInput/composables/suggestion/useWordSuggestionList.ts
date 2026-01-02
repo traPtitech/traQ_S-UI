@@ -1,17 +1,12 @@
-import type { Ref } from 'vue'
-import { computed, onBeforeUnmount, readonly, ref, watchEffect } from 'vue'
+import { computed, onBeforeUnmount, ref, toValue } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
 import useUserList from '/@/composables/users/useUserList'
 import { isDefined } from '/@/lib/basic/array'
 import TrieTree from '/@/lib/basic/trieTree'
 import { animeEffectSet, sizeEffectSet } from '/@/lib/markdown/effects'
-import type { Target } from '/@/lib/suggestion/basic'
-import {
-  getDeterminedCharacters,
-  getNextCandidateIndex,
-  getPrevCandidateIndex
-} from '/@/lib/suggestion/basic'
+import { type Word, getDeterminedCharacters } from '/@/lib/suggestion/basic'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import type { EntityEventMap } from '/@/store/entities/mitt'
@@ -32,22 +27,6 @@ const events: Array<keyof EntityEventMap> = [
   'setChannels',
   'updateChannel'
 ]
-
-interface WordBase {
-  delimiter?: string
-  text: string
-}
-
-export interface WordWithId extends WordBase {
-  type: 'user' | 'user-group' | 'stamp' | 'channel'
-  id: string
-}
-
-export interface WordWithoutId extends WordBase {
-  type: 'stamp-effect'
-}
-
-export type Word = WordWithId | WordWithoutId
 
 const useCandidateTree = () => {
   const userList = useUserList()
@@ -123,16 +102,15 @@ const replaceRegex = new RegExp(`[${Object.keys(replaceMap).join('|')}]`, 'g')
  * @param minLength 補完が利用できるようになる最小の文字数
  */
 const useWordSuggestionList = (
-  target: Ref<Target>,
-  currentInputWord: Ref<string>,
+  word: MaybeRefOrGetter<string>,
   minLength: number
 ) => {
   const tree = useCandidateTree()
   const candidates = computed(() =>
-    target.value.word.length >= minLength
+    toValue(word).length >= minLength
       ? tree.value.search(
-          target.value.word.replace(replaceRegex, c => replaceMap[c] ?? c),
-          { stopAtNextDelimiter: target.value.word.startsWith('#') }
+          toValue(word).replace(replaceRegex, c => replaceMap[c] ?? c),
+          { stopAtNextDelimiter: toValue(word).startsWith('#') }
         )
       : []
   )
@@ -140,44 +118,9 @@ const useWordSuggestionList = (
     getDeterminedCharacters(candidates.value.map(obj => obj.text))
   )
 
-  /**
-   * nullのときは未選択
-   * -1のときは確定部分が選択されている
-   * 0～のときは候補が選択されている
-   */
-  const selectedIndex = ref<number | null>(null)
-  watchEffect(() => {
-    const i = candidates.value.findIndex(c => c.text === currentInputWord.value)
-    // 候補に存在せず確定部とも一致していなかったら選択状態を解除
-    if (i === -1 && confirmedText.value !== currentInputWord.value) {
-      selectedIndex.value = null
-      return
-    }
-
-    selectedIndex.value = i
-  })
-
-  const getCandidateTextFromIndex = (i: number) => {
-    if (i === -1) return confirmedText.value
-    return candidates.value[i]?.text ?? ''
-  }
-  const prevCandidateText = computed(() =>
-    getCandidateTextFromIndex(
-      getPrevCandidateIndex(candidates.value, selectedIndex.value)
-    )
-  )
-  const nextCandidateText = computed(() =>
-    getCandidateTextFromIndex(
-      getNextCandidateIndex(candidates.value, selectedIndex.value)
-    )
-  )
-
   return {
     suggestedCandidateWords: candidates,
-    confirmedText,
-    selectedCandidateIndex: readonly(selectedIndex),
-    prevCandidateText,
-    nextCandidateText
+    confirmedText
   }
 }
 
