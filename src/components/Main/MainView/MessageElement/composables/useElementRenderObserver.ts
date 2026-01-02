@@ -21,6 +21,7 @@ const useElementRenderObserver = (
     quoteMessageIds: readonly MessageId[]
     fileIds: readonly FileId[]
     externalUrls: readonly ExternalUrl[]
+    hasCodeBlock: boolean
   }>,
   emit: ((name: 'entryMessageLoaded', relativePos: number) => void) &
     ((name: 'changeHeight', data: ChangeHeightData) => void)
@@ -72,11 +73,12 @@ const useElementRenderObserver = (
         (unref(isEntryMessage) ||
           embeddingsState.quoteMessageIds.length > 0 ||
           embeddingsState.fileIds.length > 0 ||
-          embeddingsState.externalUrls.length > 0) &&
+          embeddingsState.externalUrls.length > 0 ||
+          embeddingsState.hasCodeBlock) &&
         bodyRef.value
       ) {
         /*
-          引用 / 添付ファイル / 外部URL がある場合か
+          引用 / 添付ファイル / 外部URL / コードブロック がある場合か
           エントリーメッセージは
           高さ監視をする
         */
