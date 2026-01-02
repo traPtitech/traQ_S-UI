@@ -86,7 +86,7 @@ const {
 })
 watch(() => props.clipFolderId, sync)
 
-const { getStartupChannelPath } = useBrowserSettings()
+const { startupChannelPath } = useBrowserSettings()
 
 const deleteClip = async () => {
   if (!window.confirm('本当に削除しますか？')) {
@@ -110,7 +110,7 @@ const deleteClip = async () => {
     return
   }
 
-  router.push(constructChannelPath(getStartupChannelPath()))
+  router.push(constructChannelPath(startupChannelPath.value))
 }
 </script>
 

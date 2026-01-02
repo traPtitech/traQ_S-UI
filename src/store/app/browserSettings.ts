@@ -1,5 +1,6 @@
-import { toRefs } from 'vue'
+import { reactive, toRefs } from 'vue'
 
+import { computedAsync } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
@@ -72,9 +73,10 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     filterStarChannel: false
   }
 
+  const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
   const { channelPathStringToId, channelIdToPathString } = useChannelPath()
 
-  const [state] = useLocalStorageValue(
+  const [state, migrationPromise] = useLocalStorageValue(
     'store/app/browserSettings',
     2,
     {
@@ -91,7 +93,6 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
       2: async oldStore => {
         // v1 -> v2: path から ID への変換
 
-        const { bothChannelsMapInitialFetchPromise } = useChannelsStore()
         await bothChannelsMapInitialFetchPromise
 
         type OldState = State & {
@@ -121,7 +122,9 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     initialValue
   )
 
-  const getStartupChannelId = () => {
+  const getStartupChannelId = async () => {
+    await Promise.all([bothChannelsMapInitialFetchPromise, migrationPromise])
+
     const id = (() => {
       switch (state.openMode) {
         case 'lastOpen':
@@ -139,21 +142,30 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
 
     if (id) return id
 
-    const { channelsMap } = useChannelsStore()
-
     return defaultChannelIds.find(id => channelsMap.value.has(id)) ?? nullUuid
   }
 
-  const getStartupChannelPath = () => {
+  const getStartupChannelPath = async () => {
+    const id = await getStartupChannelId()
     return setFallbackForNullishOrOnError(fallbackChannelPath).exec(() =>
-      channelIdToPathString(getStartupChannelId())
+      channelIdToPathString(id)
     )
   }
 
+  const startupChannelId = computedAsync(getStartupChannelId, nullUuid)
+
+  const startupChannelPath = computedAsync(
+    getStartupChannelPath,
+    fallbackChannelPath
+  )
+
   return {
     ...toRefs(state),
+    config: reactive(state),
     getStartupChannelId,
-    getStartupChannelPath
+    getStartupChannelPath,
+    startupChannelId,
+    startupChannelPath
   }
 })
 

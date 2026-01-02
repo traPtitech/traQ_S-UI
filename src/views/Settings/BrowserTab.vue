@@ -3,33 +3,31 @@
     <NotificationState />
     <CitationNotification />
     <SimpleToggle
-      v-model="state.ecoMode"
+      v-model="config.ecoMode"
       title="省エネモード"
       description="省エネモードがONの場合、スタンプエフェクトのアニメーションを表示しません"
     />
     <OpenMode
-      v-model:open-mode="state.openMode"
-      v-model:startup-channel-id="state.startupChannelId"
+      v-model:open-mode="config.openMode"
+      v-model:startup-channel-id="config.startupChannelId"
     />
     <SimpleToggle
-      v-model="state.prioritizeStarredChannel"
+      v-model="config.prioritizeStarredChannel"
       title="未読画面でお気に入りを優先表示"
       description="未読チャンネル一覧でお気に入りチャンネルを優先的に表示するようにします。"
     />
     <SimpleToggle
-      v-model="state.prioritizeNotifiedChannel"
+      v-model="config.prioritizeNotifiedChannel"
       title="未読画面で通知を優先表示"
       description="未読チャンネル一覧で通知オンのチャンネルを優先的に表示するようにします。"
     />
-    <SendKey v-model:send-with-modifier-key="state.sendWithModifierKey" />
-    <ModifierKeys v-model:modifier-key="state.modifierKey" />
+    <SendKey v-model:send-with-modifier-key="config.sendWithModifierKey" />
+    <ModifierKeys v-model:modifier-key="config.modifierKey" />
     <CacheManager />
   </section>
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
-
 import CacheManager from '/@/components/Settings/BrowserTab/CacheManager.vue'
 import CitationNotification from '/@/components/Settings/BrowserTab/CitationNotification.vue'
 import ModifierKeys from '/@/components/Settings/BrowserTab/ModifierKeys.vue'
@@ -39,7 +37,7 @@ import SendKey from '/@/components/Settings/BrowserTab/SendKey.vue'
 import SimpleToggle from '/@/components/Settings/BrowserTab/SimpleToggle.vue'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 
-const state = reactive(useBrowserSettings())
+const { config } = useBrowserSettings()
 </script>
 
 <style lang="scss" module>

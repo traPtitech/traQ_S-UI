@@ -65,7 +65,7 @@ const useRouteWatcher = () => {
 
   const onRouteChangedToIndex = async () => {
     await router
-      .replace(constructChannelPath(getStartupChannelPath()))
+      .replace(constructChannelPath(await getStartupChannelPath()))
       // 同じ場所に移動しようとした際のエラーを消す
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {})
@@ -93,7 +93,7 @@ const useRouteWatcher = () => {
     })()
 
     if (!id) {
-      return router.replace(constructChannelPath(getStartupChannelPath()))
+      return router.replace(constructChannelPath(await getStartupChannelPath()))
     }
 
     changePrimaryViewToChannel({
@@ -158,12 +158,13 @@ const useRouteWatcher = () => {
 
     // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
+
     if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
 
-    const channelId = (() => {
+    const channelId = await (() => {
       if (file.channelId) {
         return file.channelId
       } else {
