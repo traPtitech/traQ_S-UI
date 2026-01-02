@@ -5,7 +5,22 @@ import { storeToRefs } from 'pinia'
 
 import { isPromiseLike } from './promise'
 
-type StoreToRefs<SS extends Store> = ReturnType<typeof storeToRefs<SS>>
+/**
+ * PromiseLike なプロパティのキーを抽出する
+ */
+type PromiseLikeKeys<T> = {
+  [K in keyof T]: T[K] extends PromiseLike<unknown> ? K : never
+}[keyof T]
+
+/**
+ * pinia の storeToRefs は Promise をスキップするが、型定義では
+ * Ref でラップされてしまうため、あらかじめ除外した型を定義する
+ */
+type StoreToRefs<SS extends Store> = Omit<
+  ReturnType<typeof storeToRefs<SS>>,
+  PromiseLikeKeys<SS>
+>
+
 type ToRefsedStore<SS extends Store> = Omit<SS, keyof StoreToRefs<SS>> &
   StoreToRefs<SS>
 
@@ -47,8 +62,7 @@ export const convertToRefsStore = <SS extends Store>(
         // piniaの内部プロパティ
         if (key.startsWith('_') || key.startsWith('$')) continue
         throw new Error(
-          'store から Function や Promise でない非リアクティブ値を返すことはできません' +
-            `Type: ${typeof v}, ToString: ${v}`
+          `store から Function や Promise でない非リアクティブ値を返すことはできません: ${key} (${typeof v})`
         )
       }
     }
