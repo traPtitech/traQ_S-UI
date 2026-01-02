@@ -15,8 +15,7 @@ const useMessageScroller = (
 ) => {
   const state = reactive({
     height: 0,
-    scrollTop: 0,
-    skipResizeAdjustment: false
+    scrollTop: 0
   })
 
   const onChangeHeight = (payload: ChangeHeightData) => {
@@ -49,11 +48,6 @@ const useMessageScroller = (
       scrollerProps.lastLoadingDirection === 'latest' ||
       scrollerProps.lastLoadingDirection === 'former'
     ) {
-      // 古いメッセージを読み込んですぐはここで高さの調整をしない
-      if (state.skipResizeAdjustment) {
-        return
-      }
-
       const scrollerTop = rootRef.value.getBoundingClientRect().top
       // 視界より上にある要素の高さが変わった場合のみ補正する
       if (payload.top < scrollerTop) {
@@ -104,18 +98,10 @@ const useMessageScroller = (
         }
         //上に追加された時はスクロール位置を変更する。
         if (scrollerProps.lastLoadingDirection === 'former') {
-          // onChangeHeight の調整を一時的に無効化
-          state.skipResizeAdjustment = true
           rootRef.value.scrollTo({
             top: rootRef.value.scrollTop + (newHeight - state.height)
           })
           state.height = newHeight
-          // 十分に DOMが更新されたら無効化を解除
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              state.skipResizeAdjustment = false
-            })
-          })
         }
 
         if (scrollerProps.lastLoadingDirection === 'latest') {
