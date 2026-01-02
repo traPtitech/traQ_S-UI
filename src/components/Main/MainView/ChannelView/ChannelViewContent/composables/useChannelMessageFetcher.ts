@@ -176,7 +176,7 @@ const useChannelMessageFetcher = (
 
   const onReachedLatest = async () => {
     // 未読を取得していないと未読を表示できないため
-    await unreadChannelsMapInitialFetchPromise.value
+    await unreadChannelsMapInitialFetchPromise
 
     const unreadChannel = unreadChannelsMap.value.get(props.channelId)
     if (unreadChannel) {

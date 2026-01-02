@@ -13,9 +13,8 @@ import { useTrueChangedPromise } from '/@/store/utils/promise'
 const useViewStatesStorePinia = defineStore('domain/viewStates', () => {
   const viewStates = ref(new Map<string, MyChannelViewState>())
   const viewStatesFetched = ref(false)
-  const viewStatesInitialFetchPromise = ref(
-    useTrueChangedPromise(viewStatesFetched)
-  )
+  const viewStatesInitialFetchPromise = useTrueChangedPromise(viewStatesFetched)
+
   const monitoringChannels = computed(
     () =>
       new Set(

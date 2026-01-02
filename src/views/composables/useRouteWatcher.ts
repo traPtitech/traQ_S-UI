@@ -74,7 +74,7 @@ const useRouteWatcher = () => {
 
   const onRouteChangedToChannel = async () => {
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise.value
+    await bothChannelsMapInitialFetchPromise
     if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
@@ -150,7 +150,7 @@ const useRouteWatcher = () => {
     }
 
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise.value
+    await bothChannelsMapInitialFetchPromise
     if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
@@ -201,7 +201,7 @@ const useRouteWatcher = () => {
     const channelId = message.channelId
 
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise.value
+    await bothChannelsMapInitialFetchPromise
     if (channelTree.value.children.length === 0) {
       return
     }
@@ -217,7 +217,7 @@ const useRouteWatcher = () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const dmChannel = dmChannelsMap.value.get(channelId)!
       // ユーザーIDからユーザー名への変換に必要
-      await usersMapInitialFetchPromise.value
+      await usersMapInitialFetchPromise
       const user = usersMap.value.get(dmChannel.userId)
       router.replace({
         name: RouteName.User,

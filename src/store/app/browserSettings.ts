@@ -77,7 +77,7 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
           {},
           initialValue
         )
-        await restoringPromise.value
+        await restoringPromise
         return { ...store, ...dbState }
       }
     },

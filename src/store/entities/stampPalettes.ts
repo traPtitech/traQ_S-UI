@@ -55,8 +55,8 @@ const deleteStampPaletteSingleflight = createSingleflight(
 const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
   const stampPalettesMap = ref(new Map<StampPaletteId, StampPalette>())
   const stampPalettesMapFetched = ref(false)
-  const stampPalettesMapInitialFetchPromise = ref(
-    useTrueChangedPromise(stampPalettesMapFetched)
+  const stampPalettesMapInitialFetchPromise = useTrueChangedPromise(
+    stampPalettesMapFetched
   )
 
   const nonEmptyStampPaletteIds = computed(() =>
@@ -77,7 +77,7 @@ const useStampPalettesStorePinia = defineStore('entities/stampPalettes', () => {
       stampPalettesMap,
       stampPaletteId,
       stampPalettesMapFetched.value,
-      stampPalettesMapInitialFetchPromise.value,
+      stampPalettesMapInitialFetchPromise,
       getStampPalette,
       fetchedStampPalette => {
         stampPalettesMap.value.set(stampPaletteId, fetchedStampPalette)

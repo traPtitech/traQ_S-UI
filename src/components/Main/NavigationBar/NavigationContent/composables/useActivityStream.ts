@@ -32,7 +32,7 @@ const useActivityStream = () => {
   const fetch = async () => {
     // ログイン前に取得されるのを回避するために、チャンネル取得を待つ
     // チャンネル取得である必要性はない
-    await bothChannelsMapInitialFetchPromise.value
+    await bothChannelsMapInitialFetchPromise
 
     try {
       const [{ data: res }, shared] = await getActivityTimeline(

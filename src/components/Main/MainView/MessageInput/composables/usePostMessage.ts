@@ -113,9 +113,9 @@ const usePostMessage = (
     }
 
     await Promise.all([
-      usersMapInitialFetchPromise.value,
-      userGroupsMapInitialFetchPromise.value,
-      bothChannelsMapInitialFetchPromise.value
+      usersMapInitialFetchPromise,
+      userGroupsMapInitialFetchPromise,
+      bothChannelsMapInitialFetchPromise
     ])
 
     const embededText = embedInternalLink(state.text, {
