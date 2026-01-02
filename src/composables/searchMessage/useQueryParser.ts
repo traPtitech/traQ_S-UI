@@ -1,8 +1,7 @@
-import type { Channel, DMChannel, User } from '@traptitech/traq'
+import type { Channel, DMChannel, User, UserGroup } from '@traptitech/traq'
 
 import type { Ref } from 'vue'
 
-import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 import { channelIdToPathString } from '/@/lib/channel'
 import type { ChannelTree } from '/@/lib/channelTree'
 import { channelPathToId as channelPathToIdImpl } from '/@/lib/channelTree'
@@ -14,10 +13,16 @@ import {
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
 import type { PrimaryViewInformation } from '/@/store/ui/mainView'
 import { useMainViewStore } from '/@/store/ui/mainView'
-import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
+import type {
+  ChannelId,
+  DMChannelId,
+  UserGroupId,
+  UserId
+} from '/@/types/entity-ids'
 
 const getStoreForParser = ({
   primaryView,
@@ -26,8 +31,11 @@ const getStoreForParser = ({
   userIdToDmChannelIdMap,
   channelTree,
   usersMap,
+  userGroupsMap,
   me,
-  fetchUserByName
+  fetchUserByName,
+  getUserGroupByName,
+  getUserGroupsByUserId
 }: {
   primaryView: Ref<PrimaryViewInformation>
   channelsMap: Ref<ReadonlyMap<ChannelId, Channel>>
@@ -35,10 +43,13 @@ const getStoreForParser = ({
   userIdToDmChannelIdMap: Ref<ReadonlyMap<UserId, DMChannelId>>
   channelTree: Ref<ChannelTree>
   usersMap: Ref<ReadonlyMap<UserId, User>>
+  userGroupsMap: Ref<ReadonlyMap<UserGroupId, UserGroup>>
   me: Ref<User | undefined>
   fetchUserByName: (param: { username: string }) => Promise<User | undefined>
+  getUserGroupByName: (name: string) => UserGroup | undefined
+  getUserGroupsByUserId: (userId: UserId) => UserGroup[]
 }): StoreForParser => {
-  const getMyUsername = () => `@${me.value?.name}`
+  const getMyUsername = () => me.value?.name
   const getMyUserId = () => me.value?.id
 
   const userIdToDmChannelId = (userId: UserId): DMChannelId | undefined => {
@@ -56,6 +67,10 @@ const getStoreForParser = ({
     return user?.id
   }
 
+  const userIdToName = (userId: UserId): string | undefined => {
+    return usersMap.value.get(userId)?.name
+  }
+
   const getCurrentChannelId = () => {
     return primaryView.value.type === 'channel' ||
       primaryView.value.type === 'dm'
@@ -69,6 +84,25 @@ const getStoreForParser = ({
     const id = await usernameToId(username)
     if (!id) return undefined
     return userIdToDmChannelId(id)
+  }
+
+  const userGroupNameToId = async (
+    name: string
+  ): Promise<UserGroupId | undefined> => {
+    const group = await getUserGroupByName(name)
+    return group?.id
+  }
+
+  const userGroupIdToUserIds = (
+    userGroupId: UserGroupId
+  ): UserId[] | undefined => {
+    const group = userGroupsMap.value.get(userGroupId)
+    if (!group) return undefined
+    return group.members.map(({ id }) => id)
+  }
+
+  const userIdToUserGroupIds = (userId: UserId): UserGroupId[] | undefined => {
+    return getUserGroupsByUserId(userId).map(g => g.id)
   }
 
   const getCurrentChannelPathOrUsername = () => {
@@ -91,15 +125,22 @@ const getStoreForParser = ({
     return userIdToDmChannelId(myUserId)
   }
 
-  const channelPathToId = (path: string): ChannelId | undefined =>
-    setFallbackForNullishOrOnError(undefined).exec(() =>
-      channelPathToIdImpl(path.split('/'), channelTree.value)
-    )
+  const channelPathToId = (path: string): ChannelId | undefined => {
+    try {
+      return channelPathToIdImpl(path.split('/'), channelTree.value)
+    } catch {
+      return undefined
+    }
+  }
 
   return {
     channelPathToId,
     usernameToDmChannelId,
     usernameToId,
+    userIdToName,
+    userGroupNameToId,
+    userGroupIdToUserIds,
+    userIdToUserGroupIds,
     getCurrentChannelPathOrUsername,
     getCurrentChannelId,
     getMyDmChannelId,
@@ -114,7 +155,10 @@ const useQueryParser = () => {
   const { channelTree } = useChannelTree()
   const { primaryView } = useMainViewStore()
   const { fetchUserByName, usersMap } = useUsersStore()
+  const { getUserGroupByName, userGroupsMap, getUserGroupsByUserId } =
+    useGroupsStore()
   const { detail: me } = useMeStore()
+
   const parseQuery = createQueryParser(
     getStoreForParser({
       primaryView,
@@ -123,8 +167,11 @@ const useQueryParser = () => {
       userIdToDmChannelIdMap,
       channelTree,
       usersMap,
+      userGroupsMap,
       me,
-      fetchUserByName
+      fetchUserByName,
+      getUserGroupByName,
+      getUserGroupsByUserId
     })
   )
 

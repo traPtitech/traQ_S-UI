@@ -11,6 +11,8 @@ const mockDmChannelId = 'dm-channel-id'
 const mockChannelName = 'general'
 const mockUserId = 'user-id'
 const mockUserName = 'user'
+const mockUserGroupIds = ['user-group-id-00', 'user-group-id-01']
+const mockUserGroupNames = ['user-group-00', 'user-group-01']
 const mockCurrentChannelPath = 'current/channel'
 const mockCurrentChannelId = 'current-channel-id'
 const mockCurrentUsername = 'currentUser'
@@ -102,25 +104,235 @@ describe('parseQuery', () => {
     {
       description: 'with in:me',
       query: 'lorem ipsum in:me',
-      expectedNormalizedQuery: `lorem ipsum in:${mockMyUsername}`,
+      expectedNormalizedQuery: `lorem ipsum in:@${mockMyUsername}`,
       expectedQueryObject: { word: 'lorem ipsum', in: mockMyDmChannelId }
     },
     {
-      description: 'with user-filter without @',
+      description: 'with user-filter (prefix: `from:`, user)',
       query: `lorem ipsum from:${mockUserName}`,
       expectedNormalizedQuery: `lorem ipsum from:${mockUserName}`,
       expectedQueryObject: { word: 'lorem ipsum', from: mockUserId }
     },
     {
-      description: 'with user-filter with @',
+      description: 'with user-filter (prefix: `from:`, group 0)',
+      query: `lorem ipsum from:${mockUserGroupNames[0]}`,
+      expectedNormalizedQuery: `lorem ipsum from:${mockUserGroupNames[0]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        from: [mockUserId, mockMyUserId]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `from:`, group 1)',
+      query: `lorem ipsum from:${mockUserGroupNames[1]}`,
+      expectedNormalizedQuery: `lorem ipsum from:${mockUserGroupNames[1]}`,
+      expectedQueryObject: { word: 'lorem ipsum', from: [mockUserId] }
+    },
+    {
+      description: 'with user-filter (prefix: `to:`, user)',
+      query: `lorem ipsum to:${mockUserName}`,
+      expectedNormalizedQuery: `lorem ipsum to:${mockUserName}`,
+      expectedQueryObject: { word: 'lorem ipsum', to: [mockUserId] }
+    },
+    {
+      description: 'with user-filter (prefix: `to(groups):`, user)',
+      query: `lorem ipsum to(groups):${mockUserName}`,
+      expectedNormalizedQuery: `lorem ipsum to(groups):${mockUserName}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        to: [...mockUserGroupIds, mockUserId]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `to:`, group 0)',
+      query: `lorem ipsum to:${mockUserGroupNames[0]}`,
+      expectedNormalizedQuery: `lorem ipsum to:${mockUserGroupNames[0]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        to: mockUserGroupIds[0]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `to:`, group 1)',
+      query: `lorem ipsum to:${mockUserGroupNames[1]}`,
+      expectedNormalizedQuery: `lorem ipsum to:${mockUserGroupNames[1]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        to: mockUserGroupIds[1]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `to(groups):`, group 0)',
+      query: `lorem ipsum to(groups):${mockUserGroupNames[0]}`,
+      expectedNormalizedQuery: `lorem ipsum to(groups):${mockUserGroupNames[0]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        to: mockUserGroupIds[0]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `to(groups):`, group 1)',
+      query: `lorem ipsum to(groups):${mockUserGroupNames[1]}`,
+      expectedNormalizedQuery: `lorem ipsum to(groups):${mockUserGroupNames[1]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        to: mockUserGroupIds[1]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `@`, user)',
+      query: `lorem ipsum @${mockUserName}`,
+      expectedNormalizedQuery: `lorem ipsum @${mockUserName}`,
+      expectedQueryObject: { word: 'lorem ipsum', to: [mockUserId] }
+    },
+    {
+      description: 'with user-filter (prefix: `@`, group 0)',
+      query: `lorem ipsum @${mockUserGroupNames[0]}`,
+      expectedNormalizedQuery: `lorem ipsum @${mockUserGroupNames[0]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        to: mockUserGroupIds[0]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `@`, group 1)',
+      query: `lorem ipsum @${mockUserGroupNames[1]}`,
+      expectedNormalizedQuery: `lorem ipsum @${mockUserGroupNames[1]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        to: mockUserGroupIds[1]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `from:@`, user)',
       query: `lorem ipsum from:@${mockUserName}`,
       expectedNormalizedQuery: `lorem ipsum from:@${mockUserName}`,
       expectedQueryObject: { word: 'lorem ipsum', from: mockUserId }
     },
     {
+      description: 'with user-filter (prefix: `from:@`, group 0)',
+      query: `lorem ipsum from:@${mockUserGroupNames[0]}`,
+      expectedNormalizedQuery: `lorem ipsum from:@${mockUserGroupNames[0]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        from: [mockUserId, mockMyUserId]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `from:@`, group 1)',
+      query: `lorem ipsum from:@${mockUserGroupNames[1]}`,
+      expectedNormalizedQuery: `lorem ipsum from:@${mockUserGroupNames[1]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        from: [mockUserId]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `@!`, user)',
+      query: `lorem ipsum @!${mockUserName}`,
+      expectedNormalizedQuery: `lorem ipsum @!${mockUserName}`,
+      expectedQueryObject: { word: 'lorem ipsum', to: [mockUserId] }
+    },
+    {
+      description: 'with user-filter (prefix: `@!`, group 0)',
+      query: `lorem ipsum @!${mockUserGroupNames[0]}`,
+      expectedNormalizedQuery: `lorem ipsum @!${mockUserGroupNames[0]}`,
+      expectedQueryObject: {
+        word: `lorem ipsum @!${mockUserGroupNames[0]}`,
+        to: undefined
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `@!`, group 1)',
+      query: `lorem ipsum @!${mockUserGroupNames[1]}`,
+      expectedNormalizedQuery: `lorem ipsum @!${mockUserGroupNames[1]}`,
+      expectedQueryObject: {
+        word: `lorem ipsum @!${mockUserGroupNames[1]}`,
+        to: undefined
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `from:@!`, user)',
+      query: `lorem ipsum from:@!${mockUserName}`,
+      expectedNormalizedQuery: `lorem ipsum from:@!${mockUserName}`,
+      expectedQueryObject: { word: 'lorem ipsum', from: mockUserId }
+    },
+    {
+      description: 'with user-filter (prefix: `from:@!`, group 0)',
+      query: `lorem ipsum from:@!${mockUserGroupNames[0]}`,
+      expectedNormalizedQuery: `lorem ipsum from:@!${mockUserGroupNames[0]}`,
+      expectedQueryObject: {
+        word: `lorem ipsum from:@!${mockUserGroupNames[0]}`,
+        from: undefined
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `from:@!`, group 1)',
+      query: `lorem ipsum from:@!${mockUserGroupNames[1]}`,
+      expectedNormalizedQuery: `lorem ipsum from:@!${mockUserGroupNames[1]}`,
+      expectedQueryObject: {
+        word: `lorem ipsum from:@!${mockUserGroupNames[1]}`,
+        from: undefined
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `@&`, user)',
+      query: `lorem ipsum @&${mockUserName}`,
+      expectedNormalizedQuery: `lorem ipsum @&${mockUserName}`,
+      expectedQueryObject: {
+        word: `lorem ipsum @&${mockUserName}`,
+        to: undefined
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `@&`, group 0)',
+      query: `lorem ipsum @&${mockUserGroupNames[0]}`,
+      expectedNormalizedQuery: `lorem ipsum @&${mockUserGroupNames[0]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        to: mockUserGroupIds[0]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `@&`, group 1)',
+      query: `lorem ipsum @&${mockUserGroupNames[1]}`,
+      expectedNormalizedQuery: `lorem ipsum @&${mockUserGroupNames[1]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        to: mockUserGroupIds[1]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `from:@&`, user)',
+      query: `lorem ipsum from:@&${mockUserName}`,
+      expectedNormalizedQuery: `lorem ipsum from:@&${mockUserName}`,
+      expectedQueryObject: {
+        word: `lorem ipsum from:@&${mockUserName}`,
+        from: undefined
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `from:@&`, group 0)',
+      query: `lorem ipsum from:@&${mockUserGroupNames[0]}`,
+      expectedNormalizedQuery: `lorem ipsum from:@&${mockUserGroupNames[0]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        from: [mockUserId, mockMyUserId]
+      }
+    },
+    {
+      description: 'with user-filter (prefix: `from:@&`, group 1)',
+      query: `lorem ipsum from:@&${mockUserGroupNames[1]}`,
+      expectedNormalizedQuery: `lorem ipsum from:@&${mockUserGroupNames[1]}`,
+      expectedQueryObject: {
+        word: 'lorem ipsum',
+        from: [mockUserId]
+      }
+    },
+    {
       description: 'with me',
       query: 'lorem ipsum to:me',
-      expectedNormalizedQuery: `lorem ipsum to:${mockMyUsername}`,
+      expectedNormalizedQuery: `lorem ipsum to:@!${mockMyUsername}`,
       expectedQueryObject: { word: 'lorem ipsum', to: mockMyUserId }
     },
     {
@@ -208,6 +420,11 @@ describe('parseQuery', () => {
   ]
 
   const store: StoreForParser = {
+    getCurrentChannelId: () => mockCurrentChannelId,
+    getMyDmChannelId: () => mockMyDmChannelId,
+    getMyUserId: () => mockMyUserId,
+    getCurrentChannelPathOrUsername: () => mockCurrentChannelPath,
+    getMyUsername: () => mockMyUsername,
     channelPathToId: channelPath => {
       if (channelPath === mockChannelName) {
         return mockChannelId
@@ -235,65 +452,92 @@ describe('parseQuery', () => {
       }
       return undefined
     },
-    getCurrentChannelId: () => mockCurrentChannelId,
-    getMyDmChannelId: () => mockMyDmChannelId,
-    getMyUserId: () => mockMyUserId,
-    getCurrentChannelPathOrUsername: () => mockCurrentChannelPath,
-    getMyUsername: () => mockMyUsername
+    userIdToName: userId => {
+      if (userId === mockUserId) {
+        return mockUserName
+      }
+      if (userId === mockMyUserId) {
+        return mockMyUsername
+      }
+      return undefined
+    },
+    userGroupNameToId: async name => {
+      const idx = mockUserGroupNames.indexOf(name)
+      if (idx === -1) return undefined
+      return mockUserGroupIds[idx]
+    },
+    userGroupIdToUserIds: groupId => {
+      const idx = mockUserGroupIds.indexOf(groupId)
+      if (idx === -1) return undefined
+      if (idx === 0) return [mockUserId, mockMyUserId]
+      return [mockUserId]
+    },
+    userIdToUserGroupIds: userId => {
+      if (userId === mockUserId) {
+        return mockUserGroupIds
+      }
+      if (userId === mockMyUserId) {
+        return [mockUserGroupIds[0] as string]
+      }
+      return []
+    }
   }
-  const parseQuery = createQueryParser(store)
 
-  test.each(TEST_CASES)(
-    '$description',
-    async ({ query, expectedNormalizedQuery, expectedQueryObject }) => {
-      const { normalizedQuery, queryObject } = await parseQuery(query)
+  describe('parseQuery', () => {
+    const parseQuery = createQueryParser(store)
 
-      expect(normalizedQuery).toBe(expectedNormalizedQuery)
+    test.each(TEST_CASES)(
+      '$description',
+      async ({ query, expectedNormalizedQuery, expectedQueryObject }) => {
+        const { normalizedQuery, queryObject } = await parseQuery(query)
 
-      Object.entries(expectedQueryObject).forEach(([key, value]) => {
-        expect(queryObject[key as keyof typeof queryObject]).toEqual(value)
-      })
-    }
-  )
-})
+        expect(normalizedQuery).toBe(expectedNormalizedQuery)
 
-describe('toSearchMessageParam', () => {
-  it('can convert query object to api param array', () => {
-    const query = {
-      word: 'lorem ipsum',
-      after: '2021-01-23T00:00:00.000Z',
-      before: '2021-01-23T00:00:00.000Z',
-      in: mockChannelId,
-      to: [mockUserId],
-      from: [mockUserId],
-      citation: undefined,
-      bot: false,
-      hasUrl: true,
-      hasAttachments: true,
-      hasImage: false
-    }
-    const options = {
-      limit: 20,
-      sort: 'createdAt' as const
-    }
-    const params = toSearchMessageParam(query, options)
-    expect(params).toEqual([
-      'lorem ipsum',
-      '2021-01-23T00:00:00.000Z',
-      '2021-01-23T00:00:00.000Z',
-      mockChannelId,
-      [mockUserId],
-      [mockUserId],
-      undefined,
-      false,
-      true,
-      true,
-      false,
-      undefined,
-      undefined,
-      20,
-      undefined,
-      'createdAt'
-    ])
+        Object.entries(expectedQueryObject).forEach(([key, value]) => {
+          expect(queryObject[key as keyof typeof queryObject]).toEqual(value)
+        })
+      }
+    )
+  })
+
+  describe('toSearchMessageParam', () => {
+    it('can convert query object to api param array', () => {
+      const query = {
+        word: 'lorem ipsum',
+        after: '2021-01-23T00:00:00.000Z',
+        before: '2021-01-23T00:00:00.000Z',
+        in: mockChannelId,
+        to: [mockUserId],
+        from: [mockUserId],
+        citation: undefined,
+        bot: false,
+        hasUrl: true,
+        hasAttachments: true,
+        hasImage: false
+      }
+      const options = {
+        limit: 20,
+        sort: 'createdAt' as const
+      }
+      const params = toSearchMessageParam(query, options)
+      expect(params).toEqual([
+        'lorem ipsum',
+        '2021-01-23T00:00:00.000Z',
+        '2021-01-23T00:00:00.000Z',
+        mockChannelId,
+        [mockUserId],
+        [mockUserId],
+        undefined,
+        false,
+        true,
+        true,
+        false,
+        undefined,
+        undefined,
+        20,
+        undefined,
+        'createdAt'
+      ])
+    })
   })
 })
