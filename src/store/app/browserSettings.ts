@@ -1,17 +1,23 @@
-import { computed, toRefs } from 'vue'
+import { toRefs } from 'vue'
 
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import useLocalStorageValue from '/@/composables/storage/useLocalStorage'
-import { replacePrefix } from '/@/lib/basic/string'
-import { channelTreeMitt } from '/@/store/domain/channelTree'
+import useChannelPath from '/@/composables/useChannelPath'
+import { isDefined } from '/@/lib/basic/array'
+import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import { nullUuid } from '/@/lib/basic/uuid'
+import { defaultChannelIds, fallbackChannelPath } from '/@/lib/config'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import type { ChannelId } from '/@/types/entity-ids'
+
+import { useChannelsStore } from '../entities/channels'
 
 type State = {
   openMode: OpenMode
-  lastOpenChannelName: string
-  openChannelName: string
+  lastOpenChannelId: ChannelId | null
+  startupChannelId: ChannelId | null
   sendWithModifierKey: SendKey
   modifierKey: SendKeys
   ecoMode: boolean
@@ -55,8 +61,8 @@ export interface ActivityMode {
 const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
   const initialValue: State = {
     openMode: 'particular',
-    lastOpenChannelName: 'general',
-    openChannelName: 'general',
+    lastOpenChannelId: null,
+    startupChannelId: null,
     sendWithModifierKey: 'modifier',
     modifierKey: { alt: true, ctrl: true, shift: false, macCtrl: true },
     ecoMode: false,
@@ -66,9 +72,11 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     filterStarChannel: false
   }
 
+  const { channelPathStringToId, channelIdToPathString } = useChannelPath()
+
   const [state] = useLocalStorageValue(
     'store/app/browserSettings',
-    1,
+    2,
     {
       1: async store => {
         const [dbState, _restoring, restoringPromise] = useIndexedDbValue(
@@ -79,55 +87,73 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
         )
         await restoringPromise
         return { ...store, ...dbState }
+      },
+      2: async oldStore => {
+        // v1 -> v2: path から ID への変換
+
+        const { bothChannelsMapInitialFetchPromise } = useChannelsStore()
+        await bothChannelsMapInitialFetchPromise
+
+        type OldState = State & {
+          openChannelName?: string
+          lastOpenChannelName?: string
+        }
+
+        const store = oldStore as OldState
+
+        if (isDefined(store.openChannelName)) {
+          store.startupChannelId = setFallbackForNullishOrOnError(null).exec(
+            () => channelPathStringToId(store.openChannelName ?? '')
+          )
+          delete store.openChannelName
+        }
+
+        if (isDefined(store.lastOpenChannelName)) {
+          store.lastOpenChannelId = setFallbackForNullishOrOnError(null).exec(
+            () => channelPathStringToId(store.lastOpenChannelName ?? '')
+          )
+          delete store.lastOpenChannelName
+        }
+
+        return store
       }
     },
     initialValue
   )
 
-  const defaultChannelName = computed(() => {
-    switch (state.openMode) {
-      case 'lastOpen':
-        return state.lastOpenChannelName
-      case 'particular':
-        return state.openChannelName
-      default: {
-        const invalid: never = state.openMode
-        // eslint-disable-next-line no-console
-        console.warn('Invalid app/browserSettings.openMode:', invalid)
-        return state.openChannelName
+  const getStartupChannelId = () => {
+    const id = (() => {
+      switch (state.openMode) {
+        case 'lastOpen':
+          return state.lastOpenChannelId
+        case 'particular':
+          return state.startupChannelId
+        default: {
+          const invalid: never = state.openMode
+          // eslint-disable-next-line no-console
+          console.warn('Invalid app/browserSettings.openMode:', invalid)
+          return state.startupChannelId
+        }
       }
-    }
-  })
+    })()
 
-  const updateOpenChannelNames = ({
-    oldName,
-    newName
-  }: {
-    oldName: string
-    newName: string
-  }) => {
-    state.openChannelName = replacePrefix(
-      state.openChannelName,
-      oldName,
-      newName
-    )
-    state.lastOpenChannelName = replacePrefix(
-      state.lastOpenChannelName,
-      oldName,
-      newName
+    if (id) return id
+
+    const { channelsMap } = useChannelsStore()
+
+    return defaultChannelIds.find(id => channelsMap.value.has(id)) ?? nullUuid
+  }
+
+  const getStartupChannelPath = () => {
+    return setFallbackForNullishOrOnError(fallbackChannelPath).exec(() =>
+      channelIdToPathString(getStartupChannelId())
     )
   }
 
-  channelTreeMitt.on('moved', ({ oldPath, newPath }) => {
-    updateOpenChannelNames({
-      oldName: oldPath,
-      newName: newPath
-    })
-  })
-
   return {
     ...toRefs(state),
-    defaultChannelName
+    getStartupChannelId,
+    getStartupChannelPath
   }
 })
 

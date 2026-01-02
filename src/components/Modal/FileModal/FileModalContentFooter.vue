@@ -20,6 +20,7 @@ import useFileMeta from '/@/composables/files/useFileMeta'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getDateRepresentation } from '/@/lib/basic/date'
 import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import { fallbackChannelPath } from '/@/lib/config'
 import { useUsersStore } from '/@/store/entities/users'
 
 import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
@@ -50,7 +51,7 @@ const createdAt = computed(() =>
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
 
 const channelPath = computed(() =>
-  setFallbackForNullishOrOnError('').exec(() => {
+  setFallbackForNullishOrOnError(fallbackChannelPath).exec(() => {
     const channelId = fileMeta.value?.channelId
     if (!channelId) return null
 

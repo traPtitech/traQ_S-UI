@@ -2,6 +2,7 @@ import { computed, watchEffect } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
 import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import { fallbackChannelPath } from '/@/lib/config'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 import { useMainViewStore } from '/@/store/ui/mainView'
 
@@ -17,7 +18,7 @@ const useDocumentTitle = () => {
       case 'channel': {
         const channelId = primaryView.value.channelId
 
-        return setFallbackForNullishOrOnError('').exec(() =>
+        return setFallbackForNullishOrOnError(fallbackChannelPath).exec(() =>
           channelIdToShortPathString(channelId, true)
         )
       }

@@ -9,7 +9,7 @@
     />
     <OpenMode
       v-model:open-mode="state.openMode"
-      v-model:open-channel-name="state.openChannelName"
+      v-model:startup-channel-id="state.startupChannelId"
     />
     <SimpleToggle
       v-model="state.prioritizeStarredChannel"

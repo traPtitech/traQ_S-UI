@@ -136,7 +136,12 @@
       '#random/wasure',
       '#services'
     ],
-    iosPwaInfoLink: 'https://wiki.trap.jp/SysAd/docs/traQ-S/PWA'
+    iosPwaInfoLink: 'https://wiki.trap.jp/SysAd/docs/traQ-S/PWA',
+    defaultChannelId: [
+      '04ad2c18-fdcb-4c43-beef-82e8ba26ac98', // #general of q.trap.jp
+      '83afc6cc-737d-4868-9a2f-aeb7c199260e' // #general of q-dev.trapti.tech
+    ],
+    fallbackChannelPath: 'general'
   }
 
   self.traQConfig = config

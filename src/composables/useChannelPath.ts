@@ -2,7 +2,7 @@ import { watch } from 'vue'
 
 import type { SimpleChannel } from '/@/lib/channel'
 import { channelIdToSimpleChannelPath as libChannelIdToSimpleChannelPath } from '/@/lib/channel'
-import { channelPathToId } from '/@/lib/channelTree'
+import { channelPathToId as channelPathToIdImpl } from '/@/lib/channelTree'
 import { memoizeWithPurge } from '/@/lib/memoize'
 import { constructChannelPath, constructUserPath } from '/@/router'
 import { useChannelTree } from '/@/store/domain/channelTree'
@@ -17,12 +17,20 @@ const useChannelPath = () => {
   const { channelsMap, dmChannelsMap, bothChannelsMapFetched } =
     useChannelsStore()
   const { usersMap } = useUsersStore()
-  const { topLevelChannels } = useChannelTree()
+  const { channelTree, topLevelChannels } = useChannelTree()
 
   const getUserNameByDMChannelId = (dmChannelId: DMChannelId) => {
     const dmChannel = dmChannelsMap.value.get(dmChannelId)
     if (!dmChannel) return null
     return usersMap.value.get(dmChannel.userId)?.name ?? ''
+  }
+
+  const channelPathToId = (path: string[]) => {
+    return channelPathToIdImpl(path, channelTree.value)
+  }
+
+  const channelPathStringToId = (path: string) => {
+    return channelPathToId(path.split('/'))
   }
 
   const channelIdToSimpleChannelPath = (
@@ -278,6 +286,7 @@ const useChannelPath = () => {
 
   return {
     channelPathToId,
+    channelPathStringToId,
     channelIdToPath,
     channelIdToSimpleChannelPath,
     channelIdToPathString,

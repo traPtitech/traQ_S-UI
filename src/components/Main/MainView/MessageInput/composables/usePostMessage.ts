@@ -10,7 +10,6 @@ import { nullUuid } from '/@/lib/basic/uuid'
 import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
 import { isEmbeddedLink } from '/@/lib/markdown/markdown'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
-import { useChannelTree } from '/@/store/domain/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
@@ -81,7 +80,6 @@ const usePostMessage = (
   const { getMessageInputState } = useMessageInputStateStatic()
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
-  const { channelTree } = useChannelTree()
   const { bothChannelsMapInitialFetchPromise, channelsMap } = useChannelsStore()
   const { usersMapInitialFetchPromise, findUserByName } = useUsersStore()
   const { userGroupsMapInitialFetchPromise, getUserGroupByName } =
@@ -123,7 +121,7 @@ const usePostMessage = (
       getGroup: getUserGroupByName,
       getChannel: path => {
         try {
-          const id = channelPathToId(path.split('/'), channelTree.value)
+          const id = channelPathToId(path.split('/'))
           return { id }
         } catch {
           return undefined
