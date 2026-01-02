@@ -86,7 +86,7 @@ const {
   }
   max-width: 100%;
   img {
-    height: 100%;
+    height: auto;
     width: auto;
     max-height: 450px;
     max-width: min(600px, 100%);
