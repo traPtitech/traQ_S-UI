@@ -10,6 +10,8 @@
 <script lang="ts" setup>
 import { createVNode, onMounted, ref, render, watch } from 'vue'
 
+import { defer } from '/@/lib/basic/timer'
+
 import FoldableCodeBlock from './FoldableCodeBlock.vue'
 
 const props = defineProps<{
@@ -40,18 +42,8 @@ const applyFoldableCodeBlock = () => {
   })
 }
 
-onMounted(() => {
-  applyFoldableCodeBlock()
-})
-watch(
-  () => props.content,
-  () => {
-    applyFoldableCodeBlock()
-  },
-  {
-    flush: 'post'
-  }
-)
+onMounted(() => defer(applyFoldableCodeBlock))
+watch(() => props.content, applyFoldableCodeBlock, { flush: 'post' })
 </script>
 
 <style lang="scss" module>
