@@ -69,7 +69,7 @@ import useMessageScroller from './composables/useMessageScroller'
 import type { LoadingDirection } from './composables/useMessagesFetcher'
 
 export interface MessageScrollerInstance extends ComponentPublicInstance {
-  $el: HTMLDivElement
+  rootRef: HTMLDivElement
 }
 
 const MIN_THRESHOLD = 500 // 最小の閾値
@@ -306,19 +306,21 @@ useEventListener(document, 'visibilitychange', visibilitychangeListener)
 
 const { onClick } = useMarkdownInternalHandler()
 useScrollRestoration(rootRef, state)
+
+defineExpose({ rootRef })
 </script>
 
 <style lang="scss" module>
 .container {
   height: 100%;
   position: relative;
-  overflow-y: auto;
+  overflow-y: hidden;
+  padding: 12px 0;
 }
 
 .root {
   height: 100%;
   overflow-y: scroll;
-  padding: 12px 0;
   backface-visibility: hidden;
   contain: var(--contain-strict);
   // overflow-anchorはデフォルトでautoだが、Safariが対応していないので、
