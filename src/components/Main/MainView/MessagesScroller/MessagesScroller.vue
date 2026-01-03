@@ -18,7 +18,7 @@
         data-testid="channel-viewport"
       >
         <MessagesSkeleton
-          v-if="!isReachedEnd"
+          v-if="enablePreload && !isReachedEnd"
           ref="topSkeletonRef"
           :count="8"
           :class="$style.edgeSkeleton"
@@ -36,7 +36,7 @@
           />
         </template>
         <MessagesSkeleton
-          v-if="!isReachedLatest"
+          v-if="enablePreload && !isReachedLatest"
           ref="bottomSkeletonRef"
           reversed
           :count="8"
@@ -50,14 +50,16 @@
 
 <script lang="ts">
 import type { ComponentPublicInstance, Ref } from 'vue'
-import { nextTick, onMounted, shallowRef, watch } from 'vue'
+import { computed, nextTick, onMounted, shallowRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { useEventListener, useResizeObserver } from '@vueuse/core'
 import { throttle } from 'throttle-debounce'
 
 import { useOpenLink } from '/@/composables/useOpenLink'
+import useResponsive from '/@/composables/useResponsive'
 import { embeddingOrigin } from '/@/lib/apis'
+import { isIOS } from '/@/lib/dom/browser'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
 import { RouteName, isMessageScrollerRoute } from '/@/router'
 import { useStampsStore } from '/@/store/entities/stamps'
@@ -269,6 +271,9 @@ watch(
 )
 
 const { getThreshold, update: updateThreshold } = useDynamicLoadThreshold()
+const { isMobile } = useResponsive()
+
+const enablePreload = computed(() => !isIOS() && !isMobile.value)
 
 const requestLoadMessages = () => {
   if (!rootRef.value) return
@@ -281,7 +286,7 @@ const requestLoadMessages = () => {
       rootRef.value.clientHeight +
       bottomSkeletonHeight.value)
 
-  updateThreshold(top, bottom)
+  if (enablePreload.value) updateThreshold(top, bottom)
   const threshold = getThreshold()
 
   if (props.isLoading) return
