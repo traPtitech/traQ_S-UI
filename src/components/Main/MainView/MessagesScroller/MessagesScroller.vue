@@ -59,7 +59,51 @@ export interface MessageScrollerInstance extends ComponentPublicInstance {
   $el: HTMLDivElement
 }
 
-const LOAD_MORE_THRESHOLD = 10
+const MIN_THRESHOLD = 500 // 最小の閾値
+const THRESHOLD_INCREMENT = 1000 // 端に到達するたびに増加させる閾値
+const DECAY_PER_SECOND = 0.6 // 一秒あたりの減衰率
+
+/**
+ * 端に到達するたびに閾値を増加させ、時間経過で減衰する
+ */
+const useDynamicLoadThreshold = (rootRef: Ref<HTMLElement | null>) => {
+  let currentThreshold = MIN_THRESHOLD
+  let lastTime = performance.now()
+  let wasNearEdge = false
+
+  const getThreshold = () => currentThreshold
+
+  const update = () => {
+    const now = performance.now()
+    const deltaSeconds = (now - lastTime) / 1000
+    lastTime = now
+
+    if (!rootRef.value) return
+
+    const { scrollTop, scrollHeight, clientHeight } = rootRef.value
+    const scrollBottom = scrollHeight - scrollTop - clientHeight
+
+    // 端に近いかどうか判定
+    const isNearEdge =
+      scrollTop < currentThreshold || scrollBottom < currentThreshold
+
+    // 端に到達したら閾値を増やす
+    if (isNearEdge && !wasNearEdge) {
+      currentThreshold += THRESHOLD_INCREMENT
+    } else {
+      // 時間減衰を適用
+      const decayFactor = Math.pow(DECAY_PER_SECOND, deltaSeconds)
+      currentThreshold = Math.max(
+        MIN_THRESHOLD,
+        MIN_THRESHOLD + (currentThreshold - MIN_THRESHOLD) * decayFactor
+      )
+    }
+
+    wasNearEdge = isNearEdge
+  }
+
+  return { getThreshold, update }
+}
 
 type HTMLElementTargetMouseEvent = MouseEvent & { target: HTMLElement }
 
@@ -197,17 +241,23 @@ watch(
   }
 )
 
+const { getThreshold, update: updateThreshold } =
+  useDynamicLoadThreshold(rootRef)
+
 const requestLoadMessages = () => {
   if (!rootRef.value) return
   const { clientHeight, scrollHeight, scrollTop } = rootRef.value
   state.scrollTop = scrollTop
 
+  updateThreshold()
+  const threshold = getThreshold()
+
   if (props.isLoading) return
-  if (state.scrollTop < LOAD_MORE_THRESHOLD && !props.isReachedEnd) {
+  if (state.scrollTop < threshold && !props.isReachedEnd) {
     emit('requestLoadFormer')
   }
   if (
-    scrollHeight - state.scrollTop - clientHeight < LOAD_MORE_THRESHOLD &&
+    scrollHeight - state.scrollTop - clientHeight < threshold &&
     !props.isReachedLatest
   ) {
     emit('requestLoadLatter')
