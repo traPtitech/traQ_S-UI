@@ -1,10 +1,10 @@
 <template>
-  <div :class="$style.container">
+  <div :class="[$style.container, props.reversed && $style.reversed]">
     <div
       v-for="(item, i) in items"
       :key="i"
       :class="$style.messageItem"
-      :style="{ animationDelay: `${(items.length - i) * 30}ms` }"
+      :style="{ animationDelay: `${i * 30}ms` }"
     >
       <div :class="$style.avatar" />
       <div :class="$style.content">
@@ -41,7 +41,16 @@
 </template>
 
 <script lang="ts" setup>
-const props = withDefaults(defineProps<{ count?: number }>(), { count: 16 })
+const props = withDefaults(
+  defineProps<{
+    count?: number
+    reversed?: boolean
+  }>(),
+  {
+    count: 16,
+    reversed: false
+  }
+)
 
 const generateRandomMessage = () => {
   const lines = []
@@ -65,12 +74,17 @@ const items = Array.from({ length: props.count }, generateRandomMessage)
 <style lang="scss" module>
 .container {
   display: flex;
-  flex-direction: column;
   gap: 16px;
   padding: 12px 16px;
-  height: 100%;
-  justify-content: flex-end;
   overflow: hidden;
+
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+
+  &.reversed {
+    flex-direction: column;
+    justify-content: flex-end;
+  }
 }
 
 .messageItem {
