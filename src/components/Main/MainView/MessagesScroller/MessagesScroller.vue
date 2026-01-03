@@ -17,6 +17,12 @@
         :class="$style.viewport"
         data-testid="channel-viewport"
       >
+        <MessagesSkeleton
+          v-if="!isReachedEnd"
+          ref="topSkeletonRef"
+          :count="8"
+          :class="$style.edgeSkeleton"
+        />
         <MessagesScrollerSeparator
           v-if="isReachedEnd"
           title="これ以上メッセージはありません"
@@ -29,6 +35,13 @@
             :on-entry-message-loaded="onEntryMessageLoaded"
           />
         </template>
+        <MessagesSkeleton
+          v-if="!isReachedLatest"
+          ref="bottomSkeletonRef"
+          reversed
+          :count="8"
+          :class="$style.edgeSkeleton"
+        />
       </div>
       <div :class="$style.bottomSpacer" />
     </div>
@@ -40,7 +53,7 @@ import type { ComponentPublicInstance, Ref } from 'vue'
 import { nextTick, onMounted, shallowRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { useEventListener } from '@vueuse/core'
+import { useEventListener, useResizeObserver } from '@vueuse/core'
 import { throttle } from 'throttle-debounce'
 
 import { useOpenLink } from '/@/composables/useOpenLink'
@@ -66,26 +79,20 @@ const DECAY_PER_SECOND = 0.6 // 一秒あたりの減衰率
 /**
  * 端に到達するたびに閾値を増加させ、時間経過で減衰する
  */
-const useDynamicLoadThreshold = (rootRef: Ref<HTMLElement | null>) => {
+const useDynamicLoadThreshold = () => {
   let currentThreshold = MIN_THRESHOLD
   let lastTime = performance.now()
   let wasNearEdge = false
 
   const getThreshold = () => currentThreshold
 
-  const update = () => {
+  const update = (top: number, bottom: number) => {
     const now = performance.now()
     const deltaSeconds = (now - lastTime) / 1000
     lastTime = now
 
-    if (!rootRef.value) return
-
-    const { scrollTop, scrollHeight, clientHeight } = rootRef.value
-    const scrollBottom = scrollHeight - scrollTop - clientHeight
-
     // 端に近いかどうか判定
-    const isNearEdge =
-      scrollTop < currentThreshold || scrollBottom < currentThreshold
+    const isNearEdge = top < currentThreshold || bottom < currentThreshold
 
     // 端に到達したら閾値を増やす
     if (isNearEdge && !wasNearEdge) {
@@ -210,6 +217,26 @@ const { lastScrollPosition } = useMainViewStore()
 const { stampsMapFetched } = useStampsStore()
 
 const rootRef = shallowRef<HTMLElement | null>(null)
+const topSkeletonRef = shallowRef<ComponentPublicInstance | null>(null)
+const bottomSkeletonRef = shallowRef<ComponentPublicInstance | null>(null)
+
+// スケルトンの高さをキャッシュ（getBoundingClientRectの毎回呼び出しを回避）
+const topSkeletonHeight = shallowRef(0)
+const bottomSkeletonHeight = shallowRef(0)
+
+// ResizeObserverでスケルトン高さを監視
+useResizeObserver(
+  () => topSkeletonRef.value?.$el,
+  entries => {
+    topSkeletonHeight.value = entries[0]?.contentRect.height ?? 0
+  }
+)
+useResizeObserver(
+  () => bottomSkeletonRef.value?.$el,
+  entries => {
+    bottomSkeletonHeight.value = entries[0]?.contentRect.height ?? 0
+  }
+)
 
 const { onChangeHeight, onEntryMessageLoaded, ready, state } =
   useMessageScroller(rootRef, props)
@@ -241,30 +268,32 @@ watch(
   }
 )
 
-const { getThreshold, update: updateThreshold } =
-  useDynamicLoadThreshold(rootRef)
+const { getThreshold, update: updateThreshold } = useDynamicLoadThreshold()
 
 const requestLoadMessages = () => {
   if (!rootRef.value) return
-  const { clientHeight, scrollHeight, scrollTop } = rootRef.value
-  state.scrollTop = scrollTop
+  state.scrollTop = rootRef.value.scrollTop
 
-  updateThreshold()
+  const top = rootRef.value.scrollTop - topSkeletonHeight.value
+  const bottom =
+    rootRef.value.scrollHeight -
+    (rootRef.value.scrollTop +
+      rootRef.value.clientHeight +
+      bottomSkeletonHeight.value)
+
+  updateThreshold(top, bottom)
   const threshold = getThreshold()
 
   if (props.isLoading) return
-  if (state.scrollTop < threshold && !props.isReachedEnd) {
+  if (top < threshold && !props.isReachedEnd) {
     emit('requestLoadFormer')
   }
-  if (
-    scrollHeight - state.scrollTop - clientHeight < threshold &&
-    !props.isReachedLatest
-  ) {
+  if (bottom < threshold && !props.isReachedLatest) {
     emit('requestLoadLatter')
   }
 }
 
-const handleScroll = throttle(17, requestLoadMessages)
+const handleScroll = throttle(64, requestLoadMessages)
 
 const visibilitychangeListener = () => {
   if (document.visibilityState === 'visible') {
@@ -338,5 +367,9 @@ useScrollRestoration(rootRef, state)
 
 .hidden {
   visibility: hidden;
+}
+
+.edgeSkeleton {
+  flex-shrink: 0;
 }
 </style>
