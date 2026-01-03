@@ -1,9 +1,10 @@
 import type { Reactive, Ref } from 'vue'
 import { reactive, watch } from 'vue'
+import { ref } from 'vue'
 
 import type { ChangeHeightData } from '/@/components/Main/MainView/MessageElement/composables/useElementRenderObserver'
 import type { LoadingDirection } from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
-import { nextFrame } from '/@/lib/basic/timer'
+import { defer, nextFrame, wait } from '/@/lib/basic/timer'
 import type { MessageId } from '/@/types/entity-ids'
 
 const useMessageScroller = (
@@ -14,6 +15,8 @@ const useMessageScroller = (
     entryMessageId?: MessageId
   }>
 ) => {
+  const ready = ref(true)
+
   const state = reactive({
     height: 0,
     scrollTop: 0
@@ -118,12 +121,21 @@ const useMessageScroller = (
         }
 
         if (scrollerProps.lastLoadingDirection === 'latest') {
+          ready.value = false
+
           // チャンネルを移動したとき、
           rootRef.value.scrollTo({
             top: newHeight
           })
 
           state.height = newHeight
+
+          defer(async () => {
+            await defer()
+            await wait(400)
+
+            ready.value = true
+          })
         }
       } else state.height = newHeight
     },
@@ -133,6 +145,7 @@ const useMessageScroller = (
   return {
     onChangeHeight,
     onEntryMessageLoaded,
+    ready,
     state
   }
 }
