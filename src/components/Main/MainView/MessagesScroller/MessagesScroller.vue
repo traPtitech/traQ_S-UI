@@ -1,34 +1,37 @@
 <template>
-  <div
-    ref="rootRef"
-    :class="$style.root"
-    @scroll.passive="
-      () => {
-        handleScroll()
-        emit('scrollPassive')
-      }
-    "
-    @click="onClick"
-  >
+  <div :class="$style.container">
+    <MessagesSkeleton v-if="!ready" :class="$style.skeleton" />
     <div
-      v-if="stampsMapFetched"
-      :class="$style.viewport"
-      data-testid="channel-viewport"
+      ref="rootRef"
+      :class="[$style.root, !ready && $style.hidden]"
+      @scroll.passive="
+        () => {
+          handleScroll()
+          emit('scrollPassive')
+        }
+      "
+      @click="onClick"
     >
-      <MessagesScrollerSeparator
-        v-if="isReachedEnd"
-        title="これ以上メッセージはありません"
-        :class="$style.noMoreSeparator"
-      />
-      <template v-for="messageId in messageIds" :key="messageId">
-        <slot
-          :message-id="messageId"
-          :on-change-height="onChangeHeight"
-          :on-entry-message-loaded="onEntryMessageLoaded"
+      <div
+        v-if="stampsMapFetched"
+        :class="$style.viewport"
+        data-testid="channel-viewport"
+      >
+        <MessagesScrollerSeparator
+          v-if="isReachedEnd"
+          title="これ以上メッセージはありません"
+          :class="$style.noMoreSeparator"
         />
-      </template>
+        <template v-for="messageId in messageIds" :key="messageId">
+          <slot
+            :message-id="messageId"
+            :on-change-height="onChangeHeight"
+            :on-entry-message-loaded="onEntryMessageLoaded"
+          />
+        </template>
+      </div>
+      <div :class="$style.bottomSpacer" />
     </div>
-    <div :class="$style.bottomSpacer" />
   </div>
 </template>
 
@@ -48,6 +51,7 @@ import { useStampsStore } from '/@/store/entities/stamps'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import type { MessageId } from '/@/types/entity-ids'
 
+import MessagesSkeleton from './MessagesSkeleton.vue'
 import useMessageScroller from './composables/useMessageScroller'
 import type { LoadingDirection } from './composables/useMessagesFetcher'
 
@@ -163,10 +167,8 @@ const { stampsMapFetched } = useStampsStore()
 
 const rootRef = shallowRef<HTMLElement | null>(null)
 
-const { onChangeHeight, onEntryMessageLoaded, state } = useMessageScroller(
-  rootRef,
-  props
-)
+const { onChangeHeight, onEntryMessageLoaded, ready, state } =
+  useMessageScroller(rootRef, props)
 
 // 初期スクロール位置を設定
 state.scrollTop = lastScrollPosition.value
@@ -228,6 +230,12 @@ useScrollRestoration(rootRef, state)
 </script>
 
 <style lang="scss" module>
+.container {
+  height: 100%;
+  position: relative;
+  overflow-y: auto;
+}
+
 .root {
   height: 100%;
   overflow-y: scroll;
@@ -262,5 +270,23 @@ useScrollRestoration(rootRef, state)
 
 .noMoreSeparator {
   @include color-ui-secondary;
+}
+
+.skeleton {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease-in;
+  margin-bottom: 24px;
+
+  &.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.hidden {
+  visibility: hidden;
 }
 </style>
