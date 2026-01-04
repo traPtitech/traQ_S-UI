@@ -18,9 +18,11 @@
         data-testid="channel-viewport"
       >
         <MessagesSkeleton
-          v-if="enablePreload && !isReachedEnd"
+          v-if="!isReachedEnd"
           ref="topSkeletonRef"
-          :count="8"
+          :simple="!enableProactiveLoading"
+          instant
+          :count="3"
           :class="$style.edgeSkeleton"
         />
         <MessagesScrollerSeparator
@@ -36,10 +38,12 @@
           />
         </template>
         <MessagesSkeleton
-          v-if="enablePreload && !isReachedLatest"
+          v-if="enableProactiveLoading && !isReachedLatest"
           ref="bottomSkeletonRef"
           reversed
-          :count="8"
+          instant
+          :simple="!enableProactiveLoading"
+          :count="3"
           :class="$style.edgeSkeleton"
         />
       </div>
@@ -53,8 +57,8 @@ import type { ComponentPublicInstance, Ref } from 'vue'
 import { computed, nextTick, onMounted, shallowRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { useEventListener, useResizeObserver } from '@vueuse/core'
-import { throttle } from 'throttle-debounce'
+import { unrefElement, useEventListener, useResizeObserver } from '@vueuse/core'
+import { debounce, throttle } from 'throttle-debounce'
 
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useResponsive from '/@/composables/useResponsive'
@@ -74,8 +78,8 @@ export interface MessageScrollerInstance extends ComponentPublicInstance {
   rootRef: HTMLDivElement
 }
 
-const MIN_THRESHOLD = 500 // 最小の閾値
-const THRESHOLD_INCREMENT = 1000 // 端に到達するたびに増加させる閾値
+const MIN_THRESHOLD = 1000 // 最小の閾値
+const THRESHOLD_INCREMENT = 1500 // 端に到達するたびに増加させる閾値
 const DECAY_PER_SECOND = 0.6 // 一秒あたりの減衰率
 
 /**
@@ -230,18 +234,24 @@ const bottomSkeletonHeight = shallowRef(0)
 useResizeObserver(
   () => topSkeletonRef.value?.$el,
   entries => {
-    topSkeletonHeight.value = entries[0]?.contentRect.height ?? 0
-  }
-)
-useResizeObserver(
-  () => bottomSkeletonRef.value?.$el,
-  entries => {
-    bottomSkeletonHeight.value = entries[0]?.contentRect.height ?? 0
+    topSkeletonHeight.value =
+      unrefElement(topSkeletonRef)?.getBoundingClientRect().height ?? 0
   }
 )
 
+useResizeObserver(
+  () => bottomSkeletonRef.value?.$el,
+  entries => {
+    bottomSkeletonHeight.value =
+      unrefElement(bottomSkeletonRef)?.getBoundingClientRect().height ?? 0
+  }
+)
+
+const { isMobile } = useResponsive()
+const enableProactiveLoading = computed(() => !isIOS() && !isMobile.value)
+
 const { onChangeHeight, onEntryMessageLoaded, ready, state } =
-  useMessageScroller(rootRef, props)
+  useMessageScroller(rootRef, props, topSkeletonHeight)
 
 // 初期スクロール位置を設定
 state.scrollTop = lastScrollPosition.value
@@ -271,9 +281,6 @@ watch(
 )
 
 const { getThreshold, update: updateThreshold } = useDynamicLoadThreshold()
-const { isMobile } = useResponsive()
-
-const enablePreload = computed(() => !isIOS() && !isMobile.value)
 
 const requestLoadMessages = () => {
   if (!rootRef.value) return
@@ -286,7 +293,10 @@ const requestLoadMessages = () => {
       rootRef.value.clientHeight +
       bottomSkeletonHeight.value)
 
-  if (enablePreload.value) updateThreshold(top, bottom)
+  if (enableProactiveLoading.value) {
+    updateThreshold(top, bottom)
+  }
+
   const threshold = getThreshold()
 
   if (props.isLoading) return
@@ -298,7 +308,10 @@ const requestLoadMessages = () => {
   }
 }
 
-const handleScroll = throttle(64, requestLoadMessages)
+const handleScroll = (enableProactiveLoading.value ? throttle : debounce)(
+  enableProactiveLoading.value ? 24 : 200,
+  requestLoadMessages
+)
 
 const visibilitychangeListener = () => {
   if (document.visibilityState === 'visible') {

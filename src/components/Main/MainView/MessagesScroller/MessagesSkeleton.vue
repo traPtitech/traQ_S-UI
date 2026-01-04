@@ -4,7 +4,9 @@
       v-for="(item, i) in items"
       :key="i"
       :class="$style.messageItem"
-      :style="{ animationDelay: `${i * 30}ms` }"
+      :style="{
+        animationDelay: props.instant ? '0' : `${i * 30}ms`
+      }"
     >
       <div :class="$style.avatar" />
       <div :class="$style.content">
@@ -44,27 +46,33 @@
 const props = withDefaults(
   defineProps<{
     count?: number
+    simple?: boolean
     reversed?: boolean
+    instant?: boolean
   }>(),
   {
     count: 16,
-    reversed: false
+    simple: false,
+    reversed: false,
+    instant: false
   }
 )
 
 const generateRandomMessage = () => {
   const lines = []
-  const lineCount = Math.floor(Math.random() * 3) + 1
+  const lineCount = props.simple ? 2 : Math.floor(Math.random() * 3) + 1
   for (let i = 0; i < lineCount; i++) {
     lines.push(Math.floor(Math.random() * 40) + 40)
   }
 
+  const stampCount = Math.random() < 0.3 ? Math.floor(Math.random() * 5) + 1 : 0
+
   return {
     lines,
-    hasQuote: Math.random() < 0.1,
-    hasImage: Math.random() < 0.1,
-    hasFile: Math.random() < 0.05,
-    stamps: Math.random() < 0.3 ? Math.floor(Math.random() * 5) + 1 : 0
+    hasQuote: props.simple ? false : Math.random() < 0.1,
+    hasImage: props.simple ? false : Math.random() < 0.1,
+    hasFile: props.simple ? false : Math.random() < 0.05,
+    stamps: props.simple ? 3 : stampCount
   }
 }
 
