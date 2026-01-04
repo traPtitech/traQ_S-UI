@@ -1,5 +1,5 @@
-import type { Reactive, Ref } from 'vue'
-import { reactive, watch } from 'vue'
+import type { MaybeRefOrGetter, Reactive, Ref } from 'vue'
+import { reactive, toValue, watch } from 'vue'
 import { ref } from 'vue'
 
 import type { ChangeHeightData } from '/@/components/Main/MainView/MessageElement/composables/useElementRenderObserver'
@@ -13,7 +13,8 @@ const useMessageScroller = (
     messageIds: MessageId[]
     lastLoadingDirection: LoadingDirection
     entryMessageId?: MessageId
-  }>
+  }>,
+  topSkeletonHeight: MaybeRefOrGetter<number> = 0
 ) => {
   const ready = ref(true)
 
@@ -50,7 +51,8 @@ const useMessageScroller = (
       scrollerProps.lastLoadingDirection === 'latest' ||
       scrollerProps.lastLoadingDirection === 'former'
     ) {
-      const scrollerTop = rootRef.value.getBoundingClientRect().top
+      const scrollerTop =
+        rootRef.value.getBoundingClientRect().top + toValue(topSkeletonHeight)
 
       // 視界より上にある要素の高さが変わった場合のみ補正する
       if (payload.top < scrollerTop) {
