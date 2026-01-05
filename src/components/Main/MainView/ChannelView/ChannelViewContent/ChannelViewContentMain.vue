@@ -2,6 +2,7 @@
   <div :class="$style.container">
     <ScrollLoadingBar :class="$style.loadingBar" :show="isLoading" />
     <MessagesScroller
+      :id="channelId"
       ref="scrollerRef"
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
@@ -11,10 +12,10 @@
       :last-loading-direction="lastLoadingDirection"
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
-      @scroll-passive="handleScroll"
+      @scroll="handleScroll"
       @reset-is-reached-latest="resetIsReachedLatest"
     >
-      <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
+      <template #default="{ messageId }">
         <MessagesScrollerSeparator
           v-if="messageId === firstUnreadMessageId"
           title="ここから未読"
@@ -31,8 +32,6 @@
           :is-archived="isArchived"
           :is-entry-message="messageId === entryMessageId"
           :pinned-user-id="messagePinnedUserMap.get(messageId)"
-          @change-height="onChangeHeight"
-          @entry-message-loaded="onEntryMessageLoaded"
         />
       </template>
     </MessagesScroller>
@@ -127,22 +126,17 @@ const resetIsReachedLatest = () => {
 
 const showToNewMessageButton = ref(false)
 const { channelIdToPathString } = useChannelPath()
-const toNewMessage = () => {
+const toNewMessage = async () => {
   if (props.entryMessageId) {
     const channelPath = channelIdToPathString(props.channelId) as string
     if (dmChannelsMap.value.has(props.channelId)) {
-      router.replace(constructUserPath(channelPath))
+      await router.replace(constructUserPath(channelPath))
     } else {
-      router.replace(constructChannelPath(channelPath))
+      await router.replace(constructChannelPath(channelPath))
     }
   }
 
-  const element = unrefElement(scrollerRef)
-  if (!element) return
-
-  element.scrollTo({
-    top: element.scrollHeight
-  })
+  scrollerRef.value?.scrollToBottom()
 }
 
 const handleScroll = () => {

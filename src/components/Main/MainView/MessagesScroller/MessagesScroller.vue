@@ -1,61 +1,58 @@
 <template>
-  <div
-    ref="rootRef"
-    :class="$style.root"
-    @scroll.passive="
-      () => {
-        handleScroll()
-        emit('scrollPassive')
-      }
-    "
-    @click="onClick"
-  >
-    <div
-      v-if="stampsMapFetched"
-      :class="$style.viewport"
-      data-testid="channel-viewport"
+  <div ref="rootRef" :class="$style.root" @click="onClick">
+    <MessagesScrollerSeparator
+      v-if="isReachedEnd"
+      title="これ以上メッセージはありません"
+      :class="$style.noMoreSeparator"
+    />
+    <Virtualizer
+      ref="scrollerRef"
+      :buffer-size="100000"
+      :start-margin="32"
+      :data="messageIds"
+      :shift="prepend"
+      :class="$style.scroller"
+      @scroll="handleVirtualScroll"
     >
-      <MessagesScrollerSeparator
-        v-if="isReachedEnd"
-        title="これ以上メッセージはありません"
-        :class="$style.noMoreSeparator"
-      />
-      <template v-for="messageId in messageIds" :key="messageId">
-        <slot
-          :message-id="messageId"
-          :on-change-height="onChangeHeight"
-          :on-entry-message-loaded="onEntryMessageLoaded"
-        />
+      <template #default="{ item: messageId }">
+        <slot :key="messageId" :message-id="messageId" />
       </template>
-    </div>
-    <div :class="$style.bottomSpacer" />
+    </Virtualizer>
+    <div :style="{ height: `${FOOTER_HEIGHT}px` }" />
   </div>
 </template>
 
 <script lang="ts">
-import type { ComponentPublicInstance, Ref } from 'vue'
-import { nextTick, onMounted, reactive, shallowRef, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import type { ComponentPublicInstance } from 'vue'
+import { nextTick, ref, shallowRef } from 'vue'
+import { useRouter } from 'vue-router'
 
-import { useEventListener } from '@vueuse/core'
+import { useEventListener, watchArray, watchImmediate } from '@vueuse/core'
 import { throttle } from 'throttle-debounce'
+import { Virtualizer } from 'virtua/vue'
 
 import { useOpenLink } from '/@/composables/useOpenLink'
 import { embeddingOrigin } from '/@/lib/apis'
+import { defer } from '/@/lib/basic/timer'
+import { isWebKit } from '/@/lib/dom/browser'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
-import { RouteName, isMessageScrollerRoute } from '/@/router'
+import { RouteName } from '/@/router'
 import { useStampsStore } from '/@/store/entities/stamps'
-import { useMainViewStore } from '/@/store/ui/mainView'
 import type { MessageId } from '/@/types/entity-ids'
+import type { Invocable } from '/@/types/utility'
 
-import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
+import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 import type { LoadingDirection } from './composables/useMessagesFetcher'
 
 export interface MessageScrollerInstance extends ComponentPublicInstance {
   $el: HTMLDivElement
+  scrollToBottom: Invocable
 }
 
-const LOAD_MORE_THRESHOLD = 10
+const FOOTER_HEIGHT = 12
+
+const STICK_TO_BOTTOM_THRESHOLD = 50
+const LOAD_MORE_THRESHOLD = 100
 
 type HTMLElementTargetMouseEvent = MouseEvent & { target: HTMLElement }
 
@@ -105,37 +102,12 @@ const useMarkdownInternalHandler = () => {
 
   return { onClick }
 }
-
-/** 設定などから戻ってきた際のスクロール位置リストア */
-const useScrollRestoration = (
-  rootRef: Ref<HTMLElement | null>,
-  state: { scrollTop: number }
-) => {
-  const { lastScrollPosition } = useMainViewStore()
-  const route = useRoute()
-  watch(
-    () => route.name,
-    async (to, from) => {
-      if (isMessageScrollerRoute(from)) {
-        lastScrollPosition.value = state.scrollTop
-      }
-
-      if (isMessageScrollerRoute(to)) {
-        state.scrollTop = lastScrollPosition.value
-        await nextTick()
-        rootRef.value?.scrollTo({ top: state.scrollTop })
-        lastScrollPosition.value = 0
-      }
-    }
-  )
-}
 </script>
 
 <script lang="ts" setup>
-import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
-
 const props = withDefaults(
   defineProps<{
+    id: string
     messageIds: MessageId[]
     isReachedEnd: boolean
     isReachedLatest: boolean
@@ -152,127 +124,115 @@ const emit = defineEmits<{
   (e: 'requestLoadFormer'): void
   (e: 'requestLoadLatter'): void
   (e: 'resetIsReachedLatest'): void
-  (e: 'scrollPassive'): void
+  (e: 'scroll'): void
 }>()
 
-const { lastScrollPosition } = useMainViewStore()
+const prepend = ref(false)
 
 // メッセージスタンプ表示時にスタンプが存在していないと
 // 場所が確保されないくてずれてしまうので、取得完了を待つ
-const { stampsMapFetched } = useStampsStore()
+const { stampsMapInitialFetchPromise } = useStampsStore()
 
-const rootRef = shallowRef<HTMLElement | null>(null)
-const state = reactive({
-  height: 0,
-  scrollTop: lastScrollPosition.value,
-  // 古いメッセージを読み込むとき、読み込み開始直後は高さの調整を無効化する
-  skipResizeAdjustment: false
-})
+const rootRef = shallowRef<HTMLDivElement>()
+const scrollerRef = shallowRef<InstanceType<typeof Virtualizer>>()
 
-const { onChangeHeight, onEntryMessageLoaded } =
-  useMessageScrollerElementResizeObserver(rootRef, props, state)
+let initialScrolled = false
+let shouldStickToBottom = false
 
-onMounted(() => {
-  // 表示されている
-  if (stampsMapFetched.value) {
-    state.height = rootRef.value?.scrollHeight ?? 0
+const scrollToBottom = async () => {
+  const impl = () => {
+    if (!scrollerRef.value) return
+
+    // 最新付近のメッセージのロード後に高さが変動してしまう場合があるので，
+    // 余裕をもって多めに scroll を schedule する．
+    const { scrollSize, viewportSize } = scrollerRef.value
+    scrollerRef.value.scrollTo(scrollSize + viewportSize + FOOTER_HEIGHT)
   }
-})
 
-// マウント後にstampの取得が完了した場合
-watch(
-  stampsMapFetched,
-  async fetched => {
-    if (!fetched || !rootRef.value) return
+  await nextTick().then(impl)
+  defer().then(impl)
+}
 
-    await nextTick()
-    const scrollHeight = rootRef.value.scrollHeight
-    rootRef.value.scrollTop = scrollHeight
-    state.height = scrollHeight
-    state.scrollTop = scrollHeight
+const stopMomentumScroll = () => {
+  const root = rootRef.value
+  if (!root) return
+
+  root.style.overflowY = 'hidden'
+  defer(() => (root.style.overflowY = 'auto'))
+}
+
+watchImmediate(
+  () => props.id,
+  () => {
+    initialScrolled = false
   },
-  {
-    flush: 'post'
-  }
+  { flush: 'sync' }
 )
 
-watch(
+watchArray(
   () => props.messageIds,
-  (ids, prevIds) => {
-    if (!rootRef.value) return
-    /* state.height の更新を忘れないようにすること */
+  async ids => {
+    await nextTick()
+    prepend.value = false
 
-    const newHeight = rootRef.value.scrollHeight
-    if (
-      props.lastLoadingDirection === 'latest' ||
-      props.lastLoadingDirection === 'former'
-    ) {
-      if (ids.length - prevIds.length === -1) {
-        // 削除された場合は何もしない
-        state.height = newHeight
-        return
-      }
-      // XXX: 追加時にここは0になる
-      if (ids.length - prevIds.length === 0) {
-        const scrollBottom =
-          rootRef.value.scrollTop + rootRef.value.clientHeight
+    if (ids.length === 0) return
+    if (!scrollerRef.value) return
 
-        // 一番下のメッセージあたりを見ているときに、
-        // 新規に一つ追加された場合は一番下までスクロール
-        if (state.height - 50 <= scrollBottom) {
-          rootRef.value.scrollTo({
-            top: newHeight
-          })
-        }
-        state.height = newHeight
-        return
-      }
-      //上に追加された時はスクロール位置を変更する。
-      if (props.lastLoadingDirection === 'former') {
-        // onChangeHeight の調整を一時的に無効化
-        state.skipResizeAdjustment = true
-        rootRef.value.scrollTo({
-          top: newHeight - state.height
-        })
-        state.height = newHeight
-        // 十分に DOMが更新されたら無効化を解除
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            state.skipResizeAdjustment = false
-          })
-        })
+    if (!initialScrolled) {
+      await stampsMapInitialFetchPromise
+
+      if (props.lastLoadingDirection === 'around') {
+        if (!props.entryMessageId) return
+
+        await nextTick()
+        scrollerRef.value.scrollToIndex(
+          props.messageIds.indexOf(props.entryMessageId),
+          { align: 'center' }
+        )
       }
 
       if (props.lastLoadingDirection === 'latest') {
-        // チャンネルを移動したとき、
-        rootRef.value.scrollTo({
-          top: newHeight
-        })
-        state.height = newHeight
+        await scrollToBottom()
       }
-    } else state.height = newHeight
+
+      initialScrolled = true
+    }
+
+    if (shouldStickToBottom) {
+      await scrollToBottom()
+    }
   },
   { deep: true, flush: 'post' }
 )
 
 const requestLoadMessages = () => {
-  if (!rootRef.value) return
-  const { clientHeight, scrollHeight, scrollTop } = rootRef.value
-  state.scrollTop = scrollTop
-
+  if (!scrollerRef.value) return
   if (props.isLoading) return
-  if (state.scrollTop < LOAD_MORE_THRESHOLD && !props.isReachedEnd) {
+  if (!initialScrolled) return
+
+  const { scrollOffset, scrollSize, viewportSize } = scrollerRef.value
+
+  const bottomOffset = scrollSize - scrollOffset - viewportSize
+
+  shouldStickToBottom =
+    props.isReachedLatest &&
+    bottomOffset + FOOTER_HEIGHT < STICK_TO_BOTTOM_THRESHOLD
+
+  if (scrollOffset < LOAD_MORE_THRESHOLD && !props.isReachedEnd) {
+    prepend.value = true
+    if (isWebKit) stopMomentumScroll()
     emit('requestLoadFormer')
   }
-  if (
-    scrollHeight - state.scrollTop - clientHeight < LOAD_MORE_THRESHOLD &&
-    !props.isReachedLatest
-  ) {
+
+  if (bottomOffset < LOAD_MORE_THRESHOLD && !props.isReachedLatest) {
     emit('requestLoadLatter')
   }
 }
 
-const handleScroll = throttle(17, requestLoadMessages)
+const handleVirtualScroll = throttle(17, (offset: number) => {
+  requestLoadMessages()
+  emit('scroll')
+})
 
 const visibilitychangeListener = () => {
   if (document.visibilityState === 'visible') {
@@ -284,15 +244,17 @@ const visibilitychangeListener = () => {
 useEventListener(document, 'visibilitychange', visibilitychangeListener)
 
 const { onClick } = useMarkdownInternalHandler()
-useScrollRestoration(rootRef, state)
+
+defineExpose({ scrollToBottom })
 </script>
 
 <style lang="scss" module>
 .root {
   height: 100%;
-  overflow-y: scroll;
   padding: 12px 0;
+  overflow-y: auto;
   backface-visibility: hidden;
+  overscroll-behavior-block: none;
   contain: var(--contain-strict);
   // overflow-anchorはデフォルトでautoだが、Safariが対応していないので、
   // 手動で調節しているため明示的に無効化する
@@ -301,21 +263,16 @@ useScrollRestoration(rootRef, state)
   -webkit-overflow-scrolling: auto;
 }
 
-.viewport {
-  display: flex;
-  flex-flow: column;
-  // NOTE: bottomSpacer 分だけ除く
-  min-height: calc(100% - 12px);
-}
+.scroller {
+  height: 100%;
 
-.element {
-  margin: 4px 0;
-  contain: content;
+  & [data-last-child] {
+    margin-bottom: 16px;
+  }
 }
 
 .bottomSpacer {
   width: 100%;
-  height: 12px;
 }
 
 .noMoreSeparator {

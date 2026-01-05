@@ -89,6 +89,7 @@ const handleScroll = () => {
 
             <MessagesScroller
               v-if="isMessageShow"
+              :id="channelId"
               ref="scrollerRef"
               :message-ids="messageIds"
               :is-reached-end="isReachedEnd"
@@ -97,18 +98,14 @@ const handleScroll = () => {
               :last-loading-direction="lastLoadingDirection"
               @request-load-former="onLoadFormerMessagesRequest"
               @request-load-latter="onLoadLatterMessagesRequest"
-              @scroll-passive="handleScroll"
+              @scroll="handleScroll"
               @reset-is-reached-latest="resetIsReachedLatest"
             >
-              <template
-                #default="{ messageId, onChangeHeight, onEntryMessageLoaded }"
-              >
+              <template #default="{ messageId }">
                 <MessageElement
                   :class="$style.element"
                   :message-id="messageId"
                   :is-archived="isArchived"
-                  @change-height="onChangeHeight"
-                  @entry-message-loaded="onEntryMessageLoaded"
                 />
               </template>
             </MessagesScroller>

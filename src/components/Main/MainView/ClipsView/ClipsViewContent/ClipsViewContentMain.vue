@@ -2,6 +2,7 @@
   <div :class="$style.container">
     <ScrollLoadingBar :class="$style.loadingBar" :show="isLoading" />
     <MessagesScroller
+      :id="clipFolderId"
       ref="scrollerRef"
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
@@ -10,13 +11,8 @@
       :last-loading-direction="lastLoadingDirection"
       @request-load-former="onLoadFormerMessagesRequest"
     >
-      <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
-        <ClipElement
-          :class="$style.element"
-          :message-id="messageId"
-          @change-height="onChangeHeight"
-          @entry-message-loaded="onEntryMessageLoaded"
-        />
+      <template #default="{ messageId }">
+        <ClipElement :class="$style.element" :message-id="messageId" />
       </template>
     </MessagesScroller>
   </div>
