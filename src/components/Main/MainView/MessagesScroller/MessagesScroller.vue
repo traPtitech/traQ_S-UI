@@ -1,8 +1,13 @@
 <template>
   <div ref="rootRef" :class="$style.root" @click="onClick">
+    <div v-if="showDate && currentDate" :class="$style.dateContainer">
+      <span :class="$style.date">{{ getFullDayString(currentDate) }}</span>
+    </div>
     <MessagesScrollerSeparator
-      v-if="isReachedEnd"
       title="これ以上メッセージはありません"
+      :style="{
+        visibility: isReachedEnd ? 'visible' : 'hidden'
+      }"
       :class="$style.noMoreSeparator"
     />
     <Virtualizer
@@ -14,8 +19,8 @@
       :class="$style.scroller"
       @scroll="handleVirtualScroll"
     >
-      <template #default="{ item: messageId }">
-        <slot :key="messageId" :message-id="messageId" />
+      <template #default="{ item: messageId, index }">
+        <slot :key="messageId" :message-id="messageId" :index="index" />
       </template>
     </Virtualizer>
     <div :style="{ height: `${FOOTER_HEIGHT}px` }" />
@@ -24,7 +29,7 @@
 
 <script lang="ts">
 import type { ComponentPublicInstance } from 'vue'
-import { nextTick, ref, shallowRef } from 'vue'
+import { nextTick, ref, shallowRef, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { useEventListener, watchArray, watchImmediate } from '@vueuse/core'
@@ -33,10 +38,13 @@ import { Virtualizer } from 'virtua/vue'
 
 import { useOpenLink } from '/@/composables/useOpenLink'
 import { embeddingOrigin } from '/@/lib/apis'
+import { isDefined } from '/@/lib/basic/array'
+import { getFullDayString } from '/@/lib/basic/date'
 import { defer } from '/@/lib/basic/timer'
 import { isWebKit } from '/@/lib/dom/browser'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
 import { RouteName } from '/@/router'
+import { useMessagesStore } from '/@/store/entities/messages'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { MessageId } from '/@/types/entity-ids'
 import type { Invocable } from '/@/types/utility'
@@ -46,6 +54,7 @@ import type { LoadingDirection } from './composables/useMessagesFetcher'
 
 export interface MessageScrollerInstance extends ComponentPublicInstance {
   $el: HTMLDivElement
+  topMessageId?: MessageId
   scrollToBottom: Invocable
 }
 
@@ -113,10 +122,12 @@ const props = withDefaults(
     isReachedLatest: boolean
     isLoading?: boolean
     entryMessageId?: MessageId
+    showDate?: boolean
     lastLoadingDirection: LoadingDirection
   }>(),
   {
-    isLoading: false
+    isLoading: false,
+    showDate: false
   }
 )
 
@@ -132,9 +143,27 @@ const prepend = ref(false)
 // メッセージスタンプ表示時にスタンプが存在していないと
 // 場所が確保されないくてずれてしまうので、取得完了を待つ
 const { stampsMapInitialFetchPromise } = useStampsStore()
+const { messagesMap } = useMessagesStore()
 
 const rootRef = shallowRef<HTMLDivElement>()
 const scrollerRef = shallowRef<InstanceType<typeof Virtualizer>>()
+
+const topMessageId = ref<MessageId>()
+const currentDate = ref<Date | null>(null)
+
+watchEffect(() => {
+  const messageId = topMessageId.value
+  if (!messageId) return
+
+  if (messageId === props.messageIds[0]) {
+    return (currentDate.value = null)
+  }
+
+  const message = messagesMap.value.get(messageId)
+  if (!message) return
+
+  currentDate.value = new Date(message.createdAt)
+})
 
 let initialScrolled = false
 let shouldStickToBottom = false
@@ -205,6 +234,11 @@ watchArray(
   { deep: true, flush: 'post' }
 )
 
+const updateTopMessageId = () => {
+  const index = scrollerRef.value?.findItemIndex(scrollerRef.value.scrollOffset)
+  if (isDefined(index)) topMessageId.value = props.messageIds[index]
+}
+
 const requestLoadMessages = () => {
   if (!scrollerRef.value) return
   if (props.isLoading) return
@@ -230,12 +264,14 @@ const requestLoadMessages = () => {
 }
 
 const handleVirtualScroll = throttle(17, (offset: number) => {
+  updateTopMessageId()
   requestLoadMessages()
   emit('scroll')
 })
 
 const visibilitychangeListener = () => {
   if (document.visibilityState === 'visible') {
+    updateTopMessageId()
     requestLoadMessages()
   }
   emit('resetIsReachedLatest')
@@ -245,11 +281,12 @@ useEventListener(document, 'visibilitychange', visibilitychangeListener)
 
 const { onClick } = useMarkdownInternalHandler()
 
-defineExpose({ scrollToBottom })
+defineExpose({ scrollToBottom, topMessageId })
 </script>
 
 <style lang="scss" module>
 .root {
+  position: relative;
   height: 100%;
   padding: 12px 0;
   overflow-y: auto;
@@ -277,5 +314,26 @@ defineExpose({ scrollToBottom })
 
 .noMoreSeparator {
   @include color-ui-secondary;
+}
+
+.dateContainer {
+  position: sticky;
+  top: 0;
+  width: 100%;
+
+  z-index: 100000;
+
+  display: flex;
+  justify-content: center;
+}
+
+.date {
+  @include color-ui-secondary;
+  @include background-secondary;
+
+  padding: 2px 30px;
+
+  opacity: 0.7;
+  border-radius: 9999px;
 }
 </style>

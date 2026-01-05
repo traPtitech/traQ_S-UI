@@ -10,19 +10,20 @@
       :is-loading="isLoading"
       :entry-message-id="entryMessageId"
       :last-loading-direction="lastLoadingDirection"
+      show-date
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
       @scroll="handleScroll"
       @reset-is-reached-latest="resetIsReachedLatest"
     >
-      <template #default="{ messageId }">
+      <template #default="{ messageId, index }">
         <MessagesScrollerSeparator
           v-if="messageId === firstUnreadMessageId"
           title="ここから未読"
           :class="$style.unreadSeparator"
         />
         <MessagesScrollerSeparator
-          v-if="dayDiffMessages.has(messageId)"
+          v-if="dayDiffMessages.has(messageId) && (isReachedEnd || index !== 0)"
           :title="createdDate(messageId)"
           :class="$style.dateSeparator"
         />
@@ -176,6 +177,7 @@ const handleScroll = () => {
 .dateSeparator {
   @include color-ui-secondary;
 }
+
 .element {
   margin: 4px 0;
   contain: content;
