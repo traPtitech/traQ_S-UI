@@ -3,6 +3,7 @@
     <ScrollLoadingBar :class="$style.loadingBar" :show="isLoading" />
     <MessagesScroller
       :id="channelId"
+      :key="refreshKey"
       ref="scrollerRef"
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
@@ -125,19 +126,22 @@ const resetIsReachedLatest = () => {
   isReachedLatest.value = false
 }
 
+const refreshKey = ref(0)
 const showToNewMessageButton = ref(false)
 const { channelIdToPathString } = useChannelPath()
 const toNewMessage = async () => {
-  if (props.entryMessageId) {
+  if (props.entryMessageId || !isReachedLatest.value) {
     const channelPath = channelIdToPathString(props.channelId) as string
     if (dmChannelsMap.value.has(props.channelId)) {
       await router.replace(constructUserPath(channelPath))
     } else {
       await router.replace(constructChannelPath(channelPath))
     }
-  }
 
-  scrollerRef.value?.scrollToBottom()
+    ++refreshKey.value
+  } else {
+    scrollerRef.value?.scrollToBottom()
+  }
 }
 
 const handleScroll = () => {

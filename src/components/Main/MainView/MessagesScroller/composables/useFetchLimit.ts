@@ -6,7 +6,8 @@ import { unrefElement } from '/@/lib/dom/unrefElement'
 
 import type { MessageScrollerInstance } from '../MessagesScroller.vue'
 
-const MAX_COUNT = 20
+const MIN_COUTN = 40
+const MAX_COUNT = 100
 
 const useFetchLimit = (
   scrollerRef: ShallowRef<MessageScrollerInstance | undefined>,
@@ -18,7 +19,10 @@ const useFetchLimit = (
   )
 
   const fetchLimit = computed(() =>
-    Math.min(Math.ceil((height.value ?? 0) / messageHeight), MAX_COUNT)
+    Math.max(
+      Math.min(Math.ceil((height.value ?? 0) / messageHeight), MAX_COUNT),
+      MIN_COUTN
+    )
   )
 
   const waitHeightResolved = new Promise<void>(resolve => {

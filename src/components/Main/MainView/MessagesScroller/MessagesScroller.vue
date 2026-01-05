@@ -3,16 +3,18 @@
     <div v-if="showDate && currentDate" :class="$style.dateContainer">
       <span :class="$style.date">{{ getFullDayString(currentDate) }}</span>
     </div>
-    <MessagesScrollerSeparator
-      title="これ以上メッセージはありません"
-      :style="{
-        visibility: isReachedEnd ? 'visible' : 'hidden'
-      }"
-      :class="$style.noMoreSeparator"
-    />
+    <div ref="headerRef">
+      <MessagesScrollerSeparator
+        title="これ以上メッセージはありません"
+        :style="{
+          visibility: isReachedEnd ? 'visible' : 'hidden'
+        }"
+        :class="$style.noMoreSeparator"
+      />
+    </div>
     <Virtualizer
       ref="scrollerRef"
-      :buffer-size="100000"
+      data-testid="channel-viewport"
       :start-margin="32"
       :data="messageIds"
       :shift="prepend"
@@ -29,7 +31,7 @@
 
 <script lang="ts">
 import type { ComponentPublicInstance } from 'vue'
-import { nextTick, ref, shallowRef, watchEffect } from 'vue'
+import { nextTick, ref, shallowRef } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { useEventListener, watchArray, watchImmediate } from '@vueuse/core'
@@ -61,7 +63,7 @@ export interface MessageScrollerInstance extends ComponentPublicInstance {
 const FOOTER_HEIGHT = 12
 
 const STICK_TO_BOTTOM_THRESHOLD = 50
-const LOAD_MORE_THRESHOLD = 100
+const LOAD_MORE_THRESHOLD = 10
 
 type HTMLElementTargetMouseEvent = MouseEvent & { target: HTMLElement }
 
@@ -148,25 +150,13 @@ const { messagesMap } = useMessagesStore()
 const rootRef = shallowRef<HTMLDivElement>()
 const scrollerRef = shallowRef<InstanceType<typeof Virtualizer>>()
 
-const topMessageId = ref<MessageId>()
 const currentDate = ref<Date | null>(null)
-
-watchEffect(() => {
-  const messageId = topMessageId.value
-  if (!messageId) return
-
-  if (messageId === props.messageIds[0]) {
-    return (currentDate.value = null)
-  }
-
-  const message = messagesMap.value.get(messageId)
-  if (!message) return
-
-  currentDate.value = new Date(message.createdAt)
-})
 
 let initialScrolled = false
 let shouldStickToBottom = false
+
+let startFetchedCount = -1
+let endFetchedCount = -1
 
 const scrollToBottom = async () => {
   const impl = () => {
@@ -194,13 +184,19 @@ watchImmediate(
   () => props.id,
   () => {
     initialScrolled = false
+    startFetchedCount = endFetchedCount = -1
   },
   { flush: 'sync' }
 )
 
+const count = ref(0)
+
 watchArray(
   () => props.messageIds,
   async ids => {
+    updateCurrentDate()
+    count.value = ids.length
+
     await nextTick()
     prepend.value = false
 
@@ -234,9 +230,21 @@ watchArray(
   { deep: true, flush: 'post' }
 )
 
-const updateTopMessageId = () => {
+const updateCurrentDate = () => {
   const index = scrollerRef.value?.findItemIndex(scrollerRef.value.scrollOffset)
-  if (isDefined(index)) topMessageId.value = props.messageIds[index]
+  if (!isDefined(index)) return
+
+  const topMessageId = props.messageIds[index]
+  if (!topMessageId) return
+
+  if (topMessageId === props.messageIds[0]) {
+    return (currentDate.value = null)
+  }
+
+  const message = messagesMap.value.get(topMessageId)
+  if (!message) return
+
+  currentDate.value = new Date(message.createdAt)
 }
 
 const requestLoadMessages = () => {
@@ -252,26 +260,39 @@ const requestLoadMessages = () => {
     props.isReachedLatest &&
     bottomOffset + FOOTER_HEIGHT < STICK_TO_BOTTOM_THRESHOLD
 
-  if (scrollOffset < LOAD_MORE_THRESHOLD && !props.isReachedEnd) {
+  const startOffset = scrollOffset
+  const endOffset = startOffset + viewportSize
+
+  if (
+    startFetchedCount < count.value &&
+    scrollerRef.value.findItemIndex(startOffset) - LOAD_MORE_THRESHOLD < 0
+  ) {
+    startFetchedCount = count.value
+
     prepend.value = true
     if (isWebKit) stopMomentumScroll()
     emit('requestLoadFormer')
   }
 
-  if (bottomOffset < LOAD_MORE_THRESHOLD && !props.isReachedLatest) {
+  if (
+    endFetchedCount < count.value &&
+    scrollerRef.value.findItemIndex(endOffset) + LOAD_MORE_THRESHOLD >
+      count.value
+  ) {
+    endFetchedCount = count.value
     emit('requestLoadLatter')
   }
 }
 
 const handleVirtualScroll = throttle(17, (offset: number) => {
-  updateTopMessageId()
+  updateCurrentDate()
   requestLoadMessages()
   emit('scroll')
 })
 
 const visibilitychangeListener = () => {
   if (document.visibilityState === 'visible') {
-    updateTopMessageId()
+    updateCurrentDate()
     requestLoadMessages()
   }
   emit('resetIsReachedLatest')
@@ -281,7 +302,7 @@ useEventListener(document, 'visibilitychange', visibilitychangeListener)
 
 const { onClick } = useMarkdownInternalHandler()
 
-defineExpose({ scrollToBottom, topMessageId })
+defineExpose({ scrollToBottom })
 </script>
 
 <style lang="scss" module>
