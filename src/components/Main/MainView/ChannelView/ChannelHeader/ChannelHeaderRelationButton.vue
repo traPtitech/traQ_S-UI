@@ -9,7 +9,9 @@
     :class="$style.trigger"
     @click="toggle"
   >
-    <AIcon :size="20" name="rounded-triangle" :class="$style.icon" />
+    <div :class="$style.iconContainer">
+      <AIcon :size="20" name="rounded-triangle" :class="$style.icon" />
+    </div>
   </button>
   <!-- NOTE: ボタンから Tab 移動した際に popup のはじめに飛べるように Focus を管理する -->
   <div v-if="isOpen" tabindex="0" @focus="focusPopup" />
@@ -75,7 +77,6 @@ useEventListener(
   'resize',
   updateTriggerPosition
 )
-useEventListener(window, 'resize', updateTriggerPosition)
 
 onMounted(() => {
   updateTriggerPosition()
@@ -92,19 +93,29 @@ const focusTrigger = () => {
 <style lang="scss" module>
 .trigger {
   @include color-ui-secondary;
-  @include background-primary;
 
   cursor: pointer;
   overflow: hidden;
-  height: 100%;
+  height: auto;
   width: 24px;
-  margin: 0 8px;
-  display: grid;
+  padding-inline: 24px 18px;
   place-items: center;
   flex-shrink: 0;
   position: sticky;
   right: -1px;
 
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--theme-background-primary-default) 30%
+  );
+
+  &[aria-expanded='true'] .icon {
+    transform: rotate(180deg);
+  }
+}
+
+.iconContainer {
   transition: transform 0.1s;
 
   &:hover {
@@ -112,11 +123,8 @@ const focusTrigger = () => {
   }
 
   .icon {
+    margin-top: 12px;
     transition: transform 0.5s;
-  }
-
-  &[aria-expanded='true'] .icon {
-    transform: rotate(180deg);
   }
 }
 </style>
