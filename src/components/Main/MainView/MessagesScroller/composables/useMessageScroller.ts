@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { reactive, watch } from 'vue'
+import { reactive } from 'vue'
 
 import type { ChangeHeightData } from '/@/components/Main/MainView/MessageElement/composables/useElementRenderObserver'
 import type { LoadingDirection } from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
@@ -67,58 +67,36 @@ const useMessageScroller = (
     rootRef.value.scrollTo({ top: relativePos - rootHeight / 3 })
   }
 
-  watch(
-    () => scrollerProps.messageIds,
-    (ids, prevIds) => {
-      if (!rootRef.value) return
-      /* state.height の更新を忘れないようにすること */
+  const adjustScroll = () => {
+    if (!rootRef.value) return
 
-      const newHeight = rootRef.value.scrollHeight
-      if (
-        scrollerProps.lastLoadingDirection === 'latest' ||
-        scrollerProps.lastLoadingDirection === 'former'
-      ) {
-        if (ids.length - prevIds.length === -1) {
-          // 削除された場合は何もしない
-          state.height = newHeight
-          return
-        }
-        // XXX: 追加時にここは0になる
-        if (ids.length - prevIds.length === 0) {
-          const scrollBottom =
-            rootRef.value.scrollTop + rootRef.value.clientHeight
+    const newHeight = rootRef.value.scrollHeight
+    if (newHeight === state.height) return
 
-          // 一番下のメッセージあたりを見ているときに、
-          // 新規に一つ追加された場合は一番下までスクロール
-          if (state.height - 50 <= scrollBottom) {
-            rootRef.value.scrollTo({ top: newHeight })
-          }
-          state.height = newHeight
-          return
-        }
-        //上に追加された時はスクロール位置を変更する。
-        if (scrollerProps.lastLoadingDirection === 'former') {
-          rootRef.value.scrollTo({
-            top: rootRef.value.scrollTop + (newHeight - state.height)
-          })
-          state.height = newHeight
-        }
+    if (
+      scrollerProps.lastLoadingDirection === 'latest' ||
+      scrollerProps.lastLoadingDirection === 'former'
+    ) {
+      const { scrollTop, clientHeight } = rootRef.value
+      const scrollBottom = scrollTop + clientHeight
 
-        if (scrollerProps.lastLoadingDirection === 'latest') {
-          // チャンネルを移動したとき、
-          rootRef.value.scrollTo({
-            top: newHeight
-          })
-          state.height = newHeight
-        }
-      } else state.height = newHeight
-    },
-    { deep: true, flush: 'post' }
-  )
+      if (state.height - 50 <= scrollBottom) {
+        rootRef.value.scrollTo({ top: newHeight })
+      } else if (scrollerProps.lastLoadingDirection === 'former') {
+        const heightDiff = newHeight - state.height
+        rootRef.value.scrollTo({
+          top: rootRef.value.scrollTop + heightDiff
+        })
+      }
+    }
+
+    state.height = newHeight
+  }
 
   return {
     onChangeHeight,
     onEntryMessageLoaded,
+    adjustScroll,
     state
   }
 }

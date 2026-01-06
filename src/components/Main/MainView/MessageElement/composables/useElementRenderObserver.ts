@@ -49,7 +49,8 @@ const useElementRenderObserver = (
       // エントリーメッセージだった場合は高さを報告する
       if (bodyRef.value && unref(isEntryMessage)) {
         const parentTop =
-          bodyRef.value.parentElement?.getBoundingClientRect().top ?? 0
+          bodyRef.value.parentElement?.parentElement?.getBoundingClientRect()
+            .top ?? 0
         const { top } = bodyRef.value.getBoundingClientRect()
         emit('entryMessageLoaded', top - parentTop)
       }

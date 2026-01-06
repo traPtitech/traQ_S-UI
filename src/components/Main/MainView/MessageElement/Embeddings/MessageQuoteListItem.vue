@@ -68,6 +68,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useMessagesStore } from '/@/store/entities/messages'
 import type { ChannelId, DMChannelId, MessageId } from '/@/types/entity-ids'
 
+import { useMessageReady } from '../composables/useMessageReady'
 import MessageFileSummary from './MessageFileSummary.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
@@ -83,11 +84,19 @@ const { messagesMap, fetchFileMetaData } = useMessagesStore()
 const { dmChannelsMap } = useChannelsStore()
 const { embeddingsState } = useEmbeddings(props)
 
-onBeforeMount(() => {
-  if (!renderedContentMap.value.has(props.messageId)) {
-    renderMessageContent(props.messageId)
-  }
-})
+const { register } = useMessageReady()
+if (register) {
+  register(
+    (async () => {
+      await renderMessageContent(props.messageId)
+      await Promise.all(
+        embeddingsState.fileIds.map(fileId => fetchFileMetaData({ fileId }))
+      )
+    })()
+  )
+}
+
+onBeforeMount(() => renderMessageContent(props.messageId))
 
 watchEffect(async () => {
   await Promise.allSettled(

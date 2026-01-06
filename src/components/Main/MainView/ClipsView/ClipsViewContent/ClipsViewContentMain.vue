@@ -11,19 +11,26 @@
       @request-load-former="onLoadFormerMessagesRequest"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
-        <ClipElement
-          :class="$style.element"
-          :message-id="messageId"
-          @change-height="onChangeHeight"
-          @entry-message-loaded="onEntryMessageLoaded"
-        />
+        <div
+          :class="$style.batch"
+          :data-is-ready="$boolAttr(isBatchReady(messageId))"
+        >
+          <ClipElement
+            :class="$style.element"
+            :message-id="messageId"
+            @change-height="onChangeHeight"
+            @entry-message-loaded="onEntryMessageLoaded"
+            @message-ready="markMessageReady"
+          />
+        </div>
       </template>
     </MessagesScroller>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { shallowRef } from 'vue'
+import { shallowRef, watch } from 'vue'
+import { nextTick } from 'vue'
 
 import MessagesScroller, {
   type MessageScrollerInstance
@@ -45,8 +52,20 @@ const {
   isReachedLatest,
   isLoading,
   lastLoadingDirection,
+  markMessageReady,
+  isBatchReady,
+  lastCompletedBatchId,
   onLoadFormerMessagesRequest
 } = useClipsFetcher(scrollerRef, props)
+
+watch(
+  lastCompletedBatchId,
+  async () => {
+    await nextTick()
+    scrollerRef.value?.adjustScroll()
+  },
+  { flush: 'post' }
+)
 </script>
 
 <style lang="scss" module>
@@ -70,5 +89,12 @@ const {
 .element {
   margin: 4px 0;
   contain: content;
+}
+
+.batch {
+  &:not([data-is-ready]) {
+    visibility: hidden;
+    position: absolute;
+  }
 }
 </style>

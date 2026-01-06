@@ -32,7 +32,12 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
   const renderedContentMap = ref(new Map<MessageId, string>())
   const embeddingsMap = ref(new Map<MessageId, EmbeddingOrUrl[]>())
 
-  const renderMessageContent = async (messageId: string) => {
+  const renderMessageContent = async (
+    messageId: string,
+    { force = false }: { force?: boolean } = {}
+  ) => {
+    if (!force && renderedContentMap.value.has(messageId)) return
+
     const message = await messagesStore.fetchMessage({ messageId })
     const rendered = await render(message.content)
 

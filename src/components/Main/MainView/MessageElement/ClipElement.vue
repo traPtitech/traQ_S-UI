@@ -28,7 +28,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef, toRef } from 'vue'
+import {
+  computed,
+  nextTick,
+  onMounted,
+  ref,
+  shallowRef,
+  toRef,
+  watch
+} from 'vue'
 
 import ClickOutside from '/@/components/UI/ClickOutside'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
@@ -43,6 +51,8 @@ import MessageTools, { useMessageToolsHover } from './MessageTools.vue'
 import useElementRenderObserver, {
   type ChangeHeightData
 } from './composables/useElementRenderObserver'
+import { useImageLoadWait } from './composables/useImageLoadWait'
+import { provideMessageReady } from './composables/useMessageReady'
 
 const props = defineProps<{
   messageId: MessageId
@@ -51,16 +61,35 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'entryMessageLoaded', _relativePos: number): void
   (e: 'changeHeight', _data: ChangeHeightData): void
+  (e: 'messageReady', _messageId: MessageId): void
 }>()
 
 const isActive = ref(false)
+const bodyRef = shallowRef<HTMLDivElement | null>(null)
+const { waitAll } = provideMessageReady()
 
+onMounted(async () => {
+  await new Promise<void>(resolve => {
+    if (bodyRef.value) return resolve()
+    const stop = watch(bodyRef, val => {
+      if (val) {
+        stop()
+        resolve()
+      }
+    })
+  })
+
+  await waitAll()
+  await useImageLoadWait(bodyRef)
+  await nextTick()
+
+  emit('messageReady', props.messageId)
+})
 const { messagesMap } = useMessagesStore()
 
 const { editingMessageId } = useMessageEditingStateStore()
 const isEditing = computed(() => props.messageId === editingMessageId.value)
 
-const bodyRef = shallowRef<HTMLDivElement | null>(null)
 const { isMobile } = useResponsive()
 const message = computed(() => messagesMap.value.get(props.messageId))
 

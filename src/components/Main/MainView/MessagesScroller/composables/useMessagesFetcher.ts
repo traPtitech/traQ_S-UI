@@ -9,6 +9,8 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import type { MessageId } from '/@/types/entity-ids'
 import type { MaybePromise } from '/@/types/utility'
 
+import useBatchLoading from './useBatchLoading'
+
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
 const useMessageFetcher = (
@@ -47,6 +49,14 @@ const useMessageFetcher = (
   const isInitialLoad = ref(false)
   const lastLoadingDirection = ref<LoadingDirection>('latest')
 
+  const {
+    registerBatch,
+    markMessageReady,
+    isBatchReady,
+    lastCompletedBatchId,
+    reset: resetBatchLoading
+  } = useBatchLoading()
+
   /**
    * 表示チャンネル/クリップフォルダが変化していないかチェックをして適用する
    *
@@ -76,6 +86,7 @@ const useMessageFetcher = (
     isLoading.value = false
     isInitialLoad.value = false
     lastLoadingDirection.value = 'latest'
+    resetBatchLoading()
   }
 
   const onLoadFormerMessagesRequest = async () => {
@@ -87,6 +98,7 @@ const useMessageFetcher = (
     await runWithIdentifierCheck(
       async () => {
         const newMessageIds = await fetchFormerMessages(isReachedEnd)
+        registerBatch(newMessageIds)
         await renderMessageFromIds(newMessageIds)
         return newMessageIds
       },
@@ -105,6 +117,7 @@ const useMessageFetcher = (
     await runWithIdentifierCheck(
       async () => {
         const newMessageIds = await fetchFormerMessages(isReachedEnd)
+        registerBatch(newMessageIds)
         await renderMessageFromIds(newMessageIds)
         return newMessageIds
       },
@@ -126,6 +139,7 @@ const useMessageFetcher = (
     await runWithIdentifierCheck(
       async () => {
         const newMessageIds = await fetchLatterMessages(isReachedLatest)
+        registerBatch(newMessageIds)
         await renderMessageFromIds(newMessageIds)
         return newMessageIds
       },
@@ -160,6 +174,7 @@ const useMessageFetcher = (
           isReachedLatest,
           isReachedEnd
         )
+        registerBatch(newMessageIds)
         await renderMessageFromIds(newMessageIds)
         return newMessageIds
       },
@@ -186,6 +201,7 @@ const useMessageFetcher = (
     await runWithIdentifierCheck(
       async () => {
         const newMessageIds = await fetchNewMessages(isReachedLatest)
+        registerBatch(newMessageIds)
         await renderMessageFromIds(newMessageIds)
         return newMessageIds
       },
@@ -235,6 +251,9 @@ const useMessageFetcher = (
     isLoading,
     isInitialLoad,
     lastLoadingDirection,
+    markMessageReady,
+    isBatchReady,
+    lastCompletedBatchId,
     reset,
     init,
     renderMessageFromIds,

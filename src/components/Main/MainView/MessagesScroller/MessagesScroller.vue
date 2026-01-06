@@ -53,6 +53,7 @@ import type { LoadingDirection } from './composables/useMessagesFetcher'
 
 export interface MessageScrollerInstance extends ComponentPublicInstance {
   $el: HTMLDivElement
+  adjustScroll: () => void
 }
 
 const LOAD_MORE_THRESHOLD = 10
@@ -163,10 +164,8 @@ const { stampsMapFetched } = useStampsStore()
 
 const rootRef = shallowRef<HTMLElement | null>(null)
 
-const { onChangeHeight, onEntryMessageLoaded, state } = useMessageScroller(
-  rootRef,
-  props
-)
+const { onChangeHeight, onEntryMessageLoaded, adjustScroll, state } =
+  useMessageScroller(rootRef, props)
 
 // 初期スクロール位置を設定
 state.scrollTop = lastScrollPosition.value
@@ -225,6 +224,11 @@ useEventListener(document, 'visibilitychange', visibilitychangeListener)
 
 const { onClick } = useMarkdownInternalHandler()
 useScrollRestoration(rootRef, state)
+
+defineExpose({
+  adjustScroll,
+  $el: rootRef
+})
 </script>
 
 <style lang="scss" module>
