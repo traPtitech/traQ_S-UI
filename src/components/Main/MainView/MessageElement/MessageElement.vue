@@ -66,7 +66,6 @@ import MessageStampList from './MessageStampList.vue'
 import useElementRenderObserver, {
   type ChangeHeightData
 } from './composables/useElementRenderObserver'
-import { useImageLoadWait } from './composables/useImageLoadWait'
 import { provideMessageReady } from './composables/useMessageReady'
 
 const props = withDefaults(
@@ -104,7 +103,6 @@ onMounted(async () => {
   })
 
   await waitAll()
-  await useImageLoadWait(bodyRef)
   await nextTick()
 
   emit('messageReady', props.messageId)

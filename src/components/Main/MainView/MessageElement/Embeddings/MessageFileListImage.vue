@@ -1,25 +1,21 @@
 <template>
   <template v-if="canShow">
     <router-link v-if="isLarge" :to="fileLink" :class="$style.largeContainer">
-      <!--
-        height, widthはlayout shift対策
-        https://www.mizdra.net/entry/2020/05/31/192613
-      -->
-      <img
-        draggable="false"
-        :alt="name"
+      <SkeletonImage
         :src="fileThumbnailPath"
+        :alt="name"
+        :class="$style.image"
+        fixed
         :height="fileThumbnailSize.height"
         :width="fileThumbnailSize.width"
-      />
-      <PlayIcon v-if="isAnimatedImage" :class="$style.playIcon" />
+      >
+        <PlayIcon v-if="isAnimatedImage" :class="$style.playIcon" />
+      </SkeletonImage>
     </router-link>
     <router-link v-else :to="fileLink" :class="$style.container">
-      <!--
-        CSSで固定値指定なのでheight, widthはつけない
-      -->
-      <img draggable="false" :alt="name" :src="fileThumbnailPath" />
-      <PlayIcon v-if="isAnimatedImage" :class="$style.playIcon" />
+      <SkeletonImage :src="fileThumbnailPath" :alt="name">
+        <PlayIcon v-if="isAnimatedImage" :class="$style.playIcon" />
+      </SkeletonImage>
     </router-link>
   </template>
   <div v-else :class="$style.container">表示できない画像です</div>
@@ -27,6 +23,7 @@
 
 <script lang="ts" setup>
 import PlayIcon from '/@/components/UI/PlayIcon.vue'
+import SkeletonImage from '/@/components/UI/SkeletonImage.vue'
 import useFileThumbnail from '/@/composables/files/useFileThumbnail'
 import type { ChannelId, DMChannelId, FileId } from '/@/types/entity-ids'
 
@@ -85,16 +82,18 @@ const {
     color: $theme-background-secondary-border;
   }
   max-width: 100%;
-  img {
-    height: auto;
-    width: auto;
-    max-height: 450px;
-    max-width: min(600px, 100%);
-    min-width: 100px;
-    object-fit: contain;
-    cursor: pointer;
-  }
 }
+
+.image {
+  height: auto;
+  width: auto;
+  max-height: 450px;
+  max-width: min(600px, 100%);
+  min-width: 100px;
+  object-fit: contain;
+  cursor: pointer;
+}
+
 .playIcon {
   position: absolute;
   top: 0;
