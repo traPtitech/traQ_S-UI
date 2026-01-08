@@ -22,7 +22,25 @@ export interface ChannelTreeNode {
    * スキップされた子孫 (子から親への順番)
    */
   skippedAncestorNames?: string[]
+  type: 'channel'
 }
+
+export interface ClipFolderTreeNode {
+  id: string
+  name: string
+  children: []
+  active: true
+  archived: false
+  type: 'clip-folder'
+}
+
+export type TreeNode = ChannelTreeNode | ClipFolderTreeNode
+
+export const isChannelNode = (node: TreeNode): node is ChannelTreeNode =>
+  node.type === 'channel'
+
+export const isClipFolderNode = (node: TreeNode): node is ClipFolderTreeNode =>
+  node.type === 'clip-folder'
 
 export interface ChannelTree {
   children: ChannelTreeNode[]
@@ -58,7 +76,8 @@ export const constructTree = (
           name: channel.name,
           active: true,
           archived: channel.archived,
-          children: []
+          children: [],
+          type: 'channel'
         }
       : undefined
   }
@@ -91,7 +110,8 @@ export const constructTree = (
     ancestorNames.push(channel.name)
     return {
       ...child,
-      skippedAncestorNames: ancestorNames
+      skippedAncestorNames: ancestorNames,
+      type: 'channel'
     }
   }
   // 購読しているか複数の子を持つ場合は自身を表示する
@@ -100,7 +120,8 @@ export const constructTree = (
     name: channel.name,
     active: isSubscribed,
     archived: channel.archived,
-    children
+    children,
+    type: 'channel'
   }
 }
 

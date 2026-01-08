@@ -66,10 +66,7 @@ const channelTreeNodes = computed((): TreeNode[] =>
       name: channelOrClipFolder.name,
       children: [],
       active: true,
-      archived:
-        'archived' in channelOrClipFolder
-          ? channelOrClipFolder.archived
-          : false,
+      archived: 'archived' in channelOrClipFolder ? channelOrClipFolder.archived : false,
       type: 'channel'
     } as ChannelTreeNode
   })
