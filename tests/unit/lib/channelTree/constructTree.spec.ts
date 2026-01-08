@@ -34,22 +34,39 @@ describe('constructTreeFromIds', () => {
     const constructed = constructTreeFromIds(['2', '41'], channelEntities)
     expect(constructed).toStrictEqual([
       {
+        type: 'channel',
         id: '2',
         name: '2',
         active: true,
         archived: false,
         children: [
-          { id: '21', name: '21', active: true, archived: false, children: [] },
-          { id: '22', name: '22', active: true, archived: false, children: [] }
+          {
+            type: 'channel',
+            id: '21',
+            name: '21',
+            active: true,
+            archived: false,
+            children: []
+          },
+          {
+            type: 'channel',
+            id: '22',
+            name: '22',
+            active: true,
+            archived: false,
+            children: []
+          }
         ]
       },
       {
+        type: 'channel',
         id: '41',
         name: '41',
         active: true,
         archived: false,
         children: [
           {
+            type: 'channel',
             id: '411',
             name: '411',
             active: true,
@@ -65,6 +82,7 @@ describe('constructTreeFromIds', () => {
 const channelEntities = new Map<ChannelId, ChannelLike>(
   [
     {
+      type: 'channel',
       id: '',
       name: '',
       parentId: null,
@@ -72,6 +90,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: ['1', '2', '3', '4', '5']
     },
     {
+      type: 'channel',
       id: '1',
       name: '1',
       parentId: null,
@@ -79,6 +98,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: ['11', '12']
     },
     {
+      type: 'channel',
       id: '11',
       name: '11',
       parentId: '1',
@@ -86,6 +106,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: ['111']
     },
     {
+      type: 'channel',
       id: '12',
       name: '12',
       parentId: '1',
@@ -93,6 +114,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: ['122', '123', '121']
     },
     {
+      type: 'channel',
       id: '111',
       name: '111',
       parentId: '11',
@@ -100,6 +122,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: []
     },
     {
+      type: 'channel',
       id: '121',
       name: '121',
       parentId: '12',
@@ -107,6 +130,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: []
     },
     {
+      type: 'channel',
       id: '122',
       name: '122',
       parentId: '12',
@@ -114,6 +138,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: []
     },
     {
+      type: 'channel',
       id: '123',
       name: '123',
       parentId: '123',
@@ -121,6 +146,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: []
     },
     {
+      type: 'channel',
       id: '2',
       name: '2',
       parentId: null,
@@ -128,6 +154,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: ['21', '22']
     },
     {
+      type: 'channel',
       id: '21',
       name: '21',
       parentId: '2',
@@ -135,6 +162,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: []
     },
     {
+      type: 'channel',
       id: '22',
       name: '22',
       parentId: '2',
@@ -142,6 +170,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: []
     },
     {
+      type: 'channel',
       id: '3',
       name: '3',
       parentId: null,
@@ -149,6 +178,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: ['31', '32']
     },
     {
+      type: 'channel',
       id: '31',
       name: '31',
       parentId: '3',
@@ -156,6 +186,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: []
     },
     {
+      type: 'channel',
       id: '32',
       name: '32',
       parentId: '3',
@@ -163,6 +194,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: []
     },
     {
+      type: 'channel',
       id: '4',
       name: '4',
       parentId: null,
@@ -170,6 +202,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: ['41']
     },
     {
+      type: 'channel',
       id: '41',
       name: '41',
       parentId: '4',
@@ -177,6 +210,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: ['411']
     },
     {
+      type: 'channel',
       id: '411',
       name: '411',
       parentId: '41',
@@ -184,6 +218,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: []
     },
     {
+      type: 'channel',
       id: '5',
       name: '5',
       parentId: null,
@@ -191,6 +226,7 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
       children: ['51']
     },
     {
+      type: 'channel',
       id: '51',
       name: '51',
       parentId: '5',
