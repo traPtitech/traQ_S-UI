@@ -203,18 +203,21 @@ const channelEntities = new Map<ChannelId, ChannelLike>(
 const channelTree: ChannelTree = {
   children: [
     {
+      type: 'channel',
       id: '1',
       name: '1',
       active: true,
       archived: true,
       children: [
         {
+          type: 'channel',
           id: '11',
           name: '11',
           active: true,
           archived: false,
           children: [
             {
+              type: 'channel',
               id: '111',
               name: '111',
               active: true,
@@ -224,12 +227,14 @@ const channelTree: ChannelTree = {
           ]
         },
         {
+          type: 'channel',
           id: '12',
           name: '12',
           active: true,
           archived: false,
           children: [
             {
+              type: 'channel',
               id: '121',
               name: '121',
               active: true,
@@ -237,6 +242,7 @@ const channelTree: ChannelTree = {
               children: []
             },
             {
+              type: 'channel',
               id: '122',
               name: '122',
               active: true,
@@ -244,6 +250,7 @@ const channelTree: ChannelTree = {
               children: []
             },
             {
+              type: 'channel',
               id: '123',
               name: '123',
               active: true,
@@ -255,38 +262,71 @@ const channelTree: ChannelTree = {
       ]
     },
     {
+      type: 'channel',
       id: '2',
       name: '2',
       active: true,
       archived: false,
       children: [
-        { id: '21', name: '21', active: true, archived: false, children: [] },
-        { id: '22', name: '22', active: true, archived: false, children: [] }
+        {
+          type: 'channel',
+          id: '21',
+          name: '21',
+          active: true,
+          archived: false,
+          children: []
+        },
+        {
+          type: 'channel',
+          id: '22',
+          name: '22',
+          active: true,
+          archived: false,
+          children: []
+        }
       ]
     },
     {
+      type: 'channel',
       id: '3',
       name: '3',
       active: true,
       archived: false,
       children: [
-        { id: '31', name: '31', active: true, archived: false, children: [] },
-        { id: '32', name: '32', active: true, archived: false, children: [] }
+        {
+          type: 'channel',
+          id: '31',
+          name: '31',
+          active: true,
+          archived: false,
+          children: []
+        },
+        {
+          type: 'channel',
+          id: '32',
+          name: '32',
+          active: true,
+          archived: false,
+          children: []
+        }
       ]
     },
     {
+      type: 'channel',
       id: '4',
       name: '4',
       active: true,
       archived: false,
       children: [
         {
+          type: 'channel',
           id: '41',
           name: '41',
           active: true,
           archived: false,
           children: [
             {
+              type: 'channel',
               id: '411',
               name: '411',
               active: true,
@@ -298,12 +338,14 @@ const channelTree: ChannelTree = {
       ]
     },
     {
+      type: 'channel',
       id: '5',
       name: '5',
       active: true,
       archived: false,
       children: [
         {
+          type: 'channel',
           id: '51',
           name: '51',
           active: true,
@@ -318,17 +360,20 @@ const channelTree: ChannelTree = {
 const homeChannelTree: ChannelTree = {
   children: [
     {
+      type: 'channel',
       id: '1',
       name: '1',
       active: true,
       archived: true,
       children: [
         {
+          type: 'channel',
           id: '12',
           name: '12',
           active: false,
           children: [
             {
+              type: 'channel',
               id: '122',
               name: '122',
               active: true,
@@ -336,6 +381,7 @@ const homeChannelTree: ChannelTree = {
               archived: false
             },
             {
+              type: 'channel',
               id: '123',
               name: '123',
               active: true,
@@ -348,6 +394,7 @@ const homeChannelTree: ChannelTree = {
       ]
     },
     {
+      type: 'channel',
       id: '21',
       name: '21',
       active: true,
@@ -356,16 +403,32 @@ const homeChannelTree: ChannelTree = {
       archived: false
     },
     {
+      type: 'channel',
       id: '3',
       name: '3',
       active: false,
       children: [
-        { id: '31', name: '31', active: true, children: [], archived: false },
-        { id: '32', name: '32', active: true, children: [], archived: false }
+        {
+          type: 'channel',
+          id: '31',
+          name: '31',
+          active: true,
+          children: [],
+          archived: false
+        },
+        {
+          type: 'channel',
+          id: '32',
+          name: '32',
+          active: true,
+          children: [],
+          archived: false
+        }
       ],
       archived: false
     },
     {
+      type: 'channel',
       id: '411',
       name: '411',
       active: true,

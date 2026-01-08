@@ -17,12 +17,14 @@ describe('channelPathToId', () => {
 const channelTree: ChannelTree = {
   children: [
     {
+      type: 'channel',
       id: 'a',
       name: 'a',
       active: true,
       archived: false,
       children: [
         {
+          type: 'channel',
           id: 'b',
           name: 'b',
           active: true,
