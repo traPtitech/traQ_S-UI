@@ -1,6 +1,6 @@
 import type { Message } from '@traptitech/traq'
 
-import { computed, ref, toRefs } from 'vue'
+import { computed, ref, toRefs, triggerRef } from 'vue'
 
 import { promisifyRequest } from 'idb-keyval'
 import { acceptHMRUpdate, defineStore } from 'pinia'
@@ -111,6 +111,7 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
     const { normalizedQuery } = await parseQuery(currentInput.value)
     currentInput.value = normalizedQuery
     query.value = normalizedQuery
+    triggerRef(query)
   }
 
   const addSearchHistory = (newHistory: string) => {
