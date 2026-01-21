@@ -4,9 +4,7 @@ export const isMac = () => navigator.platform.includes('Mac')
  *  ほとんどのブラウザの UA には `applewebkit` が含まれるので
  *  WebKit 特有の処理を用いて判定する
  */
-export const isWebKit = () => {
-  return Date.parse('1969-12-31T23:59:59.9991Z') === 0
-}
+export const isWebKit = Date.parse('1969-12-31T23:59:59.9991Z') === 0
 
 const ua = navigator.userAgent.toLowerCase()
 

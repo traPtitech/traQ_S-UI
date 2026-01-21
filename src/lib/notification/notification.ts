@@ -70,7 +70,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
       // 上で Notification が存在していることを確認している
       const permission = await (() => {
         // WebKit ではユーザージェスチャーを起点としたポップアップのみ許可される
-        if (isWebKit() && isPWA()) {
+        if (isWebKit && isPWA()) {
           const { addToast, deleteToast } = useToastStore()
 
           return new Promise<NotificationPermission>((resolve, reject) => {

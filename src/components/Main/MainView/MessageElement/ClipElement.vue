@@ -2,7 +2,6 @@
   <ClickOutside :enabled="isHovered" @click-outside="onClickOutside">
     <div
       v-if="message"
-      ref="bodyRef"
       :class="$style.body"
       :data-is-mobile="$boolAttr(isMobile)"
       :data-is-editing="$boolAttr(isEditing)"
@@ -28,10 +27,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef, toRef } from 'vue'
+import { computed, ref } from 'vue'
 
 import ClickOutside from '/@/components/UI/ClickOutside'
-import useEmbeddings from '/@/composables/message/useEmbeddings'
 import useResponsive from '/@/composables/useResponsive'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
@@ -40,16 +38,9 @@ import type { MessageId } from '/@/types/entity-ids'
 import MessageQuoteListItemFooter from './Embeddings/MessageQuoteListItemFooter.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools, { useMessageToolsHover } from './MessageTools.vue'
-import type { ChangeHeightData } from './composables/useElementRenderObserver'
-import useElementRenderObserver from './composables/useElementRenderObserver'
 
 const props = defineProps<{
   messageId: MessageId
-}>()
-
-const emit = defineEmits<{
-  (e: 'entryMessageLoaded', _relativePos: number): void
-  (e: 'changeHeight', _data: ChangeHeightData): void
 }>()
 
 const isActive = ref(false)
@@ -59,19 +50,8 @@ const { messagesMap } = useMessagesStore()
 const { editingMessageId } = useMessageEditingStateStore()
 const isEditing = computed(() => props.messageId === editingMessageId.value)
 
-const bodyRef = shallowRef<HTMLDivElement | null>(null)
 const { isMobile } = useResponsive()
 const message = computed(() => messagesMap.value.get(props.messageId))
-
-const { embeddingsState } = useEmbeddings(props)
-
-useElementRenderObserver(
-  bodyRef,
-  false,
-  toRef(props, 'messageId'),
-  embeddingsState,
-  emit
-)
 
 const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
   useMessageToolsHover()

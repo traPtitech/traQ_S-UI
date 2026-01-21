@@ -2,7 +2,6 @@
   <ClickOutside :enabled="showMessageTools" @click-outside="onClickOutside">
     <div
       v-if="message"
-      ref="bodyRef"
       :class="$style.body"
       :data-is-mobile="$boolAttr(isMobile)"
       :data-is-pinned="$boolAttr(message.pinned)"
@@ -40,13 +39,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef, toRef } from 'vue'
+import { computed, ref } from 'vue'
 
 import MessageTools, {
   useMessageToolsHover
 } from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
-import useEmbeddings from '/@/composables/message/useEmbeddings'
 import useResponsive from '/@/composables/useResponsive'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
@@ -55,8 +53,6 @@ import type { MessageId, UserId } from '/@/types/entity-ids'
 import MessageContents from './MessageContents.vue'
 import MessagePinned from './MessagePinned.vue'
 import MessageStampList from './MessageStampList.vue'
-import type { ChangeHeightData } from './composables/useElementRenderObserver'
-import useElementRenderObserver from './composables/useElementRenderObserver'
 
 const props = withDefaults(
   defineProps<{
@@ -71,30 +67,14 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits<{
-  (e: 'entryMessageLoaded', _relativePos: number): void
-  (e: 'changeHeight', _data: ChangeHeightData): void
-}>()
-
 const isActive = ref(false)
 
-const bodyRef = shallowRef<HTMLDivElement | null>(null)
 const { isMobile } = useResponsive()
 const { messagesMap } = useMessagesStore()
 const message = computed(() => messagesMap.value.get(props.messageId))
 
 const { editingMessageId } = useMessageEditingStateStore()
 const isEditing = computed(() => props.messageId === editingMessageId.value)
-
-const { embeddingsState } = useEmbeddings(props)
-
-useElementRenderObserver(
-  bodyRef,
-  toRef(props, 'isEntryMessage'),
-  toRef(props, 'messageId'),
-  embeddingsState,
-  emit
-)
 
 const { isHovered, onPointerEnter, onClick, onMouseLeave, onClickOutside } =
   useMessageToolsHover()
