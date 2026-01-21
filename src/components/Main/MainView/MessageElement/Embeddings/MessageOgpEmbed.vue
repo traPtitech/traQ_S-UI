@@ -7,12 +7,17 @@
       allowfullscreen
       allow="fullscreen; autoplay; encrypted-media; picture-in-picture"
     />
-    <template v-else>
-      <img :src="previewUrl" :class="$style.image" />
+    <SkeletonImage
+      v-else
+      :width="previewWidth"
+      :height="previewHeight"
+      :src="previewUrl"
+      :class="$style.image"
+    >
       <div :class="$style.icon">
         <AIcon v-if="showPlayIcon" mdi name="play" :size="32" />
       </div>
-    </template>
+    </SkeletonImage>
   </div>
 </template>
 
@@ -20,26 +25,31 @@
 import { computed } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
+import SkeletonImage from '/@/components/UI/SkeletonImage.vue'
 import useToggle from '/@/composables/utils/useToggle'
 
 const props = withDefaults(
   defineProps<{
     previewUrl?: string
+    previewWidth?: number
+    previewHeight?: number
     embeddedUrl: string
     showPlayIcon?: boolean
     aspectRatio?: number
   }>(),
   {
-    showPlayIcon: false,
-    aspectRatio: 9 / 16
+    showPlayIcon: false
   }
 )
 
 const { value: isContentShown, open: showContent } = useToggle()
 
 const containerStyle = computed(() => ({
-  // TODO: Safariが15以降で aspect-ratio に対応している
-  paddingTop: `${props.aspectRatio * 100}%`
+  aspectRatio:
+    props.aspectRatio ??
+    (props.previewWidth && props.previewHeight
+      ? `${props.previewWidth} / ${props.previewHeight}`
+      : '16 / 9')
 }))
 </script>
 

@@ -15,6 +15,7 @@ import { computed } from 'vue'
 import { isDefined } from '/@/lib/basic/array'
 import { useMessagesStore } from '/@/store/entities/messages'
 
+import { useMessageReady } from '../composables/useMessageReady'
 import MessageOgpListItem from './MessageOgpListItem.vue'
 
 const props = withDefaults(
@@ -26,7 +27,12 @@ const props = withDefaults(
   }
 )
 
-const { ogpDataMap } = useMessagesStore()
+const { ogpDataMap, fetchOgpData } = useMessagesStore()
+
+const { register } = useMessageReady()
+if (register) {
+  register(Promise.all(props.externalUrls.map(url => fetchOgpData({ url }))))
+}
 
 const ogpData = computed(() =>
   props.externalUrls

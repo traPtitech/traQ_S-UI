@@ -5,11 +5,14 @@
     rel="noopener noreferrer"
     target="_blank"
   >
-    <img
+    <SkeletonImage
       v-if="imageUrl"
-      :src="imageUrl"
-      draggable="false"
       :class="$style.image"
+      :src="imageUrl"
+      :style="imageHeight ? { height: `${imageHeight}px` } : {}"
+      draggable="false"
+      :width="imageWidth"
+      :height="imageHeight"
     />
     <MessageOgpDescription
       :class="$style.description"
@@ -21,12 +24,16 @@
 </template>
 
 <script lang="ts" setup>
+import SkeletonImage from '/@/components/UI/SkeletonImage.vue'
+
 import MessageOgpDescription from './MessageOgpDescription.vue'
 
 withDefaults(
   defineProps<{
     url: string
     imageUrl?: string
+    imageWidth?: number
+    imageHeight?: number
     title?: string
     description?: string
   }>(),
@@ -47,6 +54,7 @@ withDefaults(
   max-width: 100%;
 }
 .image {
+  width: auto;
   height: 100%;
   max-height: 10rem;
 }

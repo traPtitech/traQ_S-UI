@@ -242,7 +242,7 @@ const useChannelMessageFetcher = (
     messagesFetcher.addNewMessage(message.id)
   })
   useMittListener(messageMitt, 'updateMessage', async message => {
-    await renderMessageContent(message.id)
+    await renderMessageContent(message.id, { force: true })
   })
   useMittListener(messageMitt, 'deleteMessage', messageId => {
     const index = messagesFetcher.messageIds.value.indexOf(messageId)

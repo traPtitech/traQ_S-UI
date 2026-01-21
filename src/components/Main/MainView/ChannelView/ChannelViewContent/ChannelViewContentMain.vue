@@ -15,25 +15,31 @@
       @reset-is-reached-latest="resetIsReachedLatest"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
-        <MessagesScrollerSeparator
-          v-if="messageId === firstUnreadMessageId"
-          title="ここから未読"
-          :class="$style.unreadSeparator"
-        />
-        <MessagesScrollerSeparator
-          v-if="dayDiffMessages.has(messageId)"
-          :title="createdDate(messageId)"
-          :class="$style.dateSeparator"
-        />
-        <MessageElement
-          :class="$style.element"
-          :message-id="messageId"
-          :is-archived="isArchived"
-          :is-entry-message="messageId === entryMessageId"
-          :pinned-user-id="messagePinnedUserMap.get(messageId)"
-          @change-height="onChangeHeight"
-          @entry-message-loaded="onEntryMessageLoaded"
-        />
+        <div
+          :class="$style.batch"
+          :data-is-ready="$boolAttr(isBatchReady(messageId))"
+        >
+          <MessagesScrollerSeparator
+            v-if="messageId === firstUnreadMessageId"
+            title="ここから未読"
+            :class="$style.unreadSeparator"
+          />
+          <MessagesScrollerSeparator
+            v-if="dayDiffMessages.has(messageId)"
+            :title="createdDate(messageId)"
+            :class="$style.dateSeparator"
+          />
+          <MessageElement
+            :class="$style.element"
+            :message-id="messageId"
+            :is-archived="isArchived"
+            :is-entry-message="messageId === entryMessageId"
+            :pinned-user-id="messagePinnedUserMap.get(messageId)"
+            @change-height="onChangeHeight"
+            @entry-message-loaded="onEntryMessageLoaded"
+            @message-ready="markMessageReady"
+          />
+        </div>
       </template>
     </MessagesScroller>
     <MessageInput
@@ -48,7 +54,7 @@
 <script lang="ts" setup>
 import type { Pin } from '@traptitech/traq'
 
-import { computed, ref, shallowRef } from 'vue'
+import { computed, nextTick, ref, shallowRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
@@ -87,9 +93,21 @@ const {
   isLoading,
   lastLoadingDirection,
   unreadSince,
+  markMessageReady,
+  isBatchReady,
+  lastCompletedBatchId,
   onLoadFormerMessagesRequest,
   onLoadLatterMessagesRequest
 } = useChannelMessageFetcher(scrollerRef, props)
+
+watch(
+  lastCompletedBatchId,
+  async () => {
+    await nextTick()
+    scrollerRef.value?.adjustScroll()
+  },
+  { flush: 'post' }
+)
 
 const { messagesMap } = useMessagesStore()
 const firstUnreadMessageId = computed(() => {
@@ -101,7 +119,10 @@ const firstUnreadMessageId = computed(() => {
   )
 })
 
-const dayDiffMessages = useDayDiffMessages(messageIds)
+const readyMessageIds = computed(() =>
+  messageIds.value.filter(id => isBatchReady(id))
+)
+const dayDiffMessages = useDayDiffMessages(readyMessageIds)
 const createdDate = (id: MessageId) => {
   const message = messagesMap.value.get(id)
   if (!message) {
@@ -173,6 +194,13 @@ const handleScroll = () => {
   right: 0;
   height: 12px;
   z-index: $z-index-message-loading;
+}
+
+.batch {
+  &:not([data-is-ready]) {
+    position: absolute;
+    visibility: hidden;
+  }
 }
 
 .unreadSeparator {

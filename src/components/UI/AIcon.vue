@@ -11,7 +11,7 @@
     <path :d="path" fill="currentColor" />
   </svg>
   <component
-    :is="svgComponent"
+    :is="svgComponent ?? 'span'"
     v-else
     :width="size"
     :height="size"

@@ -2,6 +2,8 @@
   <div :class="$style.container">
     <MessageOgpEmbed
       :preview-url="previewUrl"
+      :preview-width="previewWidth"
+      :preview-height="previewHeight"
       :embedded-url="embeddedUrl"
       show-play-icon
       @click.prevent.stop=""
@@ -29,6 +31,8 @@ withDefaults(
   defineProps<{
     url: string
     previewUrl: string
+    previewWidth?: number
+    previewHeight?: number
     embeddedUrl: string
     title?: string
     description?: string

@@ -5,3 +5,7 @@ export function safeMod(x: bigint, r: bigint): bigint
 export function safeMod(x: any, r: any): any {
   return ((x % r) + r) % r
 }
+
+export const isNumber = (value: unknown): value is number => {
+  return typeof value === 'number'
+}
