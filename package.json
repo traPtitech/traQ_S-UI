@@ -94,6 +94,7 @@
     "fake-indexeddb": "^6.2.5",
     "fonteditor-core": "^2.6.3",
     "jsdom": "^27.4.0",
+    "lint-staged": "^16.2.7",
     "patch-package": "^8.0.1",
     "pinia": "^3.0.1",
     "postcss": "^8.5.3",
@@ -118,5 +119,9 @@
   "engines": {
     "node": "^22.14.0",
     "npm": "^10.9.0"
+  },
+  "lint-staged": {
+    "*.{ts,js,jsx,tsx,vue}": "eslint --cache --max-warnings=0",
+    "*.{js,jsx,ts,tsx,vue,css,html,md,json,cjs}": "npx prettier --cache --check"
   }
 }
