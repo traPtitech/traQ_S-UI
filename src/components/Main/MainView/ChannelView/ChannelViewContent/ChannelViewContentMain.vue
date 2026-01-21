@@ -137,7 +137,7 @@ const toNewMessage = () => {
     }
   }
 
-  const element = unrefElement(scrollerRef)
+  const element = unrefElement(scrollerRef.value?.rootRef)
   if (!element) return
 
   element.scrollTo({
@@ -146,7 +146,7 @@ const toNewMessage = () => {
 }
 
 const handleScroll = () => {
-  const element = unrefElement(scrollerRef)
+  const element = unrefElement(scrollerRef.value?.rootRef)
   if (!element || isLoading.value) return
   const { scrollTop, scrollHeight, clientHeight } = element
   showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop

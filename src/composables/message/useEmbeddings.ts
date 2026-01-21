@@ -5,9 +5,12 @@ import { useMessagesView } from '/@/store/domain/messagesView'
 import type { MessageId } from '/@/types/entity-ids'
 
 const useEmbeddings = (props: { messageId: MessageId }) => {
-  const { embeddingsMap } = useMessagesView()
+  const { embeddingsMap, renderedContentMap } = useMessagesView()
 
   const embeddings = computed(() => embeddingsMap.value.get(props.messageId))
+  const renderedContent = computed(
+    () => renderedContentMap.value.get(props.messageId) ?? ''
+  )
   const state = reactive({
     fileIds: computed(
       () => embeddings.value?.filter(isFile).map(e => e.id) ?? []
@@ -21,7 +24,8 @@ const useEmbeddings = (props: { messageId: MessageId }) => {
           embeddings.value?.filter(isExternalUrl).map(e => e.url) ?? []
         )
       ].slice(0, 2)
-    )
+    ),
+    hasCodeBlock: computed(() => renderedContent.value.includes('</pre>'))
   })
   return { embeddingsState: state }
 }
