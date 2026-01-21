@@ -25,7 +25,8 @@
     "gen-unicode_emojis": "node build/gen-unicode_emojis.js",
     "localhost-certs:gen": "./build/gen-localhost-certs.sh",
     "localhost-certs:rem": "rm -rf ./.certs",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "prepare": "husky"
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
