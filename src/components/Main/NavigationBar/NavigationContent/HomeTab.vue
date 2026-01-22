@@ -17,7 +17,7 @@
       >
         <DMChannelList :dm-channels="dmChannelsWithNotification" />
         <ChannelList
-          :channels="noticeableChannels"
+          :channels-or-clip-folders="noticeableChannels"
           :show-star="prioritizeStarredChannel"
         />
       </NavigationContentContainer>
@@ -27,7 +27,7 @@
         :class="$style.item"
       >
         <ChannelList
-          :channels="unreadChannels"
+          :channels-or-clip-folders="unreadChannels"
           :show-star="prioritizeStarredChannel"
           :show-notified="prioritizeNotifiedChannel"
         />
@@ -45,7 +45,7 @@
       subtitle="Qall中チャンネル"
       :class="$style.item"
     >
-      <ChannelList :channels="qallingChannels" />
+      <ChannelList :channels-or-clip-folders="qallingChannels" />
     </NavigationContentContainer>
   </div>
 </template>

@@ -17,7 +17,7 @@
         <template v-if="topLevelChannels.length > 0">
           <ChannelList
             v-if="query.length > 0"
-            :channels="filteredChannels"
+            :channels-or-clip-folders="filteredChannels"
             show-topic
           />
           <template v-else-if="filterStarChannel">

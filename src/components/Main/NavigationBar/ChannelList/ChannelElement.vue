@@ -2,34 +2,41 @@
   <div
     :class="$style.container"
     :data-is-selected="$boolAttr(isSelected)"
-    :data-is-inactive="$boolAttr(!channel.active)"
+    :data-is-inactive="$boolAttr(!channelOrClipFolder.active)"
   >
     <!-- チャンネル表示本体 -->
     <div :class="$style.channelContainer">
-      <ChannelElementIcon
-        :class="$style.channelIcon"
-        :has-child="hasChildren"
-        :is-selected="isSelected"
-        :is-opened="isOpened"
-        :has-notification="notificationState.hasNotification"
-        :has-notification-on-child="notificationState.hasNotificationOnChild"
-        :is-inactive="!channel.active"
-        :icon-name="iconName"
+      <div
         @click.stop="onClickIcon"
         @mouseenter="onIconHovered"
         @mouseleave="onIconHoveredLeave"
-      />
-      <router-link
-        v-slot="{ href, navigate }"
-        custom
-        :to="channelIdToLink(props.channel.id) ?? ''"
       >
+        <ChannelElementIcon
+          v-if="!isClip"
+          :class="$style.channelIcon"
+          :has-child="hasChildren"
+          :is-selected="isSelected"
+          :is-opened="isOpened"
+          :has-notification="notificationState.hasNotification"
+          :has-notification-on-child="notificationState.hasNotificationOnChild"
+          :is-inactive="!channelOrClipFolder.active"
+          :icon-name="iconName"
+        />
+        <AIcon
+          v-else
+          name="bookmark"
+          mdi
+          :class="$style.icon"
+          :data-is-selected="$boolAttr(isSelected)"
+        />
+      </div>
+      <router-link v-slot="{ href, navigate }" custom :to="itemLink">
         <a
           :class="$style.channel"
           :href="href"
           :aria-current="isSelected && 'page'"
           :aria-expanded="hasChildren && isOpened ? true : undefined"
-          :data-is-inactive="$boolAttr(!channel.active)"
+          :data-is-inactive="$boolAttr(!channelOrClipFolder.active)"
           :aria-label="
             showShortenedPath ? pathTooltip : (pathToShow ?? undefined)
           "
@@ -41,11 +48,12 @@
           @blur="onBlur"
         >
           <ChannelElementName
-            :channel="channel"
+            :channel-or-clip-folder="channelOrClipFolder"
             :show-shortened-path="showShortenedPath"
             :is-selected="isSelected"
           />
           <ChannelElementUnreadBadge
+            v-if="!isClip"
             :is-noticeable="notificationState.isNoticeable"
             :unread-count="notificationState.unreadCount"
           />
@@ -76,12 +84,14 @@ import {
   type TypedProps,
   usePath
 } from '/@/components/Main/NavigationBar/ChannelList/composables/usePath'
+import AIcon from '/@/components/UI/AIcon.vue'
 import useFocus from '/@/composables/dom/useFocus'
 import useHover from '/@/composables/dom/useHover'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useOpenLink } from '/@/composables/useOpenLink'
-import type { ChannelTreeNode } from '/@/lib/channelTree'
+import { type TreeNode, isClipFolderNode } from '/@/lib/channelTree'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
+import { constructClipFoldersPath } from '/@/router'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import type { ChannelId } from '/@/types/entity-ids'
 
@@ -92,7 +102,7 @@ import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 
 const props = withDefaults(
   defineProps<{
-    channel: ChannelTreeNode
+    channelOrClipFolder: TreeNode
     isOpened?: boolean
     showShortenedPath?: boolean
     showStar?: boolean
@@ -110,33 +120,73 @@ const emit = defineEmits<{
 
 const { primaryView } = useMainViewStore()
 
-const hasChildren = computed(() => props.channel.children.length > 0)
-const isSelected = computed(
-  () =>
-    primaryView.value.type === 'channel' &&
-    props.channel.id === primaryView.value.channelId
+const isClip = computed(() => isClipFolderNode(props.channelOrClipFolder))
+
+const hasChildren = computed(() =>
+  isClip.value ? false : props.channelOrClipFolder.children.length > 0
 )
 
+const isSelected = computed(() => {
+  if (isClip.value) {
+    return (
+      primaryView.value.type === 'clips' &&
+      props.channelOrClipFolder.id === primaryView.value.clipFolderId
+    )
+  }
+  return (
+    primaryView.value.type === 'channel' &&
+    props.channelOrClipFolder.id === primaryView.value.channelId
+  )
+})
+
 const onClickIcon = (e: KeyboardEvent | MouseEvent) => {
+  if (isClip.value) {
+    // クリップフォルダの場合は常にページ遷移
+    if (e instanceof MouseEvent && e.button === LEFT_CLICK_BUTTON) {
+      openItem(e)
+    }
+    return
+  }
+
   if (
     e instanceof MouseEvent &&
     (!hasChildren.value || e.button !== LEFT_CLICK_BUTTON)
   ) {
-    openChannel(e)
+    openItem(e)
     return
   }
-  emit('clickHash', props.channel.id)
+  emit('clickHash', props.channelOrClipFolder.id)
 }
 
 const { openLink } = useOpenLink()
 const { channelIdToLink } = useChannelPath()
-const openChannel = (event: MouseEvent) => {
-  openLink(event, channelIdToLink(props.channel.id) as string)
+
+const itemLink = computed(() => {
+  if (isClip.value) {
+    return constructClipFoldersPath(props.channelOrClipFolder.id)
+  }
+  return channelIdToLink(props.channelOrClipFolder.id) ?? ''
+})
+
+const openItem = (event: MouseEvent) => {
+  openLink(event, itemLink.value)
 }
 
 const { pathToShow, pathTooltip } = usePath(props as TypedProps)
 
-const notificationState = useNotificationState(toRef(props, 'channel'))
+const notificationState = computed(() => {
+  if (isClip.value) {
+    return {
+      hasNotification: false,
+      hasNotificationOnChild: false,
+      isNoticeable: false,
+      unreadCount: 0,
+      subscriptionLevel: undefined,
+      isStarred: false
+    }
+  }
+  return useNotificationState(toRef(props, 'channelOrClipFolder'))
+})
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 const { isFocused, onFocus, onBlur } = useFocus()
@@ -160,11 +210,11 @@ const isChannelBgHovered = computed(
 const iconName = computed(() => {
   if (
     props.showNotified &&
-    notificationState.subscriptionLevel === ChannelSubscribeLevel.notified
+    notificationState.value.subscriptionLevel === ChannelSubscribeLevel.notified
   ) {
     return 'notified'
   }
-  if (props.showStar && notificationState.isStarred) {
+  if (props.showStar && notificationState.value.isStarred) {
     return 'star-outline'
   }
   return 'hash'
@@ -237,6 +287,20 @@ $bgLeftShift: 8px;
   &[data-is-focused] {
     display: block;
     background: $theme-ui-primary-background;
+  }
+}
+.icon {
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  flex-shrink: 0;
+  margin: 4px;
+  &[data-is-selected] {
+    @include color-accent-primary;
+    &:hover::before,
+    .container:focus &::before {
+      @include background-accent-primary;
+    }
   }
 }
 .slot {

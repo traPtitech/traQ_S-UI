@@ -3,19 +3,24 @@ import type { Channel } from '@traptitech/traq'
 import { computed } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
-import type { ChannelTreeNode } from '/@/lib/channelTree'
+import type { ChannelTreeNode, ClipFolderTreeNode } from '/@/lib/channelTree'
 
 interface TreeProps {
-  channel: ChannelTreeNode
+  channelOrClipFolder: ChannelTreeNode
   showShortenedPath: false
 }
 
 interface ListProps {
-  channel: Channel
+  channelOrClipFolder: Channel
   showShortenedPath: true
 }
 
-export type TypedProps = TreeProps | ListProps
+interface ClipProps {
+  channelOrClipFolder: ClipFolderTreeNode
+  showShortenedPath: false
+}
+
+export type TypedProps = TreeProps | ListProps | ClipProps
 
 export const usePath = (typedProps: TypedProps) => {
   const { channelIdToShortPathString, channelIdToPathString } = useChannelPath()
@@ -25,17 +30,33 @@ export const usePath = (typedProps: TypedProps) => {
       ? [...skippedAncestorNames].reverse().join('/').concat('/')
       : ''
 
-  const pathToShow = computed(() =>
-    typedProps.showShortenedPath
-      ? channelIdToShortPathString(typedProps.channel.id)
-      : getPathWithAncestor(typedProps.channel.skippedAncestorNames) +
-        typedProps.channel.name
-  )
-  const pathTooltip = computed(() =>
-    typedProps.showShortenedPath
-      ? `${channelIdToPathString(typedProps.channel.id, true) ?? ''}`
-      : undefined
-  )
+  const pathToShow = computed(() => {
+    if (
+      'type' in typedProps.channelOrClipFolder &&
+      typedProps.channelOrClipFolder.type === 'clip-folder'
+    ) {
+      return typedProps.channelOrClipFolder.name
+    }
+    if ('showShortenedPath' in typedProps && typedProps.showShortenedPath) {
+      return channelIdToShortPathString(typedProps.channelOrClipFolder.id)
+    }
+    return (
+      getPathWithAncestor(typedProps.channelOrClipFolder.skippedAncestorNames) +
+      typedProps.channelOrClipFolder.name
+    )
+  })
+  const pathTooltip = computed(() => {
+    if (
+      'type' in typedProps.channelOrClipFolder &&
+      typedProps.channelOrClipFolder.type === 'clip-folder'
+    ) {
+      return undefined
+    }
+    if ('showShortenedPath' in typedProps && typedProps.showShortenedPath) {
+      return `${channelIdToPathString(typedProps.channelOrClipFolder.id, true) ?? ''}`
+    }
+    return undefined
+  })
 
   return { pathToShow, pathTooltip }
 }
