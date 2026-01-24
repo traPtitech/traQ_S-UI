@@ -10,6 +10,8 @@ import useIndexedDbValue, {
 import type { AttachmentType } from '/@/lib/basic/file'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
+import apis from '/@/lib/apis'
+import { useChannelsStore } from '../entities/channels'
 
 /**
  * 基本的に直接利用しないで`/@/composables/messageInputState`を利用する
@@ -62,13 +64,25 @@ const useMessageInputStateStorePinia = defineStore(
       initialValue
     )
 
+    const { channelsMap } = useChannelsStore()
+
     const states = toRef(() => state.messageInputState)
     const inputChannels = computed(() =>
       [...states.value].filter(([id]) => !virtualIds.has(id))
     )
     const hasInputChannel = computed(() => inputChannels.value.length > 0)
 
-    const getStore = (cId: MessageInputStateKey) => states.value.get(unref(cId))
+    const getStore = (cId: MessageInputStateKey) => {
+      const state = states.value.get(unref(cId))
+      if (state) {
+        if (virtualIds.has(unref(cId)) || channelsMap.value.get(unref(cId))?.archived) {
+          return state
+        }
+        // 存在しないかアーカイブ済みなら削除
+        states.value.delete(unref(cId))
+        return undefined
+      }
+    }
     const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
       // 空のときは削除、空でないときはセット
       if (v && (v.text !== '' || v.attachments.length > 0)) {
