@@ -10,6 +10,7 @@ import useIndexedDbValue, {
 import type { AttachmentType } from '/@/lib/basic/file'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
+
 import { useChannelsStore } from '../entities/channels'
 
 /**
@@ -71,14 +72,18 @@ const useMessageInputStateStorePinia = defineStore(
     )
     const hasInputChannel = computed(() => inputChannels.value.length > 0)
 
-    watch(channelsMap, newChannelsMap => {
-      for (const [cid] of inputChannels.value) {
-        if (newChannelsMap.get(cid)?.archived) {
-          // アーカイブ済みなら下書きを削除
-          states.value.delete(cid)
+    watch(
+      channelsMap,
+      newChannelsMap => {
+        for (const [cid] of inputChannels.value) {
+          if (newChannelsMap.get(cid)?.archived) {
+            // アーカイブ済みなら下書きを削除
+            states.value.delete(cid)
+          }
         }
-      }
-    }, { deep: true })
+      },
+      { deep: true }
+    )
 
     const getStore = (cId: MessageInputStateKey) => states.value.get(unref(cId))
     const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
