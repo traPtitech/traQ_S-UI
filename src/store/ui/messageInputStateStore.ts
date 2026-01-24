@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { computed, toRef, unref } from 'vue'
+import { computed, toRef, unref, watch } from 'vue'
 
 import { promisifyRequest } from 'idb-keyval'
 import { acceptHMRUpdate, defineStore } from 'pinia'
@@ -10,7 +10,6 @@ import useIndexedDbValue, {
 import type { AttachmentType } from '/@/lib/basic/file'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
-import apis from '/@/lib/apis'
 import { useChannelsStore } from '../entities/channels'
 
 /**
@@ -72,17 +71,16 @@ const useMessageInputStateStorePinia = defineStore(
     )
     const hasInputChannel = computed(() => inputChannels.value.length > 0)
 
-    const getStore = (cId: MessageInputStateKey) => {
-      const state = states.value.get(unref(cId))
-      if (state) {
-        if (virtualIds.has(unref(cId)) || channelsMap.value.get(unref(cId))?.archived) {
-          return state
+    watch(channelsMap, newChannelsMap => {
+      for (const [cid] of inputChannels.value) {
+        if (newChannelsMap.get(cid)?.archived) {
+          // アーカイブ済みなら下書きを削除
+          states.value.delete(cid)
         }
-        // 存在しないかアーカイブ済みなら削除
-        states.value.delete(unref(cId))
-        return undefined
       }
-    }
+    }, { deep: true })
+
+    const getStore = (cId: MessageInputStateKey) => states.value.get(unref(cId))
     const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
       // 空のときは削除、空でないときはセット
       if (v && (v.text !== '' || v.attachments.length > 0)) {
