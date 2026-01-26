@@ -8,10 +8,9 @@ import useIndexedDbValue, {
   key
 } from '/@/composables/storage/useIndexedDbValue'
 import type { AttachmentType } from '/@/lib/basic/file'
+import { useChannelsStore } from '/@/store/entities/channels'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
-
-import { useChannelsStore } from '../entities/channels'
 
 /**
  * 基本的に直接利用しないで`/@/composables/messageInputState`を利用する
