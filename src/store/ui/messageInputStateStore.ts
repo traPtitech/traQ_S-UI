@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { computed, toRef, unref } from 'vue'
+import { computed, toRef, unref, watch } from 'vue'
 
 import { promisifyRequest } from 'idb-keyval'
 import { acceptHMRUpdate, defineStore } from 'pinia'
@@ -8,6 +8,7 @@ import useIndexedDbValue, {
   key
 } from '/@/composables/storage/useIndexedDbValue'
 import type { AttachmentType } from '/@/lib/basic/file'
+import { useChannelsStore } from '/@/store/entities/channels'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
 
@@ -62,11 +63,24 @@ const useMessageInputStateStorePinia = defineStore(
       initialValue
     )
 
+    const { channelsMap } = useChannelsStore()
+
     const states = toRef(() => state.messageInputState)
     const inputChannels = computed(() =>
       [...states.value].filter(([id]) => !virtualIds.has(id))
     )
     const hasInputChannel = computed(() => inputChannels.value.length > 0)
+
+    watch(
+      channelsMap,
+      newChannelsMap =>
+        inputChannels.value
+          .filter(([cid]) => newChannelsMap.get(cid)?.archived)
+          .forEach(([cid]) => {
+            states.value.delete(cid)
+          }),
+      { deep: true }
+    )
 
     const getStore = (cId: MessageInputStateKey) => states.value.get(unref(cId))
     const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
