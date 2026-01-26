@@ -73,14 +73,12 @@ const useMessageInputStateStorePinia = defineStore(
 
     watch(
       channelsMap,
-      newChannelsMap => {
-        for (const [cid] of inputChannels.value) {
-          if (newChannelsMap.get(cid)?.archived) {
-            // アーカイブ済みなら下書きを削除
+      newChannelsMap =>
+        inputChannels.value
+          .filter(([cid]) => newChannelsMap.get(cid)?.archived)
+          .forEach(([cid]) => {
             states.value.delete(cid)
-          }
-        }
-      },
+          }),
       { deep: true }
     )
 
