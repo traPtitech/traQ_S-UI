@@ -28,7 +28,7 @@ const useMeStorePinia = defineStore('domain/me', () => {
 
   const myId = computed(() => state.detail?.id)
 
-  const fetchMe = async (): Promise<MyUserDetail | undefined> => {
+  const fetchMe = async (riseAuthError=true): Promise<MyUserDetail | undefined> => {
     const retryDelayMs = 1000 // 1 sec
     const retryMaxCount = 10
 
@@ -45,11 +45,10 @@ const useMeStorePinia = defineStore('domain/me', () => {
           console.error(new Error('Failed to fetchMe:', { cause: error }))
           return undefined
         }
-        if (error.status === 401) {
+        if (error.status === 401&&riseAuthError) {
           router.push('/login')
           return undefined
         }
-
         // FIXME: エラーハンドリングのためにとりあえず retry しています
         // eslint-disable-next-line no-console
         console.warn('Failed to fetchMe, retrying...', { cause: error })
