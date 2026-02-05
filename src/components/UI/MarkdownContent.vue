@@ -20,7 +20,7 @@ const contentRef = ref<HTMLElement>()
 
 const foldWrapClass = 'fold-wrap'
 
-const applyFoldCodeBlock = () => {
+const applyFoldableCodeBlock = () => {
   const content = contentRef.value
   if (content === undefined) return
 
@@ -41,12 +41,12 @@ const applyFoldCodeBlock = () => {
 }
 
 onMounted(() => {
-  applyFoldCodeBlock()
+  applyFoldableCodeBlock()
 })
 watch(
   () => props.content,
   () => {
-    applyFoldCodeBlock()
+    applyFoldableCodeBlock()
   },
   {
     flush: 'post'

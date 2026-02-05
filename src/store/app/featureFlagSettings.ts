@@ -34,7 +34,7 @@ export const featureFlagDescriptions = {
     description:
       '「contain: strict」を「contain: inline-size layout paint style」で代替します。 ' +
       'WebKit 系ブラウザ (Safari など）でレイアウトが崩れる場合に有効にすることで不具合が解消される可能性があります。',
-    defaultValue: isWebKit(),
+    defaultValue: isWebKit,
     endAt: new Date('9999-12-31T00:00')
   },
   dose_construct_strict_starred_channel_tree: {
