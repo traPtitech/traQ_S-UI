@@ -14,7 +14,9 @@
           :all-panel-id="allPanelId"
           :stared-panel-id="staredPanelId"
         />
-        <ChannelListArchivedToggle v-model:show-archived="showArchived" />
+        <ChannelListArchivedToggle
+          v-model:show-archived="showArchivedChannels"
+        />
         <template v-if="topLevelChannels.length > 0">
           <ChannelList
             v-if="query.length > 0"
@@ -57,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, toRaw } from 'vue'
+import { computed, toRaw } from 'vue'
 
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
@@ -87,19 +89,19 @@ const { staredChannelSet } = useStaredChannels()
 const { channelsMap } = useChannelsStore()
 const { channelIdToPathString } = useChannelPath()
 
-const showArchived = ref(false)
+const { showArchivedChannels, filterStarChannel } = useBrowserSettings()
 
 // filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
 const topLevelChannels = computed(() =>
   filterTrees(
     toRaw(channelTree.value.children),
-    channel => showArchived.value || !channel.archived
+    channel => showArchivedChannels.value || !channel.archived
   )
 )
 const starredTopLevelChannels = computed(() =>
   filterTrees(
     toRaw(starredChannelTree.value.children),
-    node => showArchived.value || !node.archived
+    node => showArchivedChannels.value || !node.archived
   )
 )
 
@@ -111,7 +113,7 @@ const staredChannels = computed(() => {
   const sortedTrees = sortChannelTree(trees)
   return filterTrees(
     sortedTrees,
-    channel => showArchived.value || !channel.archived
+    channel => showArchivedChannels.value || !channel.archived
   )
 })
 
@@ -137,7 +139,6 @@ const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
 
 const { featureFlags } = useFeatureFlagSettings()
 
-const { filterStarChannel } = useBrowserSettings()
 const channelListForFilter = computed(() =>
   [...channelsMap.value.values()].filter(channel => !channel.archived)
 )
