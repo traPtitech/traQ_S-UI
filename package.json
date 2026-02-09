@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@pinia/testing": "^1.0.3",
-    "@stylistic/eslint-plugin": "^5.6.1",
+    "@stylistic/eslint-plugin": "^5.8.0",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/autosize": "^4.0.3",
     "@types/dom-screen-wake-lock": "^1.0.3",
