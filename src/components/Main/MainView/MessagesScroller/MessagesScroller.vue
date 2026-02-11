@@ -1,61 +1,122 @@
 <template>
-  <div
-    ref="rootRef"
-    :class="$style.root"
-    @scroll.passive="
-      () => {
-        handleScroll()
-        emit('scrollPassive')
-      }
-    "
-    @click="onClick"
-  >
+  <div :class="$style.container">
+    <MessagesSkeleton v-if="!ready" :class="$style.skeleton" />
     <div
-      v-if="stampsMapFetched"
-      :class="$style.viewport"
-      data-testid="channel-viewport"
+      ref="rootRef"
+      :class="[$style.root, !ready && $style.hidden]"
+      @scroll.passive="
+        () => {
+          handleScroll()
+          emit('scrollPassive')
+        }
+      "
+      @click="onClick"
     >
-      <MessagesScrollerSeparator
-        v-if="isReachedEnd"
-        title="これ以上メッセージはありません"
-        :class="$style.noMoreSeparator"
-      />
-      <template v-for="messageId in messageIds" :key="messageId">
-        <slot
-          :message-id="messageId"
-          :on-change-height="onChangeHeight"
-          :on-entry-message-loaded="onEntryMessageLoaded"
+      <div
+        v-if="stampsMapFetched"
+        :class="$style.viewport"
+        data-testid="channel-viewport"
+      >
+        <MessagesSkeleton
+          v-if="!isReachedEnd"
+          ref="topSkeletonRef"
+          :simple="!enableProactiveLoading"
+          instant
+          :count="3"
+          :class="$style.edgeSkeleton"
         />
-      </template>
+        <MessagesScrollerSeparator
+          v-if="isReachedEnd"
+          title="これ以上メッセージはありません"
+          :class="$style.noMoreSeparator"
+        />
+        <template v-for="messageId in messageIds" :key="messageId">
+          <slot
+            :message-id="messageId"
+            :on-change-height="onChangeHeight"
+            :on-entry-message-loaded="onEntryMessageLoaded"
+          />
+        </template>
+        <MessagesSkeleton
+          v-if="enableProactiveLoading && !isReachedLatest"
+          ref="bottomSkeletonRef"
+          reversed
+          instant
+          :simple="!enableProactiveLoading"
+          :count="3"
+          :class="$style.edgeSkeleton"
+        />
+      </div>
+      <div :class="$style.bottomSpacer" />
     </div>
-    <div :class="$style.bottomSpacer" />
   </div>
 </template>
 
 <script lang="ts">
 import type { ComponentPublicInstance, Ref } from 'vue'
-import { nextTick, onMounted, reactive, shallowRef, watch } from 'vue'
+import { computed, nextTick, onMounted, shallowRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { useEventListener } from '@vueuse/core'
-import { throttle } from 'throttle-debounce'
+import { unrefElement, useEventListener, useResizeObserver } from '@vueuse/core'
+import { debounce, throttle } from 'throttle-debounce'
 
 import { useOpenLink } from '/@/composables/useOpenLink'
+import useResponsive from '/@/composables/useResponsive'
 import { embeddingOrigin } from '/@/lib/apis'
+import { isIOS } from '/@/lib/dom/browser'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
 import { RouteName, isMessageScrollerRoute } from '/@/router'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import type { MessageId } from '/@/types/entity-ids'
 
-import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
+import MessagesSkeleton from './MessagesSkeleton.vue'
+import useMessageScroller from './composables/useMessageScroller'
 import type { LoadingDirection } from './composables/useMessagesFetcher'
 
 export interface MessageScrollerInstance extends ComponentPublicInstance {
-  $el: HTMLDivElement
+  rootRef: HTMLDivElement
 }
 
-const LOAD_MORE_THRESHOLD = 10
+const MIN_THRESHOLD = 1000 // 最小の閾値
+const THRESHOLD_INCREMENT = 1500 // 端に到達するたびに増加させる閾値
+const DECAY_PER_SECOND = 0.6 // 一秒あたりの減衰率
+
+/**
+ * 端に到達するたびに閾値を増加させ、時間経過で減衰する
+ */
+const useDynamicLoadThreshold = () => {
+  let currentThreshold = MIN_THRESHOLD
+  let lastTime = performance.now()
+  let wasNearEdge = false
+
+  const getThreshold = () => currentThreshold
+
+  const update = (top: number, bottom: number) => {
+    const now = performance.now()
+    const deltaSeconds = (now - lastTime) / 1000
+    lastTime = now
+
+    // 端に近いかどうか判定
+    const isNearEdge = top < currentThreshold || bottom < currentThreshold
+
+    // 端に到達したら閾値を増やす
+    if (isNearEdge && !wasNearEdge) {
+      currentThreshold += THRESHOLD_INCREMENT
+    } else {
+      // 時間減衰を適用
+      const decayFactor = Math.pow(DECAY_PER_SECOND, deltaSeconds)
+      currentThreshold = Math.max(
+        MIN_THRESHOLD,
+        MIN_THRESHOLD + (currentThreshold - MIN_THRESHOLD) * decayFactor
+      )
+    }
+
+    wasNearEdge = isNearEdge
+  }
+
+  return { getThreshold, update }
+}
 
 type HTMLElementTargetMouseEvent = MouseEvent & { target: HTMLElement }
 
@@ -162,15 +223,38 @@ const { lastScrollPosition } = useMainViewStore()
 const { stampsMapFetched } = useStampsStore()
 
 const rootRef = shallowRef<HTMLElement | null>(null)
-const state = reactive({
-  height: 0,
-  scrollTop: lastScrollPosition.value,
-  // 古いメッセージを読み込むとき、読み込み開始直後は高さの調整を無効化する
-  skipResizeAdjustment: false
-})
+const topSkeletonRef = shallowRef<ComponentPublicInstance | null>(null)
+const bottomSkeletonRef = shallowRef<ComponentPublicInstance | null>(null)
 
-const { onChangeHeight, onEntryMessageLoaded } =
-  useMessageScrollerElementResizeObserver(rootRef, props, state)
+// スケルトンの高さをキャッシュ（getBoundingClientRectの毎回呼び出しを回避）
+const topSkeletonHeight = shallowRef(0)
+const bottomSkeletonHeight = shallowRef(0)
+
+// ResizeObserverでスケルトン高さを監視
+useResizeObserver(
+  () => topSkeletonRef.value?.$el,
+  entries => {
+    topSkeletonHeight.value =
+      unrefElement(topSkeletonRef)?.getBoundingClientRect().height ?? 0
+  }
+)
+
+useResizeObserver(
+  () => bottomSkeletonRef.value?.$el,
+  entries => {
+    bottomSkeletonHeight.value =
+      unrefElement(bottomSkeletonRef)?.getBoundingClientRect().height ?? 0
+  }
+)
+
+const { isMobile } = useResponsive()
+const enableProactiveLoading = computed(() => !isIOS() && !isMobile.value)
+
+const { onChangeHeight, onEntryMessageLoaded, ready, state } =
+  useMessageScroller(rootRef, props, topSkeletonHeight)
+
+// 初期スクロール位置を設定
+state.scrollTop = lastScrollPosition.value
 
 onMounted(() => {
   // 表示されている
@@ -196,83 +280,38 @@ watch(
   }
 )
 
-watch(
-  () => props.messageIds,
-  (ids, prevIds) => {
-    if (!rootRef.value) return
-    /* state.height の更新を忘れないようにすること */
-
-    const newHeight = rootRef.value.scrollHeight
-    if (
-      props.lastLoadingDirection === 'latest' ||
-      props.lastLoadingDirection === 'former'
-    ) {
-      if (ids.length - prevIds.length === -1) {
-        // 削除された場合は何もしない
-        state.height = newHeight
-        return
-      }
-      // XXX: 追加時にここは0になる
-      if (ids.length - prevIds.length === 0) {
-        const scrollBottom =
-          rootRef.value.scrollTop + rootRef.value.clientHeight
-
-        // 一番下のメッセージあたりを見ているときに、
-        // 新規に一つ追加された場合は一番下までスクロール
-        if (state.height - 50 <= scrollBottom) {
-          rootRef.value.scrollTo({
-            top: newHeight
-          })
-        }
-        state.height = newHeight
-        return
-      }
-      //上に追加された時はスクロール位置を変更する。
-      if (props.lastLoadingDirection === 'former') {
-        // onChangeHeight の調整を一時的に無効化
-        state.skipResizeAdjustment = true
-        rootRef.value.scrollTo({
-          top: newHeight - state.height
-        })
-        state.height = newHeight
-        // 十分に DOMが更新されたら無効化を解除
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            state.skipResizeAdjustment = false
-          })
-        })
-      }
-
-      if (props.lastLoadingDirection === 'latest') {
-        // チャンネルを移動したとき、
-        rootRef.value.scrollTo({
-          top: newHeight
-        })
-        state.height = newHeight
-      }
-    } else state.height = newHeight
-  },
-  { deep: true, flush: 'post' }
-)
+const { getThreshold, update: updateThreshold } = useDynamicLoadThreshold()
 
 const requestLoadMessages = () => {
   if (!rootRef.value) return
-  const { clientHeight, scrollHeight, scrollTop } = rootRef.value
-  state.scrollTop = scrollTop
+  state.scrollTop = rootRef.value.scrollTop
+
+  const top = rootRef.value.scrollTop - topSkeletonHeight.value
+  const bottom =
+    rootRef.value.scrollHeight -
+    (rootRef.value.scrollTop +
+      rootRef.value.clientHeight +
+      bottomSkeletonHeight.value)
+
+  if (enableProactiveLoading.value) {
+    updateThreshold(top, bottom)
+  }
+
+  const threshold = getThreshold()
 
   if (props.isLoading) return
-  if (state.scrollTop < LOAD_MORE_THRESHOLD && !props.isReachedEnd) {
+  if (top < threshold && !props.isReachedEnd) {
     emit('requestLoadFormer')
   }
-  if (
-    scrollHeight - state.scrollTop - clientHeight < LOAD_MORE_THRESHOLD &&
-    !props.isReachedLatest
-  ) {
+  if (bottom < threshold && !props.isReachedLatest) {
     emit('requestLoadLatter')
   }
 }
 
-const handleScroll = throttle(17, requestLoadMessages)
+const handleScroll = (enableProactiveLoading.value ? throttle : debounce)(
+  enableProactiveLoading.value ? 24 : 200,
+  requestLoadMessages
+)
 
 const visibilitychangeListener = () => {
   if (document.visibilityState === 'visible') {
@@ -285,13 +324,21 @@ useEventListener(document, 'visibilitychange', visibilitychangeListener)
 
 const { onClick } = useMarkdownInternalHandler()
 useScrollRestoration(rootRef, state)
+
+defineExpose({ rootRef })
 </script>
 
 <style lang="scss" module>
+.container {
+  height: 100%;
+  position: relative;
+  overflow-y: hidden;
+  padding: 12px 0;
+}
+
 .root {
   height: 100%;
   overflow-y: scroll;
-  padding: 12px 0;
   backface-visibility: hidden;
   contain: var(--contain-strict);
   // overflow-anchorはデフォルトでautoだが、Safariが対応していないので、
@@ -299,6 +346,8 @@ useScrollRestoration(rootRef, state)
   overflow-anchor: none;
   // iOSで無限にロードが走るのを防止する
   -webkit-overflow-scrolling: auto;
+  // scroll-behavior: auto;
+  overscroll-behavior: none;
 }
 
 .viewport {
@@ -320,5 +369,27 @@ useScrollRestoration(rootRef, state)
 
 .noMoreSeparator {
   @include color-ui-secondary;
+}
+
+.skeleton {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease-in;
+  margin-bottom: 24px;
+
+  &.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.edgeSkeleton {
+  flex-shrink: 0;
 }
 </style>

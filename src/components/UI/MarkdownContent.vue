@@ -10,6 +10,8 @@
 <script lang="ts" setup>
 import { createVNode, onMounted, ref, render, watch } from 'vue'
 
+import { defer } from '/@/lib/basic/timer'
+
 import FoldableCodeBlock from './FoldableCodeBlock.vue'
 
 const props = defineProps<{
@@ -20,7 +22,7 @@ const contentRef = ref<HTMLElement>()
 
 const foldWrapClass = 'fold-wrap'
 
-const applyFoldCodeBlock = () => {
+const applyFoldableCodeBlock = () => {
   const content = contentRef.value
   if (content === undefined) return
 
@@ -40,18 +42,8 @@ const applyFoldCodeBlock = () => {
   })
 }
 
-onMounted(() => {
-  applyFoldCodeBlock()
-})
-watch(
-  () => props.content,
-  () => {
-    applyFoldCodeBlock()
-  },
-  {
-    flush: 'post'
-  }
-)
+onMounted(() => defer(applyFoldableCodeBlock))
+watch(() => props.content, applyFoldableCodeBlock, { flush: 'post' })
 </script>
 
 <style lang="scss" module>
