@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, ref, shallowRef } from 'vue'
+import { computed, nextTick, ref, shallowRef, watch } from 'vue'
 
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
 import MessagesScroller, {
@@ -29,9 +29,21 @@ const {
   isReachedLatest,
   isLoading,
   lastLoadingDirection,
+  markMessageReady,
+  isBatchReady,
+  lastCompletedBatchId,
   onLoadFormerMessagesRequest,
   onLoadLatterMessagesRequest
 } = useChannelMessageFetcher(scrollerRef, props)
+
+watch(
+  lastCompletedBatchId,
+  async () => {
+    await nextTick()
+    scrollerRef.value?.adjustScroll()
+  },
+  { flush: 'post' }
+)
 
 const { channelsMap } = useChannelsStore()
 const isArchived = computed(
@@ -103,13 +115,19 @@ const handleScroll = () => {
               <template
                 #default="{ messageId, onChangeHeight, onEntryMessageLoaded }"
               >
-                <MessageElement
-                  :class="$style.element"
-                  :message-id="messageId"
-                  :is-archived="isArchived"
-                  @change-height="onChangeHeight"
-                  @entry-message-loaded="onEntryMessageLoaded"
-                />
+                <div
+                  :class="$style.batch"
+                  :data-is-ready="$boolAttr(isBatchReady(messageId))"
+                >
+                  <MessageElement
+                    :class="$style.element"
+                    :message-id="messageId"
+                    :is-archived="isArchived"
+                    @change-height="onChangeHeight"
+                    @entry-message-loaded="onEntryMessageLoaded"
+                    @message-ready="markMessageReady"
+                  />
+                </div>
               </template>
             </MessagesScroller>
           </div>
@@ -211,6 +229,13 @@ const handleScroll = () => {
 .element {
   margin: 4px 0;
   contain: content;
+}
+
+.batch {
+  &:not([data-is-ready]) {
+    visibility: hidden;
+    position: absolute;
+  }
 }
 
 .toggleButton {

@@ -6,6 +6,8 @@
       :title="ogpData.title"
       :description="ogpData.description"
       :preview-url="imageUrl"
+      :preview-width="imageWidth"
+      :preview-height="imageHeight"
       :embedded-url="videoUrl"
     />
     <MessageOgpContentWebsite
@@ -14,6 +16,8 @@
       :title="ogpData.title"
       :description="ogpData.description"
       :image-url="imageUrl"
+      :image-width="imageWidth"
+      :image-height="imageHeight"
     />
   </div>
 </template>
@@ -36,6 +40,10 @@ const imageUrl = computed(() => {
   const item = props.ogpData.images[0]
   return ifIsHttps(item?.secureUrl ?? item?.url)
 })
+
+const imageHeight = computed(() => props.ogpData.images[0]?.height ?? undefined)
+const imageWidth = computed(() => props.ogpData.images[0]?.width ?? undefined)
+
 const videoUrl = computed(() => {
   const item = props.ogpData.videos[0]
   return ifIsHttps(item?.secureUrl ?? item?.url)

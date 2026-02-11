@@ -40,7 +40,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef, toRef } from 'vue'
+import {
+  computed,
+  nextTick,
+  onMounted,
+  ref,
+  shallowRef,
+  toRef,
+  watch
+} from 'vue'
 
 import MessageTools, {
   useMessageToolsHover
@@ -55,8 +63,10 @@ import type { MessageId, UserId } from '/@/types/entity-ids'
 import MessageContents from './MessageContents.vue'
 import MessagePinned from './MessagePinned.vue'
 import MessageStampList from './MessageStampList.vue'
-import type { ChangeHeightData } from './composables/useElementRenderObserver'
-import useElementRenderObserver from './composables/useElementRenderObserver'
+import useElementRenderObserver, {
+  type ChangeHeightData
+} from './composables/useElementRenderObserver'
+import { provideMessageReady } from './composables/useMessageReady'
 
 const props = withDefaults(
   defineProps<{
@@ -74,11 +84,30 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'entryMessageLoaded', _relativePos: number): void
   (e: 'changeHeight', _data: ChangeHeightData): void
+  (e: 'messageReady', _messageId: MessageId): void
 }>()
 
 const isActive = ref(false)
-
 const bodyRef = shallowRef<HTMLDivElement | null>(null)
+const { waitAll } = provideMessageReady()
+
+onMounted(async () => {
+  await new Promise<void>(resolve => {
+    if (bodyRef.value) return resolve()
+    const stop = watch(bodyRef, val => {
+      if (val) {
+        stop()
+        resolve()
+      }
+    })
+  })
+
+  await waitAll()
+  await nextTick()
+
+  emit('messageReady', props.messageId)
+})
+
 const { isMobile } = useResponsive()
 const { messagesMap } = useMessagesStore()
 const message = computed(() => messagesMap.value.get(props.messageId))
