@@ -56,7 +56,6 @@
     <div :class="$style.slot">
       <ChannelElementTopic
         v-if="showTopic"
-        :class="$style.topic"
         :channel-id="channel.id"
       />
       <slot />
@@ -223,13 +222,6 @@ $bgLeftShift: 8px;
   cursor: pointer;
   position: absolute;
   left: 0;
-}
-.topic {
-  // 32px (icon width + gap) + 8px (margin-left)
-  margin-left: 40px; 
-  margin-right: 4px;
-  margin-bottom: 4px;
-  opacity: 0.8;
 }
 
 .selectedBg {

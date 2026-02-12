@@ -11,7 +11,6 @@
     >
       <ChannelElementTopic
         v-if="showTopic"
-        :class="$style.topic"
         :channel-id="channel.id"
       />
     </ChannelElement>
@@ -51,8 +50,4 @@ const channelTreeNodes = computed((): ChannelTreeNode[] =>
   margin: 4px 0;
 }
 
-.topic {
-  margin-left: 40px;
-  margin-right: 8px;
-}
 </style>
