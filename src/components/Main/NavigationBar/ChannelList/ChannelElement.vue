@@ -4,6 +4,7 @@
     :data-is-selected="$boolAttr(isSelected)"
     :data-is-inactive="$boolAttr(!channel.active)"
   >
+    <!-- チャンネル表示本体 -->
     <div :class="$style.channelContainer" :data-is-topic-shown="$boolAttr(showTopic)">
       <ChannelElementIcon
         :class="$style.channelIcon"
@@ -62,6 +63,7 @@
       <slot />
     </div>
 
+    <!-- チャンネルの背景 -->
     <div
       v-if="isSelected || isChannelBgHovered || isFocused"
       :class="$style.selectedBg"
