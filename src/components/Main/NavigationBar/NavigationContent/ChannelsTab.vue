@@ -19,6 +19,7 @@
             v-if="query.length > 0"
             :channels="filteredChannelTree"
             show-topic
+            show-shortened-path
           />
           <template v-else-if="filterStarChannel">
             <template v-if="staredChannels.length > 0">

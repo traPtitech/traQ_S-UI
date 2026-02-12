@@ -44,7 +44,8 @@ const channelNameSortFunction = (
 export const constructTree = (
   channel: ChannelLike,
   channelEntities: Map<ChannelId, ChannelLike>,
-  subscribedChannels?: Set<ChannelId>
+  subscribedChannels?: Set<ChannelId>,
+  shouldSort = true
 ): ChannelTreeNode | undefined => {
   const isRootChannel = channel.id === rootChannelId
   const isSubscribed =
@@ -76,8 +77,11 @@ export const constructTree = (
       }
       return []
     })
-    .sort(channelNameSortFunction)
   const unarchivedChildren = children.filter(child => !child.archived)
+
+  if (shouldSort) {
+    children.sort(channelNameSortFunction)
+  }
 
   if (unarchivedChildren.length === 0 && !isSubscribed) {
     // 購読しておらず子もいなければ表示しない
@@ -116,7 +120,9 @@ export const constructTreeFromIds = (
       archived: false,
       children: channelIds
     },
-    channelEntities
+    channelEntities,
+    undefined,
+    false
   )
   return treeWithDummyRoot?.children ?? []
 }
