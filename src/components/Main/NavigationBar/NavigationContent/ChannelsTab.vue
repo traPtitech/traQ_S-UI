@@ -15,9 +15,9 @@
           :stared-panel-id="staredPanelId"
         />
         <template v-if="topLevelChannels.length > 0">
-          <ChannelList
+          <ChannelTreeComponent
             v-if="query.length > 0"
-            :channels="filteredChannels"
+            :channels="filteredChannelTree"
             show-topic
           />
           <template v-else-if="filterStarChannel">
@@ -64,8 +64,7 @@ import EmptyState from '/@/components/UI/EmptyState.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { randomString } from '/@/lib/basic/randomString'
 import { filterTrees } from '/@/lib/basic/tree'
-import type { ChannelTreeNode } from '/@/lib/channelTree'
-import { constructTreeFromIds } from '/@/lib/channelTree'
+import { type ChannelTreeNode, constructTreeFromIds } from '/@/lib/channelTree'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
@@ -129,6 +128,15 @@ const channelListForFilter = computed(() =>
   [...channelsMap.value.values()].filter(channel => !channel.archived)
 )
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
+
+const filteredChannelTree = computed(() => {
+  const filteredIds = new Set(filteredChannels.value.map(c => c.id))
+  const rootIds = filteredChannels.value
+    .filter(c => c.parentId === null || !filteredIds.has(c.parentId))
+    .map(c => c.id)
+
+  return constructTreeFromIds(rootIds, channelsMap.value)
+})
 
 const onClickButton = () => {
   pushModal({

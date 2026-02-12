@@ -4,8 +4,7 @@
     :data-is-selected="$boolAttr(isSelected)"
     :data-is-inactive="$boolAttr(!channel.active)"
   >
-    <!-- チャンネル表示本体 -->
-    <div :class="$style.channelContainer">
+    <div :class="$style.channelContainer" :data-is-topic-shown="$boolAttr(showTopic)">
       <ChannelElementIcon
         :class="$style.channelIcon"
         :has-child="hasChildren"
@@ -46,6 +45,7 @@
             :is-selected="isSelected"
           />
           <ChannelElementUnreadBadge
+            :class="$style.unreadBadge"
             :is-noticeable="notificationState.isNoticeable"
             :unread-count="notificationState.unreadCount"
           />
@@ -54,10 +54,14 @@
     </div>
 
     <div :class="$style.slot">
+      <ChannelElementTopic
+        v-if="showTopic"
+        :class="$style.topic"
+        :channel-id="channel.id"
+      />
       <slot />
     </div>
 
-    <!-- チャンネルの背景 -->
     <div
       v-if="isSelected || isChannelBgHovered || isFocused"
       :class="$style.selectedBg"
@@ -88,6 +92,7 @@ import type { ChannelId } from '/@/types/entity-ids'
 import useNotificationState from '../composables/useNotificationState'
 import ChannelElementIcon from './ChannelElementIcon.vue'
 import ChannelElementName from './ChannelElementName.vue'
+import ChannelElementTopic from './ChannelElementTopic.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 
 const props = withDefaults(
@@ -95,12 +100,14 @@ const props = withDefaults(
     channel: ChannelTreeNode
     isOpened?: boolean
     showShortenedPath?: boolean
+    showTopic?: boolean
     showStar?: boolean
     showNotified?: boolean
   }>(),
   {
     isOpened: false,
-    showShortenedPath: false
+    showShortenedPath: false,
+    showTopic: false
   }
 )
 
@@ -216,6 +223,18 @@ $bgLeftShift: 8px;
   position: absolute;
   left: 0;
 }
+.topic {
+  // 32px (icon width + gap) + 8px (margin-left)
+  margin-left: 40px; 
+  margin-right: 4px;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+.unreadBadge {
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
 .selectedBg {
   position: absolute;
   width: calc(100% + #{$bgLeftShift});
