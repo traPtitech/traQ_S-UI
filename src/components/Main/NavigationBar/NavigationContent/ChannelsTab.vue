@@ -136,7 +136,10 @@ const filteredChannelTree = computed(() => {
     .filter(c => c.parentId === null || !filteredIds.has(c.parentId))
     .map(c => c.id)
 
-  return constructTreeFromIds(rootIds, channelsMap.value)
+  return filterTrees(
+    constructTreeFromIds(rootIds, channelsMap.value),
+    channel => !channel.archived
+  )
 })
 
 const onClickButton = () => {
