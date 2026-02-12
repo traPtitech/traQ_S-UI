@@ -31,7 +31,6 @@ const topic = computed(
   margin-left: 40px;
   margin-right: 8px;
   margin-bottom: 4px;
-  opacity: 0.8;
   cursor: pointer;
 }
 </style>
