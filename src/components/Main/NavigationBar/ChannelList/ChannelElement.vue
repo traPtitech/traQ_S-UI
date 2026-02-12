@@ -46,7 +46,6 @@
             :is-selected="isSelected"
           />
           <ChannelElementUnreadBadge
-            :class="$style.unreadBadge"
             :is-noticeable="notificationState.isNoticeable"
             :unread-count="notificationState.unreadCount"
           />
@@ -231,10 +230,6 @@ $bgLeftShift: 8px;
   margin-right: 4px;
   margin-bottom: 4px;
   opacity: 0.8;
-}
-.unreadBadge {
-  flex-shrink: 0;
-  margin-left: 4px;
 }
 
 .selectedBg {
