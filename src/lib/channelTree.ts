@@ -65,18 +65,17 @@ export const constructTree = (
   }
 
   /** 表示しないものをフィルタした子孫チャンネル */
-  const children = channel.children
-    .flatMap(id => {
-      const child = channelEntities.get(id)
-      if (!child) {
-        return []
-      }
-      const result = constructTree(child, channelEntities, subscribedChannels)
-      if (result) {
-        return [result]
-      }
+  const children = channel.children.flatMap(id => {
+    const child = channelEntities.get(id)
+    if (!child) {
       return []
-    })
+    }
+    const result = constructTree(child, channelEntities, subscribedChannels)
+    if (result) {
+      return [result]
+    }
+    return []
+  })
   const unarchivedChildren = children.filter(child => !child.archived)
 
   if (shouldSort) {

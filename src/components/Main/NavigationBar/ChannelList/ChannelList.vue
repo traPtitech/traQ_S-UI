@@ -9,10 +9,7 @@
       :show-star="props.showStar"
       :show-notified="props.showNotified"
     >
-      <ChannelElementTopic
-        v-if="showTopic"
-        :channel-id="channel.id"
-      />
+      <ChannelElementTopic v-if="showTopic" :channel-id="channel.id" />
     </ChannelElement>
   </div>
 </template>
@@ -49,5 +46,4 @@ const channelTreeNodes = computed((): ChannelTreeNode[] =>
 .element {
   margin: 4px 0;
 }
-
 </style>

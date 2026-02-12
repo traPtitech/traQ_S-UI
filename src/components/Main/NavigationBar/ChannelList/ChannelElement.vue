@@ -5,7 +5,10 @@
     :data-is-inactive="$boolAttr(!channel.active)"
   >
     <!-- チャンネル表示本体 -->
-    <div :class="$style.channelContainer" :data-is-topic-shown="$boolAttr(showTopic)">
+    <div
+      :class="$style.channelContainer"
+      :data-is-topic-shown="$boolAttr(showTopic)"
+    >
       <ChannelElementIcon
         :class="$style.channelIcon"
         :has-child="hasChildren"
@@ -54,10 +57,7 @@
     </div>
 
     <div :class="$style.slot">
-      <ChannelElementTopic
-        v-if="showTopic"
-        :channel-id="channel.id"
-      />
+      <ChannelElementTopic v-if="showTopic" :channel-id="channel.id" />
       <slot />
     </div>
 
