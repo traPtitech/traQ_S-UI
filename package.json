@@ -32,7 +32,7 @@
     "@sapphi-red/web-noise-suppressor": "^0.3.5",
     "@shiguredo/virtual-background": "^2023.2.0",
     "@traptitech/traq": "^3.26.1-1",
-    "@traptitech/traq-markdown-it": "^7.0.2",
+    "@traptitech/traq-markdown-it": "^7.1.0",
     "@vueuse/core": "^14.1.0",
     "autosize": "^6.0.1",
     "browser-image-compression": "^2.0.2",
