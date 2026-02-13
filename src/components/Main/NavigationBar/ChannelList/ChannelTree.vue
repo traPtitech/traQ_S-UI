@@ -14,7 +14,7 @@
         <channel-tree
           :class="$style.children"
           :channels="channel.children"
-          :show-topic="showTopic"
+          :show-topic="showTopic && !preventChildTopic"
         />
       </SlideDown>
     </ChannelElement>
@@ -34,11 +34,13 @@ interface Props extends /* @vue-ignore */ HTMLAttributes {
   channels: ReadonlyArray<ChannelTreeNode>
   showShortenedPath?: boolean
   showTopic?: boolean
+  preventChildTopic?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   showShortenedPath: false,
-  showTopic: false
+  showTopic: false,
+  preventChildTopic: false
 })
 
 const childrenShownChannels = ref(new Set<ChannelId>())

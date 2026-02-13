@@ -20,6 +20,7 @@
             :channels="filteredChannelTree"
             show-topic
             show-shortened-path
+            prevent-child-topic
           />
           <template v-else-if="filterStarChannel">
             <template v-if="staredChannels.length > 0">
