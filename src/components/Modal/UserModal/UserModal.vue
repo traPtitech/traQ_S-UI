@@ -13,7 +13,7 @@
       <UserIcon
         v-if="!isMobile"
         :user-id="id"
-        prevent-modal
+        :prevent-modal="false"
         :class="$style.icon"
         :style="styles.icon"
       />
@@ -139,4 +139,9 @@ const isThisMyProfile = computed(() => props.id === myId.value)
   margin: auto;
   border: 6px solid $theme-background-secondary-border;
 }
+
+.icon[role='button'] {
+  cursor: default;
+}
+
 </style>
