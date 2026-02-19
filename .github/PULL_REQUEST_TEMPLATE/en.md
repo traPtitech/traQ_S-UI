@@ -8,9 +8,9 @@
 
 ## ScreenShots of UI Changes
 
-|Before|After|
-|------|-----|
-|<!-- Paste image -->|<!-- Paste image -->|
+| Before               | After                |
+| -------------------- | -------------------- |
+| <!-- Paste image --> | <!-- Paste image --> |
 
 ## Pre-PR Check-List
 
