@@ -8,9 +8,9 @@
 
 ## UI 変更部分のスクリーンショット
 
-### before
-
-### after
+|Before|After|
+|------|-----|
+|<!-- Paste image -->|<!-- Paste image -->|
 
 ## PR を出す前の確認事項
 
