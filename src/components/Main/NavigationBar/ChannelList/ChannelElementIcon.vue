@@ -15,14 +15,19 @@
     @mouseleave="onIconHoveredLeave"
   >
     <div
-      :class="$style.hash"
+      :class="$style.channelIconWrapper"
       :data-container-type="hasChild ? 'parent' : 'leaf'"
       :data-is-opened="$boolAttr(hasChild && isOpened)"
       :data-is-selected="$boolAttr(isSelected)"
       :data-has-notification-on-child="$boolAttr(hasNotificationOnChild)"
       :data-is-inactive="$boolAttr(isInactive)"
     >
-      <AIcon :name="iconName" :class="$style.icon" />
+      <AIcon
+        :name="iconName"
+        :class="$style.icon"
+        :mdi="$props.isIconMdi"
+        :size="iconSize"
+      />
     </div>
     <div v-if="hasNotification" :class="$style.indicator">
       <NotificationIndicator :border-width="2" />
@@ -40,15 +45,18 @@ const props = withDefaults(
     isSelected?: boolean
     isInactive?: boolean
     isOpened?: boolean
+    isIconMdi?: boolean
     hasNotification?: boolean
     hasNotificationOnChild?: boolean
-    iconName?: 'hash' | 'star-outline' | 'notified'
+    iconName?: 'hash' | 'star-outline' | 'notified' | 'archive'
+    iconSize?: number
   }>(),
   {
     hasChild: false,
     isSelected: false,
     isInactive: false,
     isOpened: false,
+    isIconMdi: false,
     hasNotification: false,
     hasNotificationOnChild: false,
     iconName: 'hash'
@@ -87,7 +95,7 @@ const onIconHoveredLeave = () => {
   width: 32px;
   height: 32px;
 }
-.hash {
+.channelIconWrapper {
   border: {
     width: 2px;
     style: solid;
@@ -98,6 +106,7 @@ const onIconHoveredLeave = () => {
   height: 22px;
   display: flex;
   align-items: center;
+  justify-content: center;
   box-sizing: content-box;
   cursor: pointer;
   position: relative;

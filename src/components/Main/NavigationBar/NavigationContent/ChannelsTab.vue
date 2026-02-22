@@ -7,7 +7,15 @@
         </button>
       </template>
       <template #default>
-        <ChannelFilter v-model="query" :class="$style.filter" />
+        <div :class="$style.filterContainer">
+          <ChannelFilter v-model="query" :class="$style.filter" />
+          <ToggleButton
+            v-model="showArchivedChannels"
+            icon-name="archive"
+            icon-mdi
+            title="アーカイブされたチャンネルを表示する"
+          />
+        </div>
         <ChannelListSelector
           v-if="query.length === 0"
           v-model:is-starred="filterStarChannel"
@@ -77,6 +85,7 @@ import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import ChannelList from '../ChannelList/ChannelList.vue'
 import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
 import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
+import ToggleButton from './ToggleButton.vue'
 import useChannelFilter from './composables/useChannelFilter'
 
 const { pushModal } = useModalStore()
@@ -85,12 +94,20 @@ const { staredChannelSet } = useStaredChannels()
 const { channelsMap } = useChannelsStore()
 const { channelIdToPathString } = useChannelPath()
 
+const { showArchivedChannels, filterStarChannel } = useBrowserSettings()
+
 // filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
 const topLevelChannels = computed(() =>
-  filterTrees(toRaw(channelTree.value.children), channel => !channel.archived)
+  filterTrees(
+    toRaw(channelTree.value.children),
+    channel => showArchivedChannels.value || !channel.archived
+  )
 )
 const starredTopLevelChannels = computed(() =>
-  filterTrees(toRaw(starredChannelTree.value.children), node => !node.archived)
+  filterTrees(
+    toRaw(starredChannelTree.value.children),
+    node => showArchivedChannels.value || !node.archived
+  )
 )
 
 const staredChannels = computed(() => {
@@ -99,7 +116,10 @@ const staredChannels = computed(() => {
     channelsMap.value
   )
   const sortedTrees = sortChannelTree(trees)
-  return filterTrees(sortedTrees, channel => !channel.archived)
+  return filterTrees(
+    sortedTrees,
+    channel => showArchivedChannels.value || !channel.archived
+  )
 })
 
 const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
@@ -124,9 +144,10 @@ const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
 
 const { featureFlags } = useFeatureFlagSettings()
 
-const { filterStarChannel } = useBrowserSettings()
 const channelListForFilter = computed(() =>
-  [...channelsMap.value.values()].filter(channel => !channel.archived)
+  [...channelsMap.value.values()].filter(
+    channel => showArchivedChannels.value || !channel.archived
+  )
 )
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
 
@@ -141,8 +162,15 @@ const staredPanelId = randomString()
 </script>
 
 <style lang="scss" module>
+.filterContainer {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+}
 .filter {
-  margin-bottom: 16px;
+  flex: 1;
 }
 .button {
   @include color-ui-secondary-inactive;

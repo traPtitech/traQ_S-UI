@@ -26,6 +26,7 @@ type State = {
   prioritizeNotifiedChannel: boolean
   activityMode: ActivityMode
   filterStarChannel: boolean
+  showArchivedChannels: boolean
 }
 
 export const sendKeys = ['modifier', 'none'] as const
@@ -70,7 +71,8 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     prioritizeStarredChannel: true,
     prioritizeNotifiedChannel: true,
     activityMode: { all: false, perChannel: false },
-    filterStarChannel: false
+    filterStarChannel: false,
+    showArchivedChannels: false
   }
 
   const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
