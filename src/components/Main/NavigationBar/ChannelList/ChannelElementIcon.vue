@@ -22,7 +22,12 @@
       :data-has-notification-on-child="$boolAttr(hasNotificationOnChild)"
       :data-is-inactive="$boolAttr(isInactive)"
     >
-      <AIcon :name="iconName" :class="$style.icon" :mdi="$props.isIconMdi" :size="iconSize"/>
+      <AIcon
+        :name="iconName"
+        :class="$style.icon"
+        :mdi="$props.isIconMdi"
+        :size="iconSize"
+      />
     </div>
     <div v-if="hasNotification" :class="$style.indicator">
       <NotificationIndicator :border-width="2" />
