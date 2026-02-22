@@ -87,8 +87,7 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
   const { isStampSetValid } = useStampSetSelector()
   const ensureCurrentStampSetValid = () => {
     if (isStampSetValid(currentStampSet.value)) return
-    currentStampSet.value.type = 'recommendation'
-    currentStampSet.value.id = ''
+    currentStampSet.value = { type: 'recommendation', id: '' }
   }
 
   const isEffectEnabled = ref(false)
