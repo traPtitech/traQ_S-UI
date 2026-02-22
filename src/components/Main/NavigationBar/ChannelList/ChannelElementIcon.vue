@@ -15,7 +15,7 @@
     @mouseleave="onIconHoveredLeave"
   >
     <div
-      :class="$style.channelIconRapper"
+      :class="$style.channelIconWrapper"
       :data-container-type="hasChild ? 'parent' : 'leaf'"
       :data-is-opened="$boolAttr(hasChild && isOpened)"
       :data-is-selected="$boolAttr(isSelected)"
@@ -45,7 +45,7 @@ const props = withDefaults(
     isSelected?: boolean
     isInactive?: boolean
     isOpened?: boolean
-    isIconMdi: boolean
+    isIconMdi?: boolean
     hasNotification?: boolean
     hasNotificationOnChild?: boolean
     iconName?: 'hash' | 'star-outline' | 'notified' | 'archive'
@@ -56,6 +56,7 @@ const props = withDefaults(
     isSelected: false,
     isInactive: false,
     isOpened: false,
+    isIconMdi: false,
     hasNotification: false,
     hasNotificationOnChild: false,
     iconName: 'hash'
@@ -94,7 +95,7 @@ const onIconHoveredLeave = () => {
   width: 32px;
   height: 32px;
 }
-.channelIconRapper {
+.channelIconWrapper {
   border: {
     width: 2px;
     style: solid;
