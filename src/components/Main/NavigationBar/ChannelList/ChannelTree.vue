@@ -4,7 +4,7 @@
       v-for="channel in channels"
       :key="channel.id"
       :class="$style.element"
-      :channel="channel"
+      :channel-or-clip-folder="channel"
       :is-opened="childrenShownChannels.has(channel.id)"
       :show-shortened-path="showShortenedPath"
       @click-hash="toggleChildren"

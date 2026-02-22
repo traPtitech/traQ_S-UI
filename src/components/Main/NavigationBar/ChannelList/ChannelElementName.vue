@@ -28,14 +28,14 @@ import { computed } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import { useQall } from '/@/composables/qall/useQall'
-import type { ChannelTreeNode } from '/@/lib/channelTree'
+import { type TreeNode, isClipFolderNode } from '/@/lib/channelTree'
 
 import type { TypedProps } from './composables/usePath'
 import { usePath } from './composables/usePath'
 
 const props = withDefaults(
   defineProps<{
-    channel: ChannelTreeNode | Channel
+    channelOrClipFolder: TreeNode | Channel
     showShortenedPath: boolean
     isSelected?: boolean
   }>(),
@@ -48,12 +48,19 @@ const typedProps = props as TypedProps
 
 const { pathToShow, pathTooltip } = usePath(typedProps)
 const { rooms } = useQall()
-const qallUserIds = computed(
-  () =>
+const qallUserIds = computed(() => {
+  if (
+    'type' in props.channelOrClipFolder &&
+    isClipFolderNode(props.channelOrClipFolder)
+  ) {
+    return []
+  }
+  return (
     rooms.value
-      .find(room => room.channel.id === props.channel.id)
+      .find(room => room.channel.id === props.channelOrClipFolder.id)
       ?.participants.map(participant => participant.user.id) ?? []
-)
+  )
+})
 </script>
 
 <style lang="scss" module>

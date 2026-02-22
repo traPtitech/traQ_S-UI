@@ -1,6 +1,9 @@
 <template>
   <div :class="$style.container">
-    <NavigationContentContainer subtitle="クリップフォルダ">
+    <NavigationContentContainer
+      subtitle="クリップフォルダ"
+      :class="$style.item"
+    >
       <template #control>
         <button :class="$style.button" @click="onClickButton">
           <AIcon :size="20" mdi name="plus-circle-outline" />
@@ -8,12 +11,7 @@
       </template>
       <template #default>
         <template v-if="sortedClipFolders.length > 0">
-          <ClipFoldersElement
-            v-for="clipFolder in sortedClipFolders"
-            :key="clipFolder.id"
-            :clip-folder="clipFolder"
-            :class="$style.element"
-          />
+          <ChannelList :channels-or-clip-folders="sortedClipFolders" is-clip />
         </template>
         <EmptyState v-else> クリップフォルダがありません </EmptyState>
       </template>
@@ -22,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import ClipFoldersElement from '/@/components/Main/NavigationBar/NavigationContent/ClipFoldersElement.vue'
+import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
@@ -41,17 +39,24 @@ const onClickButton = () => {
 
 <style lang="scss" module>
 .container {
-  padding: 0 16px 0 0;
-}
-.element {
-  margin: 8px 0;
+  padding: 0 8px 0 0;
 }
 .button {
   @include color-ui-secondary-inactive;
   cursor: pointer;
+  padding-left: 16px;
   &:hover,
   &:focus {
     @include color-ui-secondary;
+  }
+}
+.item {
+  margin: 16px 0;
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
   }
 }
 </style>
