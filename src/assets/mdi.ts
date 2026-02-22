@@ -33,6 +33,7 @@ import {
   mdiCommentQuote,
   mdiCommentTextMultipleOutline,
   mdiContentCopy,
+  mdiCreation,
   mdiCrown,
   mdiDelete,
   mdiDotsHorizontal,
@@ -193,7 +194,8 @@ const mdi: MdiIconsMapping = {
   'comment-outline': mdiCommentTextMultipleOutline,
   'comment-off-outline': mdiCommentOffOutline,
   'palette-outline': mdiPaletteOutline,
-  'content-copy': mdiContentCopy
+  'content-copy': mdiContentCopy,
+  creation: mdiCreation
 }
 
 export default mdi

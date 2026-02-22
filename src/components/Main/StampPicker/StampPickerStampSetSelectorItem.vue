@@ -18,9 +18,9 @@
       :class="$style.icon"
     />
     <AIcon
-      v-else-if="stampSet.type === 'history'"
+      v-else-if="stampSet.type === 'recommendation'"
       mdi
-      name="history"
+      name="creation"
       :size="24"
       :class="$style.icon"
     />
