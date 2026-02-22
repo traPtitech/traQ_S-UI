@@ -14,9 +14,6 @@
           :all-panel-id="allPanelId"
           :stared-panel-id="staredPanelId"
         />
-        <ChannelListArchivedToggle
-          v-model:show-archived="showArchivedChannels"
-        />
         <template v-if="topLevelChannels.length > 0">
           <ChannelList
             v-if="query.length > 0"
@@ -78,7 +75,6 @@ import { useModalStore } from '/@/store/ui/modal'
 
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import ChannelList from '../ChannelList/ChannelList.vue'
-import ChannelListArchivedToggle from '../ChannelList/ChannelListArchivedToggle.vue'
 import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
 import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
 import useChannelFilter from './composables/useChannelFilter'
