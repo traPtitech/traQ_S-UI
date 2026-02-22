@@ -3,8 +3,6 @@ import { computed, ref } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import apis from '/@/lib/apis'
-import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
-import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { StampId } from '/@/types/entity-ids'
@@ -68,20 +66,6 @@ const useStampRecommendationsPinia = defineStore(
 export const useStampRecommendations = convertToRefsStore(
   useStampRecommendationsPinia
 )
-
-export const useTopStampIds = () => {
-  const { featureFlags } = useFeatureFlagSettings()
-  const { stampRecommendations } = useStampRecommendations()
-  const { recentStampIds } = useStampHistory()
-
-  const topStampIds = computed(() =>
-    featureFlags.value.stamp_recommendation.enabled
-      ? stampRecommendations.value
-      : recentStampIds.value
-  )
-
-  return { topStampIds }
-}
 
 if (import.meta.hot) {
   import.meta.hot.accept(

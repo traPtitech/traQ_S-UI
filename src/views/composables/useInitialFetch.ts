@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 
 import { useRoomsStore } from '/@/store/domain/rooms'
-import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
@@ -24,7 +23,6 @@ const useInitialFetch_ = () => {
   const { fetchClipFolders } = useClipFoldersStore()
   const { fetchUnreadChannels, fetchSubscriptions } = useSubscriptionStore()
   const { fetchViewStates } = useViewStatesStore()
-  const { fetchStampHistory } = useStampHistory()
   const { fetchStampRecommendations } = useStampRecommendations()
   const { fetchStaredChannels } = useStaredChannels()
   const { fetchRooms } = useRoomsStore()
@@ -40,7 +38,6 @@ const useInitialFetch_ = () => {
     fetchSubscriptions()
     fetchViewStates()
 
-    fetchStampHistory()
     fetchStampRecommendations()
     fetchStampPalettes()
 
