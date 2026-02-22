@@ -55,6 +55,7 @@ const checkMatchChannel = (
   channel: ChannelLike,
   query: string
 ): CheckResult => {
+  if (query === '*') return 'perfect'
   if (channel.name.toLowerCase() === query.toLowerCase()) return 'perfect'
   if (channel.name.toLowerCase().includes(query.toLowerCase())) return 'match'
   return 'none'
