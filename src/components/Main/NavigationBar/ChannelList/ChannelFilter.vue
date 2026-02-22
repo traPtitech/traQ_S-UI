@@ -1,13 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.input">
-      <FilterInput
-        v-model="modelValue"
-        on-secondary
-        disable-ime
-        focus-on-mount
-      />
-    </div>
+    <FilterInput v-model="modelValue" on-secondary disable-ime focus-on-mount />
   </div>
 </template>
 
@@ -20,8 +13,5 @@ const modelValue = defineModel<string>({ required: true })
 <style lang="scss" module>
 .container {
   align-items: center;
-}
-.input {
-  margin-right: 16px;
 }
 </style>

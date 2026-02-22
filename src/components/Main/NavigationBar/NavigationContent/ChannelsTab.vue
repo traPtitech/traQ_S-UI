@@ -7,7 +7,15 @@
         </button>
       </template>
       <template #default>
-        <ChannelFilter v-model="query" :class="$style.filter" />
+        <div :class="$style.filterContainer">
+          <ChannelFilter v-model="query" :class="$style.filter" />
+          <ToggleButton
+            v-model="showArchivedChannels"
+            icon-name="archive"
+            icon-mdi
+            title="アーカイブされたチャンネルを表示する"
+          />
+        </div>
         <ChannelListSelector
           v-if="query.length === 0"
           v-model:is-starred="filterStarChannel"
@@ -77,6 +85,7 @@ import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import ChannelList from '../ChannelList/ChannelList.vue'
 import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
 import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
+import ToggleButton from './ToggleButton.vue'
 import useChannelFilter from './composables/useChannelFilter'
 
 const { pushModal } = useModalStore()
@@ -136,7 +145,9 @@ const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
 const { featureFlags } = useFeatureFlagSettings()
 
 const channelListForFilter = computed(() =>
-  [...channelsMap.value.values()].filter(channel => !channel.archived)
+  [...channelsMap.value.values()].filter(
+    channel => showArchivedChannels.value || !channel.archived
+  )
 )
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
 
@@ -151,8 +162,15 @@ const staredPanelId = randomString()
 </script>
 
 <style lang="scss" module>
+.filterContainer {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+}
 .filter {
-  margin-bottom: 16px;
+  flex: 1;
 }
 .button {
   @include color-ui-secondary-inactive;
