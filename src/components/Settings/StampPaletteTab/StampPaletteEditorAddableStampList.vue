@@ -58,8 +58,8 @@ const currentStampIds = defineModel<StampId[]>('current-stamp-ids', {
 })
 
 const { stampsMap, stampsMapFetched } = useStampsStore()
-const { fetchStampRecommendations } = useStampRecommendations()
-const { stampRecommendations } = useStampRecommendations()
+const { stampRecommendations, fetchStampRecommendations } =
+  useStampRecommendations()
 const { filterState } = useStampFilter()
 
 const displayCount = ref(ITEMS_PER_LOAD)
