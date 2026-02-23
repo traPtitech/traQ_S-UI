@@ -47,7 +47,7 @@ const useMeStorePinia = defineStore('domain/me', () => {
           console.error(new Error('Failed to fetchMe:', { cause: error }))
           return undefined
         }
-        const status = error.response?.status;
+        const status = error.response?.status
 
         // 401 ならリトライせずにすぐ終了する（ループを止める）
         if (status === 401) {
