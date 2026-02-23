@@ -47,8 +47,13 @@ const useMeStorePinia = defineStore('domain/me', () => {
           console.error(new Error('Failed to fetchMe:', { cause: error }))
           return undefined
         }
-        if (error.status === 401 && riseAuthError) {
-          router.push('/login')
+        const status = error.response?.status;
+
+        // 401 ならリトライせずにすぐ終了する（ループを止める）
+        if (status === 401) {
+          if (riseAuthError) {
+            router.push('/login')
+          }
           return undefined
         }
         // FIXME: エラーハンドリングのためにとりあえず retry しています
