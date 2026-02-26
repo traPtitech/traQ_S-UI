@@ -132,10 +132,7 @@ const channelListForFilter = computed(() =>
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
 
 const filteredChannelTree = computed(() => {
-  const filteredIds = new Set(filteredChannels.value.map(c => c.id))
-  const rootIds = filteredChannels.value
-    .filter(c => c.parentId === null || !filteredIds.has(c.parentId))
-    .map(c => c.id)
+  const rootIds = filteredChannels.value.map(c => c.id)
 
   return filterTrees(
     constructTreeFromIds(rootIds, channelsMap.value),
