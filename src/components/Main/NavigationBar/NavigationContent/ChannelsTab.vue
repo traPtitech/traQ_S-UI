@@ -23,10 +23,12 @@
           :stared-panel-id="staredPanelId"
         />
         <template v-if="topLevelChannels.length > 0">
-          <ChannelList
+          <ChannelTreeComponent
             v-if="query.length > 0"
-            :channels="filteredChannels"
+            :channels="filteredChannelTree"
             show-topic
+            show-shortened-path
+            prevent-child-topic
           />
           <template v-else-if="filterStarChannel">
             <template v-if="staredChannels.length > 0">
@@ -82,7 +84,6 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useModalStore } from '/@/store/ui/modal'
 
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
-import ChannelList from '../ChannelList/ChannelList.vue'
 import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
 import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
 import ToggleButton from './ToggleButton.vue'
@@ -150,6 +151,15 @@ const channelListForFilter = computed(() =>
   )
 )
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
+
+const filteredChannelTree = computed(() => {
+  const rootIds = filteredChannels.value.map(c => c.id)
+
+  return filterTrees(
+    constructTreeFromIds(rootIds, channelsMap.value),
+    channel => !channel.archived
+  )
+})
 
 const onClickButton = () => {
   pushModal({

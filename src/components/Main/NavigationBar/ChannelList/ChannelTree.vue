@@ -7,10 +7,15 @@
       :channel="channel"
       :is-opened="childrenShownChannels.has(channel.id)"
       :show-shortened-path="showShortenedPath"
+      :show-topic="showTopic"
       @click-hash="toggleChildren"
     >
       <SlideDown :is-open="childrenShownChannels.has(channel.id)">
-        <channel-tree :class="$style.children" :channels="channel.children" />
+        <channel-tree
+          :class="$style.children"
+          :channels="channel.children"
+          :show-topic="showTopic && !preventChildTopic"
+        />
       </SlideDown>
     </ChannelElement>
   </div>
@@ -28,10 +33,14 @@ import ChannelElement from './ChannelElement.vue'
 interface Props extends /* @vue-ignore */ HTMLAttributes {
   channels: ReadonlyArray<ChannelTreeNode>
   showShortenedPath?: boolean
+  showTopic?: boolean
+  preventChildTopic?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
-  showShortenedPath: false
+  showShortenedPath: false,
+  showTopic: false,
+  preventChildTopic: false
 })
 
 const childrenShownChannels = ref(new Set<ChannelId>())

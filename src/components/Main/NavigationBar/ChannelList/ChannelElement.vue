@@ -5,7 +5,10 @@
     :data-is-inactive="$boolAttr(!channel.active)"
   >
     <!-- チャンネル表示本体 -->
-    <div :class="$style.channelContainer">
+    <div
+      :class="$style.channelContainer"
+      :data-is-topic-shown="$boolAttr(showTopic)"
+    >
       <ChannelElementIcon
         :class="$style.channelIcon"
         :has-child="hasChildren"
@@ -56,6 +59,7 @@
     </div>
 
     <div :class="$style.slot">
+      <ChannelElementTopic v-if="showTopic" :channel-id="channel.id" />
       <slot />
     </div>
 
@@ -90,6 +94,7 @@ import type { ChannelId } from '/@/types/entity-ids'
 import useNotificationState from '../composables/useNotificationState'
 import ChannelElementIcon from './ChannelElementIcon.vue'
 import ChannelElementName from './ChannelElementName.vue'
+import ChannelElementTopic from './ChannelElementTopic.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 
 const props = withDefaults(
@@ -97,12 +102,14 @@ const props = withDefaults(
     channel: ChannelTreeNode
     isOpened?: boolean
     showShortenedPath?: boolean
+    showTopic?: boolean
     showStar?: boolean
     showNotified?: boolean
   }>(),
   {
     isOpened: false,
-    showShortenedPath: false
+    showShortenedPath: false,
+    showTopic: false
   }
 )
 
@@ -223,6 +230,7 @@ $bgLeftShift: 8px;
   position: absolute;
   left: 0;
 }
+
 .selectedBg {
   position: absolute;
   width: calc(100% + #{$bgLeftShift});
