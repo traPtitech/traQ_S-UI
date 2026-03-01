@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:25.2.1-alpine AS build
+FROM --platform=$BUILDPLATFORM node:25.7.0-alpine AS build
 WORKDIR /app
 
 ENV CYPRESS_INSTALL_BINARY=0
@@ -10,7 +10,7 @@ COPY . .
 RUN NODE_ENV=production npm run build:with-font
 
 
-FROM caddy:2.10.0-alpine
+FROM caddy:2.11.1-alpine
 EXPOSE 80
 
 COPY build/docker/Caddyfile /etc/caddy/Caddyfile
