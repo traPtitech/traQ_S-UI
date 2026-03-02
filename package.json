@@ -120,9 +120,5 @@
   "engines": {
     "node": "^22.14.0",
     "npm": "^10.9.0"
-  },
-  "lint-staged": {
-    "*.{ts,js,jsx,tsx,vue}": "eslint --fix --cache --max-warnings=0",
-    "*.{js,jsx,ts,tsx,vue,css,html,md,json,cjs}": "prettier --cache --write"
   }
 }
