@@ -86,11 +86,9 @@ const {
   }
   max-width: 100%;
   img {
-    height: 100%;
-    width: auto;
+    width: clamp(100px, 100%, 600px);
+    height: auto;
     max-height: 450px;
-    max-width: min(600px, 100%);
-    min-width: 100px;
     object-fit: contain;
     cursor: pointer;
   }

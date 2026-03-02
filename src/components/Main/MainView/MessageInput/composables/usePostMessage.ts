@@ -116,7 +116,7 @@ const usePostMessage = (
       bothChannelsMapInitialFetchPromise
     ])
 
-    const embededText = embedInternalLink(state.text, {
+    const embeddedText = embedInternalLink(state.text, {
       getUser: findUserByName,
       getGroup: getUserGroupByName,
       getChannel: path => {
@@ -132,7 +132,7 @@ const usePostMessage = (
     const dummyFileUrls = state.attachments.map(() =>
       buildFilePathForPost(nullUuid)
     )
-    const dummyText = await createContent(embededText, dummyFileUrls)
+    const dummyText = await createContent(embeddedText, dummyFileUrls)
     if (countLength(dummyText) > MESSAGE_MAX_LENGTH) {
       addErrorToast('メッセージが長すぎます')
       return
@@ -147,7 +147,7 @@ const usePostMessage = (
       })
 
       await apis.postMessage(cId, {
-        content: await createContent(embededText, fileUrls)
+        content: await createContent(embeddedText, fileUrls)
       })
 
       clearState()
