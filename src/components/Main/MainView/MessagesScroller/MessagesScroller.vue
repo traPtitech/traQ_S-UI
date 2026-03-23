@@ -333,7 +333,6 @@ defineExpose({ rootRef })
   height: 100%;
   position: relative;
   overflow-y: hidden;
-  padding: 12px 0;
 }
 
 .root {
