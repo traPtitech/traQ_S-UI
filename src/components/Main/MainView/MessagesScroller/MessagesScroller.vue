@@ -333,7 +333,6 @@ defineExpose({ rootRef })
   height: 100%;
   position: relative;
   overflow-y: hidden;
-  padding: 12px 0;
 }
 
 .root {
@@ -348,6 +347,7 @@ defineExpose({ rootRef })
   -webkit-overflow-scrolling: auto;
   // scroll-behavior: auto;
   overscroll-behavior: none;
+  padding-bottom: 12px;
 }
 
 .viewport {
