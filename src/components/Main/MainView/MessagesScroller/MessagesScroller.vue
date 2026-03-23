@@ -233,7 +233,7 @@ const bottomSkeletonHeight = shallowRef(0)
 // ResizeObserverでスケルトン高さを監視
 useResizeObserver(
   () => topSkeletonRef.value?.$el,
-  entries => {
+  () => {
     topSkeletonHeight.value =
       unrefElement(topSkeletonRef)?.getBoundingClientRect().height ?? 0
   }
@@ -241,7 +241,7 @@ useResizeObserver(
 
 useResizeObserver(
   () => bottomSkeletonRef.value?.$el,
-  entries => {
+  () => {
     bottomSkeletonHeight.value =
       unrefElement(bottomSkeletonRef)?.getBoundingClientRect().height ?? 0
   }

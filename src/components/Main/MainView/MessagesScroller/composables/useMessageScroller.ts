@@ -4,7 +4,7 @@ import { ref } from 'vue'
 
 import type { ChangeHeightData } from '/@/components/Main/MainView/MessageElement/composables/useElementRenderObserver'
 import type { LoadingDirection } from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
-import { defer, nextFrame, wait } from '/@/lib/basic/timer'
+import { defer, wait } from '/@/lib/basic/timer'
 import type { MessageId } from '/@/types/entity-ids'
 
 const useMessageScroller = (
