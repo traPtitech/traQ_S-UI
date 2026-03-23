@@ -171,11 +171,13 @@ const useChannelPath = () => {
 
     const channelIds = simpleChannels.map(c => c.id)
     const channelNames = simpleChannels.map(c => c.name)
-    const channelInitials = channelNames.map(c => c[0] ?? '')
+    const channelShortenedNames = channelNames.map(name =>
+      name.length <= 2 ? name : (name[0] ?? '')
+    )
 
     // r/g/p/child
     const primitiveChannels = [
-      ...channelInitials.slice(0, -1),
+      ...channelShortenedNames.slice(0, -1),
       channelNames[channelsLength - 1] ?? ''
     ]
     if (primitiveChannels.join('/').length >= MAX_SHORT_PATH_LENGTH) {
@@ -240,7 +242,7 @@ const useChannelPath = () => {
         replaceInitialChannels.join('/').length > MAX_SHORT_PATH_LENGTH &&
         replaceInitialIndex < channelsLength - 2
       ) {
-        const indexinitial = channelInitials[replaceInitialIndex]
+        const indexinitial = channelShortenedNames[replaceInitialIndex]
         if (indexinitial !== undefined) {
           replaceInitialChannels[replaceInitialIndex] = indexinitial
         }

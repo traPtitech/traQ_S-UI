@@ -15,6 +15,8 @@
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
         :icon-name="iconName"
+        :is-icon-mdi="isIconMdi"
+        :icon-size="iconSize"
         @click.stop="onClickIcon"
         @mouseenter="onIconHovered"
         @mouseleave="onIconHoveredLeave"
@@ -167,8 +169,13 @@ const iconName = computed(() => {
   if (props.showStar && notificationState.isStarred) {
     return 'star-outline'
   }
+  if (props.channel.archived) {
+    return 'archive'
+  }
   return 'hash'
 })
+const isIconMdi = computed(() => props.channel.archived)
+const iconSize = computed(() => (props.channel.archived ? 17 : undefined))
 </script>
 
 <style lang="scss" module>
