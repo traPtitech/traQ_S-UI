@@ -9,6 +9,23 @@ $ npm run gen-fonts
 
 Vetur ではなく Vue (offical) を導入することを推奨しています。
 
+## コミット時の自動フォーマット・lint
+
+このリポジトリでは [husky](https://typicode.github.io/husky/) と [lint-staged](https://github.com/okonet/lint-staged) を利用して、コミット時にステージされたファイルへ自動でフォーマット（prettier）とlint（eslint --fix）が実行されます。
+
+初回セットアップ時は、以下のコマンドを実行してください。
+
+```shell
+$ npm run husky:prepare
+```
+
+その後は特別な操作は不要で、通常通りコミットするだけで自動的に修正・整形が行われます。
+
+設定ファイル:
+
+- lint-staged: `lint-staged.config.js`
+- husky: `.husky/pre-commit`
+
 ## コマンド
 
 ### ホットリロード環境
