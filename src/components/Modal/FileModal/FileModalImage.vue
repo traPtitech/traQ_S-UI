@@ -12,11 +12,23 @@
       <AIcon name="chevron-left" mdi :size="32" />
     </div>
 
-    <ImageViewer
-      :class="$style.img"
-      :src="fileRawPath"
-      :alt="fileMeta?.name ?? 'unknown'"
-    />
+    <transition
+      :enter-active-class="$style.transitionActive"
+      :leave-active-class="$style.transitionActive"
+      :enter-from-class="
+        direction === 'next' ? $style.nextEnterFrom : $style.prevEnterFrom
+      "
+      :leave-to-class="
+        direction === 'next' ? $style.nextLeaveTo : $style.prevLeaveTo
+      "
+    >
+      <ImageViewer
+        :key="fileRawPath"
+        :class="$style.img"
+        :src="fileRawPath"
+        :alt="fileMeta?.name ?? 'unknown'"
+      />
+    </transition>
 
     <div
       v-if="siblingImageIds.length > 1"
@@ -33,7 +45,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { useEventListener } from '@vueuse/core'
@@ -86,8 +98,13 @@ watchEffect(() => {
 
 const currentIndex = computed(() => siblingImageIds.value.indexOf(props.fileId))
 
+type Direction = 'next' | 'prev'
+const direction = ref<Direction>('next')
+
 const moveFile = (index: number) => {
   if (currentIndex.value === -1 || siblingImageIds.value.length <= 1) return
+
+  direction.value = index > 0 ? 'next' : 'prev'
 
   router.replace(
     constructFilesPath(
@@ -143,9 +160,35 @@ useEventListener('keydown', onKeyDown)
   }
 }
 .img {
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
   width: 100%;
 }
+
+.transitionActive {
+  transition:
+    transform 150ms ease-in-out,
+    opacity 150ms ease;
+}
+.nextEnterFrom {
+  transform: translateX(30%);
+  opacity: 0;
+}
+.nextLeaveTo {
+  transform: translateX(-30%);
+  opacity: 0;
+}
+.prevEnterFrom {
+  transform: translateX(-30%);
+  opacity: 0;
+}
+.prevLeaveTo {
+  transform: translateX(30%);
+  opacity: 0;
+}
+
 .navButton {
   @include color-ui-secondary;
 
