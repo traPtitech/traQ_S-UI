@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="$style.timeSlider"
+    :class="[$style.timeSlider, 'audio-time-slider']"
     :aria-disabled="disabled"
     :data-show-background-on-hover="showBackgroundOnHover"
   >
@@ -63,16 +63,20 @@ const disabled = computed(() => props.duration === 0)
   &:not(:hover) :global(.vue-slider-dot-handle) {
     opacity: 0;
   }
-  :global {
-    @include meta.load-css(
-      'vue-slider-component/lib/theme/default.scss',
-      $with: (
-        dotBgColor: #1e1e1e,
+}
+</style>
 
-        bgColor: #b7b9ba,
-        themeColor: #585859
-      )
-    );
-  }
+<style lang="scss">
+@use 'sass:meta';
+
+.audio-time-slider {
+  @include meta.load-css(
+    'vue-slider-component/lib/theme/default.scss',
+    $with: (
+      dotBgColor: #1e1e1e,
+      bgColor: #b7b9ba,
+      themeColor: #585859
+    )
+  );
 }
 </style>

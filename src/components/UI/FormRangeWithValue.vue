@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <ASlider
       v-model="modelValue"
-      :class="$style.range"
+      :class="[$style.range, 'form-range-slider']"
       :min="min"
       :max="max"
       :disabled="disabled"
@@ -55,18 +55,21 @@ const showValue = computed(() => props.format(modelValue.value))
 .range {
   flex: 1 1;
   margin-right: 16px;
-  :global {
-    @include meta.load-css(
-      'vue-slider-component/lib/theme/default.scss',
-      $with: (
-        dotBgColor: $theme-accent-primary-background,
-        dotShadow: none,
+}
+</style>
 
-        bgColor: rgba(107, 125, 138, 0.5),
-        // $theme-ui-secondary-default;
-        themeColor: $theme-accent-primary-background
-      )
-    );
-  }
+<style lang="scss">
+@use 'sass:meta';
+
+.form-range-slider {
+  @include meta.load-css(
+    'vue-slider-component/lib/theme/default.scss',
+    $with: (
+      dotBgColor: $theme-accent-primary-background,
+      dotShadow: none,
+      bgColor: rgba(107, 125, 138, 0.5),
+      themeColor: $theme-accent-primary-background
+    )
+  );
 }
 </style>

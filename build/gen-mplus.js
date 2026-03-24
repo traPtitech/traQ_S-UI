@@ -7,10 +7,9 @@ import process from 'process'
 import util from 'util'
 import zlib from 'zlib'
 
+import * as lightningcss from 'lightningcss'
 import axios from 'axios'
 import browserslist from 'browserslist'
-import esbuild from 'esbuild'
-import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
 import { createFont, woff2 } from 'fonteditor-core'
 import postcss from 'postcss'
 
@@ -88,7 +87,7 @@ const generateFilename = font => {
   return `${family}.${weight}.${fontSrcWithId[1]}.woff2`
 }
 
-const downloadAndtransform = async (url, filename) => {
+const downloadAndTransform = async (url, filename) => {
   const res = await axios.get(url, { responseType: 'arraybuffer' })
   const readBuffer = Buffer.from(res.data, 'binary')
   try {
@@ -152,26 +151,30 @@ const generateFontFace = (font, filename) => {
     const fontFaceText = generateFontFace(font, filename)
 
     promises.push(
-      downloadAndtransform(getUrlFromSrc(font.src), filename).catch(() =>
-        downloadAndtransform(getUrlFromSrc(font.src), filename)
+      downloadAndTransform(getUrlFromSrc(font.src), filename).catch(() =>
+        downloadAndTransform(getUrlFromSrc(font.src), filename)
       )
     )
 
     cssText += fontFaceText
   }
-  const { code: minifiedCssText, warnings } = await esbuild.transform(cssText, {
-    loader: 'css',
+
+  const targets = ligtningcss.browserslistToTargets(
+    browserslist('baseline widely available')
+  )
+  const { code: minifiedCss } = lightningcss.transform({
+    filename: 'fonts.css',
+    code: Buffer.from(cssText),
     minify: true,
-    target: resolveToEsbuildTarget(browserslist())
+    targets: targets
   })
-  if (warnings.length > 0) console.warn(warnings)
 
   promises.push(
-    fs.writeFile(path.join(rootPath, './fonts.css'), minifiedCssText, 'utf-8')
+    fs.writeFile(path.join(rootPath, './fonts.css'), minifiedCss, 'utf-8')
   )
 
   const brotliPromise = (async () => {
-    const compressed = await brotliCompress(minifiedCssText, {
+    const compressed = await brotliCompress(minifiedCss, {
       params: {
         [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
         [zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.BROTLI_MAX_QUALITY
