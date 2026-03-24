@@ -4,9 +4,8 @@ import fs from 'fs'
 import { Agent as HttpsAgent } from 'https'
 
 import VuePlugin from '@vitejs/plugin-vue'
-import autoprefixer from 'autoprefixer'
 import browserslist from 'browserslist'
-import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
+import { browserslistToTargets } from 'lightningcss'
 import brotli from 'rollup-plugin-brotli'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
@@ -54,9 +53,6 @@ export default defineConfig(({ mode }) => ({
     ...localhostCerts
   },
   build: {
-    target: resolveToEsbuildTarget(browserslist(), {
-      printUnknownTargets: false
-    }),
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -84,15 +80,13 @@ export default defineConfig(({ mode }) => ({
   css: {
     preprocessorOptions: {
       scss: {
+        api: 'modern-compiler',
         additionalData: `
           @use "sass:math";
           @use "/@/styles/common.scss" as *;
         `,
         charset: false
       }
-    },
-    postcss: {
-      plugins: mode === 'production' ? [autoprefixer()] : []
     },
     devSourcemap: true
   },

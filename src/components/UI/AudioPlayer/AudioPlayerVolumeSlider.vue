@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="$style.volume"
+    :class="[$style.volume, 'audio-volume-slider']"
     :data-keep-expanded="keepExpanded"
     :aria-disabled="disabled"
   >
@@ -69,18 +69,6 @@ $afterVolumeSliderWidth: 48px;
   &[aria-disabled='true'] {
     opacity: 0.5;
   }
-
-  :global {
-    @include meta.load-css(
-      'vue-slider-component/lib/theme/default.scss',
-      $with: (
-        dotBgColor: #1e1e1e,
-
-        bgColor: #b7b9ba,
-        themeColor: #585859
-      )
-    );
-  }
 }
 .volumeSlider {
   transition:
@@ -111,5 +99,20 @@ $afterVolumeSliderWidth: 48px;
 }
 .icon {
   flex-shrink: 0;
+}
+</style>
+
+<style lang="scss">
+@use 'sass:meta';
+
+.audio-volume-slider {
+  @include meta.load-css(
+    'vue-slider-component/lib/theme/default.scss',
+    $with: (
+      dotBgColor: #1e1e1e,
+      bgColor: #b7b9ba,
+      themeColor: #585859
+    )
+  );
 }
 </style>
