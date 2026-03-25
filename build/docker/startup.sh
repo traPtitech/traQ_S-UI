@@ -19,6 +19,22 @@ if [ $? -eq 0 ]; then
 fi
 
 ###
+# config.jsonからconfig.jsへの変換
+###
+if [ -f /app/override/config.json ]; then
+    if [ -f /app/override/config.js ]; then
+        echo "WARNING: Both config.json and config.js are mounted at /app/override/"
+        echo "WARNING: config.js will be ignored and overwritten by the mapped config.json"
+    fi
+    echo "Startup: converting config.json to config.js"
+    {
+      echo ";(() => { self.traQConfig = "
+      cat /app/override/config.json
+      echo " })()"
+    } > /usr/share/caddy/config.js
+fi
+
+###
 # アプリ名設定
 ###
 echo "Startup: set app name to $APP_NAME"
