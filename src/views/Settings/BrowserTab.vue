@@ -21,6 +21,11 @@
       title="未読画面で通知を優先表示"
       description="未読チャンネル一覧で通知オンのチャンネルを優先的に表示するようにします。"
     />
+    <SimpleToggle
+      v-model="config.showArchivedChannels"
+      title="アーカイブされたチャンネルを表示"
+      description="アーカイブされたチャンネルもチャンネルタブに表示するようにします。"
+    />
     <SendKey v-model:send-with-modifier-key="config.sendWithModifierKey" />
     <ModifierKeys v-model:modifier-key="config.modifierKey" />
     <CacheManager />
