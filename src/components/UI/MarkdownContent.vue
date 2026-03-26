@@ -14,9 +14,15 @@ import { defer } from '/@/lib/basic/timer'
 
 import FoldableCodeBlock from './FoldableCodeBlock.vue'
 
-const props = defineProps<{
-  content: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    content: string
+    deferOnMounted?: boolean
+  }>(),
+  {
+    deferOnMounted: true
+  }
+)
 
 const contentRef = ref<HTMLElement>()
 
@@ -42,7 +48,13 @@ const applyFoldableCodeBlock = () => {
   })
 }
 
-onMounted(() => defer(applyFoldableCodeBlock))
+onMounted(() => {
+  if (props.deferOnMounted) {
+    defer(applyFoldableCodeBlock)
+    return
+  }
+  applyFoldableCodeBlock()
+})
 watch(() => props.content, applyFoldableCodeBlock, { flush: 'post' })
 </script>
 

@@ -1,6 +1,5 @@
 <template>
   <div :class="$style.container">
-    <MessagesSkeleton v-if="!ready" :class="$style.skeleton" />
     <div
       ref="rootRef"
       :class="[$style.root, !ready && $style.hidden]"
@@ -21,8 +20,7 @@
           v-if="!isReachedEnd"
           ref="topSkeletonRef"
           :simple="!enableProactiveLoading"
-          instant
-          :count="3"
+          :count="isInitialLoad ? 10 : 3"
           :class="$style.edgeSkeleton"
         />
         <MessagesScrollerSeparator
@@ -43,7 +41,7 @@
           reversed
           instant
           :simple="!enableProactiveLoading"
-          :count="3"
+          :count="isInitialLoad ? 10 : 3"
           :class="$style.edgeSkeleton"
         />
       </div>
@@ -201,6 +199,7 @@ const props = withDefaults(
     isReachedEnd: boolean
     isReachedLatest: boolean
     isLoading?: boolean
+    isInitialLoad?: boolean
     entryMessageId?: MessageId
     lastLoadingDirection: LoadingDirection
   }>(),
@@ -375,7 +374,6 @@ defineExpose({ rootRef })
   position: absolute;
   inset: 0;
   opacity: 1;
-  visibility: visible;
   transition: opacity 0.3s ease-in;
   margin-bottom: 24px;
 

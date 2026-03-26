@@ -43,6 +43,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
+
 const props = withDefaults(
   defineProps<{
     count?: number
@@ -76,7 +78,9 @@ const generateRandomMessage = () => {
   }
 }
 
-const items = Array.from({ length: props.count }, generateRandomMessage)
+const items = computed(() =>
+  Array.from({ length: props.count }, generateRandomMessage)
+)
 </script>
 
 <style lang="scss" module>

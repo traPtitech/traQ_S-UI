@@ -8,7 +8,11 @@
       :updated-at="message.updatedAt"
     />
     <div :class="$style.messageContents">
-      <MarkdownContent v-show="!isEditing" :content="renderedContent" />
+      <MarkdownContent
+        v-show="!isEditing"
+        :content="renderedContent"
+        :defer-on-mounted="!isInitialLoad"
+      />
       <MessageEditor
         v-if="isEditing"
         :raw-content="message.content"
@@ -16,7 +20,7 @@
         :channel-id="message.channelId"
         @finish-editing="finishEditing"
       />
-      <DeferredRender>
+      <DeferredRender :disabled="isInitialLoad">
         <MessageQuoteList
           v-if="embeddingsState.quoteMessageIds.length > 0"
           :class="$style.messageEmbeddingsList"
@@ -58,6 +62,7 @@ import MessageHeader from './MessageHeader.vue'
 
 const props = defineProps<{
   messageId: MessageId
+  isInitialLoad?: boolean
 }>()
 
 const { messagesMap } = useMessagesStore()

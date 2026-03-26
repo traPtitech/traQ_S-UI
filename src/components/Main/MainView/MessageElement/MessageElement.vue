@@ -28,6 +28,7 @@
       <MessageContents
         :class="$style.messageContents"
         :message-id="messageId"
+        :is-initial-load="isInitialLoad"
       />
       <MessageStampList
         :show-detail-button="isHovered || isMobile"
@@ -65,10 +66,12 @@ const props = withDefaults(
     pinnedUserId?: UserId
     isEntryMessage?: boolean
     isArchived?: boolean
+    isInitialLoad?: boolean
   }>(),
   {
     isEntryMessage: false,
-    isArchived: false
+    isArchived: false,
+    isInitialLoad: false
   }
 )
 

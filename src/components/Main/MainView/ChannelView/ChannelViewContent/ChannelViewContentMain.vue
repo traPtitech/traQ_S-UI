@@ -7,6 +7,7 @@
       :is-reached-end="isReachedEnd"
       :is-reached-latest="isReachedLatest"
       :is-loading="isLoading"
+      :is-initial-load="isInitialLoad"
       :entry-message-id="entryMessageId"
       :last-loading-direction="lastLoadingDirection"
       @request-load-former="onLoadFormerMessagesRequest"
@@ -29,6 +30,7 @@
           :class="$style.element"
           :message-id="messageId"
           :is-archived="isArchived"
+          :is-initial-load="isInitialLoad"
           :is-entry-message="messageId === entryMessageId"
           :pinned-user-id="messagePinnedUserMap.get(messageId)"
           @change-height="onChangeHeight"
@@ -85,6 +87,7 @@ const {
   isReachedEnd,
   isReachedLatest,
   isLoading,
+  isInitialLoad,
   lastLoadingDirection,
   unreadSince,
   onLoadFormerMessagesRequest,
