@@ -19,6 +19,11 @@ updates:
       patches:
         update-types:
           - 'patch'
+        exclude-patterns:
+          - '@types/*'
+          - '*eslint*'
+          - '*prettier*'
+          - 'workbox-*'
   - package-ecosystem: docker
     directory: '/'
     schedule:
