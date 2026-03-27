@@ -86,7 +86,7 @@
     "cypress": "^15.8.1",
     "esbuild": "^0.27.2",
     "esbuild-plugin-browserslist": "^2.0.0",
-    "eslint": "^9.39.2",
+    "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-cypress": "^5.2.1",
     "eslint-plugin-unused-imports": "^4.3.0",
