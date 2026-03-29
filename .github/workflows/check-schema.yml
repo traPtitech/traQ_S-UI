@@ -1,0 +1,27 @@
+name: Check Config Schema
+
+on:
+  pull_request:
+
+jobs:
+  check-schema:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate JSON Schema from config.d.ts
+        run: npm run generate-schema
+
+      - name: Check for changes
+        run: |
+          git diff --exit-code config.schema.json
