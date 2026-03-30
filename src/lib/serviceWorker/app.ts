@@ -1,6 +1,7 @@
 import { isSafari } from '/@/lib/dom/browser'
 import type { OnCanUpdate } from '/@/lib/notification/updateToast'
 import { setupUpdateToast } from '/@/lib/notification/updateToast'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
 const APP_SERVICE_WORKER_SCOPE = '/'
 
@@ -9,7 +10,14 @@ const getAppServiceWorkerRegistration = async () =>
 
 // Safari は root scope の service worker 配下だと API の再検証経路が変わり、
 // ETag による 304 が効かなくなるため page-controlling worker を無効化する。
-const shouldDisableAppServiceWorker = () => isSafari()
+const shouldDisableAppServiceWorker = async () => {
+  if (!isSafari()) return false
+
+  const { featureFlags, restoringPromise } = useFeatureFlagSettings()
+  await restoringPromise
+
+  return featureFlags.value.disable_root_service_worker_on_safari.enabled
+}
 
 const unregisterAppServiceWorker = async () => {
   const registration = await getAppServiceWorkerRegistration()
@@ -24,7 +32,7 @@ export const registerAppServiceWorker = async (onCanUpdate: OnCanUpdate) => {
     return
   }
 
-  if (shouldDisableAppServiceWorker()) {
+  if (await shouldDisableAppServiceWorker()) {
     const unregistered = await unregisterAppServiceWorker()
     if (unregistered && navigator.serviceWorker.controller) {
       window.location.reload()

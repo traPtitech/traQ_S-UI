@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
-import { isWebKit } from '/@/lib/dom/browser'
+import { isSafari, isWebKit } from '/@/lib/dom/browser'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
 type FeatureFlagDescription = {
@@ -50,6 +50,15 @@ export const featureFlagDescriptions = {
       'スタンプのレコメンド機能を有効にします。スタンプ履歴が用いられている部分をレコメンドで置き換えます。',
     defaultValue: false,
     endAt: new Date('2026-01-31T23:59')
+  },
+  // Safari は root scope の service worker 配下だと API の再検証経路が変わり、
+  // ETag による 304 が効かなくなるため page-controlling worker を無効化する。
+  disable_root_service_worker_on_safari: {
+    title: 'Safari で通信を安定させる',
+    description:
+      'Safari で一部の情報がキャッシュされにくくなる問題を回避します。有効にするとルートのService Workerが無効化され、メッセージ通知の動作が変わる場合があります。',
+    defaultValue: isSafari(),
+    endAt: new Date('2026-04-30T23:59')
   }
 } as const satisfies Record<string, FeatureFlagDescription>
 
@@ -105,7 +114,8 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
   return {
     updateFeatureFlagStatus,
     featureFlags,
-    restoring
+    restoring,
+    restoringPromise
   }
 })
 
