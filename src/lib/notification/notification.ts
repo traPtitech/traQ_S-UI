@@ -16,23 +16,26 @@ import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
 import type { FirebasePayloadData } from './firebase'
 import { getFirebaseApp, setupFirebaseApp } from './firebase'
 import { createNotificationArgumentsCreator } from './notificationArguments'
-import type { OnCanUpdate } from './updateToast'
-import { setupUpdateToast } from './updateToast'
 
 const appName = window.traQConfig.name || 'traQ'
 const ignoredChannels = window.traQConfig.inlineReplyDisableChannels ?? []
 const vapidKey = window.traQConfig.firebase?.vapidKey
 
-type ServiceWorkerMessage = ServiceWorkerNavigateMessage
-export type ServiceWorkerNavigateMessage = {
-  type: 'navigate'
-  to: string
-}
+const NOTIFICATION_SERVICE_WORKER_URL = '/notification-sw.js'
+const NOTIFICATION_SERVICE_WORKER_SCOPE = '/notification/'
 
 const createNotificationArguments = createNotificationArgumentsCreator(
   appName,
   ignoredChannels
 )
+
+const getNotificationServiceWorkerRegistration = async () =>
+  navigator.serviceWorker?.getRegistration(NOTIFICATION_SERVICE_WORKER_SCOPE)
+
+const registerNotificationServiceWorker = async () =>
+  navigator.serviceWorker.register(NOTIFICATION_SERVICE_WORKER_URL, {
+    scope: NOTIFICATION_SERVICE_WORKER_SCOPE
+  })
 
 const notify = async (
   options: Partial<FirebasePayloadData>,
@@ -44,9 +47,9 @@ const notify = async (
   )
 
   if (navigator.serviceWorker) {
-    const regist = await navigator.serviceWorker.ready
+    const regist = await getNotificationServiceWorkerRegistration()
     // mac SafariだとshowNotificationが存在しない
-    if (regist.showNotification) {
+    if (regist?.showNotification) {
       return regist.showNotification(notificationTitle, notificationOptions)
     }
   }
@@ -56,7 +59,7 @@ const notify = async (
   return null
 }
 
-export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
+export const connectFirebase = async () => {
   if (isIOSApp(window)) {
     // iOSはNotificationがないため、先にFCMトークンを登録する
     const token = window.iOSToken
@@ -107,22 +110,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     return
   }
 
-  navigator.serviceWorker.addEventListener(
-    'message',
-    ({ data }: MessageEvent<ServiceWorkerMessage>) => {
-      if (data.type === 'navigate') {
-        // 同じ場所に移動しようとした際のエラーを消す
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        router.push(data.to).catch(() => {})
-      }
-    }
-  )
-
-  const registration = await navigator.serviceWorker.register('/sw.js', {
-    scope: '/'
-  })
-
-  setupUpdateToast(registration, onCanUpdate)
+  const registration = await registerNotificationServiceWorker()
 
   if (Notification?.permission !== 'granted') {
     // eslint-disable-next-line no-console
@@ -194,7 +182,7 @@ export const deleteToken = () => {
 export const removeNotification = async (
   channelId: ChannelId | DMChannelId
 ) => {
-  const registration = await navigator.serviceWorker?.getRegistration()
+  const registration = await getNotificationServiceWorkerRegistration()
   if (!registration) return
 
   // Safari(mac/iOS)ともにgetNotificationsが存在しない

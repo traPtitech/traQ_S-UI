@@ -46,6 +46,7 @@ import { useEventListener } from '@vueuse/core'
 import useNavigationController from '/@/composables/mainView/useNavigationController'
 import useResponsive from '/@/composables/useResponsive'
 import { connectFirebase } from '/@/lib/notification/notification'
+import { registerAppServiceWorker } from '/@/lib/serviceWorker/app'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useToastStore } from '/@/store/ui/toast'
 
@@ -139,7 +140,7 @@ const hideOuter = computed(
 
 const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
 useInitialFetch(() => {
-  connectFirebase(onClick => {
+  registerAppServiceWorker(onClick => {
     addToast({
       type: 'success',
       text: 'クリックでアップデートできます',
@@ -147,6 +148,7 @@ useInitialFetch(() => {
       onClick
     })
   })
+  connectFirebase()
   triggerRouteParamChange()
 })
 

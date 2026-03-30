@@ -3,7 +3,6 @@ import { getMessaging, onBackgroundMessage } from 'firebase/messaging/sw'
 
 import { wait } from '/@/lib/basic/timer'
 import type { FirebasePayloadData } from '/@/lib/notification/firebase'
-import type { ServiceWorkerNavigateMessage } from '/@/lib/notification/notification'
 import { createNotificationArgumentsCreator } from '/@/lib/notification/notificationArguments'
 import { getMeStore } from '/@/sw/store'
 import type { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
@@ -22,19 +21,20 @@ const postMessage = (channelId: ChannelId, text: string) =>
   })
 
 const openChannel = async (event: NotificationClickEvent) => {
+  const path = event.notification.data.path
+  if (!path) return
+
+  const url = new URL(path, self.location.origin)
   const clientsArr = await self.clients.matchAll({
     type: 'window',
     includeUncontrolled: true
   })
   if (clientsArr[0]) {
-    const client = await clientsArr[0].focus()
-    const message: ServiceWorkerNavigateMessage = {
-      type: 'navigate',
-      to: event.notification.data.path
-    }
-    return client.postMessage(message)
+    const client = clientsArr[0]
+    await client.navigate(url)
+    return client.focus()
   } else {
-    return self.clients.openWindow(event.notification.data.path)
+    return self.clients.openWindow(url)
   }
 }
 

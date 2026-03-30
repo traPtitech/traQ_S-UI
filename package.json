@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node build/build-notification-sw.js",
     "build:with-font": "npm run gen-fonts && npm run build",
     "build:may-with-font": "MAY_SKIP_FONT_GEN=1 npm run gen-fonts && npm run build",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
