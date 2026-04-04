@@ -54,17 +54,6 @@ const loadMd = async () => {
   if (md) return
   const { traQMarkdownIt } = await import('./traq-markdown-it')
   md = new traQMarkdownIt(storeProvider, [], embeddingOrigin)
-
-  // q.trap.jp のURLも内部リンクとして認識する
-  // メッセージ内の添付ファイル・引用リンクは https://q.trap.jp/files/... や
-  // https://q.trap.jp/messages/... の形式で保存されているが、
-  // embeddingOrigin が q.ramdos.net なので外部URL扱いされてしまう。
-  // urlToEmbeddingData を上書きして q.trap.jp を embeddingOrigin に正規化してから渡す。
-  const upstreamOrigin = 'https://q.trap.jp'
-  const orig = md.embeddingExtractor.urlToEmbeddingData.bind(md.embeddingExtractor)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ;(md.embeddingExtractor as any).urlToEmbeddingData = (url: string) =>
-    orig(url.replace(upstreamOrigin, embeddingOrigin))
 }
 
 const waitForInitialFetch = () => {
