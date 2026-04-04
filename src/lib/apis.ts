@@ -48,7 +48,8 @@ export const buildFileWaveformPath = (fileId: FileId) =>
 export const embeddingOrigin =
   DEV_SERVER !== '' && import.meta.env.MODE === 'development'
     ? DEV_SERVER
-    : (self.traQConfig.backendOrigin ?? `${location.protocol}//${location.host}`)
+    : (self.traQConfig.backendOrigin ??
+      `${location.protocol}//${location.host}`)
 
 export const buildFilePathForPost = (fileId: FileId) =>
   `${embeddingOrigin}${constructFilesPath(fileId)}`
