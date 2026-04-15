@@ -20,7 +20,7 @@ const { toasts } = useToastStore()
   left: 20px;
   bottom: 20px;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   pointer-events: none;
   z-index: $z-index-toast-container;
   contain: layout;
