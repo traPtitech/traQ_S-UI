@@ -127,6 +127,15 @@ export type Config = Readonly<{
    * @example 'general'
    */
   fallbackChannelPath?: string
+
+  /**
+   * traQバックエンドのオリジン
+   * フロントエンドとは異なるドメインでホストする場合に指定する
+   * 省略時は `location.origin` を使用
+   *
+   * @example 'https://q.trap.jp'
+   */
+  backendOrigin?: string
 }>
 
 declare global {
