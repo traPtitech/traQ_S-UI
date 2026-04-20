@@ -5,12 +5,16 @@
  * @see https://github.com/whatwg/notifications/pull/132
  */
 
-interface ExtendedNotificationAction extends NotificationAction {
+interface ExtendedNotificationAction {
+  action: string
+  icon?: string
+  title: string
   type?: 'text' | 'button'
   placeholder?: string
 }
 export interface ExtendedNotificationOptions extends NotificationOptions {
   actions?: ExtendedNotificationAction[]
+  renotify?: boolean
 }
 
 export interface NotificationClickEvent extends NotificationEvent {
