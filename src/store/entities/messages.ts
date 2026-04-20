@@ -77,6 +77,7 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     const [{ data: message }, shared] = await getMessage(messageId)
     if (!shared) {
       internalMessagesMap.value.set(message.id, message)
+      triggerRef(internalMessagesMap)
     }
     return message
   }
