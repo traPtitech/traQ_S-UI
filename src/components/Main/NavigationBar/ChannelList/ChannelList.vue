@@ -9,11 +9,7 @@
       :show-star="props.showStar"
       :show-notified="props.showNotified"
     >
-      <ChannelElementTopic
-        v-if="showTopic"
-        :class="$style.topic"
-        :channel-id="channel.id"
-      />
+      <ChannelElementTopic v-if="showTopic" :channel-id="channel.id" />
     </ChannelElement>
   </div>
 </template>
@@ -49,10 +45,5 @@ const channelTreeNodes = computed((): ChannelTreeNode[] =>
 <style lang="scss" module>
 .element {
   margin: 4px 0;
-}
-
-.topic {
-  margin-left: 40px;
-  margin-right: 8px;
 }
 </style>
