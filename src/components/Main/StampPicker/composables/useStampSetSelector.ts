@@ -3,7 +3,7 @@ import { computed, reactive } from 'vue'
 import { useStampCategory } from '/@/store/domain/stampCategory'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
-export type StampSetType = 'palette' | 'category' | 'history'
+export type StampSetType = 'recommendation' | 'palette' | 'category'
 
 export type StampSet = {
   type: StampSetType
@@ -19,7 +19,7 @@ const useStampSetSelector = () => {
   const state = reactive({
     stampSets: computed((): StampSet[] => [
       {
-        type: 'history',
+        type: 'recommendation',
         id: ''
       },
       ...state.stampPalettes,
@@ -47,7 +47,10 @@ const useStampSetSelector = () => {
     hasStampPalette: computed((): boolean => state.stampPalettes.length > 0)
   })
 
-  return { stampSetState: state }
+  const isStampSetValid = (stampSet: StampSet) =>
+    state.stampSets.some(s => s.type === stampSet.type && s.id === stampSet.id)
+
+  return { stampSetState: state, isStampSetValid }
 }
 
 export default useStampSetSelector

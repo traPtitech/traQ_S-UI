@@ -1,7 +1,6 @@
 import { type MaybeRefOrGetter, computed, toValue } from 'vue'
 
 import type { Candidate, Word, WordWithId } from '/@/lib/suggestion/basic'
-import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 
 const stampSuggestionOverride = <
@@ -13,7 +12,6 @@ const stampSuggestionOverride = <
 >(
   input: Params
 ) => {
-  const { upsertLocalStampHistory } = useStampHistory()
   const { recordStampUsage } = useStampRecommendations()
 
   const isStampSuggestion = computed(() =>
@@ -30,7 +28,6 @@ const stampSuggestionOverride = <
   })
 
   const onSelect = (word: WordWithId) => {
-    upsertLocalStampHistory(word.id, new Date())
     recordStampUsage(word.id)
     input.onSelect({ ...word, text: `${word.text}:` })
   }
