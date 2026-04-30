@@ -8,7 +8,11 @@
       :updated-at="message.updatedAt"
     />
     <div :class="$style.messageContents">
-      <MarkdownContent v-show="!isEditing" :content="renderedContent" />
+      <MarkdownContent
+        v-show="!isEditing"
+        :content="renderedContent"
+        :defer-on-mounted="!isInitialLoad"
+      />
       <MessageEditor
         v-if="isEditing"
         :raw-content="message.content"
@@ -16,22 +20,24 @@
         :channel-id="message.channelId"
         @finish-editing="finishEditing"
       />
-      <MessageQuoteList
-        v-if="embeddingsState.quoteMessageIds.length > 0"
-        :class="$style.messageEmbeddingsList"
-        :parent-message-channel-id="message.channelId"
-        :message-ids="embeddingsState.quoteMessageIds"
-      />
-      <MessageFileList
-        v-if="embeddingsState.fileIds.length > 0"
-        :class="$style.messageEmbeddingsList"
-        :channel-id="message.channelId"
-        :file-ids="embeddingsState.fileIds"
-      />
-      <MessageOgpList
-        v-if="embeddingsState.externalUrls.length > 0"
-        :external-urls="embeddingsState.externalUrls"
-      />
+      <DeferredRender :disabled="isInitialLoad">
+        <MessageQuoteList
+          v-if="embeddingsState.quoteMessageIds.length > 0"
+          :class="$style.messageEmbeddingsList"
+          :parent-message-channel-id="message.channelId"
+          :message-ids="embeddingsState.quoteMessageIds"
+        />
+        <MessageFileList
+          v-if="embeddingsState.fileIds.length > 0"
+          :class="$style.messageEmbeddingsList"
+          :channel-id="message.channelId"
+          :file-ids="embeddingsState.fileIds"
+        />
+        <MessageOgpList
+          v-if="embeddingsState.externalUrls.length > 0"
+          :external-urls="embeddingsState.externalUrls"
+        />
+      </DeferredRender>
     </div>
   </div>
 </template>
@@ -39,6 +45,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 
+import DeferredRender from '/@/components/UI/DeferredRender.vue'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
@@ -55,6 +62,7 @@ import MessageHeader from './MessageHeader.vue'
 
 const props = defineProps<{
   messageId: MessageId
+  isInitialLoad?: boolean
 }>()
 
 const { messagesMap } = useMessagesStore()
