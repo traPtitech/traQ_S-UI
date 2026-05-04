@@ -6,6 +6,19 @@ import axios from 'axios'
 // 開発環境で実行するスクリプトのため, console の使用は問題ない.
 /* eslint no-console: 0 */
 
+const OUTPUT_EMOJIS_FILE = './src/assets/unicode_emojis.json'
+const OUTPUT_ALT_NAMES_FILE = './src/assets/emoji_altname_table.json'
+
+// https://github.com/traPtitech/traQ/blob/d6d3981a412e5b259c04bcfcef6b87c58b3c7267/utils/twemoji/installer.go#L30
+const UNICODE_EMOJIS_META_URL =
+  'https://raw.githubusercontent.com/joypixels/emoji-assets/v9.0.0/emoji.json'
+const UNICODE_EMOJIS_CATEGORIES_URL =
+  'https://raw.githubusercontent.com/joypixels/emoji-toolkit/9.0.0/categories.json'
+
+// https://github.com/traPtitech/traQ/blob/1ebbfabc64891ea6181ad4b3f417702dd5cad5ca/utils/validator/rules.go#L75-L79
+const TRAQ_STAMP_NAME_RULE = /^[a-zA-Z0-9_-]{1,32}$/
+
+// ZWJ (Zero Width Joiner): 複数の Unicode 文字を結合して1つの絵文字として表示するために使用される特殊な文字.
 const ZWJ = String.fromCodePoint(0x200d)
 
 // https://github.com/traPtitech/traQ/blob/d6d3981a412e5b259c04bcfcef6b87c58b3c7267/utils/twemoji/installer.go#L44-L58
@@ -25,9 +38,6 @@ const replaceNameMap: Record<string, string> = {
   woman_with_white_cane_facing_right: 'woman_white_cane_facing_right',
   person_with_white_cane_facing_right: 'person_white_cane_facing_right'
 }
-
-// https://github.com/traPtitech/traQ/blob/1ebbfabc64891ea6181ad4b3f417702dd5cad5ca/utils/validator/rules.go#L75-L79
-const stampNameRule = /^[a-zA-Z0-9_-]{1,32}$/
 
 /**
  *  スタンプ名重複の検査
@@ -65,7 +75,7 @@ function checkInvalidStampNames(
   altNames: { [altName: string]: string }
 ) {
   const invalidEmojiNames = Object.values(emojis).filter(
-    name => !stampNameRule.test(name)
+    name => !TRAQ_STAMP_NAME_RULE.test(name)
   )
   if (invalidEmojiNames.length > 0) {
     console.error(
@@ -77,7 +87,7 @@ function checkInvalidStampNames(
   }
 
   const invalidAltNames = Object.keys(altNames).filter(
-    altName => !stampNameRule.test(altNames[altName])
+    altName => !TRAQ_STAMP_NAME_RULE.test(altNames[altName])
   )
   if (invalidAltNames.length > 0) {
     console.error(
@@ -98,9 +108,7 @@ function checkInvalidStampNames(
  */
 async function fetchData() {
   const [{ data: emojis }, { data: categories }] = await Promise.all([
-    axios.get(
-      'https://raw.githubusercontent.com/joypixels/emoji-toolkit/10.0.0/emoji.json'
-    ) as Promise<{
+    axios.get(UNICODE_EMOJIS_META_URL) as Promise<{
       data: Record<
         string,
         {
@@ -112,9 +120,7 @@ async function fetchData() {
         }
       >
     }>,
-    axios.get(
-      'https://raw.githubusercontent.com/joypixels/emoji-toolkit/10.0.0/categories.json'
-    ) as Promise<{
+    axios.get(UNICODE_EMOJIS_CATEGORIES_URL) as Promise<{
       data: { order: number; category: string; category_label: string }[]
     }>
   ])
@@ -200,13 +206,10 @@ async function main() {
     Object.entries(unicodeTable).sort((a, b) => (a[0] > b[0] ? 1 : -1))
   )
 
-  const unicodeEmojisFile = './src/assets/unicode_emojis.json'
-  const altNameTableFile = './src/assets/emoji_altname_table.json'
-
   await Promise.all([
-    fs.writeFile(unicodeEmojisFile, JSON.stringify(result)),
+    fs.writeFile(OUTPUT_EMOJIS_FILE, JSON.stringify(result)),
     fs.writeFile(
-      altNameTableFile,
+      OUTPUT_ALT_NAMES_FILE,
       JSON.stringify({
         altNameTable: sortedAltNameTable,
         unicodeTable: sortedUnicodeTable
@@ -214,8 +217,8 @@ async function main() {
     )
   ])
   console.log(styleText('bgCyan', 'INFO'), 'Generated:', [
-    unicodeEmojisFile,
-    altNameTableFile
+    OUTPUT_EMOJIS_FILE,
+    OUTPUT_ALT_NAMES_FILE
   ])
 }
 
