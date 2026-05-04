@@ -3,6 +3,9 @@ import { styleText } from 'util'
 
 import axios from 'axios'
 
+// 開発環境で実行するスクリプトのため, console の使用は問題ない.
+/* eslint no-console: 0 */
+
 const ZWJ = String.fromCodePoint(0x200d)
 
 // https://github.com/traPtitech/traQ/blob/d6d3981a412e5b259c04bcfcef6b87c58b3c7267/utils/twemoji/installer.go#L44-L58
@@ -29,15 +32,20 @@ const stampNameRule = /^[a-zA-Z0-9_-]{1,32}$/
 /**
  *  スタンプ名重複の検査
  */
-function checkDuplicateStampNames(emojis: {[unicodeString: string]: string}) {
-  const nameToUnicodeStringsMap = Object.entries(emojis).reduce((grouped, [unicodeString, name]) => {
-    if (!grouped[name]) {
-      grouped[name] = []
-    }
-    grouped[name].push(unicodeString)
-    return grouped
-  }, {} as Record<string, string[]>)
-  const duplicateNames = Object.entries(nameToUnicodeStringsMap).filter(([, unicodeStrings]) => unicodeStrings.length > 1)
+function checkDuplicateStampNames(emojis: { [unicodeString: string]: string }) {
+  const nameToUnicodeStringsMap = Object.entries(emojis).reduce(
+    (grouped, [unicodeString, name]) => {
+      if (!grouped[name]) {
+        grouped[name] = []
+      }
+      grouped[name].push(unicodeString)
+      return grouped
+    },
+    {} as Record<string, string[]>
+  )
+  const duplicateNames = Object.entries(nameToUnicodeStringsMap).filter(
+    ([, unicodeStrings]) => unicodeStrings.length > 1
+  )
   if (duplicateNames.length > 0) {
     console.error(
       styleText('bgRed', 'ERROR'),
@@ -52,7 +60,10 @@ function checkDuplicateStampNames(emojis: {[unicodeString: string]: string}) {
 /**
  * traQ 上の制約に合わないスタンプ名の検査
  */
-function checkInvalidStampNames(emojis: {[unicodeString: string]: string}, altNames: {[altName: string]: string}) {
+function checkInvalidStampNames(
+  emojis: { [unicodeString: string]: string },
+  altNames: { [altName: string]: string }
+) {
   const invalidEmojiNames = Object.values(emojis).filter(
     name => !stampNameRule.test(name)
   )
@@ -65,8 +76,9 @@ function checkInvalidStampNames(emojis: {[unicodeString: string]: string}, altNa
     )
   }
 
-  const invalidAltNames = Object.keys(altNames)
-    .filter((altName) => !stampNameRule.test(altNames[altName]))
+  const invalidAltNames = Object.keys(altNames).filter(
+    altName => !stampNameRule.test(altNames[altName])
+  )
   if (invalidAltNames.length > 0) {
     console.error(
       styleText('bgRed', 'ERROR'),
