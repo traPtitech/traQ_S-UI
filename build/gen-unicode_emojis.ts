@@ -70,10 +70,7 @@ function checkDuplicateStampNames(emojis: { [unicodeString: string]: string }) {
 /**
  * traQ 上の制約に合わないスタンプ名の検査
  */
-function checkInvalidStampNames(
-  emojis: { [unicodeString: string]: string },
-  altNames: { [altName: string]: string }
-) {
+function checkInvalidStampNames(emojis: { [unicodeString: string]: string }) {
   const invalidEmojiNames = Object.values(emojis).filter(
     name => !TRAQ_STAMP_NAME_RULE.test(name)
   )
@@ -84,22 +81,7 @@ function checkInvalidStampNames(
       invalidEmojiNames,
       '\n'
     )
-  }
-
-  const invalidAltNames = Object.keys(altNames).filter(
-    altName => !TRAQ_STAMP_NAME_RULE.test(altNames[altName])
-  )
-  if (invalidAltNames.length > 0) {
-    console.error(
-      styleText('bgRed', 'ERROR'),
-      'Invalid alt names found. Please fix `replaceNameMap` for these names:',
-      invalidAltNames,
-      '\n'
-    )
-  }
-
-  if (invalidEmojiNames.length > 0 || invalidAltNames.length > 0) {
-    throw new Error('Invalid stamp names or alt names found')
+    throw new Error('Invalid stamp names found')
   }
 }
 
@@ -171,7 +153,17 @@ async function main() {
       name = replacedName
     }
 
-    categoryMap[e.category].emojis.push({ name, order: e.order })
+    const category = categoryMap[e.category]
+    if (!category) {
+      console.error(
+        styleText('bgRed', 'ERROR'),
+        `Category not found for emoji:`,
+        e,
+        '\n'
+      )
+      throw new Error(`Category "${e.category}" not found`)
+    }
+    category.emojis.push({ name, order: e.order })
 
     const unicodeString = key
       .split('-')
@@ -185,7 +177,7 @@ async function main() {
   })
 
   checkDuplicateStampNames(unicodeTable)
-  checkInvalidStampNames(unicodeTable, altNameTable)
+  checkInvalidStampNames(unicodeTable)
 
   const result = Object.entries(categoryMap).map(([key, category]) => {
     if (key === 'regional') {
