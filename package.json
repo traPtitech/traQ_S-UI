@@ -94,7 +94,7 @@
     "fake-indexeddb": "^6.2.5",
     "fonteditor-core": "^2.6.3",
     "husky": "^9.1.7",
-    "jsdom": "^27.4.0",
+    "jsdom": "^29.0.2",
     "lint-staged": "^16.2.7",
     "patch-package": "^8.0.1",
     "pinia": "^3.0.1",
