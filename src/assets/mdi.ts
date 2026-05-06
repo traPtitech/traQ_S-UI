@@ -33,6 +33,7 @@ import {
   mdiCommentQuote,
   mdiCommentTextMultipleOutline,
   mdiContentCopy,
+  mdiCreation,
   mdiCrown,
   mdiDelete,
   mdiDotsHorizontal,
@@ -50,7 +51,6 @@ import {
   mdiFormatTitle,
   mdiGithub,
   mdiGoogle,
-  mdiHistory,
   mdiHome,
   mdiImageMultiple,
   mdiInformation,
@@ -116,7 +116,6 @@ const mdi: MdiIconsMapping = {
   'microphone-off': mdiMicrophoneOff,
   pin: mdiPin,
   search: mdiMagnify,
-  history: mdiHistory,
   'file-upload': mdiFileUpload,
   'file-music': mdiFileMusic,
   'file-video': mdiFileVideo,
@@ -193,7 +192,8 @@ const mdi: MdiIconsMapping = {
   'comment-outline': mdiCommentTextMultipleOutline,
   'comment-off-outline': mdiCommentOffOutline,
   'palette-outline': mdiPaletteOutline,
-  'content-copy': mdiContentCopy
+  'content-copy': mdiContentCopy,
+  creation: mdiCreation
 }
 
 export default mdi

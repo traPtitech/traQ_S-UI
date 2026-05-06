@@ -7,10 +7,11 @@ import { useEventListener } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { throttle } from 'throttle-debounce'
 
-import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
+import useStampSetSelector, {
+  type StampSet
+} from '/@/components/Main/StampPicker/composables/useStampSetSelector'
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import type { Point } from '/@/lib/basic/point'
-import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { StampId } from '/@/types/entity-ids'
 
@@ -65,7 +66,7 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
   const selectHandler = ref<StampSelectHandler>(defaultSelectHandler)
 
   const initialStampSetValue: StampSet = {
-    type: 'history',
+    type: 'recommendation',
     id: ''
   }
   const [state] = useIndexedDbValue(
@@ -75,7 +76,6 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
     initialStampSetValue
   )
 
-  const { nonEmptyStampPaletteIds } = useStampPalettesStore()
   const currentStampSet = computed({
     get: () => state,
     set: (newValue: StampSet) => {
@@ -84,12 +84,10 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
     }
   })
 
-  const validateCurrentStampSet = () => {
-    if (currentStampSet.value.type !== 'palette') return
-    if (!nonEmptyStampPaletteIds.value.includes(currentStampSet.value.id)) {
-      currentStampSet.value.type = 'history'
-      currentStampSet.value.id = ''
-    }
+  const { isStampSetValid } = useStampSetSelector()
+  const ensureCurrentStampSetValid = () => {
+    if (isStampSetValid(currentStampSet.value)) return
+    currentStampSet.value = { type: 'recommendation', id: '' }
   }
 
   const isEffectEnabled = ref(false)
@@ -107,7 +105,7 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
   return {
     selectHandler,
     currentStampSet,
-    validateCurrentStampSet,
+    ensureCurrentStampSetValid,
     isEffectEnabled,
     position,
     alignment,

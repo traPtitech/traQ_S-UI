@@ -43,7 +43,6 @@ import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/M
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { randomString } from '/@/lib/basic/randomString'
-import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
@@ -52,7 +51,6 @@ import { useToastStore } from '/@/store/ui/toast'
 import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
 import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
 
-const { fetchStampHistory } = useStampHistory()
 const { fetchStampRecommendations } = useStampRecommendations()
 const { fetchStamps } = useStampsStore()
 const { fetchStampPalettes } = useStampPalettesStore()
@@ -82,7 +80,6 @@ const { toggleStampPicker } = useTextStampPickerInvoker(
 // スタンプピッカーに必要
 fetchStamps()
 fetchStampPalettes()
-fetchStampHistory()
 fetchStampRecommendations()
 
 const id = randomString()
