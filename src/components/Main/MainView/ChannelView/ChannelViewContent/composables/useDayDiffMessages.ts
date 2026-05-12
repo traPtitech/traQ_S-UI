@@ -5,7 +5,7 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import type { MessageId } from '/@/types/entity-ids'
 
 const useDayDiffMessages = (messageIds: Ref<MessageId[]>) => {
-  const { messagesMap } = useMessagesStore()
+  const { getMessageRef } = useMessagesStore()
 
   const dayDiffMessages = computed(() => {
     const result = new Set<MessageId>()
@@ -17,11 +17,11 @@ const useDayDiffMessages = (messageIds: Ref<MessageId[]>) => {
     result.add(mIds[0]!)
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    let preDate = new Date(messagesMap.value.get(mIds[0]!)?.createdAt ?? '')
+    let preDate = new Date(getMessageRef(mIds[0]!).value?.createdAt ?? '')
     for (let i = 1; i < mCount; i++) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const mId = mIds[i]!
-      const currentDate = new Date(messagesMap.value.get(mId)?.createdAt ?? '')
+      const currentDate = new Date(getMessageRef(mId).value?.createdAt ?? '')
       if (preDate.toDateString() !== currentDate.toDateString()) {
         result.add(mId)
       }

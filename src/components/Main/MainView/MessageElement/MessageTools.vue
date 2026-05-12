@@ -155,10 +155,10 @@ const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
     false
   )
 
-const { messagesMap } = useMessagesStore()
+const { getMessageRef } = useMessagesStore()
 const { myId } = useMeStore()
 const isMine = computed(
-  () => messagesMap.value.get(props.messageId)?.userId === myId.value
+  () => getMessageRef(props.messageId).value?.userId === myId.value
 )
 
 const { editingMessageId } = useMessageEditingStateStore()

@@ -57,9 +57,9 @@ const props = defineProps<{
   messageId: MessageId
 }>()
 
-const { messagesMap } = useMessagesStore()
+const { getMessageRef } = useMessagesStore()
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const message = computed(() => messagesMap.value.get(props.messageId)!)
+const message = computed(() => getMessageRef(props.messageId).value!)
 
 const { editingMessageId } = useMessageEditingStateStore()
 const isEditing = computed(() => props.messageId === editingMessageId.value)

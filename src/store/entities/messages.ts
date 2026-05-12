@@ -1,6 +1,6 @@
 import type { FileInfo, Message, MessageStamp, Ogp } from '@traptitech/traq'
 
-import { computed, ref, shallowRef, triggerRef } from 'vue'
+import { type Ref, ref } from 'vue'
 
 import type { AxiosError } from 'axios'
 import mitt from 'mitt'
@@ -46,19 +46,32 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
    * ここでは内容が更新されることのみを保障する
    * それぞれの方でメッセージIDの追加、削除の更新はする必要がある
    */
-  const internalMessagesMap = shallowRef(new Map<MessageId, Message>())
-  const messagesMap = computed<ReadonlyMap<MessageId, Message>>(
-    () => internalMessagesMap.value
-  )
+  const messagesMap = new Map<MessageId, Ref<Message | undefined>>()
+
+  const getMessageRef = (messageId: MessageId) => {
+    const messageRef = messagesMap.get(messageId)
+    if (messageRef) return messageRef
+
+    const newMessageRef = ref<Message>()
+    messagesMap.set(messageId, newMessageRef)
+    return newMessageRef
+  }
+  const getMessageFromMap = (messageId: MessageId) =>
+    messagesMap.get(messageId)?.value
+  const setMessage = (message: Message) => {
+    getMessageRef(message.id).value = message
+  }
+
   const extendMessagesMap = (messages: Message[]) => {
     for (const message of messages) {
-      internalMessagesMap.value.set(message.id, message)
+      setMessage(message)
     }
-    triggerRef(internalMessagesMap)
   }
   const deleteMessage = (messageId: MessageId) => {
-    internalMessagesMap.value.delete(messageId)
-    triggerRef(internalMessagesMap)
+    const messageRef = messagesMap.get(messageId)
+    if (messageRef) {
+      messageRef.value = undefined
+    }
 
     messageMitt.emit('deleteMessage', messageId)
   }
@@ -69,15 +82,14 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     messageId: MessageId
     ignoreCache?: boolean
   }) => {
-    if (!ignoreCache && messagesMap.value.has(messageId)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return messagesMap.value.get(messageId)!
+    const messageRef = getMessageRef(messageId)
+    if (!ignoreCache && messageRef.value) {
+      return messageRef.value
     }
 
     const [{ data: message }, shared] = await getMessage(messageId)
     if (!shared) {
-      internalMessagesMap.value.set(message.id, message)
-      triggerRef(internalMessagesMap)
+      setMessage(message)
     }
     return message
   }
@@ -85,12 +97,12 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     messageId: MessageId,
     stamps: MessageStamp[]
   ) => {
-    const message = messagesMap.value.get(messageId)
+    const message = getMessageFromMap(messageId)
     if (!message) return
     message.stamps = stamps
   }
   const pinMessage = (messageId: MessageId) => {
-    const message = messagesMap.value.get(messageId)
+    const message = getMessageFromMap(messageId)
     if (!message) return
     message.pinned = true
 
@@ -98,7 +110,7 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
   }
 
   const unpinMessage = (messageId: MessageId) => {
-    const message = messagesMap.value.get(messageId)
+    const message = getMessageFromMap(messageId)
     if (message) {
       message.pinned = false
     }
@@ -187,10 +199,10 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
   const addStampLocally = (messageId: MessageId, stampId: StampId) => {
     if (myId.value === undefined) return
 
-    if (!messagesMap.value.has(messageId)) return
+    const message = getMessageFromMap(messageId)
+    if (!message) return
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { stamps } = messagesMap.value.get(messageId)!
+    const { stamps } = message
 
     const currentCount =
       stamps.find(
@@ -227,10 +239,10 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     return () => {
       removeOptimisticStamp({ type: 'add', messageId, stampId })
 
-      if (!messagesMap.value.has(messageId)) return
+      const message = getMessageFromMap(messageId)
+      if (!message) return
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const { stamps } = messagesMap.value.get(messageId)!
+      const { stamps } = message
 
       const revertedStamps = stamps
         .map(stamp =>
@@ -248,10 +260,10 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
   const removeStampLocally = (messageId: MessageId, stampId: StampId) => {
     if (myId.value === undefined) return
 
-    if (!messagesMap.value.has(messageId)) return
+    const message = getMessageFromMap(messageId)
+    if (!message) return
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { stamps } = messagesMap.value.get(messageId)!
+    const { stamps } = message
 
     const index = stamps.findIndex(
       stamp => stamp.stampId === stampId && stamp.userId === myId.value
@@ -266,10 +278,10 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     return () => {
       removeOptimisticStamp({ type: 'remove', messageId, stampId })
 
-      if (!messagesMap.value.has(messageId)) return
+      const message = getMessageFromMap(messageId)
+      if (!message) return
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const { stamps } = messagesMap.value.get(messageId)!
+      const { stamps } = message
 
       if (removingStamp === undefined) return
       const revertedStamps = [...stamps, removingStamp]
@@ -306,10 +318,10 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
       count,
       created_at: createdAt
     } = e
-    if (!messagesMap.value.has(messageId)) return
+    const message = getMessageFromMap(messageId)
+    if (!message) return
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { stamps } = messagesMap.value.get(messageId)!
+    const { stamps } = message
 
     // 既に押されているスタンプは更新、新規は追加
     if (
@@ -341,10 +353,10 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     if (removed) return
 
     const { message_id: messageId, user_id: userId, stamp_id: stampId } = e
-    if (!messagesMap.value.has(messageId)) return
+    const message = getMessageFromMap(messageId)
+    if (!message) return
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { stamps } = messagesMap.value.get(messageId)!
+    const { stamps } = message
 
     const newStamps = stamps.filter(
       stamp => !(stamp.stampId === stampId && stamp.userId === userId)
@@ -364,7 +376,7 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
   })
 
   return {
-    messagesMap,
+    getMessageRef,
     fileMetaDataMap,
     ogpDataMap,
     extendMessagesMap,

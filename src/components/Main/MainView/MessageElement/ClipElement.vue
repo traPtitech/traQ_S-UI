@@ -54,14 +54,14 @@ const emit = defineEmits<{
 
 const isActive = ref(false)
 
-const { messagesMap } = useMessagesStore()
+const { getMessageRef } = useMessagesStore()
 
 const { editingMessageId } = useMessageEditingStateStore()
 const isEditing = computed(() => props.messageId === editingMessageId.value)
 
 const bodyRef = shallowRef<HTMLDivElement | null>(null)
 const { isMobile } = useResponsive()
-const message = computed(() => messagesMap.value.get(props.messageId))
+const message = computed(() => getMessageRef(props.messageId).value)
 
 const { embeddingsState } = useEmbeddings(props)
 
