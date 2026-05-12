@@ -81,10 +81,10 @@ const props = defineProps<{
   messageId: string
 }>()
 
-const { messagesMap } = useMessagesStore()
+const { getMessageRef } = useMessagesStore()
 const sortedClipFolders = useSortedClipFolders()
 
-const message = computed(() => messagesMap.value.get(props.messageId))
+const message = computed(() => getMessageRef(props.messageId).value)
 
 const isSelected = ref(new Set<ClipFolderId>())
 apis.getMessageClips(props.messageId).then(res => {

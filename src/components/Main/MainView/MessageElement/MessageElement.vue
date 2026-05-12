@@ -80,8 +80,8 @@ const isActive = ref(false)
 
 const bodyRef = shallowRef<HTMLDivElement | null>(null)
 const { isMobile } = useResponsive()
-const { messagesMap } = useMessagesStore()
-const message = computed(() => messagesMap.value.get(props.messageId))
+const { getMessageRef } = useMessagesStore()
+const message = computed(() => getMessageRef(props.messageId).value)
 
 const { editingMessageId } = useMessageEditingStateStore()
 const isEditing = computed(() => props.messageId === editingMessageId.value)

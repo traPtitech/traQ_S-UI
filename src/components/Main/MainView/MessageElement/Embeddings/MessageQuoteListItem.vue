@@ -79,7 +79,7 @@ const props = defineProps<{
 }>()
 
 const { renderedContentMap, renderMessageContent } = useMessagesView()
-const { messagesMap, fetchFileMetaData } = useMessagesStore()
+const { getMessageRef, fetchFileMetaData } = useMessagesStore()
 const { dmChannelsMap } = useChannelsStore()
 const { embeddingsState } = useEmbeddings(props)
 
@@ -95,7 +95,7 @@ watchEffect(async () => {
   )
 })
 
-const message = computed(() => messagesMap.value.get(props.messageId))
+const message = computed(() => getMessageRef(props.messageId).value)
 const shouldShow = computed(
   () =>
     !!message.value &&

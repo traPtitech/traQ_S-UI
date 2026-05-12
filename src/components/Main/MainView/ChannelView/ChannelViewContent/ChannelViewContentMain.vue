@@ -91,19 +91,19 @@ const {
   onLoadLatterMessagesRequest
 } = useChannelMessageFetcher(scrollerRef, props)
 
-const { messagesMap } = useMessagesStore()
+const { getMessageRef } = useMessagesStore()
 const firstUnreadMessageId = computed(() => {
   if (!unreadSince.value) return ''
   return (
     messageIds.value.find(
-      id => messagesMap.value.get(id)?.createdAt === unreadSince.value
+      id => getMessageRef(id).value?.createdAt === unreadSince.value
     ) ?? ''
   )
 })
 
 const dayDiffMessages = useDayDiffMessages(messageIds)
 const createdDate = (id: MessageId) => {
-  const message = messagesMap.value.get(id)
+  const message = getMessageRef(id).value
   if (!message) {
     return ''
   }

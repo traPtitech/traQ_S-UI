@@ -89,11 +89,11 @@ const useMessageChanger = (messageId: Ref<MessageId>) => {
 }
 
 const useCopyMd = (messageId: Ref<MessageId>) => {
-  const { messagesMap } = useMessagesStore()
+  const { getMessageRef } = useMessagesStore()
   const { copyText } = useCopyText()
 
   const copyMd = async () => {
-    const content = messagesMap.value.get(messageId.value)?.content ?? ''
+    const content = getMessageRef(messageId.value).value?.content ?? ''
     const replacedContent = replaceBack(content)
     copyText(replacedContent, 'Markdown')
   }
@@ -134,11 +134,11 @@ const { showWidgetCopyButton } = window.traQConfig
 
 const messageId = toRef(props, 'messageId')
 const { myId } = useMeStore()
-const { messagesMap } = useMessagesStore()
+const { getMessageRef } = useMessagesStore()
 
-const isPinned = computed(() => messagesMap.value.get(messageId.value)?.pinned)
+const isPinned = computed(() => getMessageRef(messageId.value).value?.pinned)
 const isMine = computed(
-  () => messagesMap.value.get(messageId.value)?.userId === myId.value
+  () => getMessageRef(messageId.value).value?.userId === myId.value
 )
 
 const { copyLink, copyEmbedded } = useCopyLink(messageId)
