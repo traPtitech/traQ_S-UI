@@ -68,7 +68,7 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     }
   }
   const deleteMessage = (messageId: MessageId) => {
-    const messageRef = getMessageRef(messageId)
+    const messageRef = messagesMap.get(messageId)
     if (messageRef) {
       messageRef.value = undefined
     }
