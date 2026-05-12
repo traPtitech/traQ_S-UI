@@ -88,11 +88,13 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     const message = messagesMap.value.get(messageId)
     if (!message) return
     message.stamps = stamps
+    triggerRef(internalMessagesMap)
   }
   const pinMessage = (messageId: MessageId) => {
     const message = messagesMap.value.get(messageId)
     if (!message) return
     message.pinned = true
+    triggerRef(internalMessagesMap)
 
     messageMitt.emit('pinMessage', message)
   }
@@ -101,6 +103,7 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     const message = messagesMap.value.get(messageId)
     if (message) {
       message.pinned = false
+      triggerRef(internalMessagesMap)
     }
 
     messageMitt.emit('unpinMessage', messageId)
