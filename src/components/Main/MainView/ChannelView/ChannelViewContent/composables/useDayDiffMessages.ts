@@ -21,9 +21,7 @@ const useDayDiffMessages = (messageIds: Ref<MessageId[]>) => {
     for (let i = 1; i < mCount; i++) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const mId = mIds[i]!
-      const currentDate = new Date(
-        getMessageRef(mId).value?.createdAt ?? ''
-      )
+      const currentDate = new Date(getMessageRef(mId).value?.createdAt ?? '')
       if (preDate.toDateString() !== currentDate.toDateString()) {
         result.add(mId)
       }
