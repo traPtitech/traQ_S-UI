@@ -28,6 +28,7 @@
       <MessageContents
         :class="$style.messageContents"
         :message-id="messageId"
+        :is-initial-load="isInitialLoad"
       />
       <MessageStampList
         :show-detail-button="isHovered || isMobile"
@@ -55,8 +56,9 @@ import type { MessageId, UserId } from '/@/types/entity-ids'
 import MessageContents from './MessageContents.vue'
 import MessagePinned from './MessagePinned.vue'
 import MessageStampList from './MessageStampList.vue'
-import type { ChangeHeightData } from './composables/useElementRenderObserver'
-import useElementRenderObserver from './composables/useElementRenderObserver'
+import useElementRenderObserver, {
+  type ChangeHeightData
+} from './composables/useElementRenderObserver'
 
 const props = withDefaults(
   defineProps<{
@@ -64,10 +66,12 @@ const props = withDefaults(
     pinnedUserId?: UserId
     isEntryMessage?: boolean
     isArchived?: boolean
+    isInitialLoad?: boolean
   }>(),
   {
     isEntryMessage: false,
-    isArchived: false
+    isArchived: false,
+    isInitialLoad: false
   }
 )
 
