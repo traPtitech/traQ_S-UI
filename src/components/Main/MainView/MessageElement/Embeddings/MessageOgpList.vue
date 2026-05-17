@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.container">
     <MessageOgpListItem
-      v-for="item in ogpItems"
-      :key="item.url"
+      v-for="(item, index) in ogpItems"
+      :key="`${item.url}-${index}`"
       :class="$style.item"
       :url="item.url"
       :ogp-data="item.ogpData"
