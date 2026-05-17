@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <MessageOgpContentVideo
       v-if="isVideoType && imageUrl && videoUrl"
-      :url="ogpData.url"
+      :url="url"
       :title="ogpData.title"
       :description="ogpData.description"
       :preview-url="imageUrl"
@@ -10,7 +10,7 @@
     />
     <MessageOgpContentWebsite
       v-else
-      :url="ogpData.url"
+      :url="url"
       :title="ogpData.title"
       :description="ogpData.description"
       :image-url="imageUrl"
@@ -29,6 +29,7 @@ import MessageOgpContentVideo from './MessageOgpContentVideo.vue'
 import MessageOgpContentWebsite from './MessageOgpContentWebsite.vue'
 
 const props = defineProps<{
+  url: string
   ogpData: Ogp
 }>()
 
