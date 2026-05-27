@@ -13,6 +13,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 
+import { isDefined } from '/@/lib/basic/array'
 import { useMessagesStore } from '/@/store/entities/messages'
 
 import MessageOgpListItem from './MessageOgpListItem.vue'
@@ -29,13 +30,13 @@ const props = withDefaults(
 const { ogpDataMap } = useMessagesStore()
 
 const ogpItems = computed(() =>
-  props.externalUrls.flatMap(url => {
-    const ogpData = ogpDataMap.value.get(url)
-    if (!ogpData?.title) {
-      return []
-    }
-    return [{ url, ogpData }]
-  })
+  props.externalUrls
+    .map((url: string) => {
+      const ogpData = ogpDataMap.value.get(url)
+      return isDefined(ogpData) ? { url, ogpData } : undefined
+    })
+    .filter(isDefined)
+    .filter(({ ogpData }: { ogpData: { title?: string } }) => ogpData.title)
 )
 </script>
 
