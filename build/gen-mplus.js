@@ -1,4 +1,3 @@
-/* eslint-env node */
 /* eslint-disable no-console */
 import fs from 'fs/promises'
 import { Buffer } from 'node:buffer'
