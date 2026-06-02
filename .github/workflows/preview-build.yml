@@ -1,14 +1,7 @@
-name: preview
+name: Build preview image
 
 on:
-  # pull_request_target を使うにあたって https://securitylab.github.com/research/github-actions-preventing-pwn-requests/ の一読を推奨
-  pull_request_target:
-
-permissions:
-  packages: write
-
-env:
-  IMAGE_NAME: traq-ui
+  pull_request:
 
 jobs:
   build-preview-image:
@@ -20,7 +13,6 @@ jobs:
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
 
       - name: Set up QEMU
@@ -36,19 +28,23 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
-        with:
-          registry: ghcr.io
-          username: traptitech
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # 隔離された環境でビルドを行い、write perm付きトークンをユーザーのコードに与えないよう注意すること
       - name: Build
         uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: true
-          # NOTE: once https://github.com/argoproj/argo-cd/pull/13199 is released we can use short sha
-          tags: ghcr.io/traptitech/${{ env.IMAGE_NAME }}:preview-${{ env.PR_NUMBER }}-${{ github.event.pull_request.head.sha }}
+          outputs: type=oci,dest=/tmp/image.tar
+
+      - name: Save PR info
+        run: |
+          echo "${{ github.event.number }}" > /tmp/pr_number
+          echo "${{ github.event.pull_request.head.sha }}" > /tmp/pr_sha
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.3.0
+        with:
+          name: preview-artifacts
+          path: |
+            /tmp/image.tar
+            /tmp/pr_number
+            /tmp/pr_sha

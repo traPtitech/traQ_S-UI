@@ -1,0 +1,44 @@
+name: Push preview image
+
+on:
+  workflow_run:
+    workflows: ['build-preview']
+    types:
+      - completed
+
+permissions:
+  packages: write
+  actions: read
+
+env:
+  IMAGE_NAME: traq-ui
+
+jobs:
+  push-preview-image:
+    name: Push Preview Image
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v4.1.7
+        with:
+          name: preview-artifacts
+          path: /tmp/artifacts
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set ENV vars
+        run: |
+          echo "PR_NUMBER=$(cat /tmp/artifacts/pr_number)" >> $GITHUB_ENV
+          echo "PR_SHA=$(cat /tmp/artifacts/pr_sha)" >> $GITHUB_ENV
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
+        with:
+          registry: ghcr.io
+          username: traptitech
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image
+        run: |
+          skopeo copy --all oci-archive:/tmp/artifacts/image.tar docker://ghcr.io/traptitech/${IMAGE_NAME}:preview-${PR_NUMBER}-${PR_SHA}
