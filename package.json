@@ -44,7 +44,7 @@
     "highlight.js": "11.11.1",
     "idb-keyval": "6.2.2",
     "livekit-client": "2.17.0",
-    "mitt": "3.0.0",
+    "mitt": "3.0.1",
     "party-js": "2.2.0",
     "sortablejs": "1.15.6",
     "text-field-edit": "4.1.1",
@@ -76,14 +76,14 @@
     "@types/webappsec-credential-management": "0.6.9",
     "@typescript-eslint/eslint-plugin": "8.43.0",
     "@typescript-eslint/parser": "8.54.0",
-    "@typescript/lib-dom": "npm:@types/web@^0.0.72",
+    "@typescript/lib-dom": "npm:@types/web@0.0.72",
     "@vitejs/plugin-vue": "6.0.3",
     "@vitest/coverage-v8": "4.1.4",
     "@vue/test-utils": "2.4.6",
     "autoprefixer": "10.4.24",
-    "axios": "1.15.0",
+    "axios": "1.16.1",
     "browserslist": "4.28.1",
-    "cypress": "15.8.1",
+    "cypress": "15.15.0",
     "esbuild": "0.27.2",
     "esbuild-plugin-browserslist": "2.0.0",
     "eslint": "9.39.2",
@@ -98,7 +98,7 @@
     "lint-staged": "16.2.7",
     "patch-package": "8.0.1",
     "pinia": "3.0.4",
-    "postcss": "8.5.3",
+    "postcss": "8.5.15",
     "prettier": "3.8.1",
     "rollup-plugin-brotli": "3.1.0",
     "sass": "1.97.3",
@@ -117,6 +117,12 @@
     "workbox-precaching": "7.4.0",
     "workbox-routing": "7.3.0",
     "workbox-strategies": "7.4.0"
+  },
+  "overrides": {
+    "@actions/core": "3.0.1",
+    "@types/vue-select": {
+      "vue": "$vue"
+    }
   },
   "engines": {
     "node": ">=24.16",
