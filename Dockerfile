@@ -5,7 +5,7 @@ ENV CYPRESS_INSTALL_BINARY=0
 
 COPY package*.json ./
 COPY patches/ ./patches/
-RUN npm ci --unsafe-perm
+RUN npm ci
 COPY . .
 RUN NODE_ENV=production npm run build:with-font
 
