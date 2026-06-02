@@ -52,4 +52,3 @@ jobs:
           push: true
           # NOTE: once https://github.com/argoproj/argo-cd/pull/13199 is released we can use short sha
           tags: ghcr.io/traptitech/${{ env.IMAGE_NAME }}:preview-${{ env.PR_NUMBER }}-${{ github.event.pull_request.head.sha }}
-          cache-from: type=registry,ref=ghcr.io/traptitech/${{ env.IMAGE_NAME }}:buildcache
