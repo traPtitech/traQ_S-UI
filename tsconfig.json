@@ -18,14 +18,13 @@
     "verbatimModuleSyntax": true,
     "sourceMap": true,
     "noEmit": true,
-    "baseUrl": ".",
     "types": [
       "serviceworker",
       "dom-screen-wake-lock",
       "webappsec-credential-management"
     ],
     "paths": {
-      "/@/*": ["src/*"]
+      "/@/*": ["./src/*"]
     },
     "lib": ["esnext", "dom", "dom.iterable"]
   },
