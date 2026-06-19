@@ -1,6 +1,7 @@
 <template>
   <div :class="$style.header">
     <span :class="$style.displayName">{{ displayName }}</span>
+    <span :class="$style.name">{{ name }}</span>
   </div>
 </template>
 
@@ -17,6 +18,7 @@ const props = defineProps<{
 const { usersMap, fetchUser } = useUsersStore()
 
 const user = computed(() => usersMap.value.get(props.userId))
+const name = computed(() => '@' + (user.value?.name ?? 'unknown'))
 const displayName = computed(() => user.value?.displayName ?? 'unknown')
 if (user.value === undefined) {
   fetchUser({ userId: props.userId })
@@ -33,6 +35,22 @@ if (user.value === undefined) {
 .displayName {
   @include size-body2;
   font-weight: bold;
+  flex: 2;
+  max-width: min-content;
+
+  word-break: keep-all;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.name {
+  @include size-body2;
+  @include color-ui-secondary;
+  margin-left: 4px;
+  flex: 1;
+  max-width: min-content;
+
   word-break: keep-all;
   white-space: nowrap;
   text-overflow: ellipsis;
