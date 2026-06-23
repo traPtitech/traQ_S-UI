@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { computed, shallowRef, watch } from 'vue'
+import { computed } from 'vue'
 import type { Component, SVGAttributes } from 'vue'
 
 import mdiPaths from '/@/assets/mdi'
@@ -33,11 +33,13 @@ type ComponentModule = {
 }
 
 const iconModules0 = import.meta.glob<ComponentModule>(
-  '/src/assets/icons/*.svg'
+  '/src/assets/icons/*.svg',
+  { eager: true }
   /* ?component や as: 'component'が効かないのでdefaultImportオプションで指定 */
 )
 const iconModules1 = import.meta.glob<ComponentModule>(
-  '/src/assets/icons/*/*.svg'
+  '/src/assets/icons/*/*.svg',
+  { eager: true }
   /* 上記同様 */
 )
 
@@ -67,27 +69,17 @@ interface Attributes extends /* @vue-ignore */ SVGAttributes {}
 
 defineEmits<Attributes>()
 
-const getComponent = async (name: string) => {
-  const moduleFunc = iconModules[`/src/assets/icons/${name}.svg`]
-  if (!moduleFunc) {
+const getComponent = (name: string) => {
+  const module = iconModules[`/src/assets/icons/${name}.svg`]
+  if (!module) {
     throw new Error(`存在しないアイコン名: ${name}`)
   }
 
-  const module = await moduleFunc()
   return module.default
 }
 
-const svgComponent = shallowRef()
-watch(
-  () => props.name,
-  async () => {
-    if (props.mdi) return
-    const name = props.name
-    const com = await getComponent(name)
-    if (props.name !== name) return // 取得中にnameが変わったら何もしない
-    svgComponent.value = com
-  },
-  { immediate: true }
+const svgComponent = computed(() =>
+  props.mdi ? undefined : getComponent(props.name)
 )
 
 const path = computed(() => mdiPaths[props.name])
