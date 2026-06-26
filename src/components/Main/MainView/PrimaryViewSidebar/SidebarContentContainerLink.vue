@@ -4,6 +4,9 @@
     :title="title"
     :large-padding="largePadding"
     @toggle="emit('clickLink')"
+    
+    :iconName="iconName" 
+    :iconMdi="iconMdi"
   >
     <template #header-control>
       <div>
@@ -26,6 +29,9 @@ withDefaults(
     title?: string
     count?: number
     largePadding?: boolean
+
+    iconName?: string
+    iconMdi?: boolean
   }>(),
   {
     largePadding: false

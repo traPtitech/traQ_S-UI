@@ -12,6 +12,7 @@
       @click="emit('toggle')"
     >
       <h2 :class="$style.headerTitle">
+        <AIcon v-if="iconName" :class="$style.headerIcon" :name="iconName" :mdi="iconMdi" :size="18"/>
         {{ title }}
       </h2>
       <slot name="header-control" />
@@ -21,12 +22,16 @@
 </template>
 
 <script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 const props = withDefaults(
   defineProps<{
     title?: string
     largePadding?: boolean
     clickable?: boolean
     titleClickable?: boolean
+
+    iconName?: string
+    iconMdi?: boolean
   }>(),
   {
     largePadding: false,
@@ -81,5 +86,9 @@ const onContainerClick = () => {
 .headerTitle {
   @include size-body1;
   font-weight: bold;
+}
+
+.headerIcon {
+  margin: 8px;
 }
 </style>
