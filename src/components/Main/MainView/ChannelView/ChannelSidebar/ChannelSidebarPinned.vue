@@ -3,6 +3,8 @@
     title="ピン留め"
     :count="pinnedMessageLength"
     @click-link="emit('clickLink')"
+    icon-name="pin"
+    icon-mdi
   />
 </template>
 

@@ -2,6 +2,8 @@
   <SidebarContentContainerLink
     title="イベント"
     @click-link="emit('clickLink')"
+    icon-name="history"
+    icon-mdi
   />
 </template>
 
