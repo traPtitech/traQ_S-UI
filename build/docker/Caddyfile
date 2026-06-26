@@ -1,15 +1,23 @@
 {
     admin off
 }
-
-:80
-
-encode zstd gzip
-header /sw.js Cache-Control "max-age=0"
-
-file_server {
-    precompressed br gzip
+:80 {
+    encode zstd gzip
+    header /sw.js Cache-Control "max-age=0"
+    @api path /api /api/*
+    handle @api {
+        reverse_proxy https://q.trap.jp {
+            header_up Host q.trap.jp
+            transport http {
+                tls_server_name q.trap.jp
+            }
+        }
+    }
+    handle {
+        root * /usr/share/caddy
+        try_files {path} /index.html
+        file_server {
+            precompressed br gzip
+        }
+    }
 }
-root * /usr/share/caddy
-
-try_files {path} /index.html
