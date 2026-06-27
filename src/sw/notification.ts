@@ -84,7 +84,7 @@ export const setupNotification = async () => {
       if (store?.detail) {
         const me = store.detail
         data.body = `${me.displayName}: ${event.reply}`
-        data.icon = `/api/v3/files/${me.iconFileId}`
+        data.icon = `/api/v3/files/${me.iconFileId}?dl=1`
       } else {
         // eslint-disable-next-line no-console
         console.warn('[sw] no store or me.detail found')

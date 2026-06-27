@@ -33,11 +33,11 @@ const apis = new Apis(
 
 export default apis
 
-export const buildFilePath = (fileId: FileId, withDlParam = false) =>
-  `${BASE_PATH}/files/${fileId}${withDlParam ? '?dl=1' : ''}`
+export const buildFilePath = (fileId: FileId) =>
+  `${BASE_PATH}/files/${fileId}?dl=1`
 
 export const buildUserIconPath = (userIconFileId: FileId) =>
-  `${BASE_PATH}/files/${userIconFileId}`
+  `${BASE_PATH}/files/${userIconFileId}?dl=1`
 
 export const buildFileThumbnailPath = (fileId: FileId) =>
   `${BASE_PATH}/files/${fileId}/thumbnail`

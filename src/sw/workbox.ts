@@ -68,7 +68,7 @@ export const setupWorkbox = () => {
 
   // ファイルAPIのキャッシュ設定
   registerRoute(
-    new RegExp('/api/v3/files/[0-9a-fA-F-]{36}$'),
+    new RegExp('/api/v3/files/[0-9a-fA-F-]{36}(\\?dl=1)?$'),
     new CacheFirst({
       cacheName: 'files-cache',
       plugins: [

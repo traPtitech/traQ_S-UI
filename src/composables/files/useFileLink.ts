@@ -7,7 +7,7 @@ import type { FileId } from '/@/types/entity-ids'
 const useFileLink = (props: { fileId: FileId }) => {
   const fileLink = computed(() => constructFilesPath(props.fileId))
   const onFileDownloadLinkClick = () => {
-    location.href = buildFilePath(props.fileId, true)
+    location.href = buildFilePath(props.fileId)
   }
   return { fileLink, onFileDownloadLinkClick }
 }
