@@ -1,16 +1,18 @@
 <template>
-  <sidebar-content-container-foldable title="Qall">
-    <channel-sidebar-member-icons :viewer-states="viewStates" />
-  </sidebar-content-container-foldable>
+  <SidebarContentContainerFoldable title="Qall">
+    <ChannelSidebarMemberIcons :viewer-states="viewStates" />
+  </SidebarContentContainerFoldable>
 </template>
 
 <script lang="ts" setup>
-import SidebarContentContainerFoldable from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerFoldable.vue'
-import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 import { computed } from 'vue'
-import type { ChannelId } from '/@/types/entity-ids'
-import { useUsersStore } from '/@/store/entities/users'
+
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerFoldable.vue'
 import { isDefined } from '/@/lib/basic/array'
+import { useUsersStore } from '/@/store/entities/users'
+import type { ChannelId } from '/@/types/entity-ids'
+
+import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 
 const props = defineProps<{
   qallUserIds: ChannelId[]

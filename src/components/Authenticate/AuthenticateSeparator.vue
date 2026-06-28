@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.container">
-    <span :class="$style.hr"></span>
+    <span :class="$style.hr" />
     <span v-if="label !== ''" :class="$style.label">
       {{ label }}
     </span>
-    <span :class="$style.hr"></span>
+    <span :class="$style.hr" />
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <navigation-selector-item
+    <NavigationSelectorItem
       v-for="item in entries"
       :key="item.type"
       :class="$style.item"
@@ -11,7 +11,7 @@
       @click="onNavigationItemClick(item.type)"
     />
     <div v-if="showSeparator" :class="$style.separator" />
-    <navigation-selector-item
+    <NavigationSelectorItem
       v-for="item in ephemeralEntries"
       :key="item.type"
       :class="$style.item"
@@ -25,16 +25,18 @@
 </template>
 
 <script lang="ts" setup>
-import NavigationSelectorItem from '/@/components/Main/NavigationBar/NavigationSelectorItem.vue'
 import { computed, watch } from 'vue'
+
+import NavigationSelectorItem from '/@/components/Main/NavigationBar/NavigationSelectorItem.vue'
 import type {
-  NavigationItemType,
-  EphemeralNavigationItemType
+  EphemeralNavigationItemType,
+  NavigationItemType
 } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 import {
-  useNavigationSelectorItem,
-  useEphemeralNavigationSelectorItem
+  useEphemeralNavigationSelectorItem,
+  useNavigationSelectorItem
 } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
+
 import type { EphemeralNavigationSelectorEntry } from './composables/useNavigationSelectorEntry'
 import useNavigationSelectorEntry from './composables/useNavigationSelectorEntry'
 

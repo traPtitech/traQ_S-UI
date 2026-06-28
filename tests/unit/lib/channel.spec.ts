@@ -1,12 +1,12 @@
-import type { ChannelId } from '/@/types/entity-ids'
 import type { MatchResult } from '/@/lib/channel'
 import {
-  channelDeepMatching,
   canCreateChildChannel,
-  channelIdToSimpleChannelPath,
-  channelIdToPathString
+  channelDeepMatching,
+  channelIdToPathString,
+  channelIdToSimpleChannelPath
 } from '/@/lib/channel'
 import type { ChannelLike } from '/@/lib/channelTree'
+import type { ChannelId } from '/@/types/entity-ids'
 
 describe('canCreateChildChannel', () => {
   it('can create', () => {

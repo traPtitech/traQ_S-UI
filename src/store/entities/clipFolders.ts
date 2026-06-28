@@ -1,15 +1,19 @@
 import type { ClipFolder } from '@traptitech/traq'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+
 import { ref } from 'vue'
-import { useTrueChangedPromise } from '/@/store/utils/promise'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import type { ClipFolderId } from '/@/types/entity-ids'
-import { createSingleflight } from '/@/lib/basic/async'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import apis from '/@/lib/apis'
-import type { CacheStrategy } from './utils'
-import { fetchWithCacheStrategy } from './utils'
+import { createSingleflight } from '/@/lib/basic/async'
 import { arrayToMap } from '/@/lib/basic/map'
 import { wsListener } from '/@/lib/websocket'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import { useTrueChangedPromise } from '/@/store/utils/promise'
+import type { ClipFolderId } from '/@/types/entity-ids'
+
+import type { CacheStrategy } from './utils'
+import { fetchWithCacheStrategy } from './utils'
 
 const getClipFolder = createSingleflight(apis.getClipFolder.bind(apis))
 const getClipFolders = createSingleflight(apis.getClipFolders.bind(apis))
@@ -17,8 +21,8 @@ const getClipFolders = createSingleflight(apis.getClipFolders.bind(apis))
 const useClipFoldersStorePinia = defineStore('entities/clipFolders', () => {
   const clipFoldersMap = ref(new Map<ClipFolderId, ClipFolder>())
   const clipFoldersMapFetched = ref(false)
-  const clipFoldersMapInitialFetchPromise = ref(
-    useTrueChangedPromise(clipFoldersMapFetched)
+  const clipFoldersMapInitialFetchPromise = useTrueChangedPromise(
+    clipFoldersMapFetched
   )
 
   const fetchClipFolder = async ({
@@ -33,7 +37,7 @@ const useClipFoldersStorePinia = defineStore('entities/clipFolders', () => {
       clipFoldersMap,
       clipFolderId,
       clipFoldersMapFetched.value,
-      clipFoldersMapInitialFetchPromise.value,
+      clipFoldersMapInitialFetchPromise,
       getClipFolder,
       clipFolder => {
         clipFoldersMap.value.set(clipFolder.id, clipFolder)

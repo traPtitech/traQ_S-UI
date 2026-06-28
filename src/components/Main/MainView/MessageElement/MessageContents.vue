@@ -1,34 +1,34 @@
 <template>
   <div :class="$style.container">
-    <user-icon :class="$style.userIcon" :user-id="message.userId" :size="40" />
-    <message-header
+    <UserIcon :class="$style.userIcon" :user-id="message.userId" :size="40" />
+    <MessageHeader
       :class="$style.messageHeader"
       :user-id="message.userId"
       :created-at="message.createdAt"
       :updated-at="message.updatedAt"
     />
     <div :class="$style.messageContents">
-      <markdown-content v-show="!isEditing" :content="renderedContent" />
-      <message-editor
+      <MarkdownContent v-show="!isEditing" :content="renderedContent" />
+      <MessageEditor
         v-if="isEditing"
         :raw-content="message.content"
         :message-id="messageId"
         :channel-id="message.channelId"
         @finish-editing="finishEditing"
       />
-      <message-quote-list
+      <MessageQuoteList
         v-if="embeddingsState.quoteMessageIds.length > 0"
         :class="$style.messageEmbeddingsList"
         :parent-message-channel-id="message.channelId"
         :message-ids="embeddingsState.quoteMessageIds"
       />
-      <message-file-list
+      <MessageFileList
         v-if="embeddingsState.fileIds.length > 0"
         :class="$style.messageEmbeddingsList"
         :channel-id="message.channelId"
         :file-ids="embeddingsState.fileIds"
       />
-      <message-ogp-list
+      <MessageOgpList
         v-if="embeddingsState.externalUrls.length > 0"
         :external-urls="embeddingsState.externalUrls"
       />
@@ -37,19 +37,21 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import MessageHeader from './MessageHeader.vue'
-import MessageEditor from './MessageEditor.vue'
-import MessageFileList from './MessageFileList.vue'
-import MessageQuoteList from './MessageQuoteList.vue'
-import MessageOgpList from './MessageOgpList.vue'
 import { computed } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
+
+import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
+import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
-import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
-import { useMessagesView } from '/@/store/domain/messagesView'
+import type { MessageId } from '/@/types/entity-ids'
+
+import MessageFileList from './Embeddings/MessageFileList.vue'
+import MessageOgpList from './Embeddings/MessageOgpList.vue'
+import MessageQuoteList from './Embeddings/MessageQuoteList.vue'
+import MessageEditor from './MessageEditor.vue'
+import MessageHeader from './MessageHeader.vue'
 
 const props = defineProps<{
   messageId: MessageId

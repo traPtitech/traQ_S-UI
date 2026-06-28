@@ -1,29 +1,34 @@
 <template>
-  <click-outside stop @click-outside="clearModal">
+  <ClickOutside stop @click-outside="clearModal">
     <div :class="$style.container">
-      <common-modal-header
+      <CommonModalHeader
         :class="$style.header"
         :icon-name="iconName"
         :icon-mdi="iconMdi"
         :title="title"
         :return-button="returnButton"
+        :edit-button="editButton"
+        @edit="emit('edit', $event)"
       >
         <template #subtitle>
-          <template v-if="subtitle">{{ subtitle }}</template>
+          <template v-if="subtitle">
+            {{ subtitle }}
+          </template>
           <slot v-else name="subtitle" />
         </template>
-      </common-modal-header>
+      </CommonModalHeader>
       <div :class="$style.body">
         <slot />
       </div>
     </div>
-  </click-outside>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>
 import ClickOutside from '/@/components/UI/ClickOutside'
-import CommonModalHeader from './ModalHeader.vue'
 import { useModalStore } from '/@/store/ui/modal'
+
+import CommonModalHeader from './ModalHeader.vue'
 
 withDefaults(
   defineProps<{
@@ -32,13 +37,19 @@ withDefaults(
     title: string
     subtitle?: string
     returnButton?: boolean
+    editButton?: boolean
   }>(),
   {
     iconMdi: false,
     subtitle: '',
-    returnButton: false
+    returnButton: false,
+    editButton: false
   }
 )
+
+const emit = defineEmits<{
+  edit: [event: MouseEvent]
+}>()
 
 const { clearModal } = useModalStore()
 </script>

@@ -2,25 +2,27 @@
   <li :class="$style.container" :data-is-open="$boolAttr(isOpen)">
     <div :class="$style.name" @click="toggleOpen">
       {{ scopeInfo.name }}
-      <a-icon :class="$style.icon" name="rounded-triangle" />
+      <AIcon :class="$style.icon" name="rounded-triangle" />
     </div>
-    <slide-down :is-open="isOpen">
+    <SlideDown :is-open="isOpen">
       <ul :class="$style.permissions">
         <li v-for="permission in scopeInfo.permissions" :key="permission">
           {{ permission }}
         </li>
       </ul>
-    </slide-down>
+    </SlideDown>
   </li>
 </template>
 
 <script lang="ts" setup>
-import SlideDown from '/@/components/UI/SlideDown.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import { computed } from 'vue'
 import type { OAuth2Scope } from '@traptitech/traq'
-import { scopeInfoMap } from '/@/lib/clientScope'
+
+import { computed } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
+import SlideDown from '/@/components/UI/SlideDown.vue'
 import useToggle from '/@/composables/utils/useToggle'
+import { scopeInfoMap } from '/@/lib/clientScope'
 
 const props = defineProps<{
   scope: OAuth2Scope

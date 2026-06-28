@@ -4,11 +4,11 @@
     :data-on-secondary="$boolAttr(onSecondary)"
     @click="focus"
   >
-    <a-icon mdi name="search" :size="18" :class="$style.icon" />
+    <AIcon mdi name="search" :size="18" :class="$style.icon" />
     <input
       ref="inputRef"
       :class="$style.input"
-      :value="value"
+      :value="modelValue"
       :placeholder="placeholder"
       :autocapitalize="autocapitalize"
       :type="disableIme ? 'url' : 'text'"
@@ -23,24 +23,32 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted, shallowRef } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
-import { shallowRef, onMounted } from 'vue'
+import useOnInput from '/@/composables/useOnInput'
 import { isTouchDevice } from '/@/lib/dom/browser'
-import useTextModelSyncer from '/@/composables/useTextModelSyncer'
+
+const modelValue = defineModel<string>('modelValue', { default: '' })
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string
     onSecondary?: boolean
     placeholder?: string
     autocapitalize?: string
     disableIme?: boolean
     title?: string
     focusOnMount?: boolean
-    enterkeyhint?: string
+    enterkeyhint?:
+      | 'done'
+      | 'send'
+      | 'search'
+      | 'enter'
+      | 'go'
+      | 'next'
+      | 'previous'
   }>(),
   {
-    modelValue: '',
     onSecondary: false,
     placeholder: '',
     autocapitalize: 'off',
@@ -52,15 +60,13 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', _val: string): void
   (e: 'enter'): void
 }>()
 
-const { value, onInput } = useTextModelSyncer(props, emit)
+const onInput = useOnInput(modelValue)
 
 const reset = () => {
-  // update:modelValueイベントを発火することで値を変更する
-  emit('update:modelValue', '')
+  modelValue.value = ''
 }
 
 const inputRef = shallowRef<HTMLInputElement | null>(null)

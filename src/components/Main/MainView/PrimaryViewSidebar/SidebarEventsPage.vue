@@ -1,7 +1,7 @@
 <template>
-  <primary-view-sidebar-page show-back-button @back="emit('moveBack')">
+  <PrimaryViewSidebarPage show-back-button @back="emit('moveBack')">
     <template #header>
-      <sidebar-header text="イベント" />
+      <SidebarHeader text="イベント" />
     </template>
     <template #content>
       <div
@@ -9,7 +9,7 @@
         :class="$style.container"
         @scroll.passive="onScroll"
       >
-        <sidebar-event
+        <SidebarEvent
           v-for="parsedEvent in parsedEvents"
           :key="parsedEvent.datetime"
           :class="$style.item"
@@ -20,17 +20,19 @@
         </div>
       </div>
     </template>
-  </primary-view-sidebar-page>
+  </PrimaryViewSidebarPage>
 </template>
 
 <script lang="ts" setup>
-import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
-import SidebarHeader from './SidebarHeader.vue'
-import SidebarEvent from './SidebarEvent/SidebarEvent.vue'
 import { computed, shallowRef } from 'vue'
-import type { ChannelId } from '/@/types/entity-ids'
-import useChannelEvents from './composables/useChannelEvents'
+
+import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
 import { parseChannelEvent } from '/@/lib/apis'
+import type { ChannelId } from '/@/types/entity-ids'
+
+import SidebarEvent from './SidebarEvent/SidebarEvent.vue'
+import SidebarHeader from './SidebarHeader.vue'
+import useChannelEvents from './composables/useChannelEvents'
 
 const props = defineProps<{
   channelId: ChannelId

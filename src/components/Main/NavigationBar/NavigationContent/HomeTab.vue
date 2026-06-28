@@ -1,60 +1,78 @@
 <template>
   <div>
-    <navigation-content-container
+    <NavigationContentContainer
       v-if="homeChannelWithTree.length > 0"
       subtitle="ホームチャンネル"
       :class="$style.item"
     >
-      <channel-tree :channels="homeChannelWithTree" show-shortened-path />
-    </navigation-content-container>
-    <navigation-content-container
-      v-if="
-        dmChannelsWithNotification.length + channelsWithNotification.length !==
-        0
-      "
-      subtitle="未読"
-      :class="$style.item"
-    >
-      <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
-      <channel-list :channels="channelsWithNotification" />
-    </navigation-content-container>
-    <navigation-content-container subtitle="チャンネル" :class="$style.item">
-      <channel-tree
+      <ChannelTree :channels="homeChannelWithTree" show-shortened-path />
+    </NavigationContentContainer>
+    <div>
+      <NavigationContentContainer
+        v-if="
+          dmChannelsWithNotification.length + noticeableChannels.length !== 0
+        "
+        subtitle="メンション"
+        :class="$style.item"
+      >
+        <DMChannelList :dm-channels="dmChannelsWithNotification" />
+        <ChannelList
+          :channels="noticeableChannels"
+          :show-star="prioritizeStarredChannel"
+        />
+      </NavigationContentContainer>
+      <NavigationContentContainer
+        v-if="unreadChannels.length > 0"
+        subtitle="未読"
+        :class="$style.item"
+      >
+        <ChannelList
+          :channels="unreadChannels"
+          :show-star="prioritizeStarredChannel"
+          :show-notified="prioritizeNotifiedChannel"
+        />
+      </NavigationContentContainer>
+    </div>
+    <NavigationContentContainer subtitle="チャンネル" :class="$style.item">
+      <ChannelTree
         v-if="topLevelChannels.length > 0"
         :channels="topLevelChannels"
       />
-      <empty-state v-else>購読していません</empty-state>
-    </navigation-content-container>
-    <navigation-content-container
-      v-if="channelsWithRtc.length > 0"
+      <EmptyState v-else> 購読していません </EmptyState>
+    </NavigationContentContainer>
+    <NavigationContentContainer
+      v-if="qallingChannels.length > 0"
       subtitle="Qall中チャンネル"
       :class="$style.item"
     >
-      <channel-list :channels="channelsWithRtc" />
-    </navigation-content-container>
+      <ChannelList :channels="qallingChannels" />
+    </NavigationContentContainer>
   </div>
 </template>
 
 <script lang="ts" setup>
-import EmptyState from '/@/components/UI/EmptyState.vue'
+import { computed, toRaw } from 'vue'
+
 import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
 import ChannelTree from '/@/components/Main/NavigationBar/ChannelList/ChannelTree.vue'
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
-import { computed, toRaw } from 'vue'
-import { isDefined } from '/@/lib/basic/array'
-import { constructTreeFromIds } from '/@/lib/channelTree'
-import { useChannelTree } from '/@/store/domain/channelTree'
-import { useDomainRtcStore } from '/@/store/domain/rtc'
-import { useMeStore } from '/@/store/domain/me'
-import { useChannelsStore } from '/@/store/entities/channels'
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import EmptyState from '/@/components/UI/EmptyState.vue'
+import { useQall } from '/@/composables/qall/useQall'
 import useChannelsWithNotification from '/@/composables/subscription/useChannelsWithNotification'
 import { filterTrees } from '/@/lib/basic/tree'
+import { constructTreeFromIds } from '/@/lib/channelTree'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useChannelTree } from '/@/store/domain/channelTree'
+import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const { homeChannelTree } = useChannelTree()
-const { channelSessionsMap } = useDomainRtcStore()
 const { detail } = useMeStore()
 const { channelsMap } = useChannelsStore()
+const { rooms: roomWithParticipants } = useQall()
+const { prioritizeNotifiedChannel, prioritizeStarredChannel } =
+  useBrowserSettings()
 
 const homeChannelWithTree = computed(() => {
   if (!detail.value?.homeChannel) return []
@@ -66,18 +84,16 @@ const homeChannelWithTree = computed(() => {
   return filterTrees(trees, channel => !channel.archived)
 })
 
-const { channelsWithNotification, dmChannelsWithNotification } =
+const { noticeableChannels, unreadChannels, dmChannelsWithNotification } =
   useChannelsWithNotification()
 
 const topLevelChannels = computed(() =>
   // filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
   filterTrees(toRaw(homeChannelTree.value.children), node => !node.archived)
 )
-const channelsWithRtc = computed(() =>
-  [...channelSessionsMap.value.entries()]
-    .filter(([, sessionIds]) => sessionIds.size > 0)
-    .map(([channelId]) => channelsMap.value.get(channelId))
-    .filter(isDefined)
+
+const qallingChannels = computed(() =>
+  roomWithParticipants.value.map(room => room.channel)
 )
 </script>
 

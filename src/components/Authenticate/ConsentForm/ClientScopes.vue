@@ -2,7 +2,7 @@
   <div>
     <p :class="$style.title">許可される項目:</p>
     <ul :class="$style.list">
-      <client-scope
+      <ClientScope
         v-for="scope in scopes"
         :key="scope"
         :class="$style.item"
@@ -13,8 +13,9 @@
 </template>
 
 <script lang="ts" setup>
-import ClientScope from './ClientScope.vue'
 import type { OAuth2Scope } from '@traptitech/traq'
+
+import ClientScope from './ClientScope.vue'
 
 withDefaults(
   defineProps<{

@@ -1,16 +1,16 @@
 <template>
   <div :class="$style.container">
-    <share-target-component :title="title" :text="text" :url="url" />
-    <stamp-picker-container />
+    <ShareTargetComponent :title="title" :text="text" :url="url" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import ShareTargetComponent from '/@/components/ShareTarget/ShareTarget.vue'
-import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import { computed } from 'vue'
-import { getFirstQuery } from '/@/lib/basic/url'
 import { useRoute } from 'vue-router'
+
+import ShareTargetComponent from '/@/components/ShareTarget/ShareTarget.vue'
+import { getFirstQuery } from '/@/lib/basic/url'
+
 import useLoginCheck from './composables/useLoginCheck'
 
 const route = useRoute()

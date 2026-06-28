@@ -1,12 +1,13 @@
 import { transparentizeWithFallback } from '/@/lib/basic/color'
-import type { OnlyDefault } from './util'
-import { resolveOnlyDefault, resolveWithFallback } from './util'
 import type {
   BasicTheme,
   CSSColorType,
   CSSColorTypeSimple,
   CSSImageType
 } from '/@/lib/theme/schema'
+
+import type { OnlyDefault } from './util'
+import { resolveOnlyDefault, resolveWithFallback } from './util'
 
 export type ResolvedBasicTheme = {
   accent: {

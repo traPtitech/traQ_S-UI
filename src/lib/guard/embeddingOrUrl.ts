@@ -1,8 +1,8 @@
 import type {
   EmbeddingFile,
   EmbeddingMessage,
-  ExternalUrl,
-  EmbeddingOrUrl
+  EmbeddingOrUrl,
+  ExternalUrl
 } from '@traptitech/traq-markdown-it'
 
 export const isFile = (e: EmbeddingOrUrl): e is EmbeddingFile =>

@@ -1,19 +1,30 @@
 <template>
   <div>
-    <div :class="$style.label">{{ label }}</div>
+    <div :class="$style.labelContainer">
+      <label v-if="label" :for="id" :class="$style.label">
+        {{ label }}
+      </label>
+      <span v-if="hasError" :class="$style.errorMessage">
+        {{ errorMessage }}
+      </span>
+    </div>
     <div v-if="isEditing" :class="$style.inputWrapper">
-      <form-input
+      <FormInput
+        :id="id"
         ref="inputRef"
         v-model="localValue"
         :class="$style.input"
         :max-length="maxLength"
         on-secondary
+        :error-message="hasError ? '' : null"
+        @input="emit('update:localValue', localValue)"
       />
-      <a-icon
+      <AIcon
         name="check"
         mdi
         :class="$style.icon"
         :size="20"
+        :data-has-error="$boolAttr(hasError)"
         @click="endEditing"
       />
     </div>
@@ -21,7 +32,7 @@
       <div :class="$style.value" :data-is-empty="localValue === ''">
         {{ localValue || `${label}が設定されていません` }}
       </div>
-      <a-icon
+      <AIcon
         name="pencil-outline"
         mdi
         :class="$style.icon"
@@ -33,26 +44,36 @@
 </template>
 
 <script lang="ts" setup>
-import FormInput from '/@/components/UI/FormInput.vue'
+import { computed, nextTick, ref, useId } from 'vue'
+import type { ComponentExposed } from 'vue-component-type-helpers'
+
 import AIcon from '/@/components/UI/AIcon.vue'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
+import FormInput from '/@/components/UI/FormInput.vue'
 import useLocalInput from '/@/composables/utils/useLocalInput'
 import useToggle from '/@/composables/utils/useToggle'
-import { ref, nextTick } from 'vue'
 
-const props = defineProps<{
-  label: string
-  modelValue: string
-  maxLength?: number
-}>()
+const remoteValue = defineModel<string>({ required: true })
+const id = useId()
+
+const props = withDefaults(
+  defineProps<{
+    label: string
+    maxLength?: number
+    errorMessage?: string | null
+  }>(),
+  {
+    errorMessage: null
+  }
+)
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', _value: string): void
+  (e: 'update:localValue', value: string): void
 }>()
 
-const inputRef = ref<InstanceType<typeof FormInput> | null>(null)
+const hasError = computed(() => props.errorMessage !== null)
 
-const remoteValue = useModelValueSyncer(props, emit)
+const inputRef = ref<ComponentExposed<typeof FormInput> | null>(null)
+
 const { localValue, isEditing } = useLocalInput(
   remoteValue,
   newValue => {
@@ -61,7 +82,7 @@ const { localValue, isEditing } = useLocalInput(
   },
   true // キャンセルするUIがないため
 )
-const { open, close: endEditing } = useToggle(isEditing)
+const { open, close } = useToggle(isEditing)
 
 const startEditing = async () => {
   open()
@@ -70,19 +91,35 @@ const startEditing = async () => {
     inputRef.value?.focus()
   }
 }
+
+const endEditing = () => {
+  if (hasError.value) return
+  close()
+}
 </script>
 
 <style lang="scss" module>
+.labelContainer {
+  display: flex;
+  gap: 0px 8px;
+  flex-wrap: wrap;
+}
 .label {
   @include color-ui-primary;
   font-weight: bold;
+}
+.errorMessage {
+  color: $theme-accent-error-default;
 }
 .icon {
   @include color-ui-primary-inactive;
   margin-left: 4px;
   cursor: pointer;
-  &:hover {
+  &:not([data-has-error]):hover {
     @include color-ui-primary;
+  }
+  &[data-has-error] {
+    cursor: not-allowed;
   }
 }
 

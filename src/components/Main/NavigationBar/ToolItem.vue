@@ -1,5 +1,5 @@
 <template>
-  <icon-button
+  <IconButton
     :icon-name="iconName"
     :icon-mdi="iconMdi"
     :class="$style.container"

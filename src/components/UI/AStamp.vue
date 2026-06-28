@@ -14,9 +14,10 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import type { StampId } from '/@/types/entity-ids'
+
 import { buildFilePath } from '/@/lib/apis'
 import { useStampsStore } from '/@/store/entities/stamps'
+import type { StampId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{
@@ -33,7 +34,9 @@ const props = withDefaults(
 
 const { stampsMap } = useStampsStore()
 
-const name = computed(() => stampsMap.value.get(props.stampId)?.name ?? '')
+const name = computed(
+  () => stampsMap.value.get(props.stampId)?.name ?? 'unknown stamp'
+)
 const imageUrl = computed(() => {
   const fileId = stampsMap.value.get(props.stampId)?.fileId
   return fileId ? buildFilePath(fileId) : ''

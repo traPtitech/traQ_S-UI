@@ -5,52 +5,51 @@
         mousedownイベントでやっているのはclickイベントだとフォーカスが外れるため
         preventをすることでclickイベントでフォーカスが外れるのを回避している
       -->
-      <dropdown-suggester-candidate
-        :candidate="confirmedPartCandidate"
-        :is-selected="selectedIndex === -1"
-        @mousedown.prevent="select(confirmedPartCandidate)"
-      />
       <div :class="$style.scroll">
-        <dropdown-suggester-candidate
+        <div
           v-for="(candidate, index) in candidates"
-          :key="candidate.text"
-          :candidate="candidate"
-          :is-selected="selectedIndex === index"
-          @mousedown.prevent="select(candidate)"
-        />
+          :key="candidate.word.text"
+          :ref="selectedIndex === index ? scrollToSelectedCandidate : undefined"
+        >
+          <DropdownSuggesterCandidate
+            :candidate="candidate.word"
+            :display="candidate.display"
+            :is-selected="selectedIndex === index"
+            @mousedown.prevent="select(candidate.word)"
+          />
+        </div>
       </div>
     </div>
   </teleport>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import type { Word } from '../composables/useWordSuggestionList'
-import type { WordOrConfirmedPart } from '../composables/useWordSuggester'
-import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
+import { type ComponentPublicInstance, computed } from 'vue'
+
 import { isIOS } from '/@/lib/dom/browser'
+import type { Candidate, Word } from '/@/lib/suggestion/basic'
+
+import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 
 const props = withDefaults(
   defineProps<{
     isShown?: boolean
+    width: number
     position?: { top: number; left: number }
-    candidates?: Word[]
+    candidates?: Candidate[]
     selectedIndex: number | null
-    confirmedPart?: string
   }>(),
   {
     isShown: false,
     position: () => ({ top: 0, left: 0 }),
-    candidates: () => [],
-    confirmedPart: ''
+    candidates: () => []
   }
 )
 
 const emit = defineEmits<{
-  (e: 'select', _word: WordOrConfirmedPart): void
+  (e: 'select', _word: Word): void
 }>()
 
-const WIDTH = 240
 const MARGIN = 8
 
 const iOSFlag = isIOS()
@@ -61,19 +60,21 @@ const styledPosition = computed(() => ({
       ? (window.visualViewport?.offsetTop ?? 0) + props.position.top
       : props.position.top
   }px`,
-  left: `min(${props.position.left}px, calc(100vw - ${WIDTH + MARGIN}px))`,
-  width: `${WIDTH}px`
+  left: `min(${props.position.left}px, calc(100vw - ${props.width + MARGIN}px))`,
+  width: `${props.width}px`
 }))
 
-const confirmedPartCandidate = computed(
-  (): WordOrConfirmedPart => ({
-    type: 'confirmed-part',
-    text: props.confirmedPart
-  })
-)
-
-const select = (word: WordOrConfirmedPart) => {
+const select = (word: Word) => {
   emit('select', word)
+}
+
+const scrollToSelectedCandidate = (
+  element: Element | ComponentPublicInstance | null
+) => {
+  if (!(element instanceof HTMLDivElement)) return
+  element.scrollIntoView({
+    block: 'center'
+  })
 }
 </script>
 
@@ -91,6 +92,5 @@ const select = (word: WordOrConfirmedPart) => {
 .scroll {
   overflow-y: scroll;
   max-height: 32px * 4.5;
-  border-top: 2px solid $theme-background-secondary-border;
 }
 </style>

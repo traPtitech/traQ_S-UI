@@ -1,7 +1,7 @@
 import type { EphemeralNavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 import {
-  useNavigation,
-  useEphemeralNavigation
+  useEphemeralNavigation,
+  useNavigation
 } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 
 import type { EphemeralNavigationSelectorEntry } from './useNavigationSelectorEntry'

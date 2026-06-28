@@ -1,3 +1,5 @@
+import type { ManifestOptions } from 'vite-plugin-pwa'
+
 export default {
   name: 'traQ',
   short_name: 'traQ',
@@ -54,4 +56,4 @@ export default {
     enctype: 'application/x-www-form-urlencoded',
     params: { title: 'title', text: 'text', url: 'url' }
   }
-}
+} satisfies Partial<ManifestOptions>

@@ -1,7 +1,8 @@
-import type { StampId } from '/@/types/entity-ids'
 import type { Stamp } from '@traptitech/traq'
-import { compareStringInsensitive } from '/@/lib/basic/string'
+
 import { isDefined } from '/@/lib/basic/array'
+import { compareStringInsensitive } from '/@/lib/basic/string'
+import type { StampId } from '/@/types/entity-ids'
 
 type StampName = string
 
@@ -49,7 +50,7 @@ export const categorizeUnicodeStamps = async (
   const unicodeEmojis = (await import('/@/assets/unicode_emojis.json')).default
 
   const unicodeStampCategories: StampCategory[] = unicodeEmojis.map(
-    (emojiCategory, i) => {
+    emojiCategory => {
       const name = emojiCategory.category
       const stampIds = emojiCategory.emojis
         .map(emojiName => unicodeStampNameIdMap.get(emojiName))

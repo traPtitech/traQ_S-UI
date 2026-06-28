@@ -5,7 +5,7 @@
         <img :class="$style.img" :src="imageUrl" width="136" height="136" />
       </div>
       <div>
-        <form-input
+        <FormInput
           v-model="newStampName"
           label="スタンプ名"
           prefix=":"
@@ -19,9 +19,10 @@
       </div>
     </div>
     <div :class="$style.buttonContainer">
-      <form-button label="戻る" type="tertiary" @click="back" />
-      <form-button
+      <FormButton label="戻る" type="tertiary" @click="back" />
+      <FormButton
         label="登録する"
+        :disabled="!isNameValid"
         :loading="isCreating"
         :class="$style.form"
         @click="createStamp"
@@ -31,14 +32,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, type Ref } from 'vue'
-import apis, { formatResizeError } from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
-import FormInput from '/@/components/UI/FormInput.vue'
+import { type Ref, computed, ref } from 'vue'
+
+import type { AxiosError } from 'axios'
+
 import FormButton from '/@/components/UI/FormButton.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import apis, { formatResizeError } from '/@/lib/apis'
+import { isValidStampName } from '/@/lib/validate'
 import { useMeStore } from '/@/store/domain/me'
 import { useModalStore } from '/@/store/ui/modal'
-import type { AxiosError } from 'axios'
+import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
   stampImage: File
@@ -50,14 +54,26 @@ const emit = defineEmits<{
 const { detail } = useMeStore()
 const { clearModal } = useModalStore()
 
+const trimExt = (filename: string) => filename.replace(/\.[^.]+$/, '')
+
 const imageUrl = computed(() => URL.createObjectURL(props.stampImage))
-const newStampName = ref('')
+const newStampName = ref(trimExt(props.stampImage.name))
+
+const isNameValid = computed(() => isValidStampName(newStampName.value))
 
 const useStampCreate = (newStampName: Ref<string>, stampImage: File) => {
   const { addSuccessToast, addErrorToast } = useToastStore()
   const isCreating = ref(false)
 
   const createStamp = async () => {
+    if (
+      !confirm(
+        `本当に「:${newStampName.value}:」を作成しますか？（作成後のスタンプの削除はできません。）`
+      )
+    ) {
+      return
+    }
+
     try {
       isCreating.value = true
       await apis.createStamp(newStampName.value, stampImage)

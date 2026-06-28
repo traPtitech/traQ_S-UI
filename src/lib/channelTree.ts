@@ -1,7 +1,8 @@
 import type { Channel } from '@traptitech/traq'
-import type { ChannelId } from '/@/types/entity-ids'
-import { nullUuid } from '/@/lib/basic/uuid'
+
 import { compareStringInsensitive } from '/@/lib/basic/string'
+import { nullUuid } from '/@/lib/basic/uuid'
+import type { ChannelId } from '/@/types/entity-ids'
 
 export const rootChannelId = nullUuid
 export type RootChannelId = typeof rootChannelId
@@ -31,14 +32,20 @@ const channelNameSortFunction = (
   node1: ChannelTreeNode,
   node2: ChannelTreeNode
 ) => {
-  // sort by channel name
-  return compareStringInsensitive(node1.name, node2.name)
+  // sort by last ancestor name
+  const lastAncestorName1 = node1.skippedAncestorNames?.at(-1)
+  const lastAncestorName2 = node2.skippedAncestorNames?.at(-1)
+  return compareStringInsensitive(
+    lastAncestorName1 ?? node1.name,
+    lastAncestorName2 ?? node2.name
+  )
 }
 
 export const constructTree = (
   channel: ChannelLike,
   channelEntities: Map<ChannelId, ChannelLike>,
-  subscribedChannels?: Set<ChannelId>
+  subscribedChannels?: Set<ChannelId>,
+  shouldSort = true
 ): ChannelTreeNode | undefined => {
   const isRootChannel = channel.id === rootChannelId
   const isSubscribed =
@@ -58,20 +65,22 @@ export const constructTree = (
   }
 
   /** 表示しないものをフィルタした子孫チャンネル */
-  const children = channel.children
-    .flatMap(id => {
-      const child = channelEntities.get(id)
-      if (!child) {
-        return []
-      }
-      const result = constructTree(child, channelEntities, subscribedChannels)
-      if (result) {
-        return [result]
-      }
+  const children = channel.children.flatMap(id => {
+    const child = channelEntities.get(id)
+    if (!child) {
       return []
-    })
-    .sort(channelNameSortFunction)
+    }
+    const result = constructTree(child, channelEntities, subscribedChannels)
+    if (result) {
+      return [result]
+    }
+    return []
+  })
   const unarchivedChildren = children.filter(child => !child.archived)
+
+  if (shouldSort) {
+    children.sort(channelNameSortFunction)
+  }
 
   if (unarchivedChildren.length === 0 && !isSubscribed) {
     // 購読しておらず子もいなければ表示しない
@@ -110,7 +119,9 @@ export const constructTreeFromIds = (
       archived: false,
       children: channelIds
     },
-    channelEntities
+    channelEntities,
+    undefined,
+    false
   )
   return treeWithDummyRoot?.children ?? []
 }
@@ -120,7 +131,7 @@ export const channelPathToId = (
   channelTree: Readonly<ChannelTree | ChannelTreeNode>
 ): string => {
   if (separatedPath[0] === undefined) {
-    throw 'channelPathToId: Empty path'
+    throw new Error('channelPathToId: Empty path')
   }
 
   const loweredChildName = separatedPath[0].toLowerCase()
@@ -128,7 +139,7 @@ export const channelPathToId = (
     child => child.name.toLowerCase() === loweredChildName
   )
   if (!nextTree) {
-    throw `channelPathToId: No channel: ${separatedPath[0]}`
+    throw new Error(`channelPathToId: No channel: ${separatedPath[0]}`)
   }
   if (separatedPath.length === 1) {
     return nextTree.id

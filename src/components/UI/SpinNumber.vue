@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.body">
-    <div :class="$style.dummy">{{ value }}</div>
+    <div :class="$style.dummy">
+      {{ value }}
+    </div>
     <transition :name="name">
       <div :key="state.val" :class="$style.number">
         {{ state.val }}
@@ -10,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, reactive, computed } from 'vue'
+import { computed, reactive, watch } from 'vue'
 
 const props = defineProps<{
   value: number

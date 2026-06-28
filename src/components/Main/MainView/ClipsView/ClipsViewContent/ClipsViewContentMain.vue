@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.container">
-    <scroll-loading-bar :class="$style.loadingBar" :show="isLoading" />
-    <messages-scroller
-      ref="scrollerEle"
+    <ScrollLoadingBar :class="$style.loadingBar" :show="isLoading" />
+    <MessagesScroller
+      ref="scrollerRef"
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
       :is-reached-latest="isReachedLatest"
@@ -11,30 +11,34 @@
       @request-load-former="onLoadFormerMessagesRequest"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
-        <clip-element
+        <ClipElement
           :class="$style.element"
           :message-id="messageId"
           @change-height="onChangeHeight"
           @entry-message-loaded="onEntryMessageLoaded"
         />
       </template>
-    </messages-scroller>
+    </MessagesScroller>
   </div>
 </template>
 
 <script lang="ts" setup>
-import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
-import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import { shallowRef } from 'vue'
+
+import MessagesScroller, {
+  type MessageScrollerInstance
+} from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
+import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import type { ClipFolderId } from '/@/types/entity-ids'
+
+import ClipElement from '../../MessageElement/ClipElement.vue'
 import useClipsFetcher from './composables/useClipsFetcher'
-import ClipElement from '/@/components/Main/MainView/MessageElement/ClipElement.vue'
 
 const props = defineProps<{
   clipFolderId: ClipFolderId
 }>()
 
-const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
+const scrollerRef = shallowRef<MessageScrollerInstance>()
 const {
   messageIds,
   isReachedEnd,
@@ -42,7 +46,7 @@ const {
   isLoading,
   lastLoadingDirection,
   onLoadFormerMessagesRequest
-} = useClipsFetcher(scrollerEle, props)
+} = useClipsFetcher(scrollerRef, props)
 </script>
 
 <style lang="scss" module>

@@ -2,13 +2,13 @@
   <div :class="$style.container" :data-is-small="small">
     <div :class="$style.valueContainer" @click="toggle">
       {{ currentItem?.title ?? '' }}
-      <a-icon
+      <AIcon
         :class="$style.trailingIcon"
         name="rounded-triangle"
         :size="small ? 20 : 24"
       />
     </div>
-    <click-outside @click-outside="close">
+    <ClickOutside @click-outside="close">
       <div v-if="isOpen" :class="$style.selectorContainer">
         <div
           v-for="item in items"
@@ -17,7 +17,7 @@
           @click="onClick(item)"
         >
           <div :class="$style.item">
-            <a-icon
+            <AIcon
               v-if="item.iconName"
               :name="item.iconName"
               :mdi="item.iconMdi"
@@ -27,47 +27,47 @@
           </div>
         </div>
       </div>
-    </click-outside>
+    </ClickOutside>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { computed } from 'vue'
-import AIcon from './AIcon.vue'
-import ClickOutside from './ClickOutside'
-import useToggle from '/@/composables/utils/useToggle'
-
-export type PopupSelectorItem = {
-  value: string
+<script lang="ts">
+export type PopupSelectorItem<U extends PropertyKey | undefined> = {
+  value: U
   title: string
   iconName?: string
   iconMdi?: boolean
 }
+</script>
+
+<script lang="ts" setup generic="T extends PropertyKey | undefined">
+import { computed } from 'vue'
+
+import useToggle from '/@/composables/utils/useToggle'
+
+import AIcon from './AIcon.vue'
+import ClickOutside from './ClickOutside'
+
+const modelValue = defineModel<T>()
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string
-    items: PopupSelectorItem[]
+    items: PopupSelectorItem<T>[]
     small?: boolean
   }>(),
   {
-    modelValue: '',
     small: false
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', _val: string): void
-}>()
-
 const { value: isOpen, toggle, close } = useToggle()
 
-const onClick = (item: PopupSelectorItem) => {
-  emit('update:modelValue', item.value)
+const onClick = (item: PopupSelectorItem<T>) => {
+  modelValue.value = item.value
   close()
 }
 const currentItem = computed(() =>
-  props.items.find(item => item.value === props.modelValue)
+  props.items.find(item => item.value === modelValue.value)
 )
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <sidebar-content-container-link
+  <SidebarContentContainerLink
     title="イベント"
     @click-link="emit('clickLink')"
   />

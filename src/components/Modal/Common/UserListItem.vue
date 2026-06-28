@@ -4,10 +4,10 @@
     :class="$style.container"
     @click.stop="openModal"
   >
-    <user-icon :class="$style.icon" :user-id="userId" :size="36" />
+    <UserIcon :class="$style.icon" :user-id="userId" :size="36" />
     <div :class="$style.desc">
       <div :class="$style.displayName">
-        <a-icon
+        <AIcon
           v-if="isAdmin"
           :class="$style.adminIcon"
           name="crown"
@@ -22,9 +22,10 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed, toRef } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
 import { useUsersStore } from '/@/store/entities/users'
 

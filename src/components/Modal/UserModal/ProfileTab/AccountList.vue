@@ -1,8 +1,8 @@
 <template>
   <section>
-    <profile-header text="アカウント" />
+    <ProfileHeader text="アカウント" />
     <p v-if="showWikiPageLink" :class="$style.p">
-      <circle-icon
+      <CircleIcon
         title="wiki"
         name="crowi"
         :color="iconColor"
@@ -18,7 +18,7 @@
       >
     </p>
     <p v-if="blogPageLink" :class="$style.p">
-      <circle-icon
+      <CircleIcon
         title="ブログ"
         name="traP"
         :color="iconColor"
@@ -34,14 +34,14 @@
       >
     </p>
     <p v-if="twitterId !== ''" :class="$style.p">
-      <circle-icon
+      <CircleIcon
         title="𝕏"
         name="x"
         :color="iconColor"
         :background="iconBackgroundColor"
         :class="$style.icon"
       />
-      <template v-if="twitterId === undefined">Now Loading...</template>
+      <template v-if="twitterId === undefined"> Now Loading... </template>
       <template v-else>
         <a
           :href="twitterLink"
@@ -56,10 +56,12 @@
 </template>
 
 <script lang="ts" setup>
-import ProfileHeader from './ProfileHeader.vue'
-import CircleIcon from '/@/components/UI/CircleIcon.vue'
 import { computed } from 'vue'
+
+import CircleIcon from '/@/components/UI/CircleIcon.vue'
 import { useThemeSettings } from '/@/store/app/themeSettings'
+
+import ProfileHeader from './ProfileHeader.vue'
 
 const props = defineProps<{
   bot: boolean

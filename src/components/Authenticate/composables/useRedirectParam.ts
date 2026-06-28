@@ -1,9 +1,10 @@
 import { computed } from 'vue'
-import { getFirstQuery } from '/@/lib/basic/url'
-import router, { RouteName } from '/@/router'
 import { useRoute } from 'vue-router'
-import { sessionStorageRedirectKey } from '/@/lib/dom/storage'
+
 import { isServerRequestUrl } from '/@/lib/apis'
+import { getFirstQuery } from '/@/lib/basic/url'
+import { sessionStorageRedirectKey } from '/@/lib/dom/storage'
+import router, { RouteName } from '/@/router'
 
 const useRedirectParam = () => {
   const route = useRoute()

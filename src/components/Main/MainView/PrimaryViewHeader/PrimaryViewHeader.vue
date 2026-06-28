@@ -1,7 +1,7 @@
 <template>
   <header :class="$style.container">
     <div :class="$style.headerContainer">
-      <popup-navigator
+      <PopupNavigator
         v-if="isMobile"
         :class="$style.icon"
         @click-icon="openNav"
@@ -17,9 +17,9 @@
 <script lang="ts" setup>
 import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
 import useNavigationController from '/@/composables/mainView/useNavigationController'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const { openNav } = useNavigationController()
 </script>
 

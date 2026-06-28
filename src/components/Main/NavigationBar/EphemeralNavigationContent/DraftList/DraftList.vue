@@ -1,14 +1,15 @@
 <template>
   <div>
-    <draft-list-details-panel :input-channels="inputChannels" />
-    <draft-list-title-panel />
+    <DraftListDetailsPanel :input-channels="inputChannels" />
+    <DraftListTitlePanel />
   </div>
 </template>
 
 <script lang="ts" setup>
-import DraftListTitlePanel from './DraftListTitlePanel.vue'
-import DraftListDetailsPanel from './DraftListDetailsPanel.vue'
 import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
+
+import DraftListDetailsPanel from './DraftListDetailsPanel.vue'
+import DraftListTitlePanel from './DraftListTitlePanel.vue'
 
 const { inputChannels } = useMessageInputStateStore()
 </script>

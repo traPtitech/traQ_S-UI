@@ -1,5 +1,7 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref } from 'vue'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import apis from '/@/lib/apis'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'

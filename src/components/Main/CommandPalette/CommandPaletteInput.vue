@@ -2,8 +2,8 @@
   <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
     <div :class="$style.inputContainer">
       <div :class="$style.icon">
-        <a-icon v-if="mode === 'search'" mdi name="search" />
-        <a-icon v-else-if="mode === 'command'" mdi name="code-grater-than" />
+        <AIcon v-if="mode === 'search'" mdi name="search" />
+        <AIcon v-else-if="mode === 'command'" mdi name="code-grater-than" />
       </div>
       <input
         ref="inputRef"
@@ -14,7 +14,7 @@
         @keydown.enter="onEnter"
       />
     </div>
-    <close-button
+    <CloseButton
       :class="$style.closeIcon"
       :size="24"
       :inner-size="12"
@@ -24,13 +24,14 @@
 </template>
 
 <script lang="ts" setup>
-import CloseButton from '/@/components/UI/CloseButton.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import { useCommandPalette } from '/@/store/app/commandPalette'
 import { computed, onMounted, shallowRef, watch } from 'vue'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 
-const { isMobile } = useResponsiveStore()
+import AIcon from '/@/components/UI/AIcon.vue'
+import CloseButton from '/@/components/UI/CloseButton.vue'
+import useResponsive from '/@/composables/useResponsive'
+import { useCommandPalette } from '/@/store/app/commandPalette'
+
+const { isMobile } = useResponsive()
 const inputRef = shallowRef<HTMLInputElement | null>(null)
 const focus = () => {
   inputRef.value?.focus()

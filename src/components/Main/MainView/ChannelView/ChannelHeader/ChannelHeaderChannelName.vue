@@ -4,8 +4,9 @@
       v-if="ancestorsPath[0]"
       :to="ancestorsPath[0].link"
       :class="$style.ancestorHash"
-      >#</router-link
     >
+      #
+    </router-link>
     <span v-else :class="$style.currentHash">#</span>
     <span v-for="(ancestor, i) in ancestorsPath" :key="i">
       <router-link :to="ancestor.link" :class="$style.ancestor">{{
@@ -23,16 +24,17 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import type { ChannelId } from '/@/types/entity-ids'
+
 import useChannelPath from '/@/composables/useChannelPath'
+import useResponsive from '/@/composables/useResponsive'
 import { constructChannelPath } from '/@/router'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const { channelIdToPath } = useChannelPath()
 
@@ -41,19 +43,20 @@ type ChannelPathInfo = {
   link: string
 }
 /** 現在のチャンネルに至るまでのフルパスたち */
-const pathInfoList = computed((): ChannelPathInfo[] =>
-  channelIdToPath(props.channelId).map((p, i, arr) => {
-    const path = arr.slice(0, i + 1)
-    return {
-      name: p,
-      link: constructChannelPath(path.join('/'))
-    }
-  })
+const pathInfoList = computed(
+  (): ChannelPathInfo[] =>
+    channelIdToPath(props.channelId)?.map((p, i, arr) => {
+      const path = arr.slice(0, i + 1)
+      return {
+        name: p,
+        link: constructChannelPath(path.join('/'))
+      }
+    }) ?? []
 )
 
 const ancestorsPath = computed(() => pathInfoList.value.slice(0, -1))
 const currentChannelLastPath = computed(
-  () => pathInfoList.value[pathInfoList.value.length - 1]?.name ?? ''
+  () => pathInfoList.value.at(-1)?.name ?? ''
 )
 </script>
 

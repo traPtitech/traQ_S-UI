@@ -1,18 +1,19 @@
 <template>
   <div :class="$style.container">
-    <desktop-tab-selector :class="$style.selector" />
-    <desktop-tab-frame :class="$style.frame">
+    <DesktopTabSelector :class="$style.selector" />
+    <DesktopTabFrame :class="$style.frame">
       <slot />
-    </desktop-tab-frame>
-    <close-button :class="$style.close" with-text :size="56" @close="close" />
+    </DesktopTabFrame>
+    <CloseButton :class="$style.close" with-text :size="56" @close="close" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import CloseButton from '/@/components/UI/CloseButton.vue'
-import DesktopTabSelector from './DesktopTabSelector.vue'
-import DesktopTabFrame from './DesktopTabFrame.vue'
 import useSettingsNavigation from '/@/components/Settings/composables/useNavigation'
+import CloseButton from '/@/components/UI/CloseButton.vue'
+
+import DesktopTabFrame from './DesktopTabFrame.vue'
+import DesktopTabSelector from './DesktopTabSelector.vue'
 
 const { close } = useSettingsNavigation()
 </script>

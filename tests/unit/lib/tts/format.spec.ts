@@ -1,6 +1,7 @@
-import { format } from '/@/lib/tts/format'
 import type { Store } from '@traptitech/traq-markdown-it'
 import { traQMarkdownIt } from '@traptitech/traq-markdown-it'
+
+import { format } from '/@/lib/tts/format'
 
 const embeddingOrigin = 'https://example.com'
 const storeProvider: Store = {
@@ -8,8 +9,8 @@ const storeProvider: Store = {
   getMe: () => ({ id: '' }),
   getStampByName: name => ({ name, fileId: '' }),
   getUser: id => ({ id }),
-  getUserByName: name => ({ iconFileId: '' }),
-  getUserGroup: id => ({ members: [] }),
+  getUserByName: _name => ({ iconFileId: '' }),
+  getUserGroup: _id => ({ members: [] }),
   generateChannelHref: () => '',
   generateUserHref: () => '',
   generateUserGroupHref: () => ''

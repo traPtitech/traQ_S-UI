@@ -12,9 +12,7 @@
       vapidKey:
         'BPHegiDotHG7TlKhoW1qvwUYjOQj1C7RgKjvw3etUJZ_4x3LWUtFVXtRANWwckJX4G2w3CVj4zwi5QNThg7DZH4'
     },
-    skyway: {
-      apiKey: '55fd6e68-6e1b-492b-b57d-df0273c6e217'
-    },
+    enableQall: true,
     enableSearch: true,
     services: [
       {
@@ -84,13 +82,23 @@
       },
       {
         label: 'traPortfolio',
-        iconPath: 'traP.svg',
+        iconPath: 'traPortfolio.svg',
         appLink: 'https://portfolio.trap.jp/'
       },
       {
         label: 'tpf-admin',
-        iconPath: 'traP.svg',
+        iconPath: 'traPortfolio-admin.svg',
         appLink: 'https://portfolio-admin.trap.jp/'
+      },
+      {
+        label: 'rucQ',
+        iconPath: 'rucq.svg',
+        appLink: 'https://rucq.trap.jp/'
+      },
+      {
+        label: 'traP Collection',
+        iconPath: 'traPCollection.svg',
+        appLink: 'https://collection.trap.jp/'
       }
     ],
     ogpIgnoreHostNames: [
@@ -107,7 +115,8 @@
       'drive.trapti.tech',
       'jomon.trap.jp',
       'ns.trap.jp',
-      'portfolio-admin.trap.jp'
+      'portfolio-admin.trap.jp',
+      'rucq.trap.jp'
     ],
     wikiPageOrigin: 'https://wiki.trap.jp',
     blogPagePrefix: 'https://trap.jp/author/',
@@ -117,7 +126,6 @@
       changeName: 'traPortal'
     },
     isRootChannelSelectableAsParentChannel: false,
-    showQrCodeButton: true,
     tooLargeFileMessage: '大きい%sの共有にはDriveを使用してください',
     showWidgetCopyButton: true,
     inlineReplyDisableChannels: [
@@ -128,7 +136,12 @@
       '#random/wasure',
       '#services'
     ],
-    iosPwaInfoLink: 'https://wiki.trap.jp/SysAd/docs/traQ-S/PWA'
+    iosPwaInfoLink: 'https://wiki.trap.jp/SysAd/docs/traQ-S/PWA',
+    defaultChannelId: [
+      '04ad2c18-fdcb-4c43-beef-82e8ba26ac98', // #general of q.trap.jp
+      '83afc6cc-737d-4868-9a2f-aeb7c199260e' // #general of q-dev.trapti.tech
+    ],
+    fallbackChannelPath: 'general'
   }
 
   self.traQConfig = config

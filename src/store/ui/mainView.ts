@@ -1,6 +1,10 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref } from 'vue'
-import { channelIdToPathString } from '/@/lib/channel'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type {
   ChannelId,
@@ -8,9 +12,6 @@ import type {
   DMChannelId,
   MessageId
 } from '/@/types/entity-ids'
-import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useUsersStore } from '/@/store/entities/users'
 
 interface ViewInformationBase {
   type: string
@@ -66,7 +67,7 @@ export enum MainViewComponentState {
 export type HeaderStyle = 'default' | 'dark'
 
 const useMainViewStorePinia = defineStore('ui/mainView', () => {
-  const { lastOpenChannelName } = useBrowserSettings()
+  const { lastOpenChannelId } = useBrowserSettings()
   const channelsStore = useChannelsStore()
   const usersStore = useUsersStore()
 
@@ -117,7 +118,7 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
         cacheStrategy: 'useCache'
       })
       if (!user) {
-        throw 'user not found'
+        throw new Error('user not found')
       }
 
       changePrimaryViewToDM({
@@ -147,11 +148,9 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
     }
 
     // 通常のチャンネルは最後に開いたチャンネルとして保持
-    const channelPath = channelIdToPathString(
-      channelId,
-      channelsStore.channelsMap.value
-    )
-    lastOpenChannelName.value = channelPath
+    if (channelsStore.channelsMap.value.has(channelId)) {
+      lastOpenChannelId.value = channelId
+    }
   }
 
   const changePrimaryViewToDM = ({

@@ -1,11 +1,15 @@
 <template>
   <li :key="token.id" :class="$style.wrap">
-    <div :class="$style.title">{{ token.clientName ?? '---' }}</div>
-    <div :class="$style.description">{{ token.clientDesc }}</div>
+    <div :class="$style.title">
+      {{ token.clientName ?? '---' }}
+    </div>
+    <div :class="$style.description">
+      {{ token.clientDesc }}
+    </div>
     <div :class="$style.details">
       <div :class="$style.developer">
         <template v-if="token.clientDeveloper">
-          <user-icon
+          <UserIcon
             :class="$style.developerIcon"
             :user-id="token.clientDeveloper.id"
             :size="24"
@@ -14,7 +18,7 @@
           />
           @{{ token.clientDeveloper.name }}
         </template>
-        <template v-else>unknown</template>
+        <template v-else> unknown </template>
       </div>
       <time :datetime="issuedAtISO">{{ issuedAt }}</time>
       <div :class="$style.scopes">
@@ -29,19 +33,21 @@
         title="トークンを無効化"
         @click="emit('revoke')"
       >
-        <a-icon name="close" mdi />
+        <AIcon name="close" mdi />
       </button>
     </div>
   </li>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import type { ActiveOAuth2Token, User } from '@traptitech/traq'
-import { getFullDayString, getISOFullDayString } from '/@/lib/basic/date'
-import { scopeInfoMap } from '/@/lib/clientScope'
+
+import { computed } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
+import { getFullDayString, getISOFullDayString } from '/@/lib/basic/date'
+import { scopeInfoMap } from '/@/lib/clientScope'
 
 interface TokenInfo extends ActiveOAuth2Token {
   clientName?: string

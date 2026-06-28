@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.innerContainer">
-      <stamp-picker-stamp-set-selector-item
+      <StampPickerStampSetSelectorItem
         v-for="set in stampSets"
         :key="set.id"
         :class="$style.item"
@@ -17,9 +17,12 @@
 import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue'
 import type { StampSet } from './composables/useStampSetSelector'
 
+const currentStampSet = defineModel<StampSet>('currentStampSet', {
+  required: true
+})
+
 withDefaults(
   defineProps<{
-    currentStampSet: StampSet
     stampSets: StampSet[]
     foldedStampSets?: StampSet[]
   }>(),
@@ -28,12 +31,8 @@ withDefaults(
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:currentStampSet', _stampSet: StampSet): void
-}>()
-
 const onStampSetSelect = (stampSet: StampSet) => {
-  emit('update:currentStampSet', stampSet)
+  currentStampSet.value = stampSet
 }
 </script>
 

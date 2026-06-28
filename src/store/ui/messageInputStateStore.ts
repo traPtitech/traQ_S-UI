@@ -1,11 +1,16 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import type { Ref } from 'vue'
-import { computed, unref, toRef, ref } from 'vue'
+import { computed, ref, toRef, unref, watch } from 'vue'
+
+import { promisifyRequest } from 'idb-keyval'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import useIndexedDbValue, {
+  key
+} from '/@/composables/storage/useIndexedDbValue'
 import type { AttachmentType } from '/@/lib/basic/file'
+import { useChannelsStore } from '/@/store/entities/channels'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
-import useIndexedDbValue, { key } from '/@/composables/utils/useIndexedDbValue'
-import { promisifyRequest } from 'idb-keyval'
 
 /**
  * 基本的に直接利用しないで`/@/composables/messageInputState`を利用する
@@ -42,7 +47,7 @@ const useMessageInputStateStorePinia = defineStore(
       messageInputState: new Map<ChannelId, MessageInputState>()
     }
 
-    const [state, restoring, restoringPromise] = useIndexedDbValue(
+    const [state] = useIndexedDbValue(
       'store/ui/messageInputStateStore',
       1,
       {
@@ -55,6 +60,8 @@ const useMessageInputStateStorePinia = defineStore(
       initialValue
     )
 
+    const { channelsMap } = useChannelsStore()
+
     const states = toRef(() => state.messageInputState)
     const inputChannels = computed(() => [...states.value])
     const hasInputChannel = computed(() => inputChannels.value.length > 0)
@@ -62,11 +69,23 @@ const useMessageInputStateStorePinia = defineStore(
       new Map<VirtualChannelId, MessageInputState>()
     )
 
+    watch(
+      channelsMap,
+      newChannelsMap =>
+        inputChannels.value
+          .filter(([cid]) => newChannelsMap.get(cid)?.archived)
+          .forEach(([cid]) => {
+            states.value.delete(cid)
+          }),
+      { deep: true }
+    )
+
     const getStore = (cId: MessageInputStateKey) => {
       const cId_ = unref(cId)
       const st = virtualIds.has(cId_) ? virtualChannelStates : states
       return st.value.get(cId_)
     }
+
     const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
       const cId_ = unref(cId)
       const st = virtualIds.has(cId_) ? virtualChannelStates : states

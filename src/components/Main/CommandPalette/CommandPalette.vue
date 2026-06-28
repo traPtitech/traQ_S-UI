@@ -1,30 +1,32 @@
 <template>
-  <click-outside
+  <ClickOutside
     stop
     unable-while-modal-open
     @click-outside="closeCommandPalette"
   >
     <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
-      <command-palette-input />
+      <CommandPaletteInput />
       <hr v-if="supplementalViewType" :class="$style.separator" />
-      <search-result v-if="supplementalViewType === 'search-result'" />
-      <search-suggestion
+      <SearchResult v-if="supplementalViewType === 'search-result'" />
+      <SearchSuggestion
         v-else-if="supplementalViewType === 'search-suggestion'"
       />
     </div>
-  </click-outside>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useCommandPalette } from '/@/store/app/commandPalette'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+
 import ClickOutside from '/@/components/UI/ClickOutside'
+import useResponsive from '/@/composables/useResponsive'
+import { useCommandPalette } from '/@/store/app/commandPalette'
+
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import SearchResult from './SearchResult.vue'
 import SearchSuggestion from './SearchSuggestion.vue'
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const { mode, query, closeCommandPalette } = useCommandPalette()
 
 type SupplementalViewType = 'search-result' | 'search-suggestion' | undefined

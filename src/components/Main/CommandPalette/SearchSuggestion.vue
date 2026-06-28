@@ -1,13 +1,13 @@
 <template>
   <div :class="$style.container">
     <template v-if="currentInput.length > 0">
-      <search-suggestion-item
+      <SearchSuggestionItem
         :item="searchConfirmItem"
         @select="onSelectSuggestion(searchConfirmItem)"
       />
     </template>
     <div :class="$style.header">検索オプション</div>
-    <search-suggestion-query-item
+    <SearchSuggestionQueryItem
       v-for="suggestion in querySuggestions"
       :key="suggestion.insertQuery"
       :description="suggestion.description"
@@ -16,7 +16,7 @@
     />
     <template v-if="searchHistories.length > 0">
       <div :class="$style.header">過去の検索</div>
-      <search-suggestion-history-item
+      <SearchSuggestionHistoryItem
         v-for="suggestion in searchHistories"
         :key="suggestion"
         :label="suggestion"
@@ -29,18 +29,20 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
+import useResponsive from '/@/composables/useResponsive'
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import type { SuggestionItem } from './SearchSuggestionItem.vue'
-import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
+
 import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
+import type { SuggestionItem } from './SearchSuggestionItem.vue'
 import SearchSuggestionItem from './SearchSuggestionItem.vue'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
 
 const emit = defineEmits<{
   (e: 'queryInsert'): void
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const querySuggestions = computed(() => [
   {

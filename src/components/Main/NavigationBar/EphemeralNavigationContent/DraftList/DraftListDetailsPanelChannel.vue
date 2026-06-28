@@ -2,25 +2,28 @@
   <router-link :to="channelLink">
     <div :class="$style.container">
       <div :class="$style.state">
-        <a-icon v-if="hasAttachments" name="file" mdi :class="$style.icon" />
+        <AIcon v-if="hasAttachments" name="file" mdi :class="$style.icon" />
         <div
           class="markdown-inline-body"
           :class="$style.text"
           v-html="renderedContent"
-        ></div>
+        />
       </div>
-      <div :class="$style.channelPath">{{ channelPath }}</div>
+      <div :class="$style.channelPath">
+        {{ channelPath }}
+      </div>
     </div>
   </router-link>
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed, ref, watchEffect } from 'vue'
-import type { MessageInputState } from '/@/store/ui/messageInputStateStore'
-import type { ChannelId } from '/@/types/entity-ids'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { renderInline } from '/@/lib/markdown/markdown'
+import type { MessageInputState } from '/@/store/ui/messageInputStateStore'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -29,10 +32,10 @@ const props = defineProps<{
 
 const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
 
-const channelPath = computed(() =>
-  channelIdToShortPathString(props.channelId, true)
+const channelPath = computed(
+  () => channelIdToShortPathString(props.channelId, true) ?? ''
 )
-const channelLink = computed(() => channelIdToLink(props.channelId))
+const channelLink = computed(() => channelIdToLink(props.channelId) ?? '')
 const hasAttachments = computed(() => props.state.attachments.length > 0)
 
 const renderedContent = ref()

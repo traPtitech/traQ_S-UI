@@ -1,10 +1,10 @@
 <template>
-  <modal-frame title="カスタムテーマ" icon-name="">
+  <ModalFrame title="カスタムテーマ" icon-name="">
     <div :class="$style.content">
-      <textarea-autosize v-model="editedTheme" :class="$style.jsonField" />
+      <TextareaAutosize v-model="editedTheme" :class="$style.jsonField" />
       <div :class="$style.buttonContainer">
-        <form-button label="キャンセル" type="tertiary" @click="clearModal" />
-        <form-button
+        <FormButton label="キャンセル" type="tertiary" @click="clearModal" />
+        <FormButton
           label="更新する"
           :disabled="!isChanged"
           type="primary"
@@ -12,17 +12,19 @@
         />
       </div>
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">
 import { computed, ref, watchEffect } from 'vue'
+import { reactive } from 'vue'
+
+import { dequal } from 'dequal'
+
 import type { Theme } from '/@/lib/theme/schema'
 import { themeSchema } from '/@/lib/theme/schema'
-import { dequal } from 'dequal'
-import { useToastStore } from '/@/store/ui/toast'
-import { reactive } from 'vue'
 import { useThemeSettings } from '/@/store/app/themeSettings'
+import { useToastStore } from '/@/store/ui/toast'
 
 const useEditedThemes = (
   props: { custom: Theme },
@@ -80,8 +82,9 @@ const useEditedThemes = (
 <script lang="ts" setup>
 import FormButton from '/@/components/UI/FormButton.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
-import ModalFrame from '../Common/ModalFrame.vue'
 import { useModalStore } from '/@/store/ui/modal'
+
+import ModalFrame from '../Common/ModalFrame.vue'
 
 const { clearModal } = useModalStore()
 

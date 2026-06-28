@@ -1,65 +1,106 @@
 <template>
-  <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
-    <template v-if="!isMobile || isExpanded">
-      <message-input-upload-button
-        :class="$style.button"
-        @click="emit('clickAddAttachment')"
-      />
-      <message-input-preview-button
-        v-model="isPreviewShownValue"
-        :class="$style.button"
-      />
-    </template>
-    <icon-button
-      v-if="isMobile"
-      :class="$style.button"
-      :icon-name="isExpanded ? 'chevron-left' : 'chevron-right'"
+  <div :class="$style.outerContainer" :style="outerContainerStyle">
+    <IconButton
+      v-if="showTextAreaExpandButton"
+      :class="$style.textAreaExpandButton"
+      :icon-name="isInputTextAreaExpanded ? 'chevron-down' : 'chevron-up'"
       icon-mdi
-      @click="toggleExpanded"
+      @click="toggleIsInputTextAreaExpanded"
     />
+    <div :class="$style.innerContainer" :data-is-mobile="$boolAttr(isMobile)">
+      <template v-if="!isMobile || isLeftControlsExpanded">
+        <MessageInputUploadButton
+          :class="$style.button"
+          @click="emit('clickAddAttachment')"
+        />
+        <MessageInputPreviewButton
+          v-model="isPreviewShownValue"
+          :class="$style.button"
+        />
+      </template>
+      <IconButton
+        v-if="isMobile"
+        :class="$style.button"
+        :icon-name="isLeftControlsExpanded ? 'chevron-left' : 'chevron-right'"
+        icon-mdi
+        @click="toggleLeftControlsExpanded"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import MessageInputUploadButton from './MessageInputUploadButton.vue'
-import MessageInputPreviewButton from './MessageInputPreviewButton.vue'
-import IconButton from '/@/components/UI/IconButton.vue'
 import { computed } from 'vue'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+
+import IconButton from '/@/components/UI/IconButton.vue'
+import useResponsive from '/@/composables/useResponsive'
+
+import MessageInputPreviewButton from './MessageInputPreviewButton.vue'
+import MessageInputUploadButton from './MessageInputUploadButton.vue'
+
+const isLeftControlsExpanded = defineModel<boolean>('isLeftControlsExpanded', {
+  required: true
+})
+const isPreviewShown = defineModel<boolean>('isPreviewShown', {
+  required: true
+})
+const isInputTextAreaExpanded = defineModel<boolean>(
+  'isInputTextAreaExpanded',
+  {
+    required: true
+  }
+)
 
 const props = defineProps<{
-  isExpanded: boolean
-  isPreviewShown: boolean
+  showTextAreaExpandButton: boolean
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:isExpanded', _v: boolean): void
-  (e: 'update:isPreviewShown', _v: boolean): void
   (e: 'clickAddAttachment'): void
+  (e: 'toggleLeftControlsExpanded'): void
 }>()
 
-const { isMobile } = useResponsiveStore()
-const toggleExpanded = () => {
-  emit('update:isExpanded', !props.isExpanded)
+const { isMobile } = useResponsive()
+const toggleLeftControlsExpanded = () => {
+  isLeftControlsExpanded.value = !isLeftControlsExpanded.value
+  emit('toggleLeftControlsExpanded')
+}
+const toggleIsInputTextAreaExpanded = () => {
+  isInputTextAreaExpanded.value = !isInputTextAreaExpanded.value
 }
 
 const isPreviewShownValue = computed<boolean>({
   get() {
-    return props.isPreviewShown
+    return isPreviewShown.value
   },
   set(v) {
-    emit('update:isPreviewShown', v)
-    emit('update:isExpanded', false)
+    isPreviewShown.value = v
+    isLeftControlsExpanded.value = false
+    emit('toggleLeftControlsExpanded')
   }
 })
+
+const outerContainerStyle = computed(() => ({
+  '--justify-content': props.showTextAreaExpandButton
+    ? 'space-between'
+    : 'flex-end'
+}))
 </script>
 
 <style lang="scss" module>
-.container {
+.outerContainer {
+  @include color-ui-secondary;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: var(--justify-content);
+}
+.innerContainer {
   @include color-ui-secondary;
   display: flex;
 }
 .button {
+  @include color-ui-secondary;
   margin: 0 4px;
 
   &:first-child:first-child {
@@ -68,5 +109,8 @@ const isPreviewShownValue = computed<boolean>({
   &:last-child:last-child {
     margin-right: 0;
   }
+}
+.textAreaExpandButton {
+  @include color-ui-secondary;
 }
 </style>

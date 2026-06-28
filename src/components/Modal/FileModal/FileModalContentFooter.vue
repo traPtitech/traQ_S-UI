@@ -3,22 +3,28 @@
     <div :class="$style.channelPath" @mousedown="onClick">
       {{ channelPath }}
     </div>
-    <file-modal-content-footer-username
+    <FileModalContentFooterUsername
       :class="$style.userName"
       :user-id="user?.id"
     />
-    <div :class="$style.createdAt">{{ createdAt }}</div>
+    <div :class="$style.createdAt">
+      {{ createdAt }}
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
 import { computed } from 'vue'
+
 import useFileMeta from '/@/composables/files/useFileMeta'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getDateRepresentation } from '/@/lib/basic/date'
-import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
+import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import { fallbackChannelPath } from '/@/lib/config'
 import { useUsersStore } from '/@/store/entities/users'
+
+import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
+import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -43,15 +49,16 @@ const createdAt = computed(() =>
 )
 
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
-const channelPath = computed(() => {
-  try {
-    return fileMeta.value?.channelId
-      ? channelIdToPathString(fileMeta.value?.channelId, true)
-      : ''
-  } catch {
-    return ''
-  }
-})
+
+const channelPath = computed(() =>
+  setFallbackForNullishOrOnError(fallbackChannelPath).exec(() => {
+    const channelId = fileMeta.value?.channelId
+    if (!channelId) return null
+
+    return channelIdToPathString(channelId, true)
+  })
+)
+
 const channelLink = computed(() => {
   try {
     return fileMeta.value?.channelId
@@ -63,8 +70,7 @@ const channelLink = computed(() => {
 })
 
 const onClick = async (event: MouseEvent) => {
-  if (channelLink.value === '') return
-
+  if (!channelLink.value) return
   openLinkAndClearModal(event, channelLink.value)
 }
 </script>

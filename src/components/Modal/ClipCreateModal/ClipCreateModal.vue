@@ -1,10 +1,14 @@
 <template>
-  <modal-frame title="クリップ" icon-mdi icon-name="bookmark">
+  <ModalFrame title="クリップ" icon-mdi icon-name="bookmark">
     <template #subtitle>
-      <inline-markdown :class="$style.subtitle" :content="messageContent" />
+      <MarkdownPreview
+        :class="$style.subtitle"
+        :content="messageContent"
+        inline
+      />
     </template>
     <template #default>
-      <clip-folder-element
+      <ClipFolderElement
         v-for="clipFolder in sortedClipFolders"
         :key="clipFolder.id"
         :folder-name="clipFolder.name"
@@ -12,18 +16,20 @@
         @click="toggleClip(clipFolder.id)"
       />
     </template>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">
 import type { Ref } from 'vue'
 import { computed, ref } from 'vue'
-import apis from '/@/lib/apis'
-import type { MessageId, ClipFolderId } from '/@/types/entity-ids'
-import { useToastStore } from '/@/store/ui/toast'
+
 import type { AxiosError } from 'axios'
-import { useMessagesStore } from '/@/store/entities/messages'
+
 import useSortedClipFolders from '/@/composables/clips/useSortedClipFolders'
+import apis from '/@/lib/apis'
+import { useMessagesStore } from '/@/store/entities/messages'
+import { useToastStore } from '/@/store/ui/toast'
+import type { ClipFolderId, MessageId } from '/@/types/entity-ids'
 
 const useCreateClip = (
   props: { messageId: MessageId },
@@ -66,9 +72,10 @@ const useCreateClip = (
 </script>
 
 <script lang="ts" setup>
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
+
 import ModalFrame from '../Common/ModalFrame.vue'
 import ClipFolderElement from './ClipFolderElement.vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const props = defineProps<{
   messageId: string

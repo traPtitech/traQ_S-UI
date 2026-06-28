@@ -2,7 +2,7 @@
   <div ref="targetRef" :class="$style.frame" @scroll.passive="onScroll">
     <div :style="containerStyle">
       <div :class="$style.panel" :style="panelStyle">
-        <stamp-picker-stamp-list-item
+        <StampPickerStampListItem
           v-for="{ stamp, key } in stampsWithAnimationKey"
           :key="stamp.id"
           :stamp="stamp"
@@ -16,10 +16,13 @@
 </template>
 
 <script lang="ts" setup>
-import StampPickerStampListItem from './StampPickerStampListItem.vue'
-import type { StampId } from '/@/types/entity-ids'
 import type { Stamp } from '@traptitech/traq'
+
 import { computed, shallowRef } from 'vue'
+
+import type { StampId } from '/@/types/entity-ids'
+
+import StampPickerStampListItem from './StampPickerStampListItem.vue'
 import useStampListVirtualScroll from './composables/useStampListVirtualScroll'
 
 const props = defineProps<{
@@ -63,8 +66,7 @@ const onHoverStamp = (id: StampId) => {
 }
 
 .panel {
-  display: flex;
-  flex-flow: row wrap;
-  align-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(10, min-content);
 }
 </style>

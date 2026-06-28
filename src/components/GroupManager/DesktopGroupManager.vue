@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.wrapper">
-    <close-button :class="$style.close" with-text :size="56" @close="close" />
+    <CloseButton :class="$style.close" with-text :size="56" @close="close" />
     <section :class="$style.container">
       <div :class="[$style.header, $style.item]">
         <h2 :class="$style.title">ユーザーグループ管理</h2>
-        <form-button
+        <FormButton
           :class="$style.createButton"
           label="新規作成"
           @click="openGroupCreateModal"
@@ -13,7 +13,7 @@
       <p :class="[$style.desc, $style.item]">
         自分が管理者になっているユーザーグループ一覧
       </p>
-      <group-list :class="[$style.list, $style.item]" />
+      <GroupList :class="[$style.list, $style.item]" />
     </section>
   </div>
 </template>
@@ -21,9 +21,10 @@
 <script lang="ts" setup>
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import GroupList from './GroupList.vue'
-import useClose from '/@/composables/useClose'
 import useGroupCreateModalOpener from '/@/composables/modal/useGroupCreateModalOpener'
+import useClose from '/@/composables/useClose'
+
+import GroupList from './GroupList.vue'
 
 const { close } = useClose()
 const { openGroupCreateModal } = useGroupCreateModalOpener()
@@ -81,6 +82,6 @@ const { openGroupCreateModal } = useGroupCreateModalOpener()
   @include color-ui-secondary;
 }
 .list {
-  padding: 0 16px;
+  padding: 0px 16px 50px 16px;
 }
 </style>

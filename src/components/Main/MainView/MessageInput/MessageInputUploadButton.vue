@@ -1,5 +1,5 @@
 <template>
-  <icon-button
+  <IconButton
     :class="$style.container"
     title="ファイルを添付する"
     icon-mdi

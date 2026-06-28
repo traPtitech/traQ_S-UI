@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <form-button
+    <FormButton
       label="スタンプを追加する"
       :class="$style.form"
       icon="plus"

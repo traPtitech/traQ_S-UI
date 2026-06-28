@@ -1,0 +1,111 @@
+import type { UseStore } from 'idb-keyval'
+import { createStore as idbCreateStore, promisifyRequest } from 'idb-keyval'
+
+import type { MaybePromise } from '/@/types/utility'
+
+export const dbPrefix = 'traQ_S-'
+
+/**
+ * インデックスが 1 のものは作成時に実行される
+ * インデックスが 2 のものはバージョン 1 から 2 になるときに実行される
+ */
+export type Migrations = Record<number, Migration>
+
+/**
+ * migration 内では async にできないので独自に行う
+ * ここでは IDB のストア自体のスキーマが変わることはないので、
+ * バージョンをあげてから行うことにする
+ * async にできないのは transaction が終わってしまうため
+ * 参考: https://stackoverflow.com/q/42700663
+ */
+type Migration = (getStore: () => IDBObjectStore) => MaybePromise<void>
+
+const outputLog = (
+  level: 'log' | 'error',
+  message: string,
+  dbName: string,
+  version: number,
+  ...args: unknown[]
+) => {
+  // eslint-disable-next-line no-console
+  console[level](
+    `[IndexedDB:migration] ${message} for "${dbName}" v${version} to v${version + 1}`,
+    ...args
+  )
+}
+
+export function createStoreWithMigrations(
+  dbName: string,
+  storeName: string,
+  version: number,
+  migrations: Migrations
+): UseStore {
+  const dbNameWithPrefix = `${dbPrefix}${dbName}`
+
+  const dbp = (async () => {
+    let created = false
+    const request = indexedDB.open(dbNameWithPrefix)
+    request.onupgradeneeded = () => {
+      // 存在しなかった場合
+      request.result.createObjectStore(storeName)
+      created = true
+    }
+    let db = await promisifyRequest(request)
+
+    if (created) {
+      // 作成時のmigrationを実行する
+      const migration = migrations[1]
+      if (migration) {
+        try {
+          const getStore = () =>
+            db.transaction(storeName, 'readwrite').objectStore(storeName)
+
+          await migration(getStore)
+          outputLog('log', 'Ran migration', dbNameWithPrefix, 0)
+        } catch (e) {
+          outputLog('error', 'Failed to run migration', dbNameWithPrefix, 0)
+          throw e
+        }
+      }
+    }
+
+    // run migration
+    for (let v = db.version; v < version; v++) {
+      const migration = migrations[v + 1]
+      if (!migration) continue
+
+      try {
+        const getStore = () =>
+          db.transaction(storeName, 'readwrite').objectStore(storeName)
+
+        await migration(getStore)
+        outputLog('log', 'Ran migration', dbNameWithPrefix, v)
+      } catch (e) {
+        outputLog('error', 'Failed to run migration', dbNameWithPrefix, v)
+        throw e
+      }
+
+      try {
+        // migrationに成功したらバージョンを上げる
+        db.close()
+        const updateRequest = indexedDB.open(dbNameWithPrefix, v + 1)
+        db = await promisifyRequest(updateRequest)
+      } catch (e) {
+        outputLog('error', 'Failed to upgrade version', dbNameWithPrefix, v, e)
+        throw e
+      }
+    }
+
+    return db
+  })()
+
+  return async (txMode, callback) => {
+    const db = await dbp
+    const store = db.transaction(storeName, txMode).objectStore(storeName)
+    return callback(store)
+  }
+}
+
+export function createStore(dbName: string, storeName: string): UseStore {
+  return idbCreateStore(`${dbPrefix}${dbName}`, storeName)
+}

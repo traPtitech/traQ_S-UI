@@ -1,38 +1,36 @@
 <template>
   <div>
-    <channel-sidebar-viewers
+    <ChannelSidebarViewers
       v-model="isViewersDetailOpen"
       :viewer-ids="viewerIds"
+      :inactive-viewer-ids="inactiveViewerIds"
       :class="$style.sidebarItem"
     />
-    <channel-sidebar-qall
+    <ChannelSidebarQall
       v-if="qallUserIds.length > 0"
       :qall-user-ids="qallUserIds"
       :class="$style.sidebarItem"
     />
-    <channel-sidebar-topic
-      :class="$style.sidebarItem"
-      :channel-id="channelId"
-    />
-    <channel-sidebar-pinned
+    <ChannelSidebarTopic :class="$style.sidebarItem" :channel-id="channelId" />
+    <ChannelSidebarPinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.sidebarItem"
       @click-link="emit('moveToPinned')"
     />
-    <channel-sidebar-events
+    <ChannelSidebarEvents
       :class="$style.sidebarItem"
       @click-link="emit('moveToEvents')"
     />
-    <channel-sidebar-relation
+    <ChannelSidebarRelation
       :channel-id="channelId"
       :class="$style.sidebarItem"
     />
-    <channel-sidebar-member
+    <ChannelSidebarMember
       :channel-id="channelId"
       :class="$style.sidebarItem"
       :viewer-ids="viewerIds"
     />
-    <channel-sidebar-bots :channel-id="channelId" :class="$style.sidebarItem" />
+    <ChannelSidebarBots :channel-id="channelId" :class="$style.sidebarItem" />
     <!--
     <channel-sidebar-edit :class="$style.edit" />
     -->
@@ -40,24 +38,30 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelSidebarTopic from './ChannelSidebarTopic.vue'
-import ChannelSidebarPinned from './ChannelSidebarPinned.vue'
-import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
-import ChannelSidebarMember from './ChannelSidebarMember.vue'
-import ChannelSidebarEvents from './ChannelSidebarEvents.vue'
-import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
-import ChannelSidebarQall from './ChannelSidebarQall.vue'
+import { computed } from 'vue'
+
+import { useQall } from '/@/composables/qall/useQall'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
+
 import ChannelSidebarBots from './ChannelSidebarBots.vue'
-import type { UserId, ChannelId } from '/@/types/entity-ids'
-import { useQallSession } from './composables/useChannelRTCSession'
-import { useModelSyncer } from '/@/composables/useModelSyncer'
+import ChannelSidebarEvents from './ChannelSidebarEvents.vue'
+import ChannelSidebarMember from './ChannelSidebarMember.vue'
+import ChannelSidebarPinned from './ChannelSidebarPinned.vue'
+import ChannelSidebarQall from './ChannelSidebarQall.vue'
+import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
+import ChannelSidebarTopic from './ChannelSidebarTopic.vue'
+import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
+
+const isViewersDetailOpen = defineModel<boolean>('isViewersDetailOpen', {
+  required: true
+})
 
 const props = withDefaults(
   defineProps<{
     channelId: ChannelId
     viewerIds: readonly UserId[]
+    inactiveViewerIds: readonly UserId[]
     pinnedMessagesCount?: number
-    isViewersDetailOpen: boolean
   }>(),
   {
     pinnedMessagesCount: 0
@@ -67,12 +71,16 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'moveToPinned'): void
   (e: 'moveToEvents'): void
-  (e: 'update:isViewersDetailOpen', value: boolean): void
 }>()
 
-const { sessionUserIds: qallUserIds } = useQallSession(props)
+const { rooms: roomWithParticipants } = useQall()
 
-const isViewersDetailOpen = useModelSyncer(props, emit, 'isViewersDetailOpen')
+const qallUserIds = computed(
+  () =>
+    roomWithParticipants.value
+      .find(room => room.channel.id === props.channelId)
+      ?.participants?.map(participant => participant.user.id) ?? []
+)
 </script>
 
 <style lang="scss" module>

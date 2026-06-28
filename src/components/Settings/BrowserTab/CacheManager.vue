@@ -5,7 +5,7 @@
       <p v-if="cacheData && cacheData.usage" :class="$style.usage">
         <span>{{ prettifyFileSize(cacheData.usage) }}</span>
       </p>
-      <form-button
+      <FormButton
         :class="$style.button"
         label="削除する"
         type="secondary"
@@ -18,8 +18,9 @@
 
 <script lang="ts">
 import { onMounted, ref } from 'vue'
-import { checkStorageManagerSupport } from '/@/lib/dom/browser'
+
 import { prettifyFileSize } from '/@/lib/basic/file'
+import { checkStorageManagerSupport } from '/@/lib/dom/browser'
 
 const isStorageManagerSupported = checkStorageManagerSupport()
 const getStorageUsage = async () => {

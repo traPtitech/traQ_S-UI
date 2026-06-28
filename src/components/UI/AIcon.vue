@@ -3,7 +3,7 @@
     v-if="mdi"
     :width="size"
     :height="size"
-    viewBox="0 0 24 24"
+    :viewBox="`0 0 24 24`"
     v-bind="$attrs"
     role="img"
     :class="$style.icon"
@@ -15,7 +15,7 @@
     v-else
     :width="size"
     :height="size"
-    viewBox="0 0 24 24"
+    :viewBox="`0 0 ${size} ${size}`"
     v-bind="$attrs"
     role="img"
     :class="$style.icon"
@@ -23,8 +23,9 @@
 </template>
 
 <script lang="ts">
-import { shallowRef, watch, computed } from 'vue'
-import type { Component } from 'vue'
+import { computed, shallowRef, watch } from 'vue'
+import type { Component, SVGAttributes } from 'vue'
+
 import mdiPaths from '/@/assets/mdi'
 
 type ComponentModule = {
@@ -61,6 +62,11 @@ const props = withDefaults(
   }
 )
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-empty-object-type
+interface Attributes extends /* @vue-ignore */ SVGAttributes {}
+
+defineEmits<Attributes>()
+
 const getComponent = async (name: string) => {
   const moduleFunc = iconModules[`/src/assets/icons/${name}.svg`]
   if (!moduleFunc) {
@@ -89,6 +95,6 @@ const path = computed(() => mdiPaths[props.name])
 
 <style lang="scss" module>
 .icon {
-  contain: strict;
+  contain: var(--contain-strict);
 }
 </style>

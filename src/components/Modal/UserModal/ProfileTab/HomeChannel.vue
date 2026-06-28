@@ -1,8 +1,8 @@
 <template>
   <section>
-    <profile-header text="ホームチャンネル" />
+    <ProfileHeader text="ホームチャンネル" />
     <p>
-      <a-icon name="home" mdi :class="$style.icon" />
+      <AIcon name="home" mdi :class="$style.icon" />
       <span v-if="isLoading" :class="$style.text" aria-busy="true"
         >[Now loading...]</span
       >
@@ -17,12 +17,14 @@
 </template>
 
 <script lang="ts" setup>
-import ProfileHeader from './ProfileHeader.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
+
 import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
+import ProfileHeader from './ProfileHeader.vue'
 
 const props = defineProps<{
   channelId?: string | null
@@ -41,6 +43,7 @@ const channelPath = computed(() =>
 
 const onClick = async (event: MouseEvent) => {
   if (!props.channelId) return
+  if (!channelPath.value) return
 
   openLinkAndClearModal(event, constructChannelPath(channelPath.value))
 }

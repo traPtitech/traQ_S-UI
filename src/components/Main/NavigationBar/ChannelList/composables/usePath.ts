@@ -1,6 +1,7 @@
 import type { Channel } from '@traptitech/traq'
-import { computed, reactive } from 'vue'
-import { useQallSession } from '/@/components/Main/MainView/ChannelView/ChannelSidebar/composables/useChannelRTCSession'
+
+import { computed } from 'vue'
+
 import useChannelPath from '/@/composables/useChannelPath'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 
@@ -32,17 +33,9 @@ export const usePath = (typedProps: TypedProps) => {
   )
   const pathTooltip = computed(() =>
     typedProps.showShortenedPath
-      ? `#${channelIdToPathString(typedProps.channel.id)}`
+      ? `${channelIdToPathString(typedProps.channel.id, true) ?? ''}`
       : undefined
   )
 
   return { pathToShow, pathTooltip }
-}
-
-export const useRTCState = (typedProps: TypedProps) => {
-  const { sessionUserIds } = useQallSession(
-    reactive({ channelId: computed(() => typedProps.channel.id) })
-  )
-
-  return { qallUserIds: sessionUserIds }
 }

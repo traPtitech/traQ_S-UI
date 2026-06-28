@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
-    <a-slider
-      v-model.number="value"
+    <ASlider
+      v-model="modelValue"
       :class="$style.range"
       :min="min"
       :max="max"
@@ -10,7 +10,7 @@
       :interval="interval"
       :style="{ padding: '24px 0' }"
     />
-    <semi-fixed-size-text
+    <SemiFixedSizeText
       align="right"
       :actual="showValue"
       :placeholder="maxText"
@@ -20,13 +20,15 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
-import SemiFixedSizeText from './SemiFixedSizeText.vue'
+
 import ASlider from '/@/components/UI/ASlider.vue'
+
+import SemiFixedSizeText from './SemiFixedSizeText.vue'
+
+const modelValue = defineModel<number>({ required: true })
 
 const props = withDefaults(
   defineProps<{
-    modelValue: number
     maxText: string
     min?: number
     max?: number
@@ -39,13 +41,7 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', v: number): void
-}>()
-
-const value = useModelValueSyncer(props, emit)
-
-const showValue = computed(() => props.format(value.value))
+const showValue = computed(() => props.format(modelValue.value))
 </script>
 
 <style lang="scss" module>

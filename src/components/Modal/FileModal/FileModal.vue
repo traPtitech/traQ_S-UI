@@ -1,31 +1,26 @@
 <template>
-  <click-outside stop @click-outside="clearModal">
+  <ClickOutside stop @click-outside="clearModal">
     <div
       v-if="fileMeta"
       :class="$style.fileContainer"
       :data-fullsize="$boolAttr(isFullsizeModal)"
     >
-      <file-modal-image v-if="fileType === 'image'" :file-id="fileMeta.id" />
-      <file-modal-video
-        v-else-if="fileType === 'video'"
-        :file-id="fileMeta.id"
-      />
-      <file-modal-audio
-        v-else-if="fileType === 'audio'"
-        :file-id="fileMeta.id"
-      />
-      <file-modal-file v-else :file-id="fileMeta.id" />
+      <FileModalImage v-if="fileType === 'image'" :file-id="fileMeta.id" />
+      <FileModalVideo v-else-if="fileType === 'video'" :file-id="fileMeta.id" />
+      <FileModalAudio v-else-if="fileType === 'audio'" :file-id="fileMeta.id" />
+      <FileModalFile v-else :file-id="fileMeta.id" />
     </div>
-  </click-outside>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>
-import ClickOutside from '/@/components/UI/ClickOutside'
-import FileModalImage from '/@/components/Modal/FileModal/FileModalImage.vue'
-import FileModalFile from '/@/components/Modal/FileModal/FileModalFile.vue'
-import FileModalVideo from '/@/components/Modal/FileModal/FileModalVideo.vue'
-import FileModalAudio from '/@/components/Modal/FileModal/FileModalAudio.vue'
 import { computed, reactive } from 'vue'
+
+import FileModalAudio from '/@/components/Modal/FileModal/FileModalAudio.vue'
+import FileModalFile from '/@/components/Modal/FileModal/FileModalFile.vue'
+import FileModalImage from '/@/components/Modal/FileModal/FileModalImage.vue'
+import FileModalVideo from '/@/components/Modal/FileModal/FileModalVideo.vue'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import useFileMeta from '/@/composables/files/useFileMeta'
 import { useModalStore } from '/@/store/ui/modal'
 

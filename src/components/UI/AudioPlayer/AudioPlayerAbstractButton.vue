@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :aria-disabled="disabled">
-    <a-icon :mdi="iconMdi" :name="iconName" :size="size" />
+    <AIcon :mdi="iconMdi" :name="iconName" :size="size" />
   </div>
 </template>
 

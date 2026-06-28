@@ -1,19 +1,24 @@
 import { computed, reactive, watch } from 'vue'
-import router, { RouteName, constructChannelPath } from '/@/router'
-import useNavigationController from '/@/composables/mainView/useNavigationController'
-import useChannelPath from '/@/composables/useChannelPath'
 import type { LocationQuery } from 'vue-router'
 import { useRoute } from 'vue-router'
-import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
+
 import { dequal } from 'dequal'
-import { useMainViewStore } from '/@/store/ui/mainView'
-import { useModalStore } from '/@/store/ui/modal'
+
+import { useRenderKey } from '/@/composables/dom/useRenderKey'
+import useNavigationController from '/@/composables/mainView/useNavigationController'
+import useChannelPath from '/@/composables/useChannelPath'
+import { useMessageQuery } from '/@/composables/utils/useMessageQuery'
+import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import { getFirstParam } from '/@/lib/basic/url'
+import router, { RouteName, constructChannelPath } from '/@/router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
-import { useMessagesStore } from '/@/store/entities/messages'
 import { useChannelsStore } from '/@/store/entities/channels'
-import { useUsersStore } from '/@/store/entities/users'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+import { useMessagesStore } from '/@/store/entities/messages'
+import { useUsersStore } from '/@/store/entities/users'
+import { useMainViewStore } from '/@/store/ui/mainView'
+import { useModalStore } from '/@/store/ui/modal'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -27,15 +32,11 @@ const useRouteWatcher = () => {
     changePrimaryViewToChannelOrDM
   } = useMainViewStore()
   const { fetchMessage, fetchFileMetaData } = useMessagesStore()
-  const { channelPathToId, channelIdToPathString, channelIdToLink } =
-    useChannelPath()
+  const { channelPathStringToId, channelIdToLink } = useChannelPath()
   const { closeNav } = useNavigationController()
   const { isOnInitialModalRoute, replaceModal, clearModalState } =
     useModalStore()
-  const {
-    defaultChannelName,
-    restoringPromise: browserSettingsRestoringPromise
-  } = useBrowserSettings()
+  const { getStartupChannelId, getStartupChannelPath } = useBrowserSettings()
   const { channelTree } = useChannelTree()
   const {
     channelsMap,
@@ -47,6 +48,7 @@ const useRouteWatcher = () => {
   const { usersMap, usersMapInitialFetchPromise, fetchUserByName } =
     useUsersStore()
   const { fetchClipFolder } = useClipFoldersStore()
+  const messageQuery = useMessageQuery()
 
   const state = reactive({
     currentRouteName: computed(() => route.name ?? ''),
@@ -61,43 +63,44 @@ const useRouteWatcher = () => {
     isInitialView: true
   })
 
-  const useOpenChannel = async () => {
-    await browserSettingsRestoringPromise.value
-    return defaultChannelName
-  }
-
   const onRouteChangedToIndex = async () => {
-    const openChannelPath = await useOpenChannel()
     await router
-      .replace(constructChannelPath(openChannelPath.value))
+      .replace(constructChannelPath(await getStartupChannelPath()))
       // 同じ場所に移動しようとした際のエラーを消す
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {})
-    return
   }
 
   const onRouteChangedToChannel = async () => {
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise.value
+    await bothChannelsMapInitialFetchPromise
+
     if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
-    try {
-      const id = channelPathToId(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        state.channelParam!.split('/'),
-        channelTree.value
-      )
 
-      changePrimaryViewToChannel({
-        channelId: id,
-        entryMessageId: getFirstQuery(route.query['message']) ?? undefined
-      })
-    } catch (e) {
-      state.view = 'not-found'
-      return
+    const pathOrId = state.channelParam ?? ''
+
+    const id = (() => {
+      if (channelsMap.value.has(pathOrId)) {
+        return pathOrId
+      }
+
+      return setFallbackForNullishOrOnError(null).exec(() =>
+        channelPathStringToId(pathOrId)
+      )
+    })()
+
+    if (!id) {
+      return router.replace(constructChannelPath(await getStartupChannelPath()))
     }
+
+    changePrimaryViewToChannel({
+      channelId: id,
+      entryMessageId: messageQuery.value
+    })
+
     state.view = 'main'
   }
 
@@ -107,18 +110,18 @@ const useRouteWatcher = () => {
         username: state.currentRouteParam,
         cacheStrategy: 'useCache'
       })
-      if (!user) throw 'user not found'
+      if (!user) throw new Error('user not found')
 
       const dmChannelId =
         userIdToDmChannelIdMap.value.get(user.id) ??
         (await fetchUserDMChannel(user.id))
 
-      if (!dmChannelId) throw 'failed to fetch DM channel ID'
+      if (!dmChannelId) throw new Error('failed to fetch DM channel ID')
 
       changePrimaryViewToDM({
         channelId: dmChannelId,
         userName: user.name,
-        entryMessageId: getFirstQuery(route.query['message']) ?? undefined
+        entryMessageId: messageQuery.value
       })
       state.view = 'main'
     } catch {
@@ -154,27 +157,20 @@ const useRouteWatcher = () => {
     }
 
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise.value
+    await bothChannelsMapInitialFetchPromise
+
     if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
 
-    const openChannelPath = await useOpenChannel()
-    let channelPath = ''
-    let channelId = ''
-    if (file.channelId) {
-      channelPath = channelIdToPathString(file.channelId, true)
-      channelId = file.channelId
-    } else {
-      channelPath = openChannelPath.value
-      try {
-        channelId = channelPathToId(channelPath.split('/'), channelTree.value)
-      } catch (e) {
-        state.view = 'not-found'
-        return
+    const channelId = await (() => {
+      if (file.channelId) {
+        return file.channelId
+      } else {
+        return getStartupChannelId()
       }
-    }
+    })()
 
     // チャンネルが表示されていないときはそのファイルのチャンネルを表示する
     if (
@@ -206,7 +202,7 @@ const useRouteWatcher = () => {
     const channelId = message.channelId
 
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise.value
+    await bothChannelsMapInitialFetchPromise
     if (channelTree.value.children.length === 0) {
       return
     }
@@ -215,14 +211,14 @@ const useRouteWatcher = () => {
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
-        path: channelIdToLink(message.channelId),
+        path: channelIdToLink(message.channelId) as string,
         query: { message: message.id }
       })
     } else if (dmChannelsMap.value.has(channelId)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const dmChannel = dmChannelsMap.value.get(channelId)!
       // ユーザーIDからユーザー名への変換に必要
-      await usersMapInitialFetchPromise.value
+      await usersMapInitialFetchPromise
       const user = usersMap.value.get(dmChannel.userId)
       router.replace({
         name: RouteName.User,
@@ -232,16 +228,24 @@ const useRouteWatcher = () => {
     } else {
       // チャンネルがなかった
       state.view = 'not-found'
+      return
     }
+
+    useRenderKey('messages').refresh()
   }
 
-  type RouteParamWithQuery = readonly [routeParam: string, query: LocationQuery]
+  type RouteParamWithQuery = readonly [
+    routeParam: string | null,
+    query: LocationQuery
+  ]
+
   const onRouteParamChange = async (
     [routeParam, query]: RouteParamWithQuery,
     [prevRouteParam, prevQuery]: RouteParamWithQuery
   ) => {
     isOnInitialModalRoute.value = false
     const routeName = state.currentRouteName
+
     if (routeName === RouteName.Index) {
       await onRouteChangedToIndex()
       return
@@ -292,7 +296,7 @@ const useRouteWatcher = () => {
 
   const triggerRouteParamChange = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    onRouteParamChange([state.channelParam!, {}], ['', {}])
+    onRouteParamChange([state.channelParam!, {}], [null, {}])
   }
 
   return {

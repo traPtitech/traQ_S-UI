@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" @click="onClick">
     <span :class="$style.label">{{ label }}</span>
-    <a-icon
+    <AIcon
       name="close"
       mdi
       :class="$style.icon"

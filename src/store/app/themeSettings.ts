@@ -1,12 +1,14 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref, toRefs } from 'vue'
+
+import { promisifyRequest } from 'idb-keyval'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
+import { hasKey, isObjectAndHasKey } from '/@/lib/basic/object'
+import { resolveTheme } from '/@/lib/theme/resolve'
 import type { Theme } from '/@/lib/theme/schema'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import useIndexedDbValue from '/@/composables/utils/useIndexedDbValue'
-import { resolveTheme } from '/@/lib/theme/resolve'
 import { getVuexData } from '/@/store/utils/migrateFromVuex'
-import { hasKey, isObjectAndHasKey } from '/@/lib/basic/object'
-import { promisifyRequest } from 'idb-keyval'
 
 type State = {
   type: ThemeType
@@ -78,8 +80,7 @@ const useThemeSettingsPinia = defineStore('ui/themeSettings', () => {
 
   const queryList = window.matchMedia('(prefers-color-scheme: dark)')
   const isOsDarkTheme = ref(queryList.matches)
-  // safariではaddEventListener('change', func)が未対応なため
-  queryList.addListener((event: MediaQueryListEvent) => {
+  queryList.addEventListener('change', (event: MediaQueryListEvent) => {
     isOsDarkTheme.value = event.matches
   })
 

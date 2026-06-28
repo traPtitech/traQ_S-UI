@@ -9,7 +9,7 @@
             マイクなどへのアクセス許可が必要です。
           </p>
         </section>
-        <a-toggle v-model="state.isEnabled" :class="$style.toggle" />
+        <AToggle v-model="state.isEnabled" :class="$style.toggle" />
       </div>
     </section>
     <template v-if="state.isEnabled">
@@ -22,10 +22,10 @@
                 Qallしているチャンネルに投稿されたメッセージを読み上げます。
               </p>
             </section>
-            <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
+            <AToggle v-model="state.isTtsEnabled" :class="$style.toggle" />
           </div>
           <div v-if="state.isTtsEnabled" :class="$style.contents">
-            <form-selector
+            <FormSelector
               v-if="voiceOptions.length > 0"
               v-model="state.voiceName"
               label="読み上げボイスの種類"
@@ -33,22 +33,22 @@
               :class="$style.option"
             />
             <p v-else>読み上げ音声の声の種類が取得できませんでした。</p>
-            <form-input
-              v-model.number="state.voicePitch"
+            <FormInput
+              v-model="state.voicePitch"
               label="ピッチ"
               type="number"
               step="0.1"
               :class="$style.option"
             />
-            <form-input
-              v-model.number="state.voiceRate"
+            <FormInput
+              v-model="state.voiceRate"
               label="速度"
               type="number"
               step="0.1"
               :class="$style.option"
             />
-            <form-input
-              v-model.number="state.voiceVolume"
+            <FormInput
+              v-model="state.voiceVolume"
               label="音量"
               type="number"
               step="0.1"
@@ -60,7 +60,7 @@
       <section :class="$style.element">
         <h3 :class="$style.heading">入力デバイス</h3>
         <div>
-          <form-selector
+          <FormSelector
             v-if="!fetchFailed && audioInputDevices.length > 0"
             v-model="state.audioInputDeviceId"
             :options="audioInputDeviceOptions"
@@ -69,8 +69,19 @@
         </div>
       </section>
       <section :class="$style.element">
+        <h3 :class="$style.heading">出力デバイス</h3>
+        <div>
+          <FormSelector
+            v-if="!fetchFailed && audioOutputDevices.length"
+            v-model="state.audioOutputDeviceId"
+            :options="audioOutputDeviceOptions"
+          />
+          <p v-else>デバイスが取得できませんでした。</p>
+        </div>
+      </section>
+      <section :class="$style.element">
         <h3 :class="$style.heading">マスターボリューム</h3>
-        <form-range-with-value
+        <FormRangeWithValue
           v-model="state.masterVolume"
           max-text="100%"
           :min="0"
@@ -85,7 +96,7 @@
           マイクに入力された音が指定した音量以下だった場合にミュートします。
           -100dBにすると無効になります。
         </p>
-        <form-range-with-value
+        <FormRangeWithValue
           v-model="state.noiseGateThreshold"
           max-text="-100dB"
           :min="-100"
@@ -95,7 +106,7 @@
           :class="$style.noiseGate"
         />
       </section>
-      <noise-suppression
+      <NoiseSuppression
         v-model="state.noiseSuppression"
         :class="$style.element"
       />
@@ -104,7 +115,8 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, watchEffect, reactive } from 'vue'
+import { computed, reactive, ref, watchEffect } from 'vue'
+
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 
 const useDevicesInfo = () => {
@@ -115,7 +127,7 @@ const useDevicesInfo = () => {
   const fetchDeviceList = async () => {
     try {
       devices.value = await navigator.mediaDevices.enumerateDevices()
-    } catch (e) {
+    } catch (_) {
       fetchFailed.value = true
     }
     if (devices.value.length === 0 || devices.value[0]?.label === '') {
@@ -186,11 +198,11 @@ const useVoices = () => {
 </script>
 
 <script lang="ts" setup>
-import AToggle from '/@/components/UI/AToggle.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
 import NoiseSuppression from '/@/components/Settings/QallTab/NoiseSuppression.vue'
+import AToggle from '/@/components/UI/AToggle.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
 import FormRangeWithValue from '/@/components/UI/FormRangeWithValue.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
 
 const state = reactive(useRtcSettings())
 
@@ -199,10 +211,17 @@ const formatMasterVolume = (v: number) =>
 
 const formatNoiseGateThreshold = (v: number) => `${v}dB`
 
-const { fetchFailed, audioInputDevices } = useDevicesInfo()
+const { fetchFailed, audioInputDevices, audioOutputDevices } = useDevicesInfo()
 
 const audioInputDeviceOptions = computed(() =>
   audioInputDevices.value.map(d => ({
+    key: d.label,
+    value: d.deviceId
+  }))
+)
+
+const audioOutputDeviceOptions = computed(() =>
+  audioOutputDevices.value.map(d => ({
     key: d.label,
     value: d.deviceId
   }))

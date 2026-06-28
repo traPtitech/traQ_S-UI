@@ -1,7 +1,7 @@
 <template>
   <textarea
     ref="textareaEle"
-    :value="value"
+    :value="modelValue"
     :class="$style.textarea"
     :readonly="readonly"
     :placeholder="placeholder"
@@ -18,13 +18,18 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref, toRef, watch, nextTick } from 'vue'
-import autosize from 'autosize'
-import useTextModelSyncer from '/@/composables/useTextModelSyncer'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
-const props = defineProps<{
-  modelValue: string
-  maxHeight?: number
+import { useEventListener } from '@vueuse/core'
+import autosize from 'autosize'
+
+import useOnInput from '/@/composables/useOnInput'
+
+const modelValue = defineModel<string>({
+  required: true
+})
+
+defineProps<{
   readonly?: boolean
   placeholder?: string
   rows?: string
@@ -32,16 +37,16 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', _val: string): void
   (e: 'beforeInput', _val: Event): void
   (e: 'keydown', _val: KeyboardEvent): void
   (e: 'keyup', _val: KeyboardEvent): void
   (e: 'focus'): void
   (e: 'blur'): void
   (e: 'paste', _val: ClipboardEvent): void
+  (e: 'autosize-updated'): void
 }>()
 
-const { value, onInput } = useTextModelSyncer(props, emit)
+const onInput = useOnInput(modelValue)
 
 const textareaEle = ref<HTMLTextAreaElement | null>(null)
 
@@ -49,17 +54,23 @@ const focus = () => {
   textareaEle.value?.focus()
 }
 
+const autosizeUpdateTextarea = async () => {
+  await nextTick()
+  if (textareaEle.value) {
+    autosize.update(textareaEle.value)
+  }
+}
+
+useEventListener(textareaEle, 'autosize:resized', () => {
+  emit('autosize-updated')
+})
+
 onMounted(() => {
   if (textareaEle.value) {
     autosize(textareaEle.value)
   }
 })
-watch(toRef(props, 'modelValue'), async () => {
-  await nextTick()
-  if (textareaEle.value) {
-    autosize.update(textareaEle.value)
-  }
-})
+watch([modelValue], autosizeUpdateTextarea)
 onBeforeUnmount(() => {
   if (textareaEle.value) {
     autosize.destroy(textareaEle.value)
@@ -67,7 +78,9 @@ onBeforeUnmount(() => {
 })
 
 defineExpose({
-  focus
+  focus,
+  autosizeUpdateTextarea,
+  textareaEle
 })
 </script>
 

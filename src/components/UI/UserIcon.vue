@@ -1,24 +1,26 @@
 <template>
   <div
     :role="isClickable ? 'button' : 'img'"
-    :class="$style.container"
+    :class="[$style.container]"
     :style="styles.container"
     @click.prevent.stop="openModal"
   >
     <div v-if="hasNotification" :class="$style.indicator">
-      <notification-indicator :size="indicatorSize" />
+      <NotificationIndicator :size="indicatorSize" />
     </div>
+    <div v-if="isInactive" :class="$style.mask" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed, watch, toRef } from 'vue'
-import { buildUserIconPath } from '/@/lib/apis'
-import type { UserId, FileId } from '/@/types/entity-ids'
+import { computed, reactive, toRef, watch } from 'vue'
+
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
+import { buildUserIconPath } from '/@/lib/apis'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
-import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
+import type { FileId, UserId } from '/@/types/entity-ids'
 
 export type IconSize =
   | 200
@@ -42,12 +44,14 @@ const props = withDefaults(
     indicatorSize?: number
     preventModal?: boolean
     hasNotification?: boolean
+    isInactive?: boolean
   }>(),
   {
     size: 36,
     indicatorSize: 10,
     preventModal: false,
-    hasNotification: false
+    hasNotification: false,
+    isInactive: false
   }
 )
 
@@ -108,5 +112,12 @@ const { isClickable, openModal } = useUserModalOpener(
   position: absolute;
   top: 0;
   right: 0;
+}
+.mask {
+  @include background-primary;
+  width: 100%;
+  height: 100%;
+  border-radius: 100vw;
+  opacity: 0.5;
 }
 </style>

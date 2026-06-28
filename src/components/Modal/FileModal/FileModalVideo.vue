@@ -2,19 +2,19 @@
   <div :class="$style.container">
     <div v-if="fileMeta" :class="$style.container">
       <div :class="$style.header">
-        <file-modal-content-header :file-id="fileMeta.id" is-white />
+        <FileModalContentHeader :file-id="fileMeta.id" is-white />
       </div>
       <video controls draggable="false" :src="fileRawPath" />
       <div :class="$style.footer">
-        <file-modal-content-footer :file-id="fileMeta.id" is-white />
+        <FileModalContentFooter :file-id="fileMeta.id" is-white />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
+import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
 import useFileMeta from '/@/composables/files/useFileMeta'
 
 const props = defineProps<{

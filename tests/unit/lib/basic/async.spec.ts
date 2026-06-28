@@ -84,13 +84,13 @@ describe('createSingleFlight', () => {
 })
 
 describe('createMutex', () => {
-  it('can be called', () => {
+  it('can be called', async () => {
     const mutex = createMutex()
     const lockPromise = mutex.lock()
     const unlockResult = mutex.unlock()
 
-    expect(lockPromise).resolves.toBeUndefined()
-    expect(unlockResult).toBeUndefined()
+    await expect(lockPromise).resolves.toBeUndefined()
+    await expect(unlockResult).toBeUndefined()
   })
 
   it('can be called serially', async () => {

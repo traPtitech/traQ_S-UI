@@ -1,13 +1,15 @@
 import type { RouteName } from '/@/router'
 import type {
-  UserId,
   ChannelId,
   FileId,
-  UserGroupId,
-  TagId,
   MessageId,
-  StampId
+  StampId,
+  TagId,
+  UserGroupId,
+  UserId
 } from '/@/types/entity-ids'
+
+export type UserModalNavigationItemType = 'profile' | 'groups' | 'tags'
 
 export type ModalStateType =
   | 'user'
@@ -16,7 +18,6 @@ export type ModalStateType =
   | 'file'
   | 'tag'
   | 'channel-create'
-  | 'qrcode'
   | 'clip-create'
   | 'clip-folder-create'
   | 'channel-manage'
@@ -38,7 +39,6 @@ export type ModalState =
   | GroupModalState
   | TagModalState
   | ChannelCreateModalState
-  | QrCodeModalState
   | ClipCreateModalState
   | ClipFolderCreateModalState
   | ChannelManageModalState
@@ -64,6 +64,7 @@ interface BaseModalState {
 interface UserModalState extends BaseModalState {
   type: 'user'
   id: UserId
+  navigation?: UserModalNavigationItemType
 }
 
 interface NotificationModalState extends BaseModalState {
@@ -96,10 +97,6 @@ interface ChannelCreateModalState extends BaseModalState {
    * 指定しない場合は親チャンネルが指定可能な作成画面になる
    */
   parentChannelId?: ChannelId
-}
-
-interface QrCodeModalState extends BaseModalState {
-  type: 'qrcode'
 }
 
 interface ClipCreateModalState extends BaseModalState {

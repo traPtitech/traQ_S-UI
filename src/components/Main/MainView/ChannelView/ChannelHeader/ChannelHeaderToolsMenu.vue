@@ -1,31 +1,31 @@
 <template>
-  <primary-view-header-popup-frame>
-    <header-tools-menu-item
-      v-if="isMobile && isQallFeatureEnabled"
-      :icon-name="qallIconName"
+  <PrimaryViewHeaderPopupFrame>
+    <HeaderToolsMenuItem
+      v-if="isMobile"
+      :icon-name="isCallingHere ? 'phone' : 'phone-outline'"
       icon-mdi
       :class="$style.qallIcon"
-      :label="qallLabel"
-      :disabled="!canToggleQall"
-      :data-is-active="$boolAttr(isQallSessionOpened)"
-      @click="toggleQall"
+      :label="'Qallを開始'"
+      :disabled="disabled"
+      :data-is-active="$boolAttr(isCallingHere)"
+      @click="joinQall(props.channelId)"
       @click-item="emit('clickItem')"
     />
-    <header-tools-menu-item
+    <HeaderToolsMenuItem
       v-if="isChildChannelCreatable"
       icon-name="hash"
       label="子チャンネルを作成"
       @click="openChannelCreateModal"
       @click-item="emit('clickItem')"
     />
-    <header-tools-menu-item
+    <HeaderToolsMenuItem
       v-if="showNotificationSettingBtn"
       icon-name="notified-or-subscribed"
       label="通知設定"
       @click="openNotificationModal"
       @click-item="emit('clickItem')"
     />
-    <header-tools-menu-item
+    <HeaderToolsMenuItem
       v-if="isSearchEnabled"
       icon-name="search"
       icon-mdi
@@ -33,14 +33,14 @@
       @click="openCommandPalette('search', 'in:here ')"
       @click-item="emit('clickItem')"
     />
-    <header-tools-menu-item
+    <HeaderToolsMenuItem
       icon-name="link"
       icon-mdi
       label="チャンネルリンクをコピー"
       @click="copyLink"
       @click-item="emit('clickItem')"
     />
-    <header-tools-menu-item
+    <HeaderToolsMenuItem
       v-if="hasChannelEditPermission"
       icon-name="hash"
       :class="$style.manageChannel"
@@ -48,23 +48,33 @@
       @click="openChannelManageModal"
       @click-item="emit('clickItem')"
     />
-  </primary-view-header-popup-frame>
+    <HeaderToolsMenuItem
+      icon-name="phone-outline"
+      icon-mdi
+      label="ウェビナーモードでQallを開始"
+      @click="() => joinQall(props.channelId, true)"
+      @click-item="emit('clickItem')"
+    />
+  </PrimaryViewHeaderPopupFrame>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import { UserPermission } from '@traptitech/traq'
-import { useMeStore } from '/@/store/domain/me'
+
+import { computed } from 'vue'
+
 import PrimaryViewHeaderPopupFrame from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderPopupMenuItem.vue'
-import useQall from './composables/useQall'
-import type { ChannelId } from '/@/types/entity-ids'
-import useChannelCreateModal from './composables/useChannelCreateModal'
-import useNotificationModal from './composables/useNotificationModal'
+import { useQall } from '/@/composables/qall/useQall'
+import useResponsive from '/@/composables/useResponsive'
 import { useCommandPalette } from '/@/store/app/commandPalette'
+import { useMeStore } from '/@/store/domain/me'
+import type { ChannelId } from '/@/types/entity-ids'
+
+import useChannelCreateModal from './composables/useChannelCreateModal'
 import useChannelManageModal from './composables/useChannelManageModal'
 import useCopyChannelLink from './composables/useCopyChannelLink'
+import useNotificationModal from './composables/useNotificationModal'
 
 const emit = defineEmits<{
   (e: 'clickItem'): void
@@ -82,16 +92,11 @@ const props = withDefaults(
   }
 )
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
-const {
-  isQallFeatureEnabled,
-  isQallSessionOpened,
-  canToggleQall,
-  qallIconName,
-  qallLabel,
-  toggleQall
-} = useQall(props)
+const { joinQall, callingChannel } = useQall()
+const isCallingHere = computed(() => callingChannel.value === props.channelId)
+const disabled = computed(() => !!callingChannel.value && !isCallingHere.value)
 
 const { isChildChannelCreatable, openChannelCreateModal } =
   useChannelCreateModal(props)

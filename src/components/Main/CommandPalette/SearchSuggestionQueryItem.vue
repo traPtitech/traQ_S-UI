@@ -4,19 +4,24 @@
     :data-is-mobile="$boolAttr(isMobile)"
     @click="onClick"
   >
-    <p :class="$style.description">{{ description }}</p>
-    <p :class="$style.example">{{ example }}</p>
+    <p :class="$style.description">
+      {{ description }}
+    </p>
+    <p :class="$style.example">
+      {{ example }}
+    </p>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
+
 defineProps<{
   description: string
   example: string
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const emit = defineEmits<{
   (e: 'select'): void

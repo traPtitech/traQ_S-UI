@@ -1,10 +1,11 @@
 <template>
-  <inline-markdown v-if="isShown && content" :content="content" />
+  <MarkdownPreview v-if="isShown && content" :content="content" inline />
 </template>
 
 <script lang="ts" setup>
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 import { computed } from 'vue'
+
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 
 const props = defineProps<{

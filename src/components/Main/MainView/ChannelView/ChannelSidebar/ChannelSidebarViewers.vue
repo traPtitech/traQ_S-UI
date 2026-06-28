@@ -1,52 +1,49 @@
 <template>
-  <sidebar-content-container
+  <SidebarContentContainer
     v-if="!isDetailOpen"
     large-padding
     clickable
     @toggle="toggle"
   >
-    <user-icon-ellipsis-list
+    <UserIconEllipsisList
       direction="row"
       transition="fade-right"
       :user-ids="viewerIds"
+      :inactive-user-ids="inactiveViewerIds"
       @toggle="toggle"
     />
-  </sidebar-content-container>
-  <channel-sidebar-viewers-detail
+  </SidebarContentContainer>
+  <ChannelSidebarViewersDetail
     v-else
     :viewer-ids="viewerIds"
+    :inactive-viewer-ids="inactiveViewerIds"
     @toggle="toggle"
   />
 </template>
 
 <script lang="ts" setup>
 import { onUnmounted } from 'vue'
+
 import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
-import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'
-import type { UserId } from '/@/types/entity-ids'
 import useToggle from '/@/composables/utils/useToggle'
-import { useModelValueSyncer } from '/@/composables/useModelSyncer'
+import type { UserId } from '/@/types/entity-ids'
 
-const props = withDefaults(
+import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'
+
+const modelValue = defineModel<boolean>({ required: true })
+
+withDefaults(
   defineProps<{
     viewerIds?: readonly UserId[]
-    modelValue: boolean
+    inactiveViewerIds?: readonly UserId[]
   }>(),
   {
     viewerIds: () => []
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void
-}>()
-
-const {
-  value: isDetailOpen,
-  toggle,
-  close
-} = useToggle(useModelValueSyncer(props, emit))
+const { value: isDetailOpen, toggle, close } = useToggle(modelValue)
 
 onUnmounted(() => close())
 </script>

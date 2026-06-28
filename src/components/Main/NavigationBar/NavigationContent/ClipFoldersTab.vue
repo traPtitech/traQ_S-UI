@@ -1,33 +1,33 @@
 <template>
   <div :class="$style.container">
-    <navigation-content-container subtitle="クリップフォルダ">
+    <NavigationContentContainer subtitle="クリップフォルダ">
       <template #control>
         <button :class="$style.button" @click="onClickButton">
-          <a-icon :size="20" mdi name="plus-circle-outline" />
+          <AIcon :size="20" mdi name="plus-circle-outline" />
         </button>
       </template>
       <template #default>
         <template v-if="sortedClipFolders.length > 0">
-          <clip-folders-element
+          <ClipFoldersElement
             v-for="clipFolder in sortedClipFolders"
             :key="clipFolder.id"
             :clip-folder="clipFolder"
             :class="$style.element"
           />
         </template>
-        <empty-state v-else>クリップフォルダがありません</empty-state>
+        <EmptyState v-else> クリップフォルダがありません </EmptyState>
       </template>
-    </navigation-content-container>
+    </NavigationContentContainer>
   </div>
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import ClipFoldersElement from '/@/components/Main/NavigationBar/NavigationContent/ClipFoldersElement.vue'
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
-import { useModalStore } from '/@/store/ui/modal'
 import useSortedClipFolders from '/@/composables/clips/useSortedClipFolders'
+import { useModalStore } from '/@/store/ui/modal'
 
 const { pushModal } = useModalStore()
 const sortedClipFolders = useSortedClipFolders()

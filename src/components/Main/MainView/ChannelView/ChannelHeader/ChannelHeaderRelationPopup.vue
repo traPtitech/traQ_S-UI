@@ -1,6 +1,6 @@
 <template>
   <teleport to="#popup-header-relation">
-    <click-outside @click-outside="e => emit('outside-click', e)">
+    <ClickOutside @click-outside="e => emit('outside-click', e)">
       <div
         :id="props.popupId"
         ref="popupWrap"
@@ -15,7 +15,7 @@
           @keydown.left="onKeydown"
           @keydown.right="onKeydown"
         >
-          <a-tab
+          <ATab
             :id="siblingTabId"
             ref="siblingTab"
             :aria-selected="currentTab === 'siblings'"
@@ -24,7 +24,7 @@
             label="兄弟チャンネル"
             @click="currentTab = 'siblings'"
           />
-          <a-tab
+          <ATab
             :id="childrenTabId"
             ref="childrenTab"
             :aria-selected="currentTab === 'children'"
@@ -34,7 +34,7 @@
             @click="currentTab = 'children'"
           />
         </div>
-        <channel-header-relation-panel
+        <ChannelHeaderRelationPanel
           :id="siblingPanelId"
           role="tabpanel"
           :aria-labelledby="siblingTabId"
@@ -42,7 +42,7 @@
           empty-message="兄弟チャンネルはありません"
           :hidden="currentTab !== 'siblings'"
         />
-        <channel-header-relation-panel
+        <ChannelHeaderRelationPanel
           :id="childrenPanelId"
           role="tabpanel"
           :aria-labelledby="childrenTabId"
@@ -51,20 +51,23 @@
           :hidden="currentTab !== 'children'"
         />
       </div>
-    </click-outside>
+    </ClickOutside>
   </teleport>
 </template>
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
+import type { Ref } from 'vue'
+
+import ATab from '/@/components/UI/ATab.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
-import ChannelHeaderRelationPanel from './ChannelHeaderRelationPanel.vue'
-import type { Point } from '/@/lib/basic/point'
 import useBoxSize from '/@/composables/dom/useBoxSize'
 import useRelatedChannels from '/@/composables/useRelatedChannels'
+import { safeMod } from '/@/lib/basic/arithmetic'
+import type { Point } from '/@/lib/basic/point'
 import { randomString } from '/@/lib/basic/randomString'
-import ATab from '/@/components/UI/ATab.vue'
-import type { Ref } from 'vue'
+
+import ChannelHeaderRelationPanel from './ChannelHeaderRelationPanel.vue'
 
 interface Props {
   rightPosition: Point
@@ -115,7 +118,7 @@ const onKeydown = (e: KeyboardEvent) => {
     return
   }
 
-  nextIndex = (nextIndex + tabNames.length) % tabNames.length
+  nextIndex = safeMod(nextIndex, tabNames.length)
 
   currentTab.value = tabNames[nextIndex] ?? currentTab.value
   tabNameRefs[currentTab.value].value?.focus()

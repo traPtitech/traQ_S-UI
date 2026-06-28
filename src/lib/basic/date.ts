@@ -1,18 +1,29 @@
-export const getTimeString = (date: Readonly<Date>) =>
-  date.getHours().toString().padStart(2, '0') +
-  ':' +
-  date.getMinutes().toString().padStart(2, '0')
+export const getMonthString = (date: Readonly<Date>) =>
+  (date.getMonth() + 1).toString().padStart(2, '0')
 
-export const getDayString = (date: Readonly<Date>) =>
-  (date.getMonth() + 1).toString().padStart(2, '0') +
-  '/' +
+export const getDateString = (date: Readonly<Date>) =>
   date.getDate().toString().padStart(2, '0')
 
+export const getHoursString = (date: Readonly<Date>) =>
+  date.getHours().toString().padStart(2, '0')
+
+export const getMinutesString = (date: Readonly<Date>) =>
+  date.getMinutes().toString().padStart(2, '0')
+
+export const getSecondsString = (date: Readonly<Date>) =>
+  date.getSeconds().toString().padStart(2, '0')
+
+export const getTimeString = (date: Readonly<Date>) =>
+  `${getHoursString(date)}:${getMinutesString(date)}`
+
+export const getDayString = (date: Readonly<Date>) =>
+  `${getMonthString(date)}/${getDateString(date)}`
+
 export const getFullDayString = (date: Readonly<Date>) =>
-  date.getFullYear() + '/' + getDayString(date)
+  `${date.getFullYear()}/${getDayString(date)}`
 
 export const getFullDayWithTimeString = (date: Readonly<Date>) =>
-  getFullDayString(date) + ' ' + getTimeString(date)
+  `${getFullDayString(date)} ${getTimeString(date)}`
 
 export const getISOFullDayString = (date: Readonly<Date>) =>
   date.toISOString().split('T')[0]
@@ -36,7 +47,7 @@ export const getDateRepresentationWithoutSameDate = (
     fromDate.getDate() !== ofDate.getDate() ||
     fromDate.getMonth() !== ofDate.getMonth()
   ) {
-    return getDayString(ofDate) + ' ' + timeString
+    return `${getDayString(ofDate)} ${timeString}`
   }
   return timeString
 }
@@ -55,19 +66,19 @@ export const getDateRepresentation = (date: Readonly<Date> | string) => {
     displayDate.getMonth() === today.getMonth() &&
     displayDate.getDate() === today.getDate()
   ) {
-    return '今日' + ' ' + timeString
+    return `今日 ${timeString}`
   }
   if (
     displayDate.getFullYear() === yesterday.getFullYear() &&
     displayDate.getMonth() === yesterday.getMonth() &&
     displayDate.getDate() === yesterday.getDate()
   ) {
-    return '昨日' + ' ' + timeString
+    return `昨日 ${timeString}`
   }
   if (displayDate.getFullYear() === today.getFullYear()) {
-    return getDayString(displayDate) + ' ' + timeString
+    return `${getDayString(displayDate)} ${timeString}`
   } else {
-    return getFullDayString(displayDate) + ' ' + timeString
+    return `${getFullDayString(displayDate)} ${timeString}`
   }
 }
 

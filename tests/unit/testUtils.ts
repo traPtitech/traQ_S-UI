@@ -6,7 +6,7 @@ type Options = {}
 export const withSetup =
   <A extends readonly unknown[], R>(
     composable: (...args: A) => R,
-    options: Options = {}
+    _options: Options = {}
   ) =>
   (...args: A) => {
     let result!: R

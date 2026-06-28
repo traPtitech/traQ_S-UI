@@ -1,16 +1,18 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.name">{{ group.name }}</div>
+    <div :class="$style.name">
+      {{ group.name }}
+    </div>
     <div :class="$style.adminList">
-      <a-icon name="crown" mdi />
-      <user-icon-ellipsis-list
+      <AIcon name="crown" mdi />
+      <UserIconEllipsisList
         direction="row"
         :user-ids="group.admins"
         prevent-modal
       />
     </div>
     <div :class="$style.editIconWrapper">
-      <a-icon
+      <AIcon
         name="pencil-outline"
         mdi
         :class="$style.editIcon"
@@ -21,9 +23,10 @@
 </template>
 
 <script lang="ts" setup>
+import type { UserGroup } from '@traptitech/traq'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
-import type { UserGroup } from '@traptitech/traq'
 
 defineProps<{
   group: UserGroup

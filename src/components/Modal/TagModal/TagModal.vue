@@ -1,27 +1,29 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="タグ"
     :subtitle="tagName"
     icon-mdi
     icon-name="tag"
     return-button
   >
-    <user-list-item
+    <UserListItem
       v-for="userId in taggedUsers"
       :key="userId"
       :user-id="userId"
       :class="$style.item"
     />
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts">
-import { computed, ref, watchEffect } from 'vue'
 import type { Tag } from '@traptitech/traq'
+
+import { computed, ref, watchEffect } from 'vue'
+
+import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
 import { useUsersStore } from '/@/store/entities/users'
-import useMittListener from '/@/composables/utils/useMittListener'
 
 const useTag = (props: { id: string }) => {
   const tag = ref<Tag | null>()

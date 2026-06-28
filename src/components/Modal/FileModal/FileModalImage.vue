@@ -1,22 +1,22 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.header">
-      <file-modal-content-header :file-id="fileMeta?.id ?? ''" is-white />
+      <FileModalContentHeader :file-id="fileMeta?.id ?? ''" is-white />
     </div>
-    <image-viewer
+    <ImageViewer
       :class="$style.img"
       :src="fileRawPath"
       :alt="fileMeta?.name ?? 'unknown'"
     />
     <div :class="$style.footer">
-      <file-modal-content-footer :file-id="fileMeta?.id ?? ''" is-white />
+      <FileModalContentFooter :file-id="fileMeta?.id ?? ''" is-white />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
+import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
 import ImageViewer from '/@/components/UI/ImageViewer.vue'
 import useFileMeta from '/@/composables/files/useFileMeta'
 

@@ -1,22 +1,23 @@
 <template>
-  <optional-router-link :class="$style.container" :to="dmChannelPath" block>
+  <OptionalRouterLink :class="$style.container" :to="dmChannelPath" block>
     <div :class="$style.title">
-      <user-name :class="$style.name" :user="user" is-title />
-      <notification-indicator :class="$style.indicator" />
+      <UserName :class="$style.name" :user="user" is-title />
+      <NotificationIndicator :class="$style.indicator" />
     </div>
     <div :class="$style.separator" />
     <div :class="$style.content">DMのため非表示</div>
-  </optional-router-link>
+  </OptionalRouterLink>
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
+
 import UserName from '/@/components/UI/MessagePanel/UserName.vue'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
-import { computed } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
 import { constructUserPath } from '/@/router'
 import { useUsersStore } from '/@/store/entities/users'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   userId: UserId

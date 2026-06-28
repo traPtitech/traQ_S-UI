@@ -1,14 +1,16 @@
 <template>
   <section>
-    <profile-header text="最終オンライン日時" />
+    <ProfileHeader text="最終オンライン日時" />
     <p>{{ lastOnlineString }}</p>
   </section>
 </template>
 
 <script lang="ts" setup>
-import ProfileHeader from './ProfileHeader.vue'
 import { computed } from 'vue'
+
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
+
+import ProfileHeader from './ProfileHeader.vue'
 
 const props = defineProps<{
   lastOnline?: string

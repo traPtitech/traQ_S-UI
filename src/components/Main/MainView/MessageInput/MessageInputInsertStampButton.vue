@@ -1,5 +1,5 @@
 <template>
-  <icon-button
+  <IconButton
     :class="$style.container"
     title="スタンプを挿入"
     icon-mdi

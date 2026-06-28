@@ -1,17 +1,18 @@
 /* eslint-env node */
 /* eslint-disable no-console */
-import axios from 'axios'
-import postcss from 'postcss'
-import { Font, woff2 } from 'fonteditor-core'
 import fs from 'fs/promises'
+import { Buffer } from 'node:buffer'
 import path from 'path'
-import zlib from 'zlib'
+import process from 'process'
 import util from 'util'
+import zlib from 'zlib'
+
+import axios from 'axios'
+import browserslist from 'browserslist'
 import esbuild from 'esbuild'
 import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
-import browserslist from 'browserslist'
-import { Buffer } from 'node:buffer'
-import process from 'process'
+import { createFont, woff2 } from 'fonteditor-core'
+import postcss from 'postcss'
 
 const brotliCompress = util.promisify(zlib.brotliCompress)
 
@@ -91,7 +92,7 @@ const downloadAndtransform = async (url, filename) => {
   const res = await axios.get(url, { responseType: 'arraybuffer' })
   const readBuffer = Buffer.from(res.data, 'binary')
   try {
-    const font = Font.create(readBuffer, {
+    const font = createFont(readBuffer, {
       type: 'woff2'
     })
     const writeBuffer = font.write({
@@ -99,7 +100,7 @@ const downloadAndtransform = async (url, filename) => {
       hinting: false
     })
     await fs.writeFile(path.join(rootPath, filename), writeBuffer)
-  } catch (e) {
+  } catch (_) {
     await fs.writeFile(path.join(rootPath, filename), readBuffer)
     console.warn(
       `Failed to remove font hinting. Outputted original. ${filename}`

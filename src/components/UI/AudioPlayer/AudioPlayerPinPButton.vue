@@ -1,5 +1,5 @@
 <template>
-  <audio-player-abstract-button
+  <AudioPlayerAbstractButton
     v-if="canUsePinP"
     :disabled="isPinPShown || disabled"
     icon-name="picture-in-picture-bottom-right"
@@ -11,6 +11,7 @@
 
 <script lang="ts" setup>
 import { checkPinPSupport, isSafari } from '/@/lib/dom/browser'
+
 import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
 withDefaults(

@@ -1,28 +1,32 @@
 <template>
   <div :class="$style.container">
-    <message-input-file-list-item-close-button
+    <MessageInputFileListItemCloseButton
       :class="$style.closeButton"
       @click="emit('itemRemove')"
     />
-    <message-input-file-list-item-image
+    <MessageInputFileListItemImage
       v-if="thumbnailDataUrl"
       :name="attachment.file.name"
       :src="thumbnailDataUrl"
     />
     <div v-else :class="$style.fileContainer">
-      <file-type-icon :type="attachment.type" />
-      <div :class="$style.fileName">{{ attachment.file.name }}</div>
+      <FileTypeIcon :type="attachment.type" />
+      <div :class="$style.fileName">
+        {{ attachment.file.name }}
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
-import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
-import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
-import type { Attachment } from '/@/store/ui/messageInputStateStore'
-import useObjectURL from '/@/composables/dom/useObjectURL'
 import { computed } from 'vue'
+
+import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
+import useObjectURL from '/@/composables/dom/useObjectURL'
+import type { Attachment } from '/@/store/ui/messageInputStateStore'
+
+import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
+import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 
 const props = defineProps<{
   attachment: Attachment

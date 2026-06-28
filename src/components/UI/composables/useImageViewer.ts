@@ -1,11 +1,14 @@
 import type { Ref } from 'vue'
-import { computed, reactive, onMounted, onBeforeUnmount } from 'vue'
+import { computed, reactive } from 'vue'
+
+import { useEventListener } from '@vueuse/core'
+
 import type { Point } from '/@/lib/basic/point'
 import {
   diff,
+  getAngleBetweenLines,
   getDistance,
-  getMidpoint,
-  getAngleBetweenLines
+  getMidpoint
 } from '/@/lib/basic/point'
 
 const WHEEL_SCALE_DELTAX = new Map<number, number>([
@@ -108,26 +111,18 @@ const useMouseMove = (
       lastPoint = newPoint
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    containerEle.value!.addEventListener('mousemove', moveUpdate)
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    containerEle.value!.addEventListener(
-      'mouseup',
-      _upEvent => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        containerEle.value!.removeEventListener('mousemove', moveUpdate)
-      },
-      { once: true }
+    const stopWatchMousemove = useEventListener(
+      containerEle,
+      'mousemove',
+      moveUpdate
     )
+
+    useEventListener(containerEle, 'mouseup', stopWatchMousemove, {
+      once: true
+    })
   }
 
-  onMounted(() => {
-    containerEle.value?.addEventListener('mousedown', onDown)
-  })
-  onBeforeUnmount(() => {
-    containerEle.value?.removeEventListener('mousedown', onDown)
-  })
+  useEventListener(containerEle, 'mousedown', onDown)
 }
 
 const useMouseWheel = (
@@ -144,12 +139,7 @@ const useMouseWheel = (
     e.preventDefault()
   }
 
-  onMounted(() => {
-    containerEle.value?.addEventListener('wheel', onWheel)
-  })
-  onBeforeUnmount(() => {
-    containerEle.value?.removeEventListener('wheel', onWheel)
-  })
+  useEventListener(containerEle, 'wheel', onWheel)
 }
 
 const useTouch = (
@@ -229,16 +219,9 @@ const useTouch = (
     return newPinchTouches
   }
 
-  onMounted(() => {
-    containerEle.value?.addEventListener('touchstart', onTouchStart)
-    containerEle.value?.addEventListener('touchmove', onMove)
-    containerEle.value?.addEventListener('touchend', onTouchEnd)
-  })
-  onBeforeUnmount(() => {
-    containerEle.value?.removeEventListener('touchstart', onTouchStart)
-    containerEle.value?.removeEventListener('touchmove', onMove)
-    containerEle.value?.removeEventListener('touchend', onTouchEnd)
-  })
+  useEventListener(containerEle, 'touchstart', onTouchStart)
+  useEventListener(containerEle, 'touchmove', onMove)
+  useEventListener(containerEle, 'touchend', onTouchEnd)
 }
 
 const useImageViewer = (
@@ -274,11 +257,6 @@ const useImageViewer = (
     }))
   })
 
-  const rewriteCenterDiff = (oldPoint: Point, newPoint: Point) => {
-    const d = diff(newPoint, oldPoint)
-    state.centerDiff.x -= d.x
-    state.centerDiff.y -= d.y
-  }
   const rewriteRotate = (newRotate: number) => {
     if (360 < newRotate) {
       newRotate -= 360
@@ -288,8 +266,6 @@ const useImageViewer = (
 
   const clampCenterDiff = (centerDiff: Point) => {
     if (!imgEle.value) return centerDiff
-
-    const imgRect = imgEle.value.getBoundingClientRect()
 
     const width = imgEle.value.width * state.zoomRatio
     const height = imgEle.value.height * state.zoomRatio
@@ -330,7 +306,7 @@ const useImageViewer = (
     rewriteCenterDiffWithClamp(newCenterDiff)
   })
 
-  useMouseWheel(containerEle, (e, point) => {
+  useMouseWheel(containerEle, (e, _point) => {
     const deltaXScale = WHEEL_SCALE_DELTAX.get(e.deltaMode)
     const deltaYScale = WHEEL_SCALE_DELTAY.get(e.deltaMode)
     if (deltaXScale === undefined || deltaYScale === undefined) return
@@ -395,7 +371,7 @@ const useImageViewer = (
       }
       rewriteCenterDiffWithClamp(newCenterDiff)
     },
-    (newDistance, firstDistance, newMidPoint, firstMidPoint, rotateAngle) => {
+    (newDistance, firstDistance, newMidPoint, firstMidPoint, _rotateAngle) => {
       if (containerEle.value) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const beforeScale = firstState!.zoomRatio

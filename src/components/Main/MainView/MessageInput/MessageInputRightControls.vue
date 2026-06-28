@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
-    <message-input-insert-stamp-button @click="emit('clickStamp')" />
+    <MessageInputInsertStampButton @click="emit('clickStamp')" />
     <button
       :class="$style.sendButton"
       title="送信する"
@@ -9,16 +9,17 @@
       @click="onClickSendButton"
     >
       <transition name="post">
-        <a-icon v-if="!isPosting" mdi name="send" />
+        <AIcon v-if="!isPosting" mdi name="send" />
       </transition>
     </button>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useResponsiveStore } from '/@/store/ui/responsive'
-import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import useResponsive from '/@/composables/useResponsive'
+
+import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -36,7 +37,7 @@ const emit = defineEmits<{
   (e: 'clickStamp'): void
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const onClickSendButton = () => {
   if (props.canPostMessage) {

@@ -1,7 +1,9 @@
 import type { Ref } from 'vue'
 import { nextTick, onMounted } from 'vue'
 
-type Callback = () => void | Promise<void>
+import type { MaybePromise } from '/@/types/utility'
+
+type Callback = () => MaybePromise<void>
 
 const useOnAllRendered = <T extends string>(list: Ref<T[]>) => {
   const callbacks: Callback[] = []

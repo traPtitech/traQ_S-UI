@@ -1,6 +1,6 @@
 <template>
   <button :class="$style.button">
-    <a-icon
+    <AIcon
       :name="iconName"
       :mdi="iconMdi"
       :size="isMobile ? 20 : 24"
@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
 
 withDefaults(
   defineProps<{
@@ -25,7 +25,7 @@ withDefaults(
   }
 )
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 </script>
 
 <style lang="scss" module>

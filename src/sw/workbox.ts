@@ -1,13 +1,13 @@
+import { CacheableResponsePlugin } from 'workbox-cacheable-response'
 import { setCacheNameDetails } from 'workbox-core'
+import { ExpirationPlugin } from 'workbox-expiration'
 import {
-  precacheAndRoute,
+  cleanupOutdatedCaches,
   createHandlerBoundToURL,
-  cleanupOutdatedCaches
+  precacheAndRoute
 } from 'workbox-precaching'
 import { NavigationRoute, registerRoute } from 'workbox-routing'
 import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies'
-import { CacheableResponsePlugin } from 'workbox-cacheable-response'
-import { ExpirationPlugin } from 'workbox-expiration'
 
 declare const self: ServiceWorkerGlobalScope
 

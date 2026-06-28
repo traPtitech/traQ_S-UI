@@ -1,28 +1,31 @@
 <template>
   <div :aria-expanded="!isFolding">
-    <users-separator
+    <UsersSeparator
       :name="nameWithCount"
       :is-open="!isFolding"
       :has-notification="hasNotification"
       :class="$style.separator"
       @click="toggleFolding"
     />
-    <slide-down :class="$style.users" :is-open="!isFolding">
-      <users-element v-for="user in users" :key="user.id" :user="user" />
-    </slide-down>
+    <SlideDown :class="$style.users" :is-open="!isFolding">
+      <UsersElement v-for="user in users" :key="user.id" :user="user" />
+    </SlideDown>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import type { User } from '@traptitech/traq'
-import { isDefined } from '/@/lib/basic/array'
-import { useChannelsStore } from '/@/store/entities/channels'
-import UsersSeparator from './UsersSeparator.vue'
-import UsersElement from './UsersElement.vue'
+
+import { computed } from 'vue'
+
 import SlideDown from '/@/components/UI/SlideDown.vue'
 import useToggle from '/@/composables/utils/useToggle'
+import { isDefined } from '/@/lib/basic/array'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useChannelsStore } from '/@/store/entities/channels'
+
+import UsersElement from './UsersElement.vue'
+import UsersSeparator from './UsersSeparator.vue'
 
 const props = defineProps<{
   name: string

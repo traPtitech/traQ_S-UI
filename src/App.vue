@@ -5,33 +5,30 @@
         <component :is="Component" />
       </keep-alive>
     </router-view>
-    <modal-container />
-    <toast-container />
+    <ModalContainer />
+    <ToastContainer />
+    <StampPickerContainer />
   </div>
 </template>
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { computed, watchEffect } from 'vue'
+import { computed, watch, watchEffect } from 'vue'
+
+import useDocumentTitle from '/@/composables/document/useDocumentTitle'
 import useHtmlDataset from '/@/composables/document/useHtmlDataset'
 import { useThemeVariables } from '/@/composables/document/useThemeVariables'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useBeforeUnload } from '/@/composables/dom/useBeforeUnload'
+import useResponsive from '/@/composables/useResponsive'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useAppRtcStore } from '/@/store/app/rtc'
-import { useTts } from '/@/store/app/tts'
 import { useThemeSettings } from '/@/store/app/themeSettings'
-import useDocumentTitle from '/@/composables/document/useDocumentTitle'
+import { useTts } from '/@/store/app/tts'
 
 const useQallConfirmer = () => {
-  const { isCurrentDevice } = useAppRtcStore()
-  window.addEventListener('beforeunload', event => {
-    if (isCurrentDevice.value) {
-      const unloadMessage = 'Qall中ですが本当に終了しますか？'
-      event.preventDefault()
-      event.returnValue = unloadMessage
-      return unloadMessage
-    }
-  })
+  //TODO: 適切な変数にする
+  const isCurrentDevice = computed(() => false)
+
+  useBeforeUnload(isCurrentDevice, 'Qall中ですが本当に終了しますか？')
 }
 
 const useThemeObserver = () => {
@@ -83,12 +80,27 @@ ${Object.entries(style.value)
 </script>
 
 <script lang="ts" setup>
-import ToastContainer from '/@/components/Toast/ToastContainer.vue'
+import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
+import ToastContainer from '/@/components/Toast/ToastContainer.vue'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
+
+const { featureFlags } = useFeatureFlagSettings()
+
+watch(
+  () => featureFlags.value.contain_strict_alternate.enabled,
+  enabled => {
+    document.body.style.setProperty(
+      '--contain-strict',
+      enabled ? 'inline-size layout paint style' : 'strict'
+    )
+  },
+  { immediate: true }
+)
 
 useTts()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 useDocumentTitle()
 useQallConfirmer()

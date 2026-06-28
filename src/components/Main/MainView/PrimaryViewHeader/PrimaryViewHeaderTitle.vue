@@ -1,12 +1,14 @@
 <template>
   <div :class="$style.container">
-    <a-icon
+    <AIcon
       v-if="iconName"
       :class="$style.icon"
       :name="iconName"
       :mdi="iconMdi"
     />
-    <h1 :class="$style.title">{{ title }}</h1>
+    <h1 :class="$style.title">
+      {{ title }}
+    </h1>
   </div>
 </template>
 

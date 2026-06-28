@@ -4,15 +4,16 @@
       {{ user.displayName }}
     </div>
     <div :class="$style.name">
-      <online-indicator :user-id="user.id" :size="10" />
+      <OnlineIndicator :user-id="user.id" :size="10" />
       @{{ user.name }}
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 import type { User } from '@traptitech/traq'
+
+import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 
 defineProps<{
   user: User

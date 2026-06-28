@@ -9,11 +9,13 @@
     :class="$style.trigger"
     @click="toggle"
   >
-    <a-icon :size="20" name="rounded-triangle" :class="$style.icon" />
+    <div :class="$style.iconContainer">
+      <AIcon :size="20" name="rounded-triangle" :class="$style.icon" />
+    </div>
   </button>
   <!-- NOTE: ボタンから Tab 移動した際に popup のはじめに飛べるように Focus を管理する -->
-  <div v-if="isOpen" ref="focusPopupRef" tabindex="0" @focus="focusPopup" />
-  <channel-header-relation-popup
+  <div v-if="isOpen" tabindex="0" @focus="focusPopup" />
+  <ChannelHeaderRelationPopup
     v-if="isOpen"
     ref="popup"
     :popup-id="popupId"
@@ -25,19 +27,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
+
+import { useEventListener } from '@vueuse/core'
+
 import AIcon from '/@/components/UI/AIcon.vue'
-import ChannelHeaderRelationPopup from './ChannelHeaderRelationPopup.vue'
-import { reactive } from 'vue'
 import type { Point } from '/@/lib/basic/point'
 import { randomString } from '/@/lib/basic/randomString'
+
+import ChannelHeaderRelationPopup from './ChannelHeaderRelationPopup.vue'
 
 const props = defineProps<{
   channelId: string
 }>()
 
 const trigger = ref<HTMLElement | null>(null)
-const focusPopupRef = ref<HTMLElement | null>(null)
 const popup = ref<InstanceType<typeof ChannelHeaderRelationPopup> | null>(null)
 
 const popupId = randomString()
@@ -68,12 +72,14 @@ const updateTriggerPosition = () => {
   triggerBottomRightPosition.y = rect.bottom
 }
 
+useEventListener(
+  computed(() => (isOpen.value ? window : null)),
+  'resize',
+  updateTriggerPosition
+)
+
 onMounted(() => {
   updateTriggerPosition()
-  window.addEventListener('resize', updateTriggerPosition)
-})
-onUnmounted(() => {
-  window.removeEventListener('resize', updateTriggerPosition)
 })
 
 const focusPopup = () => {
@@ -87,19 +93,29 @@ const focusTrigger = () => {
 <style lang="scss" module>
 .trigger {
   @include color-ui-secondary;
-  @include background-primary;
 
   cursor: pointer;
   overflow: hidden;
-  height: 24px;
+  height: auto;
   width: 24px;
-  margin: 0 8px;
-  display: grid;
+  padding-inline: 24px 18px;
   place-items: center;
   flex-shrink: 0;
   position: sticky;
-  right: 0;
+  right: -1px;
 
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--theme-background-primary-default) 30%
+  );
+
+  &[aria-expanded='true'] .icon {
+    transform: rotate(180deg);
+  }
+}
+
+.iconContainer {
   transition: transform 0.1s;
 
   &:hover {
@@ -107,11 +123,8 @@ const focusTrigger = () => {
   }
 
   .icon {
+    margin-top: 12px;
     transition: transform 0.5s;
-  }
-
-  &[aria-expanded='true'] .icon {
-    transform: rotate(180deg);
   }
 }
 </style>

@@ -7,10 +7,10 @@
     :data-is-danger="$boolAttr(isDanger)"
   >
     <div :class="$style.label">
-      <a-icon v-if="icon" :mdi="mdi" :name="icon" />
+      <AIcon v-if="icon" :mdi="mdi" :name="icon" />
       {{ label }}
     </div>
-    <loading-spinner
+    <LoadingSpinner
       v-if="loading"
       :class="$style.spinner"
       :color="spinnerColor"
@@ -20,9 +20,11 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
+
+import { P, match } from 'ts-pattern'
+
 import AIcon from '/@/components/UI/AIcon.vue'
-import { match, P } from 'ts-pattern'
+import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 
 interface Type {
   type?: 'primary' | 'secondary' | 'tertiary'
@@ -35,6 +37,7 @@ interface NonDangerType extends Type {
 }
 interface DangerType extends Type {
   type?: 'primary' | 'secondary'
+  // eslint-disable-next-line vue/no-required-prop-with-default
   isDanger: true
 }
 

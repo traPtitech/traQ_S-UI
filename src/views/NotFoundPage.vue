@@ -5,7 +5,7 @@
       {{ routeName }} {{ routeParam }} is not found on traQ!
     </div>
     <div v-else>Path {{ route.path }} is not found on traQ!</div>
-    <router-link to="/">back</router-link>
+    <router-link to="/"> back </router-link>
   </div>
 </template>
 

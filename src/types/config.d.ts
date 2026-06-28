@@ -20,12 +20,10 @@ export type Config = Readonly<{
     vapidKey: string
   }>
   /**
-   * skyway用設定
-   * 省略時はQall機能を無効化
+   * Qall機能を有効化するかどうか
+   * 省略時は無効化
    */
-  skyway?: Readonly<{
-    apiKey: string
-  }>
+  enableQall?: boolean
   /**
    * 検索機能を有効化するかどうか
    * 省略時は無効化
@@ -89,11 +87,6 @@ export type Config = Readonly<{
    */
   isRootChannelSelectableAsParentChannel: boolean
   /**
-   * QRコード表示ボタンの有効化
-   * 省略時は`false`
-   */
-  showQrCodeButton?: boolean
-  /**
    * 大きなファイルサイズのファイルを送信した際に表示される補足メッセージ
    * `%s`の部分には「画像」または「ファイル」が入る
    * @default '大きい%sの共有には別のサービスを利用してください。'
@@ -117,9 +110,34 @@ export type Config = Readonly<{
    * 省略時はリンクへの誘導テキストが載らない
    */
   iosPwaInfoLink?: string
+
+  /**
+   * デフォルトチャンネルのチャンネル ID
+   * 起動時チャンネルが 設定されていない / 見つからない / 解決できない 場合に使用される
+   * 配列を与えた場合は先頭から優先して考慮され，最初に見つかったチャンネルが使用される
+   * 省略時は fallbackChannelPath にフォールバックする
+   */
+  defaultChannelId?: string | string[]
+
+  /**
+   * どうしてもパスを解決できなかった場合など，最後に使用されるフォールバック (ID ではなくパス)
+   * `defaultChannelId` が設定されている場合はそちらが優先される
+   * 省略時は空文字列（チャンネルが選択されていない状態）
+   *
+   * @example 'general'
+   */
+  fallbackChannelPath?: string
+
+  /**
+   * traQバックエンドのオリジン
+   * フロントエンドとは異なるドメインでホストする場合に指定する
+   * 省略時は `location.origin` を使用
+   *
+   * @example 'https://q.trap.jp'
+   */
+  backendOrigin?: string
 }>
 
 declare global {
-  // eslint-disable-next-line no-var
   var traQConfig: Config
 }

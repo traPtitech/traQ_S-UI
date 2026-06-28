@@ -1,11 +1,13 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.name">{{ client.name }}</div>
+    <div :class="$style.name">
+      {{ client.name }}
+    </div>
     <div :class="$style.desc">
       <div :class="$style.descTitle">開発者</div>
       <div :class="$style.descContent">
         <template v-if="developer">
-          <user-icon
+          <UserIcon
             :class="$style.developerIcon"
             :user-id="developer.id"
             :fallback-icon-file-id="developer.iconFileId"
@@ -26,8 +28,9 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
 import type { OAuth2Client, User } from '@traptitech/traq'
+
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 defineProps<{
   client: OAuth2Client

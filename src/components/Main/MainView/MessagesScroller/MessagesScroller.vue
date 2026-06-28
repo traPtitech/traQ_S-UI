@@ -15,7 +15,7 @@
       :class="$style.viewport"
       data-testid="channel-viewport"
     >
-      <messages-scroller-separator
+      <MessagesScrollerSeparator
         v-if="isReachedEnd"
         title="これ以上メッセージはありません"
         :class="$style.noMoreSeparator"
@@ -28,32 +28,32 @@
         />
       </template>
     </div>
-    <div :class="$style.bottomSpacer"></div>
+    <div :class="$style.bottomSpacer" />
   </div>
 </template>
 
 <script lang="ts">
-import type { Ref } from 'vue'
-import {
-  watch,
-  reactive,
-  computed,
-  onMounted,
-  onUnmounted,
-  nextTick,
-  shallowRef
-} from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import type { LoadingDirection } from './composables/useMessagesFetcher'
-import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
-import { throttle } from 'throttle-debounce'
-import { toggleSpoiler } from '/@/lib/markdown/spoiler'
-import { embeddingOrigin } from '/@/lib/apis'
+import type { ComponentPublicInstance, Ref } from 'vue'
+import { nextTick, onMounted, reactive, shallowRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { isMessageScrollerRoute, RouteName } from '/@/router'
+
+import { useEventListener } from '@vueuse/core'
+import { throttle } from 'throttle-debounce'
+
 import { useOpenLink } from '/@/composables/useOpenLink'
-import { useMainViewStore } from '/@/store/ui/mainView'
+import { embeddingOrigin } from '/@/lib/apis'
+import { toggleSpoiler } from '/@/lib/markdown/spoiler'
+import { RouteName, isMessageScrollerRoute } from '/@/router'
 import { useStampsStore } from '/@/store/entities/stamps'
+import { useMainViewStore } from '/@/store/ui/mainView'
+import type { MessageId } from '/@/types/entity-ids'
+
+import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
+import type { LoadingDirection } from './composables/useMessagesFetcher'
+
+export interface MessageScrollerInstance extends ComponentPublicInstance {
+  $el: HTMLDivElement
+}
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -114,11 +114,12 @@ const useScrollRestoration = (
   const { lastScrollPosition } = useMainViewStore()
   const route = useRoute()
   watch(
-    computed(() => route.name),
+    () => route.name,
     async (to, from) => {
       if (isMessageScrollerRoute(from)) {
-        lastScrollPosition.value = rootRef.value?.scrollTop ?? 0
+        lastScrollPosition.value = state.scrollTop
       }
+
       if (isMessageScrollerRoute(to)) {
         state.scrollTop = lastScrollPosition.value
         await nextTick()
@@ -163,7 +164,9 @@ const { stampsMapFetched } = useStampsStore()
 const rootRef = shallowRef<HTMLElement | null>(null)
 const state = reactive({
   height: 0,
-  scrollTop: lastScrollPosition.value
+  scrollTop: lastScrollPosition.value,
+  // 古いメッセージを読み込むとき、読み込み開始直後は高さの調整を無効化する
+  skipResizeAdjustment: false
 })
 
 const { onChangeHeight, onEntryMessageLoaded } =
@@ -175,16 +178,23 @@ onMounted(() => {
     state.height = rootRef.value?.scrollHeight ?? 0
   }
 })
+
 // マウント後にstampの取得が完了した場合
-watch(stampsMapFetched, async fetched => {
-  if (fetched && rootRef.value) {
+watch(
+  stampsMapFetched,
+  async fetched => {
+    if (!fetched || !rootRef.value) return
+
     await nextTick()
     const scrollHeight = rootRef.value.scrollHeight
     rootRef.value.scrollTop = scrollHeight
     state.height = scrollHeight
     state.scrollTop = scrollHeight
+  },
+  {
+    flush: 'post'
   }
-})
+)
 
 watch(
   () => props.messageIds,
@@ -217,11 +227,30 @@ watch(
         state.height = newHeight
         return
       }
-      rootRef.value.scrollTo({
-        top: newHeight - state.height
-      })
-    }
-    state.height = newHeight
+      //上に追加された時はスクロール位置を変更する。
+      if (props.lastLoadingDirection === 'former') {
+        // onChangeHeight の調整を一時的に無効化
+        state.skipResizeAdjustment = true
+        rootRef.value.scrollTo({
+          top: newHeight - state.height
+        })
+        state.height = newHeight
+        // 十分に DOMが更新されたら無効化を解除
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            state.skipResizeAdjustment = false
+          })
+        })
+      }
+
+      if (props.lastLoadingDirection === 'latest') {
+        // チャンネルを移動したとき、
+        rootRef.value.scrollTo({
+          top: newHeight
+        })
+        state.height = newHeight
+      }
+    } else state.height = newHeight
   },
   { deep: true, flush: 'post' }
 )
@@ -251,12 +280,8 @@ const visibilitychangeListener = () => {
   }
   emit('resetIsReachedLatest')
 }
-onMounted(() => {
-  document.addEventListener('visibilitychange', visibilitychangeListener)
-})
-onUnmounted(() => {
-  document.removeEventListener('visibilitychange', visibilitychangeListener)
-})
+
+useEventListener(document, 'visibilitychange', visibilitychangeListener)
 
 const { onClick } = useMarkdownInternalHandler()
 useScrollRestoration(rootRef, state)
@@ -268,7 +293,7 @@ useScrollRestoration(rootRef, state)
   overflow-y: scroll;
   padding: 12px 0;
   backface-visibility: hidden;
-  contain: strict;
+  contain: var(--contain-strict);
   // overflow-anchorはデフォルトでautoだが、Safariが対応していないので、
   // 手動で調節しているため明示的に無効化する
   overflow-anchor: none;

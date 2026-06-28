@@ -1,11 +1,12 @@
 <template>
   <div :class="$style.circle" :style="iconStyle">
-    <a-icon :class="$style.icon" :name="name" :mdi="mdi" :size="size" />
+    <AIcon :class="$style.icon" :name="name" :mdi="mdi" :size="size" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = withDefaults(

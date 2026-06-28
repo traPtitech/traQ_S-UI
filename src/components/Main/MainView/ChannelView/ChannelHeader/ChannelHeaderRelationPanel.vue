@@ -7,13 +7,13 @@
     <template v-else>
       <ul :class="$style.list">
         <li v-for="channel in displayedChannels" :key="channel.id">
-          <channel-header-relation-list-item
+          <ChannelHeaderRelationListItem
             ref="listItemsRef"
             :channel="channel"
           />
         </li>
       </ul>
-      <form-button
+      <FormButton
         v-if="showExpandButton"
         :class="$style.expandButton"
         type="tertiary"
@@ -26,9 +26,12 @@
 
 <script lang="ts" setup>
 import type { Channel } from '@traptitech/traq'
-import { computed, ref, type HTMLAttributes, nextTick } from 'vue'
-import ChannelHeaderRelationListItem from './ChannelHeaderRelationListItem.vue'
+
+import { type HTMLAttributes, computed, nextTick, ref } from 'vue'
+
 import FormButton from '/@/components/UI/FormButton.vue'
+
+import ChannelHeaderRelationListItem from './ChannelHeaderRelationListItem.vue'
 
 interface Props extends /* @vue-ignore */ HTMLAttributes {
   channels: Channel[]

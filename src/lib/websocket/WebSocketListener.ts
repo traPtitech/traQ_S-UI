@@ -1,6 +1,7 @@
-import type AutoReconnectWebSocket from './AutoReconnectWebSocket'
 import type { Emitter } from 'mitt'
 import mitt from 'mitt'
+
+import type AutoReconnectWebSocket from './AutoReconnectWebSocket'
 import type { WebSocketEvent } from './events'
 
 type WebSocketListenerEventMap = {

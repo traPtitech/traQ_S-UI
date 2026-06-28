@@ -1,5 +1,5 @@
 <template>
-  <not-found-page
+  <NotFoundPage
     v-if="routeWatcherState.view === 'not-found'"
     :route-param="routeWatcherState.currentRouteParam"
     :route-name="routeWatcherState.currentRouteName"
@@ -12,11 +12,8 @@
     @touchcancel="touchendHandler"
   >
     <div :class="$style.homeContainer">
-      <navigation-bar
-        v-show="shouldShowNav"
-        :class="$style.navigationWrapper"
-      />
-      <main-view-frame
+      <NavigationBar v-show="shouldShowNav" :class="$style.navigationWrapper" />
+      <MainViewFrame
         v-if="routeWatcherState.view === 'main'"
         :is-active="isMainViewActive"
         :hide-outer="hideOuter"
@@ -25,8 +22,8 @@
         :style="styles.mainViewWrapper"
         @click.capture="onClickMainViewFrame"
       >
-        <main-view :class="$style.mainView" />
-      </main-view-frame>
+        <MainView :class="$style.mainView" />
+      </MainViewFrame>
       <div
         v-show="isMobile && isSidebarAppeared"
         :class="$style.sidebarWrapper"
@@ -36,28 +33,25 @@
         <div id="sidebar-mobile" :class="$style.sidebarPortal" />
       </div>
     </div>
-    <stamp-picker-container />
-    <command-palette-container />
+    <CommandPaletteContainer />
   </div>
 </template>
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import {
-  reactive,
-  computed,
-  defineAsyncComponent,
-  onMounted,
-  onBeforeUnmount
-} from 'vue'
-import { connectFirebase } from '/@/lib/notification/notification'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import { computed, defineAsyncComponent, reactive } from 'vue'
+
+import { useEventListener } from '@vueuse/core'
+
 import useNavigationController from '/@/composables/mainView/useNavigationController'
+import useResponsive from '/@/composables/useResponsive'
+import { connectFirebase } from '/@/lib/notification/notification'
+import { useCommandPalette } from '/@/store/app/commandPalette'
+import { useToastStore } from '/@/store/ui/toast'
+
+import useInitialFetch from './composables/useInitialFetch'
 import useMainViewLayout from './composables/useMainViewLayout'
 import useRouteWatcher from './composables/useRouteWatcher'
-import useInitialFetch from './composables/useInitialFetch'
-import { useToastStore } from '/@/store/ui/toast'
-import { useCommandPalette } from '/@/store/app/commandPalette'
 
 const useStyles = (
   mainViewPosition: Readonly<Ref<number>>,
@@ -102,12 +96,7 @@ const useCommandPaletteShortcutKey = () => {
     }
   }
 
-  onMounted(() => {
-    window.addEventListener('keydown', onKeyDown)
-  })
-  onBeforeUnmount(() => {
-    window.removeEventListener('keydown', onKeyDown)
-  })
+  useEventListener('keydown', onKeyDown)
 }
 
 const NotFoundPage = defineAsyncComponent(
@@ -116,11 +105,11 @@ const NotFoundPage = defineAsyncComponent(
 </script>
 
 <script lang="ts" setup>
+import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue'
 import MainView from '/@/components/Main/MainView/MainView.vue'
 import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue'
 import NavigationBar from '/@/components/Main/NavigationBar/NavigationBar.vue'
-import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
-import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue'
+
 import useViewStateSender from './composables/useViewStateSender'
 
 const navWidth = 320
@@ -135,14 +124,13 @@ const {
   isNavCompletelyAppeared,
   isSidebarAppeared,
   isSidebarCompletelyAppeared,
-  isMainViewActive,
-  currentActiveDrawer
+  isMainViewActive
 } = useMainViewLayout(navWidth, sidebarWidth)
 const { addToast } = useToastStore()
 
 useCommandPaletteShortcutKey()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 const shouldShowNav = computed(() => !isMobile.value || isNavAppeared.value)
 const { closeNav } = useNavigationController()
 const hideOuter = computed(
@@ -176,18 +164,6 @@ useViewStateSender()
 </script>
 
 <style lang="scss" module>
-// ナビゲーションバーの幅
-$min-nav-width: 260px;
-$max-nav-width: 400px;
-// ナビゲーションバーの幅が最小・最大になる画面幅
-$min-nav-width-display-width: 700px;
-$max-nav-width-display-width: 2560px;
-// それぞれの差と二つの比率
-$nav-width-diff: $max-nav-width - $min-nav-width;
-$nav-width-display-width-diff: $max-nav-width-display-width -
-  $min-nav-width-display-width;
-$nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
-
 .homeWrapper {
   height: 100%;
 }
@@ -201,12 +177,7 @@ $nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
 }
 .navigationWrapper {
   height: 100%;
-  max-width: 400px;
-  min-width: 260px;
-  flex-shrink: 0;
-  flex-basis: calc(
-    260px + ((100vw - #{$min-nav-width-display-width}) * #{$nav-width-ratio})
-  );
+  width: fit-content;
   [data-is-mobile] & {
     position: absolute;
     top: 0;
@@ -216,6 +187,7 @@ $nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
 }
 .mainViewWrapper {
   z-index: $z-index-main-view-wrapper;
+  flex: 1;
 }
 .sidebarWrapper {
   @include background-secondary;
@@ -230,7 +202,7 @@ $nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
     y: auto;
   }
   scrollbar-gutter: stable;
-  contain: strict;
+  contain: var(--contain-strict);
   z-index: $z-index-sidebar-wrapper;
 }
 .sidebarPortal {

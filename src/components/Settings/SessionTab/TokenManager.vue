@@ -2,7 +2,7 @@
   <section>
     <h3 :class="$style.header">アクセスを許可しているアプリ</h3>
     <ul v-if="tokensWithClientData.length > 0" :class="$style.content">
-      <token-info
+      <TokenInfo
         v-for="token in tokensWithClientData"
         :key="token.id"
         :token="token"
@@ -15,13 +15,16 @@
 </template>
 
 <script lang="ts" setup>
-import TokenInfo from './TokenInfo.vue'
-import { computed, onMounted, ref } from 'vue'
-import apis from '/@/lib/apis'
 import type { ActiveOAuth2Token, OAuth2Client } from '@traptitech/traq'
-import type { OAuthClientId } from '/@/types/entity-ids'
-import { useToastStore } from '/@/store/ui/toast'
+
+import { computed, onMounted, ref } from 'vue'
+
+import apis from '/@/lib/apis'
 import { useUsersStore } from '/@/store/entities/users'
+import { useToastStore } from '/@/store/ui/toast'
+import type { OAuthClientId } from '/@/types/entity-ids'
+
+import TokenInfo from './TokenInfo.vue'
 
 const { addErrorToast } = useToastStore()
 const { usersMap, fetchUsers } = useUsersStore()

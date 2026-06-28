@@ -4,7 +4,7 @@
     ref="buttonEle"
     :class="$style.navigationButton"
   >
-    <a-icon name="traQ" :size="28" />
+    <AIcon name="traQ" :size="28" />
     <teleport :to="`#${popupNavigatorId}`">
       <div
         v-show="isPopupNavigatorShown"
@@ -12,11 +12,11 @@
         :style="popupStyle"
       >
         <div :class="$style.popupNavigatorItem" @click="movePrev">
-          <a-icon name="arrow-left" mdi :class="$style.icon" />
+          <AIcon name="arrow-left" mdi :class="$style.icon" />
           戻る
         </div>
         <div :class="$style.popupNavigatorItem" @click="moveNext">
-          <a-icon name="arrow-right" mdi :class="$style.icon" />
+          <AIcon name="arrow-right" mdi :class="$style.icon" />
           進む
         </div>
       </div>
@@ -25,16 +25,11 @@
 </template>
 
 <script lang="ts">
-import {
-  reactive,
-  shallowRef,
-  watch,
-  computed,
-  onMounted,
-  onUnmounted,
-  readonly
-} from 'vue'
+import { computed, reactive, readonly, shallowRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
+
+import { useEventListener } from '@vueuse/core'
+
 import useToggle from '/@/composables/utils/useToggle'
 
 const popupNavigatorButtonId = 'popup-navigation-button'
@@ -42,30 +37,20 @@ const popupNavigatorId = 'popup-navigator'
 const POPUP_MARGIN = 4
 const LONG_CLICK_DELAY = 150
 
-type MouseTouchEventHandler = (e: MouseEvent | TouchEvent) => void
+type PointerEventHandler = (e: PointerEvent) => void
 
-const useWindowMouseTouch = (
+const useWindowPointer = (
   {
-    onMouseTouchStart,
-    onMouseTouchEnd
+    onPointerDown,
+    onPointerUp
   }: {
-    onMouseTouchStart: MouseTouchEventHandler
-    onMouseTouchEnd: MouseTouchEventHandler
+    onPointerDown: PointerEventHandler
+    onPointerUp: PointerEventHandler
   },
   options?: boolean | AddEventListenerOptions | undefined
 ) => {
-  onMounted(() => {
-    window.addEventListener('mousedown', onMouseTouchStart, options)
-    window.addEventListener('touchstart', onMouseTouchStart, options)
-    window.addEventListener('mouseup', onMouseTouchEnd, options)
-    window.addEventListener('touchend', onMouseTouchEnd, options)
-  })
-  onUnmounted(() => {
-    window.removeEventListener('mousedown', onMouseTouchStart, options)
-    window.removeEventListener('touchstart', onMouseTouchStart, options)
-    window.removeEventListener('mouseup', onMouseTouchEnd, options)
-    window.removeEventListener('touchend', onMouseTouchEnd, options)
-  })
+  useEventListener('pointerdown', onPointerDown, options)
+  useEventListener('pointerup', onPointerUp, options)
 }
 
 /**
@@ -80,7 +65,7 @@ const useIsLongClicking = (
   let timer = 0
   let isClickStarted = false
 
-  const onMouseTouchStart = (e: MouseEvent | TouchEvent) => {
+  const onPointerDown = (e: PointerEvent) => {
     if (!isTarget(e.target)) return
     // スワイプを無効化するため
     e.stopPropagation()
@@ -92,7 +77,8 @@ const useIsLongClicking = (
       onLongClick()
     }, LONG_CLICK_DELAY)
   }
-  const onMouseTouchEnd = (e: MouseEvent | TouchEvent) => {
+
+  const onPointerUp = (e: PointerEvent) => {
     // document.elementFromPointが起きるとレイアウトの計算がかかるので、
     // targetでのmousetouchstartが起きていないなら無視する
     if (!isClickStarted) return
@@ -100,9 +86,7 @@ const useIsLongClicking = (
     isClickStarted = false
     window.clearTimeout(timer)
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const point = 'changedTouches' in e ? e.changedTouches[0]! : e
-    const target = document.elementFromPoint(point.clientX, point.clientY)
+    const target = document.elementFromPoint(e.clientX, e.clientY)
     if (!isTarget(target)) {
       return
     }
@@ -121,7 +105,7 @@ const useIsLongClicking = (
     }
     isLongClicking = false
   }
-  return { onMouseTouchStart, onMouseTouchEnd }
+  return { onPointerDown, onPointerUp }
 }
 
 const useNavigator = (emit: (name: 'clickIcon') => void) => {
@@ -155,22 +139,23 @@ const useNavigator = (emit: (name: 'clickIcon') => void) => {
     hidePopupNavigator()
   }
 
-  const { onMouseTouchStart, onMouseTouchEnd } = useIsLongClicking(
+  const { onPointerDown, onPointerUp } = useIsLongClicking(
     isTarget,
     showPopupNavigator,
     () => {
       emit('clickIcon')
     }
   )
-  useWindowMouseTouch(
+
+  useWindowPointer(
     {
-      onMouseTouchStart: e => {
+      onPointerDown: e => {
         if (!isPopup(e.target)) {
           hidePopupNavigator()
         }
-        onMouseTouchStart(e)
+        onPointerDown(e)
       },
-      onMouseTouchEnd
+      onPointerUp
     },
     // capture=trueなのはstopPropergationでスワイプを無効化するため
     { capture: true, passive: true }

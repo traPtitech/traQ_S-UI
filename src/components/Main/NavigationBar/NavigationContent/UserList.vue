@@ -1,8 +1,8 @@
 <template>
-  <navigation-content-container subtitle="ユーザーリスト">
-    <filter-input v-model="query" on-secondary focus-on-mount />
+  <NavigationContentContainer subtitle="ユーザーリスト">
+    <FilterInput v-model="query" on-secondary focus-on-mount />
     <div v-if="query.length > 0" :class="$style.list">
-      <users-element
+      <UsersElement
         v-for="user in filteredItems"
         :key="user.id"
         :user="user"
@@ -10,7 +10,7 @@
       />
     </div>
     <template v-else>
-      <users-grade-list
+      <UsersGradeList
         v-for="userListbyGrade in userListsByGrade"
         :key="userListbyGrade.gradeName"
         :name="userListbyGrade.gradeName"
@@ -18,17 +18,18 @@
         :class="$style.list"
       />
     </template>
-  </navigation-content-container>
+  </NavigationContentContainer>
 </template>
 
 <script lang="ts" setup>
-import useTextFilter from '/@/composables/utils/useTextFilter'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import FilterInput from '/@/components/UI/FilterInput.vue'
+import useUserList from '/@/composables/users/useUserList'
+import useTextFilter from '/@/composables/utils/useTextFilter'
+
 import UsersElement from './UsersElement.vue'
 import UsersGradeList from './UsersGradeList.vue'
-import FilterInput from '/@/components/UI/FilterInput.vue'
 import useUserListByGrade from './composables/useUserListByGrade'
-import useUserList from '/@/composables/users/useUserList'
 
 const userListsByGrade = useUserListByGrade()
 

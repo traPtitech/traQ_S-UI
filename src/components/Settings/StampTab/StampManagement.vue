@@ -8,7 +8,7 @@
       @keydown.left="onKeydown"
       @keydown.right="onKeydown"
     >
-      <a-tab
+      <ATab
         :id="myStampTabId"
         ref="myStampTab"
         :aria-selected="currentTab === 'myStamp'"
@@ -17,7 +17,7 @@
         label="所有スタンプ"
         @click="currentTab = 'myStamp'"
       />
-      <a-tab
+      <ATab
         :id="otherStampTabId"
         ref="otherStampTab"
         :aria-selected="currentTab === 'otherStamp'"
@@ -34,7 +34,7 @@
       role="tabpanel"
     >
       <p v-if="myStamps.length === 0">所有しているスタンプはありません</p>
-      <stamp-item
+      <StampItem
         v-for="stamp in myStamps"
         v-else
         :key="stamp.id"
@@ -47,7 +47,7 @@
       :class="$style.content"
       role="tabpanel"
     >
-      <stamp-item
+      <StampItem
         v-for="stamp in otherStamps"
         :key="stamp.id"
         :stamp="stamp"
@@ -58,14 +58,18 @@
 </template>
 
 <script lang="ts" setup>
-import StampItem from './StampItem.vue'
-import { computed, ref, type Ref } from 'vue'
+import { UserPermission } from '@traptitech/traq'
+
+import { type Ref, computed, ref } from 'vue'
+
+import ATab from '/@/components/UI/ATab.vue'
+import { safeMod } from '/@/lib/basic/arithmetic'
+import { randomString } from '/@/lib/basic/randomString'
+import { compareString } from '/@/lib/basic/string'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
-import { randomString } from '/@/lib/basic/randomString'
-import ATab from '/@/components/UI/ATab.vue'
-import { UserPermission } from '@traptitech/traq'
-import { compareString } from '/@/lib/basic/string'
+
+import StampItem from './StampItem.vue'
 
 const { myId } = useMeStore()
 const { stampsMap } = useStampsStore()
@@ -117,7 +121,7 @@ const onKeydown = (e: KeyboardEvent) => {
     return
   }
 
-  nextIndex = (nextIndex + tabNames.length) % tabNames.length
+  nextIndex = safeMod(nextIndex, tabNames.length)
 
   currentTab.value = tabNames[nextIndex] ?? currentTab.value
   tabNameRefs[currentTab.value].value?.focus()

@@ -1,5 +1,5 @@
 <template>
-  <context-menu-container :position="position" @close="close">
+  <ContextMenuContainer :position="position" @close="close">
     <div :class="$style.container">
       <span
         v-if="!isMinimum"
@@ -12,16 +12,18 @@
         リンクをコピー
       </span>
     </div>
-  </context-menu-container>
+  </ContextMenuContainer>
 </template>
 
 <script lang="ts" setup>
-import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
 import { toRef } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import type { Point } from '/@/lib/basic/point'
+
+import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
 import usePinToggler from '/@/composables/contextMenu/usePinToggler'
+import type { Point } from '/@/lib/basic/point'
+import type { MessageId } from '/@/types/entity-ids'
+import type { MaybePromise } from '/@/types/utility'
 
 const props = withDefaults(
   defineProps<{
@@ -46,7 +48,7 @@ const { removePinned } = usePinToggler(messageId)
 const close = () => {
   emit('close')
 }
-const withClose = async (func: () => void | Promise<void>) => {
+const withClose = async (func: () => MaybePromise<void>) => {
   await func()
   close()
 }

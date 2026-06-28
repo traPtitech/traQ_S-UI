@@ -1,8 +1,8 @@
 <template>
-  <click-outside @click-outside="closeStampPicker">
+  <ClickOutside @click-outside="closeStampPicker">
     <div :class="$style.container">
       <div :class="$style.inputContainer">
-        <filter-input
+        <FilterInput
           ref="filterInputRef"
           v-model="filterState.query"
           :class="$style.filterInput"
@@ -11,7 +11,7 @@
           focus-on-mount
           @enter="onFilterEnter"
         />
-        <stamp-picker-effect-toggle-button
+        <StampPickerEffectToggleButton
           v-if="isEffectEnabled"
           :class="$style.effectButton"
           :is-active="shouldShowEffectSelector"
@@ -19,7 +19,7 @@
           @click="toggleShowEffect"
         />
       </div>
-      <stamp-picker-stamp-list
+      <StampPickerStampList
         v-show="!shouldShowEffectSelector"
         :class="$style.stampList"
         :stamps="stamps"
@@ -27,48 +27,56 @@
         @input-stamp="onInputStamp"
         @hover-stamp="onHoverStamp"
       />
-      <stamp-picker-effect-selector
+      <StampPickerEffectSelector
         v-if="shouldShowEffectSelector"
         v-model:size-effect="selectedSizeEffect"
         v-model:anime-effects="selectedAnimeEffects"
         :class="$style.effectSelector"
       />
-      <stamp-picker-preview
+      <StampPickerPreview
         :stamp-id="preselected"
         :size-effect="selectedSizeEffect"
         :anime-effects="selectedAnimeEffects"
       />
-      <stamp-picker-stamp-set-selector
+      <StampPickerStampSetSelector
         v-model:current-stamp-set="currentStampSet"
         :class="$style.paletteSelector"
         :stamp-sets="stampSetState.stampSets"
       />
     </div>
-  </click-outside>
+  </ClickOutside>
 </template>
 
 <script lang="ts" setup>
+import { onMounted, ref } from 'vue'
+
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'
-import StampPickerStampList from './StampPickerStampList.vue'
-import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
+import useResponsive from '/@/composables/useResponsive'
+import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
+import { useStampPicker } from '/@/store/ui/stampPicker'
 import type { StampId } from '/@/types/entity-ids'
-import useStampList from './composables/useStampList'
-import useStampSetSelector from './composables/useStampSetSelector'
-import useEffectSelector from './composables/useEffectSelector'
-import useStampPreselector from './composables/useStampPreselector'
+
 import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
 import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
 import StampPickerPreview from './StampPickerPreview.vue'
-import { useStampPicker } from '/@/store/ui/stampPicker'
-import { ref } from 'vue'
-import { useStampHistory } from '/@/store/domain/stampHistory'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import StampPickerStampList from './StampPickerStampList.vue'
+import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
+import useEffectSelector from './composables/useEffectSelector'
+import useStampList from './composables/useStampList'
+import useStampPreselector from './composables/useStampPreselector'
+import useStampSetSelector from './composables/useStampSetSelector'
 
-const { selectHandler, isEffectEnabled, currentStampSet, closeStampPicker } =
-  useStampPicker()
+const {
+  selectHandler,
+  isEffectEnabled,
+  currentStampSet,
+  validateCurrentStampSet,
+  closeStampPicker
+} = useStampPicker()
 const { upsertLocalStampHistory } = useStampHistory()
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
 const animationKeys = ref(new Map<StampId, number>())
 const incrementAnimationKey = (id: StampId) => {
@@ -88,10 +96,13 @@ const {
 } = useEffectSelector()
 const { preselected, onHoverStamp } = useStampPreselector()
 
+const { recordStampUsage } = useStampRecommendations()
+
 const filterInputRef = ref<InstanceType<typeof FilterInput> | null>(null)
 
 const onInputStamp = (id: StampId) => {
   upsertLocalStampHistory(id, new Date())
+  recordStampUsage(id)
   selectHandler.value({
     id,
     sizeEffect: selectedSizeEffect.value,
@@ -108,6 +119,8 @@ const onFilterEnter = () => {
   if (!firstStamp) return
   onInputStamp(firstStamp.id)
 }
+
+onMounted(validateCurrentStampSet)
 </script>
 
 <style lang="scss" module>
@@ -138,8 +151,7 @@ const onFilterEnter = () => {
   margin-left: 8px;
 }
 .stampList {
-  padding: 0 4px;
-  padding-bottom: 12px;
+  padding-left: 4px;
 }
 .effectSelector {
   flex: 1 0;

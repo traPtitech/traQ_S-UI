@@ -1,17 +1,19 @@
 <template>
-  <sidebar-content-container v-if="viewStates.length > 0" title="参加BOT">
-    <channel-sidebar-member-icons :viewer-states="viewStates" />
-  </sidebar-content-container>
+  <SidebarContentContainer v-if="viewStates.length > 0" title="参加BOT">
+    <ChannelSidebarMemberIcons :viewer-states="viewStates" />
+  </SidebarContentContainer>
 </template>
 
 <script lang="ts" setup>
-import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
-import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 import { computed } from 'vue'
-import type { ChannelId } from '/@/types/entity-ids'
-import useChannelBots from './composables/useChannelBots'
-import { useUsersStore } from '/@/store/entities/users'
+
+import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
 import { isDefined } from '/@/lib/basic/array'
+import { useUsersStore } from '/@/store/entities/users'
+import type { ChannelId } from '/@/types/entity-ids'
+
+import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
+import useChannelBots from './composables/useChannelBots'
 
 const props = defineProps<{
   channelId: ChannelId

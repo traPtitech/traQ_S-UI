@@ -6,7 +6,7 @@
     </span>
     <div v-else :class="$style.fullLogo">
       <img :src="logoUrl" />
-      <logo-text :class="$style.fullLogoText" />
+      <LogoText :class="$style.fullLogoText" />
     </div>
   </div>
 </template>

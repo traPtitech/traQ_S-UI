@@ -1,24 +1,27 @@
 <template>
-  <optional-router-link :to="dmChannelPath" :class="$style.container" block>
-    <user-icon
+  <OptionalRouterLink :to="dmChannelPath" :class="$style.container" block>
+    <UserIcon
       :class="$style.icon"
       :user-id="user.id"
       :size="36"
       :has-notification="hasNotification"
     />
-    <users-element-user-name :user="user" />
-  </optional-router-link>
+    <UsersElementUserName :user="user" />
+  </OptionalRouterLink>
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import UsersElementUserName from './UsersElementUserName.vue'
-import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
-import { computed } from 'vue'
 import type { User } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import { constructUserPath } from '/@/router'
-import { useChannelsStore } from '/@/store/entities/channels'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useChannelsStore } from '/@/store/entities/channels'
+
+import UsersElementUserName from './UsersElementUserName.vue'
 
 const props = defineProps<{
   user: User

@@ -1,13 +1,13 @@
 <template>
   <div :class="$style.container">
-    <user-icon :user-id="userId" :size="24" />
-    <online-indicator :class="$style.indicator" :user-id="userId" :size="8" />
+    <UserIcon :user-id="userId" :size="24" />
+    <OnlineIndicator :class="$style.indicator" :user-id="userId" :size="8" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
 import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 defineProps<{
   userId: string

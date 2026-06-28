@@ -5,15 +5,20 @@
 </template>
 
 <script lang="ts">
-import type { SettingsRouteName } from '/@/router/settings'
-import { isSettingsRouteName } from '/@/router/settings'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+
+import type { SettingsRouteName } from '/@/router/settings'
+import { isSettingsRouteName } from '/@/router/settings'
+import type { SettingsStampPaletteRouteName } from '/@/router/settingsStampPalette'
+
 import { navigationRouteNameTitleMap } from './composables/useNavigation'
 
 const useSettingsTitle = () => {
   const route = useRoute()
-  const name = computed<SettingsRouteName | undefined>(() => {
+  const name = computed<
+    SettingsRouteName | SettingsStampPaletteRouteName | undefined
+  >(() => {
     const name = typeof route.name === 'string' ? route.name : ''
     return isSettingsRouteName(name) ? name : undefined
   })

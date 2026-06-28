@@ -1,17 +1,18 @@
 <template>
   <div ref="containerEle" :class="$style.container">
-    <message-input-key-guide :show="isModifierKeyPressed" is-edit />
-    <message-input-upload-progress
+    <MessageInputKeyGuide :show="isModifierKeyPressed" is-edit />
+    <MessageInputUploadProgress
       v-if="isPostingAttachment"
       :progress="attachmentPostProgress"
     />
     <div :class="$style.inputContainer">
-      <message-input-text-area
+      <MessageInputTextArea
         ref="textareaComponentRef"
         v-model="text"
         :class="$style.inputTextArea"
         :is-posting="isPostingAttachment"
         simple-padding
+        is-max-height-none
         @add-attachments="onAddAttachments"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
@@ -19,12 +20,12 @@
       />
       <!-- divで包まないとホバー時の拡大の中心位置がずれる -->
       <div>
-        <message-input-insert-stamp-button
+        <MessageInputInsertStampButton
           :class="$style.iconButton"
           :disabled="isPostingAttachment"
           @click="toggleStampPicker"
         />
-        <message-input-upload-button
+        <MessageInputUploadButton
           :class="$style.iconButton"
           :disabled="isPostingAttachment"
           @click="addAttachment"
@@ -32,8 +33,8 @@
       </div>
     </div>
     <div :class="$style.controls">
-      <form-button label="キャンセル" type="tertiary" @click="cancel" />
-      <form-button
+      <FormButton label="キャンセル" type="tertiary" @click="cancel" />
+      <FormButton
         label="OK"
         :disabled="isPostingAttachment"
         @click="editMessage"
@@ -44,16 +45,19 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { computed, onMounted, ref } from 'vue'
-import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
-import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
-import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
-import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
-import { countLength } from '/@/lib/basic/string'
-import { useToastStore } from '/@/store/ui/toast'
-import { getResizedFile } from '/@/lib/resize'
-import useAttachments from '/@/components/Main/MainView/MessageInput/composables/useAttachments'
+import { computed, onMounted, ref, shallowRef } from 'vue'
+
 import type { AxiosProgressEvent } from 'axios'
+
+import useAttachments from '/@/components/Main/MainView/MessageInput/composables/useAttachments'
+import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
+import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
+import { countLength } from '/@/lib/basic/string'
+import { getResizedFile } from '/@/lib/resize'
+import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
+import { useToastStore } from '/@/store/ui/toast'
+
+import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
 
 const useEditMessage = (
   props: { messageId: string },
@@ -135,12 +139,12 @@ const useAttachmentsEditor = (
 </script>
 
 <script lang="ts" setup>
+import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 import MessageInputKeyGuide from '/@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
 import MessageInputTextArea from '/@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
-import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-import MessageInputUploadProgress from '/@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
+import MessageInputUploadProgress from '/@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 
 const props = defineProps<{
   rawContent: string
@@ -158,13 +162,15 @@ const { editMessage, cancel } = useEditMessage(props, text, emit)
 const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
   useModifierKey()
 
-const textareaComponentRef = ref<{
-  textareaAutosizeRef: { $el: HTMLTextAreaElement }
-}>()
+const textareaComponentRef =
+  shallowRef<InstanceType<typeof MessageInputTextArea>>()
+
+const textareaRef = computed(() => textareaComponentRef.value?.textareaRef)
+
 const containerEle = ref<HTMLDivElement>()
 const { toggleStampPicker } = useTextStampPickerInvoker(
   text,
-  computed(() => textareaComponentRef.value?.textareaAutosizeRef.$el),
+  textareaRef,
   containerEle
 )
 
@@ -176,7 +182,7 @@ const {
 } = useAttachmentsEditor(props, text)
 
 onMounted(() => {
-  textareaComponentRef.value?.textareaAutosizeRef.$el?.focus()
+  textareaRef.value?.focus()
 })
 </script>
 

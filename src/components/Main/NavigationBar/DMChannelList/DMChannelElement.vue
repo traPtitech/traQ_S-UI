@@ -8,7 +8,7 @@
       @mouseleave="onMouseLeave"
     >
       <div :class="$style.channelHash">
-        <user-icon
+        <UserIcon
           has-notification
           prevent-modal
           :user-id="user.id"
@@ -16,8 +16,8 @@
           :indicator-size="8"
         />
       </div>
-      <d-m-channel-element-name :name="user.name" />
-      <channel-element-unread-badge
+      <DMChannelElementName :name="user.name" />
+      <ChannelElementUnreadBadge
         is-noticeable
         :unread-count="notificationState.unreadCount"
       />
@@ -33,16 +33,19 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRef } from 'vue'
-import useHover from '/@/composables/dom/useHover'
 import type { DMChannel } from '@traptitech/traq'
-import { useUsersStore } from '/@/store/entities/users'
+
+import { computed, toRef } from 'vue'
+
 import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import DMChannelElementName from './DMChannelElementName.vue'
-import useNotificationState from '../composables/useNotificationState'
+import useHover from '/@/composables/dom/useHover'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useOpenLink } from '/@/composables/useOpenLink'
+import { useUsersStore } from '/@/store/entities/users'
+
+import useNotificationState from '../composables/useNotificationState'
+import DMChannelElementName from './DMChannelElementName.vue'
 
 const props = defineProps<{
   dmChannel: DMChannel
@@ -56,7 +59,7 @@ const notificationState = useNotificationState(toRef(props, 'dmChannel'))
 const { openLink } = useOpenLink()
 const { channelIdToLink } = useChannelPath()
 const openChannel = (event: MouseEvent) => {
-  openLink(event, channelIdToLink(props.dmChannel.id))
+  openLink(event, channelIdToLink(props.dmChannel.id) as string)
 }
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()

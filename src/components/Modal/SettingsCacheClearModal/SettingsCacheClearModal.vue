@@ -1,11 +1,11 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="キャッシュの削除"
     subtitle="キャッシュを削除する項目を選んで下さい。"
   >
     <div :class="$style.content">
       <div :class="$style.checkboxContainer">
-        <form-checkbox
+        <FormCheckbox
           v-for="name in cacheCategories"
           :key="name"
           v-model="cacheCategoryToIsSelected[name]"
@@ -15,11 +15,11 @@
             {{ cacheLabel(name) }}
             <!-- TODO: キャッシュサイズを表示する -->
           </div>
-        </form-checkbox>
+        </FormCheckbox>
       </div>
       <div :class="$style.buttonContainer">
-        <form-button label="キャンセル" type="tertiary" @click="clearModal" />
-        <form-button
+        <FormButton label="キャンセル" type="tertiary" @click="clearModal" />
+        <FormButton
           label="削除する"
           type="secondary"
           :disabled="!anyCacheSelected"
@@ -28,17 +28,19 @@
         />
       </div>
     </div>
-  </modal-frame>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
-import { useToastStore } from '/@/store/ui/toast'
-import { wait } from '/@/lib/basic/timer'
-import ModalFrame from '../Common/ModalFrame.vue'
+import { computed, ref } from 'vue'
+
 import FormButton from '/@/components/UI/FormButton.vue'
-import { useModalStore } from '/@/store/ui/modal'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
+import { wait } from '/@/lib/basic/timer'
+import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
+
+import ModalFrame from '../Common/ModalFrame.vue'
 
 declare global {
   interface StorageEstimate {

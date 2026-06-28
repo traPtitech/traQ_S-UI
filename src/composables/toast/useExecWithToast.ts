@@ -1,4 +1,5 @@
 import { useToastStore } from '/@/store/ui/toast'
+import type { MaybePromise } from '/@/types/utility'
 
 const useExecWithToast = () => {
   const { addInfoToast, addErrorToast } = useToastStore()
@@ -6,7 +7,7 @@ const useExecWithToast = () => {
   const execWithToast = async (
     successText: string | undefined,
     errorText: string,
-    func: () => void | Promise<void>
+    func: () => MaybePromise<void>
   ) => {
     try {
       await func()

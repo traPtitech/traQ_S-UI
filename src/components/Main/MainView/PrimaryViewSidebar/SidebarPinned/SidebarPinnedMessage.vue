@@ -1,6 +1,6 @@
 <template>
   <div>
-    <message-panel
+    <MessagePanel
       title-type="user"
       hide-subtitle
       line-clamp-content
@@ -10,7 +10,7 @@
       @click-context-menu-button="toggle"
     />
 
-    <sidebar-pinned-message-context-menu
+    <SidebarPinnedMessageContextMenu
       v-if="position"
       :position="position"
       :message-id="message.id"
@@ -21,13 +21,16 @@
 </template>
 
 <script lang="ts" setup>
-import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
-import SidebarPinnedMessageContextMenu from './SidebarPinnedMessageContextMenu.vue'
-import { computed } from 'vue'
 import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
-import { constructMessagesPath } from '/@/router'
+
+import { computed } from 'vue'
+
+import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
 import useContextMenu from '/@/composables/useContextMenu'
+import { constructMessagesPath } from '/@/router'
 import { useChannelsStore } from '/@/store/entities/channels'
+
+import SidebarPinnedMessageContextMenu from './SidebarPinnedMessageContextMenu.vue'
 
 const props = defineProps<{
   message: Message | ActivityTimelineMessage

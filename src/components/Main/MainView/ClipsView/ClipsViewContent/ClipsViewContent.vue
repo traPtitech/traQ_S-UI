@@ -1,12 +1,13 @@
 <template>
   <div :class="$style.container">
-    <clips-view-content-main :clip-folder-id="clipFolderId" />
+    <ClipsViewContentMain :clip-folder-id="clipFolderId" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import ClipsViewContentMain from './ClipsViewContentMain.vue'
 import type { ClipFolderId } from '/@/types/entity-ids'
+
+import ClipsViewContentMain from './ClipsViewContentMain.vue'
 
 defineProps<{
   clipFolderId: ClipFolderId

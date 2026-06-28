@@ -1,10 +1,11 @@
 import { createApp } from 'vue'
+
 import App from './App.vue'
+import boolAttr from './bool-attr'
+import { deleteStampCacheIDB } from './lib/stampCache'
+import { setupGlobalFuncs } from './markdown-bridge'
 import router from './router'
 import store from './store'
-import boolAttr from './bool-attr'
-import { setupGlobalFuncs } from './markdown-bridge'
-import { deleteStampCacheIDB } from './lib/stampCache'
 import './styles/global.scss'
 
 import('katex/dist/katex.css')

@@ -1,6 +1,6 @@
 <template>
   <div v-if="attachments.length > 0" :class="$style.container">
-    <message-input-file-list-item
+    <MessageInputFileListItem
       v-for="(attachment, i) in attachments"
       :key="i"
       :attachment="attachment"
@@ -11,12 +11,14 @@
 </template>
 
 <script lang="ts" setup>
-import MessageInputFileListItem from './MessageInputFileListItem.vue'
 import { toRef } from 'vue'
-import type { VirtualChannelId } from '/@/store/ui/messageInputStateStore'
+
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
-import type { ChannelId } from '/@/types/entity-ids'
+import type { VirtualChannelId } from '/@/store/ui/messageInputStateStore'
 import { useToastStore } from '/@/store/ui/toast'
+import type { ChannelId } from '/@/types/entity-ids'
+
+import MessageInputFileListItem from './MessageInputFileListItem.vue'
 
 const props = defineProps<{
   channelId: ChannelId | VirtualChannelId

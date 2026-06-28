@@ -1,32 +1,40 @@
 <template>
-  <modal-frame
+  <ModalFrame
     title="グループ"
     :subtitle="name"
     icon-name="group"
     return-button
+    edit-button
+    @edit="onGroupEdit"
   >
-    <user-list-item
+    <UserListItem
       v-for="user in users"
       :key="user.id"
       :user-id="user.id"
       :is-admin="user.isAdmin"
       :class="$style.item"
     >
-      <div :class="$style.role">{{ user.role }}</div>
+      <div :class="$style.role">
+        {{ user.role }}
+      </div>
       <div v-if="user.isAdmin && !user.isMember" :class="$style.nonMemberAdmin">
         グループ外管理者
       </div>
-    </user-list-item>
-  </modal-frame>
+    </UserListItem>
+  </ModalFrame>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import type { UserGroupMember } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
+
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
+import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
 
 const props = defineProps<{
   id: string
@@ -58,6 +66,12 @@ const users = computed((): UserGroupMemberOrAdmin[] => {
       .map(m => ({ ...m, isMember: true, isAdmin: false }))
   ].filter(m => activeUsersMap.value.has(m.id))
 })
+
+const { openLinkAndClearModal } = useOpenLinkAndClearModal()
+
+const onGroupEdit = (event: MouseEvent) => {
+  openLinkAndClearModal(event, '/group-manager')
+}
 </script>
 
 <style lang="scss" module>

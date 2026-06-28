@@ -1,18 +1,22 @@
 import type { User } from '@traptitech/traq'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+
 import { computed, ref } from 'vue'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import apis from '/@/lib/apis'
+import { createSingleflight } from '/@/lib/basic/async'
+import { arrayToMap } from '/@/lib/basic/map'
+import type { ActiveUser } from '/@/lib/user'
+import { isActive } from '/@/lib/user'
+import { wsListener } from '/@/lib/websocket'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import { useTrueChangedPromise } from '/@/store/utils/promise'
+import type { UserId } from '/@/types/entity-ids'
+
 import { entityMitt } from './mitt'
 import type { CacheStrategy } from './utils'
 import { fetchWithCacheStrategy } from './utils'
-import apis from '/@/lib/apis'
-import { createSingleflight } from '/@/lib/basic/async'
-import type { ActiveUser } from '/@/lib/user'
-import { isActive } from '/@/lib/user'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import type { UserId } from '/@/types/entity-ids'
-import { useTrueChangedPromise } from '/@/store/utils/promise'
-import { arrayToMap } from '/@/lib/basic/map'
-import { wsListener } from '/@/lib/websocket'
 
 const getUser = createSingleflight(apis.getUser.bind(apis))
 const getUserByName = createSingleflight(
@@ -26,9 +30,7 @@ const getUsers = createSingleflight(apis.getUsers.bind(apis))
 const useUsersStorePinia = defineStore('entities/users', () => {
   const usersMap = ref(new Map<UserId, User>())
   const usersMapFetched = ref(false)
-  const usersMapInitialFetchPromise = ref(
-    useTrueChangedPromise(usersMapFetched)
-  )
+  const usersMapInitialFetchPromise = useTrueChangedPromise(usersMapFetched)
 
   const activeUsersMap = computed(
     () =>
@@ -66,7 +68,7 @@ const useUsersStorePinia = defineStore('entities/users', () => {
       usersMap,
       userId,
       usersMapFetched.value,
-      usersMapInitialFetchPromise.value,
+      usersMapInitialFetchPromise,
       getUser,
       setUser
     )
@@ -95,7 +97,7 @@ const useUsersStorePinia = defineStore('entities/users', () => {
       // キャッシュに存在してなかったかつ、全取得が完了してない場合は
       // 全取得を待って含まれてるか確認する
       if (cacheStrategy === 'waitForAllFetch' && !usersMapFetched.value) {
-        await usersMapInitialFetchPromise.value
+        await usersMapInitialFetchPromise
 
         const res = findUserByName(username)
         if (res) {

@@ -1,5 +1,7 @@
 import { onMounted, onUnmounted } from 'vue'
 
+import { useEventListener } from '@vueuse/core'
+
 const useScreenWakeLock = () => {
   if (!navigator.wakeLock) return
 
@@ -10,13 +12,12 @@ const useScreenWakeLock = () => {
     }
   }
 
+  useEventListener(document, 'visibilitychange', reacquireWakeLock)
+
   onMounted(async () => {
     wakeLock = await navigator.wakeLock.request('screen')
-    document.addEventListener('visibilitychange', reacquireWakeLock)
   })
   onUnmounted(async () => {
-    document.removeEventListener('visibilitychange', reacquireWakeLock)
-
     await wakeLock?.release()
     wakeLock = null
   })

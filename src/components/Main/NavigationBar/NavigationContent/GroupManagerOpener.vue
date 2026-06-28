@@ -1,12 +1,12 @@
 <template>
-  <navigation-content-container subtitle="ユーザーグループ">
+  <NavigationContentContainer subtitle="ユーザーグループ">
     <router-link to="/group-manager">
       <button :class="$style.button">
-        <a-icon name="group" :class="$style.icon" />
+        <AIcon name="group" :class="$style.icon" />
         グループ管理
       </button>
     </router-link>
-  </navigation-content-container>
+  </NavigationContentContainer>
 </template>
 
 <script lang="ts" setup>

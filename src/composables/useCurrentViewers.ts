@@ -1,11 +1,13 @@
 import type { ChannelViewer } from '@traptitech/traq'
 import { ChannelViewState } from '@traptitech/traq'
+
 import type { Ref } from 'vue'
-import { ref, computed } from 'vue'
-import type { ChannelId } from '/@/types/entity-ids'
+import { computed, ref } from 'vue'
+
+import useMittListener from '/@/composables/utils/useMittListener'
 import { wsListener } from '/@/lib/websocket'
 import { useMeStore } from '/@/store/domain/me'
-import useMittListener from '/@/composables/utils/useMittListener'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const useCurrentViewers = (channelId: Ref<ChannelId>) => {
   const meStore = useMeStore()
@@ -14,9 +16,24 @@ const useCurrentViewers = (channelId: Ref<ChannelId>) => {
   const currentViewers = ref<ChannelViewer[]>([])
 
   /**
-   * チャンネルを見ている人(入力中、バックグラウンド表示中も含む)のIDの一覧(古い順)
+   * チャンネルを見ている人(入力中を含む、バックグラウンド表示を除く)のIDの一覧(古い順)
    */
-  const viewingUsers = computed(() => currentViewers.value.map(v => v.userId))
+  const activeViewingUsers = computed(() =>
+    currentViewers.value
+      .filter(
+        v =>
+          v.state === ChannelViewState.Monitoring ||
+          v.state === ChannelViewState.Editing ||
+          v.state === ChannelViewState.StaleViewing
+      )
+      .map(v => v.userId)
+  )
+
+  const inactiveViewingUsers = computed(() =>
+    currentViewers.value
+      .filter(v => v.state === ChannelViewState.None)
+      .map(v => v.userId)
+  )
 
   /**
    * チャンネルで入力中の人のIDの一覧(新しい順)
@@ -36,7 +53,7 @@ const useCurrentViewers = (channelId: Ref<ChannelId>) => {
   })
   // NOTE: 再接続時にはCHANNEL_VIEWERS_CHANGEDが送られてくる
 
-  return { viewingUsers, typingUsers }
+  return { activeViewingUsers, typingUsers, inactiveViewingUsers }
 }
 
 export default useCurrentViewers

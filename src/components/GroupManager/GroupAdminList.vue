@@ -2,7 +2,7 @@
   <div>
     <div :class="$style.header">
       <div :class="$style.label">管理者</div>
-      <a-icon
+      <AIcon
         name="plus-circle-outline"
         mdi
         :class="$style.addIcon"
@@ -10,7 +10,7 @@
       />
     </div>
     <div :class="$style.list">
-      <group-user
+      <GroupUser
         v-for="admin in admins"
         :id="admin"
         :key="admin"
@@ -22,11 +22,12 @@
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
-import GroupUser from './GroupUser.vue'
-import type { UserGroupId, UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'
+import { useToastStore } from '/@/store/ui/toast'
+import type { UserGroupId, UserId } from '/@/types/entity-ids'
+
+import GroupUser from './GroupUser.vue'
 
 const props = defineProps<{
   groupId: UserGroupId

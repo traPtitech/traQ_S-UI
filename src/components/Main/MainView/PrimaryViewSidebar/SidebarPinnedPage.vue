@@ -1,19 +1,21 @@
 <template>
-  <primary-view-sidebar-page show-back-button @back="emit('moveBack')">
+  <PrimaryViewSidebarPage show-back-button @back="emit('moveBack')">
     <template #header>
-      <sidebar-header text="ピン留め" />
+      <SidebarHeader text="ピン留め" />
     </template>
     <template #content>
-      <sidebar-pinned-list :pinned-messages="pinnedMessages" />
+      <SidebarPinnedList :pinned-messages="pinnedMessages" />
     </template>
-  </primary-view-sidebar-page>
+  </PrimaryViewSidebarPage>
 </template>
 
 <script lang="ts" setup>
+import type { Pin } from '@traptitech/traq'
+
 import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
+
 import SidebarHeader from './SidebarHeader.vue'
 import SidebarPinnedList from './SidebarPinned/SidebarPinnedList.vue'
-import type { Pin } from '@traptitech/traq'
 
 withDefaults(
   defineProps<{

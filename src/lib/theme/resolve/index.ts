@@ -1,12 +1,13 @@
 import { isDarkColor, transparentizeWithFallback } from '/@/lib/basic/color'
+import type {
+  BrowserTheme,
+  CSSColorType,
+  SpecificTheme,
+  Theme
+} from '/@/lib/theme/schema'
+
 import type { ResolvedBasicTheme } from './basic'
 import { resolveBasicTheme } from './basic'
-import type {
-  Theme,
-  CSSColorType,
-  BrowserTheme,
-  SpecificTheme
-} from '/@/lib/theme/schema'
 import type { ResolvedMarkdownTheme } from './markdown'
 import { resolveMarkdownTheme } from './markdown'
 

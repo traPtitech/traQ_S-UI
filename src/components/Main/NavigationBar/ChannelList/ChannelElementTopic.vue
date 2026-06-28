@@ -1,14 +1,15 @@
 <template>
   <div :class="$style.container">
-    <inline-markdown :content="topic" :title="topic" />
+    <MarkdownPreview :content="topic" :title="topic" inline />
   </div>
 </template>
 
 <script lang="ts" setup>
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 import { computed } from 'vue'
-import type { ChannelId } from '/@/types/entity-ids'
+
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import { useChannelsStore } from '/@/store/entities/channels'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -27,7 +28,9 @@ const topic = computed(
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-
+  margin-left: 40px;
+  margin-right: 8px;
+  margin-bottom: 4px;
   cursor: pointer;
 }
 </style>

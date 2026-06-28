@@ -3,11 +3,11 @@
     <div :class="$style.name">
       {{ name }}
       <div v-if="hasNotification" :class="$style.indicator">
-        <notification-indicator :size="6" />
+        <NotificationIndicator :size="6" />
       </div>
     </div>
     <div :class="$style.line" />
-    <a-icon name="rounded-triangle" :class="$style.icon" :size="20" />
+    <AIcon name="rounded-triangle" :class="$style.icon" :size="20" />
   </button>
 </template>
 

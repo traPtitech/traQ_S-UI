@@ -1,12 +1,13 @@
 <template>
   <div v-if="isCommandPaletteShown" :class="$style.container">
-    <command-palette />
+    <CommandPalette />
   </div>
 </template>
 
 <script lang="ts" setup>
-import CommandPalette from './CommandPalette.vue'
 import { useCommandPalette } from '/@/store/app/commandPalette'
+
+import CommandPalette from './CommandPalette.vue'
 
 const { isCommandPaletteShown } = useCommandPalette()
 </script>

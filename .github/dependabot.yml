@@ -6,10 +6,24 @@ updates:
       interval: monthly
     open-pull-requests-limit: 10
     groups:
-      non-majors:
+      types:
+        patterns:
+          - '@types/*'
+      linters-and-formatters:
+        patterns:
+          - '*eslint*'
+          - '*prettier*'
+      workbox:
+        patterns:
+          - 'workbox-*'
+      patches:
         update-types:
           - 'patch'
-          - 'minor'
+        exclude-patterns:
+          - '@types/*'
+          - '*eslint*'
+          - '*prettier*'
+          - 'workbox-*'
   - package-ecosystem: docker
     directory: '/'
     schedule:

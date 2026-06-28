@@ -1,10 +1,12 @@
+import type { User } from '@traptitech/traq'
+
 import { computed } from 'vue'
-import { compareStringInsensitive } from '/@/lib/basic/string'
+
+import useUserList from '/@/composables/users/useUserList'
 import { isDefined } from '/@/lib/basic/array'
+import { compareStringInsensitive } from '/@/lib/basic/string'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
-import type { User } from '@traptitech/traq'
-import useUserList from '/@/composables/users/useUserList'
 
 interface UsersGradeList {
   gradeName: string

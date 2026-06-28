@@ -2,19 +2,19 @@
   <router-link :to="to">
     <div :class="$style.container">
       <div :class="$style.header">
-        <user-name
+        <UserName
           v-if="titleType === 'user'"
           :class="$style.item"
           :user="userState"
           is-title
         />
-        <channel-name
+        <ChannelName
           v-if="titleType === 'channel'"
           :class="$style.item"
           :path="path"
           is-title
         />
-        <a-icon
+        <AIcon
           v-if="showContextMenuButton"
           :class="$style.icon"
           :size="28"
@@ -28,9 +28,9 @@
         v-if="!hideSubtitle"
         :class="[$style.subTitleContainer, $style.item]"
       >
-        <user-name v-if="titleType === 'channel'" :user="userState" />
-        <channel-name v-if="titleType === 'user'" :path="path" />
-        <a-icon
+        <UserName v-if="titleType === 'channel'" :user="userState" />
+        <ChannelName v-if="titleType === 'user'" :path="path" />
+        <AIcon
           v-if="message.createdAt !== message.updatedAt"
           :class="$style.editIcon"
           :size="16"
@@ -38,7 +38,7 @@
           mdi
         />
       </div>
-      <render-content
+      <RenderContent
         :content="message.content"
         :line-clamp-content="lineClampContent"
       />
@@ -47,14 +47,18 @@
 </template>
 
 <script lang="ts" setup>
-import UserName from './UserName.vue'
+import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
+import useChannelPath from '/@/composables/useChannelPath'
+import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import { useUsersStore } from '/@/store/entities/users'
+
 import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import { computed } from 'vue'
-import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
-import useChannelPath from '/@/composables/useChannelPath'
-import { useUsersStore } from '/@/store/entities/users'
+import UserName from './UserName.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -86,13 +90,11 @@ if (userState.value === undefined) {
 
 const { channelIdToShortPathString } = useChannelPath()
 
-const path = computed(() => {
-  try {
-    return channelIdToShortPathString(props.message.channelId)
-  } catch {
-    return 'unknown'
-  }
-})
+const path = computed(() =>
+  setFallbackForNullishOrOnError('unknown').exec(() =>
+    channelIdToShortPathString(props.message.channelId)
+  )
+)
 
 const onClickContextMenuButton = (e: MouseEvent) => {
   emit('clickContextMenuButton', e)

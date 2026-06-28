@@ -1,20 +1,20 @@
 <template>
   <div :class="$style.container">
-    <navigation-content-title :current-navigation="currentNavigation" />
-    <home-tab v-if="currentNavigation === 'home'" :class="$style.content" />
-    <channels-tab
+    <NavigationContentTitle :current-navigation="currentNavigation" />
+    <HomeTab v-if="currentNavigation === 'home'" :class="$style.content" />
+    <ChannelsTab
       v-if="currentNavigation === 'channels'"
       :class="$style.content"
     />
     <!-- アクティビティの内容は保持しておきたいため -->
     <keep-alive>
-      <activity-tab
+      <ActivityTab
         v-if="currentNavigation === 'activity'"
         :class="$style.content"
       />
     </keep-alive>
-    <users-tab v-if="currentNavigation === 'users'" :class="$style.content" />
-    <clip-folders-tab
+    <UsersTab v-if="currentNavigation === 'users'" :class="$style.content" />
+    <ClipFoldersTab
       v-if="currentNavigation === 'clips'"
       :class="$style.content"
     />
@@ -22,13 +22,14 @@
 </template>
 
 <script lang="ts" setup>
-import NavigationContentTitle from './NavigationContentTitle.vue'
-import HomeTab from './NavigationContent/HomeTab.vue'
-import ChannelsTab from './NavigationContent/ChannelsTab.vue'
-import ActivityTab from './NavigationContent/ActivityTab.vue'
-import UsersTab from './NavigationContent/UsersTab.vue'
-import ClipFoldersTab from './NavigationContent/ClipFoldersTab.vue'
 import type { NavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
+
+import ActivityTab from './NavigationContent/ActivityTab.vue'
+import ChannelsTab from './NavigationContent/ChannelsTab.vue'
+import ClipFoldersTab from './NavigationContent/ClipFoldersTab.vue'
+import HomeTab from './NavigationContent/HomeTab.vue'
+import UsersTab from './NavigationContent/UsersTab.vue'
+import NavigationContentTitle from './NavigationContentTitle.vue'
 
 withDefaults(
   defineProps<{
@@ -51,7 +52,7 @@ withDefaults(
     left: 8px;
   }
   backface-visibility: hidden;
-  contain: strict;
+  contain: var(--contain-strict);
 }
 .content {
   margin: 24px 0;

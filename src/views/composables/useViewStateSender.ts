@@ -1,6 +1,10 @@
 import { ChannelViewState } from '@traptitech/traq'
-import { computed, onMounted, onUnmounted, watchEffect } from 'vue'
+
+import { computed, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
+
+import { useEventListener } from '@vueuse/core'
+
 import { changeViewState } from '/@/lib/websocket'
 import { RouteName } from '/@/router'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
@@ -30,7 +34,7 @@ const useViewStateSender = () => {
   })
 
   const state = computed(() => {
-    if (!shouldReceiveLatestMessages.value) return ChannelViewState.None
+    if (!shouldReceiveLatestMessages.value) return ChannelViewState.StaleViewing
     // 最新メッセージ閲覧中でない場合はタイピング中でもEditingにしてはいけない
     // (Editingにすると未読に追加されなくなるため)
     return isTyping.value
@@ -57,12 +61,25 @@ const useViewStateSender = () => {
     }
     changeViewState(currentChannelId.value, ChannelViewState.None)
   }
-  onMounted(() => {
-    document.addEventListener('visibilitychange', visibilitychangeListener)
-  })
-  onUnmounted(() => {
-    document.removeEventListener('visibilitychange', visibilitychangeListener)
-  })
+  const focusListener = () => {
+    if (!currentChannelId.value) {
+      changeViewState(null)
+      return
+    }
+    changeViewState(currentChannelId.value, state.value)
+  }
+
+  const blurListener = () => {
+    if (!currentChannelId.value) {
+      changeViewState(null)
+      return
+    }
+    changeViewState(currentChannelId.value, ChannelViewState.None)
+  }
+
+  useEventListener(document, 'visibilitychange', visibilitychangeListener)
+  useEventListener('focus', focusListener)
+  useEventListener('blur', blurListener)
 }
 
 export default useViewStateSender

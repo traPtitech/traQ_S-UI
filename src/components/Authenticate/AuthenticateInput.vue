@@ -5,7 +5,7 @@
       <input
         :id="id"
         :class="$style.input"
-        :value="value"
+        :value="modelValue"
         :type="typeWithShown"
         :autofocus="autofocus"
         :autocomplete="autocomplete"
@@ -20,7 +20,7 @@
         :class="$style.toggle"
         @click.prevent="togglePassword"
       >
-        <a-icon
+        <AIcon
           :name="isPasswordShown ? 'eye-off-outline' : 'eye-outline'"
           mdi
           :class="$style.toggleIcon"
@@ -32,22 +32,29 @@
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
-import { randomString } from '/@/lib/basic/randomString'
 import useShowPassword from '/@/composables/dom/useShowPassword'
-import useTextModelSyncer from '/@/composables/useTextModelSyncer'
+import useOnInput from '/@/composables/useOnInput'
+import { randomString } from '/@/lib/basic/randomString'
+
+const modelValue = defineModel<string>({ default: '' })
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string
     label?: string
     type?: 'text' | 'password'
     autocomplete?: string
     autofocus?: boolean
     autocapitalize?: string
-    enterkeyhint?: string
+    enterkeyhint?:
+      | 'search'
+      | 'done'
+      | 'enter'
+      | 'go'
+      | 'next'
+      | 'previous'
+      | 'send'
   }>(),
   {
-    modelValue: '',
     label: '',
     type: 'text' as const,
     autofocus: false,
@@ -55,11 +62,7 @@ const props = withDefaults(
   }
 )
 
-const emits = defineEmits<{
-  (v: 'update:modelValue', val: string): void
-}>()
-
-const { value, onInput } = useTextModelSyncer(props, emits)
+const onInput = useOnInput(modelValue)
 
 const id = randomString()
 

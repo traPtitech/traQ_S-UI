@@ -1,7 +1,7 @@
 <template>
-  <primary-view-header>
+  <PrimaryViewHeader>
     <template #header>
-      <primary-view-header-title
+      <PrimaryViewHeaderTitle
         :class="$style.header"
         :title="clipFolderName"
         icon-mdi
@@ -9,23 +9,24 @@
       />
     </template>
     <template #tools>
-      <primary-view-header-tools-item
+      <PrimaryViewHeaderToolsItem
         icon-mdi
         icon-name="info-outline"
         @click="openSidebar"
       />
     </template>
-  </primary-view-header>
+  </PrimaryViewHeader>
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
+
 import PrimaryViewHeader from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeader.vue'
 import PrimaryViewHeaderTitle from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderTitle.vue'
 import PrimaryViewHeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
-import { computed } from 'vue'
-import type { ClipFolderId } from '/@/types/entity-ids'
 import useSidebar from '/@/composables/mainView/useSidebar'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+import type { ClipFolderId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   clipFolderId: ClipFolderId

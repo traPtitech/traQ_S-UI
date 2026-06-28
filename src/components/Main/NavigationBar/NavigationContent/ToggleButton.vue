@@ -5,39 +5,35 @@
     :aria-pressed="modelValue"
     @click="toggle"
   >
-    <a-icon :size="22" :class="$style.icon" :name="iconName" :mdi="iconMdi" />
+    <AIcon :size="22" :class="$style.icon" :name="iconName" :mdi="iconMdi" />
   </button>
 </template>
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 
-const props = withDefaults(
+const modelValue = defineModel<boolean>({ default: false })
+
+withDefaults(
   defineProps<{
     iconName: string
     iconMdi?: boolean
-    modelValue?: boolean
     title?: string
   }>(),
   {
-    iconMdi: false,
-    modelValue: false
+    iconMdi: false
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', _value: boolean): void
-}>()
-
 const toggle = () => {
-  emit('update:modelValue', !props.modelValue)
+  modelValue.value = !modelValue.value
 }
 </script>
 
 <style lang="scss" module>
 .container {
   @include background-primary;
-  padding: 4px 28px;
+  padding: 4px 14px;
   border-radius: 4px;
   text-align: center;
   cursor: pointer;

@@ -1,13 +1,13 @@
 <template>
   <div>
-    <audio-controller-detail-panel />
-    <audio-controller-title-panel />
+    <AudioControllerDetailPanel />
+    <AudioControllerTitlePanel />
   </div>
 </template>
 
 <script lang="ts" setup>
-import AudioControllerTitlePanel from './AudioControllerTitlePanel.vue'
 import AudioControllerDetailPanel from './AudioControllerDetailPanel.vue'
+import AudioControllerTitlePanel from './AudioControllerTitlePanel.vue'
 </script>
 
 <style lang="scss" module>

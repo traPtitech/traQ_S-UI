@@ -1,16 +1,18 @@
-import type { ChannelId } from '/@/types/entity-ids'
 import type { Channel } from '@traptitech/traq'
-import { useChannelsStore } from '/@/store/entities/channels'
+
 import { computed } from 'vue'
+
 import { isDefined, unique } from '/@/lib/basic/array'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
+import { useChannelsStore } from '/@/store/entities/channels'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const collectDescendants = (
   id: ChannelId,
   channelsMap: Map<ChannelId, Channel>
 ) => {
   if (!channelsMap.has(id)) {
-    throw `channelIdToPath: No channel: ${id}`
+    throw new Error(`channelIdToPath: No channel: ${id}`)
   }
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const channel = channelsMap.get(id)!

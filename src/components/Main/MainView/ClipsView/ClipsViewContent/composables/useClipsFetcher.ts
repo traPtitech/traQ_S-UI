@@ -1,12 +1,20 @@
-import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
-import type { MessageId, ClipFolderId } from '/@/types/entity-ids'
-import type { Ref } from 'vue'
-import { reactive, watch, onMounted, computed } from 'vue'
+import {
+  type Ref,
+  type ShallowRef,
+  computed,
+  onMounted,
+  reactive,
+  watch
+} from 'vue'
+
+import type { MessageScrollerInstance } from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
-import { wsListener } from '/@/lib/websocket'
-import { useMessagesStore } from '/@/store/entities/messages'
+import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
+import { wsListener } from '/@/lib/websocket'
+import { useMessagesStore } from '/@/store/entities/messages'
+import type { ClipFolderId, MessageId } from '/@/types/entity-ids'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 80
@@ -19,7 +27,7 @@ interface GetClipsParam {
 }
 
 const useClipsFetcher = (
-  scrollerEle: Ref<{ $el: HTMLDivElement } | undefined>,
+  scrollerRef: ShallowRef<MessageScrollerInstance | undefined>,
   props: {
     clipFolderId: ClipFolderId
     entryMessageId?: MessageId
@@ -27,7 +35,7 @@ const useClipsFetcher = (
 ) => {
   const { fetchMessage, extendMessagesMap } = useMessagesStore()
   const { fetchLimit, waitHeightResolved } = useFetchLimit(
-    scrollerEle,
+    scrollerRef,
     MESSAGE_HEIGHT
   )
   const state = reactive({
@@ -70,7 +78,7 @@ const useClipsFetcher = (
       state.nextLoadOffset += fetchLimit.value
     }
 
-    return clips.map(clip => clip.message.id)
+    return clips.toReversed().map(clip => clip.message.id)
   }
 
   const messagesFetcher = useMessageFetcher(

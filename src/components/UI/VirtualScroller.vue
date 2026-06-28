@@ -18,16 +18,15 @@
 <script lang="ts">
 import {
   computed,
-  reactive,
-  ref,
+  nextTick,
   onMounted,
   onUnmounted,
-  watch,
-  nextTick
+  reactive,
+  ref,
+  watch
 } from 'vue'
-import { throttle } from 'throttle-debounce'
 
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { throttle } from 'throttle-debounce'
 
 const binarySearch = (arr: number[], x: number) => {
   let low = 0
@@ -37,6 +36,7 @@ const binarySearch = (arr: number[], x: number) => {
     mid = Math.floor((high + low) / 2)
     if (arr[mid] === x) {
       break
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     } else if (arr[mid]! > x) {
       high = mid - 1
     } else {
@@ -44,6 +44,7 @@ const binarySearch = (arr: number[], x: number) => {
     }
   }
   mid = Math.floor((high + low) / 2)
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (x <= arr[mid]!) return mid
   else return mid + 1
 }
@@ -59,7 +60,9 @@ const findStartNode = (
   while (endRange !== startRange) {
     const middle = Math.floor((endRange - startRange) / 2 + startRange)
     if (
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       nodePositions[middle]! <= scrollTop &&
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       nodePositions[middle + 1]! > scrollTop
     ) {
       return middle
@@ -68,6 +71,7 @@ const findStartNode = (
       // edge case - start and end range are consecutive
       return endRange
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (nodePositions[middle]! <= scrollTop) {
         startRange = middle
       } else {
@@ -121,6 +125,7 @@ const data = reactive({
     const displacements = []
     for (let i = 0; i < currentHeights.length; i++) {
       displacements.push(totalDisplacement)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       totalDisplacement += currentHeights[i]!
     }
     displacements.push(totalDisplacement)
@@ -154,7 +159,7 @@ const handleScroll = throttle(17, (e: Event) => {
   state.scrollTop = el.scrollTop
   //TODO: load more
 })
-const scrollTo = (index: number) => {
+const _scrollTo = (index: number) => {
   if (!rootRef.value) return
   const pageStartIndex = Math.floor(index / PAGE_SIZE)
 
@@ -166,10 +171,12 @@ const scrollTo = (index: number) => {
   const displacements = []
   for (let i = 0; i < currentHeights.length; i++) {
     displacements.push(totalDisplacement)
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     totalDisplacement += currentHeights[i]!
   }
   displacements.push(totalDisplacement)
   // console.log(pageStartIndex, rollingPageHeights[pageStartIndex], heights.slice(pageStartIndex * PAGE_SIZE, (pageStartIndex + 1) * PAGE_SIZE), displacements[index]);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const top = displacements[index % PAGE_SIZE]!
   const isVisible =
     top >= state.scrollTop &&
@@ -184,6 +191,7 @@ const scrollTo = (index: number) => {
 }
 const updatePageHeights = (pageIndices: number[]) => {
   for (let i = 0; i < pageIndices.length; i++) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const pageStartIndex = pageIndices[i]!
     const startIndex = pageStartIndex * PAGE_SIZE
     const endIndex = (pageStartIndex + 1) * PAGE_SIZE
@@ -219,7 +227,7 @@ const update = () => {
 }
 // TODO: fetch new messages
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const loadMore = () => {}
+const _loadMore = () => {}
 
 onMounted(() => {
   state.isMounted = true
@@ -269,6 +277,7 @@ const updateIndex = (scrollTop: number) => {
   state.startIndex = state.pageStartIndex * PAGE_SIZE + startNodeIndex
   state.endIndex =
     state.startIndex + Math.floor(data.rootHeight / state.smallestRowHeight)
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   state.spacerShiftY = data.rowPositions[startNodeIndex]!
 }
 

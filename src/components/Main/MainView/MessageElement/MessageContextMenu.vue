@@ -1,5 +1,5 @@
 <template>
-  <context-menu-container :position="position" @close="close">
+  <ContextMenuContainer :position="position" @close="close">
     <div :class="$style.container">
       <span
         v-if="isPinned && !isMinimum"
@@ -46,24 +46,26 @@
         削除
       </span>
     </div>
-  </context-menu-container>
+  </ContextMenuContainer>
 </template>
 
 <script lang="ts">
 import type { Ref } from 'vue'
 import { computed, toRef } from 'vue'
-import apis from '/@/lib/apis'
-import type { MessageId } from '/@/types/entity-ids'
-import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
-import type { Point } from '/@/lib/basic/point'
-import useExecWithToast from '/@/composables/toast/useExecWithToast'
-import usePinToggler from '/@/composables/contextMenu/usePinToggler'
+
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
+import usePinToggler from '/@/composables/contextMenu/usePinToggler'
+import useCopyText from '/@/composables/toast/useCopyText'
+import useExecWithToast from '/@/composables/toast/useExecWithToast'
+import apis from '/@/lib/apis'
+import type { Point } from '/@/lib/basic/point'
+import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
 import { useMeStore } from '/@/store/domain/me'
-import { useModalStore } from '/@/store/ui/modal'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
-import useCopyText from '/@/composables/toast/useCopyText'
+import { useModalStore } from '/@/store/ui/modal'
+import type { MessageId } from '/@/types/entity-ids'
+import type { MaybePromise } from '/@/types/utility'
 
 const useMessageChanger = (messageId: Ref<MessageId>) => {
   const { execWithToast } = useExecWithToast()
@@ -148,7 +150,7 @@ const { showClipCreateModal } = useShowClipCreateModal(messageId)
 const close = () => {
   emit('close')
 }
-const withClose = async (func: () => void | Promise<void>) => {
+const withClose = async (func: () => MaybePromise<void>) => {
   await func()
   close()
 }

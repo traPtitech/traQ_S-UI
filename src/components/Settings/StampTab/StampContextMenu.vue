@@ -1,34 +1,42 @@
 <template>
-  <context-menu-container :position="position" @close="close">
+  <ContextMenuContainer :position="position" @close="close">
     <div :class="$style.container">
       <button :class="$style.button" @click="updateStampImage">
-        <a-icon name="file-image" mdi />
+        <AIcon name="file-image" mdi />
         スタンプ画像を更新する
       </button>
       <button :class="$style.button" @click="withClose(editStamp)">
-        <a-icon name="pencil-outline" mdi />
+        <AIcon name="pencil-outline" mdi />
         スタンプを編集する
       </button>
       <button
+        v-if="canDeleteStamp"
         :class="[$style.button, $style.dangerButton]"
         @click="withClose(deleteStamp)"
       >
-        <a-icon name="delete" mdi />
+        <AIcon name="delete" mdi />
         スタンプを削除する
       </button>
     </div>
-  </context-menu-container>
+  </ContextMenuContainer>
 </template>
 
 <script lang="ts" setup>
-import type { StampId } from '/@/types/entity-ids'
-import type { Point } from '/@/lib/basic/point'
-import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
-import { useModalStore } from '/@/store/ui/modal'
-import { useFileSelect } from '/@/composables/dom/useFileSelect'
-import apis from '/@/lib/apis'
-import useExecWithToast from '/@/composables/toast/useExecWithToast'
+import { UserPermission } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
 import AIcon from '/@/components/UI/AIcon.vue'
+import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
+import { useFileSelect } from '/@/composables/dom/useFileSelect'
+import useExecWithToast from '/@/composables/toast/useExecWithToast'
+import apis from '/@/lib/apis'
+import type { Point } from '/@/lib/basic/point'
+import { useMeStore } from '/@/store/domain/me'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { useModalStore } from '/@/store/ui/modal'
+import type { StampId } from '/@/types/entity-ids'
+import type { MaybePromise } from '/@/types/utility'
 
 const props = defineProps<{
   position: Point
@@ -41,6 +49,25 @@ const emit = defineEmits<{
 
 const { pushModal } = useModalStore()
 const { execWithToast } = useExecWithToast()
+const { detail, myId } = useMeStore()
+const { stampsMap } = useStampsStore()
+
+const canDeleteStamp = computed(() => {
+  if (detail.value?.permissions.includes(UserPermission.DeleteStamp)) {
+    return true
+  }
+
+  if (!detail.value?.permissions.includes(UserPermission.DeleteMyStamp)) {
+    return false
+  }
+
+  const stamp = stampsMap.value.get(props.stampId)
+  if (!stamp) {
+    return false
+  }
+
+  return stamp.creatorId === myId.value
+})
 
 const acceptImageType = [
   'image/jpeg',
@@ -52,7 +79,7 @@ const acceptImageType = [
 const close = () => {
   emit('close')
 }
-const withClose = async (func: () => void | Promise<void>) => {
+const withClose = async (func: () => MaybePromise<void>) => {
   await func()
   close()
 }

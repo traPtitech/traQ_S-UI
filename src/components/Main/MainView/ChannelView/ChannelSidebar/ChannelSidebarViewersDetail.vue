@@ -1,26 +1,41 @@
 <template>
-  <sidebar-content-container clickable title="閲覧者" @toggle="emit('toggle')">
-    <div v-for="user in users" :key="user.id" :class="$style.item">
-      <user-icon :user-id="user.id" :size="32" />
-      <div :class="$style.userName">{{ user.displayName }}</div>
+  <SidebarContentContainer clickable title="閲覧者" @toggle="emit('toggle')">
+    <div v-for="user in viewers" :key="user.id" :class="$style.item">
+      <UserIcon :user-id="user.id" :size="32" />
+      <div :class="$style.userName">
+        {{ user.displayName }}
+      </div>
     </div>
-  </sidebar-content-container>
+    <div
+      v-for="user in inactiveUsers"
+      :key="user.id"
+      :class="[$style.item, $style.transparent]"
+    >
+      <UserIcon :user-id="user.id" :size="32" />
+      <div :class="$style.userName">
+        {{ user.displayName }}
+      </div>
+    </div>
+  </SidebarContentContainer>
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
 import { computed } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
+
+import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import { isDefined } from '/@/lib/basic/array'
 import { useUsersStore } from '/@/store/entities/users'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{
     viewerIds?: readonly UserId[]
+    inactiveViewerIds?: readonly UserId[]
   }>(),
   {
-    viewerIds: () => []
+    viewerIds: () => [],
+    inactiveViewerIds: () => []
   }
 )
 
@@ -29,8 +44,11 @@ const emit = defineEmits<{
 }>()
 
 const { usersMap } = useUsersStore()
-const users = computed(() =>
+const viewers = computed(() =>
   props.viewerIds.map(id => usersMap.value.get(id)).filter(isDefined)
+)
+const inactiveUsers = computed(() =>
+  props.inactiveViewerIds.map(id => usersMap.value.get(id)).filter(isDefined)
 )
 </script>
 
@@ -45,6 +63,9 @@ const users = computed(() =>
   &:last-child {
     margin-bottom: 0;
   }
+}
+.transparent {
+  opacity: 0.5;
 }
 .userName {
   margin-left: 8px;

@@ -1,9 +1,10 @@
+import type { Stamp } from '@traptitech/traq'
+
 import {
-  constructStampNameIdMap,
   categorizeUnicodeStamps,
+  constructStampNameIdMap,
   traQStampsToStampCategory
 } from '/@/lib/stampCategorizer'
-import type { Stamp } from '@traptitech/traq'
 import type { StampId } from '/@/types/entity-ids'
 
 describe('constructStampNameIdMap', () => {

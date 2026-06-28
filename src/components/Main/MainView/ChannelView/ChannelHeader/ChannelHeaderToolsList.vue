@@ -1,18 +1,18 @@
 <template>
   <div :class="$style.container">
     <template v-if="!isMobile">
-      <header-tools-item
-        v-if="isQallFeatureEnabled"
+      <HeaderToolsItem
+        v-if="true"
         icon-mdi
-        :icon-name="qallIconName"
+        :icon-name="isCallingHere ? 'phone' : 'phone-outline'"
         :class="$style.qallIcon"
-        :disabled="!canToggleQall"
-        :data-is-active="$boolAttr(isQallSessionOpened)"
-        :data-is-joined="$boolAttr(canEndQall)"
-        :tooltip="qallLabel"
-        @click="toggleQall"
+        :disabled="disabled"
+        :data-is-active="$boolAttr(isCallingHere)"
+        :data-is-joined="$boolAttr(isCallingHere)"
+        :tooltip="'Qallボタン'"
+        @click="joinQall(props.channelId)"
       />
-      <header-tools-item
+      <HeaderToolsItem
         :class="$style.notificationIcon"
         :data-state="subscriptionChangeInfo.state"
         :icon-name="subscriptionChangeInfo.iconName"
@@ -21,15 +21,15 @@
         @click="changeToNextSubscriptionLevel"
       />
     </template>
-    <header-tools-item
-      v-if="isStared"
+    <HeaderToolsItem
+      v-if="isStarred"
       :class="$style.starIcon"
-      data-is-stared
+      data-is-starred
       icon-name="star"
       tooltip="お気に入りから外す"
       @click="unstarChannel"
     />
-    <header-tools-item
+    <HeaderToolsItem
       v-else
       :class="$style.starIcon"
       icon-name="star-outline"
@@ -38,7 +38,7 @@
     />
     <div :class="$style.moreButton">
       <slot />
-      <header-tools-item
+      <HeaderToolsItem
         :class="$style.icon"
         icon-mdi
         icon-name="dots-horizontal"
@@ -49,24 +49,27 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRef } from 'vue'
-import useChannelSubscriptionState from '/@/composables/subscription/useChannelSubscriptionState'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
-import { useResponsiveStore } from '/@/store/ui/responsive'
-import type { ChannelId } from '/@/types/entity-ids'
+
+import { computed, toRef } from 'vue'
+
 import HeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
-import useQall from './composables/useQall'
+import { useQall } from '/@/composables/qall/useQall'
+import useChannelSubscriptionState from '/@/composables/subscription/useChannelSubscriptionState'
+import useResponsive from '/@/composables/useResponsive'
+import type { ChannelId } from '/@/types/entity-ids'
+
 import useStarChannel from './composables/useStarChannel'
 
 const props = withDefaults(
   defineProps<{
     channelId: ChannelId
-    isStared?: boolean
+    isStarred?: boolean
     isForcedChannel?: boolean
     isArchived?: boolean
   }>(),
   {
-    isStared: false,
+    isStarred: false,
     isForcedChannel: false,
     isArchived: false
   }
@@ -76,17 +79,11 @@ const emit = defineEmits<{
   (e: 'clickMore'): void
 }>()
 
-const { isMobile } = useResponsiveStore()
+const { isMobile } = useResponsive()
 
-const {
-  isQallFeatureEnabled,
-  isQallSessionOpened,
-  canEndQall,
-  canToggleQall,
-  qallIconName,
-  qallLabel,
-  toggleQall
-} = useQall(props)
+const { joinQall, callingChannel } = useQall()
+const isCallingHere = computed(() => callingChannel.value === props.channelId)
+const disabled = computed(() => !!callingChannel.value && !isCallingHere.value)
 
 const { changeToNextSubscriptionLevel, currentChannelSubscription } =
   useChannelSubscriptionState(toRef(props, 'channelId'))
@@ -168,7 +165,7 @@ const { starChannel, unstarChannel } = useStarChannel(props)
 }
 .starIcon {
   transition: transform 0.1s;
-  &[data-is-stared] {
+  &[data-is-starred] {
     animation: spinAndPress 0.5s;
   }
   &:hover {

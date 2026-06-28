@@ -3,32 +3,29 @@
     <div>
       <div :class="$style.header">
         <h2 :class="$style.title">設定</h2>
-        <close-button :size="36" @close="close" />
+        <CloseButton :size="36" @close="close" />
       </div>
-      <mobile-tab-selector-item
+      <MobileTabSelectorItem
         v-for="navigation in navigations"
         :key="navigation.routeName"
         :route-name="navigation.routeName"
         :icon-name="navigation.iconName"
         :icon-mdi="navigation.iconMdi"
       />
-      <safari-warning :class="$style.safariWarning" />
+      <SafariWarning :class="$style.safariWarning" />
     </div>
-    <version-info :class="$style.version" />
+    <VersionInfo :class="$style.version" />
   </section>
 </template>
 
 <script lang="ts" setup>
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import VersionInfo from '/@/components/UI/VersionInfo.vue'
+
 import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
 import SafariWarning from './SafariWarning.vue'
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
 import useSettingsNavigation, { navigations } from './composables/useNavigation'
 
-const route = useRoute()
-const currentRouteName = computed(() => route.name)
 const { close } = useSettingsNavigation()
 </script>
 

@@ -7,27 +7,29 @@
         :class="$style.input"
         placeholder="タグを追加"
       />
-      <length-count :val="newTagName" :max-length="30" />
+      <LengthCount :val="newTagName" :max-length="30" />
     </div>
     <button
       :class="$style.button"
       :disabled="newTagName.length === 0 || isExceeded || adding"
       @click="addTag"
     >
-      <a-icon name="plus" mdi :class="$style.icon" />
+      <AIcon name="plus" mdi :class="$style.icon" />
     </button>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { reactive, ref } from 'vue'
+
+import { AxiosError } from 'axios'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
-import { ref, reactive } from 'vue'
-import apis from '/@/lib/apis'
-import type { UserId } from '/@/types/entity-ids'
 import useMaxLength from '/@/composables/utils/useMaxLength'
+import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
-import { AxiosError } from 'axios'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   userId: UserId

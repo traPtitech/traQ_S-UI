@@ -1,10 +1,11 @@
 <template>
-  <null-view v-if="secondaryView" :class="$style.secondary" />
+  <NullView v-if="secondaryView" :class="$style.secondary" />
 </template>
 
 <script lang="ts" setup>
-import NullView from './NullView/NullView.vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
+
+import NullView from './NullView/NullView.vue'
 
 const { secondaryView } = useMainViewStore()
 </script>

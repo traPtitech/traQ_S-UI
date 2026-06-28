@@ -1,18 +1,19 @@
 <template>
   <div :class="$style.container">
-    <a-icon
+    <AIcon
       :class="$style.icon"
       mdi
       name="chevron-double"
       :size="28"
       @click="emit('open')"
     />
-    <user-icon-ellipsis-list
+    <UserIconEllipsisList
       direction="col"
       transition="fade-bottom"
       count-clickable
       show-count
       :user-ids="viewerIds"
+      :inactive-user-ids="inactiveViewerIds"
       :class="$style.rest"
       @count-click="emit('openViewers')"
     />
@@ -27,6 +28,7 @@ import type { UserId } from '/@/types/entity-ids'
 withDefaults(
   defineProps<{
     viewerIds?: readonly UserId[]
+    inactiveViewerIds?: readonly UserId[]
   }>(),
   {
     viewerIds: () => []

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <a-icon
+    <AIcon
       v-if="isLocked"
       name="lock"
       mdi
@@ -8,8 +8,8 @@
       @click.stop="toggleTagState"
     />
     <div v-else :class="$style.element">
-      <a-icon name="close" mdi :size="20" @click.stop="removeTag" />
-      <a-icon
+      <AIcon name="close" mdi :size="20" @click.stop="removeTag" />
+      <AIcon
         v-if="isMine"
         name="lock-open"
         mdi
@@ -23,9 +23,9 @@
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
-import type { TagId, UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
+import type { TagId, UserId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{

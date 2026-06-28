@@ -1,16 +1,20 @@
 import type { UserGroup } from '@traptitech/traq'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+
 import { computed, ref } from 'vue'
-import { useTrueChangedPromise } from '/@/store/utils/promise'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import type { UserGroupId, UserId } from '/@/types/entity-ids'
-import { createSingleflight } from '/@/lib/basic/async'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import apis from '/@/lib/apis'
-import type { CacheStrategy } from './utils'
-import { fetchWithCacheStrategy } from './utils'
-import { entityMitt } from './mitt'
+import { createSingleflight } from '/@/lib/basic/async'
 import { arrayToMap } from '/@/lib/basic/map'
 import { wsListener } from '/@/lib/websocket'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import { useTrueChangedPromise } from '/@/store/utils/promise'
+import type { UserGroupId, UserId } from '/@/types/entity-ids'
+
+import { entityMitt } from './mitt'
+import type { CacheStrategy } from './utils'
+import { fetchWithCacheStrategy } from './utils'
 
 const getUserGroup = createSingleflight(apis.getUserGroup.bind(apis))
 const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
@@ -18,9 +22,8 @@ const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
 const useGroupsStorePinia = defineStore('entities/groups', () => {
   const userGroupsMap = ref(new Map<UserGroupId, UserGroup>())
   const userGroupsMapFetched = ref(false)
-  const userGroupsMapInitialFetchPromise = ref(
+  const userGroupsMapInitialFetchPromise =
     useTrueChangedPromise(userGroupsMapFetched)
-  )
 
   const gradeGroups = computed(() =>
     [...userGroupsMap.value.values()].filter(group => group.type === 'grade')
@@ -53,7 +56,7 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
       userGroupsMap,
       userGroupId,
       userGroupsMapFetched.value,
-      userGroupsMapInitialFetchPromise.value,
+      userGroupsMapInitialFetchPromise,
       getUserGroup,
       userGroup => {
         userGroupsMap.value.set(userGroup.id, userGroup)

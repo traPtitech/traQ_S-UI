@@ -5,14 +5,14 @@
       <p>
         特定のチャンネルを指定します。OFFの場合は最後に開いたチャンネルが設定されます。
       </p>
-      <form-selector-filterable
+      <FormSelectorFilterable
         v-if="openMode === 'particular'"
-        v-model="openChannelNameValue"
+        v-model="openChannelIdValue"
         :options="channelOptions"
       />
     </div>
     <div>
-      <a-toggle
+      <AToggle
         :model-value="openModeValue === 'particular'"
         @update:model-value="toggleOpenMode"
       />
@@ -23,30 +23,19 @@
 <script lang="ts" setup>
 import AToggle from '/@/components/UI/AToggle.vue'
 import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
-import type { OpenMode } from '/@/store/app/browserSettings'
-import useChannelPath from '/@/composables/useChannelPath'
 import useChannelOptions from '/@/composables/useChannelOptions'
-import { useModelSyncer } from '/@/composables/useModelSyncer'
+import type { OpenMode } from '/@/store/app/browserSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
-
-const props = defineProps<{
-  openMode: OpenMode
-  openChannelName: string
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:openMode', _val: string): void
-  (e: 'update:openChannelName', _val: string): void
-}>()
+import type { ChannelId } from '/@/types/entity-ids'
 
 const { fetchChannels } = useChannelsStore()
 // 起動時チャンネルの選択に必要
 fetchChannels()
 
-const { channelIdToPathString } = useChannelPath()
-
-const openModeValue = useModelSyncer(props, emit, 'openMode')
-const openChannelNameValue = useModelSyncer(props, emit, 'openChannelName')
+const openModeValue = defineModel<OpenMode>('openMode', { required: true })
+const openChannelIdValue = defineModel<ChannelId | null>('startupChannelId', {
+  required: true
+})
 
 const toggleOpenMode = () => {
   if (openModeValue.value === 'lastOpen') {
@@ -56,9 +45,7 @@ const toggleOpenMode = () => {
   }
 }
 
-const { channelOptions } = useChannelOptions(undefined, channel =>
-  channel ? channelIdToPathString(channel.id) : '(unknown)'
-)
+const { channelOptions } = useChannelOptions(undefined)
 </script>
 
 <style lang="scss" module>

@@ -1,6 +1,8 @@
 import { useRouter } from 'vue-router'
-import { LEFT_CLICK_BUTTON, MIDDLE_CLICK_BUTTON } from '/@/lib/dom/event'
+
 import { isMac } from '/@/lib/dom/browser'
+import { LEFT_CLICK_BUTTON, MIDDLE_CLICK_BUTTON } from '/@/lib/dom/event'
+import type { MaybePromise } from '/@/types/utility'
 
 const macFlag = isMac()
 
@@ -44,7 +46,7 @@ export const useOpenLink = () => {
   const openLink = async (
     event: MouseEvent,
     link: string,
-    beforeOpenWithRouter?: () => void | Promise<void>
+    beforeOpenWithRouter?: () => MaybePromise<void>
   ) => {
     if (shouldOpenWithRouter(event)) {
       event.preventDefault()

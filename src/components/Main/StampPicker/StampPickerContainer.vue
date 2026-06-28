@@ -1,14 +1,16 @@
 <template>
   <teleport v-if="isStampPickerShown" to="#stamp-picker-popup">
     <keep-alive>
-      <stamp-picker :style="style" :class="$style.positionAbsolute" />
+      <StampPicker :style="style" :class="$style.positionAbsolute" />
     </keep-alive>
   </teleport>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+
 import { useStampPicker } from '/@/store/ui/stampPicker'
+
 import StampPicker from './StampPicker.vue'
 
 const { position, alignment, isStampPickerShown } = useStampPicker()
@@ -35,6 +37,14 @@ const style = computed(() => {
       transform: 'translateX(-100%)'
     }
   }
+  if (alignment.value === 'bottom-left') {
+    return {
+      bottom: `min(calc(100% - ${height + margin}px), calc(100% - ${
+        position.value.y
+      }px))`,
+      left: `min(calc(100% - ${width}px), ${position.value.x}px)`
+    }
+  }
   if (alignment.value === 'bottom-right') {
     return {
       bottom: `min(calc(100% - ${height + margin}px), calc(100% - ${
@@ -52,6 +62,6 @@ const style = computed(() => {
 .positionAbsolute {
   position: fixed;
   z-index: $z-index-stamp-picker;
-  contain: strict;
+  contain: var(--contain-strict);
 }
 </style>

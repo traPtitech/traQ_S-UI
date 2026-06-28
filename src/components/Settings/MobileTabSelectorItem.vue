@@ -1,17 +1,19 @@
 <template>
   <router-link :to="path" :class="$style.item">
-    <a-icon :name="iconName" :mdi="iconMdi" :size="size" />
+    <AIcon :name="iconName" :mdi="iconMdi" :size="size" />
     <span :class="$style.title">{{ title }}</span>
-    <a-icon :class="$style.chevron" name="chevron-right" mdi :size="size" />
+    <AIcon :class="$style.chevron" name="chevron-right" mdi :size="size" />
   </router-link>
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
-import { navigationRouteNameTitleMap } from './composables/useNavigation'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import type { SettingsRouteName } from '/@/router/settings'
 import { constructSettingsPath } from '/@/router/settings'
+
+import { navigationRouteNameTitleMap } from './composables/useNavigation'
 
 const props = defineProps<{
   routeName: SettingsRouteName

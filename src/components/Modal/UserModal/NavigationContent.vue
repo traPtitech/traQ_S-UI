@@ -1,25 +1,27 @@
 <template>
   <section :class="$style.container">
-    <profile-tab
+    <ProfileTab
       v-if="currentNavigation === 'profile'"
       :user="user"
       :detail="detail"
     />
-    <groups-tab v-if="currentNavigation === 'groups'" :detail="detail" />
-    <tags-tab v-if="currentNavigation === 'tags'" :detail="detail" />
+    <GroupsTab v-if="currentNavigation === 'groups'" :detail="detail" />
+    <TagsTab v-if="currentNavigation === 'tags'" :detail="detail" />
   </section>
 </template>
 
 <script lang="ts" setup>
-import ProfileTab from './ProfileTab/ProfileTab.vue'
-import GroupsTab from './GroupsTab.vue'
-import TagsTab from './TagsTab.vue'
 import type { User, UserDetail } from '@traptitech/traq'
-import type { NavigationItemType } from './composables/useNavigation'
+
+import type { UserModalNavigationItemType } from '/@/store/ui/modal/states'
+
+import GroupsTab from './GroupsTab.vue'
+import ProfileTab from './ProfileTab/ProfileTab.vue'
+import TagsTab from './TagsTab.vue'
 
 withDefaults(
   defineProps<{
-    currentNavigation?: NavigationItemType
+    currentNavigation?: UserModalNavigationItemType
     user: User
     detail?: UserDetail
   }>(),

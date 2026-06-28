@@ -2,25 +2,22 @@
   <section>
     <h3 :class="$style.header">アカウント</h3>
     <div>
-      <form-button
+      <FormButton
         label="ログアウト"
         :class="$style.logout"
         type="secondary"
         is-danger
         @click="onLogoutClick"
       />
-      <form-button
-        label="全セッション破棄"
-        is-danger
-        @click="onSessionDelete"
-      />
+      <FormButton label="全セッション破棄" is-danger @click="onSessionDelete" />
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
-import FormButton from '/@/components/UI/FormButton.vue'
 import { useRouter } from 'vue-router'
+
+import FormButton from '/@/components/UI/FormButton.vue'
 import { useMeStore } from '/@/store/domain/me'
 
 const router = useRouter()

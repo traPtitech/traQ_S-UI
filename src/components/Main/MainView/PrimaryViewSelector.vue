@@ -1,31 +1,32 @@
 <template>
-  <channel-view
+  <ChannelView
     v-if="primaryView.type === 'channel'"
     :is-ready="isReady"
     :channel-id="primaryView.channelId"
     :entry-message-id="primaryView.entryMessageId"
   />
-  <d-m-view
+  <DMView
     v-else-if="primaryView.type === 'dm'"
     :is-ready="isReady"
     :channel-id="primaryView.channelId"
     :entry-message-id="primaryView.entryMessageId"
     :user-name="primaryView.userName"
   />
-  <clips-view
+  <ClipsView
     v-else-if="primaryView.type === 'clips'"
     :is-ready="isReady"
     :clip-folder-id="primaryView.clipFolderId"
   />
-  <null-view v-else />
+  <NullView v-else />
 </template>
 
 <script lang="ts" setup>
-import ChannelView from './ChannelView/ChannelView.vue'
-import DMView from './DMView/DMView.vue'
-import ClipsView from './ClipsView/ClipsView.vue'
-import NullView from './NullView/NullView.vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
+
+import ChannelView from './ChannelView/ChannelView.vue'
+import ClipsView from './ClipsView/ClipsView.vue'
+import DMView from './DMView/DMView.vue'
+import NullView from './NullView/NullView.vue'
 
 const { primaryView } = useMainViewStore()
 

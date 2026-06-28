@@ -1,4 +1,5 @@
-import { reactive, computed } from 'vue'
+import { computed, reactive } from 'vue'
+
 import { useStampCategory } from '/@/store/domain/stampCategory'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 

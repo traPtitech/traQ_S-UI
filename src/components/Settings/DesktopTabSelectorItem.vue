@@ -1,16 +1,18 @@
 <template>
   <router-link :to="path" :class="$style.item" :aria-selected="isSelected">
-    <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
+    <AIcon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
     {{ title }}
   </router-link>
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
-import { navigationRouteNameTitleMap } from './composables/useNavigation'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import type { SettingsRouteName } from '/@/router/settings'
 import { constructSettingsPath } from '/@/router/settings'
+
+import { navigationRouteNameTitleMap } from './composables/useNavigation'
 
 const props = defineProps<{
   routeName: SettingsRouteName

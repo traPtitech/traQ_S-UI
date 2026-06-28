@@ -1,17 +1,21 @@
 import type { Stamp } from '@traptitech/traq'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+
 import { computed, ref } from 'vue'
-import { useTrueChangedPromise } from '/@/store/utils/promise'
-import { isDefined } from '/@/lib/basic/array'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import type { StampId } from '/@/types/entity-ids'
-import { createSingleflight } from '/@/lib/basic/async'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import apis from '/@/lib/apis'
+import { isDefined } from '/@/lib/basic/array'
+import { createSingleflight } from '/@/lib/basic/async'
+import { arrayToMap } from '/@/lib/basic/map'
+import { wsListener } from '/@/lib/websocket'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import { useTrueChangedPromise } from '/@/store/utils/promise'
+import type { StampId } from '/@/types/entity-ids'
+
 import { entityMitt } from './mitt'
 import type { CacheStrategy } from './utils'
 import { fetchWithCacheStrategy } from './utils'
-import { arrayToMap } from '/@/lib/basic/map'
-import { wsListener } from '/@/lib/websocket'
 
 const getStamp = createSingleflight(apis.getStamp.bind(apis))
 const getStamps = createSingleflight(async () => {
@@ -29,9 +33,7 @@ const initialRecentStampNames = ['ok_hand', 'thumbsup', 'eyes'] as const
 const useStampsStorePinia = defineStore('entities/stamps', () => {
   const stampsMap = ref(new Map<StampId, Stamp>())
   const stampsMapFetched = ref(false)
-  const stampsMapInitialFetchPromise = ref(
-    useTrueChangedPromise(stampsMapFetched)
-  )
+  const stampsMapInitialFetchPromise = useTrueChangedPromise(stampsMapFetched)
 
   const stampNameTable = computed(
     () =>
@@ -61,7 +63,7 @@ const useStampsStorePinia = defineStore('entities/stamps', () => {
       stampsMap,
       stampId,
       stampsMapFetched.value,
-      stampsMapInitialFetchPromise.value,
+      stampsMapInitialFetchPromise,
       getStamp,
       stamp => {
         stampsMap.value.set(stamp.id, stamp)

@@ -1,12 +1,12 @@
 <template>
   <li :class="$style.tag" @click="onTagClick">
     <div :class="$style.content">
-      <a-icon name="tag" mdi :class="$style.icon" :size="20" />
+      <AIcon name="tag" mdi :class="$style.icon" :size="20" />
       <div :class="$style.text">
         {{ tag.tag }}
       </div>
     </div>
-    <tags-tab-edit
+    <TagsTabEdit
       :tag-id="tag.tagId"
       :is-mine="isMine"
       :user-id="userId"
@@ -17,11 +17,12 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
-import TagsTabEdit from '/@/components/Modal/UserModal/TagsTabEdit.vue'
 import type { UserTag } from '@traptitech/traq'
-import type { UserId } from '/@/types/entity-ids'
+
+import TagsTabEdit from '/@/components/Modal/UserModal/TagsTabEdit.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { useModalStore } from '/@/store/ui/modal'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <tool-item
+    <ToolItem
       v-for="tool in tools"
       :key="tool.iconName"
       :class="$style.item"
@@ -9,14 +9,14 @@
       @mousedown.middle="tool.onClick"
       @click="tool.onClick"
     />
-    <user-icon
+    <UserIcon
       v-if="myId"
       :class="$style.item"
       :size="36"
       :user-id="myId"
       data-testid="my-icon-button"
     />
-    <app-list
+    <AppList
       v-if="isServicesShown"
       :class="$style.services"
       @close="closeServices"
@@ -25,10 +25,10 @@
 </template>
 
 <script lang="ts" setup>
-import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
 import AppList from '/@/components/Main/NavigationBar/AppList.vue'
+import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
 import useToolBox from '/@/components/Main/NavigationBar/composables/useToolBox'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import { useMeStore } from '/@/store/domain/me'
 
 const { myId } = useMeStore()

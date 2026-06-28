@@ -1,10 +1,12 @@
 import { computed } from 'vue'
+
 import { buildFilePath } from '/@/lib/apis'
 import { mimeToFileType, prettifyFileSize } from '/@/lib/basic/file'
-import useFileLink from './useFileLink'
-import type { ChannelId, FileId } from '/@/types/entity-ids'
-import { useMessagesStore } from '/@/store/entities/messages'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useMessagesStore } from '/@/store/entities/messages'
+import type { ChannelId, FileId } from '/@/types/entity-ids'
+
+import useFileLink from './useFileLink'
 
 const useFileMeta = (props: {
   fileId: FileId

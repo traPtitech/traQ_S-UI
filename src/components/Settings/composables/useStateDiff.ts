@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+
 import { dequal } from 'dequal'
 
 const useStateDiff = <T>() => {

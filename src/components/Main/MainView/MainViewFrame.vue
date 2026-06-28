@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.container" :data-hide-outer="$boolAttr(hideOuter)">
     <div :class="$style.body">
-      <slot></slot>
-      <div :class="$style.overlay" :data-dim-inner="$boolAttr(dimInner)"></div>
+      <slot />
+      <div :class="$style.overlay" :data-dim-inner="$boolAttr(dimInner)" />
     </div>
   </div>
 </template>
@@ -35,7 +35,7 @@ $paddingSize: 16px;
   min-width: 0;
   padding: $paddingSize 0;
   transition: opacity 0.3s ease;
-  contain: strict;
+  contain: var(--contain-strict);
 }
 .body {
   height: calc(100% + #{$paddingSize * 2});

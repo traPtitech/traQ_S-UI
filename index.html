@@ -10,11 +10,35 @@
     />
     <title>traQ</title>
 
+    <style>
+      /*
+        ダークモード時のフラッシュを防ぐために、
+        テーマ読み込み前はcolor-schemeごとのbackground primaryを表示する
+      */
+      body {
+        color-scheme: light dark;
+        background-color: Canvas;
+      }
+    </style>
+
+    <style>
+      /*
+        WebKit で発生する contain: strict による不具合の回避策
+        WebKit の場合は App.vue にて "inline-size layout paint style" を指定する
+        cf. https://bugs.webkit.org/show_bug.cgi?id=297186
+      */
+      body {
+        --contain-strict: strict;
+      }
+    </style>
+
     <link href="/fonts/fonts.css" rel="stylesheet" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- <script src="/new-relic-{hash}.js"></script> -->
 
     <script src="/config.js"></script>
     <script src="/defaultTheme.js"></script>
@@ -34,7 +58,7 @@
       href="/img/icons/favicon-16x16.png"
     />
     <meta name="theme-color" content="#0D67EA" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="apple-mobile-web-app-title" content="traQ" />
     <link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png" />
@@ -56,6 +80,7 @@
     <div id="app"></div>
     <div id="message-menu-popup"></div>
     <div id="stamp-picker-popup"></div>
+    <div id="scaled-stamp-popup"></div>
     <div id="dropdown-suggester-popup"></div>
     <div id="popup-navigator"></div>
     <div id="popup-header-relation"></div>

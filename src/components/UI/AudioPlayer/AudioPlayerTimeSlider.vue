@@ -4,7 +4,7 @@
     :aria-disabled="disabled"
     :data-show-background-on-hover="showBackgroundOnHover"
   >
-    <a-slider
+    <ASlider
       v-model="roundedCurrentTime"
       :disabled="disabled"
       :min="0"
@@ -16,12 +16,14 @@
 </template>
 
 <script lang="ts" setup>
-import ASlider from '/@/components/UI/ASlider.vue'
 import { computed } from 'vue'
+
+import ASlider from '/@/components/UI/ASlider.vue'
+
+const currentTime = defineModel<number>('currentTime', { required: true })
 
 const props = withDefaults(
   defineProps<{
-    currentTime: number
     duration: number
     showBackgroundOnHover?: boolean
   }>(),
@@ -30,16 +32,12 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits<{
-  (e: 'update:currentTime', _val: number): void
-}>()
-
 const roundedCurrentTime = computed({
   get() {
-    return Math.floor(props.currentTime)
+    return Math.floor(currentTime.value)
   },
   set(v: number) {
-    emit('update:currentTime', v)
+    currentTime.value = v
   }
 })
 

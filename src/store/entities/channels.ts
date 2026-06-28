@@ -1,15 +1,19 @@
 import type { Channel, DMChannel } from '@traptitech/traq'
-import { defineStore, acceptHMRUpdate } from 'pinia'
+
 import { computed, ref } from 'vue'
-import { useTrueChangedPromise } from '/@/store/utils/promise'
-import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
-import { createSingleflight } from '/@/lib/basic/async'
+
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import apis from '/@/lib/apis'
+import { createSingleflight } from '/@/lib/basic/async'
 import { arrayToMap } from '/@/lib/basic/map'
-import { entityMitt } from './mitt'
 import { channelIdToPathString } from '/@/lib/channel'
 import { wsListener } from '/@/lib/websocket'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
+import { useTrueChangedPromise } from '/@/store/utils/promise'
+import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
+
+import { entityMitt } from './mitt'
 
 const getChannel = createSingleflight(apis.getChannel.bind(apis))
 const getChannels = createSingleflight(apis.getChannels.bind(apis))
@@ -19,8 +23,8 @@ const useChannelsStorePinia = defineStore('entities/channels', () => {
   const channelsMap = ref(new Map<ChannelId, Channel>())
   const dmChannelsMap = ref(new Map<DMChannelId, DMChannel>())
   const bothChannelsMapFetched = ref(false)
-  const bothChannelsMapInitialFetchPromise = ref(
-    useTrueChangedPromise(bothChannelsMapFetched)
+  const bothChannelsMapInitialFetchPromise = useTrueChangedPromise(
+    bothChannelsMapFetched
   )
 
   const userIdToDmChannelIdMap = computed(
@@ -164,6 +168,7 @@ const useChannelsStorePinia = defineStore('entities/channels', () => {
     channelsMap,
     dmChannelsMap,
     userIdToDmChannelIdMap,
+    bothChannelsMapFetched,
     bothChannelsMapInitialFetchPromise,
     addChannel,
     fetchUserDMChannel,

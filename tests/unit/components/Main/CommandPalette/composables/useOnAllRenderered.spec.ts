@@ -1,6 +1,8 @@
-import { withSetup } from '../../../../testUtils'
 import { nextTick, ref } from 'vue'
+
 import useOnAllRenderedWithoutSetup from '/@/components/Main/CommandPalette/composables/useOnAllRendered'
+
+import { withSetup } from '../../../../testUtils'
 
 const useOnAllRendered = withSetup(useOnAllRenderedWithoutSetup)
 

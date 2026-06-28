@@ -1,35 +1,46 @@
 <template>
   <div>
-    <channel-element
+    <ChannelElement
       v-for="channel in channels"
       :key="channel.id"
       :class="$style.element"
       :channel="channel"
       :is-opened="childrenShownChannels.has(channel.id)"
       :show-shortened-path="showShortenedPath"
+      :show-topic="showTopic"
       @click-hash="toggleChildren"
     >
-      <slide-down :is-open="childrenShownChannels.has(channel.id)">
-        <channel-tree :class="$style.children" :channels="channel.children" />
-      </slide-down>
-    </channel-element>
+      <SlideDown :is-open="childrenShownChannels.has(channel.id)">
+        <channel-tree
+          :class="$style.children"
+          :channels="channel.children"
+          :show-topic="showTopic && !preventChildTopic"
+        />
+      </SlideDown>
+    </ChannelElement>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { ChannelId } from '/@/types/entity-ids'
-import type { ChannelTreeNode } from '/@/lib/channelTree'
-import ChannelElement from './ChannelElement.vue'
+import { type HTMLAttributes, ref } from 'vue'
+
 import SlideDown from '/@/components/UI/SlideDown.vue'
-import { ref, type HTMLAttributes } from 'vue'
+import type { ChannelTreeNode } from '/@/lib/channelTree'
+import type { ChannelId } from '/@/types/entity-ids'
+
+import ChannelElement from './ChannelElement.vue'
 
 interface Props extends /* @vue-ignore */ HTMLAttributes {
   channels: ReadonlyArray<ChannelTreeNode>
   showShortenedPath?: boolean
+  showTopic?: boolean
+  preventChildTopic?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
-  showShortenedPath: false
+  showShortenedPath: false,
+  showTopic: false,
+  preventChildTopic: false
 })
 
 const childrenShownChannels = ref(new Set<ChannelId>())

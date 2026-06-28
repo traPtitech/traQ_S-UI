@@ -5,24 +5,29 @@
     :data-is-inactive="$boolAttr(!channel.active)"
   >
     <!-- チャンネル表示本体 -->
-    <div :class="$style.channelContainer">
-      <channel-element-hash
-        :class="$style.channelHash"
+    <div
+      :class="$style.channelContainer"
+      :data-is-topic-shown="$boolAttr(showTopic)"
+    >
+      <ChannelElementIcon
+        :class="$style.channelIcon"
         :has-child="hasChildren"
         :is-selected="isSelected"
         :is-opened="isOpened"
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="!channel.active"
-        @mousedown.stop="onChannelHashClick"
-        @keydown.enter="onChannelHashKeydownEnter"
-        @mouseenter="onHashHovered"
-        @mouseleave="onHashHoveredLeave"
+        :icon-name="iconName"
+        :is-icon-mdi="isIconMdi"
+        :icon-size="iconSize"
+        @click.stop="onClickIcon"
+        @mouseenter="onIconHovered"
+        @mouseleave="onIconHoveredLeave"
       />
       <router-link
         v-slot="{ href, navigate }"
         custom
-        :to="channelIdToLink(props.channel.id)"
+        :to="channelIdToLink(props.channel.id) ?? ''"
       >
         <a
           :class="$style.channel"
@@ -30,7 +35,9 @@
           :aria-current="isSelected && 'page'"
           :aria-expanded="hasChildren && isOpened ? true : undefined"
           :data-is-inactive="$boolAttr(!channel.active)"
-          :aria-label="showShortenedPath ? pathTooltip : pathToShow"
+          :aria-label="
+            showShortenedPath ? pathTooltip : (pathToShow ?? undefined)
+          "
           draggable="false"
           @click="navigate"
           @mouseenter="onMouseEnter"
@@ -38,12 +45,12 @@
           @focus="onFocus"
           @blur="onBlur"
         >
-          <channel-element-name
+          <ChannelElementName
             :channel="channel"
             :show-shortened-path="showShortenedPath"
             :is-selected="isSelected"
           />
-          <channel-element-unread-badge
+          <ChannelElementUnreadBadge
             :is-noticeable="notificationState.isNoticeable"
             :unread-count="notificationState.unreadCount"
           />
@@ -52,6 +59,7 @@
     </div>
 
     <div :class="$style.slot">
+      <ChannelElementTopic v-if="showTopic" :channel-id="channel.id" />
       <slot />
     </div>
 
@@ -66,33 +74,42 @@
 </template>
 
 <script lang="ts" setup>
+import { ChannelSubscribeLevel } from '@traptitech/traq'
+
 import { computed, toRef } from 'vue'
-import type { ChannelTreeNode } from '/@/lib/channelTree'
-import type { ChannelId } from '/@/types/entity-ids'
+
+import {
+  type TypedProps,
+  usePath
+} from '/@/components/Main/NavigationBar/ChannelList/composables/usePath'
+import useFocus from '/@/composables/dom/useFocus'
 import useHover from '/@/composables/dom/useHover'
+import useChannelPath from '/@/composables/useChannelPath'
+import { useOpenLink } from '/@/composables/useOpenLink'
+import type { ChannelTreeNode } from '/@/lib/channelTree'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
 import { useMainViewStore } from '/@/store/ui/mainView'
-import ChannelElementHash from './ChannelElementHash.vue'
-import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
-import ChannelElementName from './ChannelElementName.vue'
+import type { ChannelId } from '/@/types/entity-ids'
+
 import useNotificationState from '../composables/useNotificationState'
-import { useOpenLink } from '/@/composables/useOpenLink'
-import useChannelPath from '/@/composables/useChannelPath'
-import useFocus from '/@/composables/dom/useFocus'
-import {
-  usePath,
-  type TypedProps
-} from '/@/components/Main/NavigationBar/ChannelList/composables/usePath'
+import ChannelElementIcon from './ChannelElementIcon.vue'
+import ChannelElementName from './ChannelElementName.vue'
+import ChannelElementTopic from './ChannelElementTopic.vue'
+import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 
 const props = withDefaults(
   defineProps<{
     channel: ChannelTreeNode
     isOpened?: boolean
     showShortenedPath?: boolean
+    showTopic?: boolean
+    showStar?: boolean
+    showNotified?: boolean
   }>(),
   {
     isOpened: false,
-    showShortenedPath: false
+    showShortenedPath: false,
+    showTopic: false
   }
 )
 
@@ -109,23 +126,21 @@ const isSelected = computed(
     props.channel.id === primaryView.value.channelId
 )
 
-const onChannelHashKeydownEnter = () => {
-  if (hasChildren.value) {
-    emit('clickHash', props.channel.id)
-  }
-}
-const onChannelHashClick = (e: MouseEvent) => {
-  if (hasChildren.value && e.button === LEFT_CLICK_BUTTON) {
-    emit('clickHash', props.channel.id)
-  } else {
+const onClickIcon = (e: KeyboardEvent | MouseEvent) => {
+  if (
+    e instanceof MouseEvent &&
+    (!hasChildren.value || e.button !== LEFT_CLICK_BUTTON)
+  ) {
     openChannel(e)
+    return
   }
+  emit('clickHash', props.channel.id)
 }
 
 const { openLink } = useOpenLink()
 const { channelIdToLink } = useChannelPath()
 const openChannel = (event: MouseEvent) => {
-  openLink(event, channelIdToLink(props.channel.id))
+  openLink(event, channelIdToLink(props.channel.id) as string)
 }
 
 const { pathToShow, pathTooltip } = usePath(props as TypedProps)
@@ -135,21 +150,39 @@ const notificationState = useNotificationState(toRef(props, 'channel'))
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 const { isFocused, onFocus, onBlur } = useFocus()
 const {
-  isHovered: isHashHovered,
-  onMouseEnter: onHashMouseEnter,
-  onMouseLeave: onHashMouseLeave
+  isHovered: isIconHovered,
+  onMouseEnter: onIconMouseEnter,
+  onMouseLeave: onIconMouseLeave
 } = useHover()
-const onHashHovered = () => {
-  onHashMouseEnter()
+const onIconHovered = () => {
+  onIconMouseEnter()
   onMouseEnter()
 }
-const onHashHoveredLeave = () => {
-  onHashMouseLeave()
+const onIconHoveredLeave = () => {
+  onIconMouseLeave()
   onMouseLeave()
 }
 const isChannelBgHovered = computed(
-  () => isHovered.value && !(hasChildren.value && isHashHovered.value)
+  () => isHovered.value && !(hasChildren.value && isIconHovered.value)
 )
+
+const iconName = computed(() => {
+  if (
+    props.showNotified &&
+    notificationState.subscriptionLevel === ChannelSubscribeLevel.notified
+  ) {
+    return 'notified'
+  }
+  if (props.showStar && notificationState.isStarred) {
+    return 'star-outline'
+  }
+  if (props.channel.archived) {
+    return 'archive'
+  }
+  return 'hash'
+})
+const isIconMdi = computed(() => props.channel.archived)
+const iconSize = computed(() => (props.channel.archived ? 17 : undefined))
 </script>
 
 <style lang="scss" module>
@@ -191,12 +224,13 @@ $bgLeftShift: 8px;
   margin-left: $bgLeftShift;
   width: calc(100% - $bgLeftShift);
 }
-.channelHash {
+.channelIcon {
   flex-shrink: 0;
   cursor: pointer;
   position: absolute;
   left: 0;
 }
+
 .selectedBg {
   position: absolute;
   width: calc(100% + #{$bgLeftShift});

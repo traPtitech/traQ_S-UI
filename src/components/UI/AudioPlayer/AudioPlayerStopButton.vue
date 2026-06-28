@@ -1,5 +1,5 @@
 <template>
-  <audio-player-abstract-button
+  <AudioPlayerAbstractButton
     icon-name="stop"
     icon-mdi
     :size="size"

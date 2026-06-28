@@ -1,13 +1,13 @@
 <template>
   <div :class="$style.container">
-    <file-modal-content-header :file-id="fileId" :class="$style.header" />
-    <file-modal-content-footer :file-id="fileId" />
+    <FileModalContentHeader :file-id="fileId" :class="$style.header" />
+    <FileModalContentFooter :file-id="fileId" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
+import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
 
 defineProps<{
   fileId: string

@@ -1,9 +1,9 @@
 <template>
   <div :class="$style.tags">
-    <template v-if="detail === undefined">Now loading...</template>
+    <template v-if="detail === undefined"> Now loading... </template>
     <template v-else>
       <ul :class="$style.list">
-        <tags-tab-tag
+        <TagsTabTag
           v-for="tag in tags"
           :key="tag.tagId"
           :class="$style.tag"
@@ -12,16 +12,18 @@
           :is-mine="isMine"
         />
       </ul>
-      <tags-tab-add :user-id="detail.id" />
+      <TagsTabAdd :user-id="detail.id" />
     </template>
   </div>
 </template>
 
 <script lang="ts" setup>
-import TagsTabTag from '/@/components/Modal/UserModal/TagsTabTag.vue'
-import TagsTabAdd from '/@/components/Modal/UserModal/TagsTabAdd.vue'
-import { computed } from 'vue'
 import type { UserDetail } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import TagsTabAdd from '/@/components/Modal/UserModal/TagsTabAdd.vue'
+import TagsTabTag from '/@/components/Modal/UserModal/TagsTabTag.vue'
 import { useMeStore } from '/@/store/domain/me'
 
 const props = defineProps<{

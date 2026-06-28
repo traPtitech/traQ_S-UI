@@ -1,13 +1,14 @@
 <template>
   <div :class="$style.container" :aria-selected="isSelected">
-    <a-icon :class="$style.icon" mdi :name="iconName" />
+    <AIcon :class="$style.icon" mdi :name="iconName" />
     <span>{{ folderName }}</span>
   </div>
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = withDefaults(
   defineProps<{

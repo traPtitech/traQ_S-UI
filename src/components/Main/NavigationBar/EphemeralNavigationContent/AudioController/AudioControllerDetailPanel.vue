@@ -1,32 +1,34 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.title">{{ name }}</div>
+    <div :class="$style.title">
+      {{ name }}
+    </div>
     <div :class="$style.sliderContainer">
-      <audio-player-time-slider
+      <AudioPlayerTimeSlider
         v-model:current-time="currentTime"
         :class="$style.timeSlider"
         :duration="duration"
         show-background-on-hover
       />
-      <audio-player-time :current-time="currentTime" :duration="duration" />
+      <AudioPlayerTime :current-time="currentTime" :duration="duration" />
     </div>
     <div :class="$style.controls">
-      <audio-player-play-button
+      <AudioPlayerPlayButton
         v-model:is-playing="isPlaying"
         :size="20"
         :class="$style.icon"
       />
-      <audio-player-stop-button
+      <AudioPlayerStopButton
         :size="20"
         :class="$style.icon"
         @click="resetAudio"
       />
-      <audio-player-loop-button
+      <AudioPlayerLoopButton
         v-model:loop="loop"
         :class="$style.icon"
         :size="20"
       />
-      <audio-player-volume-slider
+      <AudioPlayerVolumeSlider
         v-model:volume="volume"
         :class="$style.volumeSlider"
         :disabled="duration === 0"
@@ -36,16 +38,17 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, reactive } from 'vue'
+
+import AudioPlayerLoopButton from '/@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
 import AudioPlayerPlayButton from '/@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue'
 import AudioPlayerStopButton from '/@/components/UI/AudioPlayer/AudioPlayerStopButton.vue'
-import AudioPlayerLoopButton from '/@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
 import AudioPlayerTime from '/@/components/UI/AudioPlayer/AudioPlayerTime.vue'
 import AudioPlayerTimeSlider from '/@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
 import AudioPlayerVolumeSlider from '/@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue'
-import { computed, reactive } from 'vue'
-import { useAudioController } from '/@/store/ui/audioController'
-import useAudio from '/@/composables/media/useAudio'
 import useFileMeta from '/@/composables/files/useFileMeta'
+import useAudio from '/@/composables/media/useAudio'
+import { useAudioController } from '/@/store/ui/audioController'
 
 const { audio, fileId, resetAudio } = useAudioController()
 const { fileMeta, fileRawPath } = useFileMeta(

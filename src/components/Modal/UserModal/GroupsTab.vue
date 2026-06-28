@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.groups">
-    <template v-if="isLoading">Now loading...</template>
+    <template v-if="isLoading"> Now loading... </template>
     <template v-else>
       <ul :class="$style.list">
         <li
@@ -9,7 +9,7 @@
           :class="$style.group"
           @click="onGroupClick(group.id)"
         >
-          <a-icon name="group" :class="$style.icon" :size="20" />
+          <AIcon name="group" :class="$style.icon" :size="20" />
           {{ group.name }}
         </li>
       </ul>
@@ -18,14 +18,16 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
-import { computed } from 'vue'
 import type { UserDetail } from '@traptitech/traq'
-import type { UserGroupId } from '/@/types/entity-ids'
+
+import { computed } from 'vue'
+
+import AIcon from '/@/components/UI/AIcon.vue'
 import { isDefined } from '/@/lib/basic/array'
-import { useModalStore } from '/@/store/ui/modal'
-import { useGroupsStore } from '/@/store/entities/groups'
 import { compareString } from '/@/lib/basic/string'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useModalStore } from '/@/store/ui/modal'
+import type { UserGroupId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   detail?: UserDetail

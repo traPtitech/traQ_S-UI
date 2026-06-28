@@ -1,6 +1,8 @@
 import type { Ref } from 'vue'
 import { ref, watch } from 'vue'
 
+import type { MaybePromise } from '/@/types/utility'
+
 /**
  * localValueの値がリモートの値(remoteValue)に同期される
  * 編集後にdoUpdateを実行する
@@ -8,7 +10,7 @@ import { ref, watch } from 'vue'
  */
 const useLocalInput = <T>(
   remoteValue: Ref<T>,
-  doUpdate: (v: T) => Promise<boolean> | boolean,
+  doUpdate: (v: T) => MaybePromise<boolean>,
   syncEvenEditing = false
 ) => {
   const localValue = ref(remoteValue.value) as Ref<T>

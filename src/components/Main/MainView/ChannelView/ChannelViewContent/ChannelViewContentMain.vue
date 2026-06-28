@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.container">
-    <scroll-loading-bar :class="$style.loadingBar" :show="isLoading" />
-    <messages-scroller
-      ref="scrollerEle"
+    <ScrollLoadingBar :class="$style.loadingBar" :show="isLoading" />
+    <MessagesScroller
+      ref="scrollerRef"
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
       :is-reached-latest="isReachedLatest"
@@ -15,17 +15,17 @@
       @reset-is-reached-latest="resetIsReachedLatest"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
-        <messages-scroller-separator
+        <MessagesScrollerSeparator
           v-if="messageId === firstUnreadMessageId"
           title="ここから未読"
           :class="$style.unreadSeparator"
         />
-        <messages-scroller-separator
+        <MessagesScrollerSeparator
           v-if="dayDiffMessages.has(messageId)"
           :title="createdDate(messageId)"
           :class="$style.dateSeparator"
         />
-        <message-element
+        <MessageElement
           :class="$style.element"
           :message-id="messageId"
           :is-archived="isArchived"
@@ -35,8 +35,8 @@
           @entry-message-loaded="onEntryMessageLoaded"
         />
       </template>
-    </messages-scroller>
-    <message-input
+    </MessagesScroller>
+    <MessageInput
       :channel-id="channelId"
       :typing-users="typingUsers"
       :show-to-new-message-button="showToNewMessageButton"
@@ -46,23 +46,29 @@
 </template>
 
 <script lang="ts" setup>
-import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
-import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
-import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
-import { computed, ref, shallowRef } from 'vue'
-import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
-import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
-import { useChannelsStore } from '/@/store/entities/channels'
-import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
-import MessagesScrollerSeparator from '/@/components/Main/MainView/MessagesScroller/MessagesScrollerSeparator.vue'
-import { useMessagesStore } from '/@/store/entities/messages'
-import useDayDiffMessages from './composables/useDayDiffMessages'
-import { getFullDayString } from '/@/lib/basic/date'
 import type { Pin } from '@traptitech/traq'
+
+import { computed, ref, shallowRef } from 'vue'
 import { useRouter } from 'vue-router'
-import { constructChannelPath } from '/@/router'
+
+import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
+import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
+import MessagesScroller, {
+  type MessageScrollerInstance
+} from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
+import MessagesScrollerSeparator from '/@/components/Main/MainView/MessagesScroller/MessagesScrollerSeparator.vue'
+import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import useChannelPath from '/@/composables/useChannelPath'
+import { getFullDayString } from '/@/lib/basic/date'
+import { unrefElement } from '/@/lib/dom/unrefElement'
+import { constructChannelPath, constructUserPath } from '/@/router'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useMessagesStore } from '/@/store/entities/messages'
+import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
+
+import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
+import useDayDiffMessages from './composables/useDayDiffMessages'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -73,7 +79,7 @@ const props = defineProps<{
 
 const router = useRouter()
 
-const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
+const scrollerRef = shallowRef<MessageScrollerInstance>()
 const {
   messageIds,
   isReachedEnd,
@@ -82,9 +88,8 @@ const {
   lastLoadingDirection,
   unreadSince,
   onLoadFormerMessagesRequest,
-  onLoadLatterMessagesRequest,
-  onLoadAroundMessagesRequest
-} = useChannelMessageFetcher(scrollerEle, props)
+  onLoadLatterMessagesRequest
+} = useChannelMessageFetcher(scrollerRef, props)
 
 const { messagesMap } = useMessagesStore()
 const firstUnreadMessageId = computed(() => {
@@ -106,7 +111,7 @@ const createdDate = (id: MessageId) => {
   return getFullDayString(new Date(message.createdAt))
 }
 
-const { channelsMap } = useChannelsStore()
+const { channelsMap, dmChannelsMap } = useChannelsStore()
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
 )
@@ -124,18 +129,26 @@ const showToNewMessageButton = ref(false)
 const { channelIdToPathString } = useChannelPath()
 const toNewMessage = () => {
   if (props.entryMessageId) {
-    const channelPath = channelIdToPathString(props.channelId)
-    router.replace(constructChannelPath(channelPath))
+    const channelPath = channelIdToPathString(props.channelId) as string
+    if (dmChannelsMap.value.has(props.channelId)) {
+      router.replace(constructUserPath(channelPath))
+    } else {
+      router.replace(constructChannelPath(channelPath))
+    }
   }
-  if (scrollerEle.value === undefined) return
-  scrollerEle.value.$el.scrollTo({
-    top: scrollerEle.value.$el.scrollHeight
+
+  const element = unrefElement(scrollerRef)
+  if (!element) return
+
+  element.scrollTo({
+    top: element.scrollHeight
   })
 }
 
 const handleScroll = () => {
-  if (scrollerEle.value === undefined || isLoading.value) return
-  const { scrollTop, scrollHeight, clientHeight } = scrollerEle.value.$el
+  const element = unrefElement(scrollerRef)
+  if (!element || isLoading.value) return
+  const { scrollTop, scrollHeight, clientHeight } = element
   showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop
   if (!isReachedLatest.value) {
     showToNewMessageButton.value = true

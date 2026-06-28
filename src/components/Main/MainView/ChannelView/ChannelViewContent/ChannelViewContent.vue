@@ -5,11 +5,12 @@
     @dragover.prevent.stop="onDragOver"
     @drop.prevent.stop="onDrop"
   >
-    <channel-view-content-file-upload-overlay
+    <ChannelViewContentFileUploadOverlay
       v-if="canDrop"
       :class="$style.fileUploadOverlay"
     />
-    <channel-view-content-main
+    <ChannelViewContentMain
+      :key="renderKey"
       :channel-id="channelId"
       :entry-message-id="entryMessageId"
       :pinned-messages="pinnedMessages"
@@ -21,10 +22,15 @@
 <script lang="ts">
 import type { Ref } from 'vue'
 import { computed, ref, toRef } from 'vue'
-import type { ChannelId, UserId } from '/@/types/entity-ids'
+
 import { debounce, throttle } from 'throttle-debounce'
+
+import { useRenderKey } from '/@/composables/dom/useRenderKey'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { useToastStore } from '/@/store/ui/toast'
+import type { ChannelId, UserId } from '/@/types/entity-ids'
+
+const { key: renderKey } = useRenderKey('messages')
 
 const useDragDrop = (channelId: Ref<ChannelId>) => {
   const { addErrorToast } = useToastStore()
@@ -60,7 +66,7 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
       }
     }
   }
-  const onDragStart = (event: DragEvent) => {
+  const onDragStart = (_event: DragEvent) => {
     isDragStartInside.value = true
   }
 
@@ -86,10 +92,12 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
 </script>
 
 <script lang="ts" setup>
-import ChannelViewContentMain from './ChannelViewContentMain.vue'
-import ChannelViewContentFileUploadOverlay from './ChannelViewContentFileUploadOverlay.vue'
 import type { Pin } from '@traptitech/traq'
+
 import { getTextOrFile } from '/@/lib/dom/dataTransfer'
+
+import ChannelViewContentFileUploadOverlay from './ChannelViewContentFileUploadOverlay.vue'
+import ChannelViewContentMain from './ChannelViewContentMain.vue'
 
 const props = defineProps<{
   channelId: ChannelId

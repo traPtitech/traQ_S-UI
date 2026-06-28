@@ -1,9 +1,10 @@
 import type { Ref } from 'vue'
 import { computed, watch } from 'vue'
+
 import useSwipeDetector from '/@/composables/mainView/useSwipeDetector'
 import useSwipeDrawer from '/@/composables/mainView/useSwipeDrawer'
-import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+import useResponsive from '/@/composables/useResponsive'
+import { MainViewComponentState, useMainViewStore } from '/@/store/ui/mainView'
 
 type DrawerType = 'none' | 'nav' | 'sidebar'
 
@@ -27,7 +28,7 @@ const stateMachineDrawerTypeMap: Record<MainViewComponentState, DrawerType> = {
 
 const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
   const { currentMainViewComponentState: mState } = useMainViewStore()
-  const { isMobile } = useResponsiveStore()
+  const { isMobile } = useResponsive()
   const {
     swipeDetectorState,
     touchmoveHandler,

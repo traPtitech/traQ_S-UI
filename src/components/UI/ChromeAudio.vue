@@ -1,27 +1,27 @@
 <template>
   <div v-if="!cantPlay" :class="$style.container">
-    <audio-player-play-button
+    <AudioPlayerPlayButton
       v-model:is-playing="isPlaying"
       :class="$style.icon"
       :size="20"
     />
-    <audio-player-time
+    <AudioPlayerTime
       :class="$style.time"
       :current-time="currentTime"
       :duration="duration"
     />
     <div :class="$style.sliderContainer">
-      <audio-player-time-slider
+      <AudioPlayerTimeSlider
         v-model:current-time="currentTime"
         :duration="duration"
       />
-      <audio-player-volume-slider
+      <AudioPlayerVolumeSlider
         v-model:volume="volume"
         :class="$style.volumeSlider"
         :disabled="duration === 0"
       />
     </div>
-    <audio-player-pin-p-button
+    <AudioPlayerPinPButton
       :class="$style.icon"
       :is-pin-p-shown="isPinPShown"
       :size="20"
@@ -31,18 +31,19 @@
       対応していないファイル形式でした
     </div>
   </div>
-  <div></div>
+  <div />
 </template>
 
 <script lang="ts" setup>
+import useFileMeta from '/@/composables/files/useFileMeta'
+import useAudio from '/@/composables/media/useAudio'
+import { useUsersStore } from '/@/store/entities/users'
+
+import AudioPlayerPinPButton from './AudioPlayer/AudioPlayerPinPButton.vue'
 import AudioPlayerPlayButton from './AudioPlayer/AudioPlayerPlayButton.vue'
 import AudioPlayerTime from './AudioPlayer/AudioPlayerTime.vue'
 import AudioPlayerTimeSlider from './AudioPlayer/AudioPlayerTimeSlider.vue'
 import AudioPlayerVolumeSlider from './AudioPlayer/AudioPlayerVolumeSlider.vue'
-import AudioPlayerPinPButton from './AudioPlayer/AudioPlayerPinPButton.vue'
-import useFileMeta from '/@/composables/files/useFileMeta'
-import useAudio from '/@/composables/media/useAudio'
-import { useUsersStore } from '/@/store/entities/users'
 
 const props = withDefaults(
   defineProps<{

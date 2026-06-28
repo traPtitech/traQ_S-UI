@@ -1,19 +1,21 @@
 <template>
   <div v-if="user" :class="$style.container">
-    <user-icon :class="$style.userIcon" :user-id="id" prevent-modal />
+    <UserIcon :class="$style.userIcon" :user-id="id" prevent-modal />
     <div :class="$style.content">
-      <div :class="$style.displayName">{{ user.displayName }}</div>
+      <div :class="$style.displayName">
+        {{ user.displayName }}
+      </div>
       <slot />
     </div>
     <div :class="$style.controls">
-      <a-icon
+      <AIcon
         v-if="showEditButton"
         name="pencil-outline"
         mdi
         :class="$style.controlIcon"
         @click="emit('edit')"
       />
-      <a-icon
+      <AIcon
         name="close"
         mdi
         :class="$style.controlIcon"
@@ -24,11 +26,12 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
-import type { UserId } from '/@/types/entity-ids'
+
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import { useUsersStore } from '/@/store/entities/users'
+import type { UserId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{

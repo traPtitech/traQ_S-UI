@@ -1,5 +1,5 @@
 <template>
-  <message-panel
+  <MessagePanel
     :message="message"
     :title-type="titleType"
     line-clamp-content
@@ -8,9 +8,11 @@
 </template>
 
 <script lang="ts" setup>
-import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
-import { computed } from 'vue'
 import type { ActivityTimelineMessage } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { constructMessagesPath } from '/@/router'
 
@@ -26,7 +28,7 @@ const titleType = computed(() =>
 )
 const channelLink = computed(() =>
   props.type === 'channel'
-    ? channelIdToLink(props.message.channelId)
+    ? (channelIdToLink(props.message.channelId) ?? '')
     : constructMessagesPath(props.message.id)
 )
 </script>

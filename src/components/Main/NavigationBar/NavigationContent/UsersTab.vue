@@ -1,15 +1,15 @@
 <template>
   <div :class="$style.container">
-    <unread-d-ms />
-    <user-list />
-    <group-manager-opener />
+    <UnreadDMs />
+    <UserList />
+    <GroupManagerOpener />
   </div>
 </template>
 
 <script lang="ts" setup>
+import GroupManagerOpener from './GroupManagerOpener.vue'
 import UnreadDMs from './UnreadDMs.vue'
 import UserList from './UserList.vue'
-import GroupManagerOpener from './GroupManagerOpener.vue'
 </script>
 
 <style lang="scss" module>

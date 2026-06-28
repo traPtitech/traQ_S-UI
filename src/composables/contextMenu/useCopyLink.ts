@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+
 import useCopyText from '/@/composables/toast/useCopyText'
 import { embeddingOrigin } from '/@/lib/apis'
 import { constructMessagesPath } from '/@/router'

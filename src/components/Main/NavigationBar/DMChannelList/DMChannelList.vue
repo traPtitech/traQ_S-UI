@@ -1,6 +1,6 @@
 <template>
   <div>
-    <d-m-channel-element
+    <DMChannelElement
       v-for="dmChannel in dmChannels"
       :key="dmChannel.id"
       :class="$style.element"
@@ -10,11 +10,9 @@
 </template>
 
 <script lang="ts" setup>
-import DMChannelElement from './DMChannelElement.vue'
 import type { DMChannel } from '@traptitech/traq'
-import { useOpenLink } from '/@/composables/useOpenLink'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useUsersStore } from '/@/store/entities/users'
+
+import DMChannelElement from './DMChannelElement.vue'
 
 withDefaults(
   defineProps<{
@@ -24,10 +22,6 @@ withDefaults(
     dmChannels: () => []
   }
 )
-
-const { dmChannelsMap } = useChannelsStore()
-const { usersMap } = useUsersStore()
-const { openLink } = useOpenLink()
 </script>
 
 <style lang="scss" module>

@@ -1,10 +1,13 @@
+import type { Message } from '@traptitech/traq'
+
 import type { Ref } from 'vue'
 import { ref, watchEffect } from 'vue'
-import type { MessageId } from '/@/types/entity-ids'
-import type { Message } from '@traptitech/traq'
+
 import { useMessagesView } from '/@/store/domain/messagesView'
-import { useMessagesStore } from '/@/store/entities/messages'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
+import { useMessagesStore } from '/@/store/entities/messages'
+import type { MessageId } from '/@/types/entity-ids'
+import type { MaybePromise } from '/@/types/utility'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
@@ -31,7 +34,7 @@ const useMessageFetcher = (
   fetchNewMessages:
     | ((isReachedLatest: Ref<boolean>) => Promise<MessageId[]>)
     | undefined,
-  onReachedLatest?: () => void | Promise<void>
+  onReachedLatest?: () => MaybePromise<void>
 ) => {
   const { renderMessageContent, resetRenderedContent } = useMessagesView()
   const { shouldReceiveLatestMessages } = useViewStateSenderStore()
@@ -52,7 +55,7 @@ const useMessageFetcher = (
    */
   const runWithIdentifierCheck = async <T>(
     fetch: () => Promise<T>,
-    apply: (result: T) => void | Promise<void>
+    apply: (result: T) => MaybePromise<void>
   ) => {
     const beforeId = id.value
     const result = await fetch()
@@ -91,6 +94,24 @@ const useMessageFetcher = (
         isLoading.value = false
         isInitialLoad.value = false
         lastLoadingDirection.value = 'former'
+        messageIds.value = [...new Set([...newMessageIds, ...messageIds.value])]
+      }
+    )
+  }
+
+  const onLoadLatestMessagesRequest = async () => {
+    isLoading.value = true
+
+    await runWithIdentifierCheck(
+      async () => {
+        const newMessageIds = await fetchFormerMessages(isReachedEnd)
+        await renderMessageFromIds(newMessageIds)
+        return newMessageIds
+      },
+      newMessageIds => {
+        isLoading.value = false
+        isInitialLoad.value = false
+        lastLoadingDirection.value = 'latest'
         messageIds.value = [...new Set([...newMessageIds, ...messageIds.value])]
       }
     )
@@ -177,11 +198,16 @@ const useMessageFetcher = (
   }
 
   const addNewMessage = async (messageId: MessageId) => {
+    const beforeId = id.value
     await renderMessageContent(messageId)
 
     // すでに追加済みの場合は追加しない
     // https://github.com/traPtitech/traQ_S-UI/issues/1748
     if (messageIds.value.includes(messageId)) return
+    // チャンネルの移動などで id が変化していたら追加しない
+    // https://github.com/traPtitech/traQ_S-UI/issues/4218
+    if (beforeId !== id.value) return
+
     messageIds.value.push(messageId)
   }
 
@@ -191,7 +217,7 @@ const useMessageFetcher = (
       onLoadAroundMessagesRequest(props.entryMessageId)
     } else {
       isReachedLatest.value = true
-      onLoadFormerMessagesRequest()
+      onLoadLatestMessagesRequest()
     }
   }
 

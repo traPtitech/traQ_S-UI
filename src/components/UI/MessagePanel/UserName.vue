@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :data-is-title="$boolAttr(isTitle)">
-    <user-icon
+    <UserIcon
       v-if="user"
       :class="$style.icon"
       :user-id="user.id"
@@ -13,8 +13,9 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
 import type { User } from '@traptitech/traq'
+
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 withDefaults(
   defineProps<{

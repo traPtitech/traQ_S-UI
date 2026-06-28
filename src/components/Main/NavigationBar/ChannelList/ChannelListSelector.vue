@@ -5,37 +5,39 @@
     @keydown.left="onKeydown"
     @keydown.right="onKeydown"
   >
-    <a-tab
+    <ATab
       ref="allTabRef"
       label="すべて"
-      :aria-selected="!isStared"
+      :aria-selected="!isStarred"
       :aria-controls="allPanelId"
-      :tabindex="isStared ? -1 : 0"
+      :tabindex="isStarred ? -1 : 0"
       @click="unselectStarFilter"
     />
-    <a-tab
+    <div :class="$style.spacer" />
+    <ATab
       ref="staredTabRef"
       label="お気に入り"
-      :aria-selected="isStared"
+      :aria-selected="isStarred"
       :aria-controls="staredPanelId"
-      :tabindex="isStared ? 0 : -1"
+      :tabindex="isStarred ? 0 : -1"
       @click="selectStarFilter"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, type Ref } from 'vue'
-import ATab from '/@/components/UI/ATab.vue'
+import { type Ref, ref } from 'vue'
 
-const props = defineProps<{
-  isStared: boolean
+import ATab from '/@/components/UI/ATab.vue'
+import { safeMod } from '/@/lib/basic/arithmetic'
+
+const isStarred = defineModel<boolean>('isStarred', {
+  required: true
+})
+
+defineProps<{
   allPanelId: string
   staredPanelId: string
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:isStared', v: boolean): void
 }>()
 
 const allTabRef = ref<InstanceType<typeof ATab> | null>(null)
@@ -51,7 +53,7 @@ const tabNameRefs: Record<
 }
 
 const onKeydown = (e: KeyboardEvent) => {
-  const index = props.isStared ? 1 : 0
+  const index = isStarred.value ? 1 : 0
 
   let nextIndex: number
   if (e.key === 'ArrowLeft') {
@@ -62,26 +64,35 @@ const onKeydown = (e: KeyboardEvent) => {
     return
   }
 
-  nextIndex = (nextIndex + tabNames.length) % tabNames.length
+  nextIndex = safeMod(nextIndex, tabNames.length)
 
   const nextTabName = tabNames[nextIndex] ?? tabNames[index]
-  emit('update:isStared', tabNames[nextIndex] === 'stared')
+  isStarred.value = tabNames[nextIndex] === 'stared'
   tabNameRefs[nextTabName].value?.focus()
 }
 
 const selectStarFilter = () => {
-  emit('update:isStared', true)
+  isStarred.value = true
 }
 const unselectStarFilter = () => {
-  emit('update:isStared', false)
+  isStarred.value = false
 }
 </script>
 
 <style lang="scss" module>
 .container {
   display: flex;
-  gap: 0.5rem;
+  padding-left: 0.2rem;
   margin-bottom: 0.75rem;
-  flex-wrap: wrap;
+
+  .spacer {
+    width: 0.9rem;
+    flex-shrink: 1;
+  }
+
+  button {
+    flex-shrink: 0;
+    padding-inline: 0.8rem;
+  }
 }
 </style>

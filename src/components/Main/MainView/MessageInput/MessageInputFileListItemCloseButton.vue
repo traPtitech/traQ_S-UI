@@ -4,7 +4,7 @@
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
-    <circle-icon
+    <CircleIcon
       mdi
       name="close"
       :size="16"
@@ -15,8 +15,9 @@
 </template>
 
 <script lang="ts" setup>
-import CircleIcon from '/@/components/UI/CircleIcon.vue'
 import { computed } from 'vue'
+
+import CircleIcon from '/@/components/UI/CircleIcon.vue'
 import useHover from '/@/composables/dom/useHover'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 
