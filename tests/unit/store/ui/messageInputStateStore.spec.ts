@@ -5,11 +5,11 @@ import { nextTick } from 'vue'
 import { createPinia, setActivePinia } from 'pinia'
 import { vi } from 'vitest'
 
+import { useChannelsStore } from '/@/store/entities/channels'
 import type {
   MessageInputState,
   VirtualChannelId
 } from '/@/store/ui/messageInputStateStore'
-import { useChannelsStore } from '/@/store/entities/channels'
 import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 import type { ChannelId } from '/@/types/entity-ids'
 
