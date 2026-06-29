@@ -1,6 +1,6 @@
 import type { FileInfo, Message, MessageStamp, Ogp } from '@traptitech/traq'
 
-import { computed, ref, shallowRef, triggerRef } from 'vue'
+import { ref } from 'vue'
 
 import type { AxiosError } from 'axios'
 import mitt from 'mitt'
@@ -46,19 +46,14 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
    * ここでは内容が更新されることのみを保障する
    * それぞれの方でメッセージIDの追加、削除の更新はする必要がある
    */
-  const internalMessagesMap = shallowRef(new Map<MessageId, Message>())
-  const messagesMap = computed<ReadonlyMap<MessageId, Message>>(
-    () => internalMessagesMap.value
-  )
+  const messagesMap = ref(new Map<MessageId, Message>())
   const extendMessagesMap = (messages: Message[]) => {
     for (const message of messages) {
-      internalMessagesMap.value.set(message.id, message)
+      messagesMap.value.set(message.id, message)
     }
-    triggerRef(internalMessagesMap)
   }
   const deleteMessage = (messageId: MessageId) => {
-    internalMessagesMap.value.delete(messageId)
-    triggerRef(internalMessagesMap)
+    messagesMap.value.delete(messageId)
 
     messageMitt.emit('deleteMessage', messageId)
   }
@@ -76,8 +71,7 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
 
     const [{ data: message }, shared] = await getMessage(messageId)
     if (!shared) {
-      internalMessagesMap.value.set(message.id, message)
-      triggerRef(internalMessagesMap)
+      messagesMap.value.set(message.id, message)
     }
     return message
   }
