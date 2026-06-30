@@ -67,7 +67,7 @@ export default defineConfig(({ mode }) => ({
           const hljsLangs = 'node_modules/highlight.js/lib/languages/'
           const hljsLangIndex = id.indexOf(hljsLangs)
           if (id.includes(hljsLangs)) {
-            // hljsは適当に二つに分割する
+            // hljsは適当に三つに分割する
             const firstLetter = id[hljsLangIndex + hljsLangs.length]
             if (firstLetter < 'i') {
               return 'hljs'
