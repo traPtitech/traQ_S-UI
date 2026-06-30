@@ -4,7 +4,7 @@
     :subtitle="name"
     icon-name="group"
     return-button
-    edit-button
+    :edit-button="isAdmin"
     @edit="onGroupEdit"
   >
     <UserListItem
@@ -29,6 +29,7 @@ import type { UserGroupMember } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
+import { useMeStore } from '/@/store/domain/me'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
 
@@ -65,6 +66,13 @@ const users = computed((): UserGroupMemberOrAdmin[] => {
       .filter(m => !adminIds.has(m.id))
       .map(m => ({ ...m, isMember: true, isAdmin: false }))
   ].filter(m => activeUsersMap.value.has(m.id))
+})
+
+const { myId } = useMeStore()
+const isAdmin = computed(() => {
+  if (!group.value) return false
+  if (!myId.value) return false
+  return group.value.admins.includes(myId.value)
 })
 
 const { openLinkAndClearModal } = useOpenLinkAndClearModal()
