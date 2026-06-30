@@ -4,29 +4,35 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
     "build": "vite build",
-    "build:with-font": "npm run gen-fonts && npm run build",
     "build:may-with-font": "MAY_SKIP_FONT_GEN=1 npm run gen-fonts && npm run build",
-    "preview": "vite preview --host 127.0.0.1 --port 4173",
-    "test:unit": "vitest run --coverage",
-    "test:unit:watch": "vitest -w",
-    "test:e2e": "npm run build && npm run test:e2e:only-run",
-    "test:e2e-headless": "npm run build:may-with-font && npm run test:e2e:only-run-headless",
-    "test:e2e:only-run": "cypress install && start-server-and-test preview 4173 'cypress open --e2e'",
-    "test:e2e:only-run-headless": "cypress install && start-server-and-test preview 4173 'cypress run --headless'",
-    "lint": "eslint --fix --cache .",
-    "lint:no-fix": "eslint --cache .",
+    "build:with-font": "npm run gen-fonts && npm run build",
+    "dev": "vite",
     "format": "prettier --cache --write .",
-    "type-check": "patch-package && npm run type-check:src && npm run type-check:test",
-    "type-check:src": "vue-tsc --noEmit",
-    "type-check:test": "tsc --noEmit --project tests/unit/tsconfig.json && tsc --noEmit --project tests/e2e/tsconfig.json",
     "gen-fonts": "node build/gen-mplus.js",
     "gen-unicode_emojis": "tsx build/gen-unicode_emojis.ts",
+    "husky:prepare": "husky",
+    "postinstall": "patch-package",
+    "lint": "eslint --fix --cache .",
+    "lint:no-fix": "eslint --cache .",
     "localhost-certs:gen": "./build/gen-localhost-certs.sh",
     "localhost-certs:rem": "rm -rf ./.certs",
-    "postinstall": "patch-package",
-    "husky:prepare": "husky"
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "test:e2e": "npm run build && npm run test:e2e:only-run",
+    "test:e2e:only-run": "cypress install && start-server-and-test preview 4173 'cypress open --e2e'",
+    "test:e2e:only-run-headless": "cypress install && start-server-and-test preview 4173 'cypress run --headless'",
+    "test:e2e-headless": "npm run build:may-with-font && npm run test:e2e:only-run-headless",
+    "test:unit": "vitest run --coverage",
+    "test:unit:watch": "vitest -w",
+    "type-check": "patch-package && npm run type-check:src && npm run type-check:test",
+    "type-check:src": "vue-tsc --noEmit",
+    "type-check:test": "tsc --noEmit --project tests/unit/tsconfig.json && tsc --noEmit --project tests/e2e/tsconfig.json"
+  },
+  "overrides": {
+    "@actions/core": "3.0.1",
+    "@types/vue-select": {
+      "vue": "$vue"
+    }
   },
   "dependencies": {
     "@mdi/js": "7.4.47",
@@ -117,12 +123,6 @@
     "workbox-precaching": "7.4.0",
     "workbox-routing": "7.3.0",
     "workbox-strategies": "7.4.0"
-  },
-  "overrides": {
-    "@actions/core": "3.0.1",
-    "@types/vue-select": {
-      "vue": "$vue"
-    }
   },
   "engines": {
     "node": ">=26.4",
