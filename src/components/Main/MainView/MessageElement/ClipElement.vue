@@ -40,8 +40,9 @@ import type { MessageId } from '/@/types/entity-ids'
 import MessageQuoteListItemFooter from './Embeddings/MessageQuoteListItemFooter.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools, { useMessageToolsHover } from './MessageTools.vue'
-import type { ChangeHeightData } from './composables/useElementRenderObserver'
-import useElementRenderObserver from './composables/useElementRenderObserver'
+import useElementRenderObserver, {
+  type ChangeHeightData
+} from './composables/useElementRenderObserver'
 
 const props = defineProps<{
   messageId: MessageId

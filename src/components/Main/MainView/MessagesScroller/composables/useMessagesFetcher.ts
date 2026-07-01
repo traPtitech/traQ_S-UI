@@ -213,6 +213,7 @@ const useMessageFetcher = (
 
   const init = () => {
     resetRenderedContent()
+    isInitialLoad.value = true
     if (props.entryMessageId) {
       onLoadAroundMessagesRequest(props.entryMessageId)
     } else {
