@@ -28,10 +28,10 @@
 
 <script lang="ts" setup>
 import { computed, shallowRef } from 'vue'
+import { useId } from 'vue'
 
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
-import { randomString } from '/@/lib/basic/randomString'
 
 const modelValue = defineModel<string>({ default: '' })
 
@@ -56,7 +56,7 @@ const style = computed(() => ({ maxHeight: props.maxHeight }))
 
 const inputRef = shallowRef<HTMLInputElement | null>(null)
 
-const id = randomString()
+const id = useId()
 </script>
 
 <style lang="scss" module>

@@ -35,11 +35,11 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
+import { useId } from 'vue'
 
 import CopyButton from '/@/components/UI/CopyButton.vue'
 import FoldButton from '/@/components/UI/FoldButton.vue'
 import useHover from '/@/composables/dom/useHover'
-import { randomString } from '/@/lib/basic/randomString'
 
 const MAX_LINES = 5
 
@@ -67,7 +67,7 @@ const isLong = computed(() => {
 
 const preWrapRef = ref<HTMLDivElement>()
 
-const foldBlockId = randomString()
+const foldBlockId = useId()
 const applyId = () => {
   if (!isLong.value) return
   if (preWrapRef.value === undefined) return

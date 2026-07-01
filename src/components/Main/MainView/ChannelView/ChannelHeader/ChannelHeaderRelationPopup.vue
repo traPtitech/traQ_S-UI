@@ -58,6 +58,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
+import { useId } from 'vue'
 
 import ATab from '/@/components/UI/ATab.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
@@ -65,7 +66,6 @@ import useBoxSize from '/@/composables/dom/useBoxSize'
 import useRelatedChannels from '/@/composables/useRelatedChannels'
 import { safeMod } from '/@/lib/basic/arithmetic'
 import type { Point } from '/@/lib/basic/point'
-import { randomString } from '/@/lib/basic/randomString'
 
 import ChannelHeaderRelationPanel from './ChannelHeaderRelationPanel.vue'
 
@@ -82,11 +82,11 @@ onMounted(() => {
   siblingTab.value?.focus()
 })
 
-const siblingTabId = randomString()
-const childrenTabId = randomString()
+const siblingTabId = useId()
+const childrenTabId = useId()
 
-const siblingPanelId = randomString()
-const childrenPanelId = randomString()
+const siblingPanelId = useId()
+const childrenPanelId = useId()
 
 const { children, siblings } = useRelatedChannels({
   channelId: props.channelId

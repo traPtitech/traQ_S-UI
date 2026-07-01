@@ -19,10 +19,9 @@
 </template>
 
 <script lang="ts" setup generic="T extends string | null">
+import { useId } from 'vue'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
-
-import { randomString } from '/@/lib/basic/randomString'
 
 const selectedOptionValue = defineModel<T>({ required: true })
 
@@ -39,7 +38,7 @@ withDefaults(
   }
 )
 
-const id = randomString()
+const id = useId()
 </script>
 
 <style lang="scss" module>

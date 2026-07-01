@@ -11,16 +11,16 @@
 import type { Channel } from '@traptitech/traq'
 
 import { computed } from 'vue'
+import { useId } from 'vue'
 import { RouterLink } from 'vue-router'
 
 import useChannelPath from '/@/composables/useChannelPath'
-import { randomString } from '/@/lib/basic/randomString'
 
 const props = defineProps<{
   channel: Channel
 }>()
 
-const linkId = randomString()
+const linkId = useId()
 const focus = () => {
   // HACK: RouterLink が focus できないので、id から HTMLElement を取得して focus する
   const link = document.getElementById(linkId) as HTMLElement | null

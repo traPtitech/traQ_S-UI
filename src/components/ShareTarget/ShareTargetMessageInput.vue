@@ -36,13 +36,13 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, shallowRef, toRef } from 'vue'
+import { useId } from 'vue'
 
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
-import { randomString } from '/@/lib/basic/randomString'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
@@ -85,7 +85,7 @@ fetchStampPalettes()
 fetchStampHistory()
 fetchStampRecommendations()
 
-const id = randomString()
+const id = useId()
 </script>
 
 <style lang="scss" module>

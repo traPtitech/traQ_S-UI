@@ -61,10 +61,10 @@
 import { UserPermission } from '@traptitech/traq'
 
 import { type Ref, computed, ref } from 'vue'
+import { useId } from 'vue'
 
 import ATab from '/@/components/UI/ATab.vue'
 import { safeMod } from '/@/lib/basic/arithmetic'
-import { randomString } from '/@/lib/basic/randomString'
 import { compareString } from '/@/lib/basic/string'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
@@ -93,11 +93,11 @@ const hasChannelEditPermission = computed(() =>
 const myStampTab = ref<InstanceType<typeof ATab> | null>(null)
 const otherStampTab = ref<InstanceType<typeof ATab> | null>(null)
 
-const myStampTabId = randomString()
-const otherStampTabId = randomString()
+const myStampTabId = useId()
+const otherStampTabId = useId()
 
-const myStampPanelId = randomString()
-const otherStampPanelId = randomString()
+const myStampPanelId = useId()
+const otherStampPanelId = useId()
 
 const tabNames = ['myStamp', 'otherStamp'] as const
 const tabNameRefs: Record<

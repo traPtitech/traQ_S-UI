@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup generic="T extends string | null">
-import { randomString } from '/@/lib/basic/randomString'
+import { useId } from 'vue'
 
 const modelValue = defineModel<T>({ required: true })
 
@@ -39,7 +39,7 @@ withDefaults(
 
 const nullSymbol = Symbol('null')
 
-const id = randomString()
+const id = useId()
 </script>
 
 <style lang="scss" module>

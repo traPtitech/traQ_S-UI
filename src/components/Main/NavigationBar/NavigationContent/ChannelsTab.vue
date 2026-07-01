@@ -67,12 +67,12 @@
 
 <script lang="ts" setup>
 import { computed, toRaw } from 'vue'
+import { useId } from 'vue'
 
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import useChannelPath from '/@/composables/useChannelPath'
-import { randomString } from '/@/lib/basic/randomString'
 import { filterTrees } from '/@/lib/basic/tree'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 import { constructTreeFromIds } from '/@/lib/channelTree'
@@ -167,8 +167,8 @@ const onClickButton = () => {
   })
 }
 
-const allPanelId = randomString()
-const staredPanelId = randomString()
+const allPanelId = useId()
+const staredPanelId = useId()
 </script>
 
 <style lang="scss" module>
