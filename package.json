@@ -88,7 +88,7 @@
     "@vitejs/plugin-vue": "6.0.7",
     "@vitest/coverage-v8": "4.1.9",
     "@vue/test-utils": "2.4.11",
-    "autoprefixer": "10.4.24",
+    "autoprefixer": "10.5.1",
     "axios": "1.16.1",
     "browserslist": "4.28.4",
     "cypress": "15.15.0",
