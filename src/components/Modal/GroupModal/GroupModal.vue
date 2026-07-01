@@ -70,7 +70,7 @@ const users = computed((): UserGroupMemberOrAdmin[] => {
 const { openLinkAndClearModal } = useOpenLinkAndClearModal()
 
 const onGroupEdit = (event: MouseEvent) => {
-  openLinkAndClearModal(event, '/group-manager')
+  openLinkAndClearModal(event, `/group-manager#${group.value?.id}`)
 }
 </script>
 

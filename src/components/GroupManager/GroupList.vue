@@ -18,6 +18,7 @@
 import { UserPermission } from '@traptitech/traq'
 
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { compareString } from '/@/lib/basic/string'
 import { useMeStore } from '/@/store/domain/me'
@@ -27,6 +28,7 @@ import type { UserGroupId } from '/@/types/entity-ids'
 
 import GroupListGroup from './GroupListGroup.vue'
 
+const router = useRouter()
 const { detail, myId } = useMeStore()
 const { fetchUsers } = useUsersStore()
 const { userGroupsMap, fetchUserGroups } = useGroupsStore()
@@ -36,7 +38,7 @@ fetchUserGroups()
 
 const selectedId = ref<UserGroupId>()
 const onSelect = (id: UserGroupId) => {
-  selectedId.value = id
+  router.push(`#${id}`)
 }
 const isAllUserGroupsAdmin = computed(() =>
   detail.value?.permissions.includes(UserPermission.AllUserGroupsAdmin)
