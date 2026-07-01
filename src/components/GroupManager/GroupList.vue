@@ -5,7 +5,7 @@
       :key="group.id"
       :group="group"
       :class="$style.item"
-      :is-selected="selectedId === group.id"
+      :is-selected="route.hash === `#${group.id}`"
       @select="onSelect"
     />
     <div v-if="groups.length <= 0" :class="$style.notFound">
@@ -17,7 +17,8 @@
 <script lang="ts" setup>
 import { UserPermission } from '@traptitech/traq'
 
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 
 import { compareString } from '/@/lib/basic/string'
@@ -28,6 +29,7 @@ import type { UserGroupId } from '/@/types/entity-ids'
 
 import GroupListGroup from './GroupListGroup.vue'
 
+const route = useRoute()
 const router = useRouter()
 const { detail, myId } = useMeStore()
 const { fetchUsers } = useUsersStore()
@@ -36,7 +38,6 @@ const { userGroupsMap, fetchUserGroups } = useGroupsStore()
 fetchUsers()
 fetchUserGroups()
 
-const selectedId = ref<UserGroupId>()
 const onSelect = (id: UserGroupId) => {
   router.push(`#${id}`)
 }
