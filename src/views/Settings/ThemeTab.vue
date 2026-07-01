@@ -44,7 +44,7 @@
             :key="category"
             :class="$style.category"
           >
-            <h4 class>
+            <h4>
               {{ category }}
             </h4>
             <div v-for="(color, name) in val" :key="name" :class="$style.color">
