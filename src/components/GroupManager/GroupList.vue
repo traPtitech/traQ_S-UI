@@ -39,7 +39,7 @@ fetchUsers()
 fetchUserGroups()
 
 const onSelect = (id: UserGroupId) => {
-  router.push(`#${id}`)
+  router.push({ hash: `#${id}` })
 }
 const isAllUserGroupsAdmin = computed(() =>
   detail.value?.permissions.includes(UserPermission.AllUserGroupsAdmin)
