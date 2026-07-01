@@ -104,7 +104,7 @@
     "globals": "17.7.0",
     "husky": "9.1.7",
     "jsdom": "29.0.2",
-    "lint-staged": "16.2.7",
+    "lint-staged": "17.0.8",
     "patch-package": "8.0.1",
     "pinia": "3.0.4",
     "postcss": "8.5.15",
