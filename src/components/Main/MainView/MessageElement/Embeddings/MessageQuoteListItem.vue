@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeMount, ref, watchEffect } from 'vue'
+import { computed, onBeforeMount, ref, useId, watchEffect } from 'vue'
 
 import FoldButton from '/@/components/UI/FoldButton.vue'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
@@ -62,7 +62,6 @@ import UserIcon from '/@/components/UI/UserIcon.vue'
 import useBoxSize from '/@/composables/dom/useBoxSize'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
 import useToggle from '/@/composables/utils/useToggle'
-import { randomString } from '/@/lib/basic/randomString'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useMessagesStore } from '/@/store/entities/messages'
@@ -115,7 +114,7 @@ const oversized = computed(
   () => height.value !== undefined && height.value >= MAX_HEIGHT
 )
 
-const markdownId = randomString()
+const markdownId = useId()
 const { value: isFold, toggle: toggleFoldImpl } = useToggle(true)
 
 const toggleFold = (e: MouseEvent) => {

@@ -27,13 +27,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, useId } from 'vue'
 
 import { useEventListener } from '@vueuse/core'
 
 import AIcon from '/@/components/UI/AIcon.vue'
 import type { Point } from '/@/lib/basic/point'
-import { randomString } from '/@/lib/basic/randomString'
 
 import ChannelHeaderRelationPopup from './ChannelHeaderRelationPopup.vue'
 
@@ -44,7 +43,7 @@ const props = defineProps<{
 const trigger = ref<HTMLElement | null>(null)
 const popup = ref<InstanceType<typeof ChannelHeaderRelationPopup> | null>(null)
 
-const popupId = randomString()
+const popupId = useId()
 
 const isOpen = ref(false)
 const toggle = () => {
