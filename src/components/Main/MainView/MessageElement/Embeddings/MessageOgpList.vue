@@ -1,10 +1,11 @@
 <template>
   <div :class="$style.container">
     <MessageOgpListItem
-      v-for="(data, i) in ogpData"
-      :key="i"
+      v-for="(item, index) in ogpItems"
+      :key="`${item.url}-${index}`"
       :class="$style.item"
-      :ogp-data="data"
+      :url="item.url"
+      :ogp-data="item.ogpData"
     />
   </div>
 </template>
@@ -28,11 +29,14 @@ const props = withDefaults(
 
 const { ogpDataMap } = useMessagesStore()
 
-const ogpData = computed(() =>
+const ogpItems = computed(() =>
   props.externalUrls
-    .map(url => ogpDataMap.value.get(url))
+    .map((url: string) => {
+      const ogpData = ogpDataMap.value.get(url)
+      return isDefined(ogpData) ? { url, ogpData } : undefined
+    })
     .filter(isDefined)
-    .filter(o => o.title)
+    .filter(({ ogpData }: { ogpData: { title?: string } }) => ogpData.title)
 )
 </script>
 
