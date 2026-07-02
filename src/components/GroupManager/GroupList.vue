@@ -1,13 +1,17 @@
 <template>
   <div>
-    <GroupListGroup
+    <div
       v-for="group in groups"
       :key="group.id"
-      :group="group"
-      :class="$style.item"
-      :is-selected="selectedId === group.id"
-      @select="onSelect"
-    />
+      :ref="el => setSelectedGroupElement(el, group.id)"
+    >
+      <GroupListGroup
+        :group="group"
+        :class="$style.item"
+        :is-selected="isSelectedGroup(group.id)"
+        @select="onSelect"
+      />
+    </div>
     <div v-if="groups.length <= 0" :class="$style.notFound">
       自分が管理者になっているユーザーグループはありません
     </div>
@@ -17,7 +21,8 @@
 <script lang="ts" setup>
 import { UserPermission } from '@traptitech/traq'
 
-import { computed, ref } from 'vue'
+import { type ComponentPublicInstance, computed, nextTick, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 import { compareString } from '/@/lib/basic/string'
 import { useMeStore } from '/@/store/domain/me'
@@ -27,6 +32,8 @@ import type { UserGroupId } from '/@/types/entity-ids'
 
 import GroupListGroup from './GroupListGroup.vue'
 
+const route = useRoute()
+const router = useRouter()
 const { detail, myId } = useMeStore()
 const { fetchUsers } = useUsersStore()
 const { userGroupsMap, fetchUserGroups } = useGroupsStore()
@@ -34,9 +41,8 @@ const { userGroupsMap, fetchUserGroups } = useGroupsStore()
 fetchUsers()
 fetchUserGroups()
 
-const selectedId = ref<UserGroupId>()
 const onSelect = (id: UserGroupId) => {
-  selectedId.value = id
+  router.replace({ hash: `#${id}` })
 }
 const isAllUserGroupsAdmin = computed(() =>
   detail.value?.permissions.includes(UserPermission.AllUserGroupsAdmin)
@@ -53,6 +59,24 @@ const groups = computed(() =>
     })
     .sort((a, b) => compareString(a.name, b.name))
 )
+
+const selectedGroupElement = ref<HTMLElement | null>(null)
+
+const isSelectedGroup = (id: UserGroupId) => {
+  return route.hash === `#${id}`
+}
+
+const setSelectedGroupElement = (
+  el: Element | ComponentPublicInstance | null,
+  id: UserGroupId
+) => {
+  if (isSelectedGroup(id) && el) {
+    selectedGroupElement.value = el as HTMLElement
+    nextTick(() => {
+      ;(el as HTMLElement).scrollIntoView({ block: 'nearest' })
+    })
+  }
+}
 </script>
 
 <style lang="scss" module>
