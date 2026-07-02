@@ -10,8 +10,7 @@
 <script setup lang="ts">
 import type { Channel } from '@traptitech/traq'
 
-import { computed } from 'vue'
-import { useId } from 'vue'
+import { computed, useId } from 'vue'
 import { RouterLink } from 'vue-router'
 
 import useChannelPath from '/@/composables/useChannelPath'

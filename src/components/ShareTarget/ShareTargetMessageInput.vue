@@ -35,8 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, shallowRef, toRef } from 'vue'
-import { useId } from 'vue'
+import { onMounted, ref, shallowRef, toRef, useId } from 'vue'
 
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'

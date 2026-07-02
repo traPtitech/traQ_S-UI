@@ -56,9 +56,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, useId } from 'vue'
 import type { Ref } from 'vue'
-import { useId } from 'vue'
 
 import ATab from '/@/components/UI/ATab.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'

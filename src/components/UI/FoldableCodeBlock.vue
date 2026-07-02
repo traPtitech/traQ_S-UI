@@ -34,8 +34,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
-import { useId } from 'vue'
+import { computed, onMounted, ref, useId } from 'vue'
 
 import CopyButton from '/@/components/UI/CopyButton.vue'
 import FoldButton from '/@/components/UI/FoldButton.vue'

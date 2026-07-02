@@ -66,8 +66,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRaw } from 'vue'
-import { useId } from 'vue'
+import { computed, toRaw, useId } from 'vue'
 
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'

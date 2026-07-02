@@ -54,8 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeMount, ref, watchEffect } from 'vue'
-import { useId } from 'vue'
+import { computed, onBeforeMount, ref, useId, watchEffect } from 'vue'
 
 import FoldButton from '/@/components/UI/FoldButton.vue'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'

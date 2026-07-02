@@ -59,8 +59,7 @@
 </template>
 
 <script lang="ts" setup generic="T extends string | number">
-import { onMounted, shallowRef } from 'vue'
-import { useId } from 'vue'
+import { onMounted, shallowRef, useId } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'

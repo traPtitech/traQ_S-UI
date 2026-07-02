@@ -60,8 +60,7 @@
 <script lang="ts" setup>
 import { UserPermission } from '@traptitech/traq'
 
-import { type Ref, computed, ref } from 'vue'
-import { useId } from 'vue'
+import { type Ref, computed, ref, useId } from 'vue'
 
 import ATab from '/@/components/UI/ATab.vue'
 import { safeMod } from '/@/lib/basic/arithmetic'

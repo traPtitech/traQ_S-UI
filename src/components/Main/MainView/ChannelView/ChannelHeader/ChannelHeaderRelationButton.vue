@@ -27,8 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
-import { useId } from 'vue'
+import { computed, onMounted, reactive, ref, useId } from 'vue'
 
 import { useEventListener } from '@vueuse/core'
 
