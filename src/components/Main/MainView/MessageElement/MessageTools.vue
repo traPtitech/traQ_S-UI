@@ -97,7 +97,7 @@ import useToggle from '/@/composables/utils/useToggle'
 import { isDefined } from '/@/lib/basic/array'
 import { useStampUpdater } from '/@/lib/updater/stamp'
 import { useMeStore } from '/@/store/domain/me'
-import { useTopStampIds } from '/@/store/domain/stampRecommendations'
+import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
@@ -120,7 +120,7 @@ const props = withDefaults(
 
 const isActive = defineModel<boolean>('isActive', { default: false })
 
-const { topStampIds } = useTopStampIds()
+const { stampRecommendations } = useStampRecommendations()
 const { addStampOptimistically } = useStampUpdater()
 const { initialRecentStamps } = useStampsStore()
 
@@ -140,7 +140,7 @@ const pushInitialRecentStampsIfNeeded = (
 }
 
 const topStamps = computed(() => {
-  const tops = topStampIds.value.slice(0, 3)
+  const tops = stampRecommendations.value.slice(0, 3)
   pushInitialRecentStampsIfNeeded(initialRecentStamps.value, tops)
   return tops
 })
