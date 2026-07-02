@@ -61,7 +61,6 @@ const groups = computed(() =>
 )
 
 const selectedGroupElement = ref<HTMLElement | null>(null)
-const lastScrolledHash = ref<string | null>(null)
 
 const isSelectedGroup = (id: UserGroupId) => {
   return route.hash === `#${id}`
@@ -73,13 +72,9 @@ const setSelectedGroupElement = (
 ) => {
   if (isSelectedGroup(id) && el) {
     selectedGroupElement.value = el as HTMLElement
-    const hash = route.hash
-    if (lastScrolledHash.value !== hash) {
-      lastScrolledHash.value = hash
-      nextTick(() => {
-        ;(el as HTMLElement).scrollIntoView({ block: 'nearest' })
-      })
-    }
+    nextTick(() => {
+      ;(el as HTMLElement).scrollIntoView({ block: 'nearest' })
+    })
   }
 }
 </script>
