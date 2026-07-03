@@ -58,32 +58,62 @@ export default defineComponent({
     const element = shallowRef<HTMLElement | ComponentPublicInstance>()
 
     const { shouldShowModal } = useModalStore()
-    const isMouseDown = ref(false)
+    const isPointerDownOutside = ref(false)
+    const pointerDownPosition = ref<{ x: number; y: number } | null>(null)
+
+    const resetPointerDown = () => {
+      isPointerDownOutside.value = false
+      pointerDownPosition.value = null
+    }
+
+    const isInside = (e: PointerEvent) => {
+      const ele = unrefElement(element)
+      return ele === e.target || e.composedPath().includes(ele)
+    }
 
     const onPointerDown = (e: PointerEvent) => {
+      resetPointerDown()
+
       if (!element.value) return
 
       if (props.unableWhileModalOpen && shouldShowModal.value) return
 
-      const ele = unrefElement(element)
-      if (ele === e.target || e.composedPath().includes(ele)) {
+      if (isInside(e)) {
         return
       }
 
-      isMouseDown.value = true
+      isPointerDownOutside.value = true
+      pointerDownPosition.value = { x: e.clientX, y: e.clientY }
+      if (props.stop) {
+        e.stopPropagation()
+      }
+    }
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isPointerDownOutside.value || !pointerDownPosition.value) return
+
+      if (
+        e.clientX === pointerDownPosition.value.x &&
+        e.clientY === pointerDownPosition.value.y
+      ) {
+        return
+      }
+
+      resetPointerDown()
+
+      setTimeout(() => {
+        emit('clickOutside', e)
+      }, 0)
+
       if (props.stop) {
         e.stopPropagation()
       }
     }
 
     const onPointerUp = (e: PointerEvent) => {
-      if (!isMouseDown.value) return
-      isMouseDown.value = false
+      if (!isPointerDownOutside.value) return
 
-      const ele = unrefElement(element)
-      if (ele === e.target || e.composedPath().includes(ele)) {
-        return
-      }
+      resetPointerDown()
 
       setTimeout(() => {
         emit('clickOutside', e)
@@ -98,7 +128,9 @@ export default defineComponent({
     const listenerOptions = { capture: true }
 
     useEventListener(target, 'pointerdown', onPointerDown, listenerOptions)
+    useEventListener(target, 'pointermove', onPointerMove, listenerOptions)
     useEventListener(target, 'pointerup', onPointerUp, listenerOptions)
+    useEventListener(target, 'pointercancel', resetPointerDown, listenerOptions)
 
     return () => {
       if (!slots['default']) {
