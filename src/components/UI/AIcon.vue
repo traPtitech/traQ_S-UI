@@ -15,7 +15,7 @@
     v-else
     :width="size"
     :height="size"
-    :viewBox="`0 0 ${size} ${size}`"
+    :viewBox="`0 0 ${viewBoxSize} ${viewBoxSize}`"
     v-bind="$attrs"
     role="img"
     :class="$style.icon"
@@ -55,11 +55,19 @@ const props = withDefaults(
     name: string
     title?: string
     desc?: string
+    /**
+     * 表示サイズ. 拡大縮小される.
+     */
     size?: number
+    /**
+     * もとのSVGのviewBoxサイズ. デフォルトは24だが, SVGによっては異なることがあるのでその場合は指定する
+     */
+    viewBoxSize?: number
     mdi?: boolean
   }>(),
   {
     size: 24,
+    viewBoxSize: 24,
     mdi: false
   }
 )
