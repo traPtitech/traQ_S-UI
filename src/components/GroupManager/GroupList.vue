@@ -4,12 +4,12 @@
       v-for="group in groups"
       :key="group.id"
       :ref="el => setSelectedGroupElement(el, group.id)"
+      :class="$style.item"
     >
       <GroupListGroup
         :group="group"
-        :class="$style.item"
-        :is-selected="isSelectedGroup(group.id)"
-        @select="onSelect"
+        :is-selected="selectedGroupId === group.id"
+        @select="selectedGroupId = $event"
       />
     </div>
     <div v-if="groups.length <= 0" :class="$style.notFound">
@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import { UserPermission } from '@traptitech/traq'
 
-import { type ComponentPublicInstance, computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { compareString } from '/@/lib/basic/string'
@@ -41,9 +41,6 @@ const { userGroupsMap, fetchUserGroups } = useGroupsStore()
 fetchUsers()
 fetchUserGroups()
 
-const onSelect = (id: UserGroupId) => {
-  router.replace({ hash: `#${id}` })
-}
 const isAllUserGroupsAdmin = computed(() =>
   detail.value?.permissions.includes(UserPermission.AllUserGroupsAdmin)
 )
@@ -61,27 +58,48 @@ const groups = computed(() =>
 )
 
 const selectedGroupElement = ref<HTMLElement | null>(null)
-const lastScrolledHash = ref<string | null>(null)
 
-const isSelectedGroup = (id: UserGroupId) => {
-  return route.hash === `#${id}`
-}
+const selectedGroupId = computed<UserGroupId | undefined>({
+  get: () => {
+    const id = route.hash.slice(1) as UserGroupId
 
-const setSelectedGroupElement = (
-  el: Element | ComponentPublicInstance | null,
-  id: UserGroupId
-) => {
-  if (isSelectedGroup(id) && el) {
-    selectedGroupElement.value = el as HTMLElement
-    if (lastScrolledHash.value === route.hash) {
-      return
-    }
-    lastScrolledHash.value = route.hash
-    nextTick(() => {
-      ;(el as HTMLElement).scrollIntoView({ block: 'nearest' })
+    return groups.value.some(group => group.id === id) ? id : undefined
+  },
+  set: id => {
+    void router.replace({
+      hash: id ? `#${id}` : ''
     })
   }
+})
+
+const setSelectedGroupElement = (el: unknown | null, id: UserGroupId) => {
+  if (!(el instanceof HTMLElement)) {
+    return
+  }
+  if (selectedGroupId.value !== id) {
+    return
+  }
+  selectedGroupElement.value = el
 }
+
+watch(
+  selectedGroupId,
+  async id => {
+    if (!id) {
+      selectedGroupElement.value = null
+      return
+    }
+
+    await nextTick()
+    selectedGroupElement.value?.scrollIntoView({
+      block: 'nearest'
+    })
+  },
+  {
+    immediate: true,
+    flush: 'post'
+  }
+)
 </script>
 
 <style lang="scss" module>
