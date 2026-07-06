@@ -84,7 +84,7 @@ const useState = (detail: Ref<UserDetail>) => {
   const state = reactive({ ...profile.value })
 
   const { hasDiff } = useStateDiff<UserDetail>()
-  const isStateChanged = computed(() => 
+  const isStateChanged = computed(() =>
     hasDiff(state, {
       ...detail.value,
       homeChannel: detail.value.homeChannel ?? nullUuid
