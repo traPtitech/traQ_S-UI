@@ -1,23 +1,24 @@
-import type { Ref } from 'vue'
+import { type MaybeRefOrGetter, toValue } from 'vue'
 
 import { dequal } from 'dequal'
 
 const useStateDiff = <T>() => {
   const getDiffKeys = (
     state: Readonly<Partial<T>>,
-    storeState: Readonly<Ref<T>>
+    storeStateRef: MaybeRefOrGetter<T>
   ) => {
+    const storeState = toValue(storeStateRef)
     return (Object.keys(state) as Array<keyof T>).filter(key => {
       const k = key as keyof T
-      return !dequal(state[k], storeState.value[k])
+      return !dequal(state[k], storeState[k])
     })
   }
 
   const hasDiff = (
     state: Readonly<Partial<T>>,
-    storeState: Readonly<Ref<T>>
+    storeStateRef: MaybeRefOrGetter<T>
   ): boolean => {
-    return getDiffKeys(state, storeState).length > 0
+    return getDiffKeys(state, storeStateRef).length > 0
   }
 
   return { getDiffKeys, hasDiff }
