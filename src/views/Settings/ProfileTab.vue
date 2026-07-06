@@ -84,7 +84,13 @@ const useState = (detail: Ref<UserDetail>) => {
   const state = reactive({ ...profile.value })
 
   const { hasDiff } = useStateDiff<UserDetail>()
-  const isStateChanged = computed(() => hasDiff(state, detail))
+  const isStateChanged = computed(() => {
+    const stateForDiff = {
+      ...state,
+      homeChannel: state.homeChannel === nullUuid ? null : state.homeChannel
+    }
+    return hasDiff(stateForDiff, detail)
+  })
 
   const handleReset = () => {
     if (!confirm('変更をリセットしますか？')) return
