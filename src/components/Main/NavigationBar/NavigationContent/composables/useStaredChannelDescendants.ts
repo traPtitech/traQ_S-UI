@@ -3,7 +3,7 @@ import type { Channel } from '@traptitech/traq'
 import { computed } from 'vue'
 
 import { isDefined, unique } from '/@/lib/basic/array'
-import { useStaredChannels } from '/@/store/domain/staredChannels'
+import { useStarredChannels } from '/@/store/domain/starredChannels'
 import { useChannelsStore } from '/@/store/entities/channels'
 import type { ChannelId } from '/@/types/entity-ids'
 
@@ -29,13 +29,13 @@ const collectDescendants = (
 }
 
 // 関数名は Descendants だが、検索に自分自身も含ませるために、star しているチャンネル自身も含ませている
-const useStaredChannelDescendants = () => {
-  const { staredChannelSet } = useStaredChannels()
+const useStarredChannelDescendants = () => {
+  const { starredChannelSet } = useStarredChannels()
   const { channelsMap } = useChannelsStore()
 
   const startedChannelDescendantIds = computed(() =>
     unique(
-      [...staredChannelSet.value].flatMap(channelId =>
+      [...starredChannelSet.value].flatMap(channelId =>
         collectDescendants(channelId, channelsMap.value)
       )
     )
@@ -49,4 +49,4 @@ const useStaredChannelDescendants = () => {
   return startedChannelDescendants
 }
 
-export default useStaredChannelDescendants
+export default useStarredChannelDescendants

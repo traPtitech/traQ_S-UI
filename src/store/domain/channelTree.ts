@@ -12,7 +12,7 @@ import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
 
 import { useChannelsStore } from '../entities/channels'
-import { useStaredChannels } from './staredChannels'
+import { useStarredChannels } from './starredChannels'
 import { useSubscriptionStore } from './subscription'
 
 type ChannelTreeEventMap = {
@@ -38,7 +38,7 @@ channelTreeMitt.on('moved', ({ oldPath, newPath }) => {
 const useChannelTreePinia = defineStore('domain/channelTree', () => {
   const subscriptionStore = useSubscriptionStore()
   const channelsStore = useChannelsStore()
-  const { staredChannelSet } = useStaredChannels()
+  const { starredChannelSet } = useStarredChannels()
 
   const channelTree = ref<Readonly<ChannelTree>>({ children: [] })
   const homeChannelTree = ref<Readonly<ChannelTree>>({ children: [] })
@@ -112,7 +112,7 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
           },
           // constructTreeは重いのと内部ではreactiveである必要がないのでtoRawする
           toRaw(channelsStore.channelsMap.value),
-          toRaw(staredChannelSet.value)
+          toRaw(starredChannelSet.value)
         )?.children ?? []
     }
     starredChannelTree.value = tree
@@ -168,7 +168,7 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
   })
 
   watch(
-    staredChannelSet,
+    starredChannelSet,
     () => {
       constructStarredChannelTree()
     },

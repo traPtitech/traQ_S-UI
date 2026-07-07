@@ -85,8 +85,8 @@ type ChannelEvent = {
   CHANNEL_CREATED: ChannelCreatedEvent
   CHANNEL_DELETED: ChannelDeletedEvent
   CHANNEL_UPDATED: ChannelUpdatedEvent
-  CHANNEL_STARED: ChannelStaredEvent
-  CHANNEL_UNSTARED: ChannelUnstaredEvent
+  CHANNEL_STARED: ChannelStarredEvent
+  CHANNEL_UNSTARED: ChannelUnstarredEvent
   CHANNEL_VIEWERS_CHANGED: ChannelViewersChangedEvent
   CHANNEL_SUBSCRIBERS_CHANGED: ChannelSubscribersChangedEvent
 }
@@ -102,8 +102,8 @@ interface ChannelIdWithMembersBody extends ChannelIdBody {
 export type ChannelCreatedEvent = ChannelIdWithMembersBody
 export type ChannelDeletedEvent = ChannelIdWithMembersBody
 export type ChannelUpdatedEvent = ChannelIdWithMembersBody
-export type ChannelStaredEvent = ChannelIdBody
-export type ChannelUnstaredEvent = ChannelIdBody
+export type ChannelStarredEvent = ChannelIdBody
+export type ChannelUnstarredEvent = ChannelIdBody
 
 export interface ChannelViewersChangedEvent {
   id: ChannelId

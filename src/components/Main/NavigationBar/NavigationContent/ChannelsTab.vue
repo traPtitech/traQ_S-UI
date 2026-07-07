@@ -20,7 +20,7 @@
           v-if="query.length === 0"
           v-model:is-starred="filterStarChannel"
           :all-panel-id="allPanelId"
-          :stared-panel-id="staredPanelId"
+          :starred-panel-id="starredPanelId"
         />
         <template v-if="topLevelChannels.length > 0">
           <ChannelTreeComponent
@@ -31,24 +31,24 @@
             prevent-child-topic
           />
           <template v-else-if="filterStarChannel">
-            <template v-if="staredChannels.length > 0">
+            <template v-if="starredChannels.length > 0">
               <ChannelTreeComponent
                 v-if="
                   featureFlags.dose_construct_strict_starred_channel_tree
                     .enabled
                 "
-                :id="staredPanelId"
+                :id="starredPanelId"
                 :channels="starredTopLevelChannels"
               />
               <ChannelTreeComponent
                 v-else
-                :id="staredPanelId"
-                :channels="staredChannels"
+                :id="starredPanelId"
+                :channels="starredChannels"
                 show-shortened-path
                 role="tabpanel"
               />
             </template>
-            <EmptyState v-else :id="staredPanelId" role="tabpanel">
+            <EmptyState v-else :id="starredPanelId" role="tabpanel">
               お気に入りチャンネルはありません
             </EmptyState>
           </template>
@@ -78,7 +78,7 @@ import { constructTreeFromIds } from '/@/lib/channelTree'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
-import { useStaredChannels } from '/@/store/domain/staredChannels'
+import { useStarredChannels } from '/@/store/domain/starredChannels'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useModalStore } from '/@/store/ui/modal'
 
@@ -90,7 +90,7 @@ import useChannelFilter from './composables/useChannelFilter'
 
 const { pushModal } = useModalStore()
 const { channelTree, starredChannelTree } = useChannelTree()
-const { staredChannelSet } = useStaredChannels()
+const { starredChannelSet } = useStarredChannels()
 const { channelsMap } = useChannelsStore()
 const { channelIdToPathString } = useChannelPath()
 
@@ -110,9 +110,9 @@ const starredTopLevelChannels = computed(() =>
   )
 )
 
-const staredChannels = computed(() => {
+const starredChannels = computed(() => {
   const trees = constructTreeFromIds(
-    [...staredChannelSet.value],
+    [...starredChannelSet.value],
     channelsMap.value
   )
   const sortedTrees = sortChannelTree(trees)
@@ -167,7 +167,7 @@ const onClickButton = () => {
 }
 
 const allPanelId = useId()
-const staredPanelId = useId()
+const starredPanelId = useId()
 </script>
 
 <style lang="scss" module>
