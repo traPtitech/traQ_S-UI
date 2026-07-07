@@ -33,20 +33,20 @@ const useStarredChannelDescendants = () => {
   const { starredChannelSet } = useStarredChannels()
   const { channelsMap } = useChannelsStore()
 
-  const startedChannelDescendantIds = computed(() =>
+  const starredChannelDescendantIds = computed(() =>
     unique(
       [...starredChannelSet.value].flatMap(channelId =>
         collectDescendants(channelId, channelsMap.value)
       )
     )
   )
-  const startedChannelDescendants = computed(() =>
-    startedChannelDescendantIds.value
+  const starredChannelDescendants = computed(() =>
+    starredChannelDescendantIds.value
       .map(channelId => channelsMap.value.get(channelId))
       .filter(isDefined)
   )
 
-  return startedChannelDescendants
+  return starredChannelDescendants
 }
 
 export default useStarredChannelDescendants
