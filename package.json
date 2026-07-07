@@ -18,6 +18,7 @@
     "localhost-certs:gen": "./build/gen-localhost-certs.sh",
     "localhost-certs:rem": "rm -rf ./.certs",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "preview:with-build": "npm run build && npm run preview",
     "test:e2e": "npm run build && npm run test:e2e:only-run",
     "test:e2e:only-run": "cypress install && start-server-and-test preview 4173 'cypress open --e2e'",
     "test:e2e:only-run-headless": "cypress install && start-server-and-test preview 4173 'cypress run --headless'",
