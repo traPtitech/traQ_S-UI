@@ -1,13 +1,17 @@
 <template>
   <div>
-    <GroupListGroup
+    <div
       v-for="group in groups"
       :key="group.id"
-      :group="group"
+      :ref="el => setSelectedGroupElement(el, group.id)"
       :class="$style.item"
-      :is-selected="selectedId === group.id"
-      @select="onSelect"
-    />
+    >
+      <GroupListGroup
+        :group="group"
+        :is-selected="selectedGroupId === group.id"
+        @select="selectedGroupId = $event"
+      />
+    </div>
     <div v-if="groups.length <= 0" :class="$style.notFound">
       自分が管理者になっているユーザーグループはありません
     </div>
@@ -17,7 +21,8 @@
 <script lang="ts" setup>
 import { UserPermission } from '@traptitech/traq'
 
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 import { compareString } from '/@/lib/basic/string'
 import { useMeStore } from '/@/store/domain/me'
@@ -27,6 +32,8 @@ import type { UserGroupId } from '/@/types/entity-ids'
 
 import GroupListGroup from './GroupListGroup.vue'
 
+const route = useRoute()
+const router = useRouter()
 const { detail, myId } = useMeStore()
 const { fetchUsers } = useUsersStore()
 const { userGroupsMap, fetchUserGroups } = useGroupsStore()
@@ -34,10 +41,6 @@ const { userGroupsMap, fetchUserGroups } = useGroupsStore()
 fetchUsers()
 fetchUserGroups()
 
-const selectedId = ref<UserGroupId>()
-const onSelect = (id: UserGroupId) => {
-  selectedId.value = id
-}
 const isAllUserGroupsAdmin = computed(() =>
   detail.value?.permissions.includes(UserPermission.AllUserGroupsAdmin)
 )
@@ -52,6 +55,50 @@ const groups = computed(() =>
       )
     })
     .sort((a, b) => compareString(a.name, b.name))
+)
+
+const selectedGroupElement = ref<HTMLElement | null>(null)
+
+const selectedGroupId = computed<UserGroupId | undefined>({
+  get: () => {
+    const id = route.hash.slice(1) as UserGroupId
+
+    return groups.value.some(group => group.id === id) ? id : undefined
+  },
+  set: id => {
+    void router.replace({
+      hash: id ? `#${id}` : ''
+    })
+  }
+})
+
+const setSelectedGroupElement = (el: unknown | null, id: UserGroupId) => {
+  if (!(el instanceof HTMLElement)) {
+    return
+  }
+  if (selectedGroupId.value !== id) {
+    return
+  }
+  selectedGroupElement.value = el
+}
+
+watch(
+  selectedGroupId,
+  async id => {
+    if (!id) {
+      selectedGroupElement.value = null
+      return
+    }
+
+    await nextTick()
+    selectedGroupElement.value?.scrollIntoView({
+      block: 'nearest'
+    })
+  },
+  {
+    immediate: true,
+    flush: 'post'
+  }
 )
 </script>
 
