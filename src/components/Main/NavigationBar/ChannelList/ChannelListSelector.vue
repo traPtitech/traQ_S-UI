@@ -15,10 +15,10 @@
     />
     <div :class="$style.spacer" />
     <ATab
-      ref="staredTabRef"
+      ref="starredTabRef"
       label="お気に入り"
       :aria-selected="isStarred"
-      :aria-controls="staredPanelId"
+      :aria-controls="starredPanelId"
       :tabindex="isStarred ? 0 : -1"
       @click="selectStarFilter"
     />
@@ -37,19 +37,19 @@ const isStarred = defineModel<boolean>('isStarred', {
 
 defineProps<{
   allPanelId: string
-  staredPanelId: string
+  starredPanelId: string
 }>()
 
 const allTabRef = ref<InstanceType<typeof ATab> | null>(null)
-const staredTabRef = ref<InstanceType<typeof ATab> | null>(null)
+const starredTabRef = ref<InstanceType<typeof ATab> | null>(null)
 
-const tabNames = ['all', 'stared'] as const
+const tabNames = ['all', 'starred'] as const
 const tabNameRefs: Record<
   (typeof tabNames)[number],
   Ref<InstanceType<typeof ATab> | null>
 > = {
   all: allTabRef,
-  stared: staredTabRef
+  starred: starredTabRef
 }
 
 const onKeydown = (e: KeyboardEvent) => {
@@ -67,7 +67,7 @@ const onKeydown = (e: KeyboardEvent) => {
   nextIndex = safeMod(nextIndex, tabNames.length)
 
   const nextTabName = tabNames[nextIndex] ?? tabNames[index]
-  isStarred.value = tabNames[nextIndex] === 'stared'
+  isStarred.value = tabNames[nextIndex] === 'starred'
   tabNameRefs[nextTabName].value?.focus()
 }
 

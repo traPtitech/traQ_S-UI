@@ -4,7 +4,7 @@
       :class="$style.tools"
       :channel-id="channelId"
       :is-forced-channel="channelState.forced"
-      :is-starred="channelState.stared"
+      :is-starred="channelState.starred"
       :is-archived="channelState.archived"
       @click-more="togglePopupMenu"
     >
