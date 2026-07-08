@@ -1,19 +1,19 @@
 name: Comment preview environment URL
 
 on:
-  # pull_request_target を使うにあたって https://securitylab.github.com/research/github-actions-preventing-pwn-requests/ の一読を推奨
-  pull_request_target:
+  pull_request:
     types:
       - opened
 
-permissions:
-  issues: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   comment:
     name: Comment preview environment URL
     runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      pull-requests: write
 
     steps:
       - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
