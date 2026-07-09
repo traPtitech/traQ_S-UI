@@ -164,7 +164,7 @@ const useWordSuggester = (
     const textarea = toValue(textareaRef)
     
     if(!textarea) return
-    let insertingText :string;
+    let insertingText: string;
     if(!textarea.value || target.value.begin === 0){
       insertingText = word.text + " "
     }
