@@ -21,7 +21,9 @@ interface EventMap {
 type TypedEventListener<T extends keyof EventMap> = (ev: EventMap[T]) => void
 
 export default class AutoReconnectWebSocket {
-  _ws?: WebSocket
+  private socket?: WebSocket
+  private reconnectWaitAbortController?: AbortController
+
   readonly eventTarget = new EventTarget()
 
   readonly url: string
@@ -41,41 +43,41 @@ export default class AutoReconnectWebSocket {
   ) {
     this.url = url
     this.protocols = protocols
-    this.options = { ...options, ...defaultOptions }
+    this.options = { ...defaultOptions, ...options }
   }
 
   get isOpen() {
-    return this._ws?.readyState === WebSocket.OPEN
+    return this.socket?.readyState === WebSocket.OPEN
   }
   get isOpenOrConnecting() {
     return (
-      this._ws?.readyState === WebSocket.OPEN ||
-      this._ws?.readyState === WebSocket.CONNECTING
+      this.socket?.readyState === WebSocket.OPEN ||
+      this.socket?.readyState === WebSocket.CONNECTING
     )
   }
 
-  _sendCommand(commands: readonly [WebSocketCommand, ...string[]]) {
+  private sendImmediately(commands: readonly [WebSocketCommand, ...string[]]) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this._ws!.send(commands.join(':'))
+    this.socket!.send(commands.join(':'))
   }
 
   sendCommand(...commands: readonly [WebSocketCommand, ...string[]]) {
     this.sendQueue.set(commands[0], commands.slice(1))
     if (this.isOpen) {
-      this._sendCommand(commands)
+      this.sendImmediately(commands)
     }
   }
 
-  _getDelay(count: number) {
+  private getReconnectDelay(count: number) {
     const { minReconnectionDelay, maxReconnectionDelay } = this.options
     return Math.min(minReconnectionDelay * 1.3 ** count, maxReconnectionDelay)
   }
 
-  _setupWs() {
+  private setupSocket() {
     return new Promise<void>(resolve => {
-      this._ws = new WebSocket(this.url, this.protocols)
+      this.socket = new WebSocket(this.url, this.protocols)
 
-      this._ws.addEventListener(
+      this.socket.addEventListener(
         'open',
         () => {
           resolve()
@@ -86,12 +88,12 @@ export default class AutoReconnectWebSocket {
           }
 
           this.sendQueue.forEach((args, command) => {
-            this._sendCommand([command, ...args])
+            this.sendImmediately([command, ...args])
           })
         },
         { once: true }
       )
-      this._ws.addEventListener(
+      this.socket.addEventListener(
         'error',
         () => {
           resolve()
@@ -99,13 +101,13 @@ export default class AutoReconnectWebSocket {
         { once: true }
       )
 
-      this._ws.addEventListener('message', e => {
+      this.socket.addEventListener('message', e => {
         this.eventTarget.dispatchEvent(
           new CustomEvent('message', { detail: e.data })
         )
       })
 
-      this._ws.addEventListener(
+      this.socket.addEventListener(
         'close',
         () => {
           this.reconnect()
@@ -134,29 +136,65 @@ export default class AutoReconnectWebSocket {
     )
   }
 
-  async connect() {
-    if (this.isOpenOrConnecting) return
+  private abortReconnectWaitIfAny() {
+    if (!this.reconnecting) return false
 
-    return this._setupWs()
+    this.reconnectWaitAbortController?.abort()
+    return true
   }
 
-  async reconnect() {
+  async connect() {
+    if (this.isOpenOrConnecting) return
+    if (this.abortReconnectWaitIfAny()) return
+
+    return this.setupSocket()
+  }
+
+  // readyStateがOPENのまま実際にはネットワーク的に切断されている
+  // （closeイベントが発火しない）ケースがあるため、readyStateを信用せず
+  // 強制的に閉じて生死を検証する。closeイベント経由の通常のreconnect()を
+  // 待たずにここでreconnect({ immediate: true })を呼んで自らreconnectingを
+  // 確保することで、後から発火するcloseイベントが二重に再接続ループを
+  // 開始するのを防ぐ
+  forceReconnect() {
+    if (this.abortReconnectWaitIfAny()) return
+
+    if (!this.socket) {
+      this.connect()
+      return
+    }
+
+    this.socket.close()
+    this.reconnect({ immediate: true })
+  }
+
+  async reconnect({ immediate = false } = {}) {
     if (this.reconnecting) return
     this.reconnecting = true
 
     let count = 0
     while (!this.isOpen) {
-      const delay = this._getDelay(count)
+      if (!(immediate && count === 0)) {
+        this.reconnectWaitAbortController = new AbortController()
+        await wait(
+          this.getReconnectDelay(count),
+          this.reconnectWaitAbortController.signal
+        )
+        this.reconnectWaitAbortController = undefined
+      }
       count++
-      await wait(delay)
 
       if (this.isOpen) break
 
       if (!this.mockFail) {
-        await this._setupWs()
+        await this.setupSocket()
       }
     }
 
     this.reconnecting = false
+  }
+
+  closeForDebug() {
+    this.socket?.close()
   }
 }

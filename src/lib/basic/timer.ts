@@ -1,8 +1,22 @@
-export const wait = (ms: number) =>
+export const wait = (ms: number, signal?: AbortSignal) =>
   new Promise<void>(resolve => {
-    setTimeout(() => {
+    if (signal?.aborted) {
+      resolve()
+      return
+    }
+
+    const timeoutId = setTimeout(() => {
       resolve()
     }, ms)
+
+    signal?.addEventListener(
+      'abort',
+      () => {
+        clearTimeout(timeoutId)
+        resolve()
+      },
+      { once: true }
+    )
   })
 
 export const rAF = () =>

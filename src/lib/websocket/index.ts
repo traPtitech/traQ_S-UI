@@ -30,7 +30,7 @@ if (import.meta.env.MODE === 'development') {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ;(window as any).closeWs = () => {
     ws.mockFail = true
-    ws._ws?.close()
+    ws.closeForDebug()
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ;(window as any).reconnectWs = () => {
@@ -39,9 +39,14 @@ if (import.meta.env.MODE === 'development') {
   }
 }
 
+// バックグラウンドから復帰した際、WebSocketのreadyStateはOPENのままなのに
+// 実際にはネットワークが切断されている（closeイベントが発火しない）ことが
+// あり、隠れていた時間の長さでは生死を判断できない。そのため時間で推測せず、
+// 復帰の度にforceReconnect()で実際に接続を張り直して検証する
+// （生きている接続だった場合も即座に張り直されるだけで実害はない）
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
-    ws.connect()
+    ws.forceReconnect()
   }
 })
 
