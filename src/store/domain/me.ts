@@ -13,12 +13,12 @@ import { wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { UserId } from '/@/types/entity-ids'
 
-export type IDBState = {
+export type State = {
   detail: Readonly<MyUserDetail> | undefined
 }
 
 const useMeStorePinia = defineStore('domain/me', () => {
-  const initialValue: IDBState = {
+  const initialValue: State = {
     detail: undefined
   }
   const router = useRouter()

@@ -5,12 +5,12 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
-export type IDBState = {
+export type State = {
   audioVolume: Readonly<number> | undefined
 }
 
 const useMediaSettingsStorePinia = defineStore('app/mediaSettings', () => {
-  const initialValue: IDBState = {
+  const initialValue: State = {
     audioVolume: 1
   }
 
