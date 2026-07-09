@@ -1,32 +1,38 @@
 <template>
-  <ClickOutside @click-outside="close">
-    <div :class="$style.container">
-      <div :class="$style.header">
-        <span :class="$style.title">サービス</span>
-        <CloseButton
-          :class="$style.close"
-          :size="32"
-          :border-width="2"
-          @close="close"
-        />
+  <teleport to="#services-popup">
+    <ClickOutside @click-outside="close">
+      <div v-bind="$attrs" :class="$style.container">
+        <div :class="$style.header">
+          <span :class="$style.title">サービス</span>
+          <CloseButton
+            :class="$style.close"
+            :size="32"
+            :border-width="2"
+            @close="close"
+          />
+        </div>
+        <div :class="$style.list">
+          <AppListItem
+            v-for="app in apps"
+            :key="app.label"
+            :icon-path="app.iconPath"
+            :label="app.label"
+            :app-link="app.appLink"
+          />
+        </div>
       </div>
-      <div :class="$style.list">
-        <AppListItem
-          v-for="app in apps"
-          :key="app.label"
-          :icon-path="app.iconPath"
-          :label="app.label"
-          :app-link="app.appLink"
-        />
-      </div>
-    </div>
-  </ClickOutside>
+    </ClickOutside>
+  </teleport>
 </template>
 
 <script lang="ts" setup>
 import AppListItem from '/@/components/Main/NavigationBar/AppListItem.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import CloseButton from '/@/components/UI/CloseButton.vue'
+
+defineOptions({
+  inheritAttrs: false
+})
 
 const emit = defineEmits<{
   (e: 'close'): void
