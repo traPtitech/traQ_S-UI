@@ -161,7 +161,23 @@ const useWordSuggester = (
   }
 
   const onSelect = (word: Word) => {
-    insertText(word.text)
+    const textarea = toValue(textareaRef)
+    
+    if(!textarea) return
+    let insertingText :string;
+    if(!textarea.value || target.value.begin === 0){
+      insertingText = word.text + " "
+    }
+    else{
+      const prevChar = textarea.value[target.value.begin - 1]
+      if(prevChar === " " || prevChar === "\n"){
+        insertingText = word.text + " "
+      }
+      else{
+        insertingText = " " + word.text + " "
+      }
+    }
+    insertText(insertingText)
     isSuggesterShown.value = false
   }
 
