@@ -32,7 +32,6 @@ const stampSuggestionOverride = <
   const onSelect = (word: WordWithId) => {
     upsertLocalStampHistory(word.id, new Date())
     recordStampUsage(word.id)
-
     input.onSelect({ ...word, text: `${word.text}:` })
   }
 
