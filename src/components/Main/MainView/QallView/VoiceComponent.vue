@@ -13,7 +13,7 @@ const { trackInfo } = defineProps<{
 const { getStore } = useUserVolume()
 
 const volume = computed<number | string>(
-  () => getStore(trackInfo.username) ?? 1
+  () => getStore(trackInfo.userName) ?? 1
 )
 
 const parseToFloat = (value: number | string): number => {

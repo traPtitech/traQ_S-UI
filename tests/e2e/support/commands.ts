@@ -19,7 +19,7 @@ declare namespace Cypress {
 
 Cypress.Commands.add('login', () => {
   cy.request('POST', '/api/v3/login', {
-    name: Cypress.env('username'),
+    name: Cypress.env('userName'),
     password: Cypress.env('password')
   })
 })

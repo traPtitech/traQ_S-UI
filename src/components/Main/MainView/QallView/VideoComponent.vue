@@ -10,7 +10,7 @@ const { trackInfo } = defineProps<{
 
 const { usersMap } = useUsersStore()
 
-const user = usersMap.value.get(trackInfo.username)
+const user = usersMap.value.get(trackInfo.userName)
 </script>
 
 <template>

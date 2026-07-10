@@ -11,13 +11,13 @@ const { trackInfo } = defineProps<{
 }>()
 const { speakerIdentities } = useQall()
 const { usersMap } = useUsersStore()
-const user = computed(() => usersMap.value.get(trackInfo.username))
+const user = computed(() => usersMap.value.get(trackInfo.userName))
 const userIconFileId = computed(() => user.value?.iconFileId ?? '')
 const iconImage = computed(() => buildUserIconPath(userIconFileId.value))
 const isSpeaking = computed(() => {
   return (
     user.value &&
-    speakerIdentities.value.some(s => s.name === trackInfo.username)
+    speakerIdentities.value.some(s => s.name === trackInfo.userName)
   )
 })
 </script>
