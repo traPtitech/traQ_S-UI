@@ -77,12 +77,10 @@ const imageUrl = computed(() =>
 )
 
 const useState = (stamp: Stamp) => {
-  const oldState = computed(
-    (): StampEditState => ({
-      name: stamp.name,
-      creatorId: stamp.creatorId
-    })
-  )
+  const oldState = computed((): StampEditState => ({
+    name: stamp.name,
+    creatorId: stamp.creatorId
+  }))
   const newState = reactive({ ...oldState.value })
 
   const { hasDiff, getDiffKeys } = useStateDiff<StampEditState>()

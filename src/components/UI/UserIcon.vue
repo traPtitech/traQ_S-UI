@@ -23,18 +23,7 @@ import { useUsersStore } from '/@/store/entities/users'
 import type { FileId, UserId } from '/@/types/entity-ids'
 
 export type IconSize =
-  | 200
-  | 160
-  | 100
-  | 64
-  | 48
-  | 44
-  | 40
-  | 36
-  | 32
-  | 28
-  | 24
-  | 20
+  200 | 160 | 100 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
 
 const props = withDefaults(
   defineProps<{

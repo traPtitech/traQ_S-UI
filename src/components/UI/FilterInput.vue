@@ -40,13 +40,7 @@ const props = withDefaults(
     title?: string
     focusOnMount?: boolean
     enterkeyhint?:
-      | 'done'
-      | 'send'
-      | 'search'
-      | 'enter'
-      | 'go'
-      | 'next'
-      | 'previous'
+      'done' | 'send' | 'search' | 'enter' | 'go' | 'next' | 'previous'
   }>(),
   {
     onSecondary: false,
