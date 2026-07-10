@@ -12,6 +12,11 @@
       :class="$style.sidebarItem"
     />
     <ChannelSidebarTopic :class="$style.sidebarItem" :channel-id="channelId" />
+    <ChannelSidebarThreads
+      :threads-length="threadsCount"
+      :class="$style.sidebarItem"
+      @click-link="emit('moveToThreads')"
+    />
     <ChannelSidebarPinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.sidebarItem"
@@ -49,6 +54,7 @@ import ChannelSidebarMember from './ChannelSidebarMember.vue'
 import ChannelSidebarPinned from './ChannelSidebarPinned.vue'
 import ChannelSidebarQall from './ChannelSidebarQall.vue'
 import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
+import ChannelSidebarThreads from './ChannelSidebarThreads.vue'
 import ChannelSidebarTopic from './ChannelSidebarTopic.vue'
 import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
 
@@ -61,14 +67,17 @@ const props = withDefaults(
     channelId: ChannelId
     viewerIds: readonly UserId[]
     inactiveViewerIds: readonly UserId[]
+    threadsCount?: number
     pinnedMessagesCount?: number
   }>(),
   {
+    threadsCount: 0,
     pinnedMessagesCount: 0
   }
 )
 
 const emit = defineEmits<{
+  (e: 'moveToThreads'): void
   (e: 'moveToPinned'): void
   (e: 'moveToEvents'): void
 }>()
