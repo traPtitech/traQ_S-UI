@@ -41,9 +41,8 @@ const useSwipeDrawer = (
   })
 
   /** 次はどちら向きへの操作か */
-  const supporsedDirection = computed(
-    (): Direction =>
-      state.startPosition < destination / 2 ? direction : inverse(direction)
+  const supporsedDirection = computed((): Direction =>
+    state.startPosition < destination / 2 ? direction : inverse(direction)
   )
 
   /** ナビゲーションは表示状態になっているか */

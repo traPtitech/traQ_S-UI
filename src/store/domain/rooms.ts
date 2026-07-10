@@ -43,8 +43,7 @@ const useRoomsStorePinia = defineStore('domain/rooms', () => {
 
   const purifyRoomData = async (
     data:
-      | QallRoomStateChangedEventRoomStatesInner[]
-      | QallRoomWithParticipants[]
+      QallRoomStateChangedEventRoomStatesInner[] | QallRoomWithParticipants[]
   ): Promise<Rooms> => {
     if (!data) return []
     await bothChannelsMapInitialFetchPromise

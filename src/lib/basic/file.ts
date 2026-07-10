@@ -2,12 +2,7 @@ import type { FileInfo } from '@traptitech/traq'
 import { ThumbnailType } from '@traptitech/traq'
 
 export type AttachmentType =
-  | 'image'
-  | 'audio'
-  | 'video'
-  | 'pdf'
-  | 'slide'
-  | 'file'
+  'image' | 'audio' | 'video' | 'pdf' | 'slide' | 'file'
 
 const PDF_MIME = 'application/pdf'
 const SLIDE_MIMES: ReadonlySet<string> = new Set([
