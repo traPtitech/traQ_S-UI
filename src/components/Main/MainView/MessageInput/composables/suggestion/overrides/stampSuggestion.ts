@@ -37,9 +37,6 @@ const stampSuggestionOverride = <
   })
 
   const onSelect = (word: WordWithId) => {
-    upsertLocalStampHistory(word.id, new Date())
-    recordStampUsage(word.id)
-
     const textarea = toValue(input.textareaRef)
     const target = input.target
     if (!textarea) return
@@ -55,6 +52,9 @@ const stampSuggestionOverride = <
       }
     }
     
+    upsertLocalStampHistory(word.id, new Date())
+    recordStampUsage(word.id)
+
     input.onSelect({ ...word, text: insertingText })
   }
 
