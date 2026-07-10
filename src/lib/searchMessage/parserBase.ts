@@ -89,22 +89,22 @@ export const makePrefixedFilterExtractor =
 
 export type StoreForParser = {
   channelPathToId: ChannelPathToId
-  usernameToDmChannelId: UsernameToDmChannelId
-  usernameToId: UsernameToId
-  getCurrentChannelPathOrUsername: () => string | undefined
+  usernameToDmChannelId: UserNameToDmChannelId
+  usernameToId: UserNameToId
+  getCurrentChannelPathOrUserName: () => string | undefined
   getCurrentChannelId: () => ChannelId | undefined
   getMyDmChannelId: () => DMChannelId | undefined
-  getMyUsername: () => string | undefined
+  getMyUserName: () => string | undefined
   getMyUserId: () => UserId | undefined
 }
 
 type ChannelPathToId = (path: string) => ChannelId | undefined
 
-type UsernameToDmChannelId = (
+type UserNameToDmChannelId = (
   username: string
 ) => MaybePromise<DMChannelId | undefined>
 
-type UsernameToId = (username: string) => MaybePromise<UserId | undefined>
+type UserNameToId = (username: string) => MaybePromise<UserId | undefined>
 
 /**
  * `string`から`ExtractedFilter`を経由して実際のフィルターを作る
@@ -183,7 +183,7 @@ export const channelOrDmChannelParser = async <T extends string>(
 }
 
 export const userParser = async <T extends string>(
-  usernameToId: UsernameToId,
+  usernameToId: UserNameToId,
   extracted: ExtractedFilter<T>
 ): Promise<UserId | typeof MeToken | undefined> => {
   if (extracted.body === 'me') return MeToken

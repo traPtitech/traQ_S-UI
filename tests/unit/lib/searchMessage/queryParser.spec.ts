@@ -13,11 +13,11 @@ const mockUserId = 'user-id'
 const mockUserName = 'user'
 const mockCurrentChannelPath = 'current/channel'
 const mockCurrentChannelId = 'current-channel-id'
-const mockCurrentUsername = 'currentUser'
+const mockCurrentUserName = 'currentUser'
 const mockCurrentUserDmChannelId = 'current-user-dm-channel-id'
 const mockMyUserId = 'my-user-id'
 const mockMyDmChannelId = 'my-dm-channel-id'
-const mockMyUsername = 'myUsername'
+const mockMyUserName = 'myUserName'
 
 describe('parseQuery', () => {
   const TEST_CASES = [
@@ -102,7 +102,7 @@ describe('parseQuery', () => {
     {
       description: 'with in:me',
       query: 'lorem ipsum in:me',
-      expectedNormalizedQuery: `lorem ipsum in:${mockMyUsername}`,
+      expectedNormalizedQuery: `lorem ipsum in:${mockMyUserName}`,
       expectedQueryObject: { word: 'lorem ipsum', in: mockMyDmChannelId }
     },
     {
@@ -120,7 +120,7 @@ describe('parseQuery', () => {
     {
       description: 'with me',
       query: 'lorem ipsum to:me',
-      expectedNormalizedQuery: `lorem ipsum to:${mockMyUsername}`,
+      expectedNormalizedQuery: `lorem ipsum to:${mockMyUserName}`,
       expectedQueryObject: { word: 'lorem ipsum', to: mockMyUserId }
     },
     {
@@ -221,7 +221,7 @@ describe('parseQuery', () => {
       if (username === mockUserName) {
         return mockDmChannelId
       }
-      if (username === mockCurrentUsername) {
+      if (username === mockCurrentUserName) {
         return mockCurrentUserDmChannelId
       }
       return undefined
@@ -230,7 +230,7 @@ describe('parseQuery', () => {
       if (username === mockUserName) {
         return mockUserId
       }
-      if (username === mockMyUsername) {
+      if (username === mockMyUserName) {
         return mockMyUserId
       }
       return undefined
@@ -238,8 +238,8 @@ describe('parseQuery', () => {
     getCurrentChannelId: () => mockCurrentChannelId,
     getMyDmChannelId: () => mockMyDmChannelId,
     getMyUserId: () => mockMyUserId,
-    getCurrentChannelPathOrUsername: () => mockCurrentChannelPath,
-    getMyUsername: () => mockMyUsername
+    getCurrentChannelPathOrUserName: () => mockCurrentChannelPath,
+    getMyUserName: () => mockMyUserName
   }
   const parseQuery = createQueryParser(store)
 

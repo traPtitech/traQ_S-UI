@@ -3,7 +3,7 @@
     <div :class="$style.channelPath" @mousedown="onClick">
       {{ channelPath }}
     </div>
-    <FileModalContentFooterUsername
+    <FileModalContentFooterUserName
       :class="$style.userName"
       :user-id="user?.id"
     />
@@ -24,7 +24,7 @@ import { fallbackChannelPath } from '/@/lib/config'
 import { useUsersStore } from '/@/store/entities/users'
 
 import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
-import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
+import FileModalContentFooterUserName from './FileModalContentFooterUserName.vue'
 
 const props = withDefaults(
   defineProps<{

@@ -37,7 +37,7 @@ const getStoreForParser = ({
   channelPathStringToId: (path: string) => ChannelId | undefined
   fetchUserByName: (param: { username: string }) => Promise<User | undefined>
 }): StoreForParser => {
-  const getMyUsername = () => `@${me.value?.name}`
+  const getMyUserName = () => `@${me.value?.name}`
   const getMyUserId = () => me.value?.id
 
   const userIdToDmChannelId = (userId: UserId): DMChannelId | undefined => {
@@ -70,7 +70,7 @@ const getStoreForParser = ({
     return userIdToDmChannelId(id)
   }
 
-  const getCurrentChannelPathOrUsername = () => {
+  const getCurrentChannelPathOrUserName = () => {
     const channelId = getCurrentChannelId()
     if (!channelId) return undefined
 
@@ -99,10 +99,10 @@ const getStoreForParser = ({
     channelPathToId,
     usernameToDmChannelId,
     usernameToId,
-    getCurrentChannelPathOrUsername,
+    getCurrentChannelPathOrUserName,
     getCurrentChannelId,
     getMyDmChannelId,
-    getMyUsername,
+    getMyUserName,
     getMyUserId
   }
 }
