@@ -32,8 +32,7 @@ updates:
     schedule:
       interval: monthly
     cooldown:
-      default-days: 7
-      semver-major-days: 30
+      default-days: 14
     open-pull-requests-limit: 10
     groups:
       non-majors:
@@ -45,8 +44,7 @@ updates:
     schedule:
       interval: monthly
     cooldown:
-      default-days: 7
-      semver-major-days: 30
+      default-days: 14
     open-pull-requests-limit: 10
     groups:
       non-majors:
