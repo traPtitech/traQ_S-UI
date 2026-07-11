@@ -4,7 +4,7 @@
       <SidebarHeader text="スレッド" />
     </template>
     <template #content>
-      <!-- ここに中身を入れる -->
+      <!-- TODO:#4820 ここに中身を入れる -->
     </template>
   </PrimaryViewSidebarPage>
 </template>
