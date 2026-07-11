@@ -11,12 +11,18 @@
             :channel-id="channelId"
             :viewer-ids="activeViewingUsers"
             :inactive-viewer-ids="inactiveViewingUsers"
+            :threads-count="0"
             :pinned-messages-count="pinnedMessages.length"
+            @move-to-threads="moveToThreadsPage"
             @move-to-pinned="moveToPinnedPage"
             @move-to-events="moveToEventsPage"
           />
         </template>
       </PrimaryViewSidebarPage>
+      <SidebarThreadsPage
+        v-else-if="page === 'threads'"
+        @move-back="moveToDefaultPage"
+      />
       <SidebarPinnedPage
         v-else-if="page === 'pinned'"
         :pinned-messages="pinnedMessages"
@@ -49,6 +55,7 @@ import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSideb
 import SidebarEventsPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarEventsPage.vue'
 import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
 import SidebarPinnedPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarPinnedPage.vue'
+import SidebarThreadsPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarThreadsPage.vue'
 import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
 import useToggle from '/@/composables/utils/useToggle'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -69,6 +76,7 @@ const { channelsMap } = useChannelsStore()
 const {
   page,
   moveToDefaultPage,
+  moveToThreadsPage,
   moveToPinnedPage,
   moveToEventsPage,
   openSidebar
