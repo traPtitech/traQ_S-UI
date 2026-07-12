@@ -90,7 +90,7 @@ const create = async () => {
     }
     await popModal()
     void router.replace({
-      hash: group.id ? `#${group.id}` : ''
+      hash: `#${group.id}`
     })
   } catch (e) {
     if (e instanceof AxiosError && e.response?.status === 409) {
