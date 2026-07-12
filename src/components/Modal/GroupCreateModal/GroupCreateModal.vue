@@ -89,7 +89,7 @@ const create = async () => {
       await apis.addUserGroupMember(group.id, { id: myIdV, role: '' })
     }
     await popModal()
-    router.replace({
+    void router.replace({
       hash: group.id ? `#${group.id}` : ''
     })
   } catch (e) {
