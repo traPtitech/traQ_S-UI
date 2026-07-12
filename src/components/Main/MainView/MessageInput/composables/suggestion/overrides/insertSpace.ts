@@ -12,11 +12,12 @@ const insertSpaceOverride = <
 >(
   input: Params
 ) => {
+  const confirmed = toValue(input.confirmedPart) 
   const shouldInsertSpaces = computed(
     () =>
-      toValue(input.confirmedPart).startsWith(':') ||
-      toValue(input.confirmedPart).startsWith('#') ||
-      toValue(input.confirmedPart).startsWith('@')
+      confirmed.startsWith(':') ||
+      confirmed.startsWith('#') ||
+      confirmed.startsWith('@')
   )
 
   const onSelect = (word: WordWithId) => {
