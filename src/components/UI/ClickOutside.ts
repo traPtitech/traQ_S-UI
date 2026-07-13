@@ -78,8 +78,6 @@ export default defineComponent({
     }
 
     const onPointerDown = (e: PointerEvent) => {
-      resetPointerDown()
-
       if (!element.value) return
       if (props.unableWhileModalOpen && shouldShowModal.value) return
       if (isInside(e)) return
