@@ -39,6 +39,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { AxiosError } from 'axios'
 
@@ -66,6 +67,8 @@ const type = ref('')
 const addMember = ref(true)
 const errorMessage = ref<string | null>(null)
 
+const router = useRouter()
+
 const validateName = () => {
   errorMessage.value = isValidGroupName(name.value)
     ? null
@@ -86,6 +89,9 @@ const create = async () => {
       await apis.addUserGroupMember(group.id, { id: myIdV, role: '' })
     }
     await popModal()
+    void router.replace({
+      hash: `#${group.id}`
+    })
   } catch (e) {
     if (e instanceof AxiosError && e.response?.status === 409) {
       addErrorToast('既に同じ名前のグループが存在しています')
