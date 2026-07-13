@@ -35,9 +35,9 @@ const getStoreForParser = ({
   usersMap: Ref<ReadonlyMap<UserId, User>>
   me: Ref<User | undefined>
   channelPathStringToId: (path: string) => ChannelId | undefined
-  fetchUserByName: (param: { username: string }) => Promise<User | undefined>
+  fetchUserByName: (param: { userName: string }) => Promise<User | undefined>
 }): StoreForParser => {
-  const getMyUsername = () => `@${me.value?.name}`
+  const getMyUserName = () => `@${me.value?.name}`
   const getMyUserId = () => me.value?.id
 
   const userIdToDmChannelId = (userId: UserId): DMChannelId | undefined => {
@@ -48,10 +48,10 @@ const getStoreForParser = ({
     return channelIdToPathString(channelId, channelsMap.value)
   }
 
-  const usernameToId = async (
-    username: string
+  const userNameToId = async (
+    userName: string
   ): Promise<UserId | undefined> => {
-    const user = await fetchUserByName({ username })
+    const user = await fetchUserByName({ userName })
     return user?.id
   }
 
@@ -62,15 +62,15 @@ const getStoreForParser = ({
       : undefined
   }
 
-  const usernameToDmChannelId = async (
-    username: string
+  const userNameToDmChannelId = async (
+    userName: string
   ): Promise<DMChannelId | undefined> => {
-    const id = await usernameToId(username)
+    const id = await userNameToId(userName)
     if (!id) return undefined
     return userIdToDmChannelId(id)
   }
 
-  const getCurrentChannelPathOrUsername = () => {
+  const getCurrentChannelPathOrUserName = () => {
     const channelId = getCurrentChannelId()
     if (!channelId) return undefined
 
@@ -80,8 +80,8 @@ const getStoreForParser = ({
     const userId = dmChannelsMap.value.get(channelId)?.userId
     if (!userId) return undefined
 
-    const username = usersMap.value.get(userId)?.name
-    if (username) return `@${username}`
+    const userName = usersMap.value.get(userId)?.name
+    if (userName) return `@${userName}`
   }
 
   const getMyDmChannelId = () => {
@@ -97,12 +97,12 @@ const getStoreForParser = ({
 
   return {
     channelPathToId,
-    usernameToDmChannelId,
-    usernameToId,
-    getCurrentChannelPathOrUsername,
+    userNameToDmChannelId,
+    userNameToId,
+    getCurrentChannelPathOrUserName,
     getCurrentChannelId,
     getMyDmChannelId,
-    getMyUsername,
+    getMyUserName,
     getMyUserId
   }
 }

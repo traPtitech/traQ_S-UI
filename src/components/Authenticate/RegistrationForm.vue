@@ -5,7 +5,7 @@
       v-model="registerState.name"
       label="traQ ID"
       :class="$style.item"
-      autocomplete="username"
+      autocomplete="userName"
       autofocus
     />
     <AuthenticateInput

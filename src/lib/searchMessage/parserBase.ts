@@ -89,22 +89,22 @@ export const makePrefixedFilterExtractor =
 
 export type StoreForParser = {
   channelPathToId: ChannelPathToId
-  usernameToDmChannelId: UsernameToDmChannelId
-  usernameToId: UsernameToId
-  getCurrentChannelPathOrUsername: () => string | undefined
+  userNameToDmChannelId: UserNameToDmChannelId
+  userNameToId: UserNameToId
+  getCurrentChannelPathOrUserName: () => string | undefined
   getCurrentChannelId: () => ChannelId | undefined
   getMyDmChannelId: () => DMChannelId | undefined
-  getMyUsername: () => string | undefined
+  getMyUserName: () => string | undefined
   getMyUserId: () => UserId | undefined
 }
 
 type ChannelPathToId = (path: string) => ChannelId | undefined
 
-type UsernameToDmChannelId = (
-  username: string
+type UserNameToDmChannelId = (
+  userName: string
 ) => MaybePromise<DMChannelId | undefined>
 
-type UsernameToId = (username: string) => MaybePromise<UserId | undefined>
+type UserNameToId = (userName: string) => MaybePromise<UserId | undefined>
 
 /**
  * `string`から`ExtractedFilter`を経由して実際のフィルターを作る
@@ -167,7 +167,7 @@ export const HereToken = Symbol('in:here')
 export const MeToken = Symbol('in:me / from:me / to:me')
 
 export const channelOrDmChannelParser = async <T extends string>(
-  { channelPathToId, usernameToDmChannelId }: StoreForParser,
+  { channelPathToId, userNameToDmChannelId }: StoreForParser,
   extracted: ExtractedFilter<T>
 ): Promise<ChannelId | typeof HereToken | typeof MeToken | undefined> => {
   const body = extracted.prefix === '#' ? `#${extracted.body}` : extracted.body
@@ -178,21 +178,21 @@ export const channelOrDmChannelParser = async <T extends string>(
   const channelPath = channelPathToId(channelName)
   if (channelPath) return channelPath
 
-  const username = body.startsWith('@') ? body.slice(1) : body
-  return usernameToDmChannelId(username)
+  const userName = body.startsWith('@') ? body.slice(1) : body
+  return userNameToDmChannelId(userName)
 }
 
 export const userParser = async <T extends string>(
-  usernameToId: UsernameToId,
+  userNameToId: UserNameToId,
   extracted: ExtractedFilter<T>
 ): Promise<UserId | typeof MeToken | undefined> => {
   if (extracted.body === 'me') return MeToken
 
-  const username = extracted.body.startsWith('@')
+  const userName = extracted.body.startsWith('@')
     ? extracted.body.slice(1)
     : extracted.body
 
-  return usernameToId(username)
+  return userNameToId(userName)
 }
 
 export const messageParser = <T extends string>(

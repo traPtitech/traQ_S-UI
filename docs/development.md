@@ -93,7 +93,7 @@ $ npm run test:e2e
 
 ```json
 {
-  "username": "ユーザー名",
+  "userName": "ユーザー名",
   "password": "パスワード"
 }
 ```

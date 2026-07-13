@@ -76,20 +76,20 @@ const useUsersStorePinia = defineStore('entities/users', () => {
   }
 
   const fetchUserByName = async ({
-    username,
+    userName,
     cacheStrategy = 'waitForAllFetch'
   }: {
-    username: string
+    userName: string
     cacheStrategy?: CacheStrategy
   }) => {
-    // usernameが空のものは存在しないので弾く
-    if (username === '') {
+    // userNameが空のものは存在しないので弾く
+    if (userName === '') {
       return undefined
     }
 
     // キャッシュを利用する場合はこのブロックに入る
     if (cacheStrategy === 'useCache' || cacheStrategy === 'waitForAllFetch') {
-      const res = findUserByName(username)
+      const res = findUserByName(userName)
       if (res) {
         return res
       }
@@ -99,14 +99,14 @@ const useUsersStorePinia = defineStore('entities/users', () => {
       if (cacheStrategy === 'waitForAllFetch' && !usersMapFetched.value) {
         await usersMapInitialFetchPromise
 
-        const res = findUserByName(username)
+        const res = findUserByName(userName)
         if (res) {
           return res
         }
       }
     }
 
-    const [{ data: res }, isShared] = await getUserByName(username)
+    const [{ data: res }, isShared] = await getUserByName(userName)
     // 他の取得とまとめられていた場合は既にcommitされてるためcommitしない
     if (!isShared && res) {
       setUser(res)

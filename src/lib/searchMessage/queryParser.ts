@@ -146,7 +146,7 @@ const parser = async (
     }
     case 'to':
     case 'from': {
-      const result = await userParser(store.usernameToId, extracted)
+      const result = await userParser(store.userNameToId, extracted)
       return result
         ? { type, raw: rawQuery(extracted), value: result }
         : undefined
@@ -248,18 +248,18 @@ export const createQueryParser = (store: StoreForParser) => {
         .map(parseQueryFragmentToFilter)
     )
 
-    const currentChannelPathOrUsername = store.getCurrentChannelPathOrUsername()
+    const currentChannelPathOrUserName = store.getCurrentChannelPathOrUserName()
     const currentChannelId = store.getCurrentChannelId()
     const myDmChannelId = store.getMyDmChannelId()
-    const myUsername = store.getMyUsername()
+    const myUserName = store.getMyUserName()
     const myUserId = store.getMyUserId()
 
     const normalizedQuery = parseds
       .map(q =>
         parsedFilterToNormalizedString(
           q,
-          currentChannelPathOrUsername,
-          myUsername
+          currentChannelPathOrUserName,
+          myUserName
         )
       )
       .join(' ')
@@ -281,18 +281,18 @@ export const createQueryParser = (store: StoreForParser) => {
 
 const parsedFilterToNormalizedString = (
   f: string | Filter,
-  currentChannelPathOrUsername: string | undefined,
-  myUsername: string | undefined
+  currentChannelPathOrUserName: string | undefined,
+  myUserName: string | undefined
 ) => {
   if (typeof f === 'string') return f
 
   if (f.type === 'in') {
-    if (f.value === HereToken) return `in:${currentChannelPathOrUsername}`
-    if (f.value === MeToken) return `in:${myUsername}`
+    if (f.value === HereToken) return `in:${currentChannelPathOrUserName}`
+    if (f.value === MeToken) return `in:${myUserName}`
   }
 
   if ((f.type === 'from' || f.type === 'to') && f.value === MeToken) {
-    return `${f.type}:${myUsername}`
+    return `${f.type}:${myUserName}`
   }
   return f.raw
 }
