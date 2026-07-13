@@ -5,7 +5,6 @@ import {
   cloneVNode,
   computed,
   defineComponent,
-  ref,
   shallowRef
 } from 'vue'
 
@@ -27,7 +26,7 @@ const filterChildren = <T extends VNode>(vnodes: T[]) =>
   })
 
 /**
- * そのデフォルトスロットに指定した要素の外でクリックされたときにclickOutsideイベントを発火する
+ * そのデフォルトスロットに指定した要素の外でポインターが動いたかクリックが離されたときにclickOutsideイベントを発火する
  */
 export default defineComponent({
   name: 'ClickOutside',
@@ -58,12 +57,19 @@ export default defineComponent({
     const element = shallowRef<HTMLElement | ComponentPublicInstance>()
 
     const { shouldShowModal } = useModalStore()
-    const isPointerDownOutside = ref(false)
-    const pointerDownPosition = ref<{ x: number; y: number } | null>(null)
+    type PointerState = Pick<PointerEvent, 'pointerId' | 'clientX' | 'clientY'>
+    let pointerDown: PointerState | undefined
 
     const resetPointerDown = () => {
-      isPointerDownOutside.value = false
-      pointerDownPosition.value = null
+      pointerDown = undefined
+    }
+
+    const emitClickOutside = (e: PointerEvent) => {
+      resetPointerDown()
+
+      setTimeout(() => emit('clickOutside', e), 0)
+
+      if (props.stop) e.stopPropagation()
     }
 
     const isInside = (e: PointerEvent) => {
@@ -75,53 +81,49 @@ export default defineComponent({
       resetPointerDown()
 
       if (!element.value) return
-
       if (props.unableWhileModalOpen && shouldShowModal.value) return
+      if (isInside(e)) return
 
-      if (isInside(e)) {
-        return
+      pointerDown = {
+        pointerId: e.pointerId,
+        clientX: e.clientX,
+        clientY: e.clientY
       }
 
-      isPointerDownOutside.value = true
-      pointerDownPosition.value = { x: e.clientX, y: e.clientY }
-      if (props.stop) {
-        e.stopPropagation()
-      }
+      if (props.stop) e.stopPropagation()
     }
 
     const onPointerMove = (e: PointerEvent) => {
-      if (!isPointerDownOutside.value || !pointerDownPosition.value) return
+      if (!pointerDown) return
+      if (pointerDown.pointerId !== e.pointerId) return
+
+      if (e.buttons === 0) {
+        resetPointerDown()
+        return
+      }
 
       if (
-        e.clientX === pointerDownPosition.value.x &&
-        e.clientY === pointerDownPosition.value.y
+        e.clientX === pointerDown.clientX &&
+        e.clientY === pointerDown.clientY
       ) {
         return
       }
 
-      resetPointerDown()
-
-      setTimeout(() => {
-        emit('clickOutside', e)
-      }, 0)
-
-      if (props.stop) {
-        e.stopPropagation()
-      }
+      emitClickOutside(e)
     }
 
     const onPointerUp = (e: PointerEvent) => {
-      if (!isPointerDownOutside.value) return
+      if (!pointerDown) return
+      if (pointerDown.pointerId !== e.pointerId) return
+
+      emitClickOutside(e)
+    }
+
+    const onPointerCancel = (e: PointerEvent) => {
+      if (!pointerDown) return
+      if (pointerDown.pointerId !== e.pointerId) return
 
       resetPointerDown()
-
-      setTimeout(() => {
-        emit('clickOutside', e)
-      }, 0)
-
-      if (props.stop) {
-        e.stopPropagation()
-      }
     }
 
     const target = computed(() => (props.enabled ? window : null))
@@ -130,7 +132,7 @@ export default defineComponent({
     useEventListener(target, 'pointerdown', onPointerDown, listenerOptions)
     useEventListener(target, 'pointermove', onPointerMove, listenerOptions)
     useEventListener(target, 'pointerup', onPointerUp, listenerOptions)
-    useEventListener(target, 'pointercancel', resetPointerDown, listenerOptions)
+    useEventListener(target, 'pointercancel', onPointerCancel, listenerOptions)
 
     return () => {
       if (!slots['default']) {
