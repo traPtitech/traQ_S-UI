@@ -3,7 +3,7 @@ import { vi } from 'vitest'
 
 import { createContent } from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
 import { buildFilePathForPost, embeddingOrigin } from '/@/lib/apis'
-import { nullUuid } from '/@/lib/basic/uuid'
+import { nilUuid } from '/@/lib/basic/uuid'
 
 vi.mock('/@/lib/markdown/markdown', () => ({
   isEmbeddedLink: vi.fn((text: string) => text.startsWith(embeddingOrigin))
@@ -24,7 +24,7 @@ describe('usePostMessage', () => {
 
 const FILES = ['fileUrl1', 'fileUrl2']
 const FILE_LINKS = FILES.join('\n')
-const LINK = buildFilePathForPost(nullUuid)
+const LINK = buildFilePathForPost(nilUuid)
 const LINE_BREAKS = '\n\n\n\n\n'
 const SPACES = '     '
 

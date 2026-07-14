@@ -1,10 +1,10 @@
 import type { Channel } from '@traptitech/traq'
 
 import { compareStringInsensitive } from '/@/lib/basic/string'
-import { nullUuid } from '/@/lib/basic/uuid'
+import { nilUuid } from '/@/lib/basic/uuid'
 import type { ChannelId } from '/@/types/entity-ids'
 
-export const rootChannelId = nullUuid
+export const rootChannelId = nilUuid
 export type RootChannelId = typeof rootChannelId
 
 export type ChannelLike = Pick<

@@ -5,10 +5,10 @@ import { computed, unref } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
 import { compareStringInsensitive } from '/@/lib/basic/string'
-import { nullUuid } from '/@/lib/basic/uuid'
+import { nilUuid } from '/@/lib/basic/uuid'
 import { useChannelsStore } from '/@/store/entities/channels'
 
-const channelToChannelId = (channel?: Channel) => channel?.id ?? nullUuid
+const channelToChannelId = (channel?: Channel) => channel?.id ?? nilUuid
 
 /**
  * @param nullKeyName nullに当てるkey、undefined時はnullを含めない
