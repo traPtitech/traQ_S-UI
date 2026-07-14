@@ -1,5 +1,6 @@
 <template>
   <div :class="$style.container">
+    <NavigationContentTitle current-navigation="activity" />
     <div :class="$style.buttons">
       <ToggleButton
         v-model="isNotAll"
@@ -59,6 +60,7 @@ const useActivityMode = () => {
 </script>
 
 <script lang="ts" setup>
+import NavigationContentTitle from '/@/components/Main/NavigationBar/NavigationContentTitle.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 
 import ActivityElement from './ActivityElement.vue'
@@ -70,9 +72,10 @@ const { isNotAll, isPerChannel } = useActivityMode()
 
 <style lang="scss" module>
 .container {
-  padding: 0 16px 0 0;
+  height: 100%;
+  overflow-y: auto;
+  padding: 24px 16px 24px 8px;
 }
-
 .buttons {
   display: flex;
 }
