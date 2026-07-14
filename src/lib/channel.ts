@@ -5,7 +5,7 @@ import type { ChannelId } from '/@/types/entity-ids'
 import type { ChannelLike } from './channelTree'
 
 export const sortByChannelPath = <T extends { id: ChannelId }>(
-  items: T[],
+  items: readonly T[],
   getPath: (id: ChannelId) => string
 ): T[] => {
   const mapped = items.map((item, index) => ({
