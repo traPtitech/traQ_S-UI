@@ -7,10 +7,16 @@ on:
   schedule:
     - cron: '0 5 * * 4'
 
+permissions: {}
+
 jobs:
   CodeQL:
     name: CodeQL
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
 
     steps:
       - name: Checkout repository

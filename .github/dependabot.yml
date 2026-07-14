@@ -4,6 +4,9 @@ updates:
     directory: '/'
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
+      semver-major-days: 30
     open-pull-requests-limit: 10
     groups:
       types:
@@ -28,6 +31,8 @@ updates:
     directory: '/'
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 14
     open-pull-requests-limit: 10
     groups:
       non-majors:
@@ -38,6 +43,8 @@ updates:
     directory: '/'
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 14
     open-pull-requests-limit: 10
     groups:
       non-majors:

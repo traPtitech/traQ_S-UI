@@ -1,11 +1,9 @@
 name: preview
 
 on:
-  # pull_request_target を使うにあたって https://securitylab.github.com/research/github-actions-preventing-pwn-requests/ の一読を推奨
-  pull_request_target:
+  pull_request:
 
-permissions:
-  packages: write
+permissions: {}
 
 env:
   IMAGE_NAME: traq-ui
@@ -14,6 +12,10 @@ jobs:
   build-preview-image:
     name: Build Preview Image
     runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Set PR_NUMBER env
         run: echo "PR_NUMBER=${{ github.event.number }}" >> $GITHUB_ENV
