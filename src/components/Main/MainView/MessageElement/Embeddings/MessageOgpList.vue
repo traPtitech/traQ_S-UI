@@ -36,7 +36,7 @@ const ogpItems = computed(() =>
       return isDefined(ogpData) ? { url, ogpData } : undefined
     })
     .filter(isDefined)
-    .filter(({ ogpData }: { ogpData: { title?: string } }) => ogpData.title)
+    .filter(({ ogpData }) => ogpData.title)
 )
 </script>
 
