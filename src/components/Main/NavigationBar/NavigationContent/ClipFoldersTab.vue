@@ -1,5 +1,6 @@
 <template>
   <div :class="$style.container">
+    <NavigationContentTitle current-navigation="clips" />
     <NavigationContentContainer subtitle="クリップフォルダ">
       <template #control>
         <button :class="$style.button" @click="onClickButton">
@@ -24,6 +25,7 @@
 <script lang="ts" setup>
 import ClipFoldersElement from '/@/components/Main/NavigationBar/NavigationContent/ClipFoldersElement.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import NavigationContentTitle from '/@/components/Main/NavigationBar/NavigationContentTitle.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import useSortedClipFolders from '/@/composables/clips/useSortedClipFolders'
@@ -41,7 +43,9 @@ const onClickButton = () => {
 
 <style lang="scss" module>
 .container {
-  padding: 0 16px 0 0;
+  height: 100%;
+  overflow-y: auto;
+  padding: 24px 16px 24px 8px;
 }
 .element {
   margin: 8px 0;

@@ -4,6 +4,22 @@ import type { ChannelId } from '/@/types/entity-ids'
 
 import type { ChannelLike } from './channelTree'
 
+export const sortByChannelPath = <T extends { id: ChannelId }>(
+  items: T[],
+  getPath: (id: ChannelId) => string
+): T[] => {
+  const mapped = items.map((item, index) => ({
+    index,
+    pathString: getPath(item.id)
+  }))
+  mapped.sort((a, b) => {
+    if (a.pathString > b.pathString) return 1
+    if (a.pathString < b.pathString) return -1
+    return 0
+  })
+  return mapped.map(v => items[v.index]).filter((v): v is T => v !== undefined)
+}
+
 const MAX_CHANNEL_DEPTH = 5
 const MAX_CHANNEL_PATH_SLASHES = MAX_CHANNEL_DEPTH - 1
 

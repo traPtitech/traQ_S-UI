@@ -39,6 +39,7 @@
     "@mdi/js": "7.4.47",
     "@sapphi-red/web-noise-suppressor": "0.3.5",
     "@shiguredo/virtual-background": "2023.2.0",
+    "@tanstack/vue-virtual": "3.13.32",
     "@traptitech/traq": "3.26.1-1",
     "@traptitech/traq-markdown-it": "7.1.0",
     "@vueuse/core": "14.3.0",
