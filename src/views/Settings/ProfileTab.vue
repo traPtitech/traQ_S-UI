@@ -64,7 +64,7 @@ import { useFileSelect } from '/@/composables/dom/useFileSelect'
 import useChannelOptions from '/@/composables/useChannelOptions'
 import useMaxLength from '/@/composables/utils/useMaxLength'
 import apis, { formatResizeError } from '/@/lib/apis'
-import { nullUuid } from '/@/lib/basic/uuid'
+import { nilUuid } from '/@/lib/basic/uuid'
 import { isValidTwitter } from '/@/lib/validate'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -79,7 +79,7 @@ const useState = (detail: Ref<UserDetail>) => {
     displayName: detail.value.displayName,
     bio: detail.value.bio,
     twitterId: detail.value.twitterId,
-    homeChannel: detail.value.homeChannel ?? nullUuid
+    homeChannel: detail.value.homeChannel ?? nilUuid
   }))
   const state = reactive({ ...profile.value })
 
@@ -87,7 +87,7 @@ const useState = (detail: Ref<UserDetail>) => {
   const isStateChanged = computed(() =>
     hasDiff(state, {
       ...detail.value,
-      homeChannel: detail.value.homeChannel ?? nullUuid
+      homeChannel: detail.value.homeChannel ?? nilUuid
     })
   )
 

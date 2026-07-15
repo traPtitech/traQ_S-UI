@@ -24,7 +24,7 @@ import FormButton from '/@/components/UI/FormButton.vue'
 import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useChannelOptions from '/@/composables/useChannelOptions'
-import { nullUuid } from '/@/lib/basic/uuid'
+import { nilUuid } from '/@/lib/basic/uuid'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
@@ -42,14 +42,14 @@ const emit = defineEmits<{
 }>()
 
 const { detail } = useMeStore()
-const homeChannelId = computed(() => detail.value?.homeChannel ?? nullUuid)
+const homeChannelId = computed(() => detail.value?.homeChannel ?? nilUuid)
 
 const { fetchChannels } = useChannelsStore()
 // 投稿先チャンネルとメッセージでの置換に必要
 fetchChannels()
 const { channelOptions } = useChannelOptions('-----')
 
-const channelId = ref<ChannelId>(nullUuid)
+const channelId = ref<ChannelId>(nilUuid)
 watch(
   homeChannelId,
   newVal => {
