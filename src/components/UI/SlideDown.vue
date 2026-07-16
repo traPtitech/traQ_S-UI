@@ -1,10 +1,10 @@
 <template>
   <transition
     name="slide-vertical"
-    @enter="setScrollHeight"
-    @after-enter="unsetHeight"
-    @before-leave="setCurrentHeight"
-    @leave="unsetHeight"
+    @enter="setScrollHeight($event as HTMLElement)"
+    @leave="unsetHeight($event as HTMLElement)"
+    @after-enter="unsetHeight($event as HTMLElement)"
+    @before-leave="setCurrentHeight($event as HTMLElement)"
   >
     <div v-if="isOpen" :class="$style.wrapper">
       <slot />
@@ -13,26 +13,25 @@
 </template>
 
 <script lang="ts" setup>
-import { rAF } from '/@/lib/basic/timer'
+import { defer } from '/@/lib/basic/timer'
 
 defineProps<{
   isOpen: boolean
 }>()
 
-const setScrollHeight = async ($el: Element) => {
-  // フレームずらさないとscrollHeightが0になるため
-  await rAF()
-  await rAF()
+const setScrollHeight = async ($el: HTMLElement) => {
+  // scrollHeight が 0 にならないようにフレームをずらす
+  await defer()
   setCurrentHeight($el)
 }
-const setCurrentHeight = ($el: Element) => {
-  ;($el as HTMLElement).style.height = `${$el.scrollHeight}px`
+
+const setCurrentHeight = ($el: HTMLElement) => {
+  $el.style.height = `${$el.scrollHeight}px`
 }
-const unsetHeight = async ($el: Element) => {
-  // フレームずらさないと処理がまとめられてheightのセットがされないことにされるため
-  await rAF()
-  await rAF()
-  ;($el as HTMLElement).style.height = null as unknown as string
+const unsetHeight = async ($el: HTMLElement) => {
+  // 処理がまとめられて height のセットがされない場合があるので，フレームをずらす
+  await defer()
+  $el.style.height = null as unknown as string
 }
 </script>
 
