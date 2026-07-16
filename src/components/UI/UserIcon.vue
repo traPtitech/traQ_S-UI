@@ -39,8 +39,7 @@ const props = withDefaults(
     size: 36,
     indicatorSize: 10,
     preventModal: false,
-    hasNotification: false,
-    isInactive: false
+    hasNotification: false
   }
 )
 
@@ -68,8 +67,7 @@ const styles = reactive({
     height: `${props.size}px`,
     backgroundImage: userIconFileId.value
       ? `url(${buildUserIconPath(userIconFileId.value)})`
-      : undefined,
-    pointerEvents: props.preventModal ? ('none' as const) : undefined
+      : undefined
   }))
 })
 
