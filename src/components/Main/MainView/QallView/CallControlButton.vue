@@ -24,6 +24,10 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  viewBoxSize: {
+    type: Number,
+    default: 24
+  },
   onBackgroundColor: {
     type: String,
     default: 'white'
@@ -53,7 +57,14 @@ function handleClick() {
 
 <template>
   <button :class="buttonClass" :style="buttonStyle" @click="handleClick">
-    <AIcon v-if="icon" :name="icon" :mdi="mdi" :size="32" :class="iconClass" />
+    <AIcon
+      v-if="icon"
+      :name="icon"
+      :mdi="mdi"
+      :size="32"
+      :view-box-size="viewBoxSize"
+      :class="iconClass"
+    />
   </button>
 </template>
 

@@ -16,6 +16,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  viewBoxSize: {
+    type: Number,
+    default: 24
+  },
   inverted: {
     type: Boolean,
     default: false
@@ -36,7 +40,14 @@ function handleClick() {
 
 <template>
   <button :class="style.callControlBtnSmall" @click="handleClick">
-    <AIcon v-if="icon" :name="icon" :mdi="mdi" :size="32" :class="iconClass" />
+    <AIcon
+      v-if="icon"
+      :name="icon"
+      :mdi="mdi"
+      :size="32"
+      :view-box-size="viewBoxSize"
+      :class="iconClass"
+    />
   </button>
 </template>
 

@@ -215,6 +215,7 @@ const toggleDanmaku = () => {
                 <CallControlButtonSmall
                   icon="sound_detection_loud_sound"
                   :on-click="handleSound"
+                  :view-box-size="32"
                 />
                 <ClickOutside @click-outside="showSoundBoard = false">
                   <SoundBoard v-if="showSoundBoard" />
@@ -224,6 +225,7 @@ const toggleDanmaku = () => {
                 <CallControlButtonSmall
                   icon="add_reaction"
                   :on-click="handleReaction"
+                  :view-box-size="32"
                 />
               </div>
             </div>
@@ -234,6 +236,7 @@ const toggleDanmaku = () => {
                 :is-on="isScreenSharing"
                 :on-click="toggleScreen"
                 :mdi="false"
+                :view-box-size="32"
                 :inverted="isScreenSharing"
               />
               <DetailButton @click="showShareScreenSettingDetail = true" />
