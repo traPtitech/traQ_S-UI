@@ -5,6 +5,7 @@
       :key="i"
       :attachment="attachment"
       :class="$style.element"
+      :is-posting="isPosting"
       @item-remove="removeAttachmentAt(i)"
     />
   </div>
@@ -20,9 +21,15 @@ import type { ChannelId } from '/@/types/entity-ids'
 
 import MessageInputFileListItem from './MessageInputFileListItem.vue'
 
-const props = defineProps<{
-  channelId: ChannelId | VirtualChannelId
-}>()
+const props = withDefaults(
+  defineProps<{
+    channelId: ChannelId | VirtualChannelId
+    isPosting?: boolean
+  }>(),
+  {
+    isPosting: false
+  }
+)
 
 const { addErrorToast } = useToastStore()
 const { attachments, removeAttachmentAt } = useMessageInputStateAttachment(

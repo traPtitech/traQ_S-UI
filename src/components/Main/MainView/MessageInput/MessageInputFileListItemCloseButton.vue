@@ -1,6 +1,7 @@
 <template>
   <button
     :class="$style.container"
+    :disabled="props.isPosting"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
@@ -20,6 +21,15 @@ import { computed } from 'vue'
 import CircleIcon from '/@/components/UI/CircleIcon.vue'
 import useHover from '/@/composables/dom/useHover'
 import { useThemeSettings } from '/@/store/app/themeSettings'
+
+const props = withDefaults(
+  defineProps<{
+    isPosting?: boolean
+  }>(),
+  {
+    isPosting: false
+  }
+)
 
 const { currentTheme } = useThemeSettings()
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
@@ -48,5 +58,9 @@ const iconColor = computed(
   justify-content: center;
   cursor: pointer;
   z-index: $z-index-message-input-file-close-button;
+  &[disabled] {
+    @include color-ui-secondary-inactive;
+    cursor: not-allowed;
+  }
 }
 </style>
