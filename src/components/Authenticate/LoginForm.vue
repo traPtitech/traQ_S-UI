@@ -13,7 +13,7 @@
       <AuthenticateInput
         v-model="loginState.name"
         label="traQ ID"
-        autocomplete="userName"
+        autocomplete="username"
         :class="$style.item"
         autofocus
       />

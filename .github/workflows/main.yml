@@ -228,9 +228,9 @@ jobs:
 
       - name: run test:e2e
         run: npm run test:e2e-headless
-        if: env.CYPRESS_userName != null
+        if: env.CYPRESS_username != null
         env:
-          CYPRESS_userName: ${{ secrets.traQ_userName }}
+          CYPRESS_username: ${{ secrets.traQ_username }}
           CYPRESS_password: ${{ secrets.traQ_password }}
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
