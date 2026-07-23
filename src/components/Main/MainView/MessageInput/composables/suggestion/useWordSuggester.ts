@@ -185,7 +185,9 @@ const useWordSuggester = (
     position,
     suggestedCandidates,
     selectedIndex,
-    confirmedPart
+    confirmedPart,
+    target,
+    textareaRef
   }
 }
 

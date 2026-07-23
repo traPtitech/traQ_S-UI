@@ -47,13 +47,7 @@ const props = withDefaults(
     autofocus?: boolean
     autocapitalize?: string
     enterkeyhint?:
-      | 'search'
-      | 'done'
-      | 'enter'
-      | 'go'
-      | 'next'
-      | 'previous'
-      | 'send'
+      'search' | 'done' | 'enter' | 'go' | 'next' | 'previous' | 'send'
   }>(),
   {
     label: '',

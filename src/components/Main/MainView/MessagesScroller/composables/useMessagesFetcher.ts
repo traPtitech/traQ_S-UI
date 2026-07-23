@@ -22,8 +22,7 @@ const useMessageFetcher = (
   id: Ref<string>,
   fetchFormerMessages: (isReachedEnd: Ref<boolean>) => Promise<MessageId[]>,
   fetchLatterMessages:
-    | ((isReachedLatest: Ref<boolean>) => Promise<MessageId[]>)
-    | undefined,
+    ((isReachedLatest: Ref<boolean>) => Promise<MessageId[]>) | undefined,
   fetchAroundMessages:
     | ((
         entryMessage: Message,
@@ -32,8 +31,7 @@ const useMessageFetcher = (
       ) => Promise<MessageId[]>)
     | undefined,
   fetchNewMessages:
-    | ((isReachedLatest: Ref<boolean>) => Promise<MessageId[]>)
-    | undefined,
+    ((isReachedLatest: Ref<boolean>) => Promise<MessageId[]>) | undefined,
   onReachedLatest?: () => MaybePromise<void>
 ) => {
   const { renderMessageContent, resetRenderedContent } = useMessagesView()

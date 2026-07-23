@@ -43,7 +43,7 @@ import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import useChannelOptions from '/@/composables/useChannelOptions'
 import useChannelPath from '/@/composables/useChannelPath'
 import apis from '/@/lib/apis'
-import { nullUuid } from '/@/lib/basic/uuid'
+import { nilUuid } from '/@/lib/basic/uuid'
 import { canCreateChildChannel } from '/@/lib/channel'
 import { isValidChannelName } from '/@/lib/validate'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -104,7 +104,7 @@ const channel = computed((): Required<PatchChannelRequest> => {
   const c = channelsMap.value.get(props.id)
   return {
     name: c?.name ?? '',
-    parent: c?.parentId ?? nullUuid,
+    parent: c?.parentId ?? nilUuid,
     archived: c?.archived ?? false,
     force: c?.force ?? false
   }

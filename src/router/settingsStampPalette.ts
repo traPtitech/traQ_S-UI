@@ -2,8 +2,7 @@ import { type Component } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 
 export type SettingsStampPaletteRouteName =
-  | 'settingsStampPaletteCreate'
-  | 'settingsStampPaletteDetail'
+  'settingsStampPaletteCreate' | 'settingsStampPaletteDetail'
 
 const pathByRouteName = (routeName: SettingsStampPaletteRouteName) => {
   switch (routeName) {

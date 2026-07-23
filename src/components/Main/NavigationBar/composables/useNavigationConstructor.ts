@@ -1,11 +1,7 @@
 import createNavigation from '/@/composables/useAbstractNavigation'
 
 export type NavigationItemType =
-  | 'home'
-  | 'channels'
-  | 'activity'
-  | 'users'
-  | 'clips'
+  'home' | 'channels' | 'activity' | 'users' | 'clips'
 
 /**
  * 特定の状況に応じて表示されるナビゲーションコンポーネント用の種別
@@ -13,10 +9,7 @@ export type NavigationItemType =
  * 「選択しない」を許すのでnullable
  */
 export type EphemeralNavigationItemType =
-  | 'qallController'
-  | 'draftList'
-  | 'audioController'
-  | undefined
+  'qallController' | 'draftList' | 'audioController' | undefined
 
 // TODO: 言語系リソースの置き場所
 export const navigationTypeNameMap: Record<NavigationItemType, string> = {

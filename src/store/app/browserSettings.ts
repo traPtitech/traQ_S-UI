@@ -8,7 +8,7 @@ import useLocalStorageValue from '/@/composables/storage/useLocalStorage'
 import useChannelPath from '/@/composables/useChannelPath'
 import { isDefined } from '/@/lib/basic/array'
 import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
-import { nullUuid } from '/@/lib/basic/uuid'
+import { nilUuid } from '/@/lib/basic/uuid'
 import { defaultChannelIds, fallbackChannelPath } from '/@/lib/config'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
@@ -144,7 +144,7 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
 
     if (id) return id
 
-    return defaultChannelIds.find(id => channelsMap.value.has(id)) ?? nullUuid
+    return defaultChannelIds.find(id => channelsMap.value.has(id)) ?? nilUuid
   }
 
   const getStartupChannelPath = async () => {
@@ -154,7 +154,7 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     )
   }
 
-  const startupChannelId = computedAsync(getStartupChannelId, nullUuid)
+  const startupChannelId = computedAsync(getStartupChannelId, nilUuid)
 
   const startupChannelPath = computedAsync(
     getStartupChannelPath,

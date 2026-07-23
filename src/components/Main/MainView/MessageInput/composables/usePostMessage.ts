@@ -6,7 +6,7 @@ import useMessageInputStateStatic from '/@/composables/messageInputState/useMess
 import useChannelPath from '/@/composables/useChannelPath'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
-import { nullUuid } from '/@/lib/basic/uuid'
+import { nilUuid } from '/@/lib/basic/uuid'
 import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
 import { isEmbeddedLink } from '/@/lib/markdown/markdown'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
@@ -130,7 +130,7 @@ const usePostMessage = (
     })
 
     const dummyFileUrls = state.attachments.map(() =>
-      buildFilePathForPost(nullUuid)
+      buildFilePathForPost(nilUuid)
     )
     const dummyText = await createContent(embeddedText, dummyFileUrls)
     if (countLength(dummyText) > MESSAGE_MAX_LENGTH) {
