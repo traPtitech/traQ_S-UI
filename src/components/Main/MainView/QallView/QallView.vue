@@ -151,7 +151,7 @@ const getParticipantTrackInfo = (participant: {
 }): TrackInfo | undefined => {
   for (const [, trackInfo] of tracksMap.value.entries()) {
     if (
-      usersMap.value.get(trackInfo.username)?.name === participant.user.name &&
+      usersMap.value.get(trackInfo.userName)?.name === participant.user.name &&
       trackInfo.trackPublication?.kind === 'audio' &&
       !screenShareTracks.value?.some?.(
         ([_, valueSid]) => valueSid === trackInfo.trackPublication?.trackSid

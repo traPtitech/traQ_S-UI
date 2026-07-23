@@ -107,7 +107,7 @@ const useRouteWatcher = () => {
   const onRouteChangedToUser = async () => {
     try {
       const user = await fetchUserByName({
-        username: state.currentRouteParam,
+        userName: state.currentRouteParam,
         cacheStrategy: 'useCache'
       })
       if (!user) throw new Error('user not found')

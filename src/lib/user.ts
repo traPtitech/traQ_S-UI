@@ -8,4 +8,4 @@ export interface ActiveUser extends User {
 export const isActive = (user: Readonly<User>): user is ActiveUser =>
   user.state === UserAccountState.active
 
-export const isWebhook = (username: string) => username.startsWith('Webhook#')
+export const isWebhook = (userName: string) => userName.startsWith('Webhook#')

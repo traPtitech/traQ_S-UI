@@ -58,8 +58,8 @@ export const buildFilePathForPost = (fileId: FileId) =>
  * アイコンが変わったあとにすぐに変わらないので
  * 使える場合は`buildUserIconPath`を優先して使う
  */
-export const buildUserIconPathPublic = (username: string) =>
-  `${embeddingOrigin}${BASE_PATH}/public/icon/${username}`
+export const buildUserIconPathPublic = (userName: string) =>
+  `${embeddingOrigin}${BASE_PATH}/public/icon/${userName}`
 
 export const OAuthDecidePath = `${BASE_PATH}/oauth2/authorize/decide`
 

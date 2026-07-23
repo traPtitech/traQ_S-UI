@@ -24,7 +24,7 @@ const isMuted = ref(false)
 const style = useCssModule()
 const minValue = 0
 const maxValue = 2
-const volume = ref<number | string>(getStore(trackInfo.username) ?? 1)
+const volume = ref<number | string>(getStore(trackInfo.userName) ?? 1)
 
 const sliderStyle = computed(() => {
   const val = parseToFloat(volume.value)
@@ -42,7 +42,7 @@ const sliderStyle = computed(() => {
   }
 })
 watch(
-  () => getStore(trackInfo.username),
+  () => getStore(trackInfo.userName),
   v => {
     if (v) {
       volume.value = v
@@ -53,7 +53,7 @@ watch(
 watch(
   () => volume.value,
   v => {
-    setStore(trackInfo.username, parseToFloat(v))
+    setStore(trackInfo.userName, parseToFloat(v))
   },
   { deep: true, immediate: true }
 )
