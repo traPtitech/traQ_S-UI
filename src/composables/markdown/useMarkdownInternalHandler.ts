@@ -8,7 +8,7 @@ import { RouteName } from '/@/router'
 type HTMLElementTargetMouseEvent = MouseEvent & { target: HTMLElement }
 
 const useMarkdownInternalHandler = () => {
-  const { hostname } = new URL(embeddingOrigin)
+  const { origin } = new URL(embeddingOrigin)
   const router = useRouter()
   const { shouldOpenWithRouter } = useOpenLink()
 
@@ -30,7 +30,7 @@ const useMarkdownInternalHandler = () => {
   // チャンネルのリンク(a.message-channel-link)もこれで処理される
   const internalLinkClickHandler = (event: HTMLElementTargetMouseEvent) => {
     const $a = event.target.closest<HTMLAnchorElement>('a[href]')
-    if (!$a || !$a.href.includes(`://${hostname}`)) return
+    if (!$a || $a.origin !== origin) return
 
     // markdown内でない場合(添付ファイルなど)は無視
     const $body = $a.closest('.markdown-body, .markdown-inline-body')
