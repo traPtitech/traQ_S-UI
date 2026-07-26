@@ -6,7 +6,6 @@
         <div
           class="markdown-inline-body"
           :class="$style.text"
-          @click="onClick"
           v-html="renderedContent"
         />
       </div>
@@ -21,7 +20,6 @@
 import { computed, ref, watchEffect } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
-import useMarkdownInternalHandler from '/@/composables/markdown/useMarkdownInternalHandler'
 import useChannelPath from '/@/composables/useChannelPath'
 import { renderInline } from '/@/lib/markdown/markdown'
 import type { MessageInputState } from '/@/store/ui/messageInputStateStore'
@@ -33,7 +31,6 @@ const props = defineProps<{
 }>()
 
 const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
-const { onClick } = useMarkdownInternalHandler()
 
 const channelPath = computed(
   () => channelIdToShortPathString(props.channelId, true) ?? ''
