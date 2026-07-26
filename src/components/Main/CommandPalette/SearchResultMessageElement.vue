@@ -124,6 +124,8 @@ const quotedMessageIds = computed(
 )
 
 const onClick = (e: MouseEvent) => {
+  if (e.target instanceof Element && e.target.closest('a[href]')) return
+
   emit('clickOpen', e, props.message.id)
 }
 
