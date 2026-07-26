@@ -15,10 +15,7 @@
     <div :class="$style.contentContainer">
       <div :class="$style.markdownWrapper">
         <div ref="contentRef" :class="$style.markdownContainer">
-          <MarkdownContent
-            :content="renderedContent"
-            @click="toggleSpoilerHandler"
-          />
+          <MarkdownContent :content="renderedContent" />
           <MessageQuoteList
             v-if="quotedMessageIds.length > 0"
             :class="$style.quoteList"
@@ -62,7 +59,6 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import useBoxSize from '/@/composables/dom/useBoxSize'
-import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
 import useToggle from '/@/composables/utils/useToggle'
 import { isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
@@ -139,8 +135,6 @@ const oversized = computed(
   () => height.value !== undefined && height.value >= maxHeight
 )
 const { value: expanded, toggle: toggleExpanded } = useToggle(false)
-
-const { toggleSpoilerHandler } = useSpoilerToggler()
 </script>
 
 <style lang="scss" module>

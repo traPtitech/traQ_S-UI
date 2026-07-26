@@ -4,7 +4,7 @@
     class="markdown-inline-body"
     :class="$style.content"
     :data-accept-action="acceptAction"
-    @click="toggleSpoilerHandler"
+    @click="onClick"
     v-html="renderedContent"
   />
   <div
@@ -12,7 +12,7 @@
     class="markdown-body"
     :class="$style.content"
     :data-accept-action="acceptAction"
-    @click="toggleSpoilerHandler"
+    @click="onClick"
     v-html="renderedContent"
   />
 </template>
@@ -22,7 +22,7 @@ import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 
 import { computed, nextTick, ref, watchEffect } from 'vue'
 
-import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
+import useMarkdownInternalHandler from '/@/composables/markdown/useMarkdownInternalHandler'
 import { render, renderInline } from '/@/lib/markdown/markdown'
 
 const props = withDefaults(
@@ -53,7 +53,7 @@ watchEffect(async () => {
 })
 const renderedContent = computed(() => rendered.value?.renderedText)
 
-const { toggleSpoilerHandler } = useSpoilerToggler()
+const { onClick } = useMarkdownInternalHandler()
 </script>
 
 <style lang="scss" module>

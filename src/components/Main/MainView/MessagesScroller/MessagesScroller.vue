@@ -8,7 +8,6 @@
         emit('scrollPassive')
       }
     "
-    @click="onClick"
   >
     <div
       v-if="stampsMapFetched"
@@ -35,15 +34,12 @@
 <script lang="ts">
 import type { ComponentPublicInstance, Ref } from 'vue'
 import { nextTick, onMounted, reactive, shallowRef, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 import { useEventListener } from '@vueuse/core'
 import { throttle } from 'throttle-debounce'
 
-import { useOpenLink } from '/@/composables/useOpenLink'
-import { embeddingOrigin } from '/@/lib/apis'
-import { toggleSpoiler } from '/@/lib/markdown/spoiler'
-import { RouteName, isMessageScrollerRoute } from '/@/router'
+import { isMessageScrollerRoute } from '/@/router'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import type { MessageId } from '/@/types/entity-ids'
@@ -56,55 +52,6 @@ export interface MessageScrollerInstance extends ComponentPublicInstance {
 }
 
 const LOAD_MORE_THRESHOLD = 10
-
-type HTMLElementTargetMouseEvent = MouseEvent & { target: HTMLElement }
-
-const useMarkdownInternalHandler = () => {
-  const { hostname } = new URL(embeddingOrigin)
-  const router = useRouter()
-  const { shouldOpenWithRouter } = useOpenLink()
-
-  const onClick = (event: MouseEvent) => {
-    if (!event.target) return
-    const e = event as HTMLElementTargetMouseEvent
-
-    toggleSpoilerHandler(e)
-    internalLinkClickHandler(e)
-  }
-
-  const toggleSpoilerHandler = (event: HTMLElementTargetMouseEvent) => {
-    if (!event.target) return
-    toggleSpoiler(event.target)
-  }
-
-  // チャンネルのリンク(a.message-channel-link)もこれで処理される
-  const internalLinkClickHandler = (event: HTMLElementTargetMouseEvent) => {
-    if (!event.target) return
-
-    const $a = event.target.closest<HTMLAnchorElement>('a[href]')
-    if (!$a || !$a.href.includes(`://${hostname}`)) return
-
-    // markdown内でない場合(添付ファイルなど)は無視
-    const $body = $a.closest('.markdown-body')
-    if (!$body) return
-
-    // 同じタブで開かない場合は無視
-    if (!shouldOpenWithRouter(event)) return
-    event.preventDefault()
-
-    const linkPath = $a.pathname + $a.search + $a.hash
-
-    const resolved = router.resolve(linkPath)
-    // NotFoundだけが引っかかった場合、または何も引っかからなかった場合はフロントで処理するルートではない
-    const isNotHandledWithRouter =
-      resolved.matched.filter(m => m.name !== RouteName.NotFound).length === 0
-    if (isNotHandledWithRouter) return
-
-    router.push(linkPath)
-  }
-
-  return { onClick }
-}
 
 /** 設定などから戻ってきた際のスクロール位置リストア */
 const useScrollRestoration = (
@@ -283,7 +230,6 @@ const visibilitychangeListener = () => {
 
 useEventListener(document, 'visibilitychange', visibilitychangeListener)
 
-const { onClick } = useMarkdownInternalHandler()
 useScrollRestoration(rootRef, state)
 </script>
 

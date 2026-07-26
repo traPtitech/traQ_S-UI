@@ -18,6 +18,7 @@
     <span
       class="markdown-inline-body"
       :class="$style.content"
+      @click="onClick"
       v-html="renderedContent"
     />
   </div>
@@ -28,6 +29,7 @@ import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 
 import { computed, ref, watchEffect } from 'vue'
 
+import useMarkdownInternalHandler from '/@/composables/markdown/useMarkdownInternalHandler'
 import type { AttachmentType } from '/@/lib/basic/file'
 import { mimeToFileType } from '/@/lib/basic/file'
 import { isFile } from '/@/lib/guard/embeddingOrUrl'
@@ -68,6 +70,7 @@ const props = withDefaults(
 )
 
 const { fileMetaDataMap, fetchFileMetaData } = useMessagesStore()
+const { onClick } = useMarkdownInternalHandler()
 
 const rendered = ref<MarkdownRenderResult>()
 watchEffect(async () => {
