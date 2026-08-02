@@ -3,12 +3,15 @@
     ref="contentRef"
     class="markdown-body"
     :class="$style.content"
+    @click="onClick"
     v-html="content"
   />
 </template>
 
 <script lang="ts" setup>
 import { createVNode, onMounted, ref, render, watch } from 'vue'
+
+import useMarkdownInternalHandler from '/@/composables/markdown/useMarkdownInternalHandler'
 
 import FoldableCodeBlock from './FoldableCodeBlock.vue'
 
@@ -17,6 +20,7 @@ const props = defineProps<{
 }>()
 
 const contentRef = ref<HTMLElement>()
+const { onClick } = useMarkdownInternalHandler()
 
 const foldWrapClass = 'fold-wrap'
 
