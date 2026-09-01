@@ -2,7 +2,7 @@
   <div v-if="user" :class="$style.container">
     <UserIcon :class="$style.userIcon" :user-id="id" prevent-modal />
     <div :class="$style.content">
-      <div :class="$style.displayName">
+      <div :class="$style.displayName" dir="auto">
         {{ user.displayName }}
       </div>
       <slot />

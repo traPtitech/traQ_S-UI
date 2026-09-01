@@ -13,7 +13,7 @@
             :fallback-icon-file-id="developer.iconFileId"
             :size="24"
           />
-          {{ developer.displayName }} (@{{ developer.name }})
+          <bdi>{{ developer.displayName }}</bdi> (@{{ developer.name }})
         </template>
         <template v-else>
           <div>=====</div>

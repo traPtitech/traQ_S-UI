@@ -14,7 +14,7 @@
           mdi
           title="管理者"
         />
-        <span>{{ displayName }}</span>
+        <bdi>{{ displayName }}</bdi>
       </div>
       <slot />
     </div>

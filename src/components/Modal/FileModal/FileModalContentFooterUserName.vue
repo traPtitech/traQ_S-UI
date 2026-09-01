@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" @click="openModal">
     <AIcon name="user" :size="20" />
-    {{ displayName ?? 'unknown' }}
+    <bdi>{{ displayName ?? 'unknown' }}</bdi>
   </div>
 </template>
 

@@ -16,7 +16,7 @@
           @update:model-value="toggle(user.id)"
         />
         <UserIcon :user-id="user.id" prevent-modal :class="$style.userIcon" />
-        <div :class="$style.displayName">{{ user.displayName }}</div>
+        <div :class="$style.displayName" dir="auto">{{ user.displayName }}</div>
       </label>
     </div>
   </div>

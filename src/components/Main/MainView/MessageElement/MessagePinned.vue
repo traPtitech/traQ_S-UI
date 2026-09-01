@@ -1,7 +1,8 @@
 <template>
   <div :class="$style.container">
     <AIcon name="pin" mdi :size="16" :class="$style.pin" />
-    {{ userDisplayName }}さんがピン留めしました
+    <bdi>{{ userDisplayName }}</bdi
+    >さんがピン留めしました
   </div>
 </template>
 

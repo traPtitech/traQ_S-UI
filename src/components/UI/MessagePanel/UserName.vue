@@ -6,9 +6,9 @@
       :user-id="user.id"
       :size="isTitle ? 24 : 20"
     />
-    <span :class="$style.displayName">
+    <bdi :class="$style.displayName">
       {{ user?.displayName ?? 'unknown' }}
-    </span>
+    </bdi>
   </div>
 </template>
 
