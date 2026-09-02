@@ -79,7 +79,7 @@ const useIsPlaying = (
 export const useCurrentTime = (audio: Ref<HTMLAudioElement | undefined>) => {
   const nativeCurrentTime = ref(toFinite(audio.value?.currentTime, 0))
 
-  const onTimeupdated = () => {
+  const onTimeUpdated = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     nativeCurrentTime.value = toFinite(audio.value!.currentTime, 0)
   }
@@ -88,11 +88,11 @@ export const useCurrentTime = (audio: Ref<HTMLAudioElement | undefined>) => {
     audio,
     (newAudio, oldAudio) => {
       if (oldAudio) {
-        oldAudio.removeEventListener('timeupdate', onTimeupdated)
+        oldAudio.removeEventListener('timeupdate', onTimeUpdated)
       }
       if (newAudio) {
         nativeCurrentTime.value = toFinite(newAudio.currentTime, 0)
-        newAudio.addEventListener('timeupdate', onTimeupdated)
+        newAudio.addEventListener('timeupdate', onTimeUpdated)
       }
     },
     { immediate: true }

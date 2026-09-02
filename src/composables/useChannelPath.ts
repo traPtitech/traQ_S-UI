@@ -242,7 +242,7 @@ const useChannelPath = () => {
         replaceInitialChannels.join('/').length > MAX_SHORT_PATH_LENGTH &&
         replaceInitialIndex < channelsLength - 2
       ) {
-        const indexinitial = channelShortenedNames[replaceInitialIndex]
+        const initialIndex = channelShortenedNames[replaceInitialIndex]
         if (indexinitial !== undefined) {
           replaceInitialChannels[replaceInitialIndex] = indexinitial
         }

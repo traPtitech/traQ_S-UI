@@ -69,7 +69,7 @@ describe('turndown', () => {
       output: 'https://trap.jp'
     },
     {
-      name: 'should convert link with titile',
+      name: 'should convert link with title',
       input: '<a href="https://trap.jp">traP公式サイト</a>',
       output: '[traP公式サイト](https://trap.jp)'
     },
