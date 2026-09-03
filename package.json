@@ -33,6 +33,13 @@
     "@actions/core": "3.0.1",
     "@types/vue-select": {
       "vue": "$vue"
+    },
+    "js-beautify": {
+      "glob": "13.0.6"
+    },
+    "qs": "6.16.0",
+    "workbox-build": {
+      "glob": "13.0.6"
     }
   },
   "dependencies": {
@@ -128,6 +135,6 @@
   },
   "engines": {
     "node": ">=26.4",
-    "npm": ">=11.13"
+    "npm": ">=11.17"
   }
 }
