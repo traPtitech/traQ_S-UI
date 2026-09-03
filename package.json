@@ -90,7 +90,7 @@
     "@vitest/coverage-v8": "4.1.9",
     "@vue/test-utils": "2.4.11",
     "axios": "1.18.1",
-    "browserslist": "4.28.4",
+    "browserslist": "4.28.8",
     "cypress": "15.18.0",
     "eslint": "10.6.0",
     "eslint-config-prettier": "10.1.8",
