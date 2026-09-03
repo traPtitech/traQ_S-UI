@@ -91,7 +91,7 @@
     "@vue/test-utils": "2.4.11",
     "axios": "1.18.1",
     "browserslist": "4.28.8",
-    "cypress": "15.18.0",
+    "cypress": "15.21.1",
     "eslint": "10.9.1",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-cypress": "6.4.4",
