@@ -49,7 +49,7 @@
     "dequal": "2.0.3",
     "firebase": "12.15.0",
     "highlight.js": "11.11.1",
-    "idb-keyval": "6.2.6",
+    "idb-keyval": "6.3.0",
     "livekit-client": "2.21.0",
     "mitt": "3.0.1",
     "party-js": "2.2.0",
