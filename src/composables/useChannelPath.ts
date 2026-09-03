@@ -243,8 +243,8 @@ const useChannelPath = () => {
         replaceInitialIndex < channelsLength - 2
       ) {
         const initialIndex = channelShortenedNames[replaceInitialIndex]
-        if (indexinitial !== undefined) {
-          replaceInitialChannels[replaceInitialIndex] = indexinitial
+        if (initialIndex !== undefined) {
+          replaceInitialChannels[replaceInitialIndex] = initialIndex
         }
         replaceInitialIndex++
       }
