@@ -22,7 +22,8 @@ const acceptImageType = [
   'image/jpeg',
   'image/png',
   'image/gif',
-  'image/svg+xml'
+  'image/svg+xml',
+  'image/webp'
 ].join(',')
 const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
   if (!files[0]) return
