@@ -3,7 +3,7 @@
     :role="isClickable ? 'button' : 'img'"
     :class="[$style.container]"
     :style="styles.container"
-    @click.prevent.stop="openModal"
+    @click="onClick"
   >
     <div v-if="hasNotification" :class="$style.indicator">
       <NotificationIndicator :size="indicatorSize" />
@@ -39,7 +39,8 @@ const props = withDefaults(
     size: 36,
     indicatorSize: 10,
     preventModal: false,
-    hasNotification: false
+    hasNotification: false,
+    isInactive: false
   }
 )
 
@@ -75,6 +76,14 @@ const { isClickable, openModal } = useUserModalOpener(
   toRef(props, 'userId'),
   toRef(props, 'preventModal')
 )
+
+const onClick = (event: MouseEvent) => {
+  if (!isClickable.value) return
+
+  event.preventDefault()
+  event.stopPropagation()
+  openModal()
+}
 </script>
 
 <style lang="scss" module>
