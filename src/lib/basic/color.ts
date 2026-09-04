@@ -81,11 +81,11 @@ const mustConvertPercentage = (str: string) => {
 }
 
 const mustConvertPercentageOrNumber = (str: string, range = 1) => {
-  const trimed = str.trim()
-  if (trimed.endsWith('%')) {
-    return mustConvertPercentage(trimed) * range
+  const trimmed = str.trim()
+  if (trimmed.endsWith('%')) {
+    return mustConvertPercentage(trimmed) * range
   }
-  return mustConvertNumber(trimed)
+  return mustConvertNumber(trimmed)
 }
 
 const angleUnits = {

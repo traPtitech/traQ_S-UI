@@ -41,7 +41,7 @@ const useSwipeDrawer = (
   })
 
   /** 次はどちら向きへの操作か */
-  const supporsedDirection = computed((): Direction =>
+  const supportedDirection = computed((): Direction =>
     state.startPosition < destination / 2 ? direction : inverse(direction)
   )
 
@@ -60,12 +60,12 @@ const useSwipeDrawer = (
   const animatePosition = (to: number) => {
     const startTime = Date.now()
     const diffPerMs = (to - state.currentPosition) / animationDurationMs
-    const animationDirectonSign = diffPerMs / Math.abs(diffPerMs)
+    const animationDirectionSign = diffPerMs / Math.abs(diffPerMs)
     const animate = () => {
       const currentTime = Date.now()
       state.currentPosition += diffPerMs * (currentTime - startTime)
       state.startPosition = state.currentPosition
-      if (animationDirectonSign * (to - state.currentPosition) > 0) {
+      if (animationDirectionSign * (to - state.currentPosition) > 0) {
         state.requestId = requestAnimationFrame(animate)
       } else {
         state.currentPosition = to
@@ -108,15 +108,15 @@ const useSwipeDrawer = (
       if (inactive?.value) {
         return
       }
-      if (swipeDirection === supporsedDirection.value) {
+      if (swipeDirection === supportedDirection.value) {
         state.startPosition = state.currentPosition
         if (state.isInitial && onInteractionStart) {
-          onInteractionStart(supporsedDirection.value === direction)
+          onInteractionStart(supportedDirection.value === direction)
           state.isInitial = false
         }
       }
       if (
-        swipeDirection === supporsedDirection.value &&
+        swipeDirection === supportedDirection.value &&
         state.requestId !== -1
       ) {
         // スワイプ開始時にanimationFrameをキャンセル

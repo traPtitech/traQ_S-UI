@@ -7,7 +7,7 @@ $ npm i
 $ npm run gen-fonts
 ```
 
-Vetur ではなく Vue (offical) を導入することを推奨しています。
+Vetur ではなく Vue (official) を導入することを推奨しています。
 
 ## コミット時の自動フォーマット・lint
 
