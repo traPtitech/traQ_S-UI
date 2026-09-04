@@ -72,6 +72,24 @@ export default class AutoReconnectWebSocket {
     }
   }
 
+  ping() {
+    const socket = this.socket
+    if (
+      socket?.readyState !== WebSocket.OPEN ||
+      this.heartbeatTimeout !== undefined
+    )
+      return
+
+    socket.send('ping')
+    this.heartbeatTimeout = setTimeout(() => {
+      if (this.socket !== socket) return
+
+      this.stopHeartbeat()
+      socket.close()
+      this.reconnect()
+    }, this.options.pingTimeout)
+  }
+
   private getReconnectDelay(count: number) {
     const { minReconnectionDelay, maxReconnectionDelay } = this.options
     return Math.min(minReconnectionDelay * 1.3 ** count, maxReconnectionDelay)
@@ -88,24 +106,12 @@ export default class AutoReconnectWebSocket {
     this.clearHeartbeatTimeout()
   }
 
-  private startHeartbeat(socket: WebSocket) {
+  private startHeartbeat() {
     this.stopHeartbeat()
-    this.heartbeatInterval = setInterval(() => {
-      if (
-        socket.readyState !== WebSocket.OPEN ||
-        this.heartbeatTimeout !== undefined
-      )
-        return
-
-      socket.send('ping')
-      this.heartbeatTimeout = setTimeout(() => {
-        if (this.socket !== socket) return
-
-        this.stopHeartbeat()
-        socket.close()
-        this.reconnect()
-      }, this.options.pingTimeout)
-    }, this.options.pingInterval)
+    this.heartbeatInterval = setInterval(
+      () => this.ping(),
+      this.options.pingInterval
+    )
   }
 
   private setupSocket() {
@@ -141,7 +147,7 @@ export default class AutoReconnectWebSocket {
           this.sendQueue.forEach((args, command) => {
             this.sendImmediately([command, ...args])
           })
-          this.startHeartbeat(socket)
+          this.startHeartbeat()
         },
         { once: true }
       )
@@ -207,9 +213,8 @@ export default class AutoReconnectWebSocket {
 
     let count = 0
     while (!this.isOpen) {
-      count++
-
       const delay = this.getReconnectDelay(count)
+      count++
       await wait(delay)
 
       if (this.isOpen) break

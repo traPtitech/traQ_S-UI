@@ -63,9 +63,9 @@ describe('AutoReconnectWebSocket heartbeat', () => {
   }
 
   it('keeps the connection when the server answers ping', async () => {
-    const { socket } = await connect()
+    const { socket, ws } = await connect()
 
-    await vi.advanceTimersByTimeAsync(1000)
+    ws.ping()
     expect(socket.sent).toEqual(['ping'])
 
     socket.receive('{"type":"PING","body":null}')
@@ -80,6 +80,27 @@ describe('AutoReconnectWebSocket heartbeat', () => {
     await vi.advanceTimersByTimeAsync(1101)
 
     expect(socket.close).toHaveBeenCalledOnce()
+    expect(MockWebSocket.instances).toHaveLength(2)
+  })
+
+  it('uses the minimum delay for the first reconnect', async () => {
+    const ws = new AutoReconnectWebSocket('ws://example.com', undefined, {
+      maxReconnectionDelay: 1000,
+      minReconnectionDelay: 100,
+      pingInterval: 1000,
+      pingTimeout: 100
+    })
+    const connected = ws.connect()
+    const socket = MockWebSocket.instances[0]
+    if (!socket) throw new Error('WebSocket was not created')
+    socket.open()
+    await connected
+
+    socket.close()
+    await vi.advanceTimersByTimeAsync(99)
+    expect(MockWebSocket.instances).toHaveLength(1)
+
+    await vi.advanceTimersByTimeAsync(1)
     expect(MockWebSocket.instances).toHaveLength(2)
   })
 

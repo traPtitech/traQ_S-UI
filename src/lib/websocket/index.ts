@@ -37,6 +37,10 @@ if (import.meta.env.MODE === 'development') {
   }
 }
 
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') ws.ping()
+})
+
 export const wsListener = createWebSocketListener(ws)
 
 export const setupWebSocket = async () => {
