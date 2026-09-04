@@ -1,12 +1,19 @@
-import { createTestingPinia } from '@pinia/testing'
 import type { User } from '@traptitech/traq'
 import { UserAccountState } from '@traptitech/traq'
-import { mount } from '@vue/test-utils'
+
 import { defineComponent } from 'vue'
 
+import { createTestingPinia } from '@pinia/testing'
+import { mount } from '@vue/test-utils'
+
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import { useModalStore } from '/@/store/ui/modal'
 import { useUsersStore } from '/@/store/entities/users'
+import { useModalStore } from '/@/store/ui/modal'
+
+vi.mock('/@/store/ui/modal', () => {
+  const pushModal = vi.fn()
+  return { useModalStore: () => ({ pushModal }) }
+})
 
 const user: User = {
   id: 'user',
