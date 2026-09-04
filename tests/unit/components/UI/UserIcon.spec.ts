@@ -25,16 +25,23 @@ const user: User = {
   updatedAt: '2020-03-18T04:17:10.177846Z'
 }
 
-const mountIcon = (preventModal: boolean) => {
+const webhookUser: User = {
+  ...user,
+  id: 'webhook',
+  name: 'Webhook#webhook',
+  bot: true
+}
+
+const mountIcon = (preventModal: boolean, iconUser = user) => {
   const pinia = createTestingPinia()
   const { usersMap } = useUsersStore()
-  usersMap.value.set(user.id, user)
+  usersMap.value.set(iconUser.id, iconUser)
 
   const onParentClick = vi.fn()
   const wrapper = mount(
     defineComponent({
       components: { UserIcon },
-      setup: () => ({ onParentClick, preventModal, userId: user.id }),
+      setup: () => ({ onParentClick, preventModal, userId: iconUser.id }),
       template: `
         <div data-testid="parent" @click="onParentClick">
           <UserIcon :user-id="userId" :prevent-modal="preventModal" />
@@ -49,6 +56,8 @@ const mountIcon = (preventModal: boolean) => {
 }
 
 describe('UserIcon', () => {
+  beforeEach(() => vi.clearAllMocks())
+
   it('lets the parent handle clicks when the modal is prevented', async () => {
     const { onParentClick, pushModal, wrapper } = mountIcon(true)
 
@@ -65,5 +74,14 @@ describe('UserIcon', () => {
 
     expect(onParentClick).not.toHaveBeenCalled()
     expect(pushModal).toHaveBeenCalledWith({ type: 'user', id: user.id })
+  })
+
+  it('does not invoke the parent for a non-clickable user', async () => {
+    const { onParentClick, pushModal, wrapper } = mountIcon(false, webhookUser)
+
+    await wrapper.get('[role="img"]').trigger('click')
+
+    expect(onParentClick).not.toHaveBeenCalled()
+    expect(pushModal).not.toHaveBeenCalled()
   })
 })

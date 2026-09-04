@@ -78,7 +78,7 @@ const { isClickable, openModal } = useUserModalOpener(
 )
 
 const onClick = (event: MouseEvent) => {
-  if (!isClickable.value) return
+  if (props.preventModal) return
 
   event.preventDefault()
   event.stopPropagation()
