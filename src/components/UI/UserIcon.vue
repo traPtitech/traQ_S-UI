@@ -3,7 +3,7 @@
     :role="isClickable ? 'button' : 'img'"
     :class="[$style.container]"
     :style="styles.container"
-    @click.prevent.stop="openModal"
+    @click="onClick"
   >
     <div v-if="hasNotification" :class="$style.indicator">
       <NotificationIndicator :size="indicatorSize" />
@@ -68,8 +68,7 @@ const styles = reactive({
     height: `${props.size}px`,
     backgroundImage: userIconFileId.value
       ? `url(${buildUserIconPath(userIconFileId.value)})`
-      : undefined,
-    pointerEvents: props.preventModal ? ('none' as const) : undefined
+      : undefined
   }))
 })
 
@@ -77,6 +76,14 @@ const { isClickable, openModal } = useUserModalOpener(
   toRef(props, 'userId'),
   toRef(props, 'preventModal')
 )
+
+const onClick = (event: MouseEvent) => {
+  if (props.preventModal) return
+
+  event.preventDefault()
+  event.stopPropagation()
+  openModal()
+}
 </script>
 
 <style lang="scss" module>
