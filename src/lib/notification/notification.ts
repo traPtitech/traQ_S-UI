@@ -44,10 +44,10 @@ const notify = async (
   )
 
   if (navigator.serviceWorker) {
-    const regist = await navigator.serviceWorker.ready
+    const registration = await navigator.serviceWorker.ready
     // mac SafariだとshowNotificationが存在しない
-    if (regist.showNotification) {
-      return regist.showNotification(notificationTitle, notificationOptions)
+    if (registration.showNotification) {
+      return registration.showNotification(notificationTitle, notificationOptions)
     }
   }
   if (Notification?.permission === 'granted') {
