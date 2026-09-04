@@ -31,7 +31,7 @@ describe('createSingleFlight', () => {
     expect(f).toHaveBeenCalledTimes(1)
   })
 
-  it('can be called twice parallely (1)', async () => {
+  it('can be called twice in parallel (1)', async () => {
     const { sff, f } = createSff()
 
     const [res1, res2] = await Promise.all([sff('1'), sff('1')])
@@ -42,7 +42,7 @@ describe('createSingleFlight', () => {
     expect(f).toHaveBeenCalledTimes(1)
   })
 
-  it('can be called twice parallely (2)', async () => {
+  it('can be called twice in parallel (2)', async () => {
     const { sff, f } = createSff()
 
     const [res1, res2] = await Promise.all([sff('1'), sff('2')])

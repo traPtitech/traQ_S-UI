@@ -11,10 +11,10 @@
     </div>
     <template v-else>
       <UsersGradeList
-        v-for="userListbyGrade in userListsByGrade"
-        :key="userListbyGrade.gradeName"
-        :name="userListbyGrade.gradeName"
-        :users="userListbyGrade.users"
+        v-for="userListByGrade in userListsByGrade"
+        :key="userListByGrade.gradeName"
+        :name="userListByGrade.gradeName"
+        :users="userListByGrade.users"
         :class="$style.list"
       />
     </template>

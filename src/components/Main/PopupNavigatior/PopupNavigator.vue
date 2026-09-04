@@ -157,7 +157,7 @@ const useNavigator = (emit: (name: 'clickIcon') => void) => {
       },
       onPointerUp
     },
-    // capture=trueなのはstopPropergationでスワイプを無効化するため
+    // capture=trueなのはstopPropagationでスワイプを無効化するため
     { capture: true, passive: true }
   )
 

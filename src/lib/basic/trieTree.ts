@@ -95,9 +95,9 @@ class TrieNode {
   }: SearchOptions = {}): number[] {
     const results: number[] = []
 
-    const childrens: TrieNode[] = [this]
-    while (childrens.length > 0) {
-      const child = childrens.pop() as TrieNode
+    const children: TrieNode[] = [this]
+    while (children.length > 0) {
+      const child = children.pop() as TrieNode
       if (child.isWord) {
         results.push(child.id)
       }
@@ -106,7 +106,7 @@ class TrieNode {
         continue
       }
 
-      childrens.push(...Object.values(child.children))
+      children.push(...Object.values(child.children))
     }
 
     return results
