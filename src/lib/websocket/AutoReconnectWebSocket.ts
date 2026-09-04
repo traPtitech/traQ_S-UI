@@ -6,12 +6,16 @@ export interface Options {
   maxReconnectionDelay: number
   minReconnectionDelay: number
   connectionTimeout: number
+  pingInterval: number
+  pingTimeout: number
 }
 
 const defaultOptions: Options = {
   maxReconnectionDelay: 10000,
   minReconnectionDelay: 1000,
-  connectionTimeout: 4000
+  connectionTimeout: 4000,
+  pingInterval: 30000,
+  pingTimeout: 10000
 }
 
 interface EventMap {
@@ -22,6 +26,8 @@ type TypedEventListener<T extends keyof EventMap> = (ev: EventMap[T]) => void
 
 export default class AutoReconnectWebSocket {
   _ws?: WebSocket
+  private heartbeatInterval?: ReturnType<typeof setInterval>
+  private heartbeatTimeout?: ReturnType<typeof setTimeout>
   readonly eventTarget = new EventTarget()
 
   readonly url: string
@@ -41,7 +47,7 @@ export default class AutoReconnectWebSocket {
   ) {
     this.url = url
     this.protocols = protocols
-    this.options = { ...options, ...defaultOptions }
+    this.options = { ...defaultOptions, ...options }
   }
 
   get isOpen() {
@@ -71,14 +77,61 @@ export default class AutoReconnectWebSocket {
     return Math.min(minReconnectionDelay * 1.3 ** count, maxReconnectionDelay)
   }
 
+  private clearHeartbeatTimeout() {
+    clearTimeout(this.heartbeatTimeout)
+    this.heartbeatTimeout = undefined
+  }
+
+  private stopHeartbeat() {
+    clearInterval(this.heartbeatInterval)
+    this.heartbeatInterval = undefined
+    this.clearHeartbeatTimeout()
+  }
+
+  private startHeartbeat(socket: WebSocket) {
+    this.stopHeartbeat()
+    this.heartbeatInterval = setInterval(() => {
+      if (
+        socket.readyState !== WebSocket.OPEN ||
+        this.heartbeatTimeout !== undefined
+      )
+        return
+
+      socket.send('ping')
+      this.heartbeatTimeout = setTimeout(() => {
+        if (this._ws !== socket) return
+
+        this.stopHeartbeat()
+        socket.close()
+        this.reconnect()
+      }, this.options.pingTimeout)
+    }, this.options.pingInterval)
+  }
+
   _setupWs() {
     return new Promise<void>(resolve => {
-      this._ws = new WebSocket(this.url, this.protocols)
+      const socket = new WebSocket(this.url, this.protocols)
+      this._ws = socket
+      const finish = () => {
+        clearTimeout(connectionTimeout)
+        resolve()
+      }
+      const connectionTimeout = setTimeout(() => {
+        if (socket.readyState !== WebSocket.CONNECTING) return
 
-      this._ws.addEventListener(
+        socket.close()
+        finish()
+      }, this.options.connectionTimeout)
+
+      socket.addEventListener(
         'open',
         () => {
-          resolve()
+          finish()
+          if (this._ws !== socket) {
+            socket.close()
+            return
+          }
+
           if (this.isInitialized) {
             this.eventTarget.dispatchEvent(new Event('reconnect'))
           } else {
@@ -88,26 +141,34 @@ export default class AutoReconnectWebSocket {
           this.sendQueue.forEach((args, command) => {
             this._sendCommand([command, ...args])
           })
+          this.startHeartbeat(socket)
         },
         { once: true }
       )
-      this._ws.addEventListener(
+      socket.addEventListener(
         'error',
         () => {
-          resolve()
+          finish()
         },
         { once: true }
       )
 
-      this._ws.addEventListener('message', e => {
+      socket.addEventListener('message', e => {
+        if (this._ws !== socket) return
+
+        this.clearHeartbeatTimeout()
         this.eventTarget.dispatchEvent(
           new CustomEvent('message', { detail: e.data })
         )
       })
 
-      this._ws.addEventListener(
+      socket.addEventListener(
         'close',
         () => {
+          finish()
+          if (this._ws !== socket) return
+
+          this.stopHeartbeat()
           this.reconnect()
         },
         { once: true }
@@ -135,7 +196,7 @@ export default class AutoReconnectWebSocket {
   }
 
   async connect() {
-    if (this.isOpenOrConnecting) return
+    if (this.reconnecting || this.isOpenOrConnecting) return
 
     return this._setupWs()
   }
