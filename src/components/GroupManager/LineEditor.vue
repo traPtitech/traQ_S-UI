@@ -29,7 +29,7 @@
       />
     </div>
     <div v-else :class="$style.valueWrapper">
-      <div :class="$style.value" :data-is-empty="localValue === ''">
+      <div :class="$style.value" :data-is-empty="localValue === ''" dir="auto">
         {{ localValue || `${label}が設定されていません` }}
       </div>
       <AIcon

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.name">
+    <div :class="$style.name" dir="auto">
       {{ group.name }}
     </div>
     <div :class="$style.adminList">

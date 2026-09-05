@@ -14,7 +14,7 @@
       :is-admin="user.isAdmin"
       :class="$style.item"
     >
-      <div :class="$style.role">
+      <div :class="$style.role" dir="auto">
         {{ user.role }}
       </div>
       <div v-if="user.isAdmin && !user.isMember" :class="$style.nonMemberAdmin">

@@ -13,7 +13,7 @@
       v-else-if="candidate.type === 'stamp-effect'"
       :effect-name-with-dot="candidate.text"
     />
-    <div :class="$style.name">
+    <div :class="$style.name" dir="auto">
       {{ display ?? candidate.text }}
     </div>
   </div>

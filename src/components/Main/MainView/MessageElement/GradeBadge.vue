@@ -6,7 +6,7 @@
     @click="onClick"
   >
     <span v-if="isBot">Bot</span>
-    <span v-else-if="gradeGroup">{{ gradeGroup.name }}</span>
+    <bdi v-else-if="gradeGroup">{{ gradeGroup.name }}</bdi>
   </div>
 </template>
 

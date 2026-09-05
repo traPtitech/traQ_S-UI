@@ -1,9 +1,8 @@
 <template>
-  <ModalFrame
-    title="グループメンバー編集"
-    :subtitle="`${groupName} - ${userDisplayName}`"
-    icon-name="group"
-  >
+  <ModalFrame title="グループメンバー編集" icon-name="group">
+    <template #subtitle>
+      <bdi>{{ groupName }}</bdi> - <bdi>{{ userDisplayName }}</bdi>
+    </template>
     <FormInput
       v-model="role"
       :class="$style.item"
