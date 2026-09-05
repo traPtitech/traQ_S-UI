@@ -13,9 +13,12 @@
       v-else-if="candidate.type === 'stamp-effect'"
       :effect-name-with-dot="candidate.text"
     />
-    <div :class="$style.name" dir="auto">
+    <template v-if="candidate.type === 'user-group'">
+      @<bdi>{{ candidate.text.slice(1) }}</bdi>
+    </template>
+    <template v-else>
       {{ display ?? candidate.text }}
-    </div>
+    </template>
   </div>
 </template>
 
