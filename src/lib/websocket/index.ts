@@ -29,15 +29,17 @@ export const ws = new AutoReconnectWebSocket(
 if (import.meta.env.MODE === 'development') {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ;(window as any).closeWs = () => {
-    ws.mockFail = true
-    ws._ws?.close()
+    ws.closeForDebug()
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ;(window as any).reconnectWs = () => {
-    ws.mockFail = false
-    ws.connect()
+    ws.reconnectForDebug()
   }
 }
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') ws.ping()
+})
 
 export const wsListener = createWebSocketListener(ws)
 

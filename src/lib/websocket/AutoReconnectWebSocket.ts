@@ -6,12 +6,16 @@ export interface Options {
   maxReconnectionDelay: number
   minReconnectionDelay: number
   connectionTimeout: number
+  pingInterval: number
+  pingTimeout: number
 }
 
 const defaultOptions: Options = {
   maxReconnectionDelay: 10000,
   minReconnectionDelay: 1000,
-  connectionTimeout: 4000
+  connectionTimeout: 4000,
+  pingInterval: 30000,
+  pingTimeout: 10000
 }
 
 interface EventMap {
@@ -21,18 +25,20 @@ interface EventMap {
 type TypedEventListener<T extends keyof EventMap> = (ev: EventMap[T]) => void
 
 export default class AutoReconnectWebSocket {
-  _ws?: WebSocket
-  readonly eventTarget = new EventTarget()
+  private socket?: WebSocket
+  private heartbeatInterval?: ReturnType<typeof setInterval>
+  private heartbeatTimeout?: ReturnType<typeof setTimeout>
+  private readonly eventTarget = new EventTarget()
 
-  readonly url: string
-  readonly protocols: string | string[] | undefined
-  readonly options: Readonly<Options>
+  private readonly url: string
+  private readonly protocols: string | string[] | undefined
+  private readonly options: Readonly<Options>
 
-  sendQueue = new Map<WebSocketCommand, readonly string[]>()
-  isInitialized = false
-  reconnecting = false
+  private readonly sendQueue = new Map<WebSocketCommand, readonly string[]>()
+  private isInitialized = false
+  private reconnecting = false
 
-  mockFail = false
+  private mockFail = false
 
   constructor(
     url: string,
@@ -41,44 +47,97 @@ export default class AutoReconnectWebSocket {
   ) {
     this.url = url
     this.protocols = protocols
-    this.options = { ...options, ...defaultOptions }
+    this.options = { ...defaultOptions, ...options }
   }
 
-  get isOpen() {
-    return this._ws?.readyState === WebSocket.OPEN
+  private get isOpen() {
+    return this.socket?.readyState === WebSocket.OPEN
   }
-  get isOpenOrConnecting() {
+  private get isOpenOrConnecting() {
     return (
-      this._ws?.readyState === WebSocket.OPEN ||
-      this._ws?.readyState === WebSocket.CONNECTING
+      this.socket?.readyState === WebSocket.OPEN ||
+      this.socket?.readyState === WebSocket.CONNECTING
     )
   }
 
-  _sendCommand(commands: readonly [WebSocketCommand, ...string[]]) {
+  private sendImmediately(commands: readonly [WebSocketCommand, ...string[]]) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this._ws!.send(commands.join(':'))
+    this.socket!.send(commands.join(':'))
   }
 
   sendCommand(...commands: readonly [WebSocketCommand, ...string[]]) {
     this.sendQueue.set(commands[0], commands.slice(1))
     if (this.isOpen) {
-      this._sendCommand(commands)
+      this.sendImmediately(commands)
     }
   }
 
-  _getDelay(count: number) {
+  ping() {
+    const socket = this.socket
+    if (
+      socket?.readyState !== WebSocket.OPEN ||
+      this.heartbeatTimeout !== undefined
+    )
+      return
+
+    socket.send('ping')
+    this.heartbeatTimeout = setTimeout(() => {
+      if (this.socket !== socket) return
+
+      this.stopHeartbeat()
+      socket.close()
+      this.reconnect()
+    }, this.options.pingTimeout)
+  }
+
+  private getReconnectDelay(count: number) {
     const { minReconnectionDelay, maxReconnectionDelay } = this.options
     return Math.min(minReconnectionDelay * 1.3 ** count, maxReconnectionDelay)
   }
 
-  _setupWs() {
-    return new Promise<void>(resolve => {
-      this._ws = new WebSocket(this.url, this.protocols)
+  private clearHeartbeatTimeout() {
+    clearTimeout(this.heartbeatTimeout)
+    this.heartbeatTimeout = undefined
+  }
 
-      this._ws.addEventListener(
+  private stopHeartbeat() {
+    clearInterval(this.heartbeatInterval)
+    this.heartbeatInterval = undefined
+    this.clearHeartbeatTimeout()
+  }
+
+  private startHeartbeat() {
+    this.stopHeartbeat()
+    this.heartbeatInterval = setInterval(
+      () => this.ping(),
+      this.options.pingInterval
+    )
+  }
+
+  private setupSocket() {
+    return new Promise<void>(resolve => {
+      const socket = new WebSocket(this.url, this.protocols)
+      this.socket = socket
+      const finish = () => {
+        clearTimeout(connectionTimeout)
+        resolve()
+      }
+      const connectionTimeout = setTimeout(() => {
+        if (socket.readyState !== WebSocket.CONNECTING) return
+
+        socket.close()
+        finish()
+      }, this.options.connectionTimeout)
+
+      socket.addEventListener(
         'open',
         () => {
-          resolve()
+          finish()
+          if (this.socket !== socket) {
+            socket.close()
+            return
+          }
+
           if (this.isInitialized) {
             this.eventTarget.dispatchEvent(new Event('reconnect'))
           } else {
@@ -86,28 +145,36 @@ export default class AutoReconnectWebSocket {
           }
 
           this.sendQueue.forEach((args, command) => {
-            this._sendCommand([command, ...args])
+            this.sendImmediately([command, ...args])
           })
+          this.startHeartbeat()
         },
         { once: true }
       )
-      this._ws.addEventListener(
+      socket.addEventListener(
         'error',
         () => {
-          resolve()
+          finish()
         },
         { once: true }
       )
 
-      this._ws.addEventListener('message', e => {
+      socket.addEventListener('message', e => {
+        if (this.socket !== socket) return
+
+        this.clearHeartbeatTimeout()
         this.eventTarget.dispatchEvent(
           new CustomEvent('message', { detail: e.data })
         )
       })
 
-      this._ws.addEventListener(
+      socket.addEventListener(
         'close',
         () => {
+          finish()
+          if (this.socket !== socket) return
+
+          this.stopHeartbeat()
           this.reconnect()
         },
         { once: true }
@@ -135,29 +202,38 @@ export default class AutoReconnectWebSocket {
   }
 
   async connect() {
-    if (this.isOpenOrConnecting) return
+    if (this.reconnecting || this.isOpenOrConnecting) return
 
-    return this._setupWs()
+    return this.setupSocket()
   }
 
-  async reconnect() {
+  private async reconnect() {
     if (this.reconnecting) return
     this.reconnecting = true
 
     let count = 0
     while (!this.isOpen) {
+      const delay = this.getReconnectDelay(count)
       count++
-
-      const delay = this._getDelay(count)
       await wait(delay)
 
       if (this.isOpen) break
 
       if (!this.mockFail) {
-        await this._setupWs()
+        await this.setupSocket()
       }
     }
 
     this.reconnecting = false
+  }
+
+  closeForDebug() {
+    this.mockFail = true
+    this.socket?.close()
+  }
+
+  reconnectForDebug() {
+    this.mockFail = false
+    this.connect()
   }
 }
