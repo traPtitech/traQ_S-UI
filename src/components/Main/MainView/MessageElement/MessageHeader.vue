@@ -29,10 +29,8 @@
 import { computed } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
-import {
-  getDateRepresentation,
-  getFullDayWithTimeString
-} from '/@/lib/basic/date'
+import { useDateRepresentation } from '/@/composables/useDateRepresentation'
+import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import { useUsersStore } from '/@/store/entities/users'
 import type { UserId } from '/@/types/entity-ids'
 
@@ -54,7 +52,7 @@ if (user.value === undefined) {
 const createdDate = computed(() =>
   getFullDayWithTimeString(new Date(props.createdAt))
 )
-const date = computed(() => getDateRepresentation(props.updatedAt))
+const date = useDateRepresentation(() => props.updatedAt)
 </script>
 
 <style lang="scss" module>
