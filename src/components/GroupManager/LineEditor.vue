@@ -145,5 +145,6 @@ const endEditing = () => {
   &[data-is-empty='true'] {
     @include color-ui-primary-inactive;
   }
+  text-align: left;
 }
 </style>

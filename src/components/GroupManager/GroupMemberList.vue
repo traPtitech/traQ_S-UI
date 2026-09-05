@@ -113,5 +113,6 @@ const onDelete = async (id: string) => {
 .role {
   @include size-caption;
   word-break: break-all;
+  text-align: left;
 }
 </style>

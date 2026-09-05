@@ -49,6 +49,7 @@ const emit = defineEmits<{
   @include color-ui-primary;
   grid-area: name;
   font-weight: bold;
+  text-align: left;
 }
 .adminList {
   @include color-ui-secondary;

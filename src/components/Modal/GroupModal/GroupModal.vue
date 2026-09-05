@@ -98,6 +98,7 @@ const onGroupEdit = (event: MouseEvent) => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: left;
 }
 .nonMemberAdmin {
   @include color-ui-secondary;
