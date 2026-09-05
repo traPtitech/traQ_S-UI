@@ -1,6 +1,7 @@
 <template>
   <div
     :class="$style.container"
+    :style="{ '--channel-indent': `${props.depth * 12}px` }"
     :data-is-selected="$boolAttr(isSelected)"
     :data-is-inactive="$boolAttr(!channel.active)"
   >
@@ -8,11 +9,9 @@
     <div
       :class="$style.channelContainer"
       :data-is-topic-shown="$boolAttr(showTopic)"
-      :style="{ paddingLeft: `${24 + props.depth * 20}px` }"
     >
       <ChannelElementIcon
         :class="$style.channelIcon"
-        :style="{ left: `${props.depth * 20}px` }"
         :has-child="hasChildren"
         :is-selected="isSelected"
         :is-opened="isOpened"
@@ -69,7 +68,6 @@
     <div
       v-if="isSelected || isChannelBgHovered || isFocused"
       :class="$style.selectedBg"
-      :style="{ left: `${props.depth * 20}px` }"
       :data-is-hovered="$boolAttr(isChannelBgHovered)"
       :data-is-focused="$boolAttr(isFocused)"
     />
@@ -211,6 +209,7 @@ $bgLeftShift: 8px;
   position: relative;
   display: flex;
   height: $elementHeight;
+  padding-left: calc(24px + var(--channel-indent));
   padding-right: 4px;
   margin-left: $bgLeftShift;
   z-index: 0;
@@ -231,6 +230,7 @@ $bgLeftShift: 8px;
   flex-shrink: 0;
   cursor: pointer;
   position: absolute;
+  left: var(--channel-indent);
   top: 50%;
   transform: translateY(-50%);
 }
@@ -238,6 +238,7 @@ $bgLeftShift: 8px;
 .selectedBg {
   position: absolute;
   height: $bgHeight;
+  left: var(--channel-indent);
   top: 0;
   right: -$bgLeftShift;
   z-index: 0;
