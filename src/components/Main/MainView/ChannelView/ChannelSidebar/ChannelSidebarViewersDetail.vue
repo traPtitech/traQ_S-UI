@@ -73,5 +73,6 @@ const inactiveUsers = computed(() =>
   word-break: normal;
   overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
+  text-align: left;
 }
 </style>

@@ -154,5 +154,6 @@ const toggle = (id: string) => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: left;
 }
 </style>

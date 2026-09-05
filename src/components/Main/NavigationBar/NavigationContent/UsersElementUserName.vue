@@ -30,6 +30,7 @@ defineProps<{
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  text-align: left;
 }
 .name {
   @include color-ui-secondary;

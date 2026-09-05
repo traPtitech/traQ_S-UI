@@ -70,6 +70,7 @@ const user = computed(() => usersMap.value.get(props.id))
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  text-align: left;
 }
 .controls {
   display: flex;
