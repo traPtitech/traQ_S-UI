@@ -16,8 +16,8 @@
       :class="$style.icon"
       mdi
       :size="20"
-      :name="volume > 0 ? 'volume-high' : 'volume-off'"
-      @click.prevent="toggleVolume"
+      :name="isMute ? 'volume-off' : 'volume-high'"
+      @click.prevent="isMute = !isMute"
     />
   </div>
 </template>
@@ -29,6 +29,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import ASlider from '/@/components/UI/ASlider.vue'
 
 const volume = defineModel<number>('volume', { required: true })
+const isMute = defineModel<boolean>('isMute', { required: true })
 
 withDefaults(
   defineProps<{
@@ -49,9 +50,6 @@ const roundedVolume = computed({
     volume.value = v
   }
 })
-const toggleVolume = () => {
-  roundedVolume.value = volume.value > 0 ? 0 : 100
-}
 </script>
 
 <style lang="scss" module>
