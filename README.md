@@ -19,7 +19,7 @@ If you want to deploy your own instance of traQ, then follow the instructions in
 
 ## Development
 
-If you want to contribute to traQ (Frontend), then follow the instructions in [development.md](./docs/development.md).
+If you want to contribute to traQ (Frontend), please read the [contribution guidelines](./CONTRIBUTING.md) and follow the [development guide](./docs/development.md).
 
 ## License
 
