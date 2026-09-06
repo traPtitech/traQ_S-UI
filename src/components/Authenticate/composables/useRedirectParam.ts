@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { isServerRequestUrl } from '/@/lib/apis'
+import { getServerRequestUrl } from '/@/lib/apis'
 import { getFirstQuery } from '/@/lib/basic/url'
 import { sessionStorageRedirectKey } from '/@/lib/dom/storage'
 import router, { RouteName } from '/@/router'
@@ -16,8 +16,9 @@ const useRedirectParam = () => {
       return
     }
 
-    if (isServerRequestUrl(url.value)) {
-      location.href = url.value
+    const serverRequestUrl = getServerRequestUrl(url.value)
+    if (serverRequestUrl) {
+      location.href = serverRequestUrl
       return
     }
 

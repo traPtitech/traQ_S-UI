@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { isServerRequestUrl } from '/@/lib/apis'
+import { getServerRequestUrl } from '/@/lib/apis'
 import { sessionStorageRedirectKey } from '/@/lib/dom/storage'
 
 import { settingsRoutes } from './settings'
@@ -145,8 +145,9 @@ const removeSessionStorageRedirect = router.beforeResolve(() => {
   if (redirectTo) {
     sessionStorage.removeItem(sessionStorageRedirectKey)
 
-    if (isServerRequestUrl(redirectTo)) {
-      location.href = redirectTo
+    const serverRequestUrl = getServerRequestUrl(redirectTo)
+    if (serverRequestUrl) {
+      location.href = serverRequestUrl
       return undefined
     }
     return redirectTo

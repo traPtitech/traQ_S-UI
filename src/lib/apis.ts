@@ -64,23 +64,24 @@ export const buildUserIconPathPublic = (userName: string) =>
 export const OAuthDecidePath = `${BASE_PATH}/oauth2/authorize/decide`
 
 /**
- * サーバーでの処理が必要なURLかどうかを判定する
+ * サーバーでの処理が必要な安全なURLを返す
  *
  * 例えば、`/api/v3/oauth2/authorize`は`router.replace`ではなくサーバーへのGETが必要
  * ([詳細](https://github.com/traPtitech/traQ/pull/1413))
  *
  * @param url 判定するURL (相対URLだった場合はlocation.hrefをbaseとして絶対URLに変換して判定する)
  */
-export const isServerRequestUrl = (url: string) => {
+export const getServerRequestUrl = (url: string) => {
   try {
     const u = new URL(url, location.href)
-    if (u.origin === location.origin) {
-      if (u.pathname === '/api/v3/oauth2/authorize') {
-        return true
-      }
+    if (
+      u.origin === location.origin &&
+      u.pathname === '/api/v3/oauth2/authorize'
+    ) {
+      return `/api/v3/oauth2/authorize${u.search}${u.hash}`
     }
   } catch {}
-  return false
+  return undefined
 }
 
 export const formatResizeError = (e: unknown, defaultMessage: string) => {
