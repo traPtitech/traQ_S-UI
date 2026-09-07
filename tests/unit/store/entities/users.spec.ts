@@ -31,6 +31,7 @@ describe('useUsersStore', () => {
   it('includes suspended users in the initial user cache', async () => {
     const users = [
       createUser('active-user', UserAccountState.active),
+      createUser('deactivated-user', UserAccountState.deactivated),
       createUser('suspended-user', UserAccountState.suspended)
     ]
     mockGetUsers.mockResolvedValue({ data: users })
