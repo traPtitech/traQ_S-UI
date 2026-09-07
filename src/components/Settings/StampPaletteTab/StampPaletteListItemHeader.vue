@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.name">
+    <div :class="$style.name" dir="auto">
       {{ palette.name }}
     </div>
     <router-link
@@ -59,6 +59,7 @@ const showStampPaletteDeleteToast = async () => {
   padding: 4px 8px;
   border-radius: 4px;
   margin-right: 8px;
+  text-align: left;
 }
 .link {
   @include color-ui-secondary;
