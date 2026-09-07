@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
+import PopupNavigator from '/@/components/Main/PopupNavigator/PopupNavigator.vue'
 import useNavigationController from '/@/composables/mainView/useNavigationController'
 import useResponsive from '/@/composables/useResponsive'
 
