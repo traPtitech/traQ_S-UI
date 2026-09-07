@@ -72,13 +72,13 @@ const useTtsPinia = defineStore('ui/tts', () => {
 
   const speak = async ({ userDisplayName, text }: Speach) => {
     const tokens = await parse(text)
-    let formatedText = format(tokens, embeddingOrigin)
+    let formattedText = format(tokens, embeddingOrigin)
 
-    if (formatedText.length > MAX_CHAR_COUNT) {
-      formatedText = `${formatedText.slice(0, MAX_CHAR_COUNT)} 。以下略`
+    if (formattedText.length > MAX_CHAR_COUNT) {
+      formattedText = `${formattedText.slice(0, MAX_CHAR_COUNT)} 。以下略`
     }
 
-    const utter = createUtter(`${userDisplayName}さん: ${formatedText}`)
+    const utter = createUtter(`${userDisplayName}さん: ${formattedText}`)
     speechSynthesis.speak(utter)
 
     return new Promise<void>(resolve => {
