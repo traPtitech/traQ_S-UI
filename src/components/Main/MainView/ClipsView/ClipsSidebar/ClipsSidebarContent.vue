@@ -7,7 +7,7 @@
         :max-length="30"
       >
         <template #default="slotProps">
-          {{ slotProps.content }}
+          <bdi>{{ slotProps.content }}</bdi>
         </template>
       </ContentEditor>
     </SidebarContentContainer>

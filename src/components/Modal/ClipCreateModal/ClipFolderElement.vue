@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :aria-selected="isSelected">
     <AIcon :class="$style.icon" mdi :name="iconName" />
-    <span>{{ folderName }}</span>
+    <bdi>{{ folderName }}</bdi>
   </div>
 </template>
 
