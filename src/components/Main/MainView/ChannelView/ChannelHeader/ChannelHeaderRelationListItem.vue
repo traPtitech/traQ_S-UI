@@ -1,7 +1,7 @@
 <template>
   <RouterLink :id="linkId" :to="channelLink" :class="$style.wrap">
     <div :class="$style.channelName"># {{ props.channel.name }}</div>
-    <div :class="[$style.topic, isTopicEmpty && $style.empty]">
+    <div :class="[$style.topic, isTopicEmpty && $style.empty]" dir="auto">
       {{ topic }}
     </div>
   </RouterLink>
@@ -53,6 +53,7 @@ defineExpose({ focus })
   contain: var(--contain-strict);
   height: 1.5rem;
   line-height: 1.5rem;
+  text-align: left;
 }
 
 .channelName {
