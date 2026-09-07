@@ -121,7 +121,7 @@ const useUsersStorePinia = defineStore('entities/users', () => {
       return usersMap.value
     }
 
-    const [{ data: users }, shared] = await getUsers()
+    const [{ data: users }, shared] = await getUsers(true)
     const newUsersMap = arrayToMap(users, 'id')
     if (!shared) {
       usersMap.value = newUsersMap
