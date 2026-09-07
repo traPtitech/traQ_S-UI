@@ -16,17 +16,23 @@
       @click="showStampPaletteDeleteToast"
     />
   </div>
-  <p :class="$style.description">
-    {{ palette.description }}
-  </p>
+  <MarkdownPreview
+    :class="$style.description"
+    :content="palette.description"
+    accept-action
+  />
 </template>
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
+import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import { constructSettingsStampPaletteDetailPath } from '/@/router/settingsStampPalette'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import { useUsersStore } from '/@/store/entities/users'
 import type { StampPalette } from '/@/types/entity'
 
 const { palette } = defineProps<{
@@ -44,6 +50,14 @@ const showStampPaletteDeleteToast = async () => {
     async () => await deleteStampPalette(palette.id)
   )
 }
+
+// 説明のレンダリングに必要
+const { fetchChannels } = useChannelsStore()
+fetchChannels()
+const { fetchUsers } = useUsersStore()
+fetchUsers()
+const { fetchUserGroups } = useGroupsStore()
+fetchUserGroups()
 </script>
 
 <style lang="scss" module>
@@ -80,6 +94,5 @@ const showStampPaletteDeleteToast = async () => {
 .description {
   @include color-ui-secondary;
   @include size-body2;
-  white-space: pre-wrap;
 }
 </style>
