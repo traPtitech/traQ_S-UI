@@ -6,6 +6,7 @@
         type="text"
         :class="$style.input"
         placeholder="タグを追加"
+        dir="auto"
       />
       <LengthCount :val="newTagName" :max-length="30" />
     </div>
