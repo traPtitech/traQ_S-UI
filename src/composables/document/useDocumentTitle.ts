@@ -37,8 +37,14 @@ const useDocumentTitle = () => {
   })
 
   watchEffect(() => {
-    const pre = primaryViewTitle.value
-    document.title = pre ? `${pre} - ${appName}` : appName
+    // ユーザー入力の文字方向が document.title 全体の表示方向に影響しないようにする
+    const pre = primaryViewTitle.value.replaceAll(/[\u2066-\u2069]/g, '')
+    const isolatedPre = pre
+      ? `${String.fromCodePoint(0x2068)}${pre}${String.fromCodePoint(0x2069)}`
+      : ''
+    document.title = isolatedPre
+      ? `${String.fromCodePoint(0x200e)}${isolatedPre} - ${appName}`
+      : appName
   })
 }
 
