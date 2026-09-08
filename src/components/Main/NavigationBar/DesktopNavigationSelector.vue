@@ -39,7 +39,7 @@ import {
   useEphemeralNavigationSelectorItem,
   useNavigationSelectorItem
 } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
-import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
+import PopupNavigator from '/@/components/Main/PopupNavigator/PopupNavigator.vue'
 import { VERSION } from '/@/lib/define'
 import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
 
