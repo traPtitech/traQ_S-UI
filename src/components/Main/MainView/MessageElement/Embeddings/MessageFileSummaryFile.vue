@@ -5,7 +5,7 @@
       :size="24"
       :is-animated-image="isAnimatedImage"
     />
-    <div>{{ fileMeta?.name ?? 'unknown' }}</div>
+    <div dir="ltr">{{ fileMeta?.name ?? 'unknown' }}</div>
   </RouterLink>
 </template>
 

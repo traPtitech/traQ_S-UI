@@ -10,6 +10,7 @@
       :class="$style.fileName"
       :data-is-ellipsis="$boolAttr(isEllipsis)"
       :title="name"
+      dir="ltr"
     >
       {{ name }}
     </div>

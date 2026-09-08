@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.title">
+    <div :class="$style.title" dir="ltr">
       {{ name }}
     </div>
     <div :class="$style.sliderContainer">

@@ -7,7 +7,7 @@
         :size="32"
         :disabled="cantPlay"
       />
-      <div :class="$style.title">
+      <div :class="$style.title" dir="ltr">
         {{ name }}
       </div>
       <div :class="$style.headerTools">
