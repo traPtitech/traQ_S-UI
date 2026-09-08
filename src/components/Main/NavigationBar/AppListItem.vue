@@ -7,7 +7,7 @@
   >
     <span v-if="isSvg" :class="$style.icon" v-html="svgHtml" />
     <img v-else :class="$style.icon" :src="`/img/services/${iconPath}`" />
-    <span :class="$style.label">{{ label }}</span>
+    <bdi :class="$style.label">{{ label }}</bdi>
   </a>
 </template>
 
