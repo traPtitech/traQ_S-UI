@@ -1,12 +1,13 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.title">
+    <div :class="$style.title" dir="auto">
       {{ title }}
     </div>
     <div
       v-if="description"
       :class="$style.description"
       :style="descriptionStyle"
+      dir="auto"
     >
       {{ description }}
     </div>
