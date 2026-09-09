@@ -32,6 +32,7 @@ export const format = (document: Document, embeddingOrigin: string) => {
         return node.data.value
       case names.Reference:
         return node.data.label
+      case names.Embedding:
       case names.InlineCode:
         return node.data.literal
       case names.Softbreak:
