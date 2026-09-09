@@ -21,7 +21,7 @@
 import { computed, nextTick, ref, watchEffect } from 'vue'
 
 import useMarkdownInternalHandler from '/@/composables/markdown/useMarkdownInternalHandler'
-import { render, renderInline } from '/@/lib/markdown/markdown'
+import { render, renderCondensed } from '/@/lib/markdown/markdown'
 import type { MarkdownRenderResult } from '/@/lib/markdown/types'
 
 const props = withDefaults(
@@ -43,7 +43,7 @@ const emit = defineEmits<{
 const rendered = ref<MarkdownRenderResult>()
 watchEffect(async () => {
   if (props.inline) {
-    rendered.value = await renderInline(props.content)
+    rendered.value = await renderCondensed(props.content)
   } else {
     rendered.value = await render(props.content)
   }
