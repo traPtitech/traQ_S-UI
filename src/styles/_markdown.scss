@@ -1,5 +1,5 @@
 @use 'sass:meta';
-@use '@traptitech/traq-markdown-it/src/css/markdown' with (
+@use '@traq-markdown-parser/traq/styles/markdown' with (
   $link-color: var(--markdown-link-text),
   $hr-color: var(--markdown-hr-text),
   $h6-color: var(--markdown-h6-text),

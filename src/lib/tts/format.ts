@@ -1,4 +1,5 @@
-import type Token from 'markdown-it/lib/token.d.mts'
+import type { Document, Node } from '@traq-markdown-parser/traq'
+import { names } from '@traq-markdown-parser/traq/nodes'
 
 export const formatUrl = (text: string, embeddingOrigin: string) => {
   try {
@@ -24,66 +25,36 @@ export const formatUrl = (text: string, embeddingOrigin: string) => {
   }
 }
 
-export const format = (
-  inputTokens: readonly Token[],
-  embeddingOrigin: string
-) => {
-  const tokens = inputTokens.flatMap(token => {
-    if (token.type === 'inline') return token.children || []
-    return token
-  })
-
-  const rendered = []
-  let linkHref: string | null = null
-  let isInSpoiler = false
-  for (const token of tokens) {
-    if (token.type === 'link_close') {
-      linkHref = null
-      continue
-    } else if (token.type === 'spoiler_close') {
-      rendered.push(' ﾍﾟｹﾍﾟｹ ')
-      isInSpoiler = false
-      continue
-    }
-
-    if (linkHref !== null) {
-      if (token.type === 'text') {
-        if (linkHref === token.content) {
-          rendered.push(formatUrl(token.content, embeddingOrigin))
-        } else {
-          rendered.push(token.content)
-        }
-      }
-      continue
-    } else if (isInSpoiler) {
-      continue
-    }
-
-    if (token.type === 'link_open') {
-      linkHref = token.attrGet('href') ?? ''
-      continue
-    } else if (token.type === 'spoiler_open') {
-      isInSpoiler = true
-      continue
-    }
-
-    if (token.type === 'text') {
-      rendered.push(token.content)
-    } else if (token.type === 'softbreak') {
-      rendered.push('\n')
-    } else if (token.type === 'regexp-0') {
-      // stamp
-      const stampName = token.meta.match[0].slice(1, -1)
-      rendered.push(` ${stampName}スタンプ `)
-    } else if (token.type === 'math_inline') {
-      rendered.push(' 数式 ')
-    } else if (token.type === 'math_block') {
-      rendered.push('\n数式\n')
-    } else if (token.type === 'fence') {
-      rendered.push('\nコードブロック\n')
-    } else if (token.type === 'code_inline') {
-      rendered.push(token.content)
+export const format = (document: Document, embeddingOrigin: string) => {
+  const render = (node: Node): string => {
+    switch (node.kind) {
+      case names.Text:
+        return node.data.value
+      case names.Reference:
+        return node.data.label
+      case names.InlineCode:
+        return node.data.literal
+      case names.Softbreak:
+        return '\n'
+      case names.Spoiler:
+        return ' ﾍﾟｹﾍﾟｹ '
+      case names.Stamp:
+        return ' ' + node.data.literal.slice(1, -1) + 'スタンプ '
+      case names.InlineMath:
+        return ' 数式 '
+      case names.BlockMath:
+        return '\n数式\n'
+      case names.CodeBlock:
+        return node.data.fenced ? '\nコードブロック\n' : ''
+      case names.Image:
+        return ''
+      case names.Link:
+        return node.data.form === 'explicit'
+          ? (node.children ?? []).map(render).join('')
+          : formatUrl(node.data.destination, embeddingOrigin)
+      default:
+        return (node.children ?? []).map(render).join('')
     }
   }
-  return rendered.join('')
+  return document.children.map(render).join('')
 }

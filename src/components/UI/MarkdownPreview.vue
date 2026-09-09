@@ -18,12 +18,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
-
 import { computed, nextTick, ref, watchEffect } from 'vue'
 
 import useMarkdownInternalHandler from '/@/composables/markdown/useMarkdownInternalHandler'
 import { render, renderInline } from '/@/lib/markdown/markdown'
+import type { MarkdownRenderResult } from '/@/lib/markdown/types'
 
 const props = withDefaults(
   defineProps<{
