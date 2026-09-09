@@ -50,10 +50,26 @@ const storeProvider: Store = {
 }
 
 let md: traQMarkdownIt
+
+const autoDirectionTokenTypes = new Set([
+  'paragraph_open',
+  'heading_open',
+  'list_item_open',
+  'th_open',
+  'td_open'
+])
+
 const loadMd = async () => {
   if (md) return
   const { traQMarkdownIt } = await import('./traq-markdown-it')
   md = new traQMarkdownIt(storeProvider, [], embeddingOrigin)
+  md.md.core.ruler.after('inline', 'bidi-auto-direction', state => {
+    for (const token of state.tokens) {
+      if (autoDirectionTokenTypes.has(token.type)) {
+        token.attrSet('dir', 'auto')
+      }
+    }
+  })
 }
 
 const waitForInitialFetch = () => {

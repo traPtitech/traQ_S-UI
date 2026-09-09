@@ -1,5 +1,5 @@
 <template>
-  <span
+  <bdi
     v-if="props.inline"
     class="markdown-inline-body"
     :class="$style.content"

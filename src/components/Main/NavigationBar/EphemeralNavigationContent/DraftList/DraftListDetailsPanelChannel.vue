@@ -3,7 +3,7 @@
     <div :class="$style.container">
       <div :class="$style.state">
         <AIcon v-if="hasAttachments" name="file" mdi :class="$style.icon" />
-        <div
+        <bdi
           class="markdown-inline-body"
           :class="$style.text"
           v-html="renderedContent"
