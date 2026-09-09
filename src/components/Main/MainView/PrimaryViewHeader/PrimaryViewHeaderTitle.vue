@@ -6,7 +6,7 @@
       :name="iconName"
       :mdi="iconMdi"
     />
-    <h1 :class="$style.title">
+    <h1 :class="$style.title" dir="auto">
       {{ title }}
     </h1>
   </div>

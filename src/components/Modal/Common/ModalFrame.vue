@@ -12,7 +12,7 @@
       >
         <template #subtitle>
           <template v-if="subtitle">
-            {{ subtitle }}
+            <bdi>{{ subtitle }}</bdi>
           </template>
           <slot v-else name="subtitle" />
         </template>
