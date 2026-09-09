@@ -17,6 +17,12 @@ const backQuote = '`'
 const dollar = '$'
 const defaultCodeTokenLength = 3
 
+interface ReplaceState {
+  inCodeBlock: boolean
+  inLatexBlock: boolean
+  codeTokenLength: number
+}
+
 export type ReplaceGetters = UserAndGroupGetters & ChannelGetter
 
 interface UserAndGroupGetters {
@@ -45,74 +51,88 @@ export interface Entity {
  * replacer.goのReplaceと同様のコード
  */
 export const replace = (m: string, getters: Readonly<ReplaceGetters>) => {
-  let inCodeBlock = false
-  let inLatexBlock = false
-  let codeTokenLength = defaultCodeTokenLength
+  const state: ReplaceState = {
+    inCodeBlock: false,
+    inLatexBlock: false,
+    codeTokenLength: defaultCodeTokenLength
+  }
+  return m
+    .split('\n')
+    .map(line => replaceLine(line, getters, state))
+    .join('\n')
+}
 
-  const lines = m.split('\n')
-  const newLines = lines.map(line => {
-    if (!inLatexBlock && line.startsWith('`'.repeat(codeTokenLength))) {
-      // `の数が一致するものと組み合うようにする
-      if (!inCodeBlock) {
-        codeTokenLength = countPrefix(line, backQuote)
-      } else {
-        codeTokenLength = defaultCodeTokenLength
-      }
+const replaceLine = (
+  line: string,
+  getters: Readonly<ReplaceGetters>,
+  state: ReplaceState
+) => {
+  if (
+    !state.inLatexBlock &&
+    line.startsWith('`'.repeat(state.codeTokenLength))
+  ) {
+    // `の数が一致するものと組み合うようにする
+    state.codeTokenLength = state.inCodeBlock
+      ? defaultCodeTokenLength
+      : countPrefix(line, backQuote)
+    state.inCodeBlock = !state.inCodeBlock
+  }
+  if (!state.inCodeBlock && line.startsWith('$$')) {
+    state.inLatexBlock = !state.inLatexBlock
+  }
+  if (state.inCodeBlock || state.inLatexBlock) {
+    return line
+  }
 
-      inCodeBlock = !inCodeBlock
+  return replaceOutsideExpressions(line, getters)
+}
+
+const replaceOutsideExpressions = (
+  line: string,
+  getters: Readonly<ReplaceGetters>
+) => {
+  let newLine = ''
+  // 「`」「$」で囲まれていないところの始めの文字のindex
+  let noExpressionStartIndex = 0
+  const chs = [...line]
+  for (let i = 0; i < chs.length; i++) {
+    const ch = chs[i]
+    if (ch !== backQuote && ch !== dollar) {
+      continue
     }
-    if (!inCodeBlock && line.startsWith('$$')) {
-      inLatexBlock = !inLatexBlock
-    }
-    if (inCodeBlock || inLatexBlock) {
-      return line
-    }
-    // 「```」のブロックでも「$$」ブロック内でもないときに置換
 
-    let newLine = ''
-    // 「`」「$」で囲まれていないところの始めの文字のindex
-    let noExpressionStartIndex = 0
-    const chs = [...line]
-    for (let i = 0; i < chs.length; i++) {
-      const ch = chs[i]
-      if (ch !== backQuote && ch !== dollar) {
-        continue
-      }
+    // 囲まれていない場所が終了したのでその箇所は置換する
+    newLine += replaceAll(
+      chs.slice(noExpressionStartIndex, i).join(''),
+      getters
+    )
 
-      // 囲まれていない場所が終了したのでその箇所は置換する
-      newLine += replaceAll(
-        chs.slice(noExpressionStartIndex, i).join(''),
-        getters
-      )
-
-      if (ch === dollar) {
-        // 「`」は「$」よりも優先されるので
-        // 「$ ` $」のように「`」がペアの「$」より前にあるときは
-        // 「$」のペアとして処理しない
-        const backQuoteI = chs.indexOf(backQuote, i + 1)
-        const dollarI = chs.indexOf(dollar, i + 1)
-        if (backQuoteI !== -1 && dollarI !== -1 && backQuoteI < dollarI) {
-          newLine += ch
-          noExpressionStartIndex = i + 1
-          continue
-        }
-      }
-      const newI = chs.indexOf(ch, i + 1)
-      if (newI === -1) {
-        // 「$」/「`」のペアがないとき
+    if (ch === dollar) {
+      // 「`」は「$」よりも優先されるので
+      // 「$ ` $」のように「`」がペアの「$」より前にあるときは
+      // 「$」のペアとして処理しない
+      const backQuoteI = chs.indexOf(backQuote, i + 1)
+      const dollarI = chs.indexOf(dollar, i + 1)
+      if (backQuoteI !== -1 && dollarI !== -1 && backQuoteI < dollarI) {
         newLine += ch
         noExpressionStartIndex = i + 1
         continue
       }
-      newLine += chs.slice(i, newI).join('')
-      i = newI
-      noExpressionStartIndex = newI
     }
-    // 最後のペア以降の置換
-    newLine += replaceAll(chs.slice(noExpressionStartIndex).join(''), getters)
-    return newLine
-  })
-  return newLines.join('\n')
+    const newI = chs.indexOf(ch, i + 1)
+    if (newI === -1) {
+      // 「$」/「`」のペアがないとき
+      newLine += ch
+      noExpressionStartIndex = i + 1
+      continue
+    }
+    newLine += chs.slice(i, newI).join('')
+    i = newI
+    noExpressionStartIndex = newI
+  }
+  // 最後のペア以降の置換
+  newLine += replaceAll(chs.slice(noExpressionStartIndex).join(''), getters)
+  return newLine
 }
 
 const replaceAll = (m: string, getters: Readonly<ReplaceGetters>) => {
