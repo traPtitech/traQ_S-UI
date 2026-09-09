@@ -30,6 +30,18 @@ export const count = (str: string, char: string) =>
  */
 export const countLength = (text: string) => Array.from(text).length
 
+const FSI = String.fromCodePoint(0x2068)
+const PDI = String.fromCodePoint(0x2069)
+const ISOLATE_CHARACTERS = /[\u2066-\u2069]/g
+
+/**
+ * 文字列内の既存の方向分離制御文字を取り除き、文字列全体を新しい方向分離境界で囲む
+ */
+export const isolateBidiText = (text: string) => {
+  const sanitized = text.replaceAll(ISOLATE_CHARACTERS, '')
+  return `${FSI}${sanitized}${PDI}`
+}
+
 /**
  * `position`から前方向に検索を始め、`searchStrings`のいずれかが最後に現れたインデックスを返す
  */
