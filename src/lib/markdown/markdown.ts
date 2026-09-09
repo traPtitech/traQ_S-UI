@@ -42,25 +42,31 @@ const storeProvider: NonNullable<Options['store']> = {
 }
 
 let parser: Parser
-let md: ReturnType<typeof messageRenderer>
+let renderer: ReturnType<typeof messageRenderer>
 let loading: Promise<void> | undefined
-const loadMd = () =>
+const loadMarkdown = () =>
   (loading ??= (async () => {
     const { createRuntime, presets, messageRenderer, wasmUrl } =
       await import('./runtime')
+
     const response = await fetch(wasmUrl)
     if (!response.ok) throw new Error('Failed to load Markdown parser')
+
     const runtime = await createRuntime(
       new Uint8Array(await response.arrayBuffer())
     )
+
     parser = runtime.createParser(presets.traq.v1)
-    md = messageRenderer({ store: storeProvider, origin: embeddingOrigin })
+    renderer = messageRenderer({
+      store: storeProvider,
+      origin: embeddingOrigin
+    })
   })().catch(error => {
     loading = undefined
     throw error
   }))
 
-const waitForInitialFetch = () => {
+const waitForMarkdownReady = () => {
   const { usersMapInitialFetchPromise } = useUsersStore()
   const { userGroupsMapInitialFetchPromise } = useGroupsStore()
   const { bothChannelsMapInitialFetchPromise } = useChannelsStore()
@@ -71,28 +77,25 @@ const waitForInitialFetch = () => {
     userGroupsMapInitialFetchPromise,
     bothChannelsMapInitialFetchPromise,
     stampsMapInitialFetchPromise,
-    loadMd()
+    loadMarkdown()
   ])
 }
 
-export const render = async (text: string) => {
-  await waitForInitialFetch()
-  return md.render(parser.parse(text))
-}
-
-export const renderInline = async (text: string) => {
-  await waitForInitialFetch()
-  return md.renderInline(parser.parse(text))
-}
-
 export const parse = async (text: string) => {
-  await waitForInitialFetch()
+  await waitForMarkdownReady()
+
   return parser.parse(text)
 }
 
+export const render = async (text: string) => renderer.render(await parse(text))
+
+export const renderInline = async (text: string) =>
+  renderer.renderInline(await parse(text))
+
 export const isEmbeddedLink = async (text: string) => {
-  await waitForInitialFetch()
-  const { embeddingFromUrl } =
-    await import('@traq-markdown-parser/traq/renderer/v1')
+  await waitForMarkdownReady()
+
+  const { embeddingFromUrl } = await import('./runtime')
+
   return isDefined(embeddingFromUrl(text, embeddingOrigin))
 }
