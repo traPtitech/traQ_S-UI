@@ -1,12 +1,11 @@
 export {
   createRuntime,
   presets,
-  processors,
   embedReferences,
   mentionsUser
 } from '@traq-markdown-parser/traq'
 export {
   endsWithEmbedding,
   messageRenderer
-} from '@traq-markdown-parser/traq/renderer/v1'
+} from '@traq-markdown-parser/traq/renderer'
 export { default as wasmUrl } from '@traq-markdown-parser/traq/parser.wasm?url'

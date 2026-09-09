@@ -1,6 +1,6 @@
 import type { LookupKind, Parser, Processor } from '@traq-markdown-parser/traq'
-import type { Options } from '@traq-markdown-parser/traq/renderer/v1'
-import type { messageRenderer } from '@traq-markdown-parser/traq/renderer/v1'
+import type { Options } from '@traq-markdown-parser/traq/renderer'
+import type { messageRenderer } from '@traq-markdown-parser/traq/renderer'
 
 import useChannelPath from '/@/composables/useChannelPath'
 import { embeddingOrigin } from '/@/lib/apis'
@@ -45,7 +45,7 @@ let renderer: ReturnType<typeof messageRenderer>
 let loading: Promise<void> | undefined
 const loadMarkdown = () =>
   (loading ??= (async () => {
-    const { createRuntime, presets, processors, messageRenderer, wasmUrl } =
+    const { createRuntime, presets, messageRenderer, wasmUrl } =
       await import('./runtime')
 
     const response = await fetch(wasmUrl)
@@ -56,7 +56,7 @@ const loadMarkdown = () =>
     )
 
     parser = runtime.createParser(presets.traq.v1)
-    processor = runtime.createProcessor(processors.traq.v1, {
+    processor = runtime.createProcessor(presets.traq.v1, {
       origin: embeddingOrigin
     })
     renderer = messageRenderer({
