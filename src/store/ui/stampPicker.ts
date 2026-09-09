@@ -1,8 +1,10 @@
-import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
-
 import type { Ref } from 'vue'
 import { computed, ref, watch } from 'vue'
 
+import type {
+  AnimeEffect,
+  SizeEffect
+} from '@traq-markdown-parser/trap-extension/stamp-effects'
 import { useEventListener } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { throttle } from 'throttle-debounce'

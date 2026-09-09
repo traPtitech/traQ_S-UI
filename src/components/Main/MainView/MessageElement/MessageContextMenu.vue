@@ -59,7 +59,7 @@ import useCopyText from '/@/composables/toast/useCopyText'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import apis from '/@/lib/apis'
 import type { Point } from '/@/lib/basic/point'
-import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
+import { unembedInternalLinks } from '/@/lib/markdown/markdown'
 import { useMeStore } from '/@/store/domain/me'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
@@ -94,7 +94,7 @@ const useCopyMd = (messageId: Ref<MessageId>) => {
 
   const copyMd = async () => {
     const content = messagesMap.value.get(messageId.value)?.content ?? ''
-    const replacedContent = replaceBack(content)
+    const replacedContent = await unembedInternalLinks(content)
     copyText(replacedContent, 'Markdown')
   }
   return { copyMd }

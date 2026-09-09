@@ -10,9 +10,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
-
 import { computed, ref, watchEffect } from 'vue'
+
+import type {
+  AnimeEffect,
+  SizeEffect
+} from '@traq-markdown-parser/trap-extension/stamp-effects'
 
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import { constructStampString } from '/@/lib/markdown/constructStampString'
