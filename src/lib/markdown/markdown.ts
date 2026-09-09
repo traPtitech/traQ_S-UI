@@ -1,6 +1,6 @@
 import type { Extractor, LookupKind, Parser } from '@traq-markdown-parser/traq'
 import type { Options } from '@traq-markdown-parser/traq/renderer'
-import type { messageRenderer } from '@traq-markdown-parser/traq/renderer'
+import type { messageRenderers } from '@traq-markdown-parser/traq/renderer'
 
 import useChannelPath from '/@/composables/useChannelPath'
 import { embeddingOrigin } from '/@/lib/apis'
@@ -41,11 +41,11 @@ const storeProvider: NonNullable<Options['store']> = {
 
 let parser: Parser
 let extractor: Extractor
-let renderer: ReturnType<typeof messageRenderer>
+let renderers: ReturnType<typeof messageRenderers>
 let loading: Promise<void> | undefined
 const loadMarkdown = () =>
   (loading ??= (async () => {
-    const { createRuntime, presets, messageRenderer, wasmUrl } =
+    const { createRuntime, presets, messageRenderers, wasmUrl } =
       await import('./runtime')
 
     const response = await fetch(wasmUrl)
@@ -59,7 +59,7 @@ const loadMarkdown = () =>
     extractor = runtime.createExtractor({
       origin: embeddingOrigin
     })
-    renderer = messageRenderer({
+    renderers = messageRenderers({
       store: storeProvider,
       origin: embeddingOrigin
     })
@@ -89,10 +89,15 @@ export const parse = async (text: string) => {
   return parser.parse(text)
 }
 
-export const render = async (text: string) => renderer.render(await parse(text))
+export const render = async (text: string) => {
+  const document = await parse(text)
+  return renderers.standard.render(document)
+}
 
-export const renderInline = async (text: string) =>
-  renderer.renderInline(await parse(text))
+export const renderCondensed = async (text: string) => {
+  const document = await parse(text)
+  return renderers.condensed.render(document)
+}
 
 export const endsWithEmbeddedLink = async (text: string) => {
   await waitForMarkdownReady()

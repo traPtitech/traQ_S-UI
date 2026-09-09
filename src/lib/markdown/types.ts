@@ -1,10 +1,10 @@
 import type {
   Embedding,
-  messageRenderer
+  messageRenderers
 } from '@traq-markdown-parser/traq/renderer'
 
 export type MarkdownRenderResult = ReturnType<
-  ReturnType<typeof messageRenderer>['render']
+  ReturnType<typeof messageRenderers>['standard']['render']
 >
 export type EmbeddingOrUrl = Embedding
 export type EmbeddingFile = Extract<Embedding, { type: 'file' }>
