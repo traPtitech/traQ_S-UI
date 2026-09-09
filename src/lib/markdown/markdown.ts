@@ -1,4 +1,4 @@
-import type { LookupKind, Parser, Processor } from '@traq-markdown-parser/traq'
+import type { Extractor, LookupKind, Parser } from '@traq-markdown-parser/traq'
 import type { Options } from '@traq-markdown-parser/traq/renderer'
 import type { messageRenderer } from '@traq-markdown-parser/traq/renderer'
 
@@ -40,7 +40,7 @@ const storeProvider: NonNullable<Options['store']> = {
 }
 
 let parser: Parser
-let processor: Processor
+let extractor: Extractor
 let renderer: ReturnType<typeof messageRenderer>
 let loading: Promise<void> | undefined
 const loadMarkdown = () =>
@@ -56,7 +56,7 @@ const loadMarkdown = () =>
     )
 
     parser = runtime.createParser(presets.traq.v1)
-    processor = runtime.createProcessor(presets.traq.v1, {
+    extractor = runtime.createExtractor({
       origin: embeddingOrigin
     })
     renderer = messageRenderer({
@@ -102,24 +102,24 @@ export const endsWithEmbeddedLink = async (text: string) => {
   return endsWithEmbedding(parser.parse(text), embeddingOrigin)
 }
 
-const processMarkdown = async (text: string) => {
+const extractMarkdown = async (text: string) => {
   await loadMarkdown()
 
-  return processor.process(text)
+  return extractor.extract(parser.parse(text))
 }
 
 export const embedInternalLinks = async (
   text: string,
   resolve: (kind: LookupKind, name: string) => string | undefined
 ) => {
-  const result = await processMarkdown(text)
+  const result = await extractMarkdown(text)
   const { embedReferences } = await import('./runtime')
 
   return embedReferences(text, result.embedding, resolve)
 }
 
 export const unembedInternalLinks = async (text: string) => {
-  const result = await processMarkdown(text)
+  const result = await extractMarkdown(text)
 
   return result.embedding.unembeddedText
 }
@@ -129,7 +129,7 @@ export const detectMentionOfMe = async (
   userId: string,
   groupIds: readonly string[]
 ) => {
-  const result = await processMarkdown(text)
+  const result = await extractMarkdown(text)
   const { mentionsUser } = await import('./runtime')
 
   return mentionsUser(result.references, userId, groupIds)
