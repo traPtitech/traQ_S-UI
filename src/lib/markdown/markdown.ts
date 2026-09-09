@@ -1,4 +1,6 @@
-import type { Store, traQMarkdownIt } from '@traptitech/traq-markdown-it'
+import type { Parser } from '@traq-markdown-parser/traq'
+import type { Options } from '@traq-markdown-parser/traq/renderer/v1'
+import type { messageRenderer } from '@traq-markdown-parser/traq/renderer/v1'
 
 import useChannelPath from '/@/composables/useChannelPath'
 import { embeddingOrigin } from '/@/lib/apis'
@@ -10,15 +12,7 @@ import { useUsersStore } from '/@/store/entities/users'
 
 import { isDefined } from '../basic/array'
 
-const storeProvider: Store = {
-  getUser(id) {
-    const { usersMap } = useUsersStore()
-    return usersMap.value.get(id)
-  },
-  getChannel(id) {
-    const { channelsMap } = useChannelsStore()
-    return channelsMap.value.get(id)
-  },
+const storeProvider: NonNullable<Options['store']> = {
   getUserGroup(id) {
     const { userGroupsMap } = useGroupsStore()
     return userGroupsMap.value.get(id)
@@ -40,21 +34,31 @@ const storeProvider: Store = {
     return `${embeddingOrigin}${channelIdToLink(id) as string}`
   },
   generateUserHref(id) {
-    return `javascript:openUserModal(${encodeURIComponent(JSON.stringify(id))})`
+    return `${embeddingOrigin}/users/${encodeURIComponent(id)}`
   },
   generateUserGroupHref(id) {
-    return `javascript:openGroupModal(${encodeURIComponent(
-      JSON.stringify(id)
-    )})`
+    return `${embeddingOrigin}/groups/${encodeURIComponent(id)}`
   }
 }
 
-let md: traQMarkdownIt
-const loadMd = async () => {
-  if (md) return
-  const { traQMarkdownIt } = await import('./traq-markdown-it')
-  md = new traQMarkdownIt(storeProvider, [], embeddingOrigin)
-}
+let parser: Parser
+let md: ReturnType<typeof messageRenderer>
+let loading: Promise<void> | undefined
+const loadMd = () =>
+  (loading ??= (async () => {
+    const { createRuntime, presets, messageRenderer, wasmUrl } =
+      await import('./runtime')
+    const response = await fetch(wasmUrl)
+    if (!response.ok) throw new Error('Failed to load Markdown parser')
+    const runtime = await createRuntime(
+      new Uint8Array(await response.arrayBuffer())
+    )
+    parser = runtime.createParser(presets.traq.v1)
+    md = messageRenderer({ store: storeProvider, origin: embeddingOrigin })
+  })().catch(error => {
+    loading = undefined
+    throw error
+  }))
 
 const waitForInitialFetch = () => {
   const { usersMapInitialFetchPromise } = useUsersStore()
@@ -73,20 +77,22 @@ const waitForInitialFetch = () => {
 
 export const render = async (text: string) => {
   await waitForInitialFetch()
-  return md.render(text)
+  return md.render(parser.parse(text))
 }
 
 export const renderInline = async (text: string) => {
   await waitForInitialFetch()
-  return md.renderInline(text)
+  return md.renderInline(parser.parse(text))
 }
 
 export const parse = async (text: string) => {
   await waitForInitialFetch()
-  return md.md.parse(text, {})
+  return parser.parse(text)
 }
 
 export const isEmbeddedLink = async (text: string) => {
   await waitForInitialFetch()
-  return isDefined(md.embeddingExtractor.urlToEmbeddingData(text))
+  const { embeddingFromUrl } =
+    await import('@traq-markdown-parser/traq/renderer/v1')
+  return isDefined(embeddingFromUrl(text, embeddingOrigin))
 }

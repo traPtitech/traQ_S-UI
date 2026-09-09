@@ -24,14 +24,13 @@
 </template>
 
 <script lang="ts">
-import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
-
 import { computed, ref, watchEffect } from 'vue'
 
 import type { AttachmentType } from '/@/lib/basic/file'
 import { mimeToFileType } from '/@/lib/basic/file'
 import { isFile } from '/@/lib/guard/embeddingOrUrl'
 import { renderInline } from '/@/lib/markdown/markdown'
+import type { MarkdownRenderResult } from '/@/lib/markdown/types'
 import { useMessagesStore } from '/@/store/entities/messages'
 
 const getUniqueFileTypes = (fileTypes: Array<[AttachmentType, boolean]>) => {

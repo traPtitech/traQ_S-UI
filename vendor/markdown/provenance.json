@@ -1,0 +1,26 @@
+[
+  {
+    "repository": "https://github.com/traq-markdown-parser/core",
+    "commit": "96759e138d74730de25fb891d92166adffa82470",
+    "file": "traq-markdown-parser-core-0.1.0.tgz",
+    "sha256": "52b0c614678e45493d6fe0d59a58d93b677d5e9999136f52b831ec3aab2e6f91"
+  },
+  {
+    "repository": "https://github.com/traq-markdown-parser/commonmark",
+    "commit": "1e74f7f05de155476b3b42e4f7666b9cb573348b",
+    "file": "traq-markdown-parser-commonmark-0.1.0.tgz",
+    "sha256": "b350559f268b7008349ea7d159d767152e967a4d4bfbd148b9c325ee30abb492"
+  },
+  {
+    "repository": "https://github.com/traq-markdown-parser/trap-extension",
+    "commit": "3e5ff6ee50eb73838c9c775786d8de25ddc3dd49",
+    "file": "traq-markdown-parser-trap-extension-0.1.0.tgz",
+    "sha256": "1a532f5cc28dea3ebe648d1ef363524498a0ec1461f686e261e72ff4cc4e8a7f"
+  },
+  {
+    "repository": "https://github.com/traq-markdown-parser/traq",
+    "commit": "4f9a8ca2eb84db5cfc98f895146cab5dbf0be80e",
+    "file": "traq-markdown-parser-traq-0.1.0.tgz",
+    "sha256": "a50b18a6db4b95fd350414c840edf95943816afe15258b0148ac39607e908d17"
+  }
+]
