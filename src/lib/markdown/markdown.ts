@@ -1,4 +1,4 @@
-import type { Parser } from '@traq-markdown-parser/traq'
+import type { LookupKind, Parser, Processor } from '@traq-markdown-parser/traq'
 import type { Options } from '@traq-markdown-parser/traq/renderer/v1'
 import type { messageRenderer } from '@traq-markdown-parser/traq/renderer/v1'
 
@@ -9,8 +9,6 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
-
-import { isDefined } from '../basic/array'
 
 const storeProvider: NonNullable<Options['store']> = {
   getUserGroup(id) {
@@ -42,11 +40,12 @@ const storeProvider: NonNullable<Options['store']> = {
 }
 
 let parser: Parser
+let processor: Processor
 let renderer: ReturnType<typeof messageRenderer>
 let loading: Promise<void> | undefined
 const loadMarkdown = () =>
   (loading ??= (async () => {
-    const { createRuntime, presets, messageRenderer, wasmUrl } =
+    const { createRuntime, presets, processors, messageRenderer, wasmUrl } =
       await import('./runtime')
 
     const response = await fetch(wasmUrl)
@@ -57,6 +56,9 @@ const loadMarkdown = () =>
     )
 
     parser = runtime.createParser(presets.traq.v1)
+    processor = runtime.createProcessor(processors.traq.v1, {
+      origin: embeddingOrigin
+    })
     renderer = messageRenderer({
       store: storeProvider,
       origin: embeddingOrigin
@@ -92,10 +94,43 @@ export const render = async (text: string) => renderer.render(await parse(text))
 export const renderInline = async (text: string) =>
   renderer.renderInline(await parse(text))
 
-export const isEmbeddedLink = async (text: string) => {
+export const endsWithEmbeddedLink = async (text: string) => {
   await waitForMarkdownReady()
 
-  const { embeddingFromUrl } = await import('./runtime')
+  const { endsWithEmbedding } = await import('./runtime')
 
-  return isDefined(embeddingFromUrl(text, embeddingOrigin))
+  return endsWithEmbedding(parser.parse(text), embeddingOrigin)
+}
+
+const processMarkdown = async (text: string) => {
+  await loadMarkdown()
+
+  return processor.process(text)
+}
+
+export const embedInternalLinks = async (
+  text: string,
+  resolve: (kind: LookupKind, name: string) => string | undefined
+) => {
+  const result = await processMarkdown(text)
+  const { embedReferences } = await import('./runtime')
+
+  return embedReferences(text, result.embedding, resolve)
+}
+
+export const unembedInternalLinks = async (text: string) => {
+  const result = await processMarkdown(text)
+
+  return result.embedding.unembeddedText
+}
+
+export const detectMentionOfMe = async (
+  text: string,
+  userId: string,
+  groupIds: readonly string[]
+) => {
+  const result = await processMarkdown(text)
+  const { mentionsUser } = await import('./runtime')
+
+  return mentionsUser(result.references, userId, groupIds)
 }
