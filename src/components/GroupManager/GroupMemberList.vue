@@ -24,7 +24,7 @@
         @edit="onEdit(member.id)"
         @delete="onDelete(member.id)"
       >
-        <div :class="$style.role">
+        <div :class="$style.role" dir="auto">
           {{ member.role }}
         </div>
       </GroupUser>
@@ -113,5 +113,6 @@ const onDelete = async (id: string) => {
 .role {
   @include size-caption;
   word-break: break-all;
+  text-align: left;
 }
 </style>

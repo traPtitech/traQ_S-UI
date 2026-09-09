@@ -14,7 +14,12 @@
       :effect-name-with-dot="candidate.text"
     />
     <div :class="$style.name">
-      {{ display ?? candidate.text }}
+      <template v-if="candidate.type === 'user-group'">
+        @<bdi>{{ candidate.text.slice(1) }}</bdi>
+      </template>
+      <template v-else>
+        {{ display ?? candidate.text }}
+      </template>
     </div>
   </div>
 </template>

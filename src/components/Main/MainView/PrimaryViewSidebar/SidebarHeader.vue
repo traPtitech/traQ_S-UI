@@ -9,7 +9,7 @@
     <span v-else-if="iconString" :class="$style.iconString">{{
       iconString
     }}</span>
-    <span :class="$style.text">{{ text }}</span>
+    <bdi :class="$style.text">{{ text }}</bdi>
   </h2>
 </template>
 

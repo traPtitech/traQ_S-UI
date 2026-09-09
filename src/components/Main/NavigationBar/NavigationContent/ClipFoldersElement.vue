@@ -6,9 +6,9 @@
       :class="$style.icon"
       :data-is-selected="$boolAttr(isSelected)"
     />
-    <span :class="$style.name">
+    <bdi :class="$style.name">
       {{ clipFolder.name }}
-    </span>
+    </bdi>
   </router-link>
 </template>
 
@@ -55,5 +55,6 @@ const isSelected = computed(
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: left;
 }
 </style>

@@ -6,7 +6,7 @@
       :class="[state.inactive ? $style.notView : '', $style.member]"
     >
       <UserIcon :size="28" :user-id="state.id" />
-      <span :class="$style.name">{{ state.displayName }}</span>
+      <bdi :class="$style.name">{{ state.displayName }}</bdi>
     </div>
   </div>
 </template>

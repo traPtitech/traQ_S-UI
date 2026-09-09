@@ -2,11 +2,13 @@ import { computed, watchEffect } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
 import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import { isolateBidiText } from '/@/lib/basic/string'
 import { fallbackChannelPath } from '/@/lib/config'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 import { useMainViewStore } from '/@/store/ui/mainView'
 
 const appName = window.traQConfig.name || 'traQ'
+const LRM = String.fromCodePoint(0x200e)
 
 const useDocumentTitle = () => {
   const { primaryView } = useMainViewStore()
@@ -37,8 +39,11 @@ const useDocumentTitle = () => {
   })
 
   watchEffect(() => {
-    const pre = primaryViewTitle.value
-    document.title = pre ? `${pre} - ${appName}` : appName
+    // ユーザー入力の文字方向が document.title 全体の表示方向に影響しないようにする
+    const isolatedPre = primaryViewTitle.value
+      ? isolateBidiText(primaryViewTitle.value)
+      : ''
+    document.title = isolatedPre ? `${LRM}${isolatedPre} - ${appName}` : appName
   })
 }
 

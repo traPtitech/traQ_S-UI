@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.name">
+    <div :class="$style.name" dir="auto">
       {{ client.name }}
     </div>
     <div :class="$style.desc">
@@ -13,14 +13,14 @@
             :fallback-icon-file-id="developer.iconFileId"
             :size="24"
           />
-          {{ developer.displayName }} (@{{ developer.name }})
+          <bdi>{{ developer.displayName }}</bdi> (@{{ developer.name }})
         </template>
         <template v-else>
           <div>=====</div>
         </template>
       </div>
       <div :class="$style.descTitle">説明</div>
-      <div :class="$style.descContent">
+      <div :class="$style.descContent" dir="auto">
         {{ client.description }}
       </div>
     </div>

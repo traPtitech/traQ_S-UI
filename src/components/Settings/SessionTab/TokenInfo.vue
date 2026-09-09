@@ -1,9 +1,9 @@
 <template>
   <li :key="token.id" :class="$style.wrap">
-    <div :class="$style.title">
+    <div :class="$style.title" dir="auto">
       {{ token.clientName ?? '---' }}
     </div>
-    <div :class="$style.description">
+    <div :class="$style.description" dir="auto">
       {{ token.clientDesc }}
     </div>
     <div :class="$style.details">
@@ -107,6 +107,7 @@ const scopes = computed(() =>
 
   @include color-ui-primary;
   font-weight: bold;
+  text-align: left;
 }
 .description {
   grid-area: description;

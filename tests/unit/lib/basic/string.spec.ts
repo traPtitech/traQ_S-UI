@@ -3,9 +3,15 @@ import {
   compareStringInsensitive,
   count,
   countLength,
+  isolateBidiText,
   lastIndexOf,
   trimEnd
 } from '/@/lib/basic/string'
+
+const LRI = String.fromCodePoint(0x2066)
+const RLI = String.fromCodePoint(0x2067)
+const FSI = String.fromCodePoint(0x2068)
+const PDI = String.fromCodePoint(0x2069)
 
 describe('compareString', () => {
   it('can compare string', () => {
@@ -58,6 +64,18 @@ describe('countLength', () => {
   })
   it('can count emoji', () => {
     expect(countLength('😀😀😀😀😀')).toBe(5)
+  })
+})
+
+describe('isolateBidiText', () => {
+  it('should wrap text with first strong isolate and pop directional isolate', () => {
+    expect(isolateBidiText('text')).toBe(`${FSI}text${PDI}`)
+  })
+
+  it('should remove existing directional isolate characters', () => {
+    expect(isolateBidiText(`${LRI}a${RLI}b${FSI}c${PDI}`)).toBe(
+      `${FSI}abc${PDI}`
+    )
   })
 })
 

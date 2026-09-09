@@ -67,7 +67,7 @@ const volumeSliderClass = computed(() => ({
   <div :class="$style.container">
     <div :class="$style.leftSide">
       <UserIcon :size="40" :user-id="participant.id" />
-      <span :class="$style.userName">{{ participant.displayName }}</span>
+      <bdi :class="$style.userName">{{ participant.displayName }}</bdi>
       <!-- TODO: Qall: ミュートを実装する -->
       <!-- <button :class="$style.micIconButton">
         <a-icon v-if="isMuted" name="microphone-off" mdi />

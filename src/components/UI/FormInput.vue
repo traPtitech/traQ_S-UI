@@ -29,6 +29,7 @@
         :max="max"
         :min="min"
         :step="step"
+        dir="auto"
         @input="onInput"
         @change="onChange"
         @focus="onFocus"

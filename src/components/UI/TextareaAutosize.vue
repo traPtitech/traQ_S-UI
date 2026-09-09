@@ -7,6 +7,7 @@
     :placeholder="placeholder"
     :rows="rows"
     :name="name"
+    dir="auto"
     @input="onInput"
     @beforeinput="e => emit('beforeInput', e)"
     @keydown="e => emit('keydown', e)"

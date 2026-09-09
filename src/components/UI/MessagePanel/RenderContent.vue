@@ -15,7 +15,7 @@
       mdi
       :size="20"
     />
-    <span
+    <bdi
       class="markdown-inline-body"
       :class="$style.content"
       v-html="renderedContent"

@@ -7,8 +7,8 @@
       :size="20"
     />
     <AIcon v-else :class="$style.icon" :mdi="icon.mdi" :name="icon.name" />
-    <span :class="$style.title">{{ title }}</span>
-    <span :class="$style.description">{{ description }}</span>
+    <bdi :class="$style.title">{{ title }}</bdi>
+    <bdi :class="$style.description">{{ description }}</bdi>
   </div>
 </template>
 

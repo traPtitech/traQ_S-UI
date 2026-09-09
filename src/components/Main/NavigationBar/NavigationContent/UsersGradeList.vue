@@ -1,12 +1,15 @@
 <template>
   <div :aria-expanded="!isFolding">
     <UsersSeparator
-      :name="nameWithCount"
       :is-open="!isFolding"
       :has-notification="hasNotification"
       :class="$style.separator"
       @click="toggleFolding"
-    />
+    >
+      <template #name>
+        <bdi>{{ name }}</bdi> ({{ users.length }})
+      </template>
+    </UsersSeparator>
     <SlideDown :class="$style.users" :is-open="!isFolding">
       <UsersElement v-for="user in users" :key="user.id" :user="user" />
     </SlideDown>
@@ -31,8 +34,6 @@ const props = defineProps<{
   name: string
   users: User[]
 }>()
-
-const nameWithCount = computed(() => `${props.name} (${props.users.length})`)
 
 const { unreadChannelsMap } = useSubscriptionStore()
 const { userIdToDmChannelIdMap } = useChannelsStore()

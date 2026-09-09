@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.name">
+    <div :class="$style.name" dir="auto">
       {{ group.name }}
     </div>
     <div :class="$style.adminList">
@@ -49,6 +49,7 @@ const emit = defineEmits<{
   @include color-ui-primary;
   grid-area: name;
   font-weight: bold;
+  text-align: left;
 }
 .adminList {
   @include color-ui-secondary;

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.clickable" @click="openModal">
-    <span>{{ removeInvisibleCharacters(displayName) }}</span>
+    <bdi>{{ removeInvisibleCharacters(displayName) }}</bdi>
     <span :class="$style.tails">
       <span v-if="count > 1" :class="$style.numberWrap">
         <SpinNumber :value="count" />

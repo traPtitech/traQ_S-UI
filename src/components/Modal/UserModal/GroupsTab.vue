@@ -10,7 +10,7 @@
           @click="onGroupClick(group.id)"
         >
           <AIcon name="group" :class="$style.icon" :size="20" />
-          {{ group.name }}
+          <bdi>{{ group.name }}</bdi>
         </li>
       </ul>
     </template>

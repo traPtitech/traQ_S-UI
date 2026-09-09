@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.header">
-    <span :class="$style.displayName">{{ displayName }}</span>
+    <bdi :class="$style.displayName">{{ displayName }}</bdi>
     <span :class="$style.name">{{ name }}</span>
   </div>
 </template>

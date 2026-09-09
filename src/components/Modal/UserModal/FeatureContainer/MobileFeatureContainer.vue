@@ -2,7 +2,7 @@
   <section :class="$style.feature">
     <UserIcon :user-id="user.id" prevent-modal :size="48" />
     <div :class="$style.names">
-      <h1 :class="$style.displayName">
+      <h1 :class="$style.displayName" dir="auto">
         {{ user.displayName }}
       </h1>
       <div :class="$style.nameInfo">
@@ -56,6 +56,7 @@ defineProps<{
   word-break: normal;
   overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
+  text-align: left;
 }
 .nameInfo {
   display: flex;

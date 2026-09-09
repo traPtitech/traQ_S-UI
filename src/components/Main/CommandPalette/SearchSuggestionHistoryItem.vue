@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" @click="onClick">
-    <span :class="$style.label">{{ label }}</span>
+    <bdi :class="$style.label">{{ label }}</bdi>
     <AIcon
       name="close"
       mdi
@@ -47,6 +47,7 @@ const onClose = () => {
   @include size-body1;
   @include color-ui-primary;
   word-break: break-all;
+  text-align: left;
 }
 .icon {
   @include color-ui-primary-inactive;

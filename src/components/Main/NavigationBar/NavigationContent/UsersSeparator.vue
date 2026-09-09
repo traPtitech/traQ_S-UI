@@ -1,7 +1,7 @@
 <template>
   <button :class="$style.container" :data-is-open="$boolAttr(isOpen)">
     <div :class="$style.name">
-      {{ name }}
+      <slot name="name">{{ name }}</slot>
       <div v-if="hasNotification" :class="$style.indicator">
         <NotificationIndicator :size="6" />
       </div>

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.displayName">
+    <div :class="$style.displayName" dir="auto">
       {{ user.displayName }}
     </div>
     <div :class="$style.name">
@@ -30,6 +30,7 @@ defineProps<{
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  text-align: left;
 }
 .name {
   @include color-ui-secondary;

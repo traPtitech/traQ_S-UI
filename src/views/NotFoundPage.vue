@@ -2,9 +2,12 @@
   <div :class="$style.container">
     <h1>Not Found</h1>
     <div v-if="routeName && routeParam">
-      {{ routeName }} {{ routeParam }} is not found on traQ!
+      {{ routeName }} <bdi dir="ltr">{{ routeParam }}</bdi> is not found on
+      traQ!
     </div>
-    <div v-else>Path {{ route.path }} is not found on traQ!</div>
+    <div v-else>
+      Path <bdi dir="ltr">{{ route.path }}</bdi> is not found on traQ!
+    </div>
     <router-link to="/"> back </router-link>
   </div>
 </template>

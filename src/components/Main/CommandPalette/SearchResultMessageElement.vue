@@ -7,9 +7,9 @@
   >
     <UserIcon :class="$style.icon" :size="32" :user-id="message.userId" />
     <div :class="$style.header" @click.stop="">
-      <span :class="$style.displayName">{{
+      <bdi :class="$style.displayName">{{
         user?.displayName ?? 'Unknown'
-      }}</span>
+      }}</bdi>
       <span :class="$style.userName">@{{ user?.name ?? 'unknown' }}</span>
     </div>
     <div :class="$style.contentContainer">

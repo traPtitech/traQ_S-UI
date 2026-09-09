@@ -1,8 +1,6 @@
 <template>
   <div :class="$style.header">
-    <span :class="$style.displayName">{{
-      user?.displayName ?? 'unknown'
-    }}</span>
+    <bdi :class="$style.displayName">{{ user?.displayName ?? 'unknown' }}</bdi>
     <GradeBadge
       :class="$style.badge"
       :user-id="userId"

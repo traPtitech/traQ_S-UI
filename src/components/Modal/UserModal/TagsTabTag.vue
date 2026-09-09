@@ -2,7 +2,7 @@
   <li :class="$style.tag" @click="onTagClick">
     <div :class="$style.content">
       <AIcon name="tag" mdi :class="$style.icon" :size="20" />
-      <div :class="$style.text">
+      <div :class="$style.text" dir="auto">
         {{ tag.tag }}
       </div>
     </div>
@@ -81,6 +81,7 @@ const onTagClick = () => {
 .text {
   overflow-wrap: break-word;
   min-width: 0;
+  text-align: left;
 }
 .edit {
   margin-left: 8px;

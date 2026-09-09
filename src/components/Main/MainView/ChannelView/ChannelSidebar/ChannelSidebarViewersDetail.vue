@@ -2,7 +2,7 @@
   <SidebarContentContainer clickable title="閲覧者" @toggle="emit('toggle')">
     <div v-for="user in viewers" :key="user.id" :class="$style.item">
       <UserIcon :user-id="user.id" :size="32" />
-      <div :class="$style.userName">
+      <div :class="$style.userName" dir="auto">
         {{ user.displayName }}
       </div>
     </div>
@@ -12,7 +12,7 @@
       :class="[$style.item, $style.transparent]"
     >
       <UserIcon :user-id="user.id" :size="32" />
-      <div :class="$style.userName">
+      <div :class="$style.userName" dir="auto">
         {{ user.displayName }}
       </div>
     </div>
@@ -73,5 +73,6 @@ const inactiveUsers = computed(() =>
   word-break: normal;
   overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
+  text-align: left;
 }
 </style>

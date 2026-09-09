@@ -1,7 +1,7 @@
 <template>
   <section :class="$style.feature">
     <div :class="$style.infoContainer">
-      <h1 :class="$style.displayName">{{ user.displayName }}</h1>
+      <h1 :class="$style.displayName" dir="auto">{{ user.displayName }}</h1>
       <div :class="$style.onlineContainer">
         <p>@{{ user.name }}</p>
         <OnlineIndicator :user-id="user.id" has-text />

@@ -8,7 +8,8 @@
       :developer="developer"
     />
     <p v-if="client" :class="$style.item">
-      {{ client.name }}がtraQアカウントへのアクセスを要求しています
+      <bdi>{{ client.name }}</bdi
+      >がtraQアカウントへのアクセスを要求しています
     </p>
     <ClientScopes :scopes="scopes" />
     <div :class="$style.error">

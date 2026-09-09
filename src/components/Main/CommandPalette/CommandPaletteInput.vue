@@ -10,6 +10,7 @@
         v-model="currentInput"
         :class="$style.input"
         :placeholder="placeholder"
+        dir="auto"
         @keydown.esc="onEsc"
         @keydown.enter="onEnter"
       />
