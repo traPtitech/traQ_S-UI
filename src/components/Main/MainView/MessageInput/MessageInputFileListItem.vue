@@ -2,6 +2,7 @@
   <div :class="$style.container">
     <MessageInputFileListItemCloseButton
       :class="$style.closeButton"
+      :is-posting="isPosting"
       @click="emit('itemRemove')"
     />
     <MessageInputFileListItemImage
@@ -28,9 +29,15 @@ import type { Attachment } from '/@/store/ui/messageInputStateStore'
 import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
 import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 
-const props = defineProps<{
-  attachment: Attachment
-}>()
+const props = withDefaults(
+  defineProps<{
+    attachment: Attachment
+    isPosting?: boolean
+  }>(),
+  {
+    isPosting: false
+  }
+)
 
 const emit = defineEmits<{
   (e: 'itemRemove'): void
