@@ -17,6 +17,7 @@
       />
       <AudioPlayerVolumeSlider
         v-model:volume="volume"
+        v-model:is-mute="isMute"
         :class="$style.volumeSlider"
         :disabled="duration === 0"
       />
@@ -62,7 +63,7 @@ const {
   isPlaying,
   currentTime,
   duration,
-  volume,
+  volume: { volume, isMute },
   isPinPShown,
   startPinP
 } = useAudio(fileMeta, fileRawPath)
