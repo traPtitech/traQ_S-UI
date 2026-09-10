@@ -110,7 +110,11 @@ export default [
       ],
 
       'vue/component-api-style': ['error', ['script-setup']],
-      'vue/component-name-in-template-casing': ['error', 'PascalCase'],
+      'vue/component-name-in-template-casing': [
+        'error',
+        'PascalCase',
+        { ignores: ['/^cropper-/'] }
+      ],
 
       'vue/v-on-event-hyphenation': [
         'error',
