@@ -1,22 +1,38 @@
-## 概要
+<!-- Please use a conventional PR title prefix like `feat:`, `fix:`, or `chore:`. -->
 
-## なぜこの PR を入れたいのか
+## Outline
 
-<!-- issue 番号だけでも OK / close: #123 とか fix: #123 の形で -->
+<!-- The first line of this section will be used as the release note summary. -->
+<!-- この項の一行目がリリースノートの概要として使用されます。 -->
 
-## 動作確認の手順
+## What
 
-## UI 変更部分のスクリーンショット
+<!-- Describe the changes made in this PR. -->
+<!-- この PR で変更された内容を記述してください。 -->
+
+## Why
+
+<!-- Describe why this change is needed. -->
+<!-- この変更が必要な理由を記述してください。 -->
+
+<!-- If there is a related issue, please write it instead (e.g., "Closes #1234"). -->
+<!-- 関連する issue がある場合は、代わりに「closes #1234」のように記述してください。 -->
+
+## Verification
+
+<!-- If there is a special verification procedure, please describe it. -->
+<!-- 特殊な検証手順があれば記述してください。 -->
+
+## ScreenShots of UI Changes
+
+<!-- If there are UI changes, please paste screenshots here. -->
+<!-- UI 変更がある場合は、スクリーンショットをここに貼り付けてください。 -->
 
 | Before               | After                |
 | -------------------- | -------------------- |
 | <!-- Paste image --> | <!-- Paste image --> |
 
-## PR を出す前の確認事項
+## Memo
 
-- [ ] （機能の追加なら）追加することの合意がチームで取れている
-  - 取れていない場合はチェックを外して PR にすれば OK
-- [ ] 動作確認ができている
-- [ ] 自分で一度コードを眺めて自分的に問題はなさそう
-
-## 見てほしいところ・聞きたいことなど
+<!-- If there is anything you want to note, please write it here. -->
+<!-- 何かメモしておきたいことがあれば、ここに記述してください。 -->

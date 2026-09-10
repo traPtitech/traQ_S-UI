@@ -1,0 +1,1 @@
+npx tsx scripts/validate-conventional-title.ts "$1"

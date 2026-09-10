@@ -34,6 +34,11 @@
     "fallthroughAttributes": true,
     "strictVModel": true
   },
-  "include": ["src/**/*.ts", "src/**/*.vue", "public/**/*.js"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "public/**/*.js",
+    "scripts/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }

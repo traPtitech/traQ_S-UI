@@ -1,0 +1,47 @@
+name: Verify Conventional Commit / PR Title
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+
+permissions: {}
+
+jobs:
+  verify-pr-title:
+    name: verify PR title
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Check PR title
+        run: |
+          npx tsx scripts/validate-conventional-title.ts --title "${{ github.event.pull_request.title }}"
+
+  verify-commit-titles:
+    name: verify commit titles in PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Check commit messages
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+          echo "Verifying commits from ${BASE_SHA} to ${HEAD_SHA}"
+
+          while IFS= read -r message; do
+            npx tsx scripts/validate-conventional-title.ts --title "$message"
+          done < <(git log --pretty=format:'%s' "${BASE_SHA}..${HEAD_SHA}")
