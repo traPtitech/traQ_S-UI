@@ -27,5 +27,6 @@ const title = computed(() => navigationTypeNameMap[props.currentNavigation])
   @include color-ui-primary;
   @include size-h2;
   font-weight: bold;
+  padding-bottom: 24px;
 }
 </style>
