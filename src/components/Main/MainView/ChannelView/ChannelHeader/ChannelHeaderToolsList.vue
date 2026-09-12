@@ -135,12 +135,6 @@ const { starChannel, unstarChannel } = useStarChannel(props)
 }
 .moreButton {
   position: relative;
-  display: inline;
-}
-.popupLocator {
-  position: absolute;
-  right: 0;
-  top: 100%;
 }
 .qallIcon {
   transition: transform 0.1s;
