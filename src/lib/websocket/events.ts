@@ -23,7 +23,9 @@ export type WebSocketEvent = UserEvent &
   MessageEvent &
   StampEvent &
   ClipFolderEvent &
-  QallEvent
+  QallEvent & {
+    PING: null
+  }
 
 /*
  * User
