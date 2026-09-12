@@ -9,7 +9,7 @@ import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
 
-interface Speach {
+interface Speech {
   channelId: ChannelId
   userDisplayName: string
   text: string
@@ -22,12 +22,12 @@ const MAX_CHAR_COUNT = 140
 
 const useTtsPinia = defineStore('ui/tts', () => {
   const rtcSettings = useRtcSettings()
-  let lastSpeachPromise = Promise.resolve()
-  const queue: Speach[] = []
+  let lastSpeechPromise = Promise.resolve()
+  const queue: Speech[] = []
 
-  const addQueue = (speach: Speach) => {
-    queue.push(speach)
-    lastSpeachPromise = lastSpeachPromise.then(() => {
+  const addQueue = (speech: Speech) => {
+    queue.push(speech)
+    lastSpeechPromise = lastSpeechPromise.then(() => {
       const next = queue.shift()
       return next ? speak(next) : Promise.resolve()
     })
@@ -70,7 +70,7 @@ const useTtsPinia = defineStore('ui/tts', () => {
     return utter
   }
 
-  const speak = async ({ userDisplayName, text }: Speach) => {
+  const speak = async ({ userDisplayName, text }: Speech) => {
     const tokens = await parse(text)
     let formatedText = format(tokens, embeddingOrigin)
 
