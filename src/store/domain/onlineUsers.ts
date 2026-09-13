@@ -9,21 +9,28 @@ import type { UserId } from '/@/types/entity-ids'
 
 const useOnlineUsersPinia = defineStore('domain/onlineUsers', () => {
   const onlineUsers = ref(new Set<UserId>())
+  const lastOnlineAt = ref(new Map<UserId, string>())
   const onlineUsersFetched = ref(false)
-  let changesDuringFetch: Map<UserId, boolean> | undefined
+  let changesDuringFetch:
+    Map<UserId, { online: boolean; confirmedAt: string }> | undefined
   let currentFetch: Promise<Set<UserId>> | undefined
 
   const fetchOnlineUsersFromApi = async () => {
-    const changes = new Map<UserId, boolean>()
+    const changes = new Map<UserId, { online: boolean; confirmedAt: string }>()
     changesDuringFetch = changes
     try {
       const { data: userIdsArray } = await apis.getOnlineUsers()
       const userIds = new Set(userIdsArray)
-      changes.forEach((online, id) => {
+      const confirmedAt = new Date().toISOString()
+      const confirmedAtByUser = new Map(lastOnlineAt.value)
+      userIds.forEach(id => confirmedAtByUser.set(id, confirmedAt))
+      changes.forEach(({ online, confirmedAt }, id) => {
         if (online) userIds.add(id)
         else userIds.delete(id)
+        confirmedAtByUser.set(id, confirmedAt)
       })
       onlineUsers.value = userIds
+      lastOnlineAt.value = confirmedAtByUser
       onlineUsersFetched.value = true
       return userIds
     } finally {
@@ -49,12 +56,22 @@ const useOnlineUsersPinia = defineStore('domain/onlineUsers', () => {
   }
 
   wsListener.on('USER_ONLINE', ({ id }) => {
+    const confirmedAt = new Date().toISOString()
     onlineUsers.value.add(id)
-    changesDuringFetch?.set(id, true)
+    lastOnlineAt.value.set(id, confirmedAt)
+    changesDuringFetch?.set(id, { online: true, confirmedAt })
   })
   wsListener.on('USER_OFFLINE', ({ id }) => {
+    const confirmedAt = new Date().toISOString()
     onlineUsers.value.delete(id)
-    changesDuringFetch?.set(id, false)
+    lastOnlineAt.value.set(id, confirmedAt)
+    changesDuringFetch?.set(id, { online: false, confirmedAt })
+  })
+  wsListener.on('PING', () => {
+    if (changesDuringFetch) return
+
+    const confirmedAt = new Date().toISOString()
+    onlineUsers.value.forEach(id => lastOnlineAt.value.set(id, confirmedAt))
   })
 
   wsListener.on('reconnect', async () => {
@@ -65,6 +82,7 @@ const useOnlineUsersPinia = defineStore('domain/onlineUsers', () => {
 
   return {
     onlineUsers: readonly(onlineUsers),
+    lastOnlineAt: readonly(lastOnlineAt),
     fetchOnlineUsers
   }
 })
