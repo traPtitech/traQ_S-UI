@@ -34,7 +34,7 @@ export default class AutoReconnectWebSocket {
   private readonly protocols: string | string[] | undefined
   private readonly options: Readonly<Options>
 
-  private readonly sendQueue = new Map<WebSocketCommand, readonly string[]>()
+  private readonly replayArgs = new Map<WebSocketCommand, readonly string[]>()
   private isInitialized = false
   private reconnecting = false
 
@@ -66,7 +66,7 @@ export default class AutoReconnectWebSocket {
   }
 
   sendCommand(...commands: readonly [WebSocketCommand, ...string[]]) {
-    this.sendQueue.set(commands[0], commands.slice(1))
+    this.replayArgs.set(commands[0], commands.slice(1))
     if (this.isOpen) {
       this.sendImmediately(commands)
     }
@@ -144,7 +144,7 @@ export default class AutoReconnectWebSocket {
             this.isInitialized = true
           }
 
-          this.sendQueue.forEach((args, command) => {
+          this.replayArgs.forEach((args, command) => {
             this.sendImmediately([command, ...args])
           })
           this.startHeartbeat()

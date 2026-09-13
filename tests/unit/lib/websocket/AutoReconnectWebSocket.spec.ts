@@ -104,6 +104,25 @@ describe('AutoReconnectWebSocket heartbeat', () => {
     expect(MockWebSocket.instances).toHaveLength(2)
   })
 
+  it('replays the latest command arguments after reconnecting', async () => {
+    const { socket, ws } = await connect()
+
+    ws.sendCommand('timeline_streaming', 'on')
+    ws.sendCommand('timeline_streaming', 'off')
+    expect(socket.sent).toEqual([
+      'timeline_streaming:on',
+      'timeline_streaming:off'
+    ])
+
+    socket.close()
+    await vi.advanceTimersByTimeAsync(1)
+    const reconnectedSocket = MockWebSocket.instances[1]
+    if (!reconnectedSocket) throw new Error('WebSocket was not created')
+    reconnectedSocket.open()
+
+    expect(reconnectedSocket.sent).toEqual(['timeline_streaming:off'])
+  })
+
   it('does not postpone the timeout when ping interval is shorter', async () => {
     const ws = new AutoReconnectWebSocket('ws://example.com', undefined, {
       maxReconnectionDelay: 1,
