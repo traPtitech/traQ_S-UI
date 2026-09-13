@@ -104,6 +104,29 @@ describe('AutoReconnectWebSocket heartbeat', () => {
     expect(MockWebSocket.instances).toHaveLength(2)
   })
 
+  it('emits reconnect after the initial connection attempt fails', async () => {
+    const ws = new AutoReconnectWebSocket('ws://example.com', undefined, {
+      maxReconnectionDelay: 1,
+      minReconnectionDelay: 1
+    })
+    const listener = vi.fn()
+    ws.addEventListener('reconnect', listener)
+
+    const connected = ws.connect()
+    const initialSocket = MockWebSocket.instances[0]
+    if (!initialSocket) throw new Error('WebSocket was not created')
+    initialSocket.dispatchEvent(new Event('error'))
+    initialSocket.close()
+    await connected
+
+    await vi.advanceTimersByTimeAsync(1)
+    const reconnectedSocket = MockWebSocket.instances[1]
+    if (!reconnectedSocket) throw new Error('WebSocket was not created')
+    reconnectedSocket.open()
+
+    expect(listener).toHaveBeenCalledOnce()
+  })
+
   it('replays the latest command arguments after reconnecting', async () => {
     const { socket, ws } = await connect()
 

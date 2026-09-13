@@ -35,7 +35,7 @@ export default class AutoReconnectWebSocket {
   private readonly options: Readonly<Options>
 
   private readonly replayArgs = new Map<WebSocketCommand, readonly string[]>()
-  private isInitialized = false
+  private isInitialConnectionEstablished = false
   private reconnecting = false
 
   private mockFail = false
@@ -138,10 +138,8 @@ export default class AutoReconnectWebSocket {
             return
           }
 
-          if (this.isInitialized) {
+          if (this.isInitialConnectionEstablished) {
             this.eventTarget.dispatchEvent(new Event('reconnect'))
-          } else {
-            this.isInitialized = true
           }
 
           this.replayArgs.forEach((args, command) => {
@@ -204,7 +202,8 @@ export default class AutoReconnectWebSocket {
   async connect() {
     if (this.reconnecting || this.isOpenOrConnecting) return
 
-    return this.setupSocket()
+    await this.setupSocket()
+    this.isInitialConnectionEstablished = true
   }
 
   private async reconnect() {
