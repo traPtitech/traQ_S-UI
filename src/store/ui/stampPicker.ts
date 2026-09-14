@@ -4,7 +4,7 @@ import { computed, ref, watch } from 'vue'
 import type {
   AnimeEffect,
   SizeEffect
-} from '@traq-markdown-parser/trap-extension/stamp-effects'
+} from '@traq-markdown-engine/traq-plugin/stamp-effects'
 import { useEventListener } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { throttle } from 'throttle-debounce'

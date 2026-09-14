@@ -1,6 +1,6 @@
 @use 'sass:meta';
-@include meta.load-css('@traq-markdown-parser/traq/styles/stamp');
+@include meta.load-css('@traq-markdown-engine/sdk/styles/stamp');
 
 html[data-eco-mode='false'] {
-  @include meta.load-css('@traq-markdown-parser/traq/styles/stampEffect');
+  @include meta.load-css('@traq-markdown-engine/sdk/styles/stampEffect');
 }

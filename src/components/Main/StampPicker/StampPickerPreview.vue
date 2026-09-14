@@ -15,7 +15,7 @@ import { computed, ref, watchEffect } from 'vue'
 import type {
   AnimeEffect,
   SizeEffect
-} from '@traq-markdown-parser/trap-extension/stamp-effects'
+} from '@traq-markdown-engine/traq-plugin/stamp-effects'
 
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import { constructStampString } from '/@/lib/markdown/constructStampString'

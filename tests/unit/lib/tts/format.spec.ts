@@ -1,12 +1,12 @@
 import { readFile } from 'node:fs/promises'
 
-import { createRuntime, presets } from '@traq-markdown-parser/traq'
+import { createRuntime, presets } from '@traq-markdown-engine/sdk'
 
 import { format } from '/@/lib/tts/format'
 
 const embeddingOrigin = 'https://example.com'
 const runtime = await createRuntime(
-  await readFile('node_modules/@traq-markdown-parser/traq/dist/parser.wasm')
+  await readFile('node_modules/@traq-markdown-engine/sdk/dist/parser.wasm')
 )
 const parser = runtime.createParser(presets.traq.v1)
 const parse = (text: string) => parser.parse(text)

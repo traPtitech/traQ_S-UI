@@ -3,9 +3,9 @@ export {
   presets,
   embedReferences,
   mentionsUser
-} from '@traq-markdown-parser/traq'
+} from '@traq-markdown-engine/sdk'
 export {
   endsWithEmbedding,
   messageRenderers
-} from '@traq-markdown-parser/traq/renderer'
-export { default as wasmUrl } from '@traq-markdown-parser/traq/parser.wasm?url'
+} from '@traq-markdown-engine/sdk/renderer'
+export { default as wasmUrl } from '@traq-markdown-engine/sdk/parser.wasm?url'
