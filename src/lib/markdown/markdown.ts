@@ -56,15 +56,9 @@ const withAutoDirection = <T extends { renderedText: string }>(
 
 const loadMarkdown = () =>
   (loading ??= (async () => {
-    const { createRuntime, presets, messageRenderers, wasmUrl } =
-      await import('./runtime')
+    const { loadRuntime, presets, messageRenderers } = await import('./runtime')
 
-    const response = await fetch(wasmUrl)
-    if (!response.ok) throw new Error('Failed to load Markdown parser')
-
-    const runtime = await createRuntime(
-      new Uint8Array(await response.arrayBuffer())
-    )
+    const runtime = await loadRuntime()
 
     parser = runtime.createParser(presets.traq.v1)
     extractor = runtime.createExtractor({
