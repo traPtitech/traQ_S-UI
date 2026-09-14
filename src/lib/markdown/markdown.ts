@@ -43,6 +43,17 @@ let parser: Parser
 let extractor: Extractor
 let renderers: ReturnType<typeof messageRenderers>
 let loading: Promise<void> | undefined
+
+const withAutoDirection = <T extends { renderedText: string }>(
+  result: T
+): T => ({
+  ...result,
+  renderedText: result.renderedText.replace(
+    /<(p|h[1-6]|li|th|td)(?=[\s>])/g,
+    '<$1 dir="auto"'
+  )
+})
+
 const loadMarkdown = () =>
   (loading ??= (async () => {
     const { createRuntime, presets, messageRenderers, wasmUrl } =
@@ -91,12 +102,12 @@ export const parse = async (text: string) => {
 
 export const render = async (text: string) => {
   const document = await parse(text)
-  return renderers.standard.render(document)
+  return withAutoDirection(renderers.standard.render(document))
 }
 
 export const renderCondensed = async (text: string) => {
   const document = await parse(text)
-  return renderers.condensed.render(document)
+  return withAutoDirection(renderers.condensed.render(document))
 }
 
 export const endsWithEmbeddedLink = async (text: string) => {

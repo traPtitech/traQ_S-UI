@@ -58,6 +58,7 @@
     "firebase": "12.15.0",
     "highlight.js": "11.11.1",
     "idb-keyval": "6.3.0",
+    "katex": "0.18.5",
     "livekit-client": "2.21.0",
     "mitt": "3.0.1",
     "party-js": "2.2.0",
