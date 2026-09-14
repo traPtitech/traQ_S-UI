@@ -71,8 +71,13 @@ const useTtsPinia = defineStore('ui/tts', () => {
   }
 
   const speak = async ({ userDisplayName, text }: Speech) => {
-    const tokens = await parse(text)
-    let formattedText = format(tokens, embeddingOrigin)
+    let formattedText = text
+    try {
+      formattedText = format(await parse(text), embeddingOrigin)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('読み上げ用の Markdown 処理に失敗しました', error)
+    }
 
     if (formattedText.length > MAX_CHAR_COUNT) {
       formattedText = `${formattedText.slice(0, MAX_CHAR_COUNT)} 。以下略`

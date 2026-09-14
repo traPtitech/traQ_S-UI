@@ -10,6 +10,8 @@ import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
 
+import type { MarkdownRenderResult } from './types'
+
 const storeProvider: NonNullable<Options['store']> = {
   getUserGroup(id) {
     const { userGroupsMap } = useGroupsStore()
@@ -54,6 +56,27 @@ const withAutoDirection = <T extends { renderedText: string }>(
   )
 })
 
+const fallbackRender = (text: string): MarkdownRenderResult => ({
+  rawText: text,
+  renderedText: text
+    .replace(/[&<>"']/g, character => `&#${character.charCodeAt(0)};`)
+    .replace(/\r?\n/g, '<br>'),
+  embeddings: []
+})
+
+const withFallback = async <T>(
+  fallback: T,
+  action: () => Promise<T>
+): Promise<T> => {
+  try {
+    return await action()
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Markdown の処理に失敗しました', error)
+    return fallback
+  }
+}
+
 const loadMarkdown = () =>
   (loading ??= (async () => {
     const { loadRuntime, presets, messageRenderers } = await import('./runtime')
@@ -94,23 +117,26 @@ export const parse = async (text: string) => {
   return parser.parse(text)
 }
 
-export const render = async (text: string) => {
-  const document = await parse(text)
-  return withAutoDirection(renderers.standard.render(document))
-}
+export const render = (text: string) =>
+  withFallback(fallbackRender(text), async () => {
+    const document = await parse(text)
+    return withAutoDirection(renderers.standard.render(document))
+  })
 
-export const renderCondensed = async (text: string) => {
-  const document = await parse(text)
-  return withAutoDirection(renderers.condensed.render(document))
-}
+export const renderCondensed = (text: string) =>
+  withFallback(fallbackRender(text), async () => {
+    const document = await parse(text)
+    return withAutoDirection(renderers.condensed.render(document))
+  })
 
-export const endsWithEmbeddedLink = async (text: string) => {
-  await waitForMarkdownReady()
+export const endsWithEmbeddedLink = (text: string) =>
+  withFallback(false, async () => {
+    await waitForMarkdownReady()
 
-  const { endsWithEmbedding } = await import('./runtime')
+    const { endsWithEmbedding } = await import('./runtime')
 
-  return endsWithEmbedding(parser.parse(text), embeddingOrigin)
-}
+    return endsWithEmbedding(parser.parse(text), embeddingOrigin)
+  })
 
 const extractMarkdown = async (text: string) => {
   await loadMarkdown()
@@ -118,21 +144,23 @@ const extractMarkdown = async (text: string) => {
   return extractor.extract(parser.parse(text))
 }
 
-export const embedInternalLinks = async (
+export const embedInternalLinks = (
   text: string,
   resolve: (kind: LookupKind, name: string) => string | undefined
-) => {
-  const result = await extractMarkdown(text)
-  const { embedReferences } = await import('./runtime')
+) =>
+  withFallback(text, async () => {
+    const result = await extractMarkdown(text)
+    const { embedReferences } = await import('./runtime')
 
-  return embedReferences(text, result.embedding, resolve)
-}
+    return embedReferences(text, result.embedding, resolve)
+  })
 
-export const unembedInternalLinks = async (text: string) => {
-  const result = await extractMarkdown(text)
+export const unembedInternalLinks = (text: string) =>
+  withFallback(text, async () => {
+    const result = await extractMarkdown(text)
 
-  return result.embedding.unembeddedText
-}
+    return result.embedding.unembeddedText
+  })
 
 export const detectMentionOfMe = async (
   text: string,
