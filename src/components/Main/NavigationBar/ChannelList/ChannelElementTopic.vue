@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div v-if="topic" :class="$style.container">
     <MarkdownPreview :content="topic" :title="topic" inline />
   </div>
 </template>
