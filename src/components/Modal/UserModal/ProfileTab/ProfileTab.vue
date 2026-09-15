@@ -11,13 +11,17 @@
     />
     <LastOnline
       :class="$style.section"
-      :last-online="detail?.lastOnline ?? undefined"
+      :last-online="
+        lastOnlineAt.get(user.id) ?? detail?.lastOnline ?? undefined
+      "
     />
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { User, UserDetail } from '@traptitech/traq'
+
+import { useOnlineUsers } from '/@/store/domain/onlineUsers'
 
 import AccountList from './AccountList.vue'
 import AccountState from './AccountState.vue'
@@ -29,6 +33,9 @@ defineProps<{
   user: User
   detail?: UserDetail
 }>()
+
+const { lastOnlineAt, fetchOnlineUsers } = useOnlineUsers()
+fetchOnlineUsers().catch(() => undefined)
 </script>
 
 <style lang="scss" module>
