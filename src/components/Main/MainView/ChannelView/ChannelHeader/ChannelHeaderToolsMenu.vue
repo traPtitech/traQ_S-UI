@@ -25,6 +25,22 @@
       @click="openNotificationModal"
       @click-item="emit('clickItem')"
     />
+    <template v-if="isMobile">
+      <HeaderToolsMenuItem
+        v-if="isStarred"
+        :icon-name="'star'"
+        :label="'お気に入りから外す'"
+        @click="unstarChannel"
+        @click-item="emit('clickItem')"
+      />
+      <HeaderToolsMenuItem
+        v-else
+        :icon-name="'star-outline'"
+        :label="'お気に入りに追加する'"
+        @click="starChannel"
+        @click-item="emit('clickItem')"
+      />
+    </template>
     <HeaderToolsMenuItem
       v-if="isSearchEnabled"
       icon-name="search"
@@ -75,6 +91,7 @@ import useChannelCreateModal from './composables/useChannelCreateModal'
 import useChannelManageModal from './composables/useChannelManageModal'
 import useCopyChannelLink from './composables/useCopyChannelLink'
 import useNotificationModal from './composables/useNotificationModal'
+import useStarChannel from './composables/useStarChannel'
 
 const emit = defineEmits<{
   (e: 'clickItem'): void
@@ -83,10 +100,12 @@ const emit = defineEmits<{
 const props = withDefaults(
   defineProps<{
     channelId: ChannelId
+    isStarred?: boolean
     showNotificationSettingBtn?: boolean
     isArchived?: boolean
   }>(),
   {
+    isStarred: false,
     showNotificationSettingBtn: true,
     isArchived: false
   }
@@ -102,6 +121,8 @@ const { isChildChannelCreatable, openChannelCreateModal } =
   useChannelCreateModal(props)
 
 const { openNotificationModal } = useNotificationModal(props)
+
+const { starChannel, unstarChannel } = useStarChannel(props)
 
 const isSearchEnabled = window.traQConfig.enableSearch ?? false
 const { openCommandPalette } = useCommandPalette()
