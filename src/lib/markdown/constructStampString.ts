@@ -1,4 +1,7 @@
-import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
+import type {
+  AnimeEffect,
+  SizeEffect
+} from '@traq-markdown-engine/traq-plugin/stamp-effects'
 
 export const constructStampString = (
   stampName: string,

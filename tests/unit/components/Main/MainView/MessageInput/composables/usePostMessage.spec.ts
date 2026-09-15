@@ -6,7 +6,9 @@ import { buildFilePathForPost, embeddingOrigin } from '/@/lib/apis'
 import { nilUuid } from '/@/lib/basic/uuid'
 
 vi.mock('/@/lib/markdown/markdown', () => ({
-  isEmbeddedLink: vi.fn((text: string) => text.startsWith(embeddingOrigin))
+  endsWithEmbeddedLink: vi.fn((text: string) =>
+    text.split('\n').at(-1)?.startsWith(embeddingOrigin)
+  )
 }))
 
 describe('usePostMessage', () => {

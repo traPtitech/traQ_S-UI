@@ -3,7 +3,7 @@ import type {
   EmbeddingMessage,
   EmbeddingOrUrl,
   ExternalUrl
-} from '@traptitech/traq-markdown-it'
+} from '/@/lib/markdown/types'
 
 export const isFile = (e: EmbeddingOrUrl): e is EmbeddingFile =>
   e.type === 'file'
