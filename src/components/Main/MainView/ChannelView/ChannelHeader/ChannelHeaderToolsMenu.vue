@@ -28,15 +28,15 @@
     <template v-if="isMobile">
       <HeaderToolsMenuItem
         v-if="isStarred"
-        icon-name="'star'"
-        label="'お気に入りから外す'"
+        icon-name="star"
+        label="お気に入りから外す"
         @click="unstarChannel"
         @click-item="emit('clickItem')"
       />
       <HeaderToolsMenuItem
         v-else
-        icon-name="'star-outline'"
-        label="'お気に入りに追加する'"
+        icon-name="star-outline"
+        label="お気に入りに追加する"
         @click="starChannel"
         @click-item="emit('clickItem')"
       />
