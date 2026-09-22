@@ -36,6 +36,7 @@ export const format = (document: Document, embeddingOrigin: string) => {
       case names.InlineCode:
         return node.data.literal
       case names.Softbreak:
+      case names.Hardbreak:
         return '\n'
       case names.Spoiler:
         return ' ﾍﾟｹﾍﾟｹ '

@@ -17,6 +17,13 @@ describe('tts format', () => {
       output
     )
   })
+
+  it.each([
+    ['two trailing spaces', 'first  \nsecond'],
+    ['a trailing backslash', 'first\\\nsecond']
+  ])('preserves a hard break from %s', (_name, input) => {
+    expect(format(parse(input), embeddingOrigin)).toEqual('first\nsecond')
+  })
 })
 
 const input = `
