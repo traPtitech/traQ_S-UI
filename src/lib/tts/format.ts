@@ -1,5 +1,5 @@
-import type { Document, Node } from '@traq-markdown-engine/sdk'
-import { names } from '@traq-markdown-engine/sdk/nodes'
+import type { Document, Node } from '@traq-flavored-markdown/sdk'
+import { names } from '@traq-flavored-markdown/sdk/nodes'
 
 export const formatUrl = (text: string, embeddingOrigin: string) => {
   try {

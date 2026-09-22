@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import type {
   AnimeEffect,
   SizeEffect
-} from '@traq-markdown-engine/traq-plugin/stamp-effects'
+} from '@traq-flavored-markdown/traq-plugin/stamp-effects'
 
 import useToggle from '/@/composables/utils/useToggle'
 

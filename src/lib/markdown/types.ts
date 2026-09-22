@@ -1,7 +1,7 @@
 import type {
   Embedding,
   messageRenderers
-} from '@traq-markdown-engine/sdk/renderer'
+} from '@traq-flavored-markdown/sdk/renderer'
 
 export type MarkdownRenderResult = ReturnType<
   ReturnType<typeof messageRenderers>['standard']['render']

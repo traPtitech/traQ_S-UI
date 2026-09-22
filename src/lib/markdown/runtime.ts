@@ -3,8 +3,8 @@ export {
   presets,
   embedReferences,
   mentionsUser
-} from '@traq-markdown-engine/sdk/browser'
+} from '@traq-flavored-markdown/sdk/browser'
 export {
   endsWithEmbedding,
   messageRenderers
-} from '@traq-markdown-engine/sdk/renderer'
+} from '@traq-flavored-markdown/sdk/renderer'

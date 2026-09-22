@@ -1,6 +1,6 @@
-import type { Extractor, LookupKind, Parser } from '@traq-markdown-engine/sdk'
-import type { Options } from '@traq-markdown-engine/sdk/renderer'
-import type { messageRenderers } from '@traq-markdown-engine/sdk/renderer'
+import type { Extractor, LookupKind, Parser } from '@traq-flavored-markdown/sdk'
+import type { Options } from '@traq-flavored-markdown/sdk/renderer'
+import type { messageRenderers } from '@traq-flavored-markdown/sdk/renderer'
 
 import useChannelPath from '/@/composables/useChannelPath'
 import { embeddingOrigin } from '/@/lib/apis'
