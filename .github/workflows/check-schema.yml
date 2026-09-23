@@ -31,4 +31,5 @@ jobs:
 
       - name: Check for changes
         run: |
+          git ls-files --error-unmatch -- config.schema.json > /dev/null
           git diff --exit-code config.schema.json
