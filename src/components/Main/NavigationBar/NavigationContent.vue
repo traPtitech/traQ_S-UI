@@ -1,6 +1,5 @@
 <template>
   <div :class="$style.container">
-    <NavigationContentTitle :current-navigation="currentNavigation" />
     <HomeTab v-if="currentNavigation === 'home'" :class="$style.content" />
     <ChannelsTab
       v-if="currentNavigation === 'channels'"
@@ -29,7 +28,6 @@ import ChannelsTab from './NavigationContent/ChannelsTab.vue'
 import ClipFoldersTab from './NavigationContent/ClipFoldersTab.vue'
 import HomeTab from './NavigationContent/HomeTab.vue'
 import UsersTab from './NavigationContent/UsersTab.vue'
-import NavigationContentTitle from './NavigationContentTitle.vue'
 
 withDefaults(
   defineProps<{
@@ -43,18 +41,15 @@ withDefaults(
 
 <style lang="scss" module>
 .container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
-  overflow-y: scroll;
-  scrollbar-gutter: stable;
-  padding: {
-    top: 24px;
-    left: 8px;
-  }
   backface-visibility: hidden;
   contain: var(--contain-strict);
 }
 .content {
-  margin: 24px 0;
+  flex: 1;
+  min-height: 0;
 }
 </style>

@@ -8,9 +8,11 @@
     <div
       :class="$style.channelContainer"
       :data-is-topic-shown="$boolAttr(showTopic)"
+      :style="{ paddingLeft: `${24 + props.depth * 20}px` }"
     >
       <ChannelElementIcon
         :class="$style.channelIcon"
+        :style="{ left: `${props.depth * 20}px` }"
         :has-child="hasChildren"
         :is-selected="isSelected"
         :is-opened="isOpened"
@@ -33,7 +35,7 @@
           :class="$style.channel"
           :href="href"
           :aria-current="isSelected && 'page'"
-          :aria-expanded="hasChildren && isOpened ? true : undefined"
+          :aria-expanded="hasChildren ? isOpened : undefined"
           :data-is-inactive="$boolAttr(!channel.active)"
           :aria-label="
             showShortenedPath ? pathTooltip : (pathToShow ?? undefined)
@@ -67,6 +69,7 @@
     <div
       v-if="isSelected || isChannelBgHovered || isFocused"
       :class="$style.selectedBg"
+      :style="{ left: `${props.depth * 20}px` }"
       :data-is-hovered="$boolAttr(isChannelBgHovered)"
       :data-is-focused="$boolAttr(isFocused)"
     />
@@ -97,21 +100,22 @@ import ChannelElementName from './ChannelElementName.vue'
 import ChannelElementTopic from './ChannelElementTopic.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 
-const props = withDefaults(
-  defineProps<{
-    channel: ChannelTreeNode
-    isOpened?: boolean
-    showShortenedPath?: boolean
-    showTopic?: boolean
-    showStar?: boolean
-    showNotified?: boolean
-  }>(),
-  {
-    isOpened: false,
-    showShortenedPath: false,
-    showTopic: false
-  }
-)
+interface ChannelElementProps {
+  channel: ChannelTreeNode
+  depth?: number
+  isOpened?: boolean
+  showShortenedPath?: boolean
+  showTopic?: boolean
+  showStar?: boolean
+  showNotified?: boolean
+}
+
+const props = withDefaults(defineProps<ChannelElementProps>(), {
+  depth: 0,
+  isOpened: false,
+  showShortenedPath: false,
+  showTopic: false
+})
 
 const emit = defineEmits<{
   (e: 'clickHash', channelId: ChannelId): void
@@ -186,7 +190,7 @@ const iconSize = computed(() => (props.channel.archived ? 17 : undefined))
 </script>
 
 <style lang="scss" module>
-$elementHeight: 32px;
+$elementHeight: 36px;
 $bgHeight: 36px;
 $bgLeftShift: 8px;
 
@@ -207,7 +211,6 @@ $bgLeftShift: 8px;
   position: relative;
   display: flex;
   height: $elementHeight;
-  padding-left: 24px;
   padding-right: 4px;
   margin-left: $bgLeftShift;
   z-index: 0;
@@ -228,15 +231,15 @@ $bgLeftShift: 8px;
   flex-shrink: 0;
   cursor: pointer;
   position: absolute;
-  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .selectedBg {
   position: absolute;
-  width: calc(100% + #{$bgLeftShift});
   height: $bgHeight;
-  top: -1 * math.div($bgHeight - $elementHeight, 2);
-  left: 0;
+  top: 0;
+  right: -$bgLeftShift;
   z-index: 0;
   border-top-left-radius: 100vw;
   border-bottom-left-radius: 100vw;
