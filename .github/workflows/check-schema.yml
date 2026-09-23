@@ -3,12 +3,13 @@ name: Check Config Schema
 on:
   pull_request:
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   check-schema:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
