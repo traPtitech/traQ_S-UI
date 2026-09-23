@@ -3,5 +3,5 @@
   "compilerOptions": {
     "lib": ["esnext", "dom", "dom.iterable"]
   },
-  "include": ["../../src/types/**/*.ts", "./**/*.ts"]
+  "include": ["../../src/types/**/*.ts", "../../config.d.ts", "./**/*.ts"]
 }
