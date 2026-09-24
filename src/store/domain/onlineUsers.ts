@@ -68,6 +68,7 @@ const useOnlineUsersPinia = defineStore('domain/onlineUsers', () => {
 
   return {
     onlineUsers: readonly(onlineUsers),
+    onlineUsersFetched: readonly(onlineUsersFetched),
     lastOnlineAt: readonly(lastOnlineAt),
     fetchOnlineUsers
   }

@@ -16,11 +16,13 @@ const { mockFetchOnlineUsers } = vi.hoisted(() => ({
 
 const lastOnlineAt = ref(new Map<UserId, string>())
 const onlineUsers = ref(new Set<UserId>())
+const onlineUsersFetched = ref(false)
 
 vi.mock('/@/store/domain/onlineUsers', () => ({
   useOnlineUsers: () => ({
     lastOnlineAt,
     onlineUsers,
+    onlineUsersFetched,
     fetchOnlineUsers: mockFetchOnlineUsers
   })
 }))
@@ -63,6 +65,7 @@ describe('ProfileTab', () => {
   beforeEach(() => {
     lastOnlineAt.value = new Map()
     onlineUsers.value = new Set()
+    onlineUsersFetched.value = true
     mockFetchOnlineUsers.mockReset().mockResolvedValue(new Set())
   })
 
@@ -81,7 +84,6 @@ describe('ProfileTab', () => {
       null,
       later
     ],
-    ['shows no timestamp when both are missing', undefined, null, undefined],
     [
       'compares timestamps with different time zones',
       '2026-09-21T10:05:00.000Z',
@@ -94,9 +96,34 @@ describe('ProfileTab', () => {
     const wrapper = mountProfile(serverLastOnline)
 
     expect(wrapper.getComponent(LastOnline).get('p').text()).toBe(
-      expected ? getFullDayWithTimeString(new Date(expected)) : ''
+      getFullDayWithTimeString(new Date(expected))
     )
   })
+
+  it.each([null, undefined])(
+    'hides the section without a timestamp (%s)',
+    lastOnline => {
+      const wrapper = mountProfile(lastOnline)
+
+      expect(wrapper.findComponent(LastOnline).exists()).toBe(false)
+    }
+  )
+
+  it.each([false, true])(
+    'waits for the initial online status (online: %s)',
+    async isOnline => {
+      onlineUsersFetched.value = false
+      const wrapper = mountProfile(earlier)
+
+      expect(wrapper.findComponent(LastOnline).exists()).toBe(false)
+
+      if (isOnline) onlineUsers.value.add(user.id)
+      onlineUsersFetched.value = true
+      await nextTick()
+
+      expect(wrapper.findComponent(LastOnline).exists()).toBe(!isOnline)
+    }
+  )
 
   it('updates the timestamp when newer user details arrive', async () => {
     lastOnlineAt.value.set(user.id, earlier)
@@ -114,23 +141,19 @@ describe('ProfileTab', () => {
     )
   })
 
-  it('shows online status instead of a historical timestamp', () => {
+  it('hides the section while the user is online', () => {
     onlineUsers.value.add(user.id)
     lastOnlineAt.value.set(user.id, earlier)
     const wrapper = mountProfile(later)
 
-    expect(wrapper.getComponent(LastOnline).get('p').text()).toBe(
-      'オンライン中'
-    )
+    expect(wrapper.findComponent(LastOnline).exists()).toBe(false)
   })
 
   it('shows the server timestamp when the user goes offline', async () => {
     onlineUsers.value.add(user.id)
     const wrapper = mountProfile(earlier)
 
-    expect(wrapper.getComponent(LastOnline).get('p').text()).toBe(
-      'オンライン中'
-    )
+    expect(wrapper.findComponent(LastOnline).exists()).toBe(false)
 
     onlineUsers.value.delete(user.id)
     lastOnlineAt.value.set(user.id, later)
@@ -139,5 +162,16 @@ describe('ProfileTab', () => {
     expect(wrapper.getComponent(LastOnline).get('p').text()).toBe(
       getFullDayWithTimeString(new Date(later))
     )
+  })
+
+  it('hides the section when the user comes online', async () => {
+    const wrapper = mountProfile(earlier)
+
+    expect(wrapper.findComponent(LastOnline).exists()).toBe(true)
+
+    onlineUsers.value.add(user.id)
+    await nextTick()
+
+    expect(wrapper.findComponent(LastOnline).exists()).toBe(false)
   })
 })

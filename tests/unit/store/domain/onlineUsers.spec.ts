@@ -60,8 +60,9 @@ describe('onlineUsers store', () => {
 
     const pinia = createPinia()
     setActivePinia(pinia)
-    const { fetchOnlineUsers, lastOnlineAt, onlineUsers } =
+    const { fetchOnlineUsers, lastOnlineAt, onlineUsers, onlineUsersFetched } =
       useOnlineUsers(pinia)
+    expect(onlineUsersFetched.value).toBe(false)
     const fetch = fetchOnlineUsers()
 
     mockWsListener.emit('USER_ONLINE', { id: becameOnline })
@@ -69,11 +70,29 @@ describe('onlineUsers store', () => {
       id: initiallyOnline,
       lastOnline: offlineAt
     })
+    expect(onlineUsersFetched.value).toBe(false)
     resolveFetch({ data: [initiallyOnline, stayedOnline] })
 
     await expect(fetch).resolves.toEqual(new Set([becameOnline, stayedOnline]))
     expect(onlineUsers.value).toEqual(new Set([becameOnline, stayedOnline]))
     expect(lastOnlineAt.value).toEqual(new Map([[initiallyOnline, offlineAt]]))
+    expect(onlineUsersFetched.value).toBe(true)
+  })
+
+  it('keeps the online status unknown after a failed initial fetch until a retry succeeds', async () => {
+    const error = new Error('network unavailable')
+    mockGetOnlineUsers
+      .mockRejectedValueOnce(error)
+      .mockResolvedValueOnce({ data: [] })
+    const pinia = createPinia()
+    setActivePinia(pinia)
+    const { fetchOnlineUsers, onlineUsersFetched } = useOnlineUsers(pinia)
+
+    await expect(fetchOnlineUsers()).rejects.toBe(error)
+    expect(onlineUsersFetched.value).toBe(false)
+
+    await fetchOnlineUsers()
+    expect(onlineUsersFetched.value).toBe(true)
   })
 
   it('fetches a fresh snapshot after reconnecting during a fetch', async () => {

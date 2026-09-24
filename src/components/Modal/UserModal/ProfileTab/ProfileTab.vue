@@ -10,8 +10,8 @@
       :twitter-id="detail?.twitterId"
     />
     <LastOnline
+      v-if="onlineUsersFetched && !onlineUsers.has(user.id) && lastOnline"
       :class="$style.section"
-      :is-online="onlineUsers.has(user.id)"
       :last-online="lastOnline"
     />
   </div>
@@ -35,7 +35,8 @@ const props = defineProps<{
   detail?: UserDetail
 }>()
 
-const { onlineUsers, lastOnlineAt, fetchOnlineUsers } = useOnlineUsers()
+const { onlineUsers, onlineUsersFetched, lastOnlineAt, fetchOnlineUsers } =
+  useOnlineUsers()
 fetchOnlineUsers().catch(() => undefined)
 
 const lastOnline = computed(() => {

@@ -4,7 +4,7 @@ import LastOnline from '/@/components/Modal/UserModal/ProfileTab/LastOnline.vue'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
 
 describe('LastOnline', () => {
-  it('shows the server timestamp while offline', () => {
+  it('shows the formatted server timestamp', () => {
     const lastOnline = new Date('2026-09-04T00:00:00Z')
     const wrapper = mount(LastOnline, {
       props: {
@@ -13,11 +13,5 @@ describe('LastOnline', () => {
     })
 
     expect(wrapper.text()).toContain(getFullDayWithTimeString(lastOnline))
-  })
-
-  it('shows online status without requiring a timestamp', () => {
-    const wrapper = mount(LastOnline, { props: { isOnline: true } })
-
-    expect(wrapper.get('p').text()).toBe('オンライン中')
   })
 })
