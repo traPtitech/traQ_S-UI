@@ -9,17 +9,14 @@
       :name="user.name"
       :twitter-id="detail?.twitterId"
     />
-    <LastOnline
-      :class="$style.section"
-      :last-online="
-        lastOnlineAt.get(user.id) ?? detail?.lastOnline ?? undefined
-      "
-    />
+    <LastOnline :class="$style.section" :last-online="lastOnline" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { User, UserDetail } from '@traptitech/traq'
+
+import { computed } from 'vue'
 
 import { useOnlineUsers } from '/@/store/domain/onlineUsers'
 
@@ -29,13 +26,25 @@ import BioText from './BioText.vue'
 import HomeChannel from './HomeChannel.vue'
 import LastOnline from './LastOnline.vue'
 
-defineProps<{
+const props = defineProps<{
   user: User
   detail?: UserDetail
 }>()
 
 const { lastOnlineAt, fetchOnlineUsers } = useOnlineUsers()
 fetchOnlineUsers().catch(() => undefined)
+
+const lastOnline = computed(() => {
+  const confirmedAt = lastOnlineAt.value.get(props.user.id)
+  const serverLastOnline = props.detail?.lastOnline
+
+  if (!confirmedAt) return serverLastOnline ?? undefined
+  if (!serverLastOnline) return confirmedAt
+
+  return Date.parse(confirmedAt) > Date.parse(serverLastOnline)
+    ? confirmedAt
+    : serverLastOnline
+})
 </script>
 
 <style lang="scss" module>
