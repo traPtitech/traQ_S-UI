@@ -23,8 +23,8 @@
     />
     <SimpleToggle
       v-model="config.stampRecommendation"
-      title="スタンプのレコメンド機能"
-      description="スタンプのレコメンド機能を有効にします。スタンプ履歴が用いられている部分をレコメンドで置き換えます。"
+      title="スタンプのレコメンデーション"
+      description="スタンプ履歴の代わりに、利用傾向に合わせたおすすめを表示するようにします。"
     />
     <SimpleToggle
       v-model="config.showArchivedChannels"
