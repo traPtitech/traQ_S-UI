@@ -18,7 +18,7 @@ import { computed } from 'vue'
 
 import useFileMeta from '/@/composables/files/useFileMeta'
 import useChannelPath from '/@/composables/useChannelPath'
-import { getDateRepresentation } from '/@/lib/basic/date'
+import { useDateRepresentation } from '/@/composables/useDateRepresentation'
 import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 import { fallbackChannelPath } from '/@/lib/config'
 import { useUsersStore } from '/@/store/entities/users'
@@ -44,9 +44,7 @@ const { openLinkAndClearModal } = useOpenLinkAndClearModal()
 const user = computed(() =>
   usersMap.value.get(fileMeta.value?.uploaderId ?? '')
 )
-const createdAt = computed(() =>
-  getDateRepresentation(fileMeta.value?.createdAt ?? '')
-)
+const createdAt = useDateRepresentation(() => fileMeta.value?.createdAt ?? '')
 
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
 
