@@ -7,7 +7,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import apis from '/@/lib/apis'
 import { checkBadgeAPISupport } from '/@/lib/dom/browser'
-import { detectMentionOfMe } from '/@/lib/markdown/detector'
+import { detectMentionOfMe } from '/@/lib/markdown/markdown'
 import { removeNotification } from '/@/lib/notification/notification'
 import { wsListener } from '/@/lib/websocket'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -194,14 +194,28 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
     // 自分の投稿は未読に追加しない
     if (meStore.myId.value === message.userId) return
 
-    const noticeable =
+    let noticeable =
       isCiting ||
-      detectMentionOfMe(
-        message.content,
-        meStore.myId.value ?? '',
-        meStore.detail.value?.groups ?? []
-      ) ||
       !!channelsStore.channelsMap.value.get(message.channelId)?.force
+
+    if (!noticeable) {
+      try {
+        noticeable = await detectMentionOfMe(
+          message.content,
+          meStore.myId.value ?? '',
+          meStore.detail.value?.groups ?? []
+        )
+      } catch (error) {
+        // Recover the authoritative unread state if Markdown could not be processed.
+        // eslint-disable-next-line no-console
+        console.error('メンションの解析に失敗しました', error)
+        await fetchUnreadChannels({ ignoreCache: true })
+        return
+      }
+    }
+
+    // The user may have opened the channel while the parser was loading.
+    if (viewStatesStore.monitoringChannels.value.has(message.channelId)) return
     const isDM = channelsStore.dmChannelsMap.value.has(message.channelId)
     if (!noticeable && !isDM && !isChannelSubscribed(message.channelId)) return
 
