@@ -15,10 +15,12 @@ const { mockFetchOnlineUsers } = vi.hoisted(() => ({
 }))
 
 const lastOnlineAt = ref(new Map<UserId, string>())
+const onlineUsers = ref(new Set<UserId>())
 
 vi.mock('/@/store/domain/onlineUsers', () => ({
   useOnlineUsers: () => ({
     lastOnlineAt,
+    onlineUsers,
     fetchOnlineUsers: mockFetchOnlineUsers
   })
 }))
@@ -60,20 +62,21 @@ enableAutoUnmount(afterEach)
 describe('ProfileTab', () => {
   beforeEach(() => {
     lastOnlineAt.value = new Map()
+    onlineUsers.value = new Set()
     mockFetchOnlineUsers.mockReset().mockResolvedValue(new Set())
   })
 
   it.each([
-    ['uses a newer server timestamp', earlier, later, later],
-    ['uses a newer client timestamp', later, earlier, later],
     [
-      'uses the server timestamp without a client timestamp',
-      undefined,
+      'uses newer user details after a missed offline event',
+      earlier,
       later,
       later
     ],
+    ['uses a newer offline event than the user details', later, earlier, later],
+    ['uses the user details without an offline event', undefined, later, later],
     [
-      'uses the client timestamp without a server timestamp',
+      'uses the offline event without a timestamp in user details',
       later,
       null,
       later
@@ -85,8 +88,8 @@ describe('ProfileTab', () => {
       '2026-09-21T12:00:00+09:00',
       '2026-09-21T10:05:00.000Z'
     ]
-  ])('%s', (_name, confirmedAt, serverLastOnline, expected) => {
-    if (confirmedAt) lastOnlineAt.value.set(user.id, confirmedAt)
+  ])('%s', (_name, eventLastOnline, serverLastOnline, expected) => {
+    if (eventLastOnline) lastOnlineAt.value.set(user.id, eventLastOnline)
 
     const wrapper = mountProfile(serverLastOnline)
 
@@ -111,9 +114,25 @@ describe('ProfileTab', () => {
     )
   })
 
-  it('updates the timestamp when the client confirms a later online time', async () => {
+  it('shows online status instead of a historical timestamp', () => {
+    onlineUsers.value.add(user.id)
+    lastOnlineAt.value.set(user.id, earlier)
+    const wrapper = mountProfile(later)
+
+    expect(wrapper.getComponent(LastOnline).get('p').text()).toBe(
+      'オンライン中'
+    )
+  })
+
+  it('shows the server timestamp when the user goes offline', async () => {
+    onlineUsers.value.add(user.id)
     const wrapper = mountProfile(earlier)
 
+    expect(wrapper.getComponent(LastOnline).get('p').text()).toBe(
+      'オンライン中'
+    )
+
+    onlineUsers.value.delete(user.id)
     lastOnlineAt.value.set(user.id, later)
     await nextTick()
 

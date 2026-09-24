@@ -23,9 +23,7 @@ export type WebSocketEvent = UserEvent &
   MessageEvent &
   StampEvent &
   ClipFolderEvent &
-  QallEvent & {
-    PING: null
-  }
+  QallEvent
 
 /*
  * User
@@ -64,7 +62,10 @@ export type UserTagsUpdatedEvent = {
 
 export type UserIconUpdatedEvent = UserIdBody
 export type UserOnlineEvent = UserIdBody
-export type UserOfflineEvent = UserIdBody
+export type UserOfflineEvent = UserIdBody & {
+  // Optional for compatibility with servers that only send the user ID.
+  lastOnline?: string
+}
 
 export type UserWebRTCStateChangedEvent = {
   user_id: UserId

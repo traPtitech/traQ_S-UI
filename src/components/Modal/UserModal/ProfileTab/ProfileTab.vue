@@ -9,7 +9,11 @@
       :name="user.name"
       :twitter-id="detail?.twitterId"
     />
-    <LastOnline :class="$style.section" :last-online="lastOnline" />
+    <LastOnline
+      :class="$style.section"
+      :is-online="onlineUsers.has(user.id)"
+      :last-online="lastOnline"
+    />
   </div>
 </template>
 
@@ -31,18 +35,20 @@ const props = defineProps<{
   detail?: UserDetail
 }>()
 
-const { lastOnlineAt, fetchOnlineUsers } = useOnlineUsers()
+const { onlineUsers, lastOnlineAt, fetchOnlineUsers } = useOnlineUsers()
 fetchOnlineUsers().catch(() => undefined)
 
 const lastOnline = computed(() => {
-  const confirmedAt = lastOnlineAt.value.get(props.user.id)
+  const eventLastOnline = lastOnlineAt.value.get(props.user.id)
   const serverLastOnline = props.detail?.lastOnline
 
-  if (!confirmedAt) return serverLastOnline ?? undefined
-  if (!serverLastOnline) return confirmedAt
+  if (!eventLastOnline) return serverLastOnline ?? undefined
+  if (!serverLastOnline) return eventLastOnline
 
-  return Date.parse(confirmedAt) > Date.parse(serverLastOnline)
-    ? confirmedAt
+  // Both values come from the server; a delayed HTTP response may be older
+  // than an event, while a reconnect may have missed a newer offline event.
+  return Date.parse(eventLastOnline) > Date.parse(serverLastOnline)
+    ? eventLastOnline
     : serverLastOnline
 })
 </script>
