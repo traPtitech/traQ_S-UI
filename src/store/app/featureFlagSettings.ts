@@ -37,13 +37,6 @@ export const featureFlagDescriptions = {
     defaultValue: isWebKit(),
     endAt: new Date('9999-12-31T00:00')
   },
-  dose_construct_strict_starred_channel_tree: {
-    title: 'お気に入りチャンネルをツリー表示',
-    description:
-      'お気に入りチャンネル一覧を、お気に入りに登録されたチャンネルのみの木構造で表示します。',
-    defaultValue: false,
-    endAt: new Date('2026-09-30T23:59')
-  },
   stamp_recommendation: {
     title: 'スタンプのレコメンド機能',
     description:

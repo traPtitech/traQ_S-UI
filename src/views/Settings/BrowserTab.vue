@@ -26,6 +26,11 @@
       title="アーカイブされたチャンネルを表示"
       description="アーカイブされたチャンネルもチャンネルタブに表示するようにします。"
     />
+    <SimpleToggle
+      v-model="config.strictStarredChannelTree"
+      title="お気に入りチャンネルをツリー表示"
+      description="お気に入りチャンネル一覧を、お気に入りに登録されたチャンネルのみの木構造で表示します。"
+    />
     <SendKey v-model:send-with-modifier-key="config.sendWithModifierKey" />
     <ModifierKeys v-model:modifier-key="config.modifierKey" />
     <CacheManager />
