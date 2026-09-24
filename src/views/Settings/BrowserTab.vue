@@ -22,6 +22,11 @@
       description="未読チャンネル一覧で通知オンのチャンネルを優先的に表示するようにします。"
     />
     <SimpleToggle
+      v-model="config.stampRecommendation"
+      title="スタンプのレコメンド機能"
+      description="スタンプのレコメンド機能を有効にします。スタンプ履歴が用いられている部分をレコメンドで置き換えます。"
+    />
+    <SimpleToggle
       v-model="config.showArchivedChannels"
       title="アーカイブされたチャンネルを表示"
       description="アーカイブされたチャンネルもチャンネルタブに表示するようにします。"
