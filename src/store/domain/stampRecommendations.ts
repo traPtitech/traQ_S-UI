@@ -75,7 +75,9 @@ export const useTopStampIds = () => {
   const { stampRecommendation } = useBrowserSettings()
 
   const topStampIds = computed(() =>
-    stampRecommendation ? stampRecommendations.value : recentStampIds.value
+    stampRecommendation.value
+      ? stampRecommendations.value
+      : recentStampIds.value
   )
 
   return { topStampIds }
