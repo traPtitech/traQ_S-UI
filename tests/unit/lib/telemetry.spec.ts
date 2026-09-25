@@ -67,7 +67,10 @@ describe('telemetry', () => {
     expect(fetchMock).toHaveBeenCalledWith(
       new URL('/telemetry/collect', location.origin).href,
       expect.objectContaining({
-        credentials: 'omit',
+        credentials: 'same-origin',
+        mode: 'same-origin',
+        redirect: 'error',
+        headers: expect.objectContaining({ 'X-Traq-Telemetry': '1' }),
         referrerPolicy: 'no-referrer'
       })
     )
@@ -140,5 +143,16 @@ describe('telemetry', () => {
       telemetry.track('feature_used', { feature: 'search' })
     ).resolves.toBeUndefined()
     expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('does not send to another origin', async () => {
+    vi.stubGlobal('traQConfig', {
+      telemetry: { endpoint: 'https://collector.example.com/collect' }
+    })
+    await telemetry.track('feature_used', { feature: 'search' })
+    await vi.advanceTimersByTimeAsync(2000)
+
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(storage.size).toBe(0)
   })
 })
