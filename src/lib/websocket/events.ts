@@ -64,7 +64,7 @@ export type UserIconUpdatedEvent = UserIdBody
 export type UserOnlineEvent = UserIdBody
 export type UserOfflineEvent = UserIdBody & {
   // Optional for compatibility with servers that only send the user ID.
-  lastOnline?: string
+  last_online?: string
 }
 
 export type UserWebRTCStateChangedEvent = {

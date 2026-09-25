@@ -68,7 +68,7 @@ describe('onlineUsers store', () => {
     mockWsListener.emit('USER_ONLINE', { id: becameOnline })
     mockWsListener.emit('USER_OFFLINE', {
       id: initiallyOnline,
-      lastOnline: offlineAt
+      last_online: offlineAt
     })
     expect(onlineUsersFetched.value).toBe(false)
     resolveFetch({ data: [initiallyOnline, stayedOnline] })
@@ -146,7 +146,7 @@ describe('onlineUsers store', () => {
     const { fetchOnlineUsers, lastOnlineAt } = useOnlineUsers(pinia)
     await fetchOnlineUsers()
 
-    mockWsListener.emit('USER_OFFLINE', { id: userId, lastOnline: offlineAt })
+    mockWsListener.emit('USER_OFFLINE', { id: userId, last_online: offlineAt })
     await fetchOnlineUsers({ ignoreCache: true })
 
     expect(lastOnlineAt.value.get(userId)).toBe(offlineAt)

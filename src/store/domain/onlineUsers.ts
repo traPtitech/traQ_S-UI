@@ -54,9 +54,9 @@ const useOnlineUsersPinia = defineStore('domain/onlineUsers', () => {
     onlineUsers.value.add(id)
     changesDuringFetch?.set(id, true)
   })
-  wsListener.on('USER_OFFLINE', ({ id, lastOnline }) => {
+  wsListener.on('USER_OFFLINE', ({ id, last_online }) => {
     onlineUsers.value.delete(id)
-    if (lastOnline) lastOnlineAt.value.set(id, lastOnline)
+    if (last_online) lastOnlineAt.value.set(id, last_online)
     changesDuringFetch?.set(id, false)
   })
 
