@@ -4,6 +4,8 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import { isWebKit } from '/@/lib/dom/browser'
+import { telemetry } from '/@/lib/telemetry'
+import type { FeatureFlagSource } from '/@/lib/telemetry/events'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
 type FeatureFlagDescription = {
@@ -57,12 +59,18 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
     initialValue
   )
 
-  const isFlagEnabled = (flag: FeatureFlagKey): boolean => {
+  const getFeatureFlagState = (
+    flag: FeatureFlagKey
+  ): { enabled: boolean; source: FeatureFlagSource } => {
     const featureFlag = featureFlagDescriptions[flag]
     if (featureFlag.endAt < new Date()) {
-      return false
+      return { enabled: false, source: 'expired' }
     }
-    return state.status.get(flag) ?? featureFlag.defaultValue
+    const override = state.status.get(flag)
+    return {
+      enabled: override ?? featureFlag.defaultValue,
+      source: override === undefined ? 'default' : 'override'
+    }
   }
 
   const featureFlags = computed(() => {
@@ -74,7 +82,7 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
           description: featureFlag.description,
           defaultValue: featureFlag.defaultValue,
           endAt: featureFlag.endAt,
-          enabled: isFlagEnabled(flag as FeatureFlagKey)
+          enabled: getFeatureFlagState(flag as FeatureFlagKey).enabled
         }
       ])
     ) as Record<FeatureFlagKey, FeatureFlag>
@@ -85,11 +93,21 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
     enabled: boolean
   ) => {
     await restoringPromise
+    const previousEnabled = getFeatureFlagState(flag).enabled
     state.status.set(flag, enabled)
+    const currentEnabled = getFeatureFlagState(flag).enabled
+    if (previousEnabled !== currentEnabled) {
+      void telemetry.track('feature_flag_changed', {
+        flag,
+        enabled: currentEnabled,
+        previous_enabled: previousEnabled
+      })
+    }
   }
 
   return {
     updateFeatureFlagStatus,
+    getFeatureFlagState,
     featureFlags,
     restoring
   }
