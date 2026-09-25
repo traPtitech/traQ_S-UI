@@ -2,12 +2,14 @@ import { effectScope, nextTick, ref } from 'vue'
 
 import { useFeatureFlagTelemetry } from '/@/composables/useFeatureFlagTelemetry'
 
-const { settings, track } = vi.hoisted(() => ({
+const { settings, me, track } = vi.hoisted(() => ({
   settings: vi.fn(),
+  me: vi.fn(),
   track: vi.fn()
 }))
 
 vi.mock('/@/lib/telemetry', () => ({ telemetry: { track } }))
+vi.mock('/@/store/domain/me', () => ({ useMeStore: me }))
 vi.mock('/@/store/app/featureFlagSettings', () => ({
   featureFlagDescriptions: { flag_test: {} },
   useFeatureFlagSettings: settings
@@ -16,6 +18,7 @@ vi.mock('/@/store/app/featureFlagSettings', () => ({
 describe('useFeatureFlagTelemetry', () => {
   let scope: ReturnType<typeof effectScope>
   const restoring = ref(true)
+  const myId = ref<string>()
   let visibility: DocumentVisibilityState
   let enabled: boolean
 
@@ -29,6 +32,7 @@ describe('useFeatureFlagTelemetry', () => {
     vi.useFakeTimers()
     track.mockReset()
     restoring.value = true
+    myId.value = 'test-user'
     enabled = false
     visibility = 'visible'
     vi.spyOn(document, 'visibilityState', 'get').mockImplementation(
@@ -38,6 +42,7 @@ describe('useFeatureFlagTelemetry', () => {
       restoring,
       getFeatureFlagState: () => ({ enabled, source: 'override' })
     })
+    me.mockReturnValue({ myId })
     scope = effectScope()
     scope.run(useFeatureFlagTelemetry)
   })
@@ -79,6 +84,27 @@ describe('useFeatureFlagTelemetry', () => {
     await setVisibility('visible')
     expect(track).toHaveBeenCalledOnce()
     scope.stop()
+    await vi.advanceTimersByTimeAsync(15 * 60 * 1000)
+    expect(track).toHaveBeenCalledOnce()
+  })
+
+  it('waits for login and stops taking snapshots after logout', async () => {
+    myId.value = undefined
+    restoring.value = false
+    await nextTick()
+    await vi.advanceTimersByTimeAsync(15 * 60 * 1000)
+    expect(track).not.toHaveBeenCalled()
+
+    myId.value = 'test-user'
+    await nextTick()
+    expect(track).toHaveBeenCalledExactlyOnceWith('feature_flag_snapshot', {
+      flag: 'flag_test',
+      enabled: false,
+      source: 'override'
+    })
+
+    myId.value = undefined
+    await nextTick()
     await vi.advanceTimersByTimeAsync(15 * 60 * 1000)
     expect(track).toHaveBeenCalledOnce()
   })

@@ -27,6 +27,7 @@ const initialize = async () => {
 
   const endpoint = new URL(config.endpoint, location.origin)
   if (!['http:', 'https:'].includes(endpoint.protocol)) return
+  if (endpoint.origin !== location.origin) return
 
   const { initializeFaro, FetchTransport } =
     await import('@grafana/faro-web-sdk')
@@ -40,7 +41,10 @@ const initialize = async () => {
       new FetchTransport({
         url: endpoint.href,
         requestOptions: {
-          credentials: 'omit',
+          credentials: 'same-origin',
+          mode: 'same-origin',
+          redirect: 'error',
+          headers: { 'X-Traq-Telemetry': '1' },
           referrerPolicy: 'no-referrer'
         }
       })
