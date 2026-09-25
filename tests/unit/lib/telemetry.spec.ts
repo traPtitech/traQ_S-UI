@@ -1,11 +1,13 @@
 import type { TransportBody } from '@grafana/faro-web-sdk'
 
+import type { telemetry as ActivityTelemetry } from '/@/lib/telemetry'
+
 const fetchMock = vi.fn()
 const storage = new Map<string, string>()
 const getItem = vi.fn((key: string) => storage.get(key) ?? null)
 
 describe('telemetry', () => {
-  let telemetry: (typeof import('/@/lib/telemetry'))['telemetry']
+  let telemetry: typeof ActivityTelemetry
 
   beforeEach(async () => {
     vi.resetModules()
@@ -25,14 +27,12 @@ describe('telemetry', () => {
       headers: new Headers(),
       text: () => Promise.resolve('')
     })
-    delete traQConfig.telemetry
   })
 
   afterEach(() => {
     vi.clearAllTimers()
     vi.useRealTimers()
     vi.unstubAllGlobals()
-    delete traQConfig.telemetry
   })
 
   const sentBody = (): TransportBody =>
@@ -47,7 +47,9 @@ describe('telemetry', () => {
   })
 
   it('sends repeated events without collecting page or user metadata', async () => {
-    traQConfig.telemetry = { endpoint: '/telemetry/collect' }
+    vi.stubGlobal('traQConfig', {
+      telemetry: { endpoint: '/telemetry/collect' }
+    })
 
     await telemetry.track('feature_flag_snapshot', {
       flag: 'contain_strict_alternate',
@@ -93,10 +95,12 @@ describe('telemetry', () => {
   })
 
   it('does not collect from hosts outside the configured deployment list', async () => {
-    traQConfig.telemetry = {
-      endpoint: '/telemetry/collect',
-      hosts: ['q.trap.jp']
-    }
+    vi.stubGlobal('traQConfig', {
+      telemetry: {
+        endpoint: '/telemetry/collect',
+        hosts: ['q.trap.jp']
+      }
+    })
     await telemetry.track('feature_used', { feature: 'search' })
     await vi.advanceTimersByTimeAsync(2000)
 
@@ -105,7 +109,9 @@ describe('telemetry', () => {
   })
 
   it('reuses the browser identifier across reloads', async () => {
-    traQConfig.telemetry = { endpoint: '/telemetry/collect' }
+    vi.stubGlobal('traQConfig', {
+      telemetry: { endpoint: '/telemetry/collect' }
+    })
     window.localStorage.setItem('telemetry/client-id', 'existing-client')
     await telemetry.track('feature_used', { feature: 'search' })
     await vi.advanceTimersByTimeAsync(1000)
@@ -116,7 +122,9 @@ describe('telemetry', () => {
   })
 
   it('continues when browser storage is unavailable', async () => {
-    traQConfig.telemetry = { endpoint: '/telemetry/collect' }
+    vi.stubGlobal('traQConfig', {
+      telemetry: { endpoint: '/telemetry/collect' }
+    })
     getItem.mockImplementation(() => {
       throw new DOMException('Storage denied', 'SecurityError')
     })
@@ -127,7 +135,7 @@ describe('telemetry', () => {
   })
 
   it('ignores an invalid endpoint without breaking feature usage', async () => {
-    traQConfig.telemetry = { endpoint: 'http://[' }
+    vi.stubGlobal('traQConfig', { telemetry: { endpoint: 'http://[' } })
     await expect(
       telemetry.track('feature_used', { feature: 'search' })
     ).resolves.toBeUndefined()
