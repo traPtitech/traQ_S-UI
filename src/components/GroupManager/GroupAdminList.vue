@@ -1,7 +1,12 @@
 <template>
   <div>
     <div :class="$style.header">
-      <div :class="$style.label">管理者</div>
+      <div :class="$style.label">
+        管理者
+        <span :class="$style.count">
+          <SpinNumber :value="admins.length" />
+        </span>
+      </div>
       <AIcon
         name="plus-circle-outline"
         mdi
@@ -22,6 +27,7 @@
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
+import SpinNumber from '/@/components/UI/SpinNumber.vue'
 import apis from '/@/lib/apis'
 import { useModalStore } from '/@/store/ui/modal'
 import { useToastStore } from '/@/store/ui/toast'
@@ -64,6 +70,19 @@ const onDelete = async (id: string) => {
   flex: 1;
   margin-bottom: 4px;
   font-weight: bold;
+}
+.count {
+  margin-left: 0.2em;
+  overflow: hidden;
+  display: inline-flex;
+  &::before {
+    content: '(';
+    display: block;
+  }
+  &::after {
+    content: ')';
+    display: block;
+  }
 }
 .addIcon {
   @include color-ui-primary-inactive;
