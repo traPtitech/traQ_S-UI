@@ -15,7 +15,6 @@
     v-else
     :width="size"
     :height="size"
-    :viewBox="`0 0 ${size} ${size}`"
     v-bind="$attrs"
     role="img"
     :class="$style.icon"
