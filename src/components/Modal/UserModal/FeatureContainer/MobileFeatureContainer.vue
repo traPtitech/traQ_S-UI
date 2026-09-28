@@ -6,7 +6,15 @@
         {{ user.displayName }}
       </h1>
       <div :class="$style.nameInfo">
-        <span :class="$style.name">@{{ user.name }}</span>
+        <div>
+          <GradeBadge
+            :user-id="user?.id"
+            :is-bot="user?.bot ?? false"
+            background="primary"
+            color="ui-secondary"
+          />
+          <span :class="$style.name">@{{ user.name }}</span>
+        </div>
         <OnlineIndicator :user-id="user.id" has-text />
       </div>
     </div>
@@ -21,6 +29,7 @@
 <script lang="ts" setup>
 import type { User, UserDetail } from '@traptitech/traq'
 
+import GradeBadge from '/@/components/Main/MainView/MessageElement/GradeBadge.vue'
 import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 
@@ -65,6 +74,7 @@ defineProps<{
   gap: 0 0.625rem;
 }
 .name {
+  margin-left: 4px;
   word-break: break-all;
 }
 .buttons {

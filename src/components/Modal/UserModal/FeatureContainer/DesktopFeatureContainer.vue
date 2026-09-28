@@ -3,7 +3,16 @@
     <div :class="$style.infoContainer">
       <h1 :class="$style.displayName" dir="auto">{{ user.displayName }}</h1>
       <div :class="$style.onlineContainer">
-        <p>@{{ user.name }}</p>
+        <div :class="$style.nameInfo">
+          <GradeBadge
+            :user-id="user?.id"
+            :is-bot="user?.bot ?? false"
+            background="primary"
+            font-size="body1"
+            color="ui-secondary"
+          />
+          <span :class="$style.name">@{{ user.name }}</span>
+        </div>
         <OnlineIndicator :user-id="user.id" has-text />
       </div>
     </div>
@@ -19,6 +28,7 @@
 <script lang="ts" setup>
 import type { User, UserDetail } from '@traptitech/traq'
 
+import GradeBadge from '/@/components/Main/MainView/MessageElement/GradeBadge.vue'
 import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 
 import LinkButtons from './LinkButtons.vue'
@@ -53,5 +63,14 @@ defineProps<{
 }
 .displayName {
   width: 80%;
+}
+.nameInfo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.name {
+  margin-left: 6px;
+  word-break: break-all;
 }
 </style>
