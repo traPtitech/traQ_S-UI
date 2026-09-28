@@ -1,26 +1,51 @@
 <template>
   <ModalFrame
     title="グループ"
-    :subtitle="name"
     icon-name="group"
     return-button
     :edit-button="isAdmin"
     @edit="onGroupEdit"
   >
-    <UserListItem
-      v-for="user in users"
-      :key="user.id"
-      :user-id="user.id"
-      :is-admin="user.isAdmin"
-      :class="$style.item"
-    >
-      <div :class="$style.role" dir="auto">
-        {{ user.role }}
-      </div>
-      <div v-if="user.isAdmin && !user.isMember" :class="$style.nonMemberAdmin">
-        グループ外管理者
-      </div>
-    </UserListItem>
+    <template #subtitle>
+      <bdi>{{ name }}</bdi>
+      <span :class="$style.memberCount">
+        <AIcon
+          name="crown"
+          mdi
+          :size="21"
+          style="vertical-align: bottom; margin-left: 0.1rem"
+        />
+        <span>
+          {{ users.filter(u => u.isAdmin).length }}
+        </span>
+
+        <span style="margin-right: 0.1rem; margin-left: 0.3rem">/</span>
+
+        <AIcon name="user" :size="21" style="vertical-align: bottom" />
+        <span style="margin-right: 0.2rem">
+          {{ users.filter(u => u.isMember).length }}
+        </span>
+      </span>
+    </template>
+    <template #default>
+      <UserListItem
+        v-for="user in users"
+        :key="user.id"
+        :user-id="user.id"
+        :is-admin="user.isAdmin"
+        :class="$style.item"
+      >
+        <div :class="$style.role" dir="auto">
+          {{ user.role }}
+        </div>
+        <div
+          v-if="user.isAdmin && !user.isMember"
+          :class="$style.nonMemberAdmin"
+        >
+          グループ外管理者
+        </div>
+      </UserListItem>
+    </template>
   </ModalFrame>
 </template>
 
@@ -29,6 +54,7 @@ import type { UserGroupMember } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
+import AIcon from '/@/components/UI/AIcon.vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
@@ -106,5 +132,14 @@ const onGroupEdit = (event: MouseEvent) => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.memberCount {
+  margin-left: 0.35rem;
+  &::before {
+    content: '(';
+  }
+  &::after {
+    content: ')';
+  }
 }
 </style>
