@@ -1,12 +1,12 @@
 import {
-  deleteToken as deleteTokenFb,
   getMessaging,
-  getToken as getTokenFb,
-  onMessage
+  onMessage,
+  onRegistered,
+  register,
+  unregister
 } from 'firebase/messaging'
 
 import apis from '/@/lib/apis'
-import { wait } from '/@/lib/basic/timer'
 import { isIOSApp, isPWA, isWebKit } from '/@/lib/dom/browser'
 import router from '/@/router'
 import { useToastStore } from '/@/store/ui/toast'
@@ -113,7 +113,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
       if (data.type === 'navigate') {
         // 同じ場所に移動しようとした際のエラーを消す
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        router.push(data.to).catch(() => {})
+        router.push(data.to).catch(() => { })
       }
     }
   )
@@ -161,26 +161,20 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
       if (data.path) {
         // 同じ場所に移動しようとした際のエラーを消す
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        router.push(data.path).catch(() => {})
+        router.push(data.path).catch(() => { })
       }
     }
   })
 
-  const token = await Promise.race([
-    getTokenFb(messaging, {
-      vapidKey,
-      serviceWorkerRegistration: registration
-    }),
-    wait(5000)
-  ])
-  if (!token) {
-    // 何故かregistration.pushManager.subscribe(～)が終わらないことで、
-    // getTokenFbのawaitが終わらないことがある
-    // eslint-disable-next-line no-console
-    console.warn('[Notification] getToken timed out')
-    return
-  }
-  apis.registerFCMDevice({ token })
+  onRegistered(messaging, _fid => {
+    apis.registerFCMDevice(/* some cool code here */)
+  })
+
+  register(messaging, {
+    vapidKey,
+    serviceWorkerRegistration: registration
+  })
+
 }
 
 export const deleteToken = () => {
@@ -188,7 +182,7 @@ export const deleteToken = () => {
 
   const firebaseApp = getFirebaseApp()
   const messaging = getMessaging(firebaseApp)
-  deleteTokenFb(messaging)
+  unregister(messaging)
 }
 
 export const removeNotification = async (
