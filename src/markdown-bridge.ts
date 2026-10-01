@@ -38,6 +38,19 @@ const checkGroupExistence = (userGroupId: UserGroupId) => {
 }
 
 export const setupGlobalFuncs = () => {
+  document.addEventListener('click', event => {
+    if (!(event.target instanceof Element)) return
+    const link = event.target.closest<HTMLAnchorElement>(
+      'a.message-user-link, a.message-group-link'
+    )
+    if (!link) return
+    const url = new URL(link.href)
+    const match = /^\/(users|groups)\/([0-9a-f-]{36})$/.exec(url.pathname)
+    if (!match?.[2]) return
+    event.preventDefault()
+    if (match[1] === 'users') window.openUserModal(match[2])
+    else window.openGroupModal(match[2])
+  })
   window.openUserModal = async (userId: UserId) => {
     if (!(await checkUserExistence(userId))) return
 

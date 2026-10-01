@@ -1,6 +1,9 @@
-import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
-
 import { computed, ref } from 'vue'
+
+import type {
+  AnimeEffect,
+  SizeEffect
+} from '@traq-flavored-markdown/traq-plugin/stamp-effects'
 
 import useToggle from '/@/composables/utils/useToggle'
 

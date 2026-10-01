@@ -1,11 +1,10 @@
-import type { EmbeddingOrUrl, ExternalUrl } from '@traptitech/traq-markdown-it'
-
 import { ref } from 'vue'
 
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import { isExternalUrl, isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
+import type { EmbeddingOrUrl, ExternalUrl } from '/@/lib/markdown/types'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { MessageId } from '/@/types/entity-ids'
