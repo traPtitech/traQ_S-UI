@@ -13,6 +13,7 @@ describe('insertText', () => {
   })
 
   it('uses setRangeText with the current selection and dispatches input on mobile', () => {
+    document.body.appendChild(textarea)
     textarea.setSelectionRange(7, 12)
     const setRangeText = vi.spyOn(textarea, 'setRangeText')
     const onInput = vi.fn()
@@ -22,6 +23,10 @@ describe('insertText', () => {
 
     expect(setRangeText).toHaveBeenCalledWith('new', 7, 12, 'end')
     expect(onInput).toHaveBeenCalledOnce()
+    expect(document.activeElement).toBe(textarea)
+    expect(textarea.value).toBe('before new')
+    expect(textarea.selectionStart).toBe(10)
+    expect(textarea.selectionEnd).toBe(10)
   })
 
   it('keeps using the non-mobile insertion path by default', () => {
