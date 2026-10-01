@@ -97,7 +97,7 @@
     "@vitejs/plugin-vue": "6.0.8",
     "@vitest/coverage-v8": "4.1.11",
     "@vue/test-utils": "2.4.11",
-    "axios": "1.18.1",
+    "axios": "1.20.0",
     "browserslist": "4.28.8",
     "cypress": "15.21.1",
     "eslint": "10.9.1",
