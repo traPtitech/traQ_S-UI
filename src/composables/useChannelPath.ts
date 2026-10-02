@@ -209,30 +209,30 @@ const useChannelPath = () => {
       return (hashed ? '#' : '') + expandedChannels.join('/')
     }
 
-    const cutChannels = (channels: string[]): string[] => {
-      const cuttedChannels = channels.concat()
+    const shortenChannels = (channels: string[]): string[] => {
+      const shortenedChannels = channels.concat()
       // そのチャンネルを短縮するか判定するindex
       let cutIndex = 0
       while (
-        cuttedChannels.join('/').length > MAX_SHORT_PATH_LENGTH &&
+        shortenedChannels.join('/').length > MAX_SHORT_PATH_LENGTH &&
         cutIndex < channelsLength - 2
       ) {
         const indexUniqueInitial = channelIdToUniqueInitial(
           channelIds[cutIndex] ?? ''
         )
         // expandされたチャンネルのみを対象にする
-        if ((cuttedChannels[cutIndex] ?? '').length >= 2) {
-          cuttedChannels[cutIndex] = indexUniqueInitial
+        if ((shortenedChannels[cutIndex] ?? '').length >= 2) {
+          shortenedChannels[cutIndex] = indexUniqueInitial
         }
         cutIndex++
       }
-      return cuttedChannels
+      return shortenedChannels
     }
 
     // r/grand-/parent/child
-    const cuttedChannels = cutChannels(expandedChannels)
-    if (cuttedChannels.join('/').length <= MAX_SHORT_PATH_LENGTH) {
-      return (hashed ? '#' : '') + cuttedChannels.join('/')
+    const shortenedChannels = shortenChannels(expandedChannels)
+    if (shortenedChannels.join('/').length <= MAX_SHORT_PATH_LENGTH) {
+      return (hashed ? '#' : '') + shortenedChannels.join('/')
     }
 
     const replaceInitialChannels = (channels: string[]): string[] => {
@@ -252,7 +252,7 @@ const useChannelPath = () => {
     }
 
     // r/g/parent/child
-    const replacedInitialChannels = replaceInitialChannels(cuttedChannels)
+    const replacedInitialChannels = replaceInitialChannels(shortenedChannels)
     if (replacedInitialChannels.join('/').length <= MAX_SHORT_PATH_LENGTH) {
       return (hashed ? '#' : '') + replacedInitialChannels.join('/')
     }
