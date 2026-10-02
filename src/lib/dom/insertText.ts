@@ -14,12 +14,11 @@ export const insertText = (
   // `execCommand` は deprecated だが，`setRangeText` は undo できなくなってしまうので，PC の場合は `execCommand` を用いる．
   // `execCommand` は主にモバイル端末での挙動が怪しいので，それを改善するためのワークアラウンド．
   if (isMobile) {
-    textarea.setRangeText(
-      text,
-      target?.begin ?? textarea.selectionStart,
-      target?.end ?? textarea.selectionEnd,
-      'end'
-    )
+    const begin = target?.begin ?? textarea.selectionStart
+    const end = target?.end ?? textarea.selectionEnd
+
+    textarea.focus({ preventScroll: true })
+    textarea.setRangeText(text, begin, end, 'end')
 
     textarea.dispatchEvent(new Event('input'))
   } else {
