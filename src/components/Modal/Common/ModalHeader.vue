@@ -61,6 +61,8 @@ const emit = defineEmits<{
 }
 .content {
   width: 100%;
+  flex: 1;
+  min-width: 0;
 }
 .returnButton {
   @include color-ui-primary;
@@ -99,5 +101,6 @@ const emit = defineEmits<{
 .editButton {
   @include color-ui-secondary;
   cursor: pointer;
+  flex-shrink: 0;
 }
 </style>

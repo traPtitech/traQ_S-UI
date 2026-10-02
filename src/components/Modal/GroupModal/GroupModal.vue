@@ -7,25 +7,27 @@
     @edit="onGroupEdit"
   >
     <template #subtitle>
-      <bdi>{{ name }}</bdi>
-      <span :class="$style.memberCount">
-        <AIcon
-          name="crown"
-          mdi
-          :size="21"
-          style="vertical-align: bottom; margin-left: 0.1rem"
-        />
-        <span>
-          {{ users.filter(u => u.isAdmin).length }}
-        </span>
+      <div :class="$style.subtitleInner">
+        <bdi :class="$style.name">{{ name }}</bdi>
+        <span :class="$style.memberCount">
+          <AIcon
+            name="crown"
+            mdi
+            :size="21"
+            style="vertical-align: bottom; margin-left: 0.1rem"
+          />
+          <span>
+            {{ users.filter(u => u.isAdmin).length }}
+          </span>
 
-        <span style="margin-right: 0.1rem; margin-left: 0.3rem">/</span>
+          <span style="margin-right: 0.1rem; margin-left: 0.3rem">/</span>
 
-        <AIcon name="user" :size="21" style="vertical-align: bottom" />
-        <span style="margin-right: 0.2rem">
-          {{ users.filter(u => u.isMember).length }}
+          <AIcon name="user" :size="21" style="vertical-align: bottom" />
+          <span style="margin-right: 0.2rem">
+            {{ users.filter(u => u.isMember).length }}
+          </span>
         </span>
-      </span>
+      </div>
     </template>
     <template #default>
       <UserListItem
@@ -132,6 +134,16 @@ const onGroupEdit = (event: MouseEvent) => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.subtitleInner {
+  display: flex;
+  min-width: 0;
+}
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .memberCount {
   margin-left: 0.35rem;
