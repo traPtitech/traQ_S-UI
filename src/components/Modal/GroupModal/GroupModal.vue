@@ -9,24 +9,11 @@
     <template #subtitle>
       <div :class="$style.subtitleInner">
         <bdi :class="$style.name">{{ name }}</bdi>
-        <span :class="$style.memberCount">
-          <AIcon
-            name="crown"
-            mdi
-            :size="21"
-            style="vertical-align: bottom; margin-left: 0.1rem"
-          />
-          <span>
-            {{ users.filter(u => u.isAdmin).length }}
-          </span>
-
-          <span style="margin-right: 0.1rem; margin-left: 0.3rem">/</span>
-
-          <AIcon name="user" :size="21" style="vertical-align: bottom" />
-          <span style="margin-right: 0.2rem">
-            {{ users.filter(u => u.isMember).length }}
-          </span>
-        </span>
+        <UserGroupMemberCount
+          v-if="group"
+          :group="group"
+          :class="$style.memberCount"
+        />
       </div>
     </template>
     <template #default>
@@ -56,7 +43,7 @@ import type { UserGroupMember } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
-import AIcon from '/@/components/UI/AIcon.vue'
+import UserGroupMemberCount from '/@/components/UI/UserGroupMemberCount.vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
@@ -147,11 +134,5 @@ const onGroupEdit = (event: MouseEvent) => {
 }
 .memberCount {
   margin-left: 0.35rem;
-  &::before {
-    content: '(';
-  }
-  &::after {
-    content: ')';
-  }
 }
 </style>

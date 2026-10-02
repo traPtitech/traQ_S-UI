@@ -2,13 +2,7 @@
   <div :class="$style.container">
     <div :class="$style.name">
       <bdi :class="$style.nameText" dir="auto">{{ group.name }}</bdi>
-      <span :class="$style.memberCount">
-        <AIcon name="crown" mdi :size="21" />
-        <span>{{ adminCount }}</span>
-        <span :class="$style.separator">/</span>
-        <AIcon name="user" :size="21" />
-        <span style="margin-right: 0.2rem">{{ memberCount }}</span>
-      </span>
+      <UserGroupMemberCount :group="group" :class="$style.memberCount" />
     </div>
     <div :class="$style.adminList">
       <AIcon name="crown" mdi />
@@ -32,24 +26,13 @@
 <script lang="ts" setup>
 import type { UserGroup } from '@traptitech/traq'
 
-import { computed } from 'vue'
-
 import AIcon from '/@/components/UI/AIcon.vue'
+import UserGroupMemberCount from '/@/components/UI/UserGroupMemberCount.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
-import { useUsersStore } from '/@/store/entities/users'
 
-const props = defineProps<{
+defineProps<{
   group: UserGroup
 }>()
-
-const { activeUsersMap } = useUsersStore()
-
-const adminCount = computed(
-  () => props.group.admins.filter(id => activeUsersMap.value.has(id)).length
-)
-const memberCount = computed(
-  () => props.group.members.filter(m => activeUsersMap.value.has(m.id)).length
-)
 
 const emit = defineEmits<{
   (e: 'clickEdit'): void
@@ -81,20 +64,7 @@ const emit = defineEmits<{
 }
 .memberCount {
   @include color-ui-secondary;
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
   margin-left: 0.35rem;
-  white-space: nowrap;
-  &::before {
-    content: '(';
-  }
-  &::after {
-    content: ')';
-  }
-}
-.separator {
-  margin: 0 0.1rem 0 0.3rem;
 }
 .adminList {
   @include color-ui-secondary;
