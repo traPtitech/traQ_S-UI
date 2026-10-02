@@ -63,7 +63,6 @@ const emit = defineEmits<{
   white-space: nowrap;
 }
 .memberCount {
-  @include color-ui-secondary;
   margin-left: 0.35rem;
 }
 .adminList {

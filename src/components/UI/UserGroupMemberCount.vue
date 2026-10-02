@@ -1,9 +1,12 @@
 <template>
-  <span :class="$style.container">
-    <AIcon name="crown" mdi :size="21" />
+  <span
+    :class="$style.container"
+    :title="`管理者 ${adminCount} / メンバー ${memberCount}`"
+  >
+    <AIcon name="crown" mdi :size="16" />
     <span>{{ adminCount }}</span>
     <span :class="$style.separator">/</span>
-    <AIcon name="user" :size="21" />
+    <AIcon name="user" :size="16" />
     <span>{{ memberCount }}</span>
   </span>
 </template>
@@ -32,20 +35,18 @@ const memberCount = computed(
 
 <style lang="scss" module>
 .container {
+  @include background-secondary;
+  @include color-ui-secondary;
+  @include size-body2;
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
+  gap: 2px;
+  padding: 0 5px 0 4px;
+  border-radius: 4px;
   white-space: nowrap;
-  &::before {
-    content: '(';
-    margin-right: 0.1rem;
-  }
-  &::after {
-    content: ')';
-    margin-left: 0.2rem;
-  }
 }
 .separator {
-  margin: 0 0.1rem 0 0.3rem;
+  margin: 0 1px 0 4px;
 }
 </style>

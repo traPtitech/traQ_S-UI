@@ -133,6 +133,7 @@ const onGroupEdit = (event: MouseEvent) => {
   white-space: nowrap;
 }
 .memberCount {
+  @include background-tertiary;
   margin-left: 0.35rem;
 }
 </style>
