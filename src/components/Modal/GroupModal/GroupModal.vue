@@ -1,26 +1,40 @@
 <template>
   <ModalFrame
     title="グループ"
-    :subtitle="name"
     icon-name="group"
     return-button
     :edit-button="isAdmin"
     @edit="onGroupEdit"
   >
-    <UserListItem
-      v-for="user in users"
-      :key="user.id"
-      :user-id="user.id"
-      :is-admin="user.isAdmin"
-      :class="$style.item"
-    >
-      <div :class="$style.role" dir="auto">
-        {{ user.role }}
+    <template #subtitle>
+      <div :class="$style.subtitleInner">
+        <bdi :class="$style.name">{{ name }}</bdi>
+        <UserGroupMemberCount
+          v-if="group"
+          :group="group"
+          :class="$style.memberCount"
+        />
       </div>
-      <div v-if="user.isAdmin && !user.isMember" :class="$style.nonMemberAdmin">
-        グループ外管理者
-      </div>
-    </UserListItem>
+    </template>
+    <template #default>
+      <UserListItem
+        v-for="user in users"
+        :key="user.id"
+        :user-id="user.id"
+        :is-admin="user.isAdmin"
+        :class="$style.item"
+      >
+        <div :class="$style.role" dir="auto">
+          {{ user.role }}
+        </div>
+        <div
+          v-if="user.isAdmin && !user.isMember"
+          :class="$style.nonMemberAdmin"
+        >
+          グループ外管理者
+        </div>
+      </UserListItem>
+    </template>
   </ModalFrame>
 </template>
 
@@ -29,6 +43,7 @@ import type { UserGroupMember } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
+import UserGroupMemberCount from '/@/components/UI/UserGroupMemberCount.vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
@@ -106,5 +121,19 @@ const onGroupEdit = (event: MouseEvent) => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.subtitleInner {
+  display: flex;
+  min-width: 0;
+}
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.memberCount {
+  @include background-tertiary;
+  margin-left: 0.35rem;
 }
 </style>

@@ -1,7 +1,8 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.name" dir="auto">
-      {{ group.name }}
+    <div :class="$style.name">
+      <bdi :class="$style.nameText" dir="auto">{{ group.name }}</bdi>
+      <UserGroupMemberCount :group="group" :class="$style.memberCount" />
     </div>
     <div :class="$style.adminList">
       <AIcon name="crown" mdi />
@@ -26,6 +27,7 @@
 import type { UserGroup } from '@traptitech/traq'
 
 import AIcon from '/@/components/UI/AIcon.vue'
+import UserGroupMemberCount from '/@/components/UI/UserGroupMemberCount.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 
 defineProps<{
@@ -42,14 +44,26 @@ const emit = defineEmits<{
   display: grid;
   grid-template:
     'name edit'
-    'adminList edit' / 1fr min-content;
+    'adminList edit' / minmax(0, 1fr) min-content;
   align-items: center;
 }
 .name {
   @include color-ui-primary;
   grid-area: name;
+  display: flex;
+  align-items: center;
+  min-width: 0;
   font-weight: bold;
   text-align: left;
+}
+.nameText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.memberCount {
+  margin-left: 0.35rem;
 }
 .adminList {
   @include color-ui-secondary;
