@@ -36,6 +36,14 @@ export const featureFlagDescriptions = {
       'WebKit 系ブラウザ (Safari など）でレイアウトが崩れる場合に有効にすることで不具合が解消される可能性があります。',
     defaultValue: isWebKit(),
     endAt: new Date('9999-12-31T00:00')
+  },
+  // 旧フラグの保存値を引き継がず、既存ユーザーも有効な状態から始める
+  stamp_recommendation_v2: {
+    title: 'スタンプのレコメンデーション',
+    description:
+      'スタンプ履歴の代わりに、利用傾向に合わせたおすすめを表示するようにします。',
+    defaultValue: true,
+    endAt: new Date('2026-10-29T23:59')
   }
 } as const satisfies Record<string, FeatureFlagDescription>
 
