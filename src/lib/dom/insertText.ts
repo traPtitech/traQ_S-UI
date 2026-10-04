@@ -17,8 +17,21 @@ export const insertText = (
     const begin = target?.begin ?? textarea.selectionStart
     const end = target?.end ?? textarea.selectionEnd
 
-    textarea.focus({ preventScroll: true })
     textarea.setRangeText(text, begin, end, 'end')
+
+    if (textarea.ownerDocument.activeElement !== textarea) {
+      const value = textarea.value
+      const caret = textarea.selectionEnd
+
+      requestAnimationFrame(() => {
+        if (
+          textarea.ownerDocument.activeElement !== textarea &&
+          textarea.value === value
+        ) {
+          textarea.setSelectionRange(caret, caret)
+        }
+      })
+    }
 
     textarea.dispatchEvent(new Event('input'))
   } else {
