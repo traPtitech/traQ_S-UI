@@ -11,6 +11,7 @@ describe('telemetry', () => {
 
   beforeEach(async () => {
     vi.resetModules()
+    vi.stubGlobal('isSecureContext', true)
     storage.clear()
     getItem.mockReset().mockImplementation(key => storage.get(key) ?? null)
     vi.stubGlobal('localStorage', {
@@ -30,6 +31,7 @@ describe('telemetry', () => {
   })
 
   afterEach(() => {
+    vi.restoreAllMocks()
     vi.clearAllTimers()
     vi.useRealTimers()
     vi.unstubAllGlobals()
@@ -154,5 +156,48 @@ describe('telemetry', () => {
 
     expect(fetchMock).not.toHaveBeenCalled()
     expect(storage.size).toBe(0)
+  })
+
+  it('does not initialize in an insecure context', async () => {
+    vi.stubGlobal('isSecureContext', false)
+    vi.stubGlobal('traQConfig', {
+      telemetry: { endpoint: '/telemetry/collect' }
+    })
+    const sdk = await import('@grafana/faro-web-sdk')
+    const initializeFaro = vi.spyOn(sdk, 'initializeFaro')
+
+    await telemetry.track('feature_used', { feature: 'search' })
+    await vi.advanceTimersByTimeAsync(2000)
+
+    expect(initializeFaro).not.toHaveBeenCalled()
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(storage.size).toBe(0)
+  })
+
+  it('retries initialization after failure and shares the retry across events', async () => {
+    vi.stubGlobal('traQConfig', {
+      telemetry: { endpoint: '/telemetry/collect' }
+    })
+    const sdk = await import('@grafana/faro-web-sdk')
+    const initializeFaro = vi
+      .spyOn(sdk, 'initializeFaro')
+      .mockImplementationOnce(() => {
+        throw new Error('Initialization failed')
+      })
+
+    await expect(
+      telemetry.track('feature_used', { feature: 'failed' })
+    ).resolves.toBeUndefined()
+    await Promise.all([
+      telemetry.track('feature_used', { feature: 'search' }),
+      telemetry.track('feature_used', { feature: 'channel_list' })
+    ])
+    await vi.advanceTimersByTimeAsync(1000)
+
+    expect(initializeFaro).toHaveBeenCalledTimes(2)
+    expect(fetchMock).toHaveBeenCalledOnce()
+    expect(
+      sentBody().events?.map(event => event.attributes?.['feature'])
+    ).toEqual(['search', 'channel_list'])
   })
 })

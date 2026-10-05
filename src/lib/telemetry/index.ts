@@ -64,6 +64,7 @@ const track = async <Name extends keyof TelemetryEvents>(
   name: Name,
   attributes: TelemetryEvents[Name]
 ): Promise<void> => {
+  if (!window.isSecureContext) return
   const config = traQConfig.telemetry
   if (!config?.endpoint) return
   if (config.hosts && !config.hosts.includes(location.hostname)) {
@@ -78,7 +79,10 @@ const track = async <Name extends keyof TelemetryEvents>(
   )
 
   try {
-    initialization ??= initialize().catch(() => undefined)
+    initialization ??= initialize().catch(() => {
+      initialization = undefined
+      return undefined
+    })
     const client = await initialization
     if (!client) return
     client.faro.api.pushEvent(
