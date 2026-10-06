@@ -1,9 +1,13 @@
 import type { Channel } from '@traptitech/traq'
+import { UserAccountState } from '@traptitech/traq'
+
+import { computed, nextTick } from 'vue'
 
 import { createTestingPinia } from '@pinia/testing'
 
 import useChannel from '/@/composables/useChannelPath'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
 
 describe('useChannelPath', () => {
   beforeEach(() => {
@@ -206,6 +210,254 @@ describe('useChannelPath', () => {
       expect(channelIdToShortPathString(id)).toBe(expectedShort)
     }
   )
+})
+
+describe('channelIdToShortPathString', () => {
+  // パスをそのまま ID にしたチャンネルを登録する。祖先も自動で作る
+  const setChannels = (paths: string[], archivedPaths: string[] = []) => {
+    const channels = new Map<string, Channel>()
+    for (const path of paths) {
+      const names = path.split('/')
+      names.forEach((name, i) => {
+        const id = names.slice(0, i + 1).join('/')
+        if (channels.has(id)) return
+        const parentId = i === 0 ? null : names.slice(0, i).join('/')
+        channels.set(id, {
+          id,
+          name,
+          parentId,
+          archived: archivedPaths.includes(id),
+          force: false,
+          topic: '',
+          children: []
+        })
+        if (parentId !== null) channels.get(parentId)?.children.push(id)
+      })
+    }
+    const { channelsMap, bothChannelsMapFetched } = useChannelsStore()
+    channelsMap.value = channels
+    bothChannelsMapFetched.value = true
+  }
+
+  beforeEach(() => {
+    createTestingPinia()
+  })
+
+  // 先頭のパスのチャンネルの省略パスを確かめる
+  test.each([
+    {
+      title: 'keeps a top-level channel',
+      paths: ['general'],
+      expected: 'general'
+    },
+    {
+      title: 'abbreviates ancestors to their initials',
+      paths: ['gps/times/alice'],
+      expected: 'g/t/alice'
+    },
+    {
+      title: 'keeps ancestors of up to 2 characters',
+      paths: ['gp/24/alice'],
+      expected: 'gp/24/alice'
+    },
+    {
+      title: 'does not expand once the abbreviated path reaches 20 characters',
+      paths: ['gps/times/abcdefghijklmnop', 'gps/team/abcdefghijklmnop'],
+      expected: 'g/t/abcdefghijklmnop'
+    },
+    {
+      title: 'expands the parent when a cousin has the same name',
+      paths: ['gps/times/alice', 'gps/team/alice'],
+      expected: 'g/times/alice'
+    },
+    {
+      title:
+        'keeps expanding while the expanded ancestor has a same-name cousin',
+      paths: ['org/proj/web/alice', 'org/proj/app/alice', 'org/misc/web'],
+      expected: 'o/proj/web/alice'
+    },
+    {
+      title: 'expands up to the top level',
+      paths: [
+        'org/proj/web/alice',
+        'org/proj/app/alice',
+        'org/misc/web',
+        'lab/proj'
+      ],
+      expected: 'org/proj/web/alice'
+    },
+    {
+      title: 'ignores cousins under an archived parent',
+      paths: ['gps/times/alice', 'gps/team/alice'],
+      archived: ['gps/team'],
+      expected: 'g/t/alice'
+    },
+    {
+      title: 'counts archived cousins',
+      paths: ['gps/times/alice', 'gps/team/alice'],
+      archived: ['gps/team/alice'],
+      expected: 'g/times/alice'
+    },
+    {
+      title: 'distinguishes cousins by case',
+      paths: ['gps/times/alice', 'gps/team/Alice'],
+      expected: 'g/t/alice'
+    },
+    {
+      title: 'shortens an expanded ancestor to a prefix unique among siblings',
+      paths: [
+        'org/project/website/alice',
+        'org/project/app/alice',
+        'org/prod/website'
+      ],
+      expected: 'o/proj/website/alice'
+    },
+    {
+      title: 'falls back to initials when unique prefixes are too long',
+      paths: [
+        'org/project/website/alice',
+        'org/project/app/alice',
+        'org/projects/website'
+      ],
+      expected: 'o/p/website/alice'
+    },
+    {
+      title: 'shortens the parent to a unique prefix as a last resort',
+      paths: ['gps/longparentname/alice', 'gps/longother/alice'],
+      expected: 'g/longp/alice'
+    },
+    {
+      title: 'ignores archived siblings for unique prefixes',
+      paths: [
+        'gps/longparentname/alice',
+        'gps/longother/alice',
+        'gps/longparentnamex'
+      ],
+      archived: ['gps/longparentnamex'],
+      expected: 'g/longp/alice'
+    }
+  ])('$title', ({ paths, archived, expected }) => {
+    setChannels(paths, archived)
+    const { channelIdToShortPathString } = useChannel()
+
+    expect(channelIdToShortPathString(paths[0] ?? '')).toBe(expected)
+    expect(channelIdToShortPathString(paths[0] ?? '', true)).toBe(
+      `#${expected}`
+    )
+  })
+
+  test('uses the user name for a DM channel', () => {
+    setChannels([])
+    const { usersMap } = useUsersStore()
+    usersMap.value = new Map([
+      [
+        'user',
+        {
+          id: 'user',
+          name: 'alice',
+          displayName: 'alice',
+          iconFileId: '',
+          state: UserAccountState.active,
+          bot: false,
+          updatedAt: '2020-03-18T04:17:10.177846Z'
+        }
+      ]
+    ])
+    const { dmChannelsMap } = useChannelsStore()
+    dmChannelsMap.value = new Map([['dm', { id: 'dm', userId: 'user' }]])
+    const { channelIdToShortPathString } = useChannel()
+
+    expect(channelIdToShortPathString('dm')).toBe('alice')
+    expect(channelIdToShortPathString('dm', true)).toBe('@alice')
+  })
+
+  test('returns null for an unknown channel before channels are fetched', () => {
+    // ストアはテストをまたいで使い回されるので、取得前の状態に戻す
+    const { bothChannelsMapFetched } = useChannelsStore()
+    bothChannelsMapFetched.value = false
+    const { channelIdToShortPathString } = useChannel()
+
+    expect(channelIdToShortPathString('unknown')).toBeNull()
+  })
+
+  test('throws for an unknown channel after channels are fetched', () => {
+    setChannels([])
+    const { channelIdToShortPathString } = useChannel()
+
+    expect(() => channelIdToShortPathString('unknown')).toThrow()
+  })
+
+  // TODO: test.fails の 3 件は、メモが Map の中身の更新では捨てられないので落ちる。前計算に置き換えたら test に戻す
+  describe('follows channel updates', () => {
+    // サイドバーの各行と同じく、computed の中で読む
+    const shortPathOf = (id: string) => {
+      const { channelIdToShortPathString } = useChannel()
+      return computed(() => channelIdToShortPathString(id))
+    }
+    const updateChannel = (id: string, update: Partial<Channel>) => {
+      const { channelsMap } = useChannelsStore()
+      const channel = channelsMap.value.get(id)
+      if (channel === undefined) throw new Error(`No channel: ${id}`)
+      channelsMap.value.set(id, { ...channel, ...update })
+    }
+
+    test.fails('when a same-name cousin is added', async () => {
+      setChannels(['gps/times/alice', 'gps/team'])
+      const shortPath = shortPathOf('gps/times/alice')
+      expect(shortPath.value).toBe('g/t/alice')
+
+      const { channelsMap } = useChannelsStore()
+      channelsMap.value.set('gps/team/alice', {
+        id: 'gps/team/alice',
+        name: 'alice',
+        parentId: 'gps/team',
+        archived: false,
+        force: false,
+        topic: '',
+        children: []
+      })
+      updateChannel('gps/team', { children: ['gps/team/alice'] })
+      await nextTick()
+
+      expect(shortPath.value).toBe('g/times/alice')
+    })
+
+    test.fails('when a cousin is renamed to the same name', async () => {
+      setChannels(['gps/times/alice', 'gps/team/bob'])
+      const shortPath = shortPathOf('gps/times/alice')
+      expect(shortPath.value).toBe('g/t/alice')
+
+      updateChannel('gps/team/bob', { name: 'alice' })
+      await nextTick()
+
+      expect(shortPath.value).toBe('g/times/alice')
+    })
+
+    test.fails(
+      'when the parent of a same-name cousin is archived',
+      async () => {
+        setChannels(['gps/times/alice', 'gps/team/alice'])
+        const shortPath = shortPathOf('gps/times/alice')
+        expect(shortPath.value).toBe('g/times/alice')
+
+        updateChannel('gps/team', { archived: true })
+        await nextTick()
+
+        expect(shortPath.value).toBe('g/t/alice')
+      }
+    )
+
+    test('when all channels are refetched', async () => {
+      setChannels(['gps/times/alice'])
+      const shortPath = shortPathOf('gps/times/alice')
+      expect(shortPath.value).toBe('g/t/alice')
+
+      setChannels(['gps/times/alice', 'gps/team/alice'])
+      await nextTick()
+
+      expect(shortPath.value).toBe('g/times/alice')
+    })
+  })
 })
 
 export const channels: Omit<Channel, 'children' | 'topic' | 'force'>[] = [
