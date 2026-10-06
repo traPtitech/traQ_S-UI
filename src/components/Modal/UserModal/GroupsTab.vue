@@ -10,8 +10,7 @@
           @click="onGroupClick(group.id)"
         >
           <AIcon name="group" :class="$style.icon" :size="20" />
-          <bdi :class="$style.name">{{ group.name }}</bdi>
-          <UserGroupMemberCount :group="group" :class="$style.memberCount" />
+          <bdi>{{ group.name }}</bdi>
         </li>
       </ul>
     </template>
@@ -24,7 +23,6 @@ import type { UserDetail } from '@traptitech/traq'
 import { computed } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
-import UserGroupMemberCount from '/@/components/UI/UserGroupMemberCount.vue'
 import { isDefined } from '/@/lib/basic/array'
 import { compareString } from '/@/lib/basic/string'
 import { useGroupsStore } from '/@/store/entities/groups'
@@ -68,8 +66,6 @@ const onGroupClick = (id: UserGroupId) => {
 
 .group {
   position: relative;
-  display: flex;
-  align-items: center;
   margin: 8px 4px;
   padding: 4px;
   cursor: pointer;
@@ -92,16 +88,7 @@ const onGroupClick = (id: UserGroupId) => {
 }
 
 .icon {
-  flex-shrink: 0;
+  vertical-align: bottom;
   margin-right: 4px;
-}
-.name {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.memberCount {
-  margin-left: 8px;
 }
 </style>
