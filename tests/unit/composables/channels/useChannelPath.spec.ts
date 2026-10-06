@@ -387,7 +387,6 @@ describe('channelIdToShortPathString', () => {
     expect(() => channelIdToShortPathString('unknown')).toThrow()
   })
 
-  // TODO: test.fails の 3 件は、メモが Map の中身の更新では捨てられないので落ちる。前計算に置き換えたら test に戻す
   describe('follows channel updates', () => {
     // サイドバーの各行と同じく、computed の中で読む
     const shortPathOf = (id: string) => {
@@ -401,7 +400,7 @@ describe('channelIdToShortPathString', () => {
       channelsMap.value.set(id, { ...channel, ...update })
     }
 
-    test.fails('when a same-name cousin is added', async () => {
+    test('when a same-name cousin is added', async () => {
       setChannels(['gps/times/alice', 'gps/team'])
       const shortPath = shortPathOf('gps/times/alice')
       expect(shortPath.value).toBe('g/t/alice')
@@ -422,7 +421,7 @@ describe('channelIdToShortPathString', () => {
       expect(shortPath.value).toBe('g/times/alice')
     })
 
-    test.fails('when a cousin is renamed to the same name', async () => {
+    test('when a cousin is renamed to the same name', async () => {
       setChannels(['gps/times/alice', 'gps/team/bob'])
       const shortPath = shortPathOf('gps/times/alice')
       expect(shortPath.value).toBe('g/t/alice')
@@ -433,19 +432,16 @@ describe('channelIdToShortPathString', () => {
       expect(shortPath.value).toBe('g/times/alice')
     })
 
-    test.fails(
-      'when the parent of a same-name cousin is archived',
-      async () => {
-        setChannels(['gps/times/alice', 'gps/team/alice'])
-        const shortPath = shortPathOf('gps/times/alice')
-        expect(shortPath.value).toBe('g/times/alice')
+    test('when the parent of a same-name cousin is archived', async () => {
+      setChannels(['gps/times/alice', 'gps/team/alice'])
+      const shortPath = shortPathOf('gps/times/alice')
+      expect(shortPath.value).toBe('g/times/alice')
 
-        updateChannel('gps/team', { archived: true })
-        await nextTick()
+      updateChannel('gps/team', { archived: true })
+      await nextTick()
 
-        expect(shortPath.value).toBe('g/t/alice')
-      }
-    )
+      expect(shortPath.value).toBe('g/t/alice')
+    })
 
     test('when all channels are refetched', async () => {
       setChannels(['gps/times/alice'])
