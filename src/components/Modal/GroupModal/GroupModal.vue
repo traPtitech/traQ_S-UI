@@ -1,13 +1,13 @@
 <template>
   <ModalFrame
+    title="グループ"
     :subtitle="name"
     icon-name="group"
     return-button
     :edit-button="isAdmin"
     @edit="onGroupEdit"
   >
-    <template #title>
-      グループ
+    <template #title-append>
       <UserGroupMemberCount
         v-if="group"
         :group="group"

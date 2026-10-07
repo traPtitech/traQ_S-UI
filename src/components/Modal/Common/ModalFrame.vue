@@ -10,10 +10,8 @@
         @edit="emit('edit', $event)"
       >
         <template #title>
-          <template v-if="title">
-            <bdi>{{ title }}</bdi>
-          </template>
-          <slot v-else name="title" />
+          <bdi>{{ title }}</bdi>
+          <slot name="title-append" />
         </template>
         <template #subtitle>
           <template v-if="subtitle">
@@ -39,7 +37,7 @@ withDefaults(
   defineProps<{
     iconMdi?: boolean
     iconName?: string
-    title?: string
+    title: string
     subtitle?: string
     returnButton?: boolean
     editButton?: boolean
