@@ -10,7 +10,8 @@
     <template #title-append>
       <UserGroupMemberCount
         v-if="group"
-        :group="group"
+        :admin-count="adminCount"
+        :member-count="memberCount"
         background="tertiary"
         :class="$style.memberCount"
         :data-has-edit-button="$boolAttr(isAdmin)"
@@ -82,6 +83,8 @@ const users = computed((): UserGroupMemberOrAdmin[] => {
       .map(m => ({ ...m, isMember: true, isAdmin: false }))
   ].filter(m => activeUsersMap.value.has(m.id))
 })
+const adminCount = computed(() => users.value.filter(u => u.isAdmin).length)
+const memberCount = computed(() => users.value.filter(u => u.isMember).length)
 
 const { myId } = useMeStore()
 const isAdmin = computed(() => {

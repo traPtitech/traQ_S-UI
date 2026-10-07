@@ -13,37 +13,18 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserGroup } from '@traptitech/traq'
-
-import { computed } from 'vue'
-
 import AIcon from '/@/components/UI/AIcon.vue'
-import { useUsersStore } from '/@/store/entities/users'
-import type { UserId } from '/@/types/entity-ids'
 
 type Background = 'secondary' | 'tertiary'
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    group: UserGroup
-    includeInactive?: boolean
+    adminCount: number
+    memberCount: number
     background?: Background
   }>(),
   {
-    includeInactive: false,
     background: 'secondary'
   }
-)
-
-const { activeUsersMap } = useUsersStore()
-
-const isCounted = (id: UserId) =>
-  props.includeInactive || activeUsersMap.value.has(id)
-
-const adminCount = computed(
-  () => props.group.admins.filter(id => isCounted(id)).length
-)
-const memberCount = computed(
-  () => props.group.members.filter(m => isCounted(m.id)).length
 )
 </script>
 

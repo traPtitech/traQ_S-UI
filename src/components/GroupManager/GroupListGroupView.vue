@@ -3,8 +3,8 @@
     <div :class="$style.name">
       <bdi :class="$style.nameText" dir="auto">{{ group.name }}</bdi>
       <UserGroupMemberCount
-        :group="group"
-        include-inactive
+        :admin-count="group.admins.length"
+        :member-count="group.members.length"
         :class="$style.memberCount"
       />
     </div>
