@@ -5,11 +5,16 @@
         :class="$style.header"
         :icon-name="iconName"
         :icon-mdi="iconMdi"
-        :title="title"
         :return-button="returnButton"
         :edit-button="editButton"
         @edit="emit('edit', $event)"
       >
+        <template #title>
+          <template v-if="title">
+            <bdi>{{ title }}</bdi>
+          </template>
+          <slot v-else name="title" />
+        </template>
         <template #subtitle>
           <template v-if="subtitle">
             <bdi>{{ subtitle }}</bdi>
@@ -34,7 +39,7 @@ withDefaults(
   defineProps<{
     iconMdi?: boolean
     iconName?: string
-    title: string
+    title?: string
     subtitle?: string
     returnButton?: boolean
     editButton?: boolean

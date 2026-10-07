@@ -1,20 +1,18 @@
 <template>
   <ModalFrame
-    title="グループ"
+    :subtitle="name"
     icon-name="group"
     return-button
     :edit-button="isAdmin"
     @edit="onGroupEdit"
   >
-    <template #subtitle>
-      <div :class="$style.subtitleInner">
-        <bdi :class="$style.name">{{ name }}</bdi>
-        <UserGroupMemberCount
-          v-if="group"
-          :group="group"
-          :class="$style.memberCount"
-        />
-      </div>
+    <template #title>
+      グループ
+      <UserGroupMemberCount
+        v-if="group"
+        :group="group"
+        :class="$style.memberCount"
+      />
     </template>
     <template #default>
       <UserListItem
@@ -121,16 +119,6 @@ const onGroupEdit = (event: MouseEvent) => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.subtitleInner {
-  display: flex;
-  min-width: 0;
-}
-.name {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .memberCount {
   @include background-tertiary;

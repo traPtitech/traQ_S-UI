@@ -9,7 +9,7 @@
           :name="iconName"
           :mdi="iconMdi"
         />
-        {{ title }}
+        <slot name="title" />
       </h1>
       <h2 :class="$style.subtitle" :data-has-icon="$boolAttr(!iconName)">
         <slot name="subtitle" />
@@ -35,14 +35,11 @@ withDefaults(
   defineProps<{
     iconMdi?: boolean
     iconName?: string
-    title: string
-    subtitle?: string
     returnButton?: boolean
     editButton?: boolean
   }>(),
   {
     iconMdi: false,
-    subtitle: '',
     returnButton: false,
     editButton: false
   }
