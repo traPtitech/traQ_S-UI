@@ -52,8 +52,7 @@ import { onMounted, ref } from 'vue'
 
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'
-import useResponsive from '/@/composables/useResponsive'
-import { isTouchDevice } from '/@/lib/dom/browser'
+import { shouldAutoFocus } from '/@/lib/dom/browser'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useStampPicker } from '/@/store/ui/stampPicker'
@@ -77,7 +76,6 @@ const {
   closeStampPicker
 } = useStampPicker()
 const { upsertLocalStampHistory } = useStampHistory()
-const { isMobile } = useResponsive()
 
 const animationKeys = ref(new Map<StampId, number>())
 const incrementAnimationKey = (id: StampId) => {
@@ -111,7 +109,7 @@ const onInputStamp = (id: StampId) => {
   })
   incrementAnimationKey(id)
 
-  if (!isMobile.value && !isTouchDevice()) {
+  if (shouldAutoFocus()) {
     filterInputRef.value?.focus()
   }
 }
