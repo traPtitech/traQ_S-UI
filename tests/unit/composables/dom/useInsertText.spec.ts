@@ -1,12 +1,13 @@
 import { nextTick, shallowRef } from 'vue'
 
 import useInsertTextWithoutSetup from '/@/composables/dom/useInsertText'
-import { shouldAutoFocus } from '/@/lib/dom/browser'
+import { isWebKit, shouldAutoFocus } from '/@/lib/dom/browser'
 
 import { setupMatchMedia } from '../../mocks/matchMedia'
 import { withSetup } from '../../testUtils'
 
 vi.mock('/@/lib/dom/browser', () => ({
+  isWebKit: vi.fn(() => false),
   shouldAutoFocus: vi.fn(() => true)
 }))
 
@@ -18,6 +19,7 @@ describe('useInsertText', () => {
   let unmount: (() => void) | undefined
 
   beforeEach(() => {
+    vi.mocked(isWebKit).mockReturnValue(false)
     vi.mocked(shouldAutoFocus).mockReturnValue(true)
     vi.useFakeTimers({ toFake: ['requestAnimationFrame'] })
     textarea = document.createElement('textarea')
@@ -133,6 +135,36 @@ describe('useInsertText', () => {
 
     expect(execCommand).not.toHaveBeenCalled()
     expect(textarea.value).toBe('before new')
+  })
+
+  it('uses native editing on composing WebKit and propagates subsequent input', async () => {
+    vi.mocked(isWebKit).mockReturnValue(true)
+    vi.mocked(shouldAutoFocus).mockReturnValue(false)
+    textarea.value = 'before :oyo'
+    textarea.focus()
+    const execCommand = vi.spyOn(document, 'execCommand')
+    const range = shallowRef({ begin: 7, end: 11 })
+    const { insertText } = await setup(shallowRef(textarea), range)
+    let model = textarea.value
+    textarea.addEventListener('input', () => {
+      model = textarea.value
+    })
+    textarea.dispatchEvent(new CompositionEvent('compositionstart'))
+
+    insertText(':oyoo: ')
+    expect(execCommand).toHaveBeenCalledWith('insertText', false, ':oyoo: ')
+    expect(model).toBe('before :oyoo: ')
+
+    textarea.setRangeText(
+      'next',
+      textarea.selectionEnd,
+      textarea.selectionEnd,
+      'end'
+    )
+    textarea.dispatchEvent(new InputEvent('input', { isComposing: true }))
+
+    expect(model).toBe('before :oyoo: next')
+    expect(document.activeElement).toBe(textarea)
   })
 
   it('resets composition tracking when the textarea changes', async () => {

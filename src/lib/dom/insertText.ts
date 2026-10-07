@@ -1,3 +1,5 @@
+import { isWebKit } from '/@/lib/dom/browser'
+
 export const insertText = (
   textarea: HTMLTextAreaElement,
   text: string,
@@ -14,7 +16,7 @@ export const insertText = (
   const normalizedText = text.replaceAll('\r\n', '\n')
 
   if (
-    !isComposing &&
+    (!isComposing || (previousFocus === textarea && isWebKit())) &&
     typeof document.execCommand === 'function' &&
     (previousFocus === textarea || allowFocus)
   ) {

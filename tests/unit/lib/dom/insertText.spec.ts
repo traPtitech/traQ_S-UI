@@ -1,9 +1,15 @@
+import { isWebKit } from '/@/lib/dom/browser'
 import { insertText } from '/@/lib/dom/insertText'
+
+vi.mock('/@/lib/dom/browser', () => ({
+  isWebKit: vi.fn(() => false)
+}))
 
 describe('insertText', () => {
   let textarea: HTMLTextAreaElement
 
   beforeEach(() => {
+    vi.mocked(isWebKit).mockReturnValue(false)
     vi.useFakeTimers({ toFake: ['requestAnimationFrame'] })
     textarea = document.createElement('textarea')
     textarea.value = 'before after'
@@ -96,6 +102,82 @@ describe('insertText', () => {
 
     expect(textarea.value).toBe('before new')
   })
+
+  it.each(['@user ', ':oyoo: ', '#general '])(
+    'uses native editing for %s during WebKit composition without moving focus',
+    text => {
+      vi.mocked(isWebKit).mockReturnValue(true)
+      textarea.focus()
+      const execCommand = vi.spyOn(document, 'execCommand')
+      const onFocus = vi.fn()
+      const onBlur = vi.fn()
+      textarea.addEventListener('focus', onFocus)
+      textarea.addEventListener('blur', onBlur)
+
+      insertText(
+        textarea,
+        text,
+        { begin: 7, end: 12 },
+        {
+          isComposing: true,
+          allowFocus: false
+        }
+      )
+
+      expect(execCommand).toHaveBeenCalledWith('insertText', false, text)
+      expect(textarea.value).toBe(`before ${text}`)
+      expect(textarea.selectionEnd).toBe(textarea.value.length)
+      expect(document.activeElement).toBe(textarea)
+      expect(onFocus).not.toHaveBeenCalled()
+      expect(onBlur).not.toHaveBeenCalled()
+    }
+  )
+
+  it('keeps bypassing native editing during non-WebKit composition', () => {
+    textarea.focus()
+    const execCommand = vi.spyOn(document, 'execCommand')
+
+    insertText(
+      textarea,
+      '#general',
+      { begin: 7, end: 12 },
+      {
+        isComposing: true,
+        allowFocus: false
+      }
+    )
+
+    expect(execCommand).not.toHaveBeenCalled()
+    expect(textarea.value).toBe('before #general')
+  })
+
+  it.each([true, false])(
+    'does not focus an unfocused composing WebKit textarea with autofocus %s',
+    allowFocus => {
+      vi.mocked(isWebKit).mockReturnValue(true)
+      const previousFocus = document.activeElement
+      const execCommand = vi.spyOn(document, 'execCommand')
+      const onFocus = vi.fn()
+      textarea.addEventListener('focus', onFocus)
+
+      insertText(
+        textarea,
+        'new',
+        { begin: 7, end: 12 },
+        {
+          isComposing: true,
+          allowFocus
+        }
+      )
+      vi.advanceTimersToNextFrame()
+
+      expect(execCommand).not.toHaveBeenCalled()
+      expect(textarea.value).toBe('before new')
+      expect(textarea.selectionEnd).toBe(10)
+      expect(document.activeElement).toBe(previousFocus)
+      expect(onFocus).not.toHaveBeenCalled()
+    }
+  )
 
   it('normalizes \\r\\n to \\n on the native insertion path', () => {
     textarea.focus()
