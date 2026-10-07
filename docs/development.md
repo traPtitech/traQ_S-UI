@@ -9,6 +9,12 @@ $ npm run gen-fonts
 
 Vetur ではなく Vue (offical) を導入することを推奨しています。
 
+## 依存パッケージの型定義修正
+
+`vue-slider-component` の型定義には、Vue の要素型を `any` に上書きする参照と、配布されていない `.vue` ファイルへの参照があるため、`scripts/patch-dependencies.js` で修正しています。
+
+この修正は `npm run type-check` の実行時に適用されます。対象パッケージの更新で型定義が変わった場合は、スクリプトの修正も必要です。
+
 ## コミット時の自動フォーマット・lint
 
 このリポジトリでは [husky](https://typicode.github.io/husky/) と [lint-staged](https://github.com/okonet/lint-staged) を利用して、コミット時にステージされたファイルへ自動でフォーマット（prettier）とlint（eslint --fix）が実行されます。
