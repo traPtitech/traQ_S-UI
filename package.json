@@ -41,6 +41,7 @@
     },
     "katex": "$katex",
     "qs": "6.16.0",
+    "source-map-js": "1.2.2",
     "workbox-build": {
       "glob": "13.0.6"
     }
