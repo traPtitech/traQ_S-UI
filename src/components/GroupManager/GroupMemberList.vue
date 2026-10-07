@@ -68,7 +68,7 @@ const onClickDeleteAll = async () => {
   if (!confirm('本当に全メンバーを削除しますか？')) return
 
   try {
-    apis.removeUserGroupMembers(props.groupId)
+    await apis.removeUserGroupMembers(props.groupId)
   } catch {
     addErrorToast('全メンバーの削除に失敗しました')
   }
