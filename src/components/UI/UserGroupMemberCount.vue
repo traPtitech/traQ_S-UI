@@ -18,18 +18,28 @@ import { computed } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
 import { useUsersStore } from '/@/store/entities/users'
+import type { UserId } from '/@/types/entity-ids'
 
-const props = defineProps<{
-  group: UserGroup
-}>()
+const props = withDefaults(
+  defineProps<{
+    group: UserGroup
+    includeInactive?: boolean
+  }>(),
+  {
+    includeInactive: false
+  }
+)
 
 const { activeUsersMap } = useUsersStore()
 
+const isCounted = (id: UserId) =>
+  props.includeInactive || activeUsersMap.value.has(id)
+
 const adminCount = computed(
-  () => props.group.admins.filter(id => activeUsersMap.value.has(id)).length
+  () => props.group.admins.filter(id => isCounted(id)).length
 )
 const memberCount = computed(
-  () => props.group.members.filter(m => activeUsersMap.value.has(m.id)).length
+  () => props.group.members.filter(m => isCounted(m.id)).length
 )
 </script>
 

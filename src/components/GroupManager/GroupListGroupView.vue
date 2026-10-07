@@ -2,7 +2,11 @@
   <div :class="$style.container">
     <div :class="$style.name">
       <bdi :class="$style.nameText" dir="auto">{{ group.name }}</bdi>
-      <UserGroupMemberCount :group="group" :class="$style.memberCount" />
+      <UserGroupMemberCount
+        :group="group"
+        include-inactive
+        :class="$style.memberCount"
+      />
     </div>
     <div :class="$style.adminList">
       <AIcon name="crown" mdi />
