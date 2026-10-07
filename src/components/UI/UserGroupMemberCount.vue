@@ -1,6 +1,7 @@
 <template>
   <span
     :class="$style.container"
+    :data-background="background"
     :title="`管理者 ${adminCount} / メンバー ${memberCount}`"
   >
     <AIcon name="crown" mdi :size="16" />
@@ -20,13 +21,16 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import { useUsersStore } from '/@/store/entities/users'
 import type { UserId } from '/@/types/entity-ids'
 
+type Background = 'secondary' | 'tertiary'
 const props = withDefaults(
   defineProps<{
     group: UserGroup
     includeInactive?: boolean
+    background?: Background
   }>(),
   {
-    includeInactive: false
+    includeInactive: false,
+    background: 'secondary'
   }
 )
 
@@ -55,6 +59,9 @@ const memberCount = computed(
   padding: 0 5px 0 4px;
   border-radius: 4px;
   white-space: nowrap;
+  &[data-background='tertiary'] {
+    @include background-tertiary;
+  }
 }
 .separator {
   margin: 0 1px 0 4px;

@@ -11,6 +11,7 @@
       <UserGroupMemberCount
         v-if="group"
         :group="group"
+        background="tertiary"
         :class="$style.memberCount"
         :data-has-edit-button="$boolAttr(isAdmin)"
       />
@@ -122,7 +123,6 @@ const onGroupEdit = (event: MouseEvent) => {
   text-overflow: ellipsis;
 }
 .memberCount {
-  @include background-tertiary;
   margin-left: auto;
   &[data-has-edit-button] {
     margin-right: 8px;
