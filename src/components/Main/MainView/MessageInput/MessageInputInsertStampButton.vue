@@ -5,6 +5,7 @@
     icon-mdi
     icon-name="emoticon-outline"
     :disabled="disabled"
+    @mousedown.left.prevent
   />
 </template>
 
