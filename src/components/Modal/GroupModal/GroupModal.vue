@@ -12,6 +12,7 @@
         v-if="group"
         :group="group"
         :class="$style.memberCount"
+        :data-has-edit-button="$boolAttr(isAdmin)"
       />
     </template>
     <template #default>
@@ -122,6 +123,9 @@ const onGroupEdit = (event: MouseEvent) => {
 }
 .memberCount {
   @include background-tertiary;
-  margin-left: 0.35rem;
+  margin-left: auto;
+  &[data-has-edit-button] {
+    margin-right: 8px;
+  }
 }
 </style>
