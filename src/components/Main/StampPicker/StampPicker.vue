@@ -53,6 +53,7 @@ import { onMounted, ref } from 'vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import useResponsive from '/@/composables/useResponsive'
+import { isTouchDevice } from '/@/lib/dom/browser'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useStampPicker } from '/@/store/ui/stampPicker'
@@ -110,7 +111,7 @@ const onInputStamp = (id: StampId) => {
   })
   incrementAnimationKey(id)
 
-  if (!isMobile.value) {
+  if (!isMobile.value && !isTouchDevice()) {
     filterInputRef.value?.focus()
   }
 }

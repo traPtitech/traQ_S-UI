@@ -1,6 +1,7 @@
 import { type MaybeRefOrGetter, toValue } from 'vue'
 
 import useResponsive from '/@/composables/useResponsive'
+import { isTouchDevice } from '/@/lib/dom/browser'
 import { insertText } from '/@/lib/dom/insertText'
 
 const useInsertText = (
@@ -14,7 +15,12 @@ const useInsertText = (
       const textarea = toValue(textareaRef)
       if (!textarea) return
 
-      insertText(textarea, text, toValue(targetRef), isMobile.value)
+      insertText(
+        textarea,
+        text,
+        toValue(targetRef),
+        isMobile.value || isTouchDevice()
+      )
     }
   }
 }
