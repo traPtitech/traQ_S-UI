@@ -22,7 +22,7 @@ const useChannelCandidateSearch = () => {
           } as const
         })
         .filter(isDefined),
-    ['addChannel', 'setChannels', 'updateChannel']
+    ['addChannel', 'setChannels', 'updateChannel', 'deleteChannel']
   )
 }
 
