@@ -17,6 +17,7 @@ const replaceMap: Record<string, string | undefined> = {
 const replaceRegex = new RegExp(`[${Object.keys(replaceMap).join('|')}]`, 'g')
 
 const mergeMentionCandidates = (users: Word[], userGroups: Word[]) => {
+  // ユーザー名とグループ名が重複しているメンションは大文字小文字を区別せずユーザー扱いになる仕様に合わせている
   const userNameSet = new Set(users.map(user => user.text.toLocaleLowerCase()))
   return users
     .concat(
