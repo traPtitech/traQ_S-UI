@@ -8,9 +8,7 @@
         {{ channelPath }}
       </router-link>
       -
-      <time :datetime="date.toISOString()">{{
-        getDateRepresentation(date)
-      }}</time>
+      <time :datetime="date.toISOString()">{{ representedDate }}</time>
     </span>
     <MessageLink
       v-if="!disableLinks"
@@ -29,7 +27,7 @@ import { type DeepReadonly, computed } from 'vue'
 
 import MessageLink from '/@/components/UI/MessageLink.vue'
 import useChannelPath from '/@/composables/useChannelPath'
-import { getDateRepresentation } from '/@/lib/basic/date'
+import { useDateRepresentation } from '/@/composables/useDateRepresentation'
 
 const props = withDefaults(
   defineProps<{
@@ -51,6 +49,7 @@ const channelLink = computed(
   () => channelIdToLink(props.message.channelId) ?? ''
 )
 const date = computed(() => props.date ?? new Date(props.message.createdAt))
+const representedDate = useDateRepresentation(date)
 </script>
 
 <style lang="scss" module>
