@@ -7,7 +7,7 @@ import type {
   AlignmentPosition,
   StampSelectHandler
 } from '/@/store/ui/stampPicker'
-import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+import { useStampPicker, useStampPickerInvoker } from '/@/store/ui/stampPicker'
 
 const useTextStampPickerInvoker = (
   text: Ref<string>,
@@ -36,12 +36,28 @@ const useTextStampPickerInvoker = (
     insertText(stampText)
   }
 
-  return useStampPickerInvoker(
+  const { isStampPickerShown } = useStampPicker()
+  const picker = useStampPickerInvoker(
     selecterHandler,
     positionElement,
     true,
     positionOf
   )
+
+  const openStampPicker = () => {
+    textareaRef.value?.blur()
+    picker.openStampPicker()
+  }
+
+  const toggleStampPicker = () => {
+    if (isStampPickerShown.value) {
+      picker.closeStampPicker()
+    } else {
+      openStampPicker()
+    }
+  }
+
+  return { ...picker, openStampPicker, toggleStampPicker }
 }
 
 export default useTextStampPickerInvoker
