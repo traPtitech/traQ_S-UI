@@ -7,20 +7,35 @@
     :edit-button="isAdmin"
     @edit="onGroupEdit"
   >
-    <UserListItem
-      v-for="user in users"
-      :key="user.id"
-      :user-id="user.id"
-      :is-admin="user.isAdmin"
-      :class="$style.item"
-    >
-      <div :class="$style.role" dir="auto">
-        {{ user.role }}
-      </div>
-      <div v-if="user.isAdmin && !user.isMember" :class="$style.nonMemberAdmin">
-        グループ外管理者
-      </div>
-    </UserListItem>
+    <template #title-append>
+      <UserGroupMemberCount
+        v-if="group"
+        :admin-count="adminCount"
+        :member-count="memberCount"
+        background="tertiary"
+        :class="$style.memberCount"
+        :data-has-edit-button="$boolAttr(isAdmin)"
+      />
+    </template>
+    <template #default>
+      <UserListItem
+        v-for="user in users"
+        :key="user.id"
+        :user-id="user.id"
+        :is-admin="user.isAdmin"
+        :class="$style.item"
+      >
+        <div :class="$style.role" dir="auto">
+          {{ user.role }}
+        </div>
+        <div
+          v-if="user.isAdmin && !user.isMember"
+          :class="$style.nonMemberAdmin"
+        >
+          グループ外管理者
+        </div>
+      </UserListItem>
+    </template>
   </ModalFrame>
 </template>
 
@@ -29,6 +44,7 @@ import type { UserGroupMember } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
+import UserGroupMemberCount from '/@/components/UI/UserGroupMemberCount.vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
@@ -67,6 +83,8 @@ const users = computed((): UserGroupMemberOrAdmin[] => {
       .map(m => ({ ...m, isMember: true, isAdmin: false }))
   ].filter(m => activeUsersMap.value.has(m.id))
 })
+const adminCount = computed(() => users.value.filter(u => u.isAdmin).length)
+const memberCount = computed(() => users.value.filter(u => u.isMember).length)
 
 const { myId } = useMeStore()
 const isAdmin = computed(() => {
@@ -106,5 +124,11 @@ const onGroupEdit = (event: MouseEvent) => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.memberCount {
+  margin-left: auto;
+  &[data-has-edit-button] {
+    margin-right: 8px;
+  }
 }
 </style>
