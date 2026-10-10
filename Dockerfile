@@ -4,7 +4,7 @@ WORKDIR /app
 ENV CYPRESS_INSTALL_BINARY=0
 
 COPY package*.json ./
-COPY patches/ ./patches/
+COPY scripts/patch-dependencies.js ./scripts/
 RUN npm ci
 COPY . .
 RUN NODE_ENV=production npm run build:with-font
