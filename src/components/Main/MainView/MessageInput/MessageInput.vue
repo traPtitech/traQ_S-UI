@@ -60,6 +60,7 @@
         :is-posting="isPosting"
         @click-send="postMessage"
         @click-stamp="toggleStampPicker"
+        @click-schedule="pushModal({ type: 'scheduled-messages', channelId })"
       />
     </div>
   </div>
@@ -77,6 +78,7 @@ import useResponsive from '/@/composables/useResponsive'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useModalStore } from '/@/store/ui/modal'
 import { useToastStore } from '/@/store/ui/toast'
 import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 
@@ -105,6 +107,7 @@ const emit = defineEmits<{
 
 const { isMobile } = useResponsive()
 const channelId = toRef(props, 'channelId')
+const { pushModal } = useModalStore()
 const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
 const { addErrorToast } = useToastStore()
 const { addAttachment: addStateAttachment } = useMessageInputStateAttachment(

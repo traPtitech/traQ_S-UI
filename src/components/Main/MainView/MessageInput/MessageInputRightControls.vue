@@ -3,6 +3,16 @@
     <MessageInputInsertStampButton @click="emit('clickStamp')" />
     <button
       :class="$style.sendButton"
+      title="予約投稿"
+      aria-label="予約投稿を開く"
+      :disabled="isPosting"
+      data-testid="message-schedule-button"
+      @click="emit('clickSchedule')"
+    >
+      <AIcon mdi name="clock-outline" />
+    </button>
+    <button
+      :class="$style.sendButton"
       title="送信する"
       :disabled="!canPostMessage"
       data-testid="message-send-button"
@@ -35,6 +45,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'clickSend'): void
   (e: 'clickStamp'): void
+  (e: 'clickSchedule'): void
 }>()
 
 const { isMobile } = useResponsive()

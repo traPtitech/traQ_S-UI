@@ -19,7 +19,8 @@
         "
         :key="currentState.type === 'user' ? currentState.id : undefined"
         :channel-id="
-          currentState.type === 'notification'
+          currentState.type === 'notification' ||
+          currentState.type === 'scheduled-messages'
             ? currentState.channelId
             : undefined
         "
@@ -76,6 +77,7 @@ import GroupMemberEditModal from './GroupMemberEditModal/GroupMemberEditModal.vu
 import GroupModal from './GroupModal/GroupModal.vue'
 import NotificationModal from './NotificationModal/NotificationModal.vue'
 import ProfileIconEditModal from './ProfileIconEditModal/ProfileIconEditModal.vue'
+import ScheduledMessagesModal from './ScheduledMessagesModal/ScheduledMessagesModal.vue'
 import SettingsCacheClearModal from './SettingsCacheClearModal/SettingsCacheClearModal.vue'
 import SettingsThemeEditModal from './SettingsThemeEditModal/SettingsThemeEditModal.vue'
 import StampCreateModal from './StampCreateModal/StampCreateModal.vue'
@@ -89,6 +91,7 @@ const { shouldShowModal, currentState } = useModalStore()
 const components: Record<ModalStateType, Component> = {
   user: UserModal,
   notification: NotificationModal,
+  'scheduled-messages': ScheduledMessagesModal,
   tag: TagModal,
   group: GroupModal,
   'channel-create': ChannelCreateModal,
