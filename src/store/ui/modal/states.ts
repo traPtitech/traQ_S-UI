@@ -15,6 +15,7 @@ export type ModalStateType =
   | 'user'
   | 'group'
   | 'notification'
+  | 'scheduled-messages'
   | 'file'
   | 'tag'
   | 'channel-create'
@@ -35,6 +36,7 @@ export type ModalStateType =
 export type ModalState =
   | UserModalState
   | NotificationModalState
+  | ScheduledMessagesModalState
   | FileModalState
   | GroupModalState
   | TagModalState
@@ -69,6 +71,11 @@ interface UserModalState extends BaseModalState {
 
 interface NotificationModalState extends BaseModalState {
   type: 'notification'
+  channelId: ChannelId
+}
+
+interface ScheduledMessagesModalState extends BaseModalState {
+  type: 'scheduled-messages'
   channelId: ChannelId
 }
 

@@ -68,6 +68,8 @@ const useMessageInputStateStorePinia = defineStore(
     const virtualChannelStates = ref(
       new Map<VirtualChannelId, MessageInputState>()
     )
+    // Shared by the composer and reservation dialog, including while a dialog closes.
+    const postingChannels = ref(new Set<string>())
 
     watch(
       channelsMap,
@@ -99,7 +101,13 @@ const useMessageInputStateStorePinia = defineStore(
       }
     }
 
-    return { inputChannels, hasInputChannel, getStore, setStore }
+    return {
+      inputChannels,
+      hasInputChannel,
+      getStore,
+      setStore,
+      postingChannels
+    }
   }
 )
 
