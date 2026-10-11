@@ -63,6 +63,12 @@ export const isTouchDevice = () => {
   return isIOS() || ua.includes('android')
 }
 
+export const shouldAutoFocus = () => {
+  return (
+    !isTouchDevice() && matchMedia('(hover: hover) and (pointer: fine)').matches
+  )
+}
+
 // https://github.com/ianstormtaylor/slate/blob/7377266b43451c4be44a1442aa1076ef3d13227e/packages/slate-dev-environment/src/index.js#L74-L79
 export const checkLevel2InputEventsSupport = () => {
   const element = document.createElement('div')

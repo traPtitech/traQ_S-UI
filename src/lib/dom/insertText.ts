@@ -1,6 +1,4 @@
-import { insert } from 'text-field-edit'
-
-import { isDefined } from '/@/lib/basic/array'
+import { isWebKit } from '/@/lib/dom/browser'
 
 export const insertText = (
   textarea: HTMLTextAreaElement,
@@ -9,38 +7,58 @@ export const insertText = (
     begin?: number
     end?: number
   } = {},
-  isMobile = false
+  { isComposing = false, allowFocus = true } = {}
 ) => {
-  // `execCommand` は deprecated だが，`setRangeText` は undo できなくなってしまうので，PC の場合は `execCommand` を用いる．
-  // `execCommand` は主にモバイル端末での挙動が怪しいので，それを改善するためのワークアラウンド．
-  if (isMobile) {
-    const begin = target?.begin ?? textarea.selectionStart
-    const end = target?.end ?? textarea.selectionEnd
+  const document = textarea.ownerDocument
+  const previousFocus = document.activeElement
+  const begin = target.begin ?? textarea.selectionStart
+  const end = target.end ?? textarea.selectionEnd
+  const normalizedText = text.replaceAll('\r\n', '\n')
 
-    textarea.setRangeText(text, begin, end, 'end')
+  if (
+    (!isComposing || (previousFocus === textarea && isWebKit())) &&
+    typeof document.execCommand === 'function' &&
+    (previousFocus === textarea || allowFocus)
+  ) {
+    const value = textarea.value
+    let inserted: boolean
 
-    if (textarea.ownerDocument.activeElement !== textarea) {
-      const value = textarea.value
-      const caret = textarea.selectionEnd
-
-      requestAnimationFrame(() => {
-        if (
-          textarea.ownerDocument.activeElement !== textarea &&
-          textarea.value === value
-        ) {
-          textarea.setSelectionRange(caret, caret)
+    try {
+      if (previousFocus !== textarea) {
+        textarea.focus({ preventScroll: true })
+      }
+      textarea.setSelectionRange(begin, end)
+      inserted = document.execCommand(
+        normalizedText === '' ? 'delete' : 'insertText',
+        false,
+        normalizedText
+      )
+    } catch {
+      inserted = false
+    } finally {
+      if (previousFocus !== textarea) {
+        textarea.blur()
+        if (previousFocus instanceof HTMLElement) {
+          previousFocus.focus({ preventScroll: true })
         }
-      })
+      }
     }
 
-    textarea.dispatchEvent(new Event('input'))
-  } else {
-    if (isDefined(target?.begin)) textarea.selectionStart = target.begin
-    if (isDefined(target?.end)) textarea.selectionEnd = target.end
-
-    // Windowsでの\r\nを含む文字列を貼り付けた後に
-    // Ctrl+Zでアンドゥすると、キャレットの位置がずれるので
-    // ずれないように\nに統一しておく
-    insert(textarea, text.replaceAll('\r\n', '\n'))
+    if (inserted || textarea.value !== value) return
   }
+
+  textarea.setRangeText(normalizedText, begin, end, 'end')
+
+  if (document.activeElement !== textarea) {
+    const value = textarea.value
+    const caret = textarea.selectionEnd
+
+    requestAnimationFrame(() => {
+      if (document.activeElement !== textarea && textarea.value === value) {
+        textarea.setSelectionRange(caret, caret)
+      }
+    })
+  }
+
+  textarea.dispatchEvent(new Event('input'))
 }
