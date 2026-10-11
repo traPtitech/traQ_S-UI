@@ -180,7 +180,12 @@ const canUpdate = computed(
 
 const { pushModal } = useModalStore()
 
-const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
+const acceptImageType = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp'
+].join(',')
 const { selectImage } = useFileSelect({ accept: acceptImageType }, files => {
   if (!files[0]) return
   pushModal({
