@@ -3,6 +3,7 @@ import type {
   ChannelId,
   DMChannelId,
   MessageId,
+  UserGroupId,
   UserId
 } from '/@/types/entity-ids'
 import type { MaybePromise } from '/@/types/utility'
@@ -91,6 +92,7 @@ export type StoreForParser = {
   channelPathToId: ChannelPathToId
   userNameToDmChannelId: UserNameToDmChannelId
   userNameToId: UserNameToId
+  userGroupNameToId: UserGroupNameToId
   getCurrentChannelPathOrUserName: () => string | undefined
   getCurrentChannelId: () => ChannelId | undefined
   getMyDmChannelId: () => DMChannelId | undefined
@@ -105,6 +107,10 @@ type UserNameToDmChannelId = (
 ) => MaybePromise<DMChannelId | undefined>
 
 type UserNameToId = (userName: string) => MaybePromise<UserId | undefined>
+
+type UserGroupNameToId = (
+  userGroupName: string
+) => MaybePromise<UserGroupId | undefined>
 
 /**
  * `string`から`ExtractedFilter`を経由して実際のフィルターを作る
@@ -178,21 +184,34 @@ export const channelOrDmChannelParser = async <T extends string>(
   const channelPath = channelPathToId(channelName)
   if (channelPath) return channelPath
 
-  const userName = body.startsWith('@') ? body.slice(1) : body
+  const userName = body.slice(
+    Number(body.startsWith('@')) + Number(body.startsWith('@!'))
+  )
   return userNameToDmChannelId(userName)
 }
 
-export const userParser = async <T extends string>(
+export const userOrUserGroupParser = async <T extends string>(
   userNameToId: UserNameToId,
+  userGroupNameToId: UserGroupNameToId,
   extracted: ExtractedFilter<T>
 ): Promise<UserId | typeof MeToken | undefined> => {
-  if (extracted.body === 'me') return MeToken
+  const body = extracted.prefix === '@' ? `@${extracted.body}` : extracted.body
+  if (body === 'me') return MeToken
 
-  const userName = extracted.body.startsWith('@')
-    ? extracted.body.slice(1)
-    : extracted.body
+  const userNameOrUserGroupName = body.startsWith('@') ? body.slice(1) : body
 
-  return userNameToId(userName)
+  const userName = body.startsWith('@!')
+    ? userNameOrUserGroupName.slice(1)
+    : userNameOrUserGroupName
+
+  const userId = await userNameToId(userName)
+  if (userId) return userId
+
+  const userGroupName = body.startsWith('@&')
+    ? userNameOrUserGroupName.slice(1)
+    : userNameOrUserGroupName
+
+  return await userGroupNameToId(userGroupName)
 }
 
 export const messageParser = <T extends string>(
