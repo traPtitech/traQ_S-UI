@@ -20,12 +20,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: [
-      '**/coverage',
-      '**/dist',
-      '**/node_modules',
-      'public/new-relic.js'
-    ]
+    ignores: ['**/coverage', '**/dist', '**/node_modules']
   },
   ...compat.extends(
     'eslint:recommended',
