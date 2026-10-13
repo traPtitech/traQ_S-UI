@@ -2,6 +2,9 @@
   <li :class="$style.container" :data-is-open="$boolAttr(isOpen)">
     <div :class="$style.name" @click="toggleOpen">
       {{ scopeInfo.name }}
+      <span v-if="!isKnown" :class="$style.unknown">
+        (説明が未登録のスコープです)
+      </span>
       <AIcon :class="$style.icon" name="rounded-triangle" />
     </div>
     <SlideDown :is-open="isOpen">
@@ -20,13 +23,14 @@ import { computed } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
 import useToggle from '/@/composables/utils/useToggle'
-import { getScopeInfo } from '/@/lib/clientScope'
+import { getScopeInfo, isKnownScope } from '/@/lib/clientScope'
 
 const props = defineProps<{
   scope: string
 }>()
 
 const scopeInfo = computed(() => getScopeInfo(props.scope))
+const isKnown = computed(() => isKnownScope(props.scope))
 
 const { value: isOpen, toggle: toggleOpen } = useToggle(false)
 </script>
@@ -47,6 +51,10 @@ const { value: isOpen, toggle: toggleOpen } = useToggle(false)
   &:last-child {
     margin-bottom: 0;
   }
+}
+.unknown {
+  margin-left: 8px;
+  font-weight: normal;
 }
 .icon {
   margin-left: auto;

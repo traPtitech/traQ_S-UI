@@ -89,7 +89,7 @@ export const scopeInfoMap: Record<KnownScope, ScopeInfo> = {
   }
 }
 
-const isKnownScope = (scope: string): scope is KnownScope =>
+export const isKnownScope = (scope: string): scope is KnownScope =>
   Object.hasOwn(scopeInfoMap, scope)
 
 // 未知のスコープはスコープ名をそのまま返す
