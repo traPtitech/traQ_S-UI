@@ -92,10 +92,6 @@ export const scopeInfoMap: Record<KnownScope, ScopeInfo> = {
 const isKnownScope = (scope: string): scope is KnownScope =>
   Object.hasOwn(scopeInfoMap, scope)
 
-/**
- * スコープの表示用情報を返す
- *
- * 未知のスコープも同意画面などで隠さずに表示するため、スコープ名をそのまま名前として返す
- */
+// 未知のスコープはスコープ名をそのまま返す
 export const getScopeInfo = (scope: string): ScopeInfo =>
   isKnownScope(scope) ? scopeInfoMap[scope] : { name: scope, permissions: [] }

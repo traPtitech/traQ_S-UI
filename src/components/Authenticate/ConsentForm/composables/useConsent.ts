@@ -31,7 +31,7 @@ const useConsent = (
   paramScopes: Ref<string[] | undefined>
 ) => {
   const client = ref<OAuth2Client>()
-  // 未知のスコープも許可されるため、除外せずにそのまま表示する
+  // 未知のスコープも除外せずに表示する
   const scopes = computed<string[]>(
     () =>
       paramScopes.value?.filter(scope => scope !== '') ??
