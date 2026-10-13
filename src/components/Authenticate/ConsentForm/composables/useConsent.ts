@@ -1,16 +1,10 @@
 import type { OAuth2Client, User } from '@traptitech/traq'
-import { OAuth2Scope } from '@traptitech/traq'
 
 import type { Ref } from 'vue'
 import { computed, ref } from 'vue'
 
 import apis, { OAuthDecidePath } from '/@/lib/apis'
 import type { OAuthClientId } from '/@/types/entity-ids'
-
-const validScopes = new Set<string>(Object.values(OAuth2Scope))
-
-const isValidScope = (scope: string): scope is OAuth2Scope =>
-  validScopes.has(scope)
 
 const sendWithForm = (value: string) => {
   const $form = document.createElement('form')
@@ -37,8 +31,12 @@ const useConsent = (
   paramScopes: Ref<string[] | undefined>
 ) => {
   const client = ref<OAuth2Client>()
-  const scopes = computed(
-    () => paramScopes.value?.filter(isValidScope) ?? client.value?.scopes ?? []
+  // 未知のスコープも許可されるため、除外せずにそのまま表示する
+  const scopes = computed<string[]>(
+    () =>
+      paramScopes.value?.filter(scope => scope !== '') ??
+      client.value?.scopes ??
+      []
   )
   const developer = ref<User>()
   const disableButton = ref(false)

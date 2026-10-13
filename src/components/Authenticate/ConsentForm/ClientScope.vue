@@ -15,20 +15,18 @@
 </template>
 
 <script lang="ts" setup>
-import type { OAuth2Scope } from '@traptitech/traq'
-
 import { computed } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
 import useToggle from '/@/composables/utils/useToggle'
-import { scopeInfoMap } from '/@/lib/clientScope'
+import { getScopeInfo } from '/@/lib/clientScope'
 
 const props = defineProps<{
-  scope: OAuth2Scope
+  scope: string
 }>()
 
-const scopeInfo = computed(() => scopeInfoMap[props.scope])
+const scopeInfo = computed(() => getScopeInfo(props.scope))
 
 const { value: isOpen, toggle: toggleOpen } = useToggle(false)
 </script>

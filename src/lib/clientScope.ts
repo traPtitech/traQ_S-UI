@@ -1,9 +1,16 @@
 import { OAuth2Scope } from '@traptitech/traq'
 
-export const scopeInfoMap: Record<
-  OAuth2Scope,
-  { name: string; permissions: string[] }
-> = {
+export interface ScopeInfo {
+  name: string
+  permissions: string[]
+}
+
+// TODO: @traptitech/traq の OAuth2Scope に qall が追加されたら OAuth2Scope.Qall に置き換える
+const qallScope = 'qall'
+
+type KnownScope = OAuth2Scope | typeof qallScope
+
+export const scopeInfoMap: Record<KnownScope, ScopeInfo> = {
   [OAuth2Scope.Openid]: {
     name: 'ユーザーID取得',
     permissions: ['traQ IDの取得']
@@ -70,5 +77,24 @@ export const scopeInfoMap: Record<
       'Clientの情報の取得',
       'Clientの作成/編集/削除'
     ]
+  },
+  [qallScope]: {
+    name: '通話 (Qall)',
+    permissions: [
+      'Qallの通話への参加',
+      '通話ルーム情報の取得/変更',
+      'サウンドボードの利用/追加'
+    ]
   }
 }
+
+const isKnownScope = (scope: string): scope is KnownScope =>
+  Object.hasOwn(scopeInfoMap, scope)
+
+/**
+ * スコープの表示用情報を返す
+ *
+ * 未知のスコープも同意画面などで隠さずに表示するため、スコープ名をそのまま名前として返す
+ */
+export const getScopeInfo = (scope: string): ScopeInfo =>
+  isKnownScope(scope) ? scopeInfoMap[scope] : { name: scope, permissions: [] }
