@@ -82,7 +82,8 @@ export const scopeInfoMap: Record<KnownScope, ScopeInfo> = {
     name: '通話 (Qall)',
     permissions: [
       'Qallの通話への参加',
-      '通話ルーム情報の取得/変更',
+      '全ユーザーの通話参加状況の取得',
+      '通話ルーム情報・参加者の発言権の変更',
       'サウンドボードの利用/追加'
     ]
   }
