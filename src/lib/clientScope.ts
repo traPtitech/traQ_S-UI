@@ -1,14 +1,16 @@
 import { OAuth2Scope } from '@traptitech/traq'
 
+export interface ScopeInfo {
+  name: string
+  permissions: string[]
+}
+
 // TODO: @traptitech/traq の OAuth2Scope に qall が追加されたら KnownScope を OAuth2Scope にする
 type QallScope = 'qall'
 
-export type KnownScope = OAuth2Scope | QallScope
+type KnownScope = OAuth2Scope | QallScope
 
-export const scopeInfoMap: Record<
-  KnownScope,
-  { name: string; permissions: string[] }
-> = {
+export const scopeInfoMap: Record<KnownScope, ScopeInfo> = {
   [OAuth2Scope.Openid]: {
     name: 'ユーザーID取得',
     permissions: ['traQ IDの取得']
@@ -89,3 +91,7 @@ export const scopeInfoMap: Record<
 
 export const isKnownScope = (scope: string): scope is KnownScope =>
   Object.hasOwn(scopeInfoMap, scope)
+
+// 未知のスコープはスコープ名をそのまま返す
+export const getScopeInfo = (scope: string): ScopeInfo =>
+  isKnownScope(scope) ? scopeInfoMap[scope] : { name: scope, permissions: [] }

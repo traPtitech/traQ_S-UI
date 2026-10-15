@@ -47,7 +47,7 @@ import { computed } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { getFullDayString, getISOFullDayString } from '/@/lib/basic/date'
-import { scopeInfoMap } from '/@/lib/clientScope'
+import { getScopeInfo } from '/@/lib/clientScope'
 
 interface TokenInfo extends ActiveOAuth2Token {
   clientName?: string
@@ -77,7 +77,7 @@ const issuedAt = computed(() => {
 })
 
 const scopes = computed(() =>
-  props.token.scopes.map(scope => scopeInfoMap[scope].name)
+  props.token.scopes.map(scope => getScopeInfo(scope).name)
 )
 </script>
 
