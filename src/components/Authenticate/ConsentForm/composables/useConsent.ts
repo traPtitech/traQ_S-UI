@@ -4,6 +4,7 @@ import type { Ref } from 'vue'
 import { computed, ref } from 'vue'
 
 import apis, { OAuthDecidePath } from '/@/lib/apis'
+import { isKnownScope } from '/@/lib/clientScope'
 import type { OAuthClientId } from '/@/types/entity-ids'
 
 const sendWithForm = (value: string) => {
@@ -31,12 +32,8 @@ const useConsent = (
   paramScopes: Ref<string[] | undefined>
 ) => {
   const client = ref<OAuth2Client>()
-  // 未知のスコープも除外せずに表示する
-  const scopes = computed<string[]>(
-    () =>
-      paramScopes.value?.filter(scope => scope !== '') ??
-      client.value?.scopes ??
-      []
+  const scopes = computed(
+    () => paramScopes.value?.filter(isKnownScope) ?? client.value?.scopes ?? []
   )
   const developer = ref<User>()
   const disableButton = ref(false)
