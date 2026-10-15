@@ -13,11 +13,13 @@
 </template>
 
 <script lang="ts" setup>
+import type { KnownScope } from '/@/lib/clientScope'
+
 import ClientScope from './ClientScope.vue'
 
 withDefaults(
   defineProps<{
-    scopes?: string[]
+    scopes?: KnownScope[]
   }>(),
   {
     scopes: () => []
