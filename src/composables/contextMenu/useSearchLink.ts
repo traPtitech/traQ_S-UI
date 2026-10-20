@@ -9,7 +9,7 @@ const useSearchLink = (messageId: Ref<MessageId>) => {
   const { currentInput, settleQuery, resetPaging, openCommandPalette } =
     useCommandPalette()
   const searchLink = async () => {
-    const link = `${embeddingOrigin}${constructMessagesPath(messageId.value)}`
+    const link = `citation:${embeddingOrigin}${constructMessagesPath(messageId.value)}`
     resetPaging()
     currentInput.value = link
     await settleQuery()
