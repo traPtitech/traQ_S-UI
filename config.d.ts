@@ -129,8 +129,9 @@ export type Config = Readonly<{
   fallbackChannelPath?: string
 
   /**
-   * メタ情報を取得できない場合に使うオリジン
-   * 省略時は `location.origin` を使用
+   * 共有リンクなどに使うオリジン。メタ情報より優先
+   * 省略時・空文字列時はメタ情報を使い、利用できない場合は `location.origin`
+   * 開発時は設定済みの `DEV_SERVER` を優先
    *
    * @example 'https://q.trap.jp'
    */

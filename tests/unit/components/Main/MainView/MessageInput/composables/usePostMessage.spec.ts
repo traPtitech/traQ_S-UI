@@ -2,11 +2,12 @@ import { createTestingPinia } from '@pinia/testing'
 import { vi } from 'vitest'
 
 import { createContent } from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
-import { buildFilePathForPost, embeddingOrigin } from '/@/lib/apis'
 import { nilUuid } from '/@/lib/basic/uuid'
 
+const EMBEDDING_ORIGIN = 'https://q.example.com'
+
 vi.mock('/@/lib/markdown/markdown', () => ({
-  isEmbeddedLink: vi.fn((text: string) => text.startsWith(embeddingOrigin))
+  isEmbeddedLink: vi.fn((text: string) => text.startsWith(EMBEDDING_ORIGIN))
 }))
 
 describe('usePostMessage', () => {
@@ -24,7 +25,7 @@ describe('usePostMessage', () => {
 
 const FILES = ['fileUrl1', 'fileUrl2']
 const FILE_LINKS = FILES.join('\n')
-const LINK = buildFilePathForPost(nilUuid)
+const LINK = `${EMBEDDING_ORIGIN}/files/${nilUuid}`
 const LINE_BREAKS = '\n\n\n\n\n'
 const SPACES = '     '
 
