@@ -129,8 +129,7 @@ export type Config = Readonly<{
   fallbackChannelPath?: string
 
   /**
-   * traQバックエンドのオリジン
-   * フロントエンドとは異なるドメインでホストする場合に指定する
+   * メタ情報を取得できない場合に使うオリジン
    * 省略時は `location.origin` を使用
    *
    * @example 'https://q.trap.jp'

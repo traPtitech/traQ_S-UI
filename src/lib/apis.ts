@@ -15,6 +15,7 @@ import type {
 import { Apis, Configuration } from '@traptitech/traq'
 
 import type { AxiosError } from 'axios'
+import axios from 'axios'
 
 import { DEV_SERVER } from '/@/lib/define'
 import { constructFilesPath } from '/@/router'
@@ -45,11 +46,30 @@ export const buildFileThumbnailPath = (fileId: FileId) =>
 export const buildFileWaveformPath = (fileId: FileId) =>
   `${buildFileThumbnailPath(fileId)}?type=waveform`
 
-export const embeddingOrigin =
+export let embeddingOrigin =
   DEV_SERVER !== '' && import.meta.env.MODE === 'development'
     ? DEV_SERVER
     : (self.traQConfig.backendOrigin ??
       `${location.protocol}//${location.host}`)
+
+export const initializeMeta = async () => {
+  if (DEV_SERVER !== '' && import.meta.env.MODE === 'development') return
+
+  try {
+    const { data } = await axios.get<{ canonicalOrigin: string }>(
+      `${BASE_PATH}/meta`,
+      { timeout: 5000 }
+    )
+    if (
+      typeof data.canonicalOrigin === 'string' &&
+      data.canonicalOrigin !== ''
+    ) {
+      embeddingOrigin = data.canonicalOrigin
+    }
+  } catch {
+    // 取得できない場合は既存のオリジンで起動する
+  }
+}
 
 export const buildFilePathForPost = (fileId: FileId) =>
   `${embeddingOrigin}${constructFilesPath(fileId)}`
