@@ -29,8 +29,6 @@ jobs:
           cache: npm
 
       - run: npm ci
-        env:
-          CYPRESS_INSTALL_BINARY: 0
 
       - run: npm run build:with-font
         env:
