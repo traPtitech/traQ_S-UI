@@ -33,6 +33,14 @@ describe('useMarkdownInternalHandler', () => {
     push.mockClear()
   })
 
+  it('navigates without a beforeNavigate callback', () => {
+    const { onClick } = useMarkdownInternalHandler()
+    const event = clickLink(onClick)
+
+    expect(event.defaultPrevented).toBe(true)
+    expect(push).toHaveBeenCalledWith('/channels/test')
+  })
+
   it('logs cleanup errors without navigating', async () => {
     const error = new Error('Modal cleanup failed')
     const logError = vi.spyOn(console, 'error').mockImplementation(() => undefined)
