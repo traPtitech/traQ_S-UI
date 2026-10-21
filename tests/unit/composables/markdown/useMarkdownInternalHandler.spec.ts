@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import useMarkdownInternalHandler from '../../../../src/composables/markdown/useMarkdownInternalHandler'
 
@@ -29,6 +29,25 @@ const clickLink = (onClick: (event: MouseEvent) => void) => {
 }
 
 describe('useMarkdownInternalHandler', () => {
+  beforeEach(() => {
+    push.mockClear()
+  })
+
+  it('logs cleanup errors without navigating', async () => {
+    const error = new Error('Modal cleanup failed')
+    const logError = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    try {
+      const beforeNavigate = vi.fn().mockRejectedValue(error)
+      const { onClick } = useMarkdownInternalHandler(beforeNavigate)
+      clickLink(onClick)
+
+      await Promise.resolve()
+      expect(logError).toHaveBeenCalledWith(error)
+      expect(push).not.toHaveBeenCalled()
+    } finally {
+      logError.mockRestore()
+    }
+  })
   it('waits for modal cleanup before navigating', async () => {
     let finish!: () => void
     const beforeNavigate = vi.fn(

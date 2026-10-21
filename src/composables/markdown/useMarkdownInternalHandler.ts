@@ -52,7 +52,13 @@ const useMarkdownInternalHandler = (beforeNavigate?: () => Promise<void>) => {
     event.preventDefault()
     event.stopPropagation()
     if (beforeNavigate) {
-      await beforeNavigate()
+      try {
+        await beforeNavigate()
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e)
+        return
+      }
     }
     router.push(linkPath)
   }
