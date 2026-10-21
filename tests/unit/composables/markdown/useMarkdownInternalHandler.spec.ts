@@ -43,7 +43,9 @@ describe('useMarkdownInternalHandler', () => {
 
   it('logs cleanup errors without navigating', async () => {
     const error = new Error('Modal cleanup failed')
-    const logError = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    const logError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined)
     try {
       const beforeNavigate = vi.fn().mockRejectedValue(error)
       const { onClick } = useMarkdownInternalHandler(beforeNavigate)
