@@ -151,7 +151,7 @@ export default [
     }
   },
   {
-    files: ['**/tests/e2e/**/*.{js,cjs,jsx,ts,tsx}'],
+    files: ['**/tests/e2e/**/*.{js,cjs,jsx,ts,tsx}', 'scripts/**/*.mjs'],
 
     languageOptions: {
       globals: {
