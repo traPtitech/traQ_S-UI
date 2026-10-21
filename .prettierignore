@@ -5,3 +5,6 @@ node_modules
 /src/assets/unicode_emojis.json
 /public/new-relic.js
 *.schema.json
+
+/tests/e2e/results
+/tests/e2e/report

@@ -5,7 +5,6 @@ import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import stylistic from '@stylistic/eslint-plugin'
 import prettier from 'eslint-config-prettier'
-import cypress from 'eslint-plugin-cypress'
 import unusedImports from 'eslint-plugin-unused-imports'
 import vueLint from 'eslint-plugin-vue'
 import globals from 'globals'
@@ -24,7 +23,9 @@ export default [
       '**/coverage',
       '**/dist',
       '**/node_modules',
-      'public/new-relic.js'
+      'public/new-relic.js',
+      'tests/e2e/report/**',
+      'tests/e2e/results/**'
     ]
   },
   ...compat.extends(
@@ -148,11 +149,6 @@ export default [
     rules: {
       'no-undef': 'off'
     }
-  },
-  {
-    plugins: { cypress },
-    files: ['**/tests/e2e/**/*.{js,cjs,jsx,ts,tsx}'],
-    rules: { ...cypress.configs.recommended.rules }
   },
   {
     files: ['**/tests/e2e/**/*.{js,cjs,jsx,ts,tsx}'],

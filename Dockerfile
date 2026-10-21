@@ -1,8 +1,6 @@
 FROM --platform=$BUILDPLATFORM docker.io/library/node:26.12.1-alpine@sha256:ae8e1c19d56886270987e99b3cfcef13a919f0655b376ae322bc64ada76f88cd AS build
 WORKDIR /app
 
-ENV CYPRESS_INSTALL_BINARY=0
-
 COPY package*.json ./
 COPY scripts/patch-dependencies.js ./scripts/
 RUN npm ci
