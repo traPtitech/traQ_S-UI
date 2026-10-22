@@ -15,7 +15,12 @@
         :class="$style.controlIcon"
         @click="emit('edit')"
       />
-      <button :disabled :class="$style.controlIcon" @click="emit('delete')">
+      <button
+        aria-label="ユーザーを削除"
+        :disabled
+        :class="$style.controlIcon"
+        @click="emit('delete')"
+      >
         <AIcon name="close" mdi />
       </button>
     </div>
