@@ -15,11 +15,11 @@ const mockUserGroupIds = ['user-group-id-00', 'user-group-id-01']
 const mockUserGroupNames = ['user-group-00', 'user-group-01']
 const mockCurrentChannelPath = 'current/channel'
 const mockCurrentChannelId = 'current-channel-id'
-const mockCurrentUsername = 'currentUser'
+const mockCurrentUserName = 'currentUser'
 const mockCurrentUserDmChannelId = 'current-user-dm-channel-id'
 const mockMyUserId = 'my-user-id'
 const mockMyDmChannelId = 'my-dm-channel-id'
-const mockMyUsername = 'myUsername'
+const mockMyUserName = 'myUserName'
 
 describe('parseQuery', () => {
   const TEST_CASES = [
@@ -104,7 +104,7 @@ describe('parseQuery', () => {
     {
       description: 'with in:me',
       query: 'lorem ipsum in:me',
-      expectedNormalizedQuery: `lorem ipsum in:@${mockMyUsername}`,
+      expectedNormalizedQuery: `lorem ipsum in:@${mockMyUserName}`,
       expectedQueryObject: { word: 'lorem ipsum', in: mockMyDmChannelId }
     },
     {
@@ -236,7 +236,7 @@ describe('parseQuery', () => {
     {
       description: 'with me',
       query: 'lorem ipsum to:me',
-      expectedNormalizedQuery: `lorem ipsum to:@!${mockMyUsername}`,
+      expectedNormalizedQuery: `lorem ipsum to:@!${mockMyUserName}`,
       expectedQueryObject: { word: 'lorem ipsum', to: mockMyUserId }
     },
     {
@@ -328,7 +328,7 @@ describe('parseQuery', () => {
     getMyDmChannelId: () => mockMyDmChannelId,
     getMyUserId: () => mockMyUserId,
     getCurrentChannelPathOrUserName: () => mockCurrentChannelPath,
-    getMyUserName: () => mockMyUsername,
+    getMyUserName: () => mockMyUserName,
     channelPathToId: channelPath => {
       if (channelPath === mockChannelName) {
         return mockChannelId
@@ -338,20 +338,20 @@ describe('parseQuery', () => {
       }
       return undefined
     },
-    userNameToDmChannelId: async username => {
-      if (username === mockUserName) {
+    userNameToDmChannelId: async userName => {
+      if (userName === mockUserName) {
         return mockDmChannelId
       }
-      if (username === mockCurrentUsername) {
+      if (userName === mockCurrentUserName) {
         return mockCurrentUserDmChannelId
       }
       return undefined
     },
-    userNameToId: username => {
-      if (username === mockUserName) {
+    userNameToId: userName => {
+      if (userName === mockUserName) {
         return mockUserId
       }
-      if (username === mockMyUsername) {
+      if (userName === mockMyUserName) {
         return mockMyUserId
       }
       return undefined

@@ -33,7 +33,7 @@ const getStoreForParser = ({
   me,
   channelPathStringToId,
   fetchUserByName,
-  getUserGroupByName
+  fetchUserGroupByName
 }: {
   primaryView: Ref<PrimaryViewInformation>
   channelsMap: Ref<ReadonlyMap<ChannelId, Channel>>
@@ -43,7 +43,9 @@ const getStoreForParser = ({
   me: Ref<User | undefined>
   channelPathStringToId: (path: string) => ChannelId | undefined
   fetchUserByName: (param: { userName: string }) => Promise<User | undefined>
-  getUserGroupByName: (name: string) => UserGroup | undefined
+  fetchUserGroupByName: (param: {
+    userGroupName: string
+  }) => Promise<UserGroup | undefined>
 }): StoreForParser => {
   const getMyUserName = () => me.value?.name
   const getMyUserId = () => me.value?.id
@@ -64,9 +66,9 @@ const getStoreForParser = ({
   }
 
   const userGroupNameToId = async (
-    name: string
+    userGroupName: string
   ): Promise<UserGroupId | undefined> => {
-    const group = await getUserGroupByName(name)
+    const group = await fetchUserGroupByName({ userGroupName })
     return group?.id
   }
 
@@ -129,7 +131,7 @@ const useQueryParser = () => {
   const { channelPathStringToId } = useChannelPath()
   const { primaryView } = useMainViewStore()
   const { fetchUserByName, usersMap } = useUsersStore()
-  const { getUserGroupByName } = useGroupsStore()
+  const { fetchUserGroupByName } = useGroupsStore()
   const { detail: me } = useMeStore()
   const parseQuery = createQueryParser(
     getStoreForParser({
@@ -141,7 +143,7 @@ const useQueryParser = () => {
       me,
       channelPathStringToId,
       fetchUserByName,
-      getUserGroupByName
+      fetchUserGroupByName
     })
   )
 

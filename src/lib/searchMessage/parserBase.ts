@@ -184,9 +184,12 @@ export const channelOrDmChannelParser = async <T extends string>(
   const channelPath = channelPathToId(channelName)
   if (channelPath) return channelPath
 
-  const userName = body.slice(
-    Number(body.startsWith('@')) + Number(body.startsWith('@!'))
-  )
+  const userName = body.startsWith('@!')
+    ? body.slice(2)
+    : body.startsWith('@')
+      ? body.slice(1)
+      : body
+
   return userNameToDmChannelId(userName)
 }
 
@@ -194,7 +197,7 @@ export const userOrUserGroupParser = async <T extends string>(
   userNameToId: UserNameToId,
   userGroupNameToId: UserGroupNameToId,
   extracted: ExtractedFilter<T>
-): Promise<UserId | typeof MeToken | undefined> => {
+): Promise<UserId | UserGroupId | typeof MeToken | undefined> => {
   const body = extracted.prefix === '@' ? `@${extracted.body}` : extracted.body
   if (body === 'me') return MeToken
 
