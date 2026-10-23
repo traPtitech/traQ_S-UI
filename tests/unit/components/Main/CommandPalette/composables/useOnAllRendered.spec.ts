@@ -6,7 +6,7 @@ import { withSetup } from '../../../../testUtils'
 
 const useOnAllRendered = withSetup(useOnAllRenderedWithoutSetup)
 
-describe('useOnAllRenderered', () => {
+describe('useOnAllRendered', () => {
   it('should work', async () => {
     const list = ref(['a', 'b'])
     const f = vi.fn()

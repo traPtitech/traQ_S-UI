@@ -53,8 +53,6 @@ jobs:
 
       - name: npm ci
         run: npm ci
-        env:
-          CYPRESS_INSTALL_BINARY: 0
 
       - name: run lint
         run: npm run lint:no-fix -- --max-warnings=0
@@ -86,8 +84,6 @@ jobs:
 
       - name: npm ci
         run: npm ci
-        env:
-          CYPRESS_INSTALL_BINARY: 0
 
       - name: run format
         run: npx prettier --cache --check .
@@ -111,8 +107,6 @@ jobs:
 
       - name: npm ci
         run: npm ci
-        env:
-          CYPRESS_INSTALL_BINARY: 0
 
       - name: run type-check
         run: npm run type-check
@@ -143,8 +137,6 @@ jobs:
 
       - name: npm ci
         run: npm ci
-        env:
-          CYPRESS_INSTALL_BINARY: 0
 
       - name: run build
         run: npm run build:may-with-font
@@ -168,8 +160,6 @@ jobs:
 
       - name: npm ci
         run: npm ci
-        env:
-          CYPRESS_INSTALL_BINARY: 0
 
       - name: run test:unit
         run: npm run test:unit
@@ -194,7 +184,7 @@ jobs:
           name: coverage
           path: ./coverage
 
-      - uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+      - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
@@ -226,14 +216,19 @@ jobs:
       - name: npm ci
         run: npm ci
 
+      - name: install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
       - name: run test:e2e
         run: npm run test:e2e-headless
-        if: env.CYPRESS_username != null
+        if: env.E2E_USERNAME != null
         env:
-          CYPRESS_username: ${{ secrets.traQ_username }}
-          CYPRESS_password: ${{ secrets.traQ_password }}
+          E2E_USERNAME: ${{ secrets.traQ_username }}
+          E2E_PASSWORD: ${{ secrets.traQ_password }}
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: failed-screenshots
-          path: ./tests/e2e/screenshots
+          name: playwright-results
+          path: |
+            ./tests/e2e/results
+            ./tests/e2e/report
         if: ${{ failure() }}

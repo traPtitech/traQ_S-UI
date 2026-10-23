@@ -5,11 +5,14 @@
         :class="$style.header"
         :icon-name="iconName"
         :icon-mdi="iconMdi"
-        :title="title"
         :return-button="returnButton"
         :edit-button="editButton"
         @edit="emit('edit', $event)"
       >
+        <template #title>
+          <bdi>{{ title }}</bdi>
+          <slot name="title-append" />
+        </template>
         <template #subtitle>
           <template v-if="subtitle">
             <bdi>{{ subtitle }}</bdi>

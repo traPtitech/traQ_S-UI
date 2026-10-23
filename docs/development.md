@@ -9,6 +9,12 @@ $ npm run gen-fonts
 
 Vetur ではなく Vue (offical) を導入することを推奨しています。
 
+## 依存パッケージの型定義修正
+
+`vue-slider-component` の型定義には、Vue の要素型を `any` に上書きする参照と、配布されていない `.vue` ファイルへの参照があるため、`scripts/patch-dependencies.js` で修正しています。
+
+この修正は `npm run type-check` の実行時に適用されます。対象パッケージの更新で型定義が変わった場合は、スクリプトの修正も必要です。
+
 ## コミット時の自動フォーマット・lint
 
 このリポジトリでは [husky](https://typicode.github.io/husky/) と [lint-staged](https://github.com/okonet/lint-staged) を利用して、コミット時にステージされたファイルへ自動でフォーマット（prettier）とlint（eslint --fix）が実行されます。
@@ -85,25 +91,28 @@ $ npm run test:unit
 
 #### e2e テスト実行
 
+Playwright を使用します。初回は Chromium をインストールしてください。
+
+```shell
+$ npx playwright install chromium
+```
+
+環境変数 `E2E_USERNAME` と `E2E_PASSWORD` に開発用サーバーの認証情報を設定してください。
+既存の `general`・`ci-e2e-test` チャンネルを使用し、後者にテスト用メッセージを投稿します。
+
 ```shell
 $ npm run test:e2e
 ```
 
-`cypress.env.json`を以下の通りに作成する必要があります
-
-```json
-{
-  "username": "ユーザー名",
-  "password": "パスワード"
-}
-```
-
-`npm run test:e2e-headless`ではヘッドレスで実行できます
+ビルド後に Playwright の UI mode を開きます。
+`npm run test:e2e-headless` ではヘッドレスで実行できます。
+失敗時のスクリーンショットと Trace は `tests/e2e/results`、HTML レポートは `tests/e2e/report` に出力されます。
 
 #### 再ビルドなしでの e2e テスト実行
 
 ```shell
-$ npm run test:e2e:without-build
+$ npm run test:e2e:only-run
+$ npm run test:e2e:only-run-headless
 ```
 
 #### lint の実行と auto-fix による修正

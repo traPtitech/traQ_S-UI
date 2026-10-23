@@ -20,7 +20,9 @@
     <AIcon
       v-else-if="stampSet.type === 'history'"
       mdi
-      :name="stampRecommendation ? 'creation' : 'history'"
+      :name="
+        featureFlags.stamp_recommendation_v2.enabled ? 'creation' : 'history'
+      "
       :size="24"
       :class="$style.icon"
     />
@@ -30,7 +32,7 @@
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
-import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import type { StampPaletteId } from '/@/types/entity-ids'
 
@@ -51,7 +53,7 @@ const emit = defineEmits<{
 }>()
 
 const { stampPalettesMap } = useStampPalettesStore()
-const { stampRecommendation } = useBrowserSettings()
+const { featureFlags } = useFeatureFlagSettings()
 const pickThumbnail = (paletteId: StampPaletteId) => {
   const palette = stampPalettesMap.value.get(paletteId)
   if (!palette) return ''
