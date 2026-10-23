@@ -61,7 +61,7 @@ type CommandPalettePresentation = {
 const useCommandPalettePinia = defineStore('app/commandPalette', () => {
   const { parseQuery } = useQueryParser()
 
-  /** 表示モード */
+  /** パレットの表示状態とフォーカス先 */
   const presentation = ref<CommandPalettePresentation>()
 
   /** 決定された入力内容 */
