@@ -91,28 +91,39 @@ $ npm run test:unit
 
 #### e2e テスト実行
 
-Playwright を使用します。初回は Chromium をインストールしてください。
+Playwright と専用の traQ・MariaDB を使用します。Docker Engine と Docker Compose v2 を起動し、初回は Chromium をインストールしてください。
 
 ```shell
 $ npx playwright install chromium
-```
-
-環境変数 `E2E_USERNAME` と `E2E_PASSWORD` に開発用サーバーの認証情報を設定してください。
-既存の `general`・`ci-e2e-test` チャンネルを使用し、後者にテスト用メッセージを投稿します。
-
-```shell
 $ npm run test:e2e
 ```
 
-ビルド後に Playwright の UI mode を開きます。
+ビルド後に専用バックエンドとプレビューサーバーを起動し、Playwright の UI mode を開きます。
+開発用サーバーのアカウントや既存チャンネルの準備は不要です。
+認証が必要な各テストで、API 経由でユーザー・チャンネル・初期メッセージを作成します。
+
 `npm run test:e2e-headless` ではヘッドレスで実行できます。
-失敗時のスクリーンショットと Trace は `tests/e2e/results`、HTML レポートは `tests/e2e/report` に出力されます。
+終了時に専用コンテナと volume を削除します。テスト用データは次回に引き継ぎません。
+
+プレビューは `http://127.0.0.1:4173`、バックエンドは動的なローカルポートを使用します。
+4173 番ポートは空けておいてください。
+`E2E_BACKEND_URL` はランナーが設定する内部変数です。テストはローカルの HTTP 接続先のみ受け付けます。
+
+失敗時のスクリーンショットと Trace は `tests/e2e/results`、HTML レポートは `tests/e2e/report`、バックエンドのログは `tests/e2e/logs` に出力されます。
+CI ではこれらを成果物として保存します。
 
 #### 再ビルドなしでの e2e テスト実行
 
 ```shell
 $ npm run test:e2e:only-run
 $ npm run test:e2e:only-run-headless
+```
+
+特定の spec だけを実行する場合は `--spec` を指定できます。
+この場合も専用のバックエンドは起動・破棄されます。
+
+```shell
+$ npm run test:e2e:only-run-headless -- --spec tests/e2e/specs/login.spec.ts
 ```
 
 #### lint の実行と auto-fix による修正
