@@ -10,6 +10,7 @@
       :class="$style.container"
       :data-is-mobile="$boolAttr(isMobile)"
       aria-label="コマンドパレット"
+      role="dialog"
     >
       <CommandPaletteInput ref="inputRef" />
       <hr v-if="supplementalViewType" :class="$style.separator" />
