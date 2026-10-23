@@ -106,7 +106,7 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
 
   const openCommandPalette = (
     newMode: CommandPaletteMode,
-    options?: OpenCommandPaletteOptions,
+    options?: OpenCommandPaletteOptions
   ) => {
     if (options?.initialInput !== undefined) {
       currentInput.value = options.initialInput
@@ -115,13 +115,14 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
       mode: newMode,
       focusTarget: options?.focusTarget ?? 'input'
     }
-
   }
   const closeCommandPalette = () => {
     presentation.value = undefined
   }
 
-  const isCommandPaletteShown = computed(() => presentation.value?.mode !== undefined)
+  const isCommandPaletteShown = computed(
+    () => presentation.value?.mode !== undefined
+  )
 
   const settleQuery = async () => {
     const { normalizedQuery } = await parseQuery(currentInput.value)

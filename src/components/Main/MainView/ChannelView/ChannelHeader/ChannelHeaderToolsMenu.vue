@@ -46,7 +46,7 @@
       icon-name="search"
       icon-mdi
       label="チャンネル内検索"
-      @click="openCommandPalette('search', {initialInput: 'in:here '})"
+      @click="openCommandPalette('search', { initialInput: 'in:here ' })"
       @click-item="emit('clickItem')"
     />
     <HeaderToolsMenuItem
