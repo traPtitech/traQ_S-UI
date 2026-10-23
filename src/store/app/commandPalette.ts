@@ -46,11 +46,23 @@ type IndexedDBState = {
   searchHistories: string[]
 }
 
+export type CommandPaletteFocusTarget = 'input' | 'palette'
+
+type OpenCommandPaletteOptions = {
+  initialInput?: string
+  focusTarget?: CommandPaletteFocusTarget
+}
+
+type CommandPalettePresentation = {
+  mode: CommandPaletteMode
+  focusTarget: CommandPaletteFocusTarget
+}
+
 const useCommandPalettePinia = defineStore('app/commandPalette', () => {
   const { parseQuery } = useQueryParser()
 
   /** 表示モード */
-  const mode = ref<CommandPaletteMode>()
+  const presentation = ref<CommandPalettePresentation>()
 
   /** 決定された入力内容 */
   const query = ref('')
@@ -94,18 +106,22 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
 
   const openCommandPalette = (
     newMode: CommandPaletteMode,
-    initialInput = ''
+    options?: OpenCommandPaletteOptions,
   ) => {
-    mode.value = newMode
-    if (initialInput !== '') {
-      currentInput.value = initialInput
+    if (options?.initialInput !== undefined) {
+      currentInput.value = options.initialInput
     }
+    presentation.value = {
+      mode: newMode,
+      focusTarget: options?.focusTarget ?? 'input'
+    }
+
   }
   const closeCommandPalette = () => {
-    mode.value = undefined
+    presentation.value = undefined
   }
 
-  const isCommandPaletteShown = computed(() => mode.value !== undefined)
+  const isCommandPaletteShown = computed(() => presentation.value?.mode !== undefined)
 
   const settleQuery = async () => {
     const { normalizedQuery } = await parseQuery(currentInput.value)
@@ -147,7 +163,7 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
 
   return {
     ...toRefs(state),
-    mode,
+    presentation,
     query,
     currentInput,
     currentScrollTop,
