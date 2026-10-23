@@ -86,7 +86,10 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
       }
 
       if (cacheStrategy === 'forceFetch') {
-        return fetchUserGroup({ userGroupId: existing.id })
+        return fetchUserGroup({
+          userGroupId: existing.id,
+          cacheStrategy: 'forceFetch'
+        })
       }
     }
 
@@ -102,7 +105,7 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
     }
 
     // それでもなかったら、グループ全体を再取得する
-    await fetchUserGroups()
+    await fetchUserGroups({ ignoreCache: true })
     return getUserGroupByName(userGroupName)
   }
 
