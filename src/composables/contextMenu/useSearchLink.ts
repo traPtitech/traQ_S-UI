@@ -13,7 +13,7 @@ const useSearchLink = (messageId: Ref<MessageId>) => {
     resetPaging()
     currentInput.value = link
     await settleQuery()
-    openCommandPalette('search', {focusTarget: 'palette'})
+    openCommandPalette('search', { focusTarget: 'palette' })
   }
   return { searchLink }
 }

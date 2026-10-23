@@ -67,7 +67,8 @@ const useStyles = (
   })
 
 const useCommandPaletteShortcutKey = () => {
-  const { presentation, openCommandPalette, closeCommandPalette } = useCommandPalette()
+  const { presentation, openCommandPalette, closeCommandPalette } =
+    useCommandPalette()
 
   const isSearchEnabled = window.traQConfig.enableSearch ?? false
 
@@ -89,7 +90,7 @@ const useCommandPaletteShortcutKey = () => {
         if (presentation.value?.mode === 'search') {
           closeCommandPalette()
         } else {
-          openCommandPalette('search', {initialInput: 'in:here '})
+          openCommandPalette('search', { initialInput: 'in:here ' })
         }
         return
       }

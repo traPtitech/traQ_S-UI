@@ -4,7 +4,13 @@
     unable-while-modal-open
     @click-outside="closeCommandPalette"
   >
-    <div ref="paletteRef" tabindex="-1" :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
+    <div
+      ref="paletteRef"
+      tabindex="-1"
+      :class="$style.container"
+      :data-is-mobile="$boolAttr(isMobile)"
+      aria-label="コマンドパレット"
+    >
       <CommandPaletteInput ref="inputRef" />
       <hr v-if="supplementalViewType" :class="$style.separator" />
       <SearchResult v-if="supplementalViewType === 'search-result'" />
@@ -21,7 +27,10 @@ import { computed, useTemplateRef, watchPostEffect } from 'vue'
 
 import ClickOutside from '/@/components/UI/ClickOutside'
 import useResponsive from '/@/composables/useResponsive'
-import { useCommandPalette, type CommandPaletteFocusTarget } from '/@/store/app/commandPalette'
+import {
+  type CommandPaletteFocusTarget,
+  useCommandPalette
+} from '/@/store/app/commandPalette'
 
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import SearchResult from './SearchResult.vue'
@@ -59,7 +68,6 @@ watchPostEffect(() => {
     focus(presentation.value.focusTarget)
   }
 })
-
 </script>
 
 <style lang="scss" module>
