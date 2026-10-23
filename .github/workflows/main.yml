@@ -191,11 +191,11 @@ jobs:
   test-e2e:
     name: run test:e2e
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: [packages]
     permissions:
       contents: read
 
-    if: (github.repository_owner == 'traPtitech' && github.actor != 'dependabot[bot]')
     steps:
       - name: checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -221,14 +221,11 @@ jobs:
 
       - name: run test:e2e
         run: npm run test:e2e-headless
-        if: env.E2E_USERNAME != null
-        env:
-          E2E_USERNAME: ${{ secrets.traQ_username }}
-          E2E_PASSWORD: ${{ secrets.traQ_password }}
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: playwright-results
           path: |
             ./tests/e2e/results
             ./tests/e2e/report
+            ./tests/e2e/logs
         if: ${{ failure() }}
