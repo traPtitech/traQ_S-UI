@@ -2,8 +2,12 @@
   <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
     <div :class="$style.inputContainer">
       <div :class="$style.icon">
-        <AIcon v-if="mode === 'search'" mdi name="search" />
-        <AIcon v-else-if="mode === 'command'" mdi name="code-grater-than" />
+        <AIcon v-if="presentation?.mode === 'search'" mdi name="search" />
+        <AIcon
+          v-else-if="presentation?.mode === 'command'"
+          mdi
+          name="code-grater-than"
+        />
       </div>
       <input
         ref="inputRef"
@@ -25,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, shallowRef, watch } from 'vue'
+import { computed, shallowRef } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
@@ -34,38 +38,30 @@ import { useCommandPalette } from '/@/store/app/commandPalette'
 
 const { isMobile } = useResponsive()
 const inputRef = shallowRef<HTMLInputElement | null>(null)
+
 const focus = () => {
   inputRef.value?.focus()
 }
-onMounted(() => {
-  focus()
-})
+defineExpose({ focus })
 
-const { mode, currentInput, settleQuery, closeCommandPalette } =
+const { presentation, currentInput, settleQuery, closeCommandPalette } =
   useCommandPalette()
-
-watch(currentInput, () => {
-  // 外から入力が変更された場合フォーカスを当てる
-  if (document.activeElement !== inputRef.value) {
-    inputRef.value?.focus()
-  }
-})
 
 const onEsc = () => {
   currentInput.value = ''
 }
 
 const onEnter = () => {
-  if (mode.value === 'command') {
+  if (presentation.value?.mode === 'command') {
     // exec command
   }
-  if (mode.value === 'search') {
+  if (presentation.value?.mode === 'search') {
     settleQuery()
   }
 }
 
 const placeholder = computed(() => {
-  switch (mode.value) {
+  switch (presentation.value?.mode) {
     case 'command':
       return 'コマンドを入力'
     case 'search':
