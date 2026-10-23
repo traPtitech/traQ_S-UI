@@ -35,6 +35,7 @@ const abort = new AbortController()
 let activeChild
 let server
 let composeStarted = false
+let composeCleanup
 let failed = true
 
 const interrupt = signal => {
@@ -71,7 +72,7 @@ const run = (
       stdio: capture ? ['ignore', 'pipe', 'inherit'] : 'inherit'
     })
 
-    activeChild = child
+    if (!cleanup) activeChild = child
     let output = ''
 
     child.stdout?.on('data', chunk => {
@@ -81,7 +82,7 @@ const run = (
     child.once('error', reject)
 
     child.once('close', code => {
-      activeChild = undefined
+      if (activeChild === child) activeChild = undefined
       if (code === 0) resolve(output.trim())
       else reject(new Error(`${command} ${args.join(' ')} exited with ${code}`))
     })
@@ -89,6 +90,42 @@ const run = (
 
 const compose = (args, options) =>
   run('docker', [...composeArgs, ...args], options)
+
+const cleanupCompose = () => {
+  if (!composeStarted) return
+
+  composeCleanup ??= (async () => {
+    if (failed) {
+      try {
+        const logs = await compose(['logs', '--no-color', '--timestamps'], {
+          capture: true,
+          cleanup: true
+        })
+
+        const logDir = path.join(root, 'tests/e2e/logs')
+        await mkdir(logDir, { recursive: true })
+
+        const logFile = path.join(logDir, `${project}.log`)
+        await writeFile(logFile, logs)
+
+        console.error(`E2E backend logs: ${logFile}`)
+      } catch (error) {
+        console.error('Failed to collect E2E backend logs:', error)
+      }
+    }
+
+    try {
+      await compose(['down', '--volumes', '--remove-orphans'], {
+        cleanup: true
+      })
+    } catch (error) {
+      console.error('Failed to remove the E2E environment:', error)
+      process.exitCode ||= 1
+    }
+  })()
+
+  return composeCleanup
+}
 
 try {
   const dockerVersion = await run(
@@ -121,6 +158,13 @@ try {
   server = await preview({
     root,
     mode: 'e2e',
+    plugins: [
+      {
+        name: 'e2e-backend-cleanup',
+        // Vite exits on SIGTERM, so its close hook must also await teardown.
+        closePreviewServer: cleanupCompose
+      }
+    ],
     preview: {
       host: '127.0.0.1',
       port: Number(new URL(frontendOrigin).port),
@@ -151,35 +195,7 @@ try {
     }
   }
 
-  if (composeStarted) {
-    if (failed) {
-      try {
-        const logs = await compose(['logs', '--no-color', '--timestamps'], {
-          capture: true,
-          cleanup: true
-        })
-
-        const logDir = path.join(root, 'tests/e2e/logs')
-        await mkdir(logDir, { recursive: true })
-
-        const logFile = path.join(logDir, `${project}.log`)
-        await writeFile(logFile, logs)
-
-        console.error(`E2E backend logs: ${logFile}`)
-      } catch (error) {
-        console.error('Failed to collect E2E backend logs:', error)
-      }
-    }
-
-    try {
-      await compose(['down', '--volumes', '--remove-orphans'], {
-        cleanup: true
-      })
-    } catch (error) {
-      console.error('Failed to remove the E2E environment:', error)
-      process.exitCode ||= 1
-    }
-  }
+  await cleanupCompose()
 
   process.removeListener('SIGINT', interrupt)
   process.removeListener('SIGTERM', interrupt)
