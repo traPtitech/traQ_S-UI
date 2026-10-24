@@ -122,8 +122,6 @@ describe('useSuggester', () => {
   test('channels', async () => {
     const $textarea = document.createElement('textarea')
     // jsdom では要素が DOM に追加されていないと focus() が正しく動作しない．
-    // text-field-edit は execCommand を呼び出す前に focus() を呼び出すため，
-    // textarea を DOM に追加する必要がある
     document.body.appendChild($textarea)
 
     const [{ suggestedCandidates, onKeyUp, onKeyDown }] =
