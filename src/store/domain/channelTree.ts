@@ -4,6 +4,7 @@ import mitt from 'mitt'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import { channelIdToPathString } from '/@/lib/channel'
+import { createShortPathResolver } from '/@/lib/channelShortPath'
 import type { ChannelTree } from '/@/lib/channelTree'
 import { constructTree, rootChannelId } from '/@/lib/channelTree'
 import router, { rewriteChannelPath } from '/@/router'
@@ -47,6 +48,14 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
   const topLevelChannels = computed(() =>
     [...channelsStore.channelsMap.value.values()].filter(
       channel => channel.parentId === undefined || channel.parentId === null
+    )
+  )
+  // 中身の差し替え (チャンネルの追加・更新・削除) だけを追跡し、各チャンネルのプロパティは追跡しない
+  const channelIdToShortPath = computed(() =>
+    createShortPathResolver(
+      new Map(
+        [...channelsStore.channelsMap.value].map(([id, c]) => [id, toRaw(c)])
+      )
     )
   )
   const forcedChannels = computed(() =>
@@ -175,7 +184,13 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
     { deep: true }
   )
 
-  return { channelTree, homeChannelTree, starredChannelTree, topLevelChannels }
+  return {
+    channelTree,
+    homeChannelTree,
+    starredChannelTree,
+    topLevelChannels,
+    channelIdToShortPath
+  }
 })
 
 export const useChannelTree = convertToRefsStore(useChannelTreePinia)
