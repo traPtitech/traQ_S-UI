@@ -29,6 +29,7 @@
       <MessageInputFileList
         :class="$style.fileList"
         channel-id="share-target"
+        :is-posting="props.isPosting"
       />
     </div>
   </div>
@@ -50,6 +51,15 @@ import { useToastStore } from '/@/store/ui/toast'
 
 import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
 import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
+
+const props = withDefaults(
+  defineProps<{
+    isPosting?: boolean
+  }>(),
+  {
+    isPosting: false
+  }
+)
 
 const { fetchStampHistory } = useStampHistory()
 const { fetchStampRecommendations } = useStampRecommendations()
