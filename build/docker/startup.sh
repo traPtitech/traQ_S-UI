@@ -23,7 +23,7 @@ fi
 ###
 echo "Startup: set app name to $APP_NAME"
 sed -i -e "s/<title>traQ<\/title>/<title>$APP_NAME<\/title>/" /usr/share/caddy/index.html
-sed -i -e "s/\"name\":\"traQ\",\"short_name\":\"traQ\"/\"name\":\"$APP_NAME\",\"short_name\":\"$APP_NAME\"/" /usr/share/caddy/site.webmanifest
+sed -i -e "s/\"name\":\"traQ\",\"short_name\":\"traQ\"/\"name\":\"$APP_NAME\",\"short_name\":\"$APP_NAME\"/" /usr/share/caddy/manifest.webmanifest
 
 ###
 # テーマ色設定
