@@ -41,7 +41,8 @@ childProcess.spawn = (command, args, options) => {
       process.execPath,
       [
         '-e',
-        `setTimeout(() => process.stdout.write(${JSON.stringify(output)}), 100)`
+        'setTimeout(() => process.stdout.write(process.argv[1]), 100)',
+        output
       ],
       options
     )

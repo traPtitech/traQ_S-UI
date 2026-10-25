@@ -7,7 +7,14 @@ import { nilUuid } from '/@/lib/basic/uuid'
 const EMBEDDING_ORIGIN = 'https://q.example.com'
 
 vi.mock('/@/lib/markdown/markdown', () => ({
-  isEmbeddedLink: vi.fn((text: string) => text.startsWith(EMBEDDING_ORIGIN))
+  isEmbeddedLink: vi.fn((text: string) => {
+    try {
+      const url = new URL(text)
+      return url.protocol === 'http:' || url.protocol === 'https:'
+    } catch {
+      return false
+    }
+  })
 }))
 
 describe('usePostMessage', () => {
@@ -94,6 +101,18 @@ const TEST_CASES: TestCase[] = [
     input: LINK,
     files: FILES,
     expected: `${LINK}\n${FILE_LINKS}`
+  },
+  {
+    description: 'lookalike origin + files',
+    input: `${EMBEDDING_ORIGIN}.example.net/files/${nilUuid}`,
+    files: FILES,
+    expected: `${EMBEDDING_ORIGIN}.example.net/files/${nilUuid}\n${FILE_LINKS}`
+  },
+  {
+    description: 'origin in credentials + files',
+    input: `${EMBEDDING_ORIGIN}@example.net/files/${nilUuid}`,
+    files: FILES,
+    expected: `${EMBEDDING_ORIGIN}@example.net/files/${nilUuid}\n${FILE_LINKS}`
   },
   {
     description: 'text + link + files',
