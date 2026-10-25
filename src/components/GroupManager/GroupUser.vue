@@ -85,8 +85,14 @@ const user = computed(() => usersMap.value.get(props.id))
     opacity: 1;
   }
 }
+.controls:has(.controlIcon:focus-visible) {
+  opacity: 1;
+}
+
 .controlIcon {
   @include color-ui-secondary-inactive;
+  display: flex;
+  align-items: center;
   cursor: pointer;
   &:hover {
     @include color-ui-secondary;
@@ -94,6 +100,11 @@ const user = computed(() => usersMap.value.get(props.id))
   &:disabled {
     cursor: not-allowed;
     @include color-ui-secondary-inactive;
+  }
+  &:focus {
+    @include color-ui-secondary;
+    outline: 2px solid #6698aa;
+    outline-offset: 2px;
   }
 }
 </style>
