@@ -37,7 +37,6 @@ const insertSpaceOverride = <
     const confirmed = toValue(input.confirmedPart)
     return (
       confirmed.startsWith(':') ||
-      confirmed.startsWith('#') ||
       confirmed.startsWith('@')
     )
   })
