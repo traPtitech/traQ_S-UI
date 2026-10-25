@@ -28,7 +28,11 @@
       <span :class="$style.text" @click="withClose(copyLink)">
         メッセージリンクをコピー
       </span>
-      <span :class="$style.text" @click="withClose(searchLink)">
+      <span
+        v-if="enableSearch"
+        :class="$style.text"
+        @click="withClose(searchLink)"
+      >
         引用を検索
       </span>
       <span
@@ -134,7 +138,7 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const { showWidgetCopyButton } = window.traQConfig
+const { showWidgetCopyButton, enableSearch } = window.traQConfig
 
 const messageId = toRef(props, 'messageId')
 const { myId } = useMeStore()
