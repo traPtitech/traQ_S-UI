@@ -85,6 +85,30 @@ describe('getDisplayDate', () => {
     vi.setSystemTime('2010-05-03T15:00:00')
     expect(getDateRepresentation(dateISO)).toBe('昨日 14:28')
   })
+
+  describe('with daylight saving time', () => {
+    beforeEach(() => {
+      vi.stubEnv('TZ', 'America/New_York')
+    })
+    afterEach(() => {
+      vi.unstubAllEnvs()
+    })
+
+    it('should say 昨日 after a 23-hour day', () => {
+      vi.setSystemTime(new Date(2025, 2, 10))
+      expect(getDateRepresentation(new Date(2025, 2, 9, 12, 34))).toBe(
+        '昨日 12:34'
+      )
+    })
+
+    it('should say 昨日 during a 25-hour day', () => {
+      vi.setSystemTime(new Date(2025, 10, 2, 23, 30))
+      expect(getDateRepresentation(new Date(2025, 10, 1, 12, 34))).toBe(
+        '昨日 12:34'
+      )
+    })
+  })
+
   it('should get MM/DD when updated in the same year', () => {
     vi.setSystemTime('2010-07-07T15:00:00')
     expect(getDateRepresentation(dateISO)).toBe('05/02 14:28')
