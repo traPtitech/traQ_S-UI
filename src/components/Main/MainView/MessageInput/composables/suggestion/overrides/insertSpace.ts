@@ -35,10 +35,7 @@ const insertSpaceOverride = <
 ) => {
   const shouldInsertSpaces = computed(() => {
     const confirmed = toValue(input.confirmedPart)
-    return (
-      confirmed.startsWith(':') ||
-      confirmed.startsWith('@')
-    )
+    return confirmed.startsWith(':') || confirmed.startsWith('@')
   })
 
   const onSelect = (word: WordWithId) => {
