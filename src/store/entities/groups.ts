@@ -73,7 +73,7 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
     userGroupName: string
     cacheStrategy?: CacheStrategy
   }): Promise<UserGroup | undefined> => {
-    // userNameが空のものは存在しないので弾く
+    // userGroupNameが空のものは存在しないので弾く
     if (userGroupName === '') {
       return undefined
     }
@@ -81,21 +81,18 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
     const existing = getUserGroupByName(userGroupName)
 
     if (existing) {
-      if (cacheStrategy === 'useCache') {
-        return existing
-      }
-
       if (cacheStrategy === 'forceFetch') {
         return fetchUserGroup({
           userGroupId: existing.id,
           cacheStrategy: 'forceFetch'
         })
       }
+      return existing
     }
 
     // キャッシュに存在してなかったかつ、全取得が完了してない場合は
     // 全取得を待って含まれてるか確認する
-    if (!userGroupsMapFetched.value) {
+    if (!userGroupsMapFetched.value && cacheStrategy === 'waitForAllFetch') {
       await userGroupsMapInitialFetchPromise
 
       const res = getUserGroupByName(userGroupName)
