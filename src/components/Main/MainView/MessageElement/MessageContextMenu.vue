@@ -29,6 +29,13 @@
         メッセージリンクをコピー
       </span>
       <span
+        v-if="enableSearch"
+        :class="$style.text"
+        @click="withClose(searchLink)"
+      >
+        引用を検索
+      </span>
+      <span
         v-if="showWidgetCopyButton"
         :class="$style.text"
         @click="withClose(copyEmbedded)"
@@ -55,6 +62,7 @@ import { computed, toRef } from 'vue'
 
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
 import usePinToggler from '/@/composables/contextMenu/usePinToggler'
+import useSearchLink from '/@/composables/contextMenu/useSearchLink'
 import useCopyText from '/@/composables/toast/useCopyText'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import apis from '/@/lib/apis'
@@ -130,7 +138,7 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const { showWidgetCopyButton } = window.traQConfig
+const { showWidgetCopyButton, enableSearch } = window.traQConfig
 
 const messageId = toRef(props, 'messageId')
 const { myId } = useMeStore()
@@ -142,6 +150,7 @@ const isMine = computed(
 )
 
 const { copyLink, copyEmbedded } = useCopyLink(messageId)
+const { searchLink } = useSearchLink(messageId)
 const { copyMd } = useCopyMd(messageId)
 const { addPinned, removePinned } = usePinToggler(messageId)
 const { editMessage, deleteMessage } = useMessageChanger(messageId)

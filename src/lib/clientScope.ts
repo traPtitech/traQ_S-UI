@@ -1,7 +1,12 @@
 import { OAuth2Scope } from '@traptitech/traq'
 
+// TODO: @traptitech/traq の OAuth2Scope に qall が追加されたら KnownScope を OAuth2Scope にする
+type QallScope = 'qall'
+
+export type KnownScope = OAuth2Scope | QallScope
+
 export const scopeInfoMap: Record<
-  OAuth2Scope,
+  KnownScope,
   { name: string; permissions: string[] }
 > = {
   [OAuth2Scope.Openid]: {
@@ -70,5 +75,17 @@ export const scopeInfoMap: Record<
       'Clientの情報の取得',
       'Clientの作成/編集/削除'
     ]
+  },
+  qall: {
+    name: '通話 (Qall)',
+    permissions: [
+      'Qallの通話への参加',
+      '全ユーザーの通話参加状況の取得',
+      '通話ルーム情報・参加者の発言権の変更',
+      'サウンドボードの利用/追加'
+    ]
   }
 }
+
+export const isKnownScope = (scope: string): scope is KnownScope =>
+  Object.hasOwn(scopeInfoMap, scope)

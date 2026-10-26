@@ -2,11 +2,19 @@ import { createTestingPinia } from '@pinia/testing'
 import { vi } from 'vitest'
 
 import { createContent } from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
-import { buildFilePathForPost, embeddingOrigin } from '/@/lib/apis'
 import { nilUuid } from '/@/lib/basic/uuid'
 
+const EMBEDDING_ORIGIN = 'https://q.example.com'
+
 vi.mock('/@/lib/markdown/markdown', () => ({
-  isEmbeddedLink: vi.fn((text: string) => text.startsWith(embeddingOrigin))
+  isEmbeddedLink: vi.fn((text: string) => {
+    try {
+      const url = new URL(text)
+      return url.protocol === 'http:' || url.protocol === 'https:'
+    } catch {
+      return false
+    }
+  })
 }))
 
 describe('usePostMessage', () => {
@@ -24,7 +32,7 @@ describe('usePostMessage', () => {
 
 const FILES = ['fileUrl1', 'fileUrl2']
 const FILE_LINKS = FILES.join('\n')
-const LINK = buildFilePathForPost(nilUuid)
+const LINK = `${EMBEDDING_ORIGIN}/files/${nilUuid}`
 const LINE_BREAKS = '\n\n\n\n\n'
 const SPACES = '     '
 
@@ -93,6 +101,18 @@ const TEST_CASES: TestCase[] = [
     input: LINK,
     files: FILES,
     expected: `${LINK}\n${FILE_LINKS}`
+  },
+  {
+    description: 'lookalike origin + files',
+    input: `${EMBEDDING_ORIGIN}.example.net/files/${nilUuid}`,
+    files: FILES,
+    expected: `${EMBEDDING_ORIGIN}.example.net/files/${nilUuid}\n${FILE_LINKS}`
+  },
+  {
+    description: 'origin in credentials + files',
+    input: `${EMBEDDING_ORIGIN}@example.net/files/${nilUuid}`,
+    files: FILES,
+    expected: `${EMBEDDING_ORIGIN}@example.net/files/${nilUuid}\n${FILE_LINKS}`
   },
   {
     description: 'text + link + files',

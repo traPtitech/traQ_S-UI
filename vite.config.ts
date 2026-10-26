@@ -12,6 +12,7 @@ import GithubActionsReporter from 'vitest-github-actions-reporter'
 
 import { DEV_SERVER_PROXY_HOST } from './dev.config'
 import packageJson from './package.json'
+import { getBackendOrigin } from './tests/e2e/config'
 import webManifest from './webmanifest'
 
 const keepAliveAgent = new HttpsAgent({ keepAlive: true })
@@ -48,7 +49,25 @@ export default defineConfig(({ mode }) => ({
         agent: keepAliveAgent
       }
     },
-    ...localhostCerts
+    ...(mode === 'e2e' ? {} : localhostCerts)
+  },
+  preview: {
+    ...(mode === 'e2e'
+      ? {
+          proxy: {
+            '/api/v3': {
+              target: getBackendOrigin(),
+              changeOrigin: true,
+              ws: true
+            },
+            '/api/auth': {
+              target: getBackendOrigin(),
+              changeOrigin: true,
+              ws: true
+            }
+          }
+        }
+      : {})
   },
   build: {
     rollupOptions: {

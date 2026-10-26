@@ -13,13 +13,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { OAuth2Scope } from '@traptitech/traq'
+import type { KnownScope } from '/@/lib/clientScope'
 
 import ClientScope from './ClientScope.vue'
 
 withDefaults(
   defineProps<{
-    scopes?: OAuth2Scope[]
+    scopes?: KnownScope[]
   }>(),
   {
     scopes: () => []

@@ -1,6 +1,6 @@
 {
   "name": "traq_s-ui",
-  "version": "3.33.12",
+  "version": "3.33.14",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,32 +13,37 @@
     "gen-unicode_emojis": "tsx build/gen-unicode_emojis.ts",
     "generate-schema": "node scripts/generate-schema.js",
     "husky:prepare": "husky",
-    "postinstall": "patch-package",
+    "postinstall": "node scripts/patch-dependencies.js",
     "lint": "eslint --fix --cache .",
     "lint:no-fix": "eslint --cache .",
     "localhost-certs:gen": "./build/gen-localhost-certs.sh",
     "localhost-certs:rem": "rm -rf ./.certs",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
     "preview:with-build": "npm run build && npm run preview",
-    "test:e2e": "npm run build && npm run test:e2e:only-run",
-    "test:e2e:only-run": "cypress install && start-server-and-test preview 4173 'cypress open --e2e'",
-    "test:e2e:only-run-headless": "cypress install && start-server-and-test preview 4173 'cypress run --headless'",
-    "test:e2e-headless": "npm run build:may-with-font && npm run test:e2e:only-run-headless",
+    "test:e2e": "node scripts/run-e2e.mjs --build --ui",
+    "test:e2e:only-run": "node scripts/run-e2e.mjs --ui",
+    "test:e2e:only-run-headless": "node scripts/run-e2e.mjs",
+    "test:e2e-headless": "node scripts/run-e2e.mjs --build",
     "test:unit": "vitest run --coverage",
     "test:unit:watch": "vitest -w",
-    "type-check": "patch-package && npm run type-check:src && npm run type-check:test",
+    "type-check": "node scripts/patch-dependencies.js && npm run type-check:src && npm run type-check:test",
     "type-check:src": "vue-tsc --noEmit",
     "type-check:test": "tsc --noEmit --project tests/unit/tsconfig.json && tsc --noEmit --project tests/e2e/tsconfig.json"
   },
   "overrides": {
     "@actions/core": "3.0.1",
+    "@grpc/grpc-js": "1.13.6",
     "@types/vue-select": {
       "vue": "$vue"
     },
+    "fast-uri": "3.1.9",
     "js-beautify": {
       "glob": "13.0.6"
     },
+    "katex": "$katex",
     "qs": "6.16.0",
+    "serialize-javascript": "7.1.4",
+    "source-map-js": "1.2.2",
     "workbox-build": {
       "glob": "13.0.6"
     }
@@ -58,6 +63,7 @@
     "firebase": "12.15.0",
     "highlight.js": "11.12.0",
     "idb-keyval": "6.3.0",
+    "katex": "0.18.2",
     "livekit-client": "2.21.0",
     "mitt": "3.0.1",
     "party-js": "2.2.0",
@@ -71,12 +77,13 @@
     "vue-router": "5.2.0",
     "vue-select": "4.0.0-beta.6",
     "vue-slider-component": "4.0.0-beta.9",
-    "zod": "4.4.3"
+    "zod": "4.6.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.7",
     "@eslint/js": "10.0.1",
     "@pinia/testing": "2.0.1",
+    "@playwright/test": "1.64.0",
     "@stylistic/eslint-plugin": "5.10.0",
     "@trivago/prettier-plugin-sort-imports": "6.0.2",
     "@types/autosize": "4.0.3",
@@ -95,14 +102,12 @@
     "@typescript-eslint/parser": "8.70.1",
     "@typescript/lib-dom": "npm:@types/web@0.0.350",
     "@vitejs/plugin-vue": "6.0.9",
-    "@vitest/coverage-v8": "4.1.11",
+    "@vitest/coverage-v8": "4.1.12",
     "@vue/test-utils": "2.4.11",
     "axios": "1.20.0",
     "browserslist": "4.28.8",
-    "cypress": "15.21.1",
     "eslint": "10.11.0",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-cypress": "7.0.2",
     "eslint-plugin-unused-imports": "4.4.1",
     "eslint-plugin-vue": "10.11.1",
     "fake-indexeddb": "6.2.5",
@@ -112,20 +117,18 @@
     "jsdom": "30.1.1",
     "lightningcss": "1.33.0",
     "lint-staged": "17.2.0",
-    "patch-package": "8.0.1",
     "pinia": "4.0.3",
     "postcss": "8.5.28",
     "prettier": "3.9.9",
     "rollup-plugin-brotli": "3.1.0",
     "sass": "1.102.0",
-    "start-server-and-test": "3.0.12",
     "ts-json-schema-generator": "2.9.0",
     "tsx": "4.23.15",
     "typescript": "6.0.3",
-    "vite": "8.1.3",
+    "vite": "8.3.5",
     "vite-plugin-pwa": "1.3.0",
     "vite-svg-loader": "5.1.3",
-    "vitest": "4.1.11",
+    "vitest": "4.1.12",
     "vitest-github-actions-reporter": "0.11.1",
     "vue-tsc": "3.3.11",
     "workbox-cacheable-response": "7.4.1",
@@ -136,7 +139,7 @@
     "workbox-strategies": "7.4.1"
   },
   "engines": {
-    "node": ">=26.4",
+    "node": ">=26.12.1",
     "npm": ">=11.17"
   }
 }

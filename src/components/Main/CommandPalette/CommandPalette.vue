@@ -4,41 +4,70 @@
     unable-while-modal-open
     @click-outside="closeCommandPalette"
   >
-    <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
-      <CommandPaletteInput />
+    <div
+      ref="paletteRef"
+      tabindex="-1"
+      :class="$style.container"
+      :data-is-mobile="$boolAttr(isMobile)"
+      aria-label="コマンドパレット"
+      role="dialog"
+    >
+      <CommandPaletteInput ref="inputRef" />
       <hr v-if="supplementalViewType" :class="$style.separator" />
       <SearchResult v-if="supplementalViewType === 'search-result'" />
       <SearchSuggestion
         v-else-if="supplementalViewType === 'search-suggestion'"
+        @request-input-focus="focus('input')"
       />
     </div>
   </ClickOutside>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, useTemplateRef, watchPostEffect } from 'vue'
 
 import ClickOutside from '/@/components/UI/ClickOutside'
 import useResponsive from '/@/composables/useResponsive'
-import { useCommandPalette } from '/@/store/app/commandPalette'
+import {
+  type CommandPaletteFocusTarget,
+  useCommandPalette
+} from '/@/store/app/commandPalette'
 
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import SearchResult from './SearchResult.vue'
 import SearchSuggestion from './SearchSuggestion.vue'
 
 const { isMobile } = useResponsive()
-const { mode, query, closeCommandPalette } = useCommandPalette()
+const { presentation, query, closeCommandPalette } = useCommandPalette()
 
 type SupplementalViewType = 'search-result' | 'search-suggestion' | undefined
 
 const supplementalViewType = computed((): SupplementalViewType => {
-  if (mode.value === 'search' && query.value.length > 0) {
+  if (presentation.value?.mode === 'search' && query.value.length > 0) {
     return 'search-result'
   }
-  if (mode.value === 'search') {
+  if (presentation.value?.mode === 'search') {
     return 'search-suggestion'
   }
   return undefined
+})
+
+const focus = (target: CommandPaletteFocusTarget) => {
+  if (target === 'input') {
+    inputRef.value?.focus()
+  }
+  if (target === 'palette') {
+    paletteRef.value?.focus()
+  }
+}
+
+const inputRef = useTemplateRef('inputRef')
+const paletteRef = useTemplateRef('paletteRef')
+
+watchPostEffect(() => {
+  if (presentation.value?.focusTarget) {
+    focus(presentation.value.focusTarget)
+  }
 })
 </script>
 
