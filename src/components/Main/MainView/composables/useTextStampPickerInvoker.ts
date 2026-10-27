@@ -18,7 +18,7 @@ const useTextStampPickerInvoker = (
   const { stampsMap } = useStampsStore()
   const { insertText } = useInsertText(textareaRef)
 
-  const selecterHandler: StampSelectHandler = stampData => {
+  const selecterHandler: StampSelectHandler = (stampData, options) => {
     const stampName = stampsMap.value.get(stampData.id)?.name
     if (!stampName) return
 
@@ -33,7 +33,7 @@ const useTextStampPickerInvoker = (
       return
     }
 
-    insertText(stampText)
+    insertText(stampText, options)
   }
 
   const { isStampPickerShown } = useStampPicker()

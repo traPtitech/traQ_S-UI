@@ -1,7 +1,7 @@
 describe('shouldAutoFocus', () => {
-  const touchEndDescriptor = Object.getOwnPropertyDescriptor(
-    document,
-    'ontouchend'
+  const touchPointsDescriptor = Object.getOwnPropertyDescriptor(
+    navigator,
+    'maxTouchPoints'
   )
 
   beforeEach(() => {
@@ -10,31 +10,30 @@ describe('shouldAutoFocus', () => {
 
   afterEach(() => {
     vi.restoreAllMocks()
-    if (touchEndDescriptor) {
-      Object.defineProperty(document, 'ontouchend', touchEndDescriptor)
+    if (touchPointsDescriptor) {
+      Object.defineProperty(navigator, 'maxTouchPoints', touchPointsDescriptor)
     } else {
-      Reflect.deleteProperty(document, 'ontouchend')
+      Reflect.deleteProperty(navigator, 'maxTouchPoints')
     }
   })
 
   it.each([
-    ['desktop mouse', 'Windows NT 10.0', true, false, true],
-    ['narrow desktop', 'Windows NT 10.0', true, true, true],
-    ['wide touch PC', 'Windows NT 10.0', false, false, false],
-    ['iPad', 'iPad', false, false, false],
-    ['iPad with mouse', 'iPad', true, false, false],
-    ['Android with mouse', 'Android', true, false, false],
-    ['iPad desktop UA', 'Macintosh', true, false, false]
+    ['desktop mouse', 'Windows NT 10.0', true, false, 0, true],
+    ['narrow desktop', 'Windows NT 10.0', true, true, 0, true],
+    ['wide touch PC', 'Windows NT 10.0', false, false, 5, false],
+    ['iPad', 'iPad', false, false, 5, false],
+    ['iPad with mouse', 'iPad', true, false, 5, false],
+    ['Android with mouse', 'Android', true, false, 5, false],
+    ['iPad desktop UA', 'Macintosh', true, false, 5, false],
+    ['Mac', 'Macintosh', true, false, 0, true]
   ] as const)(
     'applies the autofocus policy on %s',
-    async (_, ua, hover, narrow, expected) => {
+    async (_, ua, hover, narrow, maxTouchPoints, expected) => {
       vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(ua)
-      if (ua === 'Macintosh') {
-        Object.defineProperty(document, 'ontouchend', {
-          value: null,
-          configurable: true
-        })
-      }
+      Object.defineProperty(navigator, 'maxTouchPoints', {
+        value: maxTouchPoints,
+        configurable: true
+      })
       vi.spyOn(window, 'matchMedia').mockImplementation(query => ({
         media: query,
         matches:

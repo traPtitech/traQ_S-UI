@@ -30,13 +30,13 @@ const useInsertText = (
   })
 
   return {
-    insertText: (text: string) => {
+    insertText: (text: string, { allowFocus = shouldAutoFocus() } = {}) => {
       const textarea = toValue(textareaRef)
       if (!textarea) return
 
       insertText(textarea, text, toValue(targetRef), {
         isComposing: isComposing.value,
-        allowFocus: shouldAutoFocus()
+        allowFocus
       })
     }
   }

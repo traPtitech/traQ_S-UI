@@ -121,4 +121,28 @@ describe('useTextStampPickerInvoker', () => {
     expect(picker.open).not.toHaveBeenCalled()
     expect(document.activeElement).toBe(textarea)
   })
+
+  it('honors the picker interaction even when the device is classified as a desktop', async () => {
+    vi.mocked(shouldAutoFocus).mockReturnValue(true)
+    const picker = await setup()
+    textarea.focus()
+    textarea.setSelectionRange(7, 7)
+    picker.openStampPicker()
+    const search = document.createElement('input')
+    document.body.appendChild(search)
+    search.focus()
+    const textareaFocus = vi.spyOn(textarea, 'focus')
+    const searchFocus = vi.spyOn(search, 'focus')
+    const execCommand = vi.spyOn(document, 'execCommand')
+    const select = vi.mocked(useStampPickerInvoker).mock.calls.at(-1)?.[0]
+
+    select?.({ id: 'stamp-id' }, { allowFocus: false })
+    vi.advanceTimersToNextFrame()
+
+    expect(picker.text.value).toBe('before :stamp:after')
+    expect(execCommand).not.toHaveBeenCalled()
+    expect(textareaFocus).not.toHaveBeenCalled()
+    expect(searchFocus).not.toHaveBeenCalled()
+    search.remove()
+  })
 })

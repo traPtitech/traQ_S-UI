@@ -1,6 +1,10 @@
 <template>
   <ClickOutside @click-outside="closeStampPicker">
-    <div :class="$style.container">
+    <div
+      :class="$style.container"
+      @pointerdown="allowSearchFocus = $event.pointerType === 'mouse'"
+      @keydown.capture="allowSearchFocus = true"
+    >
       <div :class="$style.inputContainer">
         <FilterInput
           ref="filterInputRef"
@@ -98,18 +102,23 @@ const { preselected, onHoverStamp } = useStampPreselector()
 const { recordStampUsage } = useStampRecommendations()
 
 const filterInputRef = ref<InstanceType<typeof FilterInput> | null>(null)
+const allowSearchFocus = ref(true)
 
 const onInputStamp = (id: StampId) => {
+  const allowFocus = allowSearchFocus.value && shouldAutoFocus()
   upsertLocalStampHistory(id, new Date())
   recordStampUsage(id)
-  selectHandler.value({
-    id,
-    sizeEffect: selectedSizeEffect.value,
-    animeEffects: selectedAnimeEffects.value
-  })
+  selectHandler.value(
+    {
+      id,
+      sizeEffect: selectedSizeEffect.value,
+      animeEffects: selectedAnimeEffects.value
+    },
+    { allowFocus }
+  )
   incrementAnimationKey(id)
 
-  if (shouldAutoFocus()) {
+  if (allowFocus) {
     filterInputRef.value?.focus()
   }
 }
