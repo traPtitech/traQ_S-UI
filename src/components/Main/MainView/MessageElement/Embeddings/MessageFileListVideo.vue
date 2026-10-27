@@ -2,7 +2,11 @@
   <div
     v-if="canShow"
     ref="container"
-    :class="[$style.container, isLoaded || $style.unload]"
+    :class="[
+      $style.container,
+      isLoaded || $style.unload,
+      (!hasPlayed || !isLoaded) && $style.thumbnail
+    ]"
   >
     <div :class="$style.overlay">
       <MessageFileListItemContent :file-id="fileId" is-white />
@@ -14,7 +18,9 @@
       preload="none"
       draggable="false"
       :src="fileRawPath"
+      :poster="filePosterPath"
       @canplay="onCanPlay"
+      @play="onPlay"
     />
   </div>
   <div v-else :class="$style.error">表示できない動画です</div>
@@ -38,12 +44,16 @@ const props = withDefaults(
   }
 )
 
-const { fileRawPath, canShow } = useFileMeta(props)
+const { fileRawPath, filePosterPath, canShow } = useFileMeta(props)
 const container = ref<HTMLDivElement>()
 const isLoaded = ref(false)
+const hasPlayed = ref(false)
 const onCanPlay = () => {
   if (!container.value) return
   isLoaded.value = true
+}
+const onPlay = () => {
+  hasPlayed.value = true
 }
 </script>
 
@@ -62,9 +72,22 @@ const onCanPlay = () => {
   }
   video {
     display: block;
-    max-width: 100%;
+    width: clamp(100px, 100%, 600px);
+    height: auto;
     max-height: 450px;
+    object-fit: contain;
     margin: auto;
+  }
+}
+
+.thumbnail {
+  box-sizing: content-box;
+  max-width: min(360px, calc(100% - 4px));
+
+  video {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
   }
 }
 
