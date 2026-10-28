@@ -63,6 +63,7 @@ const useStampRecommendationsPinia = defineStore(
 
     return {
       stampRecommendations,
+      stampRecommendationsFetched,
       recordStampUsage,
       fetchStampRecommendations
     }
@@ -75,8 +76,10 @@ export const useStampRecommendations = convertToRefsStore(
 
 export const useTopStampIds = () => {
   const { featureFlags } = useFeatureFlagSettings()
-  const { stampRecommendations } = useStampRecommendations()
-  const { recentStampIds } = useStampHistory()
+  const { stampRecommendations, stampRecommendationsFetched } =
+    useStampRecommendations()
+  const { recentStampIds, stampHistoryFetched } = useStampHistory()
+  const { stampsMapFetched } = useStampsStore()
 
   const topStampIds = computed(() =>
     featureFlags.value.stamp_recommendation_v2.enabled
@@ -84,7 +87,15 @@ export const useTopStampIds = () => {
       : recentStampIds.value
   )
 
-  return { topStampIds }
+  const topStampIdsFetched = computed(
+    () =>
+      stampsMapFetched.value &&
+      (featureFlags.value.stamp_recommendation_v2.enabled
+        ? stampRecommendationsFetched.value
+        : stampHistoryFetched.value)
+  )
+
+  return { topStampIds, topStampIdsFetched }
 }
 
 if (import.meta.hot) {

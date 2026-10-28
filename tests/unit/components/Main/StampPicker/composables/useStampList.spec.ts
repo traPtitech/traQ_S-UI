@@ -24,6 +24,7 @@ vi.mock('/@/store/entities/stamps', () => ({
 
 describe('useStampList', () => {
   const topStampIds = ref<string[]>([])
+  const topStampIdsFetched = ref(true)
   const stampsMap = ref(new Map<string, Stamp>())
   const scopes: ReturnType<typeof effectScope>[] = []
 
@@ -38,9 +39,11 @@ describe('useStampList', () => {
 
   beforeEach(() => {
     topStampIds.value = ['a', 'b']
+    topStampIdsFetched.value = true
     stampsMap.value = new Map(['a', 'b', 'c'].map(id => [id, createStamp(id)]))
     vi.mocked(useTopStampIds).mockReturnValue({
-      topStampIds: computed(() => topStampIds.value)
+      topStampIds: computed(() => topStampIds.value),
+      topStampIdsFetched: computed(() => topStampIdsFetched.value)
     })
     vi.mocked(useStampsStore, { partial: true }).mockReturnValue({ stampsMap })
     vi.mocked(useStampCategory, { partial: true }).mockReturnValue({
@@ -92,16 +95,50 @@ describe('useStampList', () => {
 
   it('shows the first fetched list if opened before recommendations load', async () => {
     topStampIds.value = []
+    topStampIdsFetched.value = false
     const picker = openPicker()
     expect(picker.stamps.value).toEqual([])
 
     topStampIds.value = ['b', 'a']
+    topStampIdsFetched.value = true
     await nextTick()
     expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['b', 'a'])
 
     topStampIds.value = ['a', 'b']
     await nextTick()
     expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['b', 'a'])
+  })
+
+  it('does not freeze local usage recorded before the initial fetch completes', async () => {
+    topStampIds.value = []
+    topStampIdsFetched.value = false
+    const picker = openPicker()
+
+    topStampIds.value = ['c']
+    await nextTick()
+    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['c'])
+
+    topStampIds.value = ['b', 'a', 'c']
+    topStampIdsFetched.value = true
+    await nextTick()
+    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['b', 'a', 'c'])
+
+    topStampIds.value = ['c', 'b', 'a']
+    await nextTick()
+    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['b', 'a', 'c'])
+  })
+
+  it('keeps an empty fetched list fixed until the picker is reopened', async () => {
+    topStampIds.value = []
+    const picker = openPicker()
+
+    topStampIds.value = ['c']
+    await nextTick()
+    expect(picker.stamps.value).toEqual([])
+
+    picker.close()
+    const reopened = openPicker()
+    expect(reopened.stamps.value.map(stamp => stamp.id)).toEqual(['c'])
   })
 
   it('omits stamps deleted while the picker is open', () => {
