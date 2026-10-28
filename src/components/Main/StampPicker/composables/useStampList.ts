@@ -1,6 +1,7 @@
 import type { Ref } from 'vue'
-import { computed } from 'vue'
+import { computed, shallowRef, watch } from 'vue'
 
+import { isDefined } from '/@/lib/basic/array'
 import { useStampCategory } from '/@/store/domain/stampCategory'
 import { useTopStampIds } from '/@/store/domain/stampRecommendations'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
@@ -16,9 +17,21 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { stampsMap } = useStampsStore()
   const { stampPalettesMap } = useStampPalettesStore()
 
+  // ピッカーは開くたびにマウントされるため、最初の一覧を保持して並び替えを防ぐ。
+  // 初回取得前に開いた場合は、一覧が届いてから固定する。
+  const initialTopStampIds = shallowRef<readonly StampId[]>([])
+  watch(
+    topStampIds,
+    ids => {
+      if (initialTopStampIds.value.length > 0) return
+      initialTopStampIds.value = [...ids]
+    },
+    { immediate: true }
+  )
+
   const stampIds = computed((): readonly StampId[] => {
     if (currentStampSet.value.type === 'history') {
-      return topStampIds.value
+      return initialTopStampIds.value
     }
     if (currentStampSet.value.type === 'palette') {
       const id = currentStampSet.value.id
@@ -42,8 +55,7 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
 
   const stamps = computed(() => {
     if (filterState.query === '') {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return stampIds.value.map(id => stampsMap.value.get(id)!)
+      return stampIds.value.map(id => stampsMap.value.get(id)).filter(isDefined)
     }
     return filterState.filteredItems
   })
