@@ -141,6 +141,9 @@ jobs:
       - name: run build
         run: npm run build:may-with-font
 
+      - name: run storybook:build
+        run: npm run storybook:build
+
   test-unit:
     name: run test:unit
     runs-on: ubuntu-latest
