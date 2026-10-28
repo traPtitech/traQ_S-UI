@@ -13,17 +13,17 @@ import type { StampSet } from './useStampSetSelector'
 
 const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { traQStampCategory, unicodeStampCategories } = useStampCategory()
-  const { topStampIds } = useTopStampIds()
+  const { topStampIds, topStampIdsFetched } = useTopStampIds()
   const { stampsMap } = useStampsStore()
   const { stampPalettesMap } = useStampPalettesStore()
 
-  // ピッカーは開くたびにマウントされるため、最初の一覧を保持して並び替えを防ぐ。
-  // 初回取得前に開いた場合は、一覧が届いてから固定する。
-  const initialTopStampIds = shallowRef<readonly StampId[]>([])
+  // ピッカーは開くたびにマウントされるため、取得済みの一覧を保持して並び替えを防ぐ。
+  // 取得前のローカル更新では固定せず、スタンプとおすすめ・履歴の取得完了を待つ。
+  const initialTopStampIds = shallowRef<readonly StampId[]>()
   watch(
-    topStampIds,
-    ids => {
-      if (initialTopStampIds.value.length > 0) return
+    [topStampIds, topStampIdsFetched],
+    ([ids, fetched]) => {
+      if (initialTopStampIds.value !== undefined || !fetched) return
       initialTopStampIds.value = [...ids]
     },
     { immediate: true }
@@ -31,7 +31,7 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
 
   const stampIds = computed((): readonly StampId[] => {
     if (currentStampSet.value.type === 'history') {
-      return initialTopStampIds.value
+      return initialTopStampIds.value ?? topStampIds.value
     }
     if (currentStampSet.value.type === 'palette') {
       const id = currentStampSet.value.id

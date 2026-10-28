@@ -40,6 +40,7 @@ const useStampHistoryPinia = defineStore('domain/stampHistory', () => {
 
   return {
     recentStampIds,
+    stampHistoryFetched,
     upsertLocalStampHistory,
     fetchStampHistory
   }
