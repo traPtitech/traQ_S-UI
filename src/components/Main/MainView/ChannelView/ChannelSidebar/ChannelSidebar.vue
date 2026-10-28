@@ -1,5 +1,5 @@
 <template>
-  <ChannelInfomationSidebar v-bind="props" />
+  <ChannelThreadsSidebar :is-sidebar-opener-ready="isSidebarOpenerReady" />
 </template>
 
 <script lang="ts" setup>
@@ -7,9 +7,9 @@ import type { Pin } from '@traptitech/traq'
 
 import type { ChannelId, UserId } from '/@/types/entity-ids'
 
-import ChannelInfomationSidebar from './ChannelInfomationSidebar/ChannelInfomationSidebar.vue'
+import ChannelThreadsSidebar from './ChannelThreadsSidebar/ChannelThreadsSidebar.vue'
 
-const props = defineProps<{
+defineProps<{
   channelId: ChannelId
   isSidebarOpenerReady: boolean
   pinnedMessages: Pin[]

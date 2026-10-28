@@ -8,15 +8,25 @@
         <template #content> </template>
       </PrimaryViewSidebarPage>
     </template>
+    <template #opener>
+      <PrimaryViewSidebarHidden @open="openSidebar" />
+    </template>
   </PrimaryViewSidebar>
 </template>
 
 <script lang="ts" setup>
 import PrimaryViewSidebar from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebar.vue'
+import PrimaryViewSidebarHidden from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarHidden.vue'
 import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
 import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
+import useSidebar from '/@/composables/mainView/useSidebar'
 
-defineProps<{
-  isSidebarOpenerReady: boolean
-}>()
+const { openSidebar } = useSidebar()
+
+withDefaults(
+  defineProps<{
+    isSidebarOpenerReady?: boolean
+  }>(),
+  { isSidebarOpenerReady: true }
+)
 </script>
