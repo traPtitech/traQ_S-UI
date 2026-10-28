@@ -1,5 +1,5 @@
 <template>
-  <SidebarEventFrame
+  <InfomationSidebarEventFrame
     title="購読者変更"
     icon-name="notified"
     :user-id="details.userId"
@@ -13,7 +13,7 @@
       <div :class="$style.label">解除した購読者</div>
       <UserIconEllipsisList direction="row" :user-ids="details.off" />
     </div>
-  </SidebarEventFrame>
+  </InfomationSidebarEventFrame>
 </template>
 
 <script lang="ts" setup>
@@ -21,7 +21,7 @@ import type { SubscribersChangedEvent } from '@traptitech/traq'
 
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 
-import SidebarEventFrame from './SidebarEventFrame.vue'
+import InfomationSidebarEventFrame from './InfomationSidebarEventFrame.vue'
 
 defineProps<{
   datetime: string

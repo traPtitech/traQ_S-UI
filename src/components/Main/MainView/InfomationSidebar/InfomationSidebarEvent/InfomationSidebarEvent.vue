@@ -1,15 +1,15 @@
 <template>
-  <SidebarEventTopicChanged
+  <InfomationSidebarEventTopicChanged
     v-if="event.type === ChannelEventTypeEnum.TopicChanged"
     :datetime="event.datetime"
     :details="event.detail"
   />
-  <SidebarEventSubscribersChanged
+  <InfomationSidebarEventSubscribersChanged
     v-else-if="event.type === ChannelEventTypeEnum.SubscribersChanged"
     :datetime="event.datetime"
     :details="event.detail"
   />
-  <SidebarEventPinnedChanged
+  <InfomationSidebarEventPinnedChanged
     v-else-if="
       event.type === ChannelEventTypeEnum.PinAdded ||
       event.type === ChannelEventTypeEnum.PinRemoved
@@ -18,27 +18,27 @@
     :details="event.detail"
     :type="event.type"
   />
-  <SidebarEventNameChanged
+  <InfomationSidebarEventNameChanged
     v-else-if="event.type === ChannelEventTypeEnum.NameChanged"
     :datetime="event.datetime"
     :details="event.detail"
   />
-  <SidebarEventParentChanged
+  <InfomationSidebarEventParentChanged
     v-else-if="event.type === ChannelEventTypeEnum.ParentChanged"
     :datetime="event.datetime"
     :details="event.detail"
   />
-  <SidebarEventArchiveChanged
+  <InfomationSidebarEventArchiveChanged
     v-else-if="event.type === ChannelEventTypeEnum.VisibilityChanged"
     :datetime="event.datetime"
     :details="event.detail"
   />
-  <SidebarEventForcedNotificationChanged
+  <InfomationSidebarEventForcedNotificationChanged
     v-else-if="event.type === ChannelEventTypeEnum.ForcedNotificationChanged"
     :datetime="event.datetime"
     :details="event.detail"
   />
-  <SidebarEventChildCreated
+  <InfomationSidebarEventChildCreated
     v-else-if="event.type === ChannelEventTypeEnum.ChildCreated"
     :datetime="event.datetime"
     :details="event.detail"
@@ -50,14 +50,14 @@ import { ChannelEventTypeEnum } from '@traptitech/traq'
 
 import type { ParsedChannelEvent } from '/@/lib/apis'
 
-import SidebarEventArchiveChanged from './SidebarEventArchiveChanged.vue'
-import SidebarEventChildCreated from './SidebarEventChildCreated.vue'
-import SidebarEventForcedNotificationChanged from './SidebarEventForcedNotificationChanged.vue'
-import SidebarEventNameChanged from './SidebarEventNameChanged.vue'
-import SidebarEventParentChanged from './SidebarEventParentChanged.vue'
-import SidebarEventPinnedChanged from './SidebarEventPinnedChanged.vue'
-import SidebarEventSubscribersChanged from './SidebarEventSubscribersChanged.vue'
-import SidebarEventTopicChanged from './SidebarEventTopicChanged.vue'
+import InfomationSidebarEventArchiveChanged from './InfomationSidebarEventArchiveChanged.vue'
+import InfomationSidebarEventChildCreated from './InfomationSidebarEventChildCreated.vue'
+import InfomationSidebarEventForcedNotificationChanged from './InfomationSidebarEventForcedNotificationChanged.vue'
+import InfomationSidebarEventNameChanged from './InfomationSidebarEventNameChanged.vue'
+import InfomationSidebarEventParentChanged from './InfomationSidebarEventParentChanged.vue'
+import InfomationSidebarEventPinnedChanged from './InfomationSidebarEventPinnedChanged.vue'
+import InfomationSidebarEventSubscribersChanged from './InfomationSidebarEventSubscribersChanged.vue'
+import InfomationSidebarEventTopicChanged from './InfomationSidebarEventTopicChanged.vue'
 
 defineProps<{
   event: ParsedChannelEvent

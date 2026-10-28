@@ -1,6 +1,6 @@
 <template>
   <SidebarContentContainerFoldable title="Qall">
-    <ChannelSidebarMemberIcons :viewer-states="viewStates" />
+    <ChannelInfomationSidebarMemberIcons :viewer-states="viewStates" />
   </SidebarContentContainerFoldable>
 </template>
 
@@ -12,7 +12,7 @@ import { isDefined } from '/@/lib/basic/array'
 import { useUsersStore } from '/@/store/entities/users'
 import type { ChannelId } from '/@/types/entity-ids'
 
-import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
+import ChannelInfomationSidebarMemberIcons from './ChannelInfomationSidebarMemberIcons.vue'
 
 const props = defineProps<{
   qallUserIds: ChannelId[]

@@ -1,5 +1,5 @@
 <template>
-  <SidebarEventFrame
+  <InfomationSidebarEventFrame
     :title="title"
     icon-name="pin"
     icon-mdi
@@ -14,7 +14,7 @@
     <div v-else-if="message === null" :class="$style.deletedMessage">
       削除されたメッセージ
     </div>
-  </SidebarEventFrame>
+  </InfomationSidebarEventFrame>
 </template>
 
 <script lang="ts" setup>
@@ -31,7 +31,7 @@ import { constructMessagesPath } from '/@/router'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useUsersStore } from '/@/store/entities/users'
 
-import SidebarEventFrame from './SidebarEventFrame.vue'
+import InfomationSidebarEventFrame from './InfomationSidebarEventFrame.vue'
 
 const props = defineProps<{
   type:

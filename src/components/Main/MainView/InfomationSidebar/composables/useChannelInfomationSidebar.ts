@@ -3,12 +3,12 @@ import { ref, watch } from 'vue'
 import useSidebar from '/@/composables/mainView/useSidebar'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 
-type ChannelSidebarPage = 'default' | 'pinned' | 'events'
+type ChannelInfomationSidebarPage = 'default' | 'pinned' | 'events'
 
-const useChannelSidebarCommon = () => {
+const useChannelInfomationSidebar = () => {
   const { lastOpenChannelId } = useBrowserSettings()
 
-  const page = ref<ChannelSidebarPage>('default')
+  const page = ref<ChannelInfomationSidebarPage>('default')
   const moveToDefaultPage = () => {
     page.value = 'default'
   }
@@ -35,4 +35,4 @@ const useChannelSidebarCommon = () => {
   }
 }
 
-export default useChannelSidebarCommon
+export default useChannelInfomationSidebar
