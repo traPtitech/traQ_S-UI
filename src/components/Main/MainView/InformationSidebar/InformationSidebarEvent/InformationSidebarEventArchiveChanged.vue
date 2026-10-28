@@ -1,5 +1,5 @@
 <template>
-  <InfomationSidebarEventFrame
+  <InformationSidebarEventFrame
     title="アーカイブ状態変更"
     icon-name="snowflake"
     icon-mdi
@@ -9,13 +9,13 @@
     {{
       !details.visibility ? 'アーカイブされました' : 'アーカイブ解除されました'
     }}
-  </InfomationSidebarEventFrame>
+  </InformationSidebarEventFrame>
 </template>
 
 <script lang="ts" setup>
 import type { VisibilityChangedEvent } from '@traptitech/traq'
 
-import InfomationSidebarEventFrame from './InfomationSidebarEventFrame.vue'
+import InformationSidebarEventFrame from './InformationSidebarEventFrame.vue'
 
 defineProps<{
   datetime: string

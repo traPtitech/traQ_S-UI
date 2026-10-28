@@ -33,7 +33,7 @@
             <AIcon mdi name="message-text-outline" :class="$style.modeIcon" />
           </button>
         </div>
-        <ChannelInfomationSidebar
+        <ChannelInformationSidebar
           v-if="sidebarMode === 'information'"
           v-model:is-viewers-detail-open="isViewersDetailOpen"
           :channel-id="channelId"
@@ -45,7 +45,7 @@
       </div>
     </template>
     <template #opener>
-      <ChannelInfomationSidebarHidden
+      <ChannelInformationSidebarHidden
         v-if="sidebarMode === 'information'"
         :viewer-ids="activeViewingUsers"
         :inactive-viewer-ids="inactiveViewingUsers"
@@ -68,8 +68,8 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import useSidebar from '/@/composables/mainView/useSidebar'
 import type { ChannelId, UserId } from '/@/types/entity-ids'
 
-import ChannelInfomationSidebar from './ChannelInfomationSidebar/ChannelInfomationSidebar.vue'
-import ChannelInfomationSidebarHidden from './ChannelInfomationSidebar/ChannelInfomationSidebarHidden.vue'
+import ChannelInformationSidebar from './ChannelInformationSidebar/ChannelInformationSidebar.vue'
+import ChannelInformationSidebarHidden from './ChannelInformationSidebar/ChannelInformationSidebarHidden.vue'
 import ChannelThreadsSidebar from './ChannelThreadsSidebar/ChannelThreadsSidebar.vue'
 
 defineProps<{

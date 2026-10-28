@@ -13,7 +13,7 @@
         :class="$style.container"
         @scroll.passive="onScroll"
       >
-        <InfomationSidebarEvent
+        <InformationSidebarEvent
           v-for="parsedEvent in parsedEvents"
           :key="parsedEvent.datetime"
           :class="$style.item"
@@ -35,7 +35,7 @@ import { parseChannelEvent } from '/@/lib/apis'
 import type { ChannelId } from '/@/types/entity-ids'
 
 import SidebarHeader from '../PrimaryViewSidebar/SidebarHeader.vue'
-import InfomationSidebarEvent from './InfomationSidebarEvent/InfomationSidebarEvent.vue'
+import InformationSidebarEvent from './InformationSidebarEvent/InformationSidebarEvent.vue'
 import useChannelEvents from './composables/useChannelEvents'
 
 const props = withDefaults(

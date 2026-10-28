@@ -8,7 +8,7 @@
       <SidebarHeader text="ピン留め" />
     </template>
     <template #content>
-      <InfomationSidebarPinnedList :pinned-messages="pinnedMessages" />
+      <InformationSidebarPinnedList :pinned-messages="pinnedMessages" />
     </template>
   </PrimaryViewSidebarPage>
 </template>
@@ -19,7 +19,7 @@ import type { Pin } from '@traptitech/traq'
 import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
 
 import SidebarHeader from '../PrimaryViewSidebar/SidebarHeader.vue'
-import InfomationSidebarPinnedList from './InfomationSidebarPinned/InfomationSidebarPinnedList.vue'
+import InformationSidebarPinnedList from './InformationSidebarPinned/InformationSidebarPinnedList.vue'
 
 withDefaults(
   defineProps<{

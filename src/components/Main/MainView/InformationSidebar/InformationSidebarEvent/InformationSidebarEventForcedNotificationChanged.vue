@@ -1,5 +1,5 @@
 <template>
-  <InfomationSidebarEventFrame
+  <InformationSidebarEventFrame
     title="強制通知状態変更"
     icon-name="forced"
     :user-id="details.userId"
@@ -10,13 +10,13 @@
         ? '強制通知チャンネルに変更されました'
         : '強制通知チャンネルから解除されました'
     }}
-  </InfomationSidebarEventFrame>
+  </InformationSidebarEventFrame>
 </template>
 
 <script lang="ts" setup>
 import type { ForcedNotificationChangedEvent } from '@traptitech/traq'
 
-import InfomationSidebarEventFrame from './InfomationSidebarEventFrame.vue'
+import InformationSidebarEventFrame from './InformationSidebarEventFrame.vue'
 
 defineProps<{
   datetime: string

@@ -1,6 +1,6 @@
 <template>
   <SidebarContentContainer v-if="viewStates.length > 0" title="参加BOT">
-    <ChannelInfomationSidebarMemberIcons :viewer-states="viewStates" />
+    <ChannelInformationSidebarMemberIcons :viewer-states="viewStates" />
   </SidebarContentContainer>
 </template>
 
@@ -12,7 +12,7 @@ import { isDefined } from '/@/lib/basic/array'
 import { useUsersStore } from '/@/store/entities/users'
 import type { ChannelId } from '/@/types/entity-ids'
 
-import ChannelInfomationSidebarMemberIcons from './ChannelInfomationSidebarMemberIcons.vue'
+import ChannelInformationSidebarMemberIcons from './ChannelInformationSidebarMemberIcons.vue'
 import useChannelBots from './composables/useChannelBots.ts'
 
 const props = defineProps<{

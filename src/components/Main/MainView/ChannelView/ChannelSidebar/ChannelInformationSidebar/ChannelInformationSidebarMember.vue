@@ -4,7 +4,7 @@
     <EmptyState v-else-if="!subscribers">
       メンバーの取得に失敗しました
     </EmptyState>
-    <ChannelInfomationSidebarMemberIcons
+    <ChannelInformationSidebarMemberIcons
       v-else-if="subscribers.size > 0"
       :viewer-states="viewStates"
     />
@@ -23,7 +23,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 import type { ChannelId, UserId } from '/@/types/entity-ids'
 
-import ChannelInfomationSidebarMemberIcons from './ChannelInfomationSidebarMemberIcons.vue'
+import ChannelInformationSidebarMemberIcons from './ChannelInformationSidebarMemberIcons.vue'
 
 const props = withDefaults(
   defineProps<{

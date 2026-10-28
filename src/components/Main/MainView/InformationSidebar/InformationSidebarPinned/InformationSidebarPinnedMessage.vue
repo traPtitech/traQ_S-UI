@@ -10,7 +10,7 @@
       @click-context-menu-button="toggle"
     />
 
-    <InfomationSidebarPinnedMessageContextMenu
+    <InformationSidebarPinnedMessageContextMenu
       v-if="position"
       :position="position"
       :message-id="message.id"
@@ -30,7 +30,7 @@ import useContextMenu from '/@/composables/useContextMenu'
 import { constructMessagesPath } from '/@/router'
 import { useChannelsStore } from '/@/store/entities/channels'
 
-import InfomationSidebarPinnedMessageContextMenu from './InfomationSidebarPinnedMessageContextMenu.vue'
+import InformationSidebarPinnedMessageContextMenu from './InformationSidebarPinnedMessageContextMenu.vue'
 
 const props = defineProps<{
   message: Message | ActivityTimelineMessage
