@@ -31,7 +31,7 @@ vi.mock('/@/lib/apis', () => ({
 vi.mock('/@/store/app/featureFlagSettings', () => ({
   useFeatureFlagSettings: () => ({
     featureFlags: computed(() => ({
-      stamp_recommendation_v2: { enabled: recommendationsEnabled.value }
+      stamp_recommendation_v3: { enabled: recommendationsEnabled.value }
     }))
   })
 }))

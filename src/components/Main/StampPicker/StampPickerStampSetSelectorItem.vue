@@ -21,7 +21,7 @@
       v-else-if="stampSet.type === 'history'"
       mdi
       :name="
-        featureFlags.stamp_recommendation_v2.enabled ? 'creation' : 'history'
+        featureFlags.stamp_recommendation_v3.enabled ? 'creation' : 'history'
       "
       :size="24"
       :class="$style.icon"

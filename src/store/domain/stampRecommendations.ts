@@ -82,7 +82,7 @@ export const useTopStampIds = () => {
   const { stampsMapFetched } = useStampsStore()
 
   const topStampIds = computed(() =>
-    featureFlags.value.stamp_recommendation_v2.enabled
+    featureFlags.value.stamp_recommendation_v3.enabled
       ? stampRecommendations.value
       : recentStampIds.value
   )
@@ -90,7 +90,7 @@ export const useTopStampIds = () => {
   const topStampIdsFetched = computed(
     () =>
       stampsMapFetched.value &&
-      (featureFlags.value.stamp_recommendation_v2.enabled
+      (featureFlags.value.stamp_recommendation_v3.enabled
         ? stampRecommendationsFetched.value
         : stampHistoryFetched.value)
   )

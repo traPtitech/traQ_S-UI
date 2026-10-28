@@ -12,7 +12,7 @@ import { useStampsStore } from '/@/store/entities/stamps'
 vi.mock('/@/store/app/featureFlagSettings', () => ({
   useFeatureFlagSettings: () => ({
     featureFlags: computed(() => ({
-      stamp_recommendation_v2: { enabled: true }
+      stamp_recommendation_v3: { enabled: true }
     }))
   })
 }))
