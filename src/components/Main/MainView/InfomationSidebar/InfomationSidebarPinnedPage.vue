@@ -1,5 +1,9 @@
 <template>
-  <PrimaryViewSidebarPage show-back-button @back="emit('moveBack')">
+  <PrimaryViewSidebarPage
+    :show-close-button="showCloseButton"
+    show-back-button
+    @back="emit('moveBack')"
+  >
     <template #header>
       <SidebarHeader text="ピン留め" />
     </template>
@@ -20,9 +24,11 @@ import InfomationSidebarPinnedList from './InfomationSidebarPinned/InfomationSid
 withDefaults(
   defineProps<{
     pinnedMessages?: Pin[]
+    showCloseButton?: boolean
   }>(),
   {
-    pinnedMessages: () => []
+    pinnedMessages: () => [],
+    showCloseButton: true
   }
 )
 
