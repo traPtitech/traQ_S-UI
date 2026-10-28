@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SidebarPinnedMessage
+    <InfomationSidebarPinnedMessage
       v-for="message in sortedMessages"
       :key="message.id"
       :message="message"
@@ -17,7 +17,7 @@ import type { Pin } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
-import SidebarPinnedMessage from './SidebarPinnedMessage.vue'
+import InfomationSidebarPinnedMessage from './InfomationSidebarPinnedMessage.vue'
 
 const props = withDefaults(
   defineProps<{

@@ -1,18 +1,18 @@
 <template>
-  <SidebarEventFrame
+  <InfomationSidebarEventFrame
     title="チャンネル名変更"
     icon-name="hash"
     :user-id="details.userId"
     :datetime="datetime"
   >
     {{ details.after }}
-  </SidebarEventFrame>
+  </InfomationSidebarEventFrame>
 </template>
 
 <script lang="ts" setup>
 import type { NameChangedEvent } from '@traptitech/traq'
 
-import SidebarEventFrame from './SidebarEventFrame.vue'
+import InfomationSidebarEventFrame from './InfomationSidebarEventFrame.vue'
 
 defineProps<{
   datetime: string

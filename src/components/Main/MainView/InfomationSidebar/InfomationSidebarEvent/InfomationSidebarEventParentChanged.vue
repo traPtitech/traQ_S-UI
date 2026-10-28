@@ -1,5 +1,5 @@
 <template>
-  <SidebarEventFrame
+  <InfomationSidebarEventFrame
     title="親チャンネル変更"
     icon-name="hash"
     :user-id="details.userId"
@@ -7,7 +7,7 @@
     :link="newParentLink"
   >
     {{ newParentPath }}
-  </SidebarEventFrame>
+  </InfomationSidebarEventFrame>
 </template>
 
 <script lang="ts" setup>
@@ -17,7 +17,7 @@ import { computed } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
 
-import SidebarEventFrame from './SidebarEventFrame.vue'
+import InfomationSidebarEventFrame from './InfomationSidebarEventFrame.vue'
 
 const props = defineProps<{
   datetime: string

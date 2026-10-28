@@ -1,5 +1,5 @@
 <template>
-  <SidebarEventFrame
+  <InfomationSidebarEventFrame
     title="トピック変更"
     icon-name="format-title"
     icon-mdi
@@ -13,7 +13,7 @@
         inline
       />
     </div>
-  </SidebarEventFrame>
+  </InfomationSidebarEventFrame>
 </template>
 
 <script lang="ts" setup>
@@ -21,7 +21,7 @@ import type { TopicChangedEvent } from '@traptitech/traq'
 
 import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
 
-import SidebarEventFrame from './SidebarEventFrame.vue'
+import InfomationSidebarEventFrame from './InfomationSidebarEventFrame.vue'
 
 defineProps<{
   datetime: string

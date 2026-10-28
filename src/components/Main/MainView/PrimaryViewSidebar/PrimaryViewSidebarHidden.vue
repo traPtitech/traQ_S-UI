@@ -7,37 +7,15 @@
       :size="28"
       @click="emit('open')"
     />
-    <UserIconEllipsisList
-      direction="col"
-      transition="fade-bottom"
-      count-clickable
-      show-count
-      :user-ids="viewerIds"
-      :inactive-user-ids="inactiveViewerIds"
-      :class="$style.rest"
-      @count-click="emit('openViewers')"
-    />
+    <slot />
   </div>
 </template>
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
-import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
-import type { UserId } from '/@/types/entity-ids'
-
-withDefaults(
-  defineProps<{
-    viewerIds?: readonly UserId[]
-    inactiveViewerIds?: readonly UserId[]
-  }>(),
-  {
-    viewerIds: () => []
-  }
-)
 
 const emit = defineEmits<{
   (e: 'open'): void
-  (e: 'openViewers'): void
 }>()
 </script>
 
@@ -60,9 +38,5 @@ const emit = defineEmits<{
   &:hover {
     transform: scale(1.1);
   }
-}
-.rest {
-  @include color-ui-secondary;
-  pointer-events: all;
 }
 </style>

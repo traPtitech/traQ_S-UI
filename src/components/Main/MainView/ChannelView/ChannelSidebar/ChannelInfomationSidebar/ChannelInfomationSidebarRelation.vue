@@ -1,6 +1,6 @@
 <template>
   <SidebarContentContainerFoldable title="関連チャンネル">
-    <ChannelSidebarRelationContent
+    <ChannelInfomationSidebarRelationContent
       :parent="parent"
       :children="children"
       :siblings="siblings"
@@ -14,7 +14,7 @@ import SidebarContentContainerFoldable from '/@/components/Main/MainView/Primary
 import useRelatedChannels from '/@/composables/useRelatedChannels'
 import type { ChannelId } from '/@/types/entity-ids'
 
-import ChannelSidebarRelationContent from './ChannelSidebarRelationContent.vue'
+import ChannelInfomationSidebarRelationContent from './ChannelInfomationSidebarRelationContent.vue'
 
 const props = defineProps<{
   channelId: ChannelId

@@ -1,10 +1,14 @@
 <template>
-  <PrimaryViewSidebarPage show-back-button @back="emit('moveBack')">
+  <PrimaryViewSidebarPage
+    :show-close-button="showCloseButton"
+    show-back-button
+    @back="emit('moveBack')"
+  >
     <template #header>
       <SidebarHeader text="ピン留め" />
     </template>
     <template #content>
-      <SidebarPinnedList :pinned-messages="pinnedMessages" />
+      <InfomationSidebarPinnedList :pinned-messages="pinnedMessages" />
     </template>
   </PrimaryViewSidebarPage>
 </template>
@@ -14,15 +18,17 @@ import type { Pin } from '@traptitech/traq'
 
 import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
 
-import SidebarHeader from './SidebarHeader.vue'
-import SidebarPinnedList from './SidebarPinned/SidebarPinnedList.vue'
+import SidebarHeader from '../PrimaryViewSidebar/SidebarHeader.vue'
+import InfomationSidebarPinnedList from './InfomationSidebarPinned/InfomationSidebarPinnedList.vue'
 
 withDefaults(
   defineProps<{
     pinnedMessages?: Pin[]
+    showCloseButton?: boolean
   }>(),
   {
-    pinnedMessages: () => []
+    pinnedMessages: () => [],
+    showCloseButton: true
   }
 )
 

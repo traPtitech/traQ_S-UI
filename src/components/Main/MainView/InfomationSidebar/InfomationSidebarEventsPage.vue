@@ -1,5 +1,9 @@
 <template>
-  <PrimaryViewSidebarPage show-back-button @back="emit('moveBack')">
+  <PrimaryViewSidebarPage
+    :show-close-button="showCloseButton"
+    show-back-button
+    @back="emit('moveBack')"
+  >
     <template #header>
       <SidebarHeader text="イベント" />
     </template>
@@ -9,7 +13,7 @@
         :class="$style.container"
         @scroll.passive="onScroll"
       >
-        <SidebarEvent
+        <InfomationSidebarEvent
           v-for="parsedEvent in parsedEvents"
           :key="parsedEvent.datetime"
           :class="$style.item"
@@ -30,13 +34,17 @@ import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSideb
 import { parseChannelEvent } from '/@/lib/apis'
 import type { ChannelId } from '/@/types/entity-ids'
 
-import SidebarEvent from './SidebarEvent/SidebarEvent.vue'
-import SidebarHeader from './SidebarHeader.vue'
+import SidebarHeader from '../PrimaryViewSidebar/SidebarHeader.vue'
+import InfomationSidebarEvent from './InfomationSidebarEvent/InfomationSidebarEvent.vue'
 import useChannelEvents from './composables/useChannelEvents'
 
-const props = defineProps<{
-  channelId: ChannelId
-}>()
+const props = withDefaults(
+  defineProps<{
+    channelId: ChannelId
+    showCloseButton?: boolean
+  }>(),
+  { showCloseButton: true }
+)
 
 const emit = defineEmits<{
   (e: 'moveBack'): void

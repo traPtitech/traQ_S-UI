@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="parent" :class="$style.channel" data-is-parent>
-      <ChannelSidebarRelationElement
+      <ChannelInfomationSidebarRelationElement
         :name="parent.name"
         :topic="parent.topic"
         :link="buildParentLink()"
@@ -10,7 +10,7 @@
     </div>
     <div v-if="current" :class="$style.channel">
       <template v-for="sibling in filteredSiblings" :key="sibling.id">
-        <ChannelSidebarRelationElement
+        <ChannelInfomationSidebarRelationElement
           :name="sibling.name"
           :topic="sibling.topic"
           :link="buildSiblingLink(sibling.name)"
@@ -22,7 +22,7 @@
           :class="$style.channel"
           data-is-children
         >
-          <ChannelSidebarRelationElement
+          <ChannelInfomationSidebarRelationElement
             v-for="child in filteredChildren"
             :key="child.id"
             :name="child.name"
@@ -60,7 +60,7 @@ import { computed } from 'vue'
 import useToggle from '/@/composables/utils/useToggle'
 import { pickSomeAroundIndex } from '/@/lib/basic/array'
 
-import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
+import ChannelInfomationSidebarRelationElement from './ChannelInfomationSidebarRelationElement.vue'
 
 const props = withDefaults(
   defineProps<{
