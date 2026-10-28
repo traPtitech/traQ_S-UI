@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import apis from '/@/lib/apis'
+import { createSingleflight } from '/@/lib/basic/async'
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampsStore } from '/@/store/entities/stamps'
@@ -44,17 +45,20 @@ const useStampRecommendationsPinia = defineStore(
       )
     }
 
+    const syncStampRecommendations = createSingleflight(async () => {
+      const { data } = await apis.getMyStampRecommendations()
+      stampToRecommendationScore.value = new Map(
+        data.map(h => [h.stampId, h.score])
+      )
+      stampRecommendationsFetched.value = true
+    })
+
     const fetchStampRecommendations = async ({
       ignoreCache = false
     }: { ignoreCache?: boolean } = {}) => {
       if (!ignoreCache && stampRecommendationsFetched.value) return
 
-      await apis.getMyStampRecommendations().then(res => {
-        stampToRecommendationScore.value = new Map(
-          res.data.map(h => [h.stampId, h.score])
-        )
-      })
-      stampRecommendationsFetched.value = true
+      await syncStampRecommendations()
     }
 
     return {
