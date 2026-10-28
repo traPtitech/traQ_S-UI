@@ -42,6 +42,25 @@ $ npm run dev
 
 **実行前に一度`$ npm run gen-fonts`を実行する必要があります**
 
+### コンポーネントの表示確認
+
+```shell
+$ npm run storybook
+```
+
+`http://localhost:6006` で Storybook を開けます。バックエンドへの接続やログインは不要です。
+ツールバーからライト・ダークテーマを切り替え、Controls で props を変更できます。
+フォントはアプリと同じものを使用するため、初回は `npm run gen-fonts` を実行してください。
+
+Story はコンポーネントの隣に `ComponentName.stories.ts` として追加します。
+ストアや API に依存するコンポーネントは、各 Story で必要なデータを用意してください。
+
+```shell
+$ npm run storybook:build
+```
+
+静的ファイルは `storybook/` に出力されます。
+
 ### ビルド
 
 #### フォント以外のビルド
