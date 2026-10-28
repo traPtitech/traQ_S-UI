@@ -10,6 +10,12 @@
         <span v-if="count !== undefined" :class="$style.count">{{
           count
         }}</span>
+        <AIcon
+          v-if="iconName"
+          :name="iconName"
+          :class="$style.icon"
+          :mdi="iconMdi"
+        />
         <AIcon name="chevron-right" :class="$style.icon" mdi />
       </div>
     </template>
@@ -26,9 +32,12 @@ withDefaults(
     title?: string
     count?: number
     largePadding?: boolean
+    iconName?: string
+    iconMdi?: boolean
   }>(),
   {
-    largePadding: false
+    largePadding: false,
+    iconMdi: false
   }
 )
 
