@@ -21,7 +21,7 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { filterState } = useStampFilter()
   const shouldFreezeTopStampIds = computed(
     () =>
-      featureFlags.value.stamp_recommendation_v2.enabled &&
+      featureFlags.value.stamp_recommendation_v3.enabled &&
       currentStampSet.value.type === 'history' &&
       filterState.query === ''
   )
