@@ -1,6 +1,8 @@
 import type { Ref } from 'vue'
-import { computed } from 'vue'
+import { computed, shallowRef, watch } from 'vue'
 
+import { isDefined } from '/@/lib/basic/array'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useStampCategory } from '/@/store/domain/stampCategory'
 import { useTopStampIds } from '/@/store/domain/stampRecommendations'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
@@ -12,13 +14,35 @@ import type { StampSet } from './useStampSetSelector'
 
 const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { traQStampCategory, unicodeStampCategories } = useStampCategory()
-  const { topStampIds } = useTopStampIds()
+  const { featureFlags } = useFeatureFlagSettings()
+  const { topStampIds, topStampIdsFetched } = useTopStampIds()
   const { stampsMap } = useStampsStore()
   const { stampPalettesMap } = useStampPalettesStore()
+  const { filterState } = useStampFilter()
+  const shouldFreezeTopStampIds = computed(
+    () =>
+      featureFlags.value.stamp_recommendation_v3.enabled &&
+      currentStampSet.value.type === 'history' &&
+      filterState.query === ''
+  )
+
+  const initialTopStampIds = shallowRef<readonly StampId[]>()
+  watch(
+    [shouldFreezeTopStampIds, topStampIds, topStampIdsFetched],
+    ([shouldFreeze, ids, fetched]) => {
+      if (!shouldFreeze) {
+        initialTopStampIds.value = undefined
+        return
+      }
+      if (initialTopStampIds.value !== undefined || !fetched) return
+      initialTopStampIds.value = [...ids]
+    },
+    { immediate: true, flush: 'sync' }
+  )
 
   const stampIds = computed((): readonly StampId[] => {
     if (currentStampSet.value.type === 'history') {
-      return topStampIds.value
+      return initialTopStampIds.value ?? topStampIds.value
     }
     if (currentStampSet.value.type === 'palette') {
       const id = currentStampSet.value.id
@@ -38,12 +62,9 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
     }
     return []
   })
-  const { filterState } = useStampFilter()
-
   const stamps = computed(() => {
     if (filterState.query === '') {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return stampIds.value.map(id => stampsMap.value.get(id)!)
+      return stampIds.value.map(id => stampsMap.value.get(id)).filter(isDefined)
     }
     return filterState.filteredItems
   })
