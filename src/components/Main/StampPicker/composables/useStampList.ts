@@ -2,6 +2,7 @@ import type { Ref } from 'vue'
 import { computed, shallowRef, watch } from 'vue'
 
 import { isDefined } from '/@/lib/basic/array'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useStampCategory } from '/@/store/domain/stampCategory'
 import { useTopStampIds } from '/@/store/domain/stampRecommendations'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
@@ -13,21 +14,23 @@ import type { StampSet } from './useStampSetSelector'
 
 const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { traQStampCategory, unicodeStampCategories } = useStampCategory()
+  const { featureFlags } = useFeatureFlagSettings()
   const { topStampIds, topStampIdsFetched } = useTopStampIds()
   const { stampsMap } = useStampsStore()
   const { stampPalettesMap } = useStampPalettesStore()
   const { filterState } = useStampFilter()
-  const isTopStampListShown = computed(
-    () => currentStampSet.value.type === 'history' && filterState.query === ''
+  const shouldFreezeTopStampIds = computed(
+    () =>
+      featureFlags.value.stamp_recommendation_v2.enabled &&
+      currentStampSet.value.type === 'history' &&
+      filterState.query === ''
   )
 
-  // おすすめ・履歴の一覧を表示している間だけ順序を固定し、戻ってきたら更新する。
-  // 取得前のローカル更新では固定せず、スタンプとおすすめ・履歴の取得完了を待つ。
   const initialTopStampIds = shallowRef<readonly StampId[]>()
   watch(
-    [isTopStampListShown, topStampIds, topStampIdsFetched],
-    ([shown, ids, fetched]) => {
-      if (!shown) {
+    [shouldFreezeTopStampIds, topStampIds, topStampIdsFetched],
+    ([shouldFreeze, ids, fetched]) => {
+      if (!shouldFreeze) {
         initialTopStampIds.value = undefined
         return
       }

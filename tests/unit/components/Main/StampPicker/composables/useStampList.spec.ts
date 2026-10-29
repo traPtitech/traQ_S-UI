@@ -9,6 +9,13 @@ import { useTopStampIds } from '/@/store/domain/stampRecommendations'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
 
+vi.mock('/@/store/app/featureFlagSettings', () => ({
+  useFeatureFlagSettings: () => ({
+    featureFlags: computed(() => ({
+      stamp_recommendation_v2: { enabled: true }
+    }))
+  })
+}))
 vi.mock('/@/store/domain/stampCategory', () => ({
   useStampCategory: vi.fn()
 }))
