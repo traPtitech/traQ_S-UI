@@ -1,11 +1,20 @@
 <template>
   <div>
     <ChannelThreadsSidebarNotification :class="$style.sidebarItem" />
+    <ChannelThreadsSidebarThreads
+      :channel-id="channelId"
+      :class="$style.sidebarItem"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import ChannelThreadsSidebarNotification from './ChannelThreadsSidebarNotification.vue'
+import ChannelThreadsSidebarThreads from './ChannelThreadsSidebarThreads.vue'
+
+defineProps<{
+  channelId: string
+}>()
 </script>
 
 <style lang="scss" module>

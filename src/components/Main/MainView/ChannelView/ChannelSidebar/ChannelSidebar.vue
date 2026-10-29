@@ -41,7 +41,7 @@
           :active-viewing-users="activeViewingUsers"
           :inactive-viewing-users="inactiveViewingUsers"
         />
-        <ChannelThreadsSidebar v-else />
+        <ChannelThreadsSidebar v-else :channel-id="channelId" />
       </div>
     </template>
     <template #opener>
