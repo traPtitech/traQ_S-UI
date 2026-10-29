@@ -1,0 +1,21 @@
+<template>
+  <div>
+    <ChannelThreadsSidebarNotification :class="$style.sidebarItem" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import ChannelThreadsSidebarNotification from './ChannelThreadsSidebarNotification.vue'
+</script>
+
+<style lang="scss" module>
+.sidebarItem {
+  margin: 16px 0;
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+</style>
