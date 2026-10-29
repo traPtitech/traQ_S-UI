@@ -13,7 +13,7 @@
       @toggle="toggle"
     />
   </SidebarContentContainer>
-  <ChannelInfomationSidebarViewersDetail
+  <ChannelInformationSidebarViewersDetail
     v-else
     :viewer-ids="viewerIds"
     :inactive-viewer-ids="inactiveViewerIds"
@@ -29,7 +29,7 @@ import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import useToggle from '/@/composables/utils/useToggle'
 import type { UserId } from '/@/types/entity-ids'
 
-import ChannelInfomationSidebarViewersDetail from './ChannelInfomationSidebarViewersDetail.vue'
+import ChannelInformationSidebarViewersDetail from './ChannelInformationSidebarViewersDetail.vue'
 
 const modelValue = defineModel<boolean>({ required: true })
 

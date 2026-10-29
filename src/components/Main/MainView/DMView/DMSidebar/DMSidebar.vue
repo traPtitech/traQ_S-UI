@@ -15,19 +15,19 @@
           />
         </template>
       </PrimaryViewSidebarPage>
-      <InfomationSidebarPinnedPage
+      <InformationSidebarPinnedPage
         v-else-if="page === 'pinned'"
         :pinned-messages="pinnedMessages"
         @move-back="moveToDefaultPage"
       />
-      <InfomationSidebarEventsPage
+      <InformationSidebarEventsPage
         v-else-if="page === 'events'"
         :channel-id="channelId"
         @move-back="moveToDefaultPage"
       />
     </template>
     <template #opener>
-      <ChannelInfomationSidebarHidden
+      <ChannelInformationSidebarHidden
         :viewer-ids="activeViewingUsers"
         :inactive-viewer-ids="inactiveViewingUsers"
         @open="openSidebar"
@@ -39,10 +39,10 @@
 <script lang="ts" setup>
 import type { Pin } from '@traptitech/traq'
 
-import ChannelInfomationSidebarHidden from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInfomationSidebar/ChannelInfomationSidebarHidden.vue'
-import InfomationSidebarEventsPage from '/@/components/Main/MainView/InfomationSidebar/InfomationSidebarEventsPage.vue'
-import InfomationSidebarPinnedPage from '/@/components/Main/MainView/InfomationSidebar/InfomationSidebarPinnedPage.vue'
-import useChannelInfomationSidebar from '/@/components/Main/MainView/InfomationSidebar/composables/useChannelInfomationSidebar'
+import ChannelInformationSidebarHidden from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarHidden.vue'
+import InformationSidebarEventsPage from '/@/components/Main/MainView/InformationSidebar/InformationSidebarEventsPage.vue'
+import InformationSidebarPinnedPage from '/@/components/Main/MainView/InformationSidebar/InformationSidebarPinnedPage.vue'
+import useChannelInformationSidebar from '/@/components/Main/MainView/InformationSidebar/composables/useChannelInformationSidebar'
 import PrimaryViewSidebar from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebar.vue'
 import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
 import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
@@ -65,5 +65,5 @@ const {
   moveToPinnedPage,
   moveToEventsPage,
   openSidebar
-} = useChannelInfomationSidebar()
+} = useChannelInformationSidebar()
 </script>
