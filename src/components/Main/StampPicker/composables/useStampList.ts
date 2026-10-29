@@ -16,17 +16,25 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { topStampIds, topStampIdsFetched } = useTopStampIds()
   const { stampsMap } = useStampsStore()
   const { stampPalettesMap } = useStampPalettesStore()
+  const { filterState } = useStampFilter()
+  const isTopStampListShown = computed(
+    () => currentStampSet.value.type === 'history' && filterState.query === ''
+  )
 
-  // ピッカーは開くたびにマウントされるため、取得済みの一覧を保持して並び替えを防ぐ。
+  // おすすめ・履歴の一覧を表示している間だけ順序を固定し、戻ってきたら更新する。
   // 取得前のローカル更新では固定せず、スタンプとおすすめ・履歴の取得完了を待つ。
   const initialTopStampIds = shallowRef<readonly StampId[]>()
   watch(
-    [topStampIds, topStampIdsFetched],
-    ([ids, fetched]) => {
+    [isTopStampListShown, topStampIds, topStampIdsFetched],
+    ([shown, ids, fetched]) => {
+      if (!shown) {
+        initialTopStampIds.value = undefined
+        return
+      }
       if (initialTopStampIds.value !== undefined || !fetched) return
       initialTopStampIds.value = [...ids]
     },
-    { immediate: true }
+    { immediate: true, flush: 'sync' }
   )
 
   const stampIds = computed((): readonly StampId[] => {
@@ -51,8 +59,6 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
     }
     return []
   })
-  const { filterState } = useStampFilter()
-
   const stamps = computed(() => {
     if (filterState.query === '') {
       return stampIds.value.map(id => stampsMap.value.get(id)).filter(isDefined)
