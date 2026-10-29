@@ -4,7 +4,7 @@
       <SidebarHeader text="スレッド" />
     </template>
     <template #content>
-      <ChannelThreadsSidebarContent />
+      <ChannelThreadsSidebarContent :channel-id="channelId" />
     </template>
   </PrimaryViewSidebarPage>
 </template>
@@ -14,4 +14,8 @@ import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSideb
 import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
 
 import ChannelThreadsSidebarContent from './ChannelThreadsSidebarContent.vue'
+
+defineProps<{
+  channelId: string
+}>()
 </script>
