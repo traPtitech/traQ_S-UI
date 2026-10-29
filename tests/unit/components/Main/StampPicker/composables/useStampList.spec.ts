@@ -28,10 +28,10 @@ describe('useStampList', () => {
   const stampsMap = ref(new Map<string, Stamp>())
   const scopes: ReturnType<typeof effectScope>[] = []
 
-  const openPicker = () => {
+  const openPicker = (stampSet: StampSet = { type: 'history', id: '' }) => {
     const scope = effectScope()
     scopes.push(scope)
-    const currentStampSet = ref<StampSet>({ type: 'history', id: '' })
+    const currentStampSet = ref<StampSet>(stampSet)
     const list = scope.run(() => useStampList(currentStampSet))
     if (!list) throw new Error('Picker scope is inactive')
     return { ...list, currentStampSet, close: () => scope.stop() }
@@ -77,20 +77,45 @@ describe('useStampList', () => {
     ])
   })
 
-  it('keeps the order after searching and switching stamp sets', async () => {
+  it('uses the latest order after clearing a search and then keeps it fixed', async () => {
     const picker = openPicker()
-    topStampIds.value = ['b', 'a']
-    await nextTick()
-
     picker.filterState.query = 'cc'
     expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['c'])
-    picker.filterState.query = ''
-    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['a', 'b'])
 
+    topStampIds.value = ['c', 'b', 'a']
+    await nextTick()
+    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['c'])
+
+    picker.filterState.query = ''
+    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['c', 'b', 'a'])
+
+    topStampIds.value = ['a', 'b', 'c']
+    await nextTick()
+    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['c', 'b', 'a'])
+  })
+
+  it('uses the latest order after returning from another stamp set', async () => {
+    const picker = openPicker()
     picker.currentStampSet.value = { type: 'category', id: 'traq' }
     expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['a', 'b', 'c'])
+
+    topStampIds.value = ['c', 'b', 'a']
+    await nextTick()
     picker.currentStampSet.value = { type: 'history', id: '' }
-    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['a', 'b'])
+    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['c', 'b', 'a'])
+
+    topStampIds.value = ['a', 'b', 'c']
+    await nextTick()
+    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['c', 'b', 'a'])
+  })
+
+  it('captures the latest order when first switching to recommendations', async () => {
+    const picker = openPicker({ type: 'category', id: 'traq' })
+    topStampIds.value = ['c', 'b', 'a']
+    await nextTick()
+
+    picker.currentStampSet.value = { type: 'history', id: '' }
+    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['c', 'b', 'a'])
   })
 
   it('shows the first fetched list if opened before recommendations load', async () => {
