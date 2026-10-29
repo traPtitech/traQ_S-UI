@@ -56,7 +56,7 @@ vi.mock('/@/store/entities/stamps', () => ({
 
 const recommendationsEnabled = ref(true)
 
-describe('useStampList initial loading', () => {
+describe('useStampList with stamp stores', () => {
   const stampsMap = ref(new Map<string, Stamp>())
   const stampsMapFetched = ref(true)
   const scopes: ReturnType<typeof effectScope>[] = []
@@ -91,6 +91,73 @@ describe('useStampList initial loading', () => {
   afterEach(() => {
     for (const scope of scopes.splice(0)) scope.stop()
     vi.useRealTimers()
+  })
+
+  it.each([true, false])(
+    'freezes only recommendations after usage (recommendations enabled: %s)',
+    async enabled => {
+      recommendationsEnabled.value = enabled
+      mockGetRecommendations.mockResolvedValue({
+        data: [
+          { stampId: 'a', score: 2 },
+          { stampId: 'b', score: 1 }
+        ]
+      })
+      mockGetHistory.mockResolvedValue({
+        data: [
+          { stampId: 'a', datetime: new Date(2000).toISOString() },
+          { stampId: 'b', datetime: new Date(1000).toISOString() }
+        ]
+      })
+      const { recordStampUsage, fetchStampRecommendations } =
+        useStampRecommendations()
+      const { upsertLocalStampHistory, fetchStampHistory } = useStampHistory()
+      await (enabled ? fetchStampRecommendations() : fetchStampHistory())
+      const picker = openPicker()
+      expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['a', 'b'])
+
+      recordStampUsage('b')
+      upsertLocalStampHistory('b', new Date(3000))
+      await nextTick()
+      expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(
+        enabled ? ['a', 'b'] : ['b', 'a']
+      )
+
+      recordStampUsage('c')
+      upsertLocalStampHistory('c', new Date(4000))
+      await nextTick()
+      expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(
+        enabled ? ['a', 'b'] : ['c', 'b', 'a']
+      )
+    }
+  )
+
+  it('releases the frozen list when recommendations are disabled while open', async () => {
+    mockGetRecommendations.mockResolvedValue({
+      data: [
+        { stampId: 'a', score: 2 },
+        { stampId: 'b', score: 1 }
+      ]
+    })
+    mockGetHistory.mockResolvedValue({
+      data: [
+        { stampId: 'b', datetime: new Date(2000).toISOString() },
+        { stampId: 'a', datetime: new Date(1000).toISOString() }
+      ]
+    })
+    await useStampRecommendations().fetchStampRecommendations()
+    const { fetchStampHistory, upsertLocalStampHistory } = useStampHistory()
+    await fetchStampHistory()
+    const picker = openPicker()
+    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['a', 'b'])
+
+    recommendationsEnabled.value = false
+    await nextTick()
+    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['b', 'a'])
+
+    upsertLocalStampHistory('a', new Date(3000))
+    await nextTick()
+    expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['a', 'b'])
   })
 
   it.each([true, false])(
