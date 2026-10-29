@@ -1,6 +1,7 @@
 <template>
   <SidebarContentContainer
     :title="title"
+    :tooltip="tooltip"
     :large-padding="largePadding"
     clickable
     title-clickable
@@ -18,6 +19,7 @@ import SidebarContentContainer from './SidebarContentContainer.vue'
 withDefaults(
   defineProps<{
     title: string
+    tooltip?: string
     largePadding?: boolean
   }>(),
   {

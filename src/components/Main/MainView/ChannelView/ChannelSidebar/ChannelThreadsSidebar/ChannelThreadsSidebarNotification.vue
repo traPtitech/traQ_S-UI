@@ -1,6 +1,7 @@
 <template>
   <SidebarContentContainerSelect
     title="デフォルトの通知設定"
+    :tooltip="notificationDescriptions[iconName]"
     @click="changeNotification"
   >
     <AIcon :name="iconName" />
@@ -13,7 +14,16 @@ import { ref } from 'vue'
 import SidebarContentContainerSelect from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerSelect.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 
-const iconName = ref('notified-or-subscribed')
+const notificationDescriptions = {
+  'notified-or-subscribed': 'チャンネルの通知設定を引き継ぐ',
+  'not-subscribed': 'なし',
+  subscribed: '未読管理',
+  notified: '通知あり'
+}
+
+const iconName = ref<keyof typeof notificationDescriptions>(
+  'notified-or-subscribed'
+)
 
 const changeNotification = () => {
   switch (iconName.value) {
