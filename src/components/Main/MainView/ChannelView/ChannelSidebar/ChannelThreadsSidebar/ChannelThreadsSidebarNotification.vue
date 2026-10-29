@@ -21,6 +21,7 @@ const notificationDescriptions = {
   notified: '通知あり'
 }
 
+// TODO: 繋ぎ込みの時に自動生成される型に置き換える
 const iconName = ref<keyof typeof notificationDescriptions>(
   'notified-or-subscribed'
 )
