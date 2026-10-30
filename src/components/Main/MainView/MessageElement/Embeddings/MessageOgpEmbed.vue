@@ -8,7 +8,11 @@
       allow="fullscreen; autoplay; encrypted-media; picture-in-picture"
     />
     <template v-else>
-      <img :src="previewUrl" :class="$style.image" />
+      <img
+        :src="previewUrl"
+        referrerpolicy="no-referrer"
+        :class="$style.image"
+      />
       <div :class="$style.icon">
         <AIcon v-if="showPlayIcon" mdi name="play" :size="32" />
       </div>
