@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { fn } from 'storybook/test'
 
 import ThreadSummaryCard from './ThreadSummaryCard.vue'
+import ThreadUnreadBadge from './ThreadUnreadBadge.vue'
 
 type StoryArgs = Pick<
   InstanceType<typeof ThreadSummaryCard>['$props'],
@@ -9,6 +10,7 @@ type StoryArgs = Pick<
 > & {
   width: number
   showSlots: boolean
+  unreadCount: number
 }
 
 const meta = {
@@ -18,7 +20,8 @@ const meta = {
     title: 'スレッドタイトル',
     onOpen: fn(),
     width: 456,
-    showSlots: false
+    showSlots: false,
+    unreadCount: 5
   },
   argTypes: {
     width: {
@@ -30,10 +33,15 @@ const meta = {
       control: 'boolean',
       description: 'バッジと最新メッセージの代わりに仮の要素を表示',
       table: { category: 'Story' }
+    },
+    unreadCount: {
+      control: { type: 'number', min: 0 },
+      description: '未読件数',
+      table: { category: 'Story' }
     }
   },
   parameters: {
-    controls: { include: ['title', 'width', 'showSlots'] },
+    controls: { include: ['title', 'width', 'showSlots', 'unreadCount'] },
     docs: {
       description: {
         component:
@@ -42,7 +50,7 @@ const meta = {
     }
   },
   render: args => ({
-    components: { ThreadSummaryCard },
+    components: { ThreadSummaryCard, ThreadUnreadBadge },
     setup: () => ({ args }),
     template: `
       <article :style="{ width: args.width + 'px', maxWidth: '100%' }">
@@ -58,7 +66,7 @@ const meta = {
         </div>
         <ThreadSummaryCard :title="args.title" @open="args.onOpen">
           <template v-if="args.showSlots" #badge>
-            <span style="color: var(--theme-accent-primary-default); font-weight: bold;">+5</span>
+            <ThreadUnreadBadge :unread-count="args.unreadCount" />
           </template>
           <template v-if="args.showSlots" #default>
             <span style="display: flex; align-items: center; gap: 8px;">
@@ -110,6 +118,27 @@ export const WithSlots: Story = {
       description: {
         story:
           'バッジと最新メッセージは別 issue の担当範囲のため、スロットの配置確認用に仮の要素を表示しています。'
+      }
+    }
+  }
+}
+
+export const NoUnread: Story = {
+  args: {
+    showSlots: true,
+    unreadCount: 0
+  }
+}
+
+export const ManyUnread: Story = {
+  args: {
+    showSlots: true,
+    unreadCount: 100
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: '100件以上の未読は、表示上は +99 に丸められます。'
       }
     }
   }
