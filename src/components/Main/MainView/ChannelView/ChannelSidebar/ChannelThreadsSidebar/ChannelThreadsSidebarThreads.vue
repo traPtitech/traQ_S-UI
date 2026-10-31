@@ -23,7 +23,7 @@
         <bdi :class="$style.firstUser">
           {{ firstUser.displayName }}
         </bdi>
-        <ChannelElementUnreadBadge
+        <UnreadBadge
           :class="$style.unreadBadge"
           :unread-count="unread?.count"
           :is-noticeable="unread?.noticeable"
@@ -57,8 +57,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
 import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
+import UnreadBadge from '/@/components/UI/UnreadBadge.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import useChannelPath from '/@/composables/useChannelPath'
@@ -163,7 +163,6 @@ const threads = getMockThreadItems()
 
 .unreadBadge {
   margin-left: auto;
-  font-weight: normal;
 }
 
 .time {
