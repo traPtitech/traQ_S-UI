@@ -45,20 +45,39 @@
         aria-hidden="true"
       />
     </button>
+    <UserIconEllipsisList
+      v-if="modelValue === 'threads'"
+      :direction="isMobile ? 'row' : 'col'"
+      transition="fade-bottom"
+      count-clickable
+      show-count
+      :user-ids="viewerIds"
+      :inactive-user-ids="inactiveViewerIds"
+      :class="$style.viewers"
+      @count-click="emit('openViewers')"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
+import useResponsive from '/@/composables/useResponsive'
+import type { UserId } from '/@/types/entity-ids'
 
 defineProps<{
   modelValue: 'information' | 'threads'
+  viewerIds: readonly UserId[]
+  inactiveViewerIds: readonly UserId[]
 }>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: 'information' | 'threads'): void
   (e: 'close'): void
+  (e: 'openViewers'): void
 }>()
+
+const { isMobile } = useResponsive()
 </script>
 
 <style lang="scss" module>
@@ -128,6 +147,15 @@ const emit = defineEmits<{
   }
 }
 
+.viewers {
+  @include color-ui-secondary;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 56px;
+  pointer-events: all;
+}
+
 .modeControl {
   @include color-accent-primary;
 }
@@ -160,6 +188,12 @@ const emit = defineEmits<{
 
   &::after {
     display: none;
+  }
+
+  .viewers {
+    position: static;
+    width: auto;
+    margin-left: auto;
   }
 }
 </style>
