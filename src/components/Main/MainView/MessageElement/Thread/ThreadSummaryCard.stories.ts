@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { fn } from 'storybook/test'
 
 import ThreadSummaryCard from './ThreadSummaryCard.vue'
-import ThreadUnreadBadge from './ThreadUnreadBadge.vue'
+import ThreadUnreadCountBadge from './ThreadUnreadCountBadge.vue'
 
 type StoryArgs = Pick<
   InstanceType<typeof ThreadSummaryCard>['$props'],
@@ -50,7 +50,7 @@ const meta = {
     }
   },
   render: args => ({
-    components: { ThreadSummaryCard, ThreadUnreadBadge },
+    components: { ThreadSummaryCard, ThreadUnreadCountBadge },
     setup: () => ({ args }),
     template: `
       <article :style="{ width: args.width + 'px', maxWidth: '100%' }">
@@ -66,7 +66,7 @@ const meta = {
         </div>
         <ThreadSummaryCard :title="args.title" @open="args.onOpen">
           <template #badge>
-            <ThreadUnreadBadge :unread-count="args.unreadCount" />
+            <ThreadUnreadCountBadge :unread-count="args.unreadCount" />
           </template>
           <template v-if="args.showSlots" #default>
             <span style="display: flex; align-items: center; gap: 8px;">
