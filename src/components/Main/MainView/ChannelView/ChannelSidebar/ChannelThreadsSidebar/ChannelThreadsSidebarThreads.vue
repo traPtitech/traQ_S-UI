@@ -1,7 +1,13 @@
 <template>
   <div :class="$style.container">
     <router-link
-      v-for="{ thread, firstMessage, firstUser, firstMessageDate } in threads"
+      v-for="{
+        thread,
+        firstMessage,
+        firstUser,
+        firstMessageDate,
+        unread
+      } in threads"
       :key="thread.id"
       :to="constructChannelPath(`${channelPath}/${thread.id}`)"
       :class="$style.thread"
@@ -17,6 +23,11 @@
         <bdi :class="$style.firstUser">
           {{ firstUser.displayName }}
         </bdi>
+        <UnreadBadge
+          :class="$style.unreadBadge"
+          :unread-count="unread?.count"
+          :is-noticeable="unread?.noticeable"
+        />
       </h2>
       <RenderContent :content="firstMessage.content" line-clamp-content />
       <div :class="$style.separator" />
@@ -47,6 +58,7 @@
 import { computed } from 'vue'
 
 import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
+import UnreadBadge from '/@/components/UI/UnreadBadge.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import useChannelPath from '/@/composables/useChannelPath'
@@ -76,7 +88,7 @@ const threads = getMockThreadItems()
       Number(a.thread.archived) - Number(b.thread.archived) ||
       b.latestMessage.createdAt.localeCompare(a.latestMessage.createdAt)
   )
-  .map(({ thread }) => {
+  .map(({ thread, unread }) => {
     const firstMessage = getMockThreadMessages(thread.id)[0]
     if (!firstMessage) throw new Error('最初のメッセージのモックがありません')
     const firstUser = mockThreadUsers.find(
@@ -84,7 +96,7 @@ const threads = getMockThreadItems()
     )
     if (!firstUser) throw new Error('発言者のモックがありません')
     const firstMessageDate = useDateRepresentation(() => firstMessage.createdAt)
-    return { thread, firstMessage, firstUser, firstMessageDate }
+    return { thread, firstMessage, firstUser, firstMessageDate, unread }
   })
 </script>
 
@@ -147,6 +159,10 @@ const threads = getMockThreadItems()
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.unreadBadge {
+  margin-left: auto;
 }
 
 .time {
