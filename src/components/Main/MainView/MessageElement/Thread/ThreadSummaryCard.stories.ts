@@ -65,7 +65,7 @@ const meta = {
           </div>
         </div>
         <ThreadSummaryCard :title="args.title" @open="args.onOpen">
-          <template v-if="args.showSlots" #badge>
+          <template #badge>
             <ThreadUnreadBadge :unread-count="args.unreadCount" />
           </template>
           <template v-if="args.showSlots" #default>
