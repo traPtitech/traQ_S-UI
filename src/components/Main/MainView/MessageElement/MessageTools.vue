@@ -42,6 +42,7 @@
           @click="toggleQuickReaction"
         />
       </template>
+      <AIcon mdi name="reply-all" :size="28" :class="$style.icon" />
       <AIcon
         v-if="!isMinimum"
         mdi
