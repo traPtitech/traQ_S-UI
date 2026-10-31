@@ -27,7 +27,7 @@
       />
     </template>
     <template #opener>
-      <ChannelInformationSidebarHidden
+      <ChannelSidebarHidden
         :viewer-ids="activeViewingUsers"
         :inactive-viewer-ids="inactiveViewingUsers"
         @open="openSidebar"
@@ -39,7 +39,7 @@
 <script lang="ts" setup>
 import type { Pin } from '@traptitech/traq'
 
-import ChannelInformationSidebarHidden from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarHidden.vue'
+import ChannelSidebarHidden from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelSidebarHidden.vue'
 import InformationSidebarEventsPage from '/@/components/Main/MainView/InformationSidebar/InformationSidebarEventsPage.vue'
 import InformationSidebarPinnedPage from '/@/components/Main/MainView/InformationSidebar/InformationSidebarPinnedPage.vue'
 import useChannelInformationSidebar from '/@/components/Main/MainView/InformationSidebar/composables/useChannelInformationSidebar'

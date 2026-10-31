@@ -2,7 +2,13 @@
   <PrimaryViewSidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #page>
       <div :class="$style.panel">
-        <ChannelSidebarControls v-model="sidebarMode" @close="closeSidebar" />
+        <ChannelSidebarControls
+          v-model="sidebarMode"
+          :viewer-ids="activeViewingUsers"
+          :inactive-viewer-ids="inactiveViewingUsers"
+          @close="closeSidebar"
+          @open-viewers="openInformationViewers"
+        />
         <ChannelInformationSidebar
           v-if="sidebarMode === 'information'"
           v-model:is-viewers-detail-open="isViewersDetailOpen"
@@ -15,14 +21,12 @@
       </div>
     </template>
     <template #opener>
-      <ChannelInformationSidebarHidden
-        v-if="sidebarMode === 'information'"
+      <ChannelSidebarHidden
         :viewer-ids="activeViewingUsers"
         :inactive-viewer-ids="inactiveViewingUsers"
         @open="openSidebar"
         @open-viewers="openInformationViewers"
       />
-      <PrimaryViewSidebarHidden v-else @open="openSidebar" />
     </template>
   </PrimaryViewSidebar>
 </template>
@@ -33,13 +37,12 @@ import type { Pin } from '@traptitech/traq'
 import { ref } from 'vue'
 
 import PrimaryViewSidebar from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebar.vue'
-import PrimaryViewSidebarHidden from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarHidden.vue'
 import useSidebar from '/@/composables/mainView/useSidebar'
 import type { ChannelId, UserId } from '/@/types/entity-ids'
 
 import ChannelInformationSidebar from './ChannelInformationSidebar/ChannelInformationSidebar.vue'
-import ChannelInformationSidebarHidden from './ChannelInformationSidebar/ChannelInformationSidebarHidden.vue'
 import ChannelSidebarControls from './ChannelSidebarControls.vue'
+import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
 import ChannelThreadsSidebar from './ChannelThreadsSidebar/ChannelThreadsSidebar.vue'
 
 defineProps<{
