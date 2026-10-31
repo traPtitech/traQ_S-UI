@@ -27,15 +27,10 @@ const unreadCountString = computed(() => {
 .container {
   position: relative;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 24px;
   height: 24px;
-  padding: 0;
-  gap: 10px;
-  isolation: isolate;
-  flex-shrink: 0;
 }
 
 .indicator {
@@ -50,16 +45,11 @@ const unreadCountString = computed(() => {
 }
 
 .count {
+  @include size-body2;
   @include color-accent-primary;
   width: 24px;
-  height: 21px;
-  align-self: stretch;
-  font-family: 'Mplus 1p Bold';
-  font-size: 14px;
-  font-style: normal;
   font-weight: 700;
   line-height: 21px;
   text-align: center;
-  z-index: 0;
 }
 </style>
