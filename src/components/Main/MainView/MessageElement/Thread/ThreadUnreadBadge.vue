@@ -18,8 +18,8 @@ const props = withDefaults(
 )
 
 const unreadCountString = computed(() => {
-  if (props.unreadCount > 99) return '+99'
-  return `+${props.unreadCount}`
+  if (props.unreadCount > 99) return '99+'
+  return `${props.unreadCount}`
 })
 </script>
 
