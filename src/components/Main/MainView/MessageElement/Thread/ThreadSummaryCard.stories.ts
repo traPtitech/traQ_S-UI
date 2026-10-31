@@ -138,7 +138,7 @@ export const ManyUnread: Story = {
   parameters: {
     docs: {
       description: {
-        story: '100件以上の未読は、表示上は +99 に丸められます。'
+        story: '100件以上の未読は、表示上は 99+ に丸められます。'
       }
     }
   }
