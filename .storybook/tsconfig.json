@@ -1,10 +1,15 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["node"]
+    "types": [
+      "node",
+      "serviceworker",
+      "dom-screen-wake-lock",
+      "webappsec-credential-management"
+    ]
   },
   "vueCompilerOptions": {
-    "fallthroughAttributes": false
+    "fallthroughAttributes": true
   },
   "include": [
     "./**/*.ts",

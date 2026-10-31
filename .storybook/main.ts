@@ -19,7 +19,10 @@ const config: StorybookConfig = {
       }
     }
   },
-  staticDirs: ['../public']
+  staticDirs: [
+    '../public',
+    { from: '../public/img/icons', to: '/api/v3/files' }
+  ]
 }
 
 export default config
