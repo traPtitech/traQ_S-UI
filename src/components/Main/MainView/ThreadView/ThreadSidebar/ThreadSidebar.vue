@@ -29,7 +29,7 @@
       />
     </template>
     <template #opener>
-      <ThreadSidebarHidden
+      <ChannelSidebarHidden
         :viewer-ids="activeViewingUsers"
         :inactive-viewer-ids="inactiveViewingUsers"
         @open="openSidebar"
@@ -44,9 +44,10 @@ import type { Pin } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
+import ChannelSidebarHidden from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelSidebarHidden.vue'
 import SidebarEventsPage from '/@/components/Main/MainView/InformationSidebar/InformationSidebarEventsPage.vue'
 import SidebarPinnedPage from '/@/components/Main/MainView/InformationSidebar/InformationSidebarPinnedPage.vue'
-import useThreadSidebarCommon from '/@/components/Main/MainView/InformationSidebar/composables/useChannelInformationSidebar'
+import useChannelInformationSidebar from '/@/components/Main/MainView/InformationSidebar/composables/useChannelInformationSidebar'
 import PrimaryViewSidebar from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebar.vue'
 import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
 import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
@@ -55,7 +56,6 @@ import useToggle from '/@/composables/utils/useToggle'
 import type { ChannelId, UserId } from '/@/types/entity-ids'
 
 import ThreadSidebarContent from './ThreadSidebarContent.vue'
-import ThreadSidebarHidden from './ThreadSidebarHidden.vue'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -72,7 +72,7 @@ const {
   moveToPinnedPage,
   moveToEventsPage,
   openSidebar
-} = useThreadSidebarCommon()
+} = useChannelInformationSidebar()
 
 const channelName = computed(
   () => channelIdToPath(props.channelId)?.at(-1) ?? ''

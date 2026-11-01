@@ -2,25 +2,24 @@
   <PrimaryViewHeader>
     <template #header>
       <div :class="$style.header">
-        <ThreadHeaderThreadName :channel-id="channelId" />
-        <ThreadHeaderRelationButton :key="channelId" :channel-id="channelId" />
-        <ThreadHeaderTopic :class="$style.topic" :channel-id="channelId" />
+        <ChannelHeaderChannelName :channel-id="channelId" />
+        <ChannelHeaderRelationButton :key="channelId" :channel-id="channelId" />
+        <ChannelHeaderTopic :class="$style.topic" :channel-id="channelId" />
       </div>
     </template>
     <template #tools>
-      <ThreadHeaderTools :channel-id="channelId" />
+      <ChannelHeaderTools :channel-id="channelId" />
     </template>
   </PrimaryViewHeader>
 </template>
 
 <script lang="ts" setup>
+import ChannelHeaderChannelName from '/@/components/Main/MainView/ChannelView/ChannelHeader/ChannelHeaderChannelName.vue'
+import ChannelHeaderRelationButton from '/@/components/Main/MainView/ChannelView/ChannelHeader/ChannelHeaderRelationButton.vue'
+import ChannelHeaderTools from '/@/components/Main/MainView/ChannelView/ChannelHeader/ChannelHeaderTools.vue'
+import ChannelHeaderTopic from '/@/components/Main/MainView/ChannelView/ChannelHeader/ChannelHeaderTopic.vue'
 import PrimaryViewHeader from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeader.vue'
 import type { ChannelId } from '/@/types/entity-ids'
-
-import ThreadHeaderRelationButton from './ThreadHeaderRelationButton.vue'
-import ThreadHeaderThreadName from './ThreadHeaderThreadName.vue'
-import ThreadHeaderTools from './ThreadHeaderTools.vue'
-import ThreadHeaderTopic from './ThreadHeaderTopic.vue'
 
 defineProps<{
   channelId: ChannelId

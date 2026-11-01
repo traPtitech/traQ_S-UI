@@ -1,36 +1,42 @@
 <template>
   <div>
-    <ThreadSidebarViewers
+    <ChannelInformationSidebarViewers
       v-model="isViewersDetailOpen"
       :viewer-ids="viewerIds"
       :inactive-viewer-ids="inactiveViewerIds"
       :class="$style.sidebarItem"
     />
-    <ThreadSidebarQall
+    <ChannelInformationSidebarQall
       v-if="qallUserIds.length > 0"
       :qall-user-ids="qallUserIds"
       :class="$style.sidebarItem"
     />
-    <ThreadSidebarTopic :class="$style.sidebarItem" :channel-id="channelId" />
-    <ThreadSidebarPinned
+    <ChannelInformationSidebarTopic
+      :class="$style.sidebarItem"
+      :channel-id="channelId"
+    />
+    <ChannelInformationSidebarPinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.sidebarItem"
       @click-link="emit('moveToPinned')"
     />
-    <ThreadSidebarEvents
+    <ChannelInformationSidebarEvents
       :class="$style.sidebarItem"
       @click-link="emit('moveToEvents')"
     />
-    <ThreadSidebarRelation
+    <ChannelInformationSidebarRelation
       :channel-id="channelId"
       :class="$style.sidebarItem"
     />
-    <ThreadSidebarMember
+    <ChannelInformationSidebarMember
       :channel-id="channelId"
       :class="$style.sidebarItem"
       :viewer-ids="viewerIds"
     />
-    <ThreadSidebarBots :channel-id="channelId" :class="$style.sidebarItem" />
+    <ChannelInformationSidebarBots
+      :channel-id="channelId"
+      :class="$style.sidebarItem"
+    />
     <!--
     <channel-sidebar-edit :class="$style.edit" />
     -->
@@ -40,17 +46,16 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 
+import ChannelInformationSidebarBots from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarBots.vue'
+import ChannelInformationSidebarEvents from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarEvents.vue'
+import ChannelInformationSidebarMember from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarMember.vue'
+import ChannelInformationSidebarPinned from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarPinned.vue'
+import ChannelInformationSidebarQall from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarQall.vue'
+import ChannelInformationSidebarRelation from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarRelation.vue'
+import ChannelInformationSidebarTopic from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarTopic.vue'
+import ChannelInformationSidebarViewers from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarViewers.vue'
 import { useQall } from '/@/composables/qall/useQall'
 import type { ChannelId, UserId } from '/@/types/entity-ids'
-
-import ThreadSidebarBots from './ThreadSidebarBots.vue'
-import ThreadSidebarEvents from './ThreadSidebarEvents.vue'
-import ThreadSidebarMember from './ThreadSidebarMember.vue'
-import ThreadSidebarPinned from './ThreadSidebarPinned.vue'
-import ThreadSidebarQall from './ThreadSidebarQall.vue'
-import ThreadSidebarRelation from './ThreadSidebarRelation.vue'
-import ThreadSidebarTopic from './ThreadSidebarTopic.vue'
-import ThreadSidebarViewers from './ThreadSidebarViewers.vue'
 
 const isViewersDetailOpen = defineModel<boolean>('isViewersDetailOpen', {
   required: true
