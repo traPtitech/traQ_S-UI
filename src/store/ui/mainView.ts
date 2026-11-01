@@ -113,7 +113,7 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
     return 'default'
   })
 
-  const changePrimaryViewToChannelOrThreadOrDM = async ({
+  const resolveChannelView = async ({
     channelId,
     entryMessageId
   }: {
@@ -130,25 +130,21 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
         throw new Error('user not found')
       }
 
-      changePrimaryViewToDM({
+      return {
+        type: 'dm' as const,
         channelId,
         entryMessageId,
         userName: user.name
-      })
-      return
+      }
     }
     if (!channelsStore.channelsMap.value.has(channelId)) {
       const thread = await useThreadsStore().fetchThread(channelId, {
         force: true
       })
       if (!thread) throw new Error('thread not found')
-      changePrimaryViewToThread({ channelId, entryMessageId })
-      return
+      return { type: 'thread' as const, channelId, entryMessageId }
     }
-    changePrimaryViewToChannel({
-      channelId,
-      entryMessageId
-    })
+    return { type: 'channel' as const, channelId, entryMessageId }
   }
 
   const changePrimaryViewToChannel = ({
@@ -223,7 +219,7 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
     secondaryView,
     headerStyle,
 
-    changePrimaryViewToChannelOrThreadOrDM,
+    resolveChannelView,
     changePrimaryViewToChannel,
     changePrimaryViewToThread,
     changePrimaryViewToDM,
