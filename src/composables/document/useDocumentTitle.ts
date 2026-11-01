@@ -1,7 +1,8 @@
-import { computed, watchEffect } from 'vue'
+import { watchEffect } from 'vue'
+
+import { computedAsync } from '@vueuse/core'
 
 import useChannelPath from '/@/composables/useChannelPath'
-import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 import { isolateBidiText } from '/@/lib/basic/string'
 import { fallbackChannelPath } from '/@/lib/config'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
@@ -15,13 +16,15 @@ const useDocumentTitle = () => {
   const { clipFoldersMap } = useClipFoldersStore()
   const { channelIdToShortPathString } = useChannelPath()
 
-  const primaryViewTitle = computed(() => {
+  const primaryViewTitle = computedAsync(async () => {
     switch (primaryView.value.type) {
-      case 'channel': {
+      case 'channel':
+      case 'thread': {
         const channelId = primaryView.value.channelId
 
-        return setFallbackForNullishOrOnError(fallbackChannelPath).exec(() =>
-          channelIdToShortPathString(channelId, true)
+        return (
+          (await channelIdToShortPathString(channelId, true)) ??
+          fallbackChannelPath
         )
       }
 
@@ -36,7 +39,7 @@ const useDocumentTitle = () => {
     }
     const check: never = primaryView.value
     throw new Error(`Unexpected primaryView: ${check}`)
-  })
+  }, '')
 
   watchEffect(() => {
     // ユーザー入力の文字方向が document.title 全体の表示方向に影響しないようにする

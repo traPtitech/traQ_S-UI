@@ -25,6 +25,8 @@ import type { Message } from '@traptitech/traq'
 
 import { type DeepReadonly, computed } from 'vue'
 
+import { computedAsync } from '@vueuse/core'
+
 import MessageLink from '/@/components/UI/MessageLink.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useDateRepresentation } from '/@/composables/useDateRepresentation'
@@ -42,11 +44,14 @@ const props = withDefaults(
 
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
 
-const channelPath = computed(
-  () => channelIdToPathString(props.message.channelId, true) ?? ''
+const channelPath = computedAsync(
+  async () =>
+    (await channelIdToPathString(props.message.channelId, true)) ?? '',
+  ''
 )
-const channelLink = computed(
-  () => channelIdToLink(props.message.channelId) ?? ''
+const channelLink = computedAsync(
+  async () => (await channelIdToLink(props.message.channelId)) ?? '',
+  ''
 )
 const date = computed(() => props.date ?? new Date(props.message.createdAt))
 const representedDate = useDateRepresentation(date)

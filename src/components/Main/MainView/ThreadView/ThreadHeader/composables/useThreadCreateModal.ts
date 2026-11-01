@@ -1,0 +1,24 @@
+import { computed } from 'vue'
+
+import useCanCreateChildChannel from '/@/composables/modal/useCanCreateChildChannel'
+import { useModalStore } from '/@/store/ui/modal'
+import type { ChannelId } from '/@/types/entity-ids'
+
+const useThreadCreateModal = (props: { channelId: ChannelId }) => {
+  const { pushModal } = useModalStore()
+  const { canCreateChildChannel } = useCanCreateChildChannel()
+
+  const isChildChannelCreatable = computed(() =>
+    canCreateChildChannel(props.channelId)
+  )
+
+  const openChannelCreateModal = () => {
+    pushModal({
+      type: 'channel-create',
+      parentChannelId: props.channelId
+    })
+  }
+  return { isChildChannelCreatable, openChannelCreateModal }
+}
+
+export default useThreadCreateModal

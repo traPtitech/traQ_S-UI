@@ -13,10 +13,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computedAsync } from '@vueuse/core'
 
 import useChannelPath from '/@/composables/useChannelPath'
-import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 import { fallbackChannelPath } from '/@/lib/config'
 import { useViewStatesStore } from '/@/store/domain/viewStates'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -29,12 +28,15 @@ fetchViewStates()
 
 const { channelIdToPathString } = useChannelPath()
 
-const monitoringChannelStrings = computed(() =>
-  [...monitoringChannels.value.values()].map(channelId =>
-    setFallbackForNullishOrOnError(fallbackChannelPath).exec(() =>
-      channelIdToPathString(channelId, true)
-    )
-  )
+const monitoringChannelStrings = computedAsync(
+  async () =>
+    Promise.all(
+      [...monitoringChannels.value.values()].map(
+        async channelId =>
+          (await channelIdToPathString(channelId, true)) ?? fallbackChannelPath
+      )
+    ),
+  []
 )
 </script>
 

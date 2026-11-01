@@ -3,7 +3,7 @@ import type { Channel } from '@traptitech/traq'
 import type { Ref } from 'vue'
 import { computed, unref } from 'vue'
 
-import useChannelPath from '/@/composables/useChannelPath'
+import useCachedChannelPath from '/@/composables/useCachedChannelPath'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { nilUuid } from '/@/lib/basic/uuid'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -20,7 +20,7 @@ const useChannelOptions = (
   containsArchivedChannels = false
 ) => {
   const { channelsMap } = useChannelsStore()
-  const { channelIdToPathString } = useChannelPath()
+  const { channelIdToPathString } = useCachedChannelPath()
 
   const nullVal = computed(() => {
     const nullKeyNameUnref = unref(nullKeyName)

@@ -99,7 +99,7 @@ const useModalStorePinia = defineStore('ui/modal', () => {
    * `history.state`が残り一個の状態で、これ以上戻るとtraQの外に出る時用のメソッド (例: `/files/:id`を直に開いた場合)
    * 注意: このメソッドをhistoryにstateが乗っている状態で呼ぶとhistoryとの同期を破壊するため、直接開いたファイル画面を閉じる等以外で呼ばない
    */
-  const closeModal = () => {
+  const closeModal = async () => {
     history.replaceState(
       {
         ...history.state,
@@ -112,14 +112,11 @@ const useModalStorePinia = defineStore('ui/modal', () => {
     )
     modalState.value = history.state.modalState
 
-    const { channelIdToPathString } = useChannelPath()
+    const { channelIdToLink } = useChannelPath()
     const primaryView = mainViewStore.primaryView.value
-    if (primaryView.type === 'channel') {
-      router.replace(
-        constructChannelPath(
-          channelIdToPathString(primaryView.channelId) as string
-        )
-      )
+    if (primaryView.type === 'channel' || primaryView.type === 'thread') {
+      const link = await channelIdToLink(primaryView.channelId)
+      router.replace(link ?? constructChannelPath(primaryView.channelId))
     } else if (primaryView.type === 'dm') {
       router.replace(constructUserPath(primaryView.userName))
     } else {

@@ -3,12 +3,12 @@ import type { Channel } from '@traptitech/traq'
 import type { Ref } from 'vue'
 import { computed, ref } from 'vue'
 
-import useChannelPath from '/@/composables/useChannelPath'
+import useCachedChannelPath from '/@/composables/useCachedChannelPath'
 import { channelDeepMatching } from '/@/lib/channel'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
-  const { channelIdToPathString } = useChannelPath()
+  const { channelIdToPathString } = useCachedChannelPath()
 
   const { channelsMap } = useChannelsStore()
 

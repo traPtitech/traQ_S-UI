@@ -25,7 +25,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 
-import useChannelPath from '/@/composables/useChannelPath'
+import useCachedChannelPath from '/@/composables/useCachedChannelPath'
 import useResponsive from '/@/composables/useResponsive'
 import { constructChannelPath } from '/@/router'
 import type { ChannelId } from '/@/types/entity-ids'
@@ -36,7 +36,7 @@ const props = defineProps<{
 
 const { isMobile } = useResponsive()
 
-const { channelIdToPath } = useChannelPath()
+const { channelIdToPath } = useCachedChannelPath()
 
 type ChannelPathInfo = {
   name: string

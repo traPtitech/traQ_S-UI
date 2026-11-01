@@ -1,0 +1,72 @@
+<template>
+  <RouterLink :id="linkId" :to="channelLink" :class="$style.wrap">
+    <div :class="$style.channelName"># {{ props.channel.name }}</div>
+    <div :class="[$style.topic, isTopicEmpty && $style.empty]" dir="auto">
+      {{ topic }}
+    </div>
+  </RouterLink>
+</template>
+
+<script setup lang="ts">
+import type { Channel } from '@traptitech/traq'
+
+import { computed, useId } from 'vue'
+import { RouterLink } from 'vue-router'
+
+import useCachedChannelPath from '/@/composables/useCachedChannelPath'
+
+const props = defineProps<{
+  channel: Channel
+}>()
+
+const linkId = useId()
+const focus = () => {
+  // HACK: RouterLink が focus できないので、id から HTMLElement を取得して focus する
+  const link = document.getElementById(linkId) as HTMLElement | null
+  link?.focus()
+}
+
+const { channelIdToLink } = useCachedChannelPath()
+const channelLink = computed(() => channelIdToLink(props.channel.id) ?? '')
+
+const isTopicEmpty = computed(() => props.channel.topic.length === 0)
+const topic = computed(() =>
+  isTopicEmpty.value ? '[トピック未設定]' : props.channel.topic
+)
+
+defineExpose({ focus })
+</script>
+
+<style lang="scss" module>
+.wrap {
+  overflow: hidden;
+  width: 100%;
+  display: grid;
+}
+
+.channelName,
+.topic {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  contain: var(--contain-strict);
+  height: 1.5rem;
+  line-height: 1.5rem;
+  text-align: left;
+}
+
+.channelName {
+  @include color-ui-primary;
+
+  font-weight: bold;
+}
+.topic {
+  @include color-ui-secondary;
+  @include size-caption;
+
+  &.empty {
+    opacity: 0.5;
+  }
+}
+</style>

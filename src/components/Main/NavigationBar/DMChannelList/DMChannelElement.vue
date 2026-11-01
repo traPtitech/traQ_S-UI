@@ -40,7 +40,7 @@ import { computed, toRef } from 'vue'
 import UnreadBadge from '/@/components/UI/UnreadBadge.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import useHover from '/@/composables/dom/useHover'
-import useChannelPath from '/@/composables/useChannelPath'
+import useCachedChannelPath from '/@/composables/useCachedChannelPath'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import { useUsersStore } from '/@/store/entities/users'
 
@@ -57,7 +57,7 @@ const user = computed(() => usersMap.value.get(props.dmChannel.userId))
 const notificationState = useNotificationState(toRef(props, 'dmChannel'))
 
 const { openLink } = useOpenLink()
-const { channelIdToLink } = useChannelPath()
+const { channelIdToLink } = useCachedChannelPath()
 const openChannel = (event: MouseEvent) => {
   openLink(event, channelIdToLink(props.dmChannel.id) as string)
 }

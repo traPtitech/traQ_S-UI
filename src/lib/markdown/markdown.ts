@@ -1,6 +1,6 @@
 import type { Store, traQMarkdownIt } from '@traptitech/traq-markdown-it'
 
-import useChannelPath from '/@/composables/useChannelPath'
+import useCachedChannelPath from '/@/composables/useCachedChannelPath'
 import { embeddingOrigin } from '/@/lib/apis'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -36,7 +36,7 @@ const storeProvider: Store = {
     return findUserByName(name)
   },
   generateChannelHref(id) {
-    const { channelIdToLink } = useChannelPath()
+    const { channelIdToLink } = useCachedChannelPath()
     return `${embeddingOrigin}${channelIdToLink(id) as string}`
   },
   generateUserHref(id) {

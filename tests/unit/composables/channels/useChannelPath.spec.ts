@@ -199,11 +199,11 @@ describe('useChannelPath', () => {
     }
   ])(
     'channelIdToShortPathString: $expectedPath -> $expectedShort',
-    ({ id, expectedPath, expectedShort }) => {
+    async ({ id, expectedPath, expectedShort }) => {
       const { channelIdToShortPathString, channelIdToPath } = useChannel()
 
-      expect(channelIdToPath(id)).toEqual(expectedPath)
-      expect(channelIdToShortPathString(id)).toBe(expectedShort)
+      expect(await channelIdToPath(id)).toEqual(expectedPath)
+      expect(await channelIdToShortPathString(id)).toBe(expectedShort)
     }
   )
 })

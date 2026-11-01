@@ -2,7 +2,7 @@ import type { Channel } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
-import useChannelPath from '/@/composables/useChannelPath'
+import useCachedChannelPath from '/@/composables/useCachedChannelPath'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 
 interface TreeProps {
@@ -18,7 +18,8 @@ interface ListProps {
 export type TypedProps = TreeProps | ListProps
 
 export const usePath = (typedProps: TypedProps) => {
-  const { channelIdToShortPathString, channelIdToPathString } = useChannelPath()
+  const { channelIdToShortPathString, channelIdToPathString } =
+    useCachedChannelPath()
 
   const getPathWithAncestor = (skippedAncestorNames?: string[]) =>
     skippedAncestorNames

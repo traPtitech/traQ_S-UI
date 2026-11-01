@@ -1,5 +1,6 @@
 export type MessageId = string
 export type ChannelId = string
+export type ThreadChannelId = string
 export type DMChannelId = string
 export type UserId = string
 export type UserGroupId = string

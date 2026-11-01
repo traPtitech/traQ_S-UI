@@ -19,6 +19,8 @@
 <script lang="ts" setup>
 import { computed, ref, watchEffect } from 'vue'
 
+import { computedAsync } from '@vueuse/core'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { renderInline } from '/@/lib/markdown/markdown'
@@ -32,10 +34,14 @@ const props = defineProps<{
 
 const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
 
-const channelPath = computed(
-  () => channelIdToShortPathString(props.channelId, true) ?? ''
+const channelPath = computedAsync(
+  async () => (await channelIdToShortPathString(props.channelId, true)) ?? '',
+  ''
 )
-const channelLink = computed(() => channelIdToLink(props.channelId) ?? '')
+const channelLink = computedAsync(
+  async () => (await channelIdToLink(props.channelId)) ?? '',
+  ''
+)
 const hasAttachments = computed(() => props.state.attachments.length > 0)
 
 const renderedContent = ref()

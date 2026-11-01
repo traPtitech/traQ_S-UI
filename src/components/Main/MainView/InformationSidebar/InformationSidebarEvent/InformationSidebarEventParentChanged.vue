@@ -15,7 +15,7 @@ import type { ParentChangedEvent } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
-import useChannelPath from '/@/composables/useChannelPath'
+import useCachedChannelPath from '/@/composables/useCachedChannelPath'
 
 import InformationSidebarEventFrame from './InformationSidebarEventFrame.vue'
 
@@ -24,7 +24,7 @@ const props = defineProps<{
   details: ParentChangedEvent
 }>()
 
-const { channelIdToPathString, channelIdToLink } = useChannelPath()
+const { channelIdToPathString, channelIdToLink } = useCachedChannelPath()
 
 const newParentPath = computed(() =>
   channelIdToPathString(props.details.after, true)

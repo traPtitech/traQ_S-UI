@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import useChannelPath from '/@/composables/useChannelPath'
+import useCachedChannelPath from '/@/composables/useCachedChannelPath'
 import { constructUserPath } from '/@/router'
 
 import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
@@ -35,7 +35,7 @@ const props = withDefaults(
 )
 
 const { openLinkAndClearModal } = useOpenLinkAndClearModal()
-const { channelIdToLink } = useChannelPath()
+const { channelIdToLink } = useCachedChannelPath()
 
 const onDMClick = async (event: MouseEvent) => {
   openLinkAndClearModal(event, constructUserPath(props.userName))

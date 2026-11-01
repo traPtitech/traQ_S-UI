@@ -10,13 +10,15 @@ import type {
   ChannelId,
   ClipFolderId,
   DMChannelId,
-  MessageId
+  MessageId,
+  ThreadChannelId
 } from '/@/types/entity-ids'
 
 interface ViewInformationBase {
   type: string
 }
-export type PrimaryViewInformation = ChannelView | ClipsView | DMView
+export type PrimaryViewInformation =
+  ChannelView | ClipsView | DMView | ThreadView
 export type SecondaryViewInformation = QallView
 export type ViewInformation = ChannelView | QallView | ClipsView | DMView
 
@@ -38,6 +40,12 @@ export interface DMView extends ViewInformationBase {
   type: 'dm'
   channelId: DMChannelId
   userName: string
+  entryMessageId?: MessageId
+}
+
+export interface ThreadView extends ViewInformationBase {
+  type: 'thread'
+  channelId: ThreadChannelId
   entryMessageId?: MessageId
 }
 
@@ -104,11 +112,11 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
     return 'default'
   })
 
-  const changePrimaryViewToChannelOrDM = async ({
+  const changePrimaryViewToChannelOrThreadOrDM = async ({
     channelId,
     entryMessageId
   }: {
-    channelId: ChannelId | DMChannelId
+    channelId: ChannelId | ThreadChannelId | DMChannelId
     entryMessageId?: MessageId
   }) => {
     const DMChannel = channelsStore.dmChannelsMap.value.get(channelId)
@@ -128,6 +136,7 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
       })
       return
     }
+    // TODO: Threadのやつも書く
     changePrimaryViewToChannel({
       channelId,
       entryMessageId
@@ -150,6 +159,20 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
     // 通常のチャンネルは最後に開いたチャンネルとして保持
     if (channelsStore.channelsMap.value.has(channelId)) {
       lastOpenChannelId.value = channelId
+    }
+  }
+
+  const changePrimaryViewToThread = ({
+    channelId,
+    entryMessageId
+  }: {
+    channelId: ThreadChannelId
+    entryMessageId?: MessageId
+  }) => {
+    primaryView.value = {
+      type: 'thread',
+      channelId,
+      entryMessageId
     }
   }
 
@@ -192,8 +215,9 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
     secondaryView,
     headerStyle,
 
-    changePrimaryViewToChannelOrDM,
+    changePrimaryViewToChannelOrThreadOrDM,
     changePrimaryViewToChannel,
+    changePrimaryViewToThread,
     changePrimaryViewToDM,
     changePrimaryViewToClip
   }

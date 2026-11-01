@@ -8,8 +8,10 @@ import { useRenderKey } from '/@/composables/dom/useRenderKey'
 import useNavigationController from '/@/composables/mainView/useNavigationController'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useMessageQuery } from '/@/composables/utils/useMessageQuery'
+import apis from '/@/lib/apis'
 import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 import { getFirstParam } from '/@/lib/basic/url'
+import { isUUID } from '/@/lib/basic/uuid'
 import router, { RouteName, constructChannelPath } from '/@/router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
@@ -27,12 +29,14 @@ const useRouteWatcher = () => {
   const {
     primaryView,
     changePrimaryViewToChannel,
+    changePrimaryViewToThread,
     changePrimaryViewToDM,
     changePrimaryViewToClip,
-    changePrimaryViewToChannelOrDM
+    changePrimaryViewToChannelOrThreadOrDM
   } = useMainViewStore()
   const { fetchMessage, fetchFileMetaData } = useMessagesStore()
-  const { channelPathStringToId, channelIdToLink } = useChannelPath()
+  const { channelPathStringToId, channelIdToLink, channelIdToPathString } =
+    useChannelPath()
   const { closeNav } = useNavigationController()
   const { isOnInitialModalRoute, replaceModal, clearModalState } =
     useModalStore()
@@ -93,6 +97,53 @@ const useRouteWatcher = () => {
     })()
 
     if (!id) {
+      const threadId = pathOrId.split('/').at(-1) ?? ''
+      if (isUUID(threadId)) {
+        const entryMessageId = messageQuery.value
+        const channel = await apis
+          .getChannel(threadId)
+          .then(({ data }) => data)
+          .catch(() => null)
+
+        // 取得中に別の画面へ移動した場合は切り替えない
+        if (
+          state.currentRouteName !== RouteName.Channel ||
+          state.channelParam !== pathOrId ||
+          messageQuery.value !== entryMessageId
+        ) {
+          return
+        }
+
+        // SDKにスレッドの型が追加されるまでは応答のフィールドを確認する
+        if (
+          channel &&
+          'parentMessageId' in channel &&
+          typeof channel.parentMessageId === 'string' &&
+          channel.parentMessageId
+        ) {
+          changePrimaryViewToThread({
+            channelId: channel.id,
+            entryMessageId
+          })
+          state.view = 'main'
+
+          const parentId = channel.parentId
+          const parentPath = parentId
+            ? await channelIdToPathString(parentId)
+            : null
+          if (parentPath) {
+            const threadPath = `${parentPath}/${channel.id}`
+            if (pathOrId !== threadPath) {
+              await router.replace({
+                path: constructChannelPath(threadPath),
+                query: route.query,
+                hash: route.hash
+              })
+            }
+          }
+          return
+        }
+      }
       return router.replace(constructChannelPath(await getStartupChannelPath()))
     }
 
@@ -177,7 +228,7 @@ const useRouteWatcher = () => {
       primaryView.value.type === 'channel' &&
       primaryView.value.channelId === ''
     ) {
-      changePrimaryViewToChannelOrDM({
+      changePrimaryViewToChannelOrThreadOrDM({
         channelId: channelId
       })
     }
@@ -207,11 +258,16 @@ const useRouteWatcher = () => {
       return
     }
 
-    if (channelsMap.value.has(channelId)) {
+    if (!dmChannelsMap.value.has(channelId)) {
+      const link = await channelIdToLink(channelId)
+      if (!link) {
+        state.view = 'not-found'
+        return
+      }
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
-        path: channelIdToLink(message.channelId) as string,
+        path: link,
         query: { message: message.id }
       })
     } else if (dmChannelsMap.value.has(channelId)) {

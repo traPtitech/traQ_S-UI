@@ -51,9 +51,10 @@ import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
+import { computedAsync } from '@vueuse/core'
+
 import AIcon from '/@/components/UI/AIcon.vue'
 import useChannelPath from '/@/composables/useChannelPath'
-import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 import { useUsersStore } from '/@/store/entities/users'
 
 import ChannelName from './ChannelName.vue'
@@ -90,10 +91,10 @@ if (userState.value === undefined) {
 
 const { channelIdToShortPathString } = useChannelPath()
 
-const path = computed(() =>
-  setFallbackForNullishOrOnError('unknown').exec(() =>
-    channelIdToShortPathString(props.message.channelId)
-  )
+const path = computedAsync(
+  async () =>
+    (await channelIdToShortPathString(props.message.channelId)) ?? 'unknown',
+  'unknown'
 )
 
 const onClickContextMenuButton = (e: MouseEvent) => {
