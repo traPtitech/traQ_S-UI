@@ -64,6 +64,7 @@ import { unrefElement } from '/@/lib/dom/unrefElement'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useThreadsStore } from '/@/store/entities/threads'
 import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 
 import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
@@ -111,8 +112,12 @@ const createdDate = (id: MessageId) => {
 }
 
 const { channelsMap } = useChannelsStore()
+const { threadsMap } = useThreadsStore()
 const isArchived = computed(
-  () => channelsMap.value.get(props.channelId)?.archived ?? false
+  () =>
+    threadsMap.value.get(props.channelId)?.archived ??
+    channelsMap.value.get(props.channelId)?.archived ??
+    false
 )
 const messagePinnedUserMap = computed(
   () => new Map(props.pinnedMessages.map(pin => [pin.message.id, pin.userId]))
