@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
 import * as path from 'path'
 import fs from 'fs'
-import { Agent as HttpAgent } from 'http'
+import { Agent as HttpsAgent } from 'https'
 
 import VuePlugin from '@vitejs/plugin-vue'
 import brotli from 'rollup-plugin-brotli'
@@ -15,7 +15,7 @@ import packageJson from './package.json'
 import { getBackendOrigin } from './tests/e2e/config'
 import webManifest from './webmanifest'
 
-const keepAliveAgent = new HttpAgent({ keepAlive: true })
+const keepAliveAgent = new HttpsAgent({ keepAlive: true })
 
 const localhostCerts =
   fs.existsSync('.certs/localhost.crt') && fs.existsSync('.certs/localhost.key')

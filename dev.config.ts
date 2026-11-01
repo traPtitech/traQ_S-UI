@@ -1,1 +1,1 @@
-export const DEV_SERVER_PROXY_HOST = 'http://localhost:3000'
+export const DEV_SERVER_PROXY_HOST = 'http://q-dev.trapti.tech'
