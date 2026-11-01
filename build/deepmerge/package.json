@@ -1,0 +1,10 @@
+{
+  "name": "@traptitech/deepmerge-compat",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "index.cjs",
+  "dependencies": {
+    "@fastify/deepmerge": "3.2.4"
+  }
+}

@@ -3,6 +3,7 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY scripts/patch-dependencies.js ./scripts/
+COPY build/deepmerge ./build/deepmerge/
 RUN npm ci
 COPY . .
 RUN NODE_ENV=production npm run build:with-font
