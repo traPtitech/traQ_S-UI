@@ -40,8 +40,8 @@ import type { Ref } from 'vue'
 import { computed, reactive } from 'vue'
 
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
 import useChannelOptions from '/@/composables/useChannelOptions'
+import useChannelPath from '/@/composables/useChannelPath'
 import apis from '/@/lib/apis'
 import { nilUuid } from '/@/lib/basic/uuid'
 import { canCreateChildChannel } from '/@/lib/channel'
@@ -56,7 +56,7 @@ const useManageChannel = (
   oldState: Ref<Required<PatchChannelRequest>>
 ) => {
   const { popModal } = useModalStore()
-  const { channelIdToPathString } = useCachedChannelPath()
+  const { channelIdToPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
 
   const manageChannel = async () => {
@@ -109,7 +109,7 @@ const channel = computed((): Required<PatchChannelRequest> => {
     force: c?.force ?? false
   }
 })
-const { channelIdToPathString } = useCachedChannelPath()
+const { channelIdToPathString } = useChannelPath()
 const subtitle = computed(() => channelIdToPathString(props.id, true) ?? '')
 
 const manageState = reactive({ ...channel.value })

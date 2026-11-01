@@ -1,4 +1,4 @@
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { nilUuid } from '/@/lib/basic/uuid'
 import { canCreateChildChannel as canCreateChildChannel_ } from '/@/lib/channel'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -6,7 +6,7 @@ import type { ChannelId } from '/@/types/entity-ids'
 
 const useCanCreateChildChannel = () => {
   const { channelsMap } = useChannelsStore()
-  const { channelIdToPathString } = useCachedChannelPath()
+  const { channelIdToPathString } = useChannelPath()
 
   const canCreateChildChannel = (channelId: ChannelId) => {
     if (channelId !== nilUuid && !channelsMap.value.has(channelId)) return false

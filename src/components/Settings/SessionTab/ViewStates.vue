@@ -13,9 +13,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computedAsync } from '@vueuse/core'
+import { computed } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
+import useEnsureThread from '/@/composables/useEnsureThread'
 import { fallbackChannelPath } from '/@/lib/config'
 import { useViewStatesStore } from '/@/store/domain/viewStates'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -28,15 +29,12 @@ fetchViewStates()
 
 const { channelIdToPathString } = useChannelPath()
 
-const monitoringChannelStrings = computedAsync(
-  async () =>
-    Promise.all(
-      [...monitoringChannels.value.values()].map(
-        async channelId =>
-          (await channelIdToPathString(channelId, true)) ?? fallbackChannelPath
-      )
-    ),
-  []
+useEnsureThread(() => [...monitoringChannels.value.values()])
+
+const monitoringChannelStrings = computed(() =>
+  [...monitoringChannels.value.values()].map(
+    channelId => channelIdToPathString(channelId, true) ?? fallbackChannelPath
+  )
 )
 </script>
 

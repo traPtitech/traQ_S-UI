@@ -51,10 +51,9 @@ import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
-import { computedAsync } from '@vueuse/core'
-
 import AIcon from '/@/components/UI/AIcon.vue'
 import useChannelPath from '/@/composables/useChannelPath'
+import useEnsureThread from '/@/composables/useEnsureThread'
 import { useUsersStore } from '/@/store/entities/users'
 
 import ChannelName from './ChannelName.vue'
@@ -89,12 +88,12 @@ if (userState.value === undefined) {
   fetchUser({ userId: props.message.userId })
 }
 
+useEnsureThread(() => props.message.channelId)
+
 const { channelIdToShortPathString } = useChannelPath()
 
-const path = computedAsync(
-  async () =>
-    (await channelIdToShortPathString(props.message.channelId)) ?? 'unknown',
-  'unknown'
+const path = computed(
+  () => channelIdToShortPathString(props.message.channelId) ?? 'unknown'
 )
 
 const onClickContextMenuButton = (e: MouseEvent) => {

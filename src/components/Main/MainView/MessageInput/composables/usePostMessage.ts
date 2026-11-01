@@ -3,7 +3,7 @@ import { computed, ref, unref } from 'vue'
 import type { AxiosProgressEvent } from 'axios'
 
 import useMessageInputStateStatic from '/@/composables/messageInputState/useMessageInputStateStatic'
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
 import { nilUuid } from '/@/lib/basic/uuid'
@@ -78,8 +78,7 @@ const usePostMessage = (
   inputStateKey = channelId
 ) => {
   const { getMessageInputState } = useMessageInputStateStatic()
-  const { channelPathStringToId, channelIdToShortPathString } =
-    useCachedChannelPath()
+  const { channelPathStringToId, channelIdToShortPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
   const { bothChannelsMapInitialFetchPromise, channelsMap } = useChannelsStore()
   const { usersMapInitialFetchPromise, findUserByName } = useUsersStore()

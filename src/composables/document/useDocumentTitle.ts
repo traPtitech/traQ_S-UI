@@ -1,6 +1,4 @@
-import { watchEffect } from 'vue'
-
-import { computedAsync } from '@vueuse/core'
+import { computed, watchEffect } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
 import { isolateBidiText } from '/@/lib/basic/string'
@@ -16,15 +14,14 @@ const useDocumentTitle = () => {
   const { clipFoldersMap } = useClipFoldersStore()
   const { channelIdToShortPathString } = useChannelPath()
 
-  const primaryViewTitle = computedAsync(async () => {
+  const primaryViewTitle = computed(() => {
     switch (primaryView.value.type) {
       case 'channel':
       case 'thread': {
         const channelId = primaryView.value.channelId
 
         return (
-          (await channelIdToShortPathString(channelId, true)) ??
-          fallbackChannelPath
+          channelIdToShortPathString(channelId, true) ?? fallbackChannelPath
         )
       }
 
@@ -39,7 +36,7 @@ const useDocumentTitle = () => {
     }
     const check: never = primaryView.value
     throw new Error(`Unexpected primaryView: ${check}`)
-  }, '')
+  })
 
   watchEffect(() => {
     // ユーザー入力の文字方向が document.title 全体の表示方向に影響しないようにする

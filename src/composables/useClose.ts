@@ -16,13 +16,13 @@ const useClose = () => {
   const { startupChannelPath } = useBrowserSettings()
   const { channelIdToLink } = useChannelPath()
 
-  const close = async () => {
+  const close = () => {
     switch (primaryView.value.type) {
       case 'channel':
       case 'thread': {
         const channelId = primaryView.value.channelId
 
-        const link = await channelIdToLink(channelId)
+        const link = channelIdToLink(channelId)
         router.push(link ?? constructChannelPath(startupChannelPath.value))
 
         break

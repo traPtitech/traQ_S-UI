@@ -4,6 +4,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useThreadsStore } from '/@/store/entities/threads'
 import { useUsersStore } from '/@/store/entities/users'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type {
@@ -136,7 +137,14 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
       })
       return
     }
-    // TODO: Threadのやつも書く
+    if (!channelsStore.channelsMap.value.has(channelId)) {
+      const thread = await useThreadsStore().fetchThread(channelId, {
+        force: true
+      })
+      if (!thread) throw new Error('thread not found')
+      changePrimaryViewToThread({ channelId, entryMessageId })
+      return
+    }
     changePrimaryViewToChannel({
       channelId,
       entryMessageId

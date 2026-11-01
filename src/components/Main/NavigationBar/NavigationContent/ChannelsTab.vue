@@ -68,7 +68,7 @@ import { computed, toRaw, useId } from 'vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { filterTrees } from '/@/lib/basic/tree'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 import { constructTreeFromIds } from '/@/lib/channelTree'
@@ -88,7 +88,7 @@ const { pushModal } = useModalStore()
 const { channelTree, starredChannelTree } = useChannelTree()
 const { starredChannelSet } = useStarredChannels()
 const { channelsMap } = useChannelsStore()
-const { channelIdToPathString } = useCachedChannelPath()
+const { channelIdToPathString } = useChannelPath()
 
 const { showArchivedChannels, filterStarChannel, strictStarredChannelTree } =
   useBrowserSettings()

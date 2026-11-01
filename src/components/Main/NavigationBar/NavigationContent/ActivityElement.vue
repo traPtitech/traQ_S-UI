@@ -12,10 +12,9 @@ import type { ActivityTimelineMessage } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
-import { computedAsync } from '@vueuse/core'
-
 import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
 import useChannelPath from '/@/composables/useChannelPath'
+import useEnsureThread from '/@/composables/useEnsureThread'
 import { constructMessagesPath } from '/@/router'
 
 const props = defineProps<{
@@ -23,16 +22,16 @@ const props = defineProps<{
   message: ActivityTimelineMessage
 }>()
 
+useEnsureThread(() => props.message.channelId)
+
 const { channelIdToLink } = useChannelPath()
 
 const titleType = computed(() =>
   props.type === 'channel' ? 'channel' : 'user'
 )
-const channelLink = computedAsync(
-  async () =>
-    props.type === 'channel'
-      ? ((await channelIdToLink(props.message.channelId)) ?? '')
-      : constructMessagesPath(props.message.id),
-  ''
+const channelLink = computed(() =>
+  props.type === 'channel'
+    ? (channelIdToLink(props.message.channelId) ?? '')
+    : constructMessagesPath(props.message.id)
 )
 </script>

@@ -5,7 +5,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import useLocalStorageValue from '/@/composables/storage/useLocalStorage'
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { isDefined } from '/@/lib/basic/array'
 import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 import { nilUuid } from '/@/lib/basic/uuid'
@@ -78,8 +78,7 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
   }
 
   const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
-  const { channelPathStringToId, channelIdToPathString } =
-    useCachedChannelPath()
+  const { channelPathStringToId, channelIdToPathString } = useChannelPath()
 
   const [state, migrationPromise] = useLocalStorageValue(
     'store/app/browserSettings',

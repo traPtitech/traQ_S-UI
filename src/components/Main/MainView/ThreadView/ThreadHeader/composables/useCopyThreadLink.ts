@@ -8,10 +8,8 @@ const useCopyThreadLink = (props: { channelId: ChannelId }) => {
   const { channelIdToPathString, channelIdToLink } = useChannelPath()
 
   const copyLink = async () => {
-    const [channelPath, channelLink] = await Promise.all([
-      channelIdToPathString(props.channelId),
-      channelIdToLink(props.channelId)
-    ])
+    const channelPath = channelIdToPathString(props.channelId)
+    const channelLink = channelIdToLink(props.channelId)
     if (!channelPath || !channelLink) return
     const channelUrl = `${embeddingOrigin}${channelLink}`
 

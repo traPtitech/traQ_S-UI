@@ -20,7 +20,7 @@
 import { computed } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
 
 import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
@@ -36,7 +36,7 @@ const isEmpty = computed(() =>
   props.channelId === undefined ? false : props.channelId === null
 )
 
-const { channelIdToPathString } = useCachedChannelPath()
+const { channelIdToPathString } = useChannelPath()
 const channelPath = computed(() =>
   props.channelId ? channelIdToPathString(props.channelId) : ''
 )

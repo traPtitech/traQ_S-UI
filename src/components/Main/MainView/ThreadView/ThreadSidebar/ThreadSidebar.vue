@@ -42,7 +42,7 @@
 <script lang="ts" setup>
 import type { Pin } from '@traptitech/traq'
 
-import { computedAsync } from '@vueuse/core'
+import { computed } from 'vue'
 
 import SidebarEventsPage from '/@/components/Main/MainView/InformationSidebar/InformationSidebarEventsPage.vue'
 import SidebarPinnedPage from '/@/components/Main/MainView/InformationSidebar/InformationSidebarPinnedPage.vue'
@@ -74,9 +74,8 @@ const {
   openSidebar
 } = useThreadSidebarCommon()
 
-const channelName = computedAsync(
-  async () => (await channelIdToPath(props.channelId))?.at(-1) ?? '',
-  ''
+const channelName = computed(
+  () => channelIdToPath(props.channelId)?.at(-1) ?? ''
 )
 
 const { value: isViewersDetailOpen, open: openViewersDetail } = useToggle(false)

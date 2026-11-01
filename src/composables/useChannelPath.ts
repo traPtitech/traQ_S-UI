@@ -1,105 +1,304 @@
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
-import apis from '/@/lib/apis'
-import { isUUID } from '/@/lib/basic/uuid'
 import type { SimpleChannel } from '/@/lib/channel'
-import { constructChannelPath } from '/@/router'
+import { channelIdToSimpleChannelPath as libChannelIdToSimpleChannelPath } from '/@/lib/channel'
+import { channelPathToId as channelPathToIdImpl } from '/@/lib/channelTree'
+import { constructChannelPath, constructUserPath } from '/@/router'
+import { useChannelTree } from '/@/store/domain/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
-import type {
-  ChannelId,
-  DMChannelId,
-  ThreadChannelId
-} from '/@/types/entity-ids'
+import { useThreadsStore } from '/@/store/entities/threads'
+import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
 
-type PathChannelId = ChannelId | DMChannelId | ThreadChannelId
+import { useUsersStore } from '../store/entities/users'
+
+const MAX_SHORT_PATH_LENGTH = 20
 
 const useChannelPath = () => {
-  const cached = useCachedChannelPath()
   const { channelsMap, dmChannelsMap, bothChannelsMapFetched } =
     useChannelsStore()
+  const { threadsMap } = useThreadsStore()
+  const { usersMap } = useUsersStore()
+  const { channelTree, topLevelChannels } = useChannelTree()
 
-  const isCachedChannel = (id: PathChannelId) =>
-    channelsMap.value.has(id) || dmChannelsMap.value.has(id)
-
-  const fetchThreadChannel = async (id: PathChannelId) => {
-    if (!bothChannelsMapFetched.value || !isUUID(id)) return null
-
-    // スレッドは保存・キャッシュせず、変換のたびに存在と現在の名前を確認する。
-    try {
-      const { data: channel } = await apis.getChannel(id)
-      if (
-        !('parentMessageId' in channel) ||
-        typeof channel.parentMessageId !== 'string' ||
-        !channel.parentMessageId ||
-        !channel.parentId ||
-        channel.id !== id
-      ) {
-        return null
-      }
-      return { id: channel.id, name: channel.name, parentId: channel.parentId }
-    } catch {
-      return null
-    }
+  const getUserNameByDMChannelId = (dmChannelId: DMChannelId) => {
+    const dmChannel = dmChannelsMap.value.get(dmChannelId)
+    if (!dmChannel) return null
+    return usersMap.value.get(dmChannel.userId)?.name ?? ''
   }
 
-  const channelIdToSimpleChannelPath = async (
-    id: PathChannelId
-  ): Promise<SimpleChannel[] | null> => {
-    if (isCachedChannel(id)) return cached.channelIdToSimpleChannelPath(id)
-    const thread = await fetchThreadChannel(id)
-    if (!thread) return null
-    try {
-      const parentPath = cached.channelIdToSimpleChannelPath(thread.parentId)
-      if (!parentPath?.length) return null
-      return [...parentPath, { id: thread.id, name: thread.name }]
-    } catch {
-      return null
-    }
+  const channelPathToId = (path: string[]) => {
+    return channelPathToIdImpl(path, channelTree.value)
   }
 
-  const channelIdToPath = async (id: PathChannelId) =>
-    (await channelIdToSimpleChannelPath(id))?.map(channel => channel.name) ??
-    null
+  const channelPathStringToId = (path: string) => {
+    return channelPathToId(path.split('/'))
+  }
 
-  const channelIdToPathString = async (id: PathChannelId, hashed = false) => {
-    if (isCachedChannel(id)) return cached.channelIdToPathString(id, hashed)
-    const path = await channelIdToPath(id)
+  const channelIdToSimpleChannelPath = (
+    id: ChannelId | DMChannelId
+  ): SimpleChannel[] | null => {
+    if (dmChannelsMap.value.has(id)) {
+      return [
+        {
+          id,
+          name: getUserNameByDMChannelId(id) as string
+        }
+      ]
+    }
+
+    if (channelsMap.value.has(id)) {
+      return libChannelIdToSimpleChannelPath(id, channelsMap.value)
+    }
+
+    const thread = threadsMap.value.get(id)
+    if (thread && channelsMap.value.has(thread.parentId)) {
+      return [
+        ...libChannelIdToSimpleChannelPath(thread.parentId, channelsMap.value),
+        { id: thread.id, name: thread.name }
+      ]
+    }
+    return null
+  }
+
+  const channelIdToPath = (id: ChannelId | DMChannelId) =>
+    channelIdToSimpleChannelPath(id)?.map(c => c.name) ?? null
+
+  const dmChannelIdToPathString = (id: DMChannelId, hashed = false) =>
+    (hashed ? '@' : '') + (getUserNameByDMChannelId(id) ?? '')
+
+  const channelIdToPathString = (
+    id: ChannelId | DMChannelId,
+    hashed = false
+  ) => {
+    if (!bothChannelsMapFetched.value) return null
+    if (dmChannelsMap.value.has(id)) return dmChannelIdToPathString(id, hashed)
+    const path = channelIdToPath(id)
     return path ? (hashed ? '#' : '') + path.join('/') : null
   }
 
-  const channelIdToShortPathString = async (
-    id: PathChannelId,
-    hashed = false
-  ) => {
-    if (isCachedChannel(id))
-      return cached.channelIdToShortPathString(id, hashed)
-    const thread = await fetchThreadChannel(id)
-    if (!thread) return null
-    try {
-      const parentPath = cached.channelIdToShortPathString(
-        thread.parentId,
-        hashed
-      )
-      return parentPath ? `${parentPath}/${thread.name}` : null
-    } catch {
-      return null
+  /**
+   * 文字列 target が、candidates の中で他の文字列と区別できるようになるために必要な最短の接頭辞を求める
+   */
+  const getShortestUniqueInitial = (candidates: string[], target: string) => {
+    let restCandidates: string[] = candidates.filter(c => c !== target)
+    for (let i = 0; i < target.length; i++) {
+      restCandidates = restCandidates.filter(word => word[i] === target[i])
+      if (restCandidates.length === 0) {
+        return target.slice(0, i + 1)
+      }
     }
+    return target
   }
 
-  const channelIdToLink = async (id: PathChannelId) => {
-    if (isCachedChannel(id)) return cached.channelIdToLink(id)
-    const path = await channelIdToSimpleChannelPath(id)
-    if (!path) return null
-    // 表示にはスレッド名、URLの末尾にはUUIDを使う。
-    return constructChannelPath(
-      [...path.slice(0, -1).map(c => c.name), id].join('/')
+  /**
+   * Siblingは自分自身を含まない、アーカイブされていないチャンネルのみ返す
+   */
+  const channelIdToSiblingIds = (id: ChannelId): ChannelId[] => {
+    const self = channelsMap.value.get(id)
+    if (self === undefined) {
+      return []
+    }
+    if (self.parentId === null) {
+      return topLevelChannels.value
+        .filter(c => !c.archived && c.id !== id)
+        .map(c => c.id)
+    }
+    const parentChannel = channelsMap.value.get(self.parentId)
+    if (parentChannel === undefined) {
+      throw new Error(`channelIdToSiblingIds: No parents ${id}`)
+    }
+    return (
+      parentChannel.children.filter(
+        c => !(channelsMap.value.get(c)?.archived ?? true) && c !== id
+      ) ?? []
     )
   }
 
+  /**
+   * (トップレベルチャンネルに使うとエラーを投げる)
+   */
+  const checkHavingSameNameCousin = (id: ChannelId) => {
+    const self = channelsMap.value.get(id)
+    if (self === undefined) {
+      throw new Error(`checkHavingSameNameCousin: No channel: ${id}`)
+    }
+    const selfName = self.name
+    const parentId = self.parentId
+    if (parentId === null) {
+      throw new Error(`checkHavingSameNameCousin: No parent channel: ${id}`)
+    }
+    const parentSiblingIds = channelIdToSiblingIds(parentId)
+    for (const parentSiblingId of parentSiblingIds) {
+      const cousinIds = channelsMap.value.get(parentSiblingId)?.children ?? []
+      for (const cousinId of cousinIds) {
+        const cousinName = channelsMap.value.get(cousinId)?.name
+        if (cousinName === selfName) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  const channelIdToUniqueInitial = (id: string) => {
+    const selfName = channelsMap.value.get(id)?.name
+    if (selfName === undefined) {
+      throw new Error(`ChannelIdToUniqueInitial: No Channel ${id}`)
+    }
+    const SiblingIds = channelIdToSiblingIds(id)
+    const SiblingNames = SiblingIds.map(
+      c => channelsMap.value.get(c)?.name
+    ).filter(c => c !== undefined)
+    return getShortestUniqueInitial(SiblingNames, selfName)
+  }
+
+  const channelIdToShortPathString = (
+    id: ChannelId | DMChannelId,
+    hashed = false
+  ): string | null => {
+    if (dmChannelsMap.value.has(id)) {
+      return dmChannelIdToPathString(id, hashed)
+    }
+
+    if (!channelsMap.value.has(id)) {
+      const thread = threadsMap.value.get(id)
+      if (!thread || !channelsMap.value.has(thread.parentId)) return null
+      const parentPath = channelIdToShortPathString(thread.parentId, hashed)
+      return parentPath ? `${parentPath}/${thread.name}` : null
+    }
+
+    // channelIdToSimpleChannelPath が null になるような場合はこの部分に到達しない
+    const simpleChannels = channelIdToSimpleChannelPath(id) as SimpleChannel[]
+
+    const channelsLength = simpleChannels.length
+    if (channelsLength === 0) {
+      return hashed ? '#' : ''
+    } else if (channelsLength === 1) {
+      const channelNames = simpleChannels.map(c => c.name)
+      const path = channelNames[0]
+      return (hashed ? '#' : '') + path
+    }
+
+    const channelIds = simpleChannels.map(c => c.id)
+    const channelNames = simpleChannels.map(c => c.name)
+    const channelShortenedNames = channelNames.map(name =>
+      name.length <= 2 ? name : (name[0] ?? '')
+    )
+
+    // r/g/p/child
+    const primitiveChannels = [
+      ...channelShortenedNames.slice(0, -1),
+      channelNames[channelsLength - 1] ?? ''
+    ]
+    if (primitiveChannels.join('/').length >= MAX_SHORT_PATH_LENGTH) {
+      return (hashed ? '#' : '') + primitiveChannels.join('/')
+    }
+
+    const expandChannels = (channels: string[]): string[] => {
+      const expandedChannels = channels.concat()
+      // その名前のいとこチャンネルがいないかを検査するべきチャンネルのindex
+      // いる場合はその一つ上を展開する
+      let checkChannelIndex = channelsLength - 1
+      while (
+        checkChannelIndex > 0 &&
+        checkHavingSameNameCousin(channelIds[checkChannelIndex] ?? '') &&
+        expandedChannels.join('/').length < MAX_SHORT_PATH_LENGTH
+      ) {
+        const indexParentName = channelNames[checkChannelIndex - 1]
+        if (indexParentName !== undefined) {
+          expandedChannels[checkChannelIndex - 1] = indexParentName
+        }
+        checkChannelIndex--
+      }
+      return expandedChannels
+    }
+
+    // r/grand-parent/parent/child
+    const expandedChannels = expandChannels(primitiveChannels)
+    if (expandedChannels.join('/').length <= MAX_SHORT_PATH_LENGTH) {
+      return (hashed ? '#' : '') + expandedChannels.join('/')
+    }
+
+    const shortenChannels = (channels: string[]): string[] => {
+      const shortenedChannels = channels.concat()
+      // そのチャンネルを短縮するか判定するindex
+      let cutIndex = 0
+      while (
+        shortenedChannels.join('/').length > MAX_SHORT_PATH_LENGTH &&
+        cutIndex < channelsLength - 2
+      ) {
+        const indexUniqueInitial = channelIdToUniqueInitial(
+          channelIds[cutIndex] ?? ''
+        )
+        // expandされたチャンネルのみを対象にする
+        if ((shortenedChannels[cutIndex] ?? '').length >= 2) {
+          shortenedChannels[cutIndex] = indexUniqueInitial
+        }
+        cutIndex++
+      }
+      return shortenedChannels
+    }
+
+    // r/grand-/parent/child
+    const shortenedChannels = shortenChannels(expandedChannels)
+    if (shortenedChannels.join('/').length <= MAX_SHORT_PATH_LENGTH) {
+      return (hashed ? '#' : '') + shortenedChannels.join('/')
+    }
+
+    const replaceInitialChannels = (channels: string[]): string[] => {
+      const replaceInitialChannels = channels.concat()
+      let replaceInitialIndex = 0
+      while (
+        replaceInitialChannels.join('/').length > MAX_SHORT_PATH_LENGTH &&
+        replaceInitialIndex < channelsLength - 2
+      ) {
+        const initialIndex = channelShortenedNames[replaceInitialIndex]
+        if (initialIndex !== undefined) {
+          replaceInitialChannels[replaceInitialIndex] = initialIndex
+        }
+        replaceInitialIndex++
+      }
+      return replaceInitialChannels
+    }
+
+    // r/g/parent/child
+    const replacedInitialChannels = replaceInitialChannels(shortenedChannels)
+    if (replacedInitialChannels.join('/').length <= MAX_SHORT_PATH_LENGTH) {
+      return (hashed ? '#' : '') + replacedInitialChannels.join('/')
+    }
+
+    // r/g/pa/child
+    return (
+      (hashed ? '#' : '') +
+      [
+        ...replacedInitialChannels.slice(0, -2),
+        channelIdToUniqueInitial(channelIds[channelsLength - 2] ?? ''),
+        replacedInitialChannels[channelsLength - 1]
+      ].join('/')
+    )
+  }
+
+  const channelIdToLink = (id: ChannelId | DMChannelId) => {
+    if (!bothChannelsMapFetched.value) return null
+
+    const thread = threadsMap.value.get(id)
+    if (thread) {
+      const parentPath = channelIdToPathString(thread.parentId)
+      return parentPath
+        ? constructChannelPath(`${parentPath}/${thread.id}`)
+        : null
+    }
+    const pathString = channelIdToPathString(id, false)
+    if (!pathString) return null
+    if (dmChannelsMap.value.has(id)) {
+      return constructUserPath(pathString)
+    }
+    return constructChannelPath(pathString)
+  }
+
   return {
-    channelPathToId: cached.channelPathToId,
-    channelPathStringToId: cached.channelPathStringToId,
-    channelIdToSimpleChannelPath,
+    channelPathToId,
+    channelPathStringToId,
     channelIdToPath,
+    channelIdToSimpleChannelPath,
     channelIdToPathString,
     channelIdToShortPathString,
     channelIdToLink

@@ -1,4 +1,4 @@
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { isDefined } from '/@/lib/basic/array'
 import { useChannelsStore } from '/@/store/entities/channels'
 
@@ -6,7 +6,7 @@ import useCandidateSearch from './useCandidateSearch'
 
 const useChannelCandidateSearch = () => {
   const { channelsMap } = useChannelsStore()
-  const { channelIdToPathString } = useCachedChannelPath()
+  const { channelIdToPathString } = useChannelPath()
 
   return useCandidateSearch(
     () =>

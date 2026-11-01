@@ -22,7 +22,7 @@ import type {
   UserId
 } from '/@/types/entity-ids'
 
-import useCachedChannelPath from '../useCachedChannelPath'
+import useChannelPath from '../useChannelPath'
 
 const getStoreForParser = ({
   primaryView,
@@ -128,7 +128,7 @@ const getStoreForParser = ({
 const useQueryParser = () => {
   const { channelsMap, dmChannelsMap, userIdToDmChannelIdMap } =
     useChannelsStore()
-  const { channelPathStringToId } = useCachedChannelPath()
+  const { channelPathStringToId } = useChannelPath()
   const { primaryView } = useMainViewStore()
   const { fetchUserByName, usersMap } = useUsersStore()
   const { fetchUserGroupByName } = useGroupsStore()

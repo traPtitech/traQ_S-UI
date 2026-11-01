@@ -15,6 +15,11 @@ const mocks = vi.hoisted(() => ({
   changePrimaryViewToThread: vi.fn()
 }))
 
+vi.mock('/@/store/entities/threads', () => ({
+  useThreadsStore: () => ({
+    fetchThread: async (id: string) => (await mocks.getChannel(id))?.data
+  })
+}))
 vi.mock('vue-router', () => ({ useRoute: () => mocks.route }))
 vi.mock('/@/router', () => ({
   default: { replace: mocks.replace },
@@ -169,7 +174,7 @@ describe('useRouteWatcher channel routes', () => {
         parentMessageId: 'parent-message'
       }
     })
-    mocks.channelIdToPathString.mockResolvedValue(null)
+    mocks.channelIdToPathString.mockReturnValue(null)
     const state = open()
     await flushPromises()
 
@@ -192,13 +197,14 @@ describe('useRouteWatcher channel routes', () => {
     }
   )
 
-  test('falls back when the channel request fails', async () => {
+  test('shows not found when the channel request fails', async () => {
     mocks.getChannel.mockRejectedValue(new Error('not found'))
-    open()
+    const state = open()
     await flushPromises()
 
     expect(mocks.changePrimaryViewToThread).not.toHaveBeenCalled()
-    expect(mocks.replace).toHaveBeenCalledWith('/channels/general')
+    expect(state.view).toBe('not-found')
+    expect(mocks.replace).not.toHaveBeenCalled()
   })
 
   test('does not request a channel for a non-UUID suffix', async () => {

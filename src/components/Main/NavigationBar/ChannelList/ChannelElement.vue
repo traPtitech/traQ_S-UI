@@ -85,7 +85,7 @@ import {
 import UnreadBadge from '/@/components/UI/UnreadBadge.vue'
 import useFocus from '/@/composables/dom/useFocus'
 import useHover from '/@/composables/dom/useHover'
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
@@ -138,7 +138,7 @@ const onClickIcon = (e: KeyboardEvent | MouseEvent) => {
 }
 
 const { openLink } = useOpenLink()
-const { channelIdToLink } = useCachedChannelPath()
+const { channelIdToLink } = useChannelPath()
 const openChannel = (event: MouseEvent) => {
   openLink(event, channelIdToLink(props.channel.id) as string)
 }

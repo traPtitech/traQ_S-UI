@@ -20,9 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-
-import { computedAsync } from '@vueuse/core'
+import { computed, onMounted, ref } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
 import type { ChannelId } from '/@/types/entity-ids'
@@ -37,9 +35,8 @@ const props = defineProps<{
 }>()
 
 const { channelIdToPathString } = useChannelPath()
-const channelPathString = computedAsync(
-  async () => (await channelIdToPathString(props.channelId, true)) ?? '',
-  ''
+const channelPathString = computed(
+  () => channelIdToPathString(props.channelId, true) ?? ''
 )
 
 const modalMounted = ref(false)

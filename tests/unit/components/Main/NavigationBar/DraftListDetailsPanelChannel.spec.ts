@@ -15,7 +15,7 @@ vi.mock('/@/lib/markdown/markdown', () => ({
 }))
 
 test('renders a thread draft using its fetched name and UUID link', async () => {
-  const pinia = createTestingPinia()
+  const pinia = createTestingPinia({ stubActions: false })
   const { channelsMap, bothChannelsMapFetched } = useChannelsStore(pinia)
   const parent: Channel = {
     id: '10000000-0000-4000-8000-000000000001',
@@ -61,6 +61,7 @@ test('renders a thread draft using its fetched name and UUID link', async () => 
     await flushPromises()
     expect(wrapper.text()).toContain('draft text')
     expect(wrapper.text()).toContain('#general/discussion')
+    expect(getChannel).toHaveBeenCalledTimes(1)
     expect(wrapper.get('a').attributes('href')).toBe(
       `/channels/general/${threadId}`
     )

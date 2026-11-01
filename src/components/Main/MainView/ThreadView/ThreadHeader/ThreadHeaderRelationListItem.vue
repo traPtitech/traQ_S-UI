@@ -13,7 +13,7 @@ import type { Channel } from '@traptitech/traq'
 import { computed, useId } from 'vue'
 import { RouterLink } from 'vue-router'
 
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 
 const props = defineProps<{
   channel: Channel
@@ -26,7 +26,7 @@ const focus = () => {
   link?.focus()
 }
 
-const { channelIdToLink } = useCachedChannelPath()
+const { channelIdToLink } = useChannelPath()
 const channelLink = computed(() => channelIdToLink(props.channel.id) ?? '')
 
 const isTopicEmpty = computed(() => props.channel.topic.length === 0)

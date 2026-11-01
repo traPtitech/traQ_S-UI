@@ -16,11 +16,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 
-import { computedAsync } from '@vueuse/core'
-
 import useFileMeta from '/@/composables/files/useFileMeta'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useDateRepresentation } from '/@/composables/useDateRepresentation'
+import useEnsureThread from '/@/composables/useEnsureThread'
 import { fallbackChannelPath } from '/@/lib/config'
 import { useUsersStore } from '/@/store/entities/users'
 
@@ -47,19 +46,21 @@ const user = computed(() =>
 )
 const createdAt = useDateRepresentation(() => fileMeta.value?.createdAt ?? '')
 
+useEnsureThread(() => fileMeta.value?.channelId)
+
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
 
-const channelPath = computedAsync(async () => {
+const channelPath = computed(() => {
   const channelId = fileMeta.value?.channelId
   return channelId
-    ? ((await channelIdToPathString(channelId, true)) ?? fallbackChannelPath)
+    ? (channelIdToPathString(channelId, true) ?? fallbackChannelPath)
     : fallbackChannelPath
-}, fallbackChannelPath)
+})
 
-const channelLink = computedAsync(async () => {
+const channelLink = computed(() => {
   const channelId = fileMeta.value?.channelId
-  return channelId ? ((await channelIdToLink(channelId)) ?? '') : ''
-}, '')
+  return channelId ? (channelIdToLink(channelId) ?? '') : ''
+})
 
 const onClick = async (event: MouseEvent) => {
   if (!channelLink.value) return

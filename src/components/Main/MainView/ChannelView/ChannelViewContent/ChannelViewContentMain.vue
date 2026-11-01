@@ -128,7 +128,7 @@ const showToNewMessageButton = ref(false)
 const { channelIdToLink } = useChannelPath()
 const toNewMessage = async () => {
   if (props.entryMessageId) {
-    const link = await channelIdToLink(props.channelId)
+    const link = channelIdToLink(props.channelId)
     if (link) await router.replace(link)
   }
 

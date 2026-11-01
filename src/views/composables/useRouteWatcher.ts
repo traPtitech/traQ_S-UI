@@ -8,7 +8,6 @@ import { useRenderKey } from '/@/composables/dom/useRenderKey'
 import useNavigationController from '/@/composables/mainView/useNavigationController'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useMessageQuery } from '/@/composables/utils/useMessageQuery'
-import apis from '/@/lib/apis'
 import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 import { getFirstParam } from '/@/lib/basic/url'
 import { isUUID } from '/@/lib/basic/uuid'
@@ -18,6 +17,7 @@ import { useChannelTree } from '/@/store/domain/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useThreadsStore } from '/@/store/entities/threads'
 import { useUsersStore } from '/@/store/entities/users'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import { useModalStore } from '/@/store/ui/modal'
@@ -26,6 +26,7 @@ type Views = 'none' | 'main' | 'not-found'
 
 const useRouteWatcher = () => {
   const route = useRoute()
+  const { fetchThread } = useThreadsStore()
   const {
     primaryView,
     changePrimaryViewToChannel,
@@ -75,6 +76,7 @@ const useRouteWatcher = () => {
       .catch(() => {})
   }
 
+  let normalizedThreadRoute: string | undefined
   const onRouteChangedToChannel = async () => {
     // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
@@ -85,6 +87,8 @@ const useRouteWatcher = () => {
     }
 
     const pathOrId = state.channelParam ?? ''
+    const isNormalization = normalizedThreadRoute === pathOrId
+    normalizedThreadRoute = undefined
 
     const id = (() => {
       if (channelsMap.value.has(pathOrId)) {
@@ -100,10 +104,13 @@ const useRouteWatcher = () => {
       const threadId = pathOrId.split('/').at(-1) ?? ''
       if (isUUID(threadId)) {
         const entryMessageId = messageQuery.value
-        const channel = await apis
-          .getChannel(threadId)
-          .then(({ data }) => data)
-          .catch(() => null)
+        let channel
+        try {
+          channel = await fetchThread(threadId, { force: !isNormalization })
+        } catch {
+          state.view = 'not-found'
+          return
+        }
 
         // 取得中に別の画面へ移動した場合は切り替えない
         if (
@@ -128,12 +135,11 @@ const useRouteWatcher = () => {
           state.view = 'main'
 
           const parentId = channel.parentId
-          const parentPath = parentId
-            ? await channelIdToPathString(parentId)
-            : null
+          const parentPath = parentId ? channelIdToPathString(parentId) : null
           if (parentPath) {
             const threadPath = `${parentPath}/${channel.id}`
             if (pathOrId !== threadPath) {
+              normalizedThreadRoute = threadPath
               await router.replace({
                 path: constructChannelPath(threadPath),
                 query: route.query,
@@ -259,10 +265,21 @@ const useRouteWatcher = () => {
     }
 
     if (!dmChannelsMap.value.has(channelId)) {
-      const link = await channelIdToLink(channelId)
+      if (!channelsMap.value.has(channelId)) {
+        try {
+          await fetchThread(channelId, { force: true })
+        } catch {
+          state.view = 'not-found'
+          return
+        }
+      }
+      const link = channelIdToLink(channelId)
       if (!link) {
         state.view = 'not-found'
         return
+      }
+      if (!channelsMap.value.has(channelId)) {
+        normalizedThreadRoute = link.slice('/channels/'.length)
       }
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611

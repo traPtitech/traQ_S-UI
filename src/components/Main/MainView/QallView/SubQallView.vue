@@ -6,7 +6,7 @@ import { Track } from 'livekit-client'
 
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.vue'
 import { useQall } from '/@/composables/qall/useQall'
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
 
 import ScreenShareComponent from './ScreenShareComponent.vue'
@@ -20,7 +20,7 @@ const {
   screenShareTrackSidMap
 } = useQall()
 const router = useRouter()
-const { channelIdToPathString } = useCachedChannelPath()
+const { channelIdToPathString } = useChannelPath()
 
 const track = computed(() =>
   selectedTrack.value

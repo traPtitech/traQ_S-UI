@@ -34,8 +34,8 @@ import { computed, reactive, toRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import useCanCreateChildChannel from '/@/composables/modal/useCanCreateChildChannel'
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
 import useChannelOptions from '/@/composables/useChannelOptions'
+import useChannelPath from '/@/composables/useChannelPath'
 import apis from '/@/lib/apis'
 import { rootChannelId } from '/@/lib/channelTree'
 import { isValidChannelName } from '/@/lib/validate'
@@ -151,7 +151,7 @@ watch(
 const { channelOptions } = useChannelOptionsForSelector()
 const { createChannel } = useCreateChannel(state)
 
-const { channelIdToPathString } = useCachedChannelPath()
+const { channelIdToPathString } = useChannelPath()
 const title = computed(
   () => (props.parentChannelId ? '子' : '') + 'チャンネルを作成'
 )

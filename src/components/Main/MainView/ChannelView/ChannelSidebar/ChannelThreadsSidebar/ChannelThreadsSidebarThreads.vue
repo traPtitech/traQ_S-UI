@@ -61,7 +61,7 @@ import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
 import UnreadBadge from '/@/components/UI/UnreadBadge.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
-import useCachedChannelPath from '/@/composables/useCachedChannelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { useDateRepresentation } from '/@/composables/useDateRepresentation'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import { constructChannelPath } from '/@/router'
@@ -76,7 +76,7 @@ const props = defineProps<{
   channelId: string
 }>()
 
-const { channelIdToPathString } = useCachedChannelPath()
+const { channelIdToPathString } = useChannelPath()
 const channelPath = computed(
   () => channelIdToPathString(props.channelId) ?? props.channelId
 )

@@ -25,8 +25,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 
-import { computedAsync } from '@vueuse/core'
-
 import useChannelPath from '/@/composables/useChannelPath'
 import useResponsive from '/@/composables/useResponsive'
 import { constructChannelPath } from '/@/router'
@@ -45,16 +43,15 @@ type ChannelPathInfo = {
   link: string
 }
 /** 現在のチャンネルに至るまでのフルパスたち */
-const pathInfoList = computedAsync(
-  async (): Promise<ChannelPathInfo[]> =>
-    (await channelIdToPath(props.channelId))?.map((p, i, arr) => {
+const pathInfoList = computed(
+  (): ChannelPathInfo[] =>
+    channelIdToPath(props.channelId)?.map((p, i, arr) => {
       const path = arr.slice(0, i + 1)
       return {
         name: p,
         link: constructChannelPath(path.join('/'))
       }
-    }) ?? [],
-  []
+    }) ?? []
 )
 
 const ancestorsPath = computed(() => pathInfoList.value.slice(0, -1))
