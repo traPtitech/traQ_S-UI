@@ -74,11 +74,21 @@ const useThreadsStorePinia = defineStore('entities/threads', () => {
     }
   }
 
+  const fetchThreads = async () => {
+    const threadIds = [...threadsMap.value.keys()]
+    await Promise.allSettled(
+      threadIds.map(threadId => fetchThread(threadId, { force: true }))
+    )
+  }
+
   wsListener.on('CHANNEL_DELETED', ({ id }) => {
     deleteThread(id)
   })
+  wsListener.on('reconnect', () => {
+    fetchThreads()
+  })
 
-  return { threadsMap, fetchThread }
+  return { threadsMap, fetchThread, fetchThreads }
 })
 
 export const useThreadsStore = convertToRefsStore(useThreadsStorePinia)
