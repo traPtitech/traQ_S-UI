@@ -5,6 +5,10 @@ import type { telemetry as ActivityTelemetry } from '/@/lib/telemetry'
 const fetchMock = vi.fn()
 const storage = new Map<string, string>()
 const getItem = vi.fn((key: string) => storage.get(key) ?? null)
+const deployedTelemetry = {
+  endpoint: '/telemetry/collect',
+  hosts: ['q-dev.trapti.tech', 'q.trapti.tech']
+}
 
 describe('telemetry', () => {
   let telemetry: typeof ActivityTelemetry
@@ -99,13 +103,45 @@ describe('telemetry', () => {
     expect(Object.keys(body).sort()).toEqual(['events', 'meta'])
   })
 
-  it('does not collect from hosts outside the configured deployment list', async () => {
-    vi.stubGlobal('traQConfig', {
-      telemetry: {
-        endpoint: '/telemetry/collect',
-        hosts: ['q.trap.jp']
-      }
-    })
+  it.each([
+    ['q-dev.trapti.tech', undefined],
+    ['q.trapti.tech', 'https://q.trap.jp']
+  ])(
+    'sends from %s to its own authenticated collector',
+    async (host, backendOrigin) => {
+      vi.stubGlobal('location', new URL(`https://${host}/channels/test`))
+      vi.stubGlobal('traQConfig', {
+        backendOrigin,
+        telemetry: deployedTelemetry
+      })
+
+      await telemetry.track('feature_used', { feature: 'search' })
+      await vi.advanceTimersByTimeAsync(1000)
+
+      expect(fetchMock).toHaveBeenCalledExactlyOnceWith(
+        `https://${host}/telemetry/collect`,
+        expect.objectContaining({
+          method: 'POST',
+          credentials: 'same-origin',
+          mode: 'same-origin',
+          redirect: 'error',
+          headers: expect.objectContaining({ 'X-Traq-Telemetry': '1' })
+        })
+      )
+      expect(sentBody().meta.app?.environment).toBe(host)
+    }
+  )
+
+  it.each([
+    'q.trap.jp',
+    'staging-dev.traq-preview.trapti.tech',
+    'staging-prod.traq-preview.trapti.tech',
+    '5368-dev.traq-preview.trapti.tech',
+    '5368-prod.traq-preview.trapti.tech'
+  ])('does not collect from the excluded host %s', async host => {
+    vi.stubGlobal('location', new URL(`https://${host}`))
+    vi.stubGlobal('traQConfig', { telemetry: deployedTelemetry })
+
     await telemetry.track('feature_used', { feature: 'search' })
     await vi.advanceTimersByTimeAsync(2000)
 
