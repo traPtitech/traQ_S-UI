@@ -68,7 +68,15 @@ export const setupWorkbox = () => {
 
   // ファイルAPIのキャッシュ設定
   registerRoute(
-    new RegExp('/api/v3/files/[0-9a-fA-F-]{36}$'),
+    // メディアとRange要求はブラウザに処理させる。
+    // ストレージへのリダイレクトをSW経由で返すとFirefoxで再生に失敗する場合がある。
+    ({ url, request, sameOrigin }) =>
+      sameOrigin &&
+      /^\/api\/v3\/files\/[0-9a-fA-F-]{36}$/.test(url.pathname) &&
+      !url.search &&
+      request.destination !== 'audio' &&
+      request.destination !== 'video' &&
+      !request.headers.has('range'),
     new CacheFirst({
       cacheName: 'files-cache',
       plugins: [
