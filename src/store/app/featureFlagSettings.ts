@@ -104,7 +104,10 @@ const useFlagSettingsPinia = defineStore('app/featureFlagSettings', () => {
     const previousEnabled = getFeatureFlagState(flag).enabled
     state.status.set(flag, enabled)
     const currentEnabled = getFeatureFlagState(flag).enabled
-    if (previousEnabled !== currentEnabled) {
+    if (
+      previousEnabled !== currentEnabled &&
+      document.visibilityState === 'visible'
+    ) {
       void telemetry.track('feature_flag_changed', {
         flag,
         enabled: currentEnabled,

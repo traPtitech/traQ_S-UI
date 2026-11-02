@@ -24,6 +24,7 @@ describe('feature flag telemetry', () => {
   beforeEach(() => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-09-25T00:00:00Z'))
+    vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible')
     track.mockReset()
     pinia = createPinia()
     const state = reactive({ status: new Map<FeatureFlagKey, boolean>() })
@@ -41,6 +42,7 @@ describe('feature flag telemetry', () => {
 
   afterEach(() => {
     disposePinia(pinia)
+    vi.restoreAllMocks()
     vi.useRealTimers()
   })
 
@@ -82,6 +84,41 @@ describe('feature flag telemetry', () => {
     expect(store.getFeatureFlagState('contain_strict_alternate').source).toBe(
       'override'
     )
+    expect(track).not.toHaveBeenCalled()
+  })
+
+  it('keeps changes made while hidden without recording a change event', async () => {
+    const visibility = vi
+      .spyOn(document, 'visibilityState', 'get')
+      .mockReturnValue('hidden')
+    restore()
+
+    await store.updateFeatureFlagStatus('flag_test', true)
+
+    expect(store.getFeatureFlagState('flag_test')).toEqual({
+      enabled: true,
+      source: 'override'
+    })
+    expect(track).not.toHaveBeenCalled()
+
+    visibility.mockReturnValue('visible')
+    await store.updateFeatureFlagStatus('flag_test', false)
+
+    expect(track).toHaveBeenCalledExactlyOnceWith('feature_flag_changed', {
+      flag: 'flag_test',
+      enabled: false,
+      previous_enabled: true
+    })
+  })
+
+  it('checks visibility after restoring settings', async () => {
+    const update = store.updateFeatureFlagStatus('flag_test', true)
+    vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden')
+    restore()
+
+    await update
+
+    expect(store.getFeatureFlagState('flag_test').enabled).toBe(true)
     expect(track).not.toHaveBeenCalled()
   })
 
