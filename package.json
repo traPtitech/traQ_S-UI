@@ -53,7 +53,7 @@
     "@mdi/js": "7.4.47",
     "@sapphi-red/web-noise-suppressor": "0.4.1",
     "@shiguredo/virtual-background": "2023.2.0",
-    "@traptitech/traq": "3.26.1-1",
+    "@traptitech/traq": "0.0.0-thread.41310095832.1.g148f31ee2cac",
     "@traptitech/traq-markdown-it": "7.1.0",
     "@vueuse/core": "15.0.0",
     "autosize": "6.0.1",
