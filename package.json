@@ -30,8 +30,8 @@
     "test:unit:watch": "vitest -w",
     "type-check": "node scripts/patch-dependencies.js && npm run type-check:src && npm run type-check:test && npm run type-check:storybook",
     "type-check:src": "vue-tsc --noEmit",
-    "type-check:test": "tsc --noEmit --project tests/unit/tsconfig.json && tsc --noEmit --project tests/e2e/tsconfig.json",
-    "type-check:storybook": "vue-tsc --noEmit --project .storybook/tsconfig.json"
+    "type-check:storybook": "vue-tsc --noEmit --project .storybook/tsconfig.json",
+    "type-check:test": "vue-tsc --noEmit --project tests/unit/tsconfig.json && tsc --noEmit --project tests/e2e/tsconfig.json"
   },
   "overrides": {
     "@actions/core": "3.0.1",
@@ -53,6 +53,10 @@
     "@mdi/js": "7.4.47",
     "@sapphi-red/web-noise-suppressor": "0.4.1",
     "@shiguredo/virtual-background": "2023.2.0",
+    "@tiptap/core": "3.32.0",
+    "@tiptap/pm": "3.32.0",
+    "@tiptap/vue-3": "3.32.0",
+    "@traptitech/markdown-it-katex": "3.6.0",
     "@traptitech/traq": "3.31.0-0",
     "@traptitech/traq-markdown-it": "7.1.0",
     "@vueuse/core": "15.0.0",
@@ -65,6 +69,7 @@
     "idb-keyval": "6.3.0",
     "katex": "0.19.1",
     "livekit-client": "2.21.0",
+    "markdown-it": "14.3.3",
     "mitt": "3.0.1",
     "party-js": "2.2.0",
     "sortablejs": "1.15.7",

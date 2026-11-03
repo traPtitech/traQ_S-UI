@@ -1,5 +1,7 @@
 import type { UserGroupId, UserId } from '/@/types/entity-ids'
 
+import { embeddingTokens } from './embeddingTokens'
+
 interface StructData {
   type: string
   raw: string
@@ -17,32 +19,18 @@ export interface Position {
   length: number
 }
 
-const isStructData = (data: Readonly<unknown>): data is StructData => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const anyData = data as any
+const isStructData = (value: unknown): value is StructData => {
+  if (!value || typeof value !== 'object') return false
+
   return (
-    typeof anyData['type'] === 'string' &&
-    typeof anyData['raw'] === 'string' &&
-    typeof anyData['id'] === 'string'
+    'type' in value &&
+    typeof value.type === 'string' &&
+    'raw' in value &&
+    typeof value.raw === 'string' &&
+    'id' in value &&
+    typeof value.id === 'string'
   )
 }
-
-const parse = (str: string): StructData | null => {
-  try {
-    const data = JSON.parse(str)
-    if (!isStructData(data)) {
-      return null
-    }
-    return data
-  } catch {
-    return null
-  }
-}
-
-type ForEachDataState =
-  | 'outside' // !{}の外
-  | 'inside' // !{}の中
-  | 'insideString' // !{}の中の文字列の中
 
 /**
  * https://github.com/traPtitech/traQ/blob/master/utils/message/parser.go と検知できるものをあわせること
@@ -59,45 +47,15 @@ export const forEachData = (
   ) => boolean | void,
   shortcut: boolean | null = null
 ) => {
-  let state: ForEachDataState = 'outside'
-  let startIndex = -1
+  for (const token of embeddingTokens(text)) {
+    const result = func(isStructData(token.value) ? token.value : null, {
+      start: token.start,
+      length: token.length
+    })
 
-  for (let i = 0; i < text.length; i++) {
-    switch (state) {
-      case 'outside': {
-        if (i < text.length - 1 && text[i] === '!' && text[i + 1] === '{') {
-          state = 'inside'
-          startIndex = i
-          i++
-        }
-        break
-      }
-      case 'inside': {
-        if (text[i] === '"') {
-          state = 'insideString'
-        } else if (text[i] === '}') {
-          state = 'outside'
-          const jsonString = text.slice(startIndex + 1, i + 1) // `{`から`}`まで
-          const data = parse(jsonString)
-          const result = func(data, {
-            start: startIndex,
-            length: i - startIndex + 1
-          })
-          // funcはbooleanかundefinedなのでnullとは一致しない
-          if (result === shortcut) {
-            return result
-          }
-        }
-        break
-      }
-      case 'insideString': {
-        if (text[i] === '"') {
-          state = 'inside'
-        }
-        break
-      }
-    }
+    if (result === shortcut) return result
   }
+
   return undefined
 }
 
