@@ -51,7 +51,7 @@ const props = withDefaults(
   }>(),
   {
     label: '',
-    type: 'text' as const,
+    type: 'text',
     autofocus: false,
     autocapitalize: 'off'
   }

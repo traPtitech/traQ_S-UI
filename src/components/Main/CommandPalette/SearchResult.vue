@@ -87,7 +87,7 @@ const {
 
 watch(
   // クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
-  () => [query.value, currentSortKey.value, currentPage.value] as const,
+  () => [query.value, currentSortKey.value, currentPage.value] satisfies [string, SearchMessageSortKey, number],
   ([query, key], [oldQuery, oldKey]) => {
     // クエリの変更時・ソートキーの変更時はページングをリセット
     if (query !== oldQuery || key !== oldKey) {

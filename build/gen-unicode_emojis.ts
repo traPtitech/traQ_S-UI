@@ -43,7 +43,9 @@ const replaceNameMap: Record<string, string> = {
  *  スタンプ名重複の検査
  */
 function checkDuplicateStampNames(emojis: { [unicodeString: string]: string }) {
-  const nameToUnicodeStringsMap = Object.entries(emojis).reduce(
+  const nameToUnicodeStringsMap = Object.entries(emojis).reduce<
+    Record<string, string[]>
+  >(
     (grouped, [unicodeString, name]) => {
       if (!grouped[name]) {
         grouped[name] = []
@@ -51,7 +53,7 @@ function checkDuplicateStampNames(emojis: { [unicodeString: string]: string }) {
       grouped[name].push(unicodeString)
       return grouped
     },
-    {} as Record<string, string[]>
+    {}
   )
   const duplicateNames = Object.entries(nameToUnicodeStringsMap).filter(
     ([, unicodeStrings]) => unicodeStrings.length > 1
@@ -88,39 +90,44 @@ function checkInvalidStampNames(emojis: { [unicodeString: string]: string }) {
 /**
  *  データ取得
  */
+type Emoji = {
+  name: string
+  category: string
+  order: number
+  shortname: string
+  shortname_alternates: string[]
+}
+type EmojiCategory = {
+  order: number
+  category: string
+  category_label: string
+}
+type Category = {
+  order: number
+  category: string
+  category_label: string
+  emojis: { name: string; order: number }[]
+}
 async function fetchData() {
   const [{ data: emojis }, { data: categories }] = await Promise.all([
-    axios.get(UNICODE_EMOJIS_META_URL) as Promise<{
-      data: Record<
-        string,
-        {
-          name: string
-          category: string
-          order: number
-          shortname: string
-          shortname_alternates: string[]
-        }
-      >
-    }>,
-    axios.get(UNICODE_EMOJIS_CATEGORIES_URL) as Promise<{
-      data: { order: number; category: string; category_label: string }[]
-    }>
+    axios.get<Record<string, Emoji>>(UNICODE_EMOJIS_META_URL),
+    axios.get<EmojiCategory[]>(UNICODE_EMOJIS_CATEGORIES_URL)
   ])
   return { emojis, categories }
 }
-
 async function main() {
   const { emojis, categories } = await fetchData()
 
-  const categoryMap = Object.fromEntries(
+  const categoryMap: Record<string, Category> = Object.fromEntries(
     categories.map(c => [
       c.category,
       {
         order: c.order,
         category: c.category,
         category_label: c.category_label,
-        emojis: [] as { name: string; order: number }[]
-      }
+        // emojis: [] satisfies Category['emojis']
+        emojis: []
+      } satisfies Category
     ])
   )
   categoryMap['regional'] = {
