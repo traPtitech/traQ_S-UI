@@ -11,7 +11,7 @@ export { partsToContent, contentToParts } from './editorDocument'
 export interface ReferenceInputHandle {
   element?: HTMLElement
   focus: () => void
-  insertText: (text: string) => void
+  insertText: (text: string, options?: { focus?: boolean }) => void
   insertLineBreak: () => void
 }
 

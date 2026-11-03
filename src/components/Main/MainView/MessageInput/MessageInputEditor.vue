@@ -1,56 +1,49 @@
 <template>
-  <div :class="$style.container">
-    <TextareaAutosize
-      ref="textareaAutosizeRef"
+  <div
+    :class="$style.container"
+    @mousedown.left.self.prevent="inputRef?.focus()"
+  >
+    <ReferenceInput
+      ref="inputRef"
       v-model="modelValue"
+      :document-key="`${documentKey}:${documentRevision}`"
       :class="$style.textarea"
-      :style="textareaAutosizeStyle"
+      :style="inputStyle"
       :readonly="isPosting"
       placeholder="メッセージを入力"
-      rows="1"
       :data-simple-padding="simplePadding"
       :data-shrink-to-one-line="shrinkToOneLine"
       :data-is-max-height-none="isMaxHeightNone"
       :data-is-input-text-area-expanded="isInputTextAreaExpanded"
       :data-is-mobile="isMobile"
       :data-is-firefox="firefoxFlag"
-      data-testid="message-input-textarea"
+      test-id="message-input-textarea"
+      :prepare-paste="preparePaste"
       @before-input="onBeforeInput"
       @keydown="onKeyDown"
       @keyup="onKeyUp"
       @focus="onFocus"
       @blur="onBlur"
-      @paste="onPaste"
-      @autosize-updated="updateShowIsInputTextareaExpandButtonVisibility"
+      @layout-change="updateShowIsInputTextareaExpandButtonVisibility"
     />
+
     <div :class="$style.over" />
-    <DropdownSuggester
-      :is-shown="isSuggesterShown"
-      :width="suggesterWidth"
-      :position="suggesterPosition"
-      :candidates="suggestedCandidates"
-      :selected-index="selectedIndex"
-      @select="onSelect"
-    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, shallowRef, watch } from 'vue'
+import { computed, nextTick, ref, shallowRef, watch } from 'vue'
 
-import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
-import useInsertText from '/@/composables/dom/useInsertText'
+import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
 import useResponsive from '/@/composables/useResponsive'
 import { isFirefox } from '/@/lib/dom/browser'
 import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
-import type { ChannelId } from '/@/types/entity-ids'
 
-import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
-import useSuggester from './composables/suggestion/useSuggester'
 import usePaste from './composables/usePaste'
 import useSendKeyWatcher from './composables/useSendKeyWatcher'
 
 const modelValue = defineModel<string>({ default: '' })
+
 const showTextAreaExpandButton = defineModel<boolean>(
   'showTextAreaExpandButton',
   {
@@ -60,7 +53,7 @@ const showTextAreaExpandButton = defineModel<boolean>(
 
 const props = withDefaults(
   defineProps<{
-    channelId?: ChannelId
+    documentKey?: string | number
     isPosting?: boolean
     simplePadding?: boolean
     shrinkToOneLine?: boolean
@@ -68,7 +61,7 @@ const props = withDefaults(
     isInputTextAreaExpanded?: boolean
   }>(),
   {
-    channelId: '',
+    documentKey: 'message',
     isPosting: false,
     simplePadding: false,
     shrinkToOneLine: false,
@@ -80,101 +73,74 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'focus'): void
   (e: 'blur'): void
-  (e: 'addAttachments', _files: File[]): void
+  (e: 'addAttachments', _files: File[] | Promise<File[]>): void
   (e: 'postMessage'): void
   (e: 'modifierKeyDown'): void
   (e: 'modifierKeyUp'): void
-  (e: 'autosize-updated'): void
 }>()
+
+const documentRevision = ref(0)
+
+watch(
+  () => props.isPosting,
+  (posting, wasPosting) => {
+    if (wasPosting && !posting && modelValue.value === '')
+      documentRevision.value++
+  }
+)
 
 const firefoxFlag = isFirefox()
 
 const { isMobile } = useResponsive()
+const inputRef = shallowRef<InstanceType<typeof ReferenceInput>>()
+const inputHandle = computed(() => inputRef.value)
 
-const textareaAutosizeRef = shallowRef<InstanceType<typeof TextareaAutosize>>()
-const textareaRef = computed(
-  () => textareaAutosizeRef.value?.textareaEle ?? undefined
-)
+defineExpose({ inputHandle })
 
-defineExpose({ textareaRef, textareaAutosizeRef })
-
-const { insertText } = useInsertText(textareaRef)
-const { onPaste } = usePaste(emit, insertText)
-
-const {
-  onKeyUp: onKeyUpWordSuggester,
-  onKeyDown: onKeyDownWordSuggester,
-  onBlur: onBlurWordSuggester,
-  isSuggesterShown,
-  suggesterWidth,
-  position,
-  suggestedCandidates,
-  selectedIndex,
-  onSelect
-} = useSuggester(textareaRef)
+const { preparePaste } = usePaste(emit)
 
 const {
   onBeforeInput,
-  onKeyDown: onKeyDownSendKeyWatcher,
-  onKeyUp: onKeyUpSendKeyWatcher,
+  onKeyDown,
+  onKeyUp,
   onBlur: onBlurSendKeyWatcher
-} = useSendKeyWatcher(emit, () => {
-  insertText('\n')
-})
-
-const suggesterPosition = computed(() => {
-  if (!textareaRef.value) return
-  const { top, left } = textareaRef.value.getBoundingClientRect()
-  return {
-    top: top + position.value.top,
-    left: left + position.value.left
-  }
-})
-
-const onKeyDown = (e: KeyboardEvent) => {
-  onKeyDownSendKeyWatcher(e)
-  onKeyDownWordSuggester(e)
-}
-const onKeyUp = (e: KeyboardEvent) => {
-  onKeyUpSendKeyWatcher(e)
-  onKeyUpWordSuggester(e)
-}
+} = useSendKeyWatcher(emit, () => inputRef.value?.insertLineBreak(), true)
 
 const onFocus = () => {
   emit('focus')
 }
+
 const onBlur = () => {
-  onBlurWordSuggester()
   onBlurSendKeyWatcher()
   emit('blur')
 }
 
-const textAreaAutoSizeMaxHeightShrunk = computed(() =>
-  isMobile.value ? 70 : 160
-)
+const collapsedMaxHeight = computed(() => (isMobile.value ? 70 : 160))
 
-const textAreaAutoSizeMaxHeight = computed(() => {
+const inputMaxHeight = computed(() => {
   if (props.isMaxHeightNone) {
     return 'none'
   }
+
   return (
     (props.isInputTextAreaExpanded
-      ? textAreaAutoSizeMaxHeightShrunk.value * 2
-      : textAreaAutoSizeMaxHeightShrunk.value) + 'px'
+      ? collapsedMaxHeight.value * 2
+      : collapsedMaxHeight.value) + 'px'
   )
 })
 
-const scollbarWidth = getScrollbarWidth()
-const textareaAutosizeStyle = computed(() => ({
-  '--input-scrollbar-width': `${scollbarWidth}px`,
-  '--max-height': textAreaAutoSizeMaxHeight.value
+const scrollbarWidth = getScrollbarWidth()
+
+const inputStyle = computed(() => ({
+  '--input-scrollbar-width': `${scrollbarWidth}px`,
+  '--max-height': inputMaxHeight.value
 }))
 
 const updateShowIsInputTextareaExpandButtonVisibility = () => {
   nextTick(() => {
-    if (textareaRef.value) {
+    if (inputHandle.value?.element) {
       showTextAreaExpandButton.value =
-        textareaRef.value.scrollHeight > textAreaAutoSizeMaxHeightShrunk.value
+        inputHandle.value.element.scrollHeight > collapsedMaxHeight.value
     }
   })
 }
@@ -183,9 +149,7 @@ watch(modelValue, updateShowIsInputTextareaExpandButtonVisibility, {
   immediate: true
 })
 
-watch(textAreaAutoSizeMaxHeight, () => {
-  textareaAutosizeRef.value?.autosizeUpdateTextarea()
-})
+watch(inputMaxHeight, updateShowIsInputTextareaExpandButtonVisibility)
 </script>
 
 <style lang="scss" module>
@@ -201,6 +165,7 @@ $vertical-padding: 8px;
     border-color: $theme-accent-focus-default;
   }
 }
+
 .textarea {
   @include color-text-primary;
   @include background-primary;
@@ -209,35 +174,35 @@ $vertical-padding: 8px;
   // 左から、余白、スタンプパレットボタン、余白、送信ボタン、スクロールバー
   padding-right: calc(8px + 24px + 8px + 24px + var(--input-scrollbar-width));
   max-height: var(--max-height);
-  &[readonly] {
+
+  &[data-readonly='true'] {
     @include color-ui-secondary-inactive;
     cursor: wait;
   }
+
   &[data-simple-padding='true'] {
     padding-right: 16px;
   }
 
-  &[data-shrink-to-one-line='true'],
-  &:placeholder-shown {
-    // Chromeでは<textarea>でtext-overflow: ellipsisが利用できない
-    // line-clampだけだと2行目が表示されるので下の.overを上に重ねることで隠す
+  &[data-shrink-to-one-line='true'] {
+    // 折りたたみ時は次の行を下側の余白で隠す。
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
+
     &[data-is-firefox='true'] {
       // Firefoxではline-clampが効かないのでtext-overflow: ellipsisも使う
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    // autosizeで直接スタイルが当てられているため上書きするために!importantをつける
     // overflow: clipは、Chromeではカーソル移動によるスクロールを無効化できるが、
     // Firefoxでデザインが崩れるようになってしまうので、今のところはつけない
-    overflow: hidden !important;
+    overflow: hidden;
     // overflow: clip !important;
-    height: unset !important;
   }
 }
+
 .over {
   @include background-primary;
   position: absolute;
@@ -247,8 +212,7 @@ $vertical-padding: 8px;
   height: 0;
   pointer-events: none;
 
-  .textarea[data-shrink-to-one-line='true'] + &,
-  .textarea:placeholder-shown + & {
+  .textarea[data-shrink-to-one-line='true'] + & {
     height: $vertical-padding;
   }
 }

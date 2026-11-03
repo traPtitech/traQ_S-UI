@@ -1,8 +1,12 @@
-import { computed } from 'vue'
+import { computed, unref } from 'vue'
 
 import { mimeToFileType } from '/@/lib/basic/file'
 import { getResizedFile } from '/@/lib/resize'
 import type { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
+import {
+  createDefaultValue,
+  useMessageInputStateStore
+} from '/@/store/ui/messageInputStateStore'
 
 import useMessageInputState from './useMessageInputState'
 
@@ -11,29 +15,60 @@ const useMessageInputStateAttachment = (
   onError: (message: string) => void
 ) => {
   const { state } = useMessageInputState(channelId)
+  const { getStore, setStore } = useMessageInputStateStore()
 
   const attachments = computed(() => state.attachments)
 
-  const addTextToLast = (text: string) => {
-    state.text += state.text !== '' ? `\n${text}` : text
-  }
+  const captureDraft = () => {
+    const key = unref(channelId)
 
-  const addAttachment = async (file: File) => {
-    try {
-      const fileType = mimeToFileType(file.type)
-      const attachmentFile = await getResizedFile(file)
-      state.attachments.push({
-        type: fileType,
-        file: attachmentFile
+    const update = (apply: (draft: typeof state) => void) => {
+      if (unref(channelId) === key) {
+        apply(state)
+        return
+      }
+
+      const current = getStore(key) ?? createDefaultValue()
+      const draft = { ...current, attachments: [...current.attachments] }
+      apply(draft)
+      setStore(key, draft)
+    }
+
+    const addTextToLast = (text: string) =>
+      update(draft => {
+        draft.text += draft.text !== '' ? `\n${text}` : text
       })
-    } catch (e) {
-      if (e instanceof Error) {
-        onError(e.message)
-      } else {
-        onError('ファイルの処理に失敗しました')
+
+    const addAttachment = async (file: File) => {
+      try {
+        const fileType = mimeToFileType(file.type)
+        const attachmentFile = await getResizedFile(file)
+        update(draft =>
+          draft.attachments.push({
+            type: fileType,
+            file: attachmentFile
+          })
+        )
+      } catch (e) {
+        if (e instanceof Error) {
+          onError(e.message)
+        } else {
+          onError('ファイルの処理に失敗しました')
+        }
       }
     }
+
+    const addAttachments = async (files: File[] | Promise<File[]>) => {
+      for (const file of await files) await addAttachment(file)
+    }
+
+    return { addTextToLast, addAttachment, addAttachments }
   }
+
+  const addTextToLast = (text: string) => captureDraft().addTextToLast(text)
+  const addAttachment = (file: File) => captureDraft().addAttachment(file)
+  const addAttachments = (files: File[] | Promise<File[]>) =>
+    captureDraft().addAttachments(files)
 
   const removeAttachmentAt = (index: number) => {
     if (0 <= index && index < state.attachments.length) {
@@ -43,8 +78,10 @@ const useMessageInputStateAttachment = (
 
   return {
     attachments,
+    captureDraft,
     addTextToLast,
     addAttachment,
+    addAttachments,
     removeAttachmentAt
   }
 }

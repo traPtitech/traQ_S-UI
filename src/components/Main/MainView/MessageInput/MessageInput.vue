@@ -25,6 +25,7 @@
       <AIcon :class="$style.controls" name="archive" mdi />
       <div>アーカイブチャンネルのため、投稿できません</div>
     </div>
+
     <div v-else :class="$style.inputContainer">
       <MessageInputLeftControls
         v-model:is-left-controls-expanded="isLeftControlsExpanded"
@@ -33,15 +34,13 @@
         :show-text-area-expand-button="showTextAreaExpandButton"
         :class="$style.leftControls"
         @click-add-attachment="addAttachment"
-        @toggle-left-controls-expanded="
-          textareaComponentRef?.textareaAutosizeRef?.autosizeUpdateTextarea
-        "
       />
-      <MessageInputTextArea
-        ref="textareaComponentRef"
+
+      <MessageInputEditor
+        ref="messageInputRef"
         v-model="state.text"
         v-model:show-text-area-expand-button="showTextAreaExpandButton"
-        :channel-id="channelId"
+        :document-key="channelId"
         :is-posting="isPosting"
         :shrink-to-one-line="
           (forceMobileStyle || isMobile) && isLeftControlsExpanded
@@ -54,6 +53,7 @@
         @modifier-key-up="onModifierKeyUp"
         @post-message="postMessage"
       />
+
       <MessageInputRightControls
         :class="$style.rightControls"
         :can-post-message="canPostMessage"
@@ -81,12 +81,12 @@ import { useToastStore } from '/@/store/ui/toast'
 import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
+import MessageInputEditor from './MessageInputEditor.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
 import MessageInputLeftControls from './MessageInputLeftControls.vue'
 import MessageInputPreview from './MessageInputPreview.vue'
 import MessageInputRightControls from './MessageInputRightControls.vue'
-import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
 import useAttachments from './composables/useAttachments'
@@ -99,6 +99,7 @@ const props = defineProps<{
   showToNewMessageButton: boolean
   forceMobileStyle?: boolean
 }>()
+
 const emit = defineEmits<{
   (e: 'clickToNewMessageButton'): void
 }>()
@@ -107,13 +108,15 @@ const { isMobile } = useResponsive()
 const channelId = toRef(props, 'channelId')
 const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
 const { addErrorToast } = useToastStore()
-const { addAttachment: addStateAttachment } = useMessageInputStateAttachment(
-  channelId,
-  addErrorToast
-)
-const { addAttachment } = useAttachments(addStateAttachment)
+
+const { captureDraft, addAttachments: onAddAttachments } =
+  useMessageInputStateAttachment(channelId, addErrorToast)
+
+const { addAttachment } = useAttachments(() => captureDraft().addAttachments)
+
 const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
   useModifierKey()
+
 const { sendWithModifierKey } = useBrowserSettings()
 const { channelsMap } = useChannelsStore()
 const isLeftControlsExpanded = ref(false)
@@ -126,6 +129,7 @@ const isArchived = computed(
 )
 
 const { isFocused, onFocus, onBlur } = useFocus()
+
 watchEffect(() => {
   if (isFocused.value) {
     isLeftControlsExpanded.value = false
@@ -134,36 +138,35 @@ watchEffect(() => {
 
 const { isTyping } = useViewStateSenderStore()
 let timeoutId: NodeJS.Timeout
+
 watch(state, () => {
   isTyping.value = !isTextEmpty.value && isFocused.value
+
   if (isTyping.value) {
     clearTimeout(timeoutId)
   }
+
   timeoutId = setTimeout(() => {
     isTyping.value = false
   }, 10000)
 })
 
-const onAddAttachments = async (files: File[]) => {
-  for (const file of files) {
-    await addStateAttachment(file)
-  }
-}
-
 const { postMessage, isPosting, progress } = usePostMessage(channelId)
 
 const canPostMessage = computed(() => !isPosting.value && !isEmpty.value)
+
 const showKeyGuide = computed(
   () =>
     isModifierKeyPressed.value &&
     (sendWithModifierKey.value !== 'modifier' || canPostMessage.value)
 )
 
-const textareaComponentRef = ref<InstanceType<typeof MessageInputTextArea>>()
+const messageInputRef = ref<InstanceType<typeof MessageInputEditor>>()
 const containerEle = ref<HTMLDivElement>()
+
 const { toggleStampPicker } = useTextStampPickerInvoker(
   toRef(state, 'text'),
-  computed(() => textareaComponentRef.value?.textareaRef),
+  computed(() => messageInputRef.value?.inputHandle),
   containerEle
 )
 
@@ -192,12 +195,15 @@ $radius: 4px;
     transform: translateY(-$radius);
   }
 }
+
 .preview {
   margin-bottom: 8px;
 }
+
 .fileList {
   margin-bottom: 8px;
 }
+
 .inputContainer {
   position: relative;
   width: 100%;
@@ -212,11 +218,13 @@ $radius: 4px;
     cursor: not-allowed;
   }
 }
+
 .controls {
   flex: {
     grow: 0;
     shrink: 0;
   }
+
   margin: 8px;
 
   &:first-child:first-child {
@@ -227,9 +235,11 @@ $radius: 4px;
     margin-right: 0;
   }
 }
+
 .leftControls {
   margin: 2px 8px 8px 0;
 }
+
 .rightControls {
   position: absolute;
   right: 8px;
@@ -255,6 +265,7 @@ $radius: 4px;
   font-weight: bold;
   gap: 10px;
   cursor: pointer;
+
   &:hover {
     background-color: $theme-background-tertiary-default;
   }

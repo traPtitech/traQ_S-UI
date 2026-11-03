@@ -3,7 +3,7 @@
     <template #subtitle>
       <MarkdownPreview
         :class="$style.subtitle"
-        :content="messageContent"
+        :content="normalizeMessageSource"
         inline
       />
     </template>
@@ -91,7 +91,7 @@ apis.getMessageClips(props.messageId).then(res => {
   isSelected.value = new Set(res.data.map(c => c.folderId))
 })
 
-const messageContent = computed(() => message.value?.content ?? '')
+const normalizeMessageSource = computed(() => message.value?.content ?? '')
 const { toggleClip } = useCreateClip(props, isSelected)
 </script>
 

@@ -1,51 +1,19 @@
 import { computed, ref, unref } from 'vue'
 
-import type { AxiosProgressEvent } from 'axios'
-
 import useMessageInputStateStatic from '/@/composables/messageInputState/useMessageInputStateStatic'
 import useChannelPath from '/@/composables/useChannelPath'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
 import { nilUuid } from '/@/lib/basic/uuid'
-import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
 import { isEmbeddedLink } from '/@/lib/markdown/markdown'
+import { resolveMessageReferences } from '/@/lib/message/content'
+import { uploadAttachments } from '/@/lib/message/uploadAttachments'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
-import type {
-  Attachment,
-  MessageInputStateKey
-} from '/@/store/ui/messageInputStateStore'
+import type { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
 import { useToastStore } from '/@/store/ui/toast'
-import type { ChannelId } from '/@/types/entity-ids'
-
-/**
- * @param progress アップロード進行状況 0～1
- */
-type ProgressCallback = (progress: number) => void
-
-const uploadAttachments = async (
-  attachments: ReadonlyArray<Readonly<Attachment>>,
-  channelId: ChannelId,
-  onProgress: ProgressCallback
-) => {
-  const responses = []
-  for (const [i, attachment] of attachments.entries()) {
-    responses.push(
-      await apis.postFile(attachment.file, channelId, {
-        /**
-         * https://github.com/axios/axios#request-config
-         */
-        onUploadProgress(e: AxiosProgressEvent) {
-          if (e.total === undefined || e.total === 0) return
-          onProgress((i + e.loaded / e.total) / attachments.length)
-        }
-      })
-    )
-  }
-  return responses.map(res => buildFilePathForPost(res.data.id))
-}
 
 export const createContent = async (
   embeddedText: string,
@@ -78,14 +46,15 @@ const usePostMessage = (
   inputStateKey = channelId
 ) => {
   const { getMessageInputState } = useMessageInputStateStatic()
-  const { channelPathStringToId, channelIdToShortPathString } = useChannelPath()
+  const { channelIdToShortPathString, channelPathStringToId } = useChannelPath()
   const { addErrorToast } = useToastStore()
-  const { bothChannelsMapInitialFetchPromise, channelsMap } = useChannelsStore()
+  const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
   const { usersMapInitialFetchPromise, findUserByName } = useUsersStore()
   const { userGroupsMapInitialFetchPromise, getUserGroupByName } =
     useGroupsStore()
 
   const isForce = computed(() => channelsMap.value.get(unref(channelId))?.force)
+
   const confirmString = computed(
     () =>
       `${channelIdToShortPathString(
@@ -110,41 +79,46 @@ const usePostMessage = (
       return false
     }
 
-    await Promise.all([
-      usersMapInitialFetchPromise,
-      userGroupsMapInitialFetchPromise,
-      bothChannelsMapInitialFetchPromise
-    ])
-
-    const embeddedText = embedInternalLink(state.text, {
-      getUser: findUserByName,
-      getGroup: getUserGroupByName,
-      getChannel: path => {
-        try {
-          const id = channelPathStringToId(path)
-          return { id }
-        } catch {
-          return undefined
-        }
-      }
-    })
-
-    const dummyFileUrls = state.attachments.map(() =>
-      buildFilePathForPost(nilUuid)
-    )
-    const dummyText = await createContent(embeddedText, dummyFileUrls)
-    if (countLength(dummyText) > MESSAGE_MAX_LENGTH) {
-      addErrorToast('メッセージが長すぎます')
-      return
-    }
-
+    isPosting.value = true
     let posted = false
-    try {
-      isPosting.value = true
 
-      const fileUrls = await uploadAttachments(state.attachments, cId, p => {
-        progress.value = p
+    try {
+      await Promise.all([
+        usersMapInitialFetchPromise,
+        userGroupsMapInitialFetchPromise,
+        bothChannelsMapInitialFetchPromise
+      ])
+
+      const embeddedText = resolveMessageReferences(state.text, {
+        userId: name => findUserByName(name)?.id,
+        groupId: name => getUserGroupByName(name)?.id,
+        channelId: path => {
+          try {
+            return channelPathStringToId(path)
+          } catch {
+            return undefined
+          }
+        }
       })
+
+      const dummyFileUrls = state.attachments.map(() =>
+        buildFilePathForPost(nilUuid)
+      )
+
+      const dummyText = await createContent(embeddedText, dummyFileUrls)
+
+      if (countLength(dummyText) > MESSAGE_MAX_LENGTH) {
+        addErrorToast('メッセージが長すぎます')
+        return false
+      }
+
+      const fileUrls = await uploadAttachments(
+        state.attachments.map(attachment => attachment.file),
+        cId,
+        p => {
+          progress.value = p
+        }
+      )
 
       await apis.postMessage(cId, {
         content: await createContent(embeddedText, fileUrls)
@@ -161,8 +135,10 @@ const usePostMessage = (
       isPosting.value = false
       progress.value = 0
     }
+
     return posted
   }
+
   return { postMessage, isPosting, progress }
 }
 

@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 
-import useInsertText from '/@/composables/dom/useInsertText'
 import { constructStampString } from '/@/lib/markdown/constructStampString'
+import type { ReferenceInputHandle } from '/@/lib/referenceInput/editor'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type {
   AlignmentPosition,
@@ -11,14 +11,13 @@ import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 
 const useTextStampPickerInvoker = (
   text: Ref<string>,
-  textareaRef: Ref<HTMLTextAreaElement | undefined>,
+  inputRef: Ref<ReferenceInputHandle | undefined>,
   positionElement: Ref<HTMLElement | undefined>,
   positionOf: AlignmentPosition = 'bottom-right'
 ) => {
   const { stampsMap } = useStampsStore()
-  const { insertText } = useInsertText(textareaRef)
 
-  const selecterHandler: StampSelectHandler = stampData => {
+  const selectHandler: StampSelectHandler = stampData => {
     const stampName = stampsMap.value.get(stampData.id)?.name
     if (!stampName) return
 
@@ -28,20 +27,17 @@ const useTextStampPickerInvoker = (
       stampData.animeEffects
     )
 
-    if (!textareaRef.value) {
+    const input = inputRef.value
+    if (!input) {
       text.value += stampText
+
       return
     }
 
-    insertText(stampText)
+    input.insertText(stampText, { focus: false })
   }
 
-  return useStampPickerInvoker(
-    selecterHandler,
-    positionElement,
-    true,
-    positionOf
-  )
+  return useStampPickerInvoker(selectHandler, positionElement, true, positionOf)
 }
 
 export default useTextStampPickerInvoker

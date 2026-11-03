@@ -38,20 +38,27 @@ import useInputComposition from '/@/composables/referenceInput/useInputCompositi
 import useReferenceLabels from '/@/composables/referenceInput/useReferenceLabels'
 import useReferenceSuggestions from '/@/composables/referenceInput/useReferenceSuggestions'
 import useChannelPath from '/@/composables/useChannelPath'
-import { inputDataTransfer } from '/@/lib/referenceInput/dataTransfer'
+import { normalizeMessageParts } from '/@/lib/message/content'
+import {
+  type PreparePaste,
+  inputDataTransfer
+} from '/@/lib/referenceInput/dataTransfer'
+import {
+  type ReferenceInputHandle,
+  contentToParts,
+  inputExtensions,
+  partsToContent
+} from '/@/lib/referenceInput/editor'
+import {
+  loadInputDocument,
+  replaceInputDocument
+} from '/@/lib/referenceInput/editorDocument'
 import {
   type InputMode,
   type InputPart,
   parseInput,
   serializeInput
-} from '/@/lib/referenceInput/document'
-import {
-  contentToParts,
-  inputExtensions,
-  partsToContent
-} from '/@/lib/referenceInput/editor'
-import { loadInputDocument } from '/@/lib/referenceInput/editorDocument'
-import { normalizeMessageParts } from '/@/lib/referenceInput/message'
+} from '/@/lib/references'
 import {
   candidateLabel,
   candidateRowId
@@ -64,13 +71,19 @@ const props = withDefaults(
   defineProps<{
     mode?: InputMode
     placeholder?: string
+    labelledBy?: string
     readonly?: boolean
+    preparePaste?: PreparePaste
+    documentKey?: string | number
     testId?: string
   }>(),
   {
     mode: 'message',
     placeholder: '',
+    labelledBy: undefined,
     readonly: false,
+    preparePaste: undefined,
+    documentKey: undefined,
     testId: undefined
   }
 )
@@ -79,7 +92,6 @@ const emit = defineEmits<{
   keydown: [event: KeyboardEvent]
   keyup: [event: KeyboardEvent]
   beforeInput: [event: InputEvent]
-  paste: [event: ClipboardEvent]
   focus: []
   blur: []
   layoutChange: []
@@ -100,24 +112,29 @@ const {
 
 const insertParts = (
   parts: InputPart[],
-  range?: { from: number; to: number }
+  range?: { from: number; to: number },
+  focus = true
 ) => {
   const current = editor.value
 
   if (!current || props.readonly) return
 
   const content = partsToContent(parts).content?.[0]?.content ?? []
+  const chain = current.chain()
+  if (focus) chain.focus()
 
-  current
-    .chain()
-    .focus()
+  chain
     .insertContentAt(range ?? current.state.selection, content, {
       parseOptions: { preserveWhitespace: 'full' }
     })
     .run()
 }
 
-const insertText = (text: string, range?: { from: number; to: number }) =>
+const insertTextAt = (
+  text: string,
+  range?: { from: number; to: number },
+  focus?: boolean
+) =>
   insertParts(
     [
       {
@@ -125,8 +142,12 @@ const insertText = (text: string, range?: { from: number; to: number }) =>
         text: props.mode === 'search' ? text.replace(/[\r\n]+/g, ' ') : text
       }
     ],
-    range
+    range,
+    focus
   )
+
+const insertText: ReferenceInputHandle['insertText'] = (text, { focus } = {}) =>
+  insertTextAt(text, undefined, focus)
 
 const insertLineBreak = () => {
   if (props.readonly || props.mode !== 'message' || isComposing()) return
@@ -179,6 +200,7 @@ const editor = useEditor({
 
       return {
         role: props.mode === 'search' ? 'combobox' : 'textbox',
+        tabindex: '0',
         'aria-autocomplete': 'list',
         'aria-haspopup': 'grid',
         ...(shown.value && candidates.value.length
@@ -197,7 +219,10 @@ const editor = useEditor({
             }
           : {}),
         dir: 'auto',
-        'aria-label': props.placeholder,
+        ...(props.labelledBy
+          ? { 'aria-labelledby': props.labelledBy }
+          : { 'aria-label': props.placeholder }),
+        'aria-readonly': String(props.readonly),
         'aria-multiline': String(props.mode === 'message'),
         'data-placeholder': props.placeholder,
         'data-is-empty': String(doc.firstChild?.childCount === 0),
@@ -275,8 +300,8 @@ const editor = useEditor({
         label,
         channelPathToId: channelPathStringToId,
         insertParts,
-        insertText,
-        onPaste: event => emit('paste', event)
+        insertText: insertTextAt,
+        preparePaste: event => props.preparePaste?.(event)
       })
     }
   },
@@ -321,10 +346,16 @@ watchEffect(() => {
   }
 })
 
-watch(model, value => {
+watch([model, () => props.documentKey], ([value, key], [, previousKey]) => {
   const current = editor.value
+  if (!current) return
 
-  if (!current || !loadInputDocument(current, value, props.mode)) return
+  const changed =
+    key === undefined || key !== previousKey
+      ? loadInputDocument(current, value, props.mode, key !== previousKey)
+      : replaceInputDocument(current, value, props.mode)
+
+  if (!changed) return
 
   hideSuggestions()
   emit('layoutChange')

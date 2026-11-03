@@ -1,62 +1,62 @@
 import { getTextFromHtml } from '/@/lib/dom/dataTransfer'
 
-const readDataFromClipboard = async () => {
-  if (!navigator.permissions?.query) return []
+const readSvgFiles = async (): Promise<File[]> => {
+  try {
+    if (!navigator.permissions?.query || !navigator.clipboard?.read) return []
 
-  const permissionStatus = await navigator.permissions.query({
-    name: 'clipboard-read' as PermissionName // 型に含まれていない
-  })
-  if (
-    permissionStatus.state === 'granted' ||
-    permissionStatus.state === 'prompt'
-  ) {
-    try {
-      const data = await navigator.clipboard.read()
-      return data
-    } catch {
-      // 存在しないときもエラーが起きるのでひねりつぶす
-      return []
-    }
+    const permission = await navigator.permissions.query({
+      name: 'clipboard-read' as PermissionName
+    })
+    if (permission.state === 'denied') return []
+
+    const items = await navigator.clipboard.read()
+    const blobs = await Promise.allSettled(
+      items
+        .filter(item => item.types.includes('image/svg+xml'))
+        .map(item => item.getType('image/svg+xml'))
+    )
+
+    return blobs.flatMap(result =>
+      result.status === 'fulfilled'
+        ? [new File([result.value], 'image.svg', { type: result.value.type })]
+        : []
+    )
+  } catch {
+    return []
   }
-  return []
 }
 
-const obtainFilesFromClipboardItems = async (items: ClipboardItems) => {
-  const blobPromises = items
-    .filter(d => d.types.includes('image/svg+xml'))
-    .map(d => d.getType('image/svg+xml'))
-  const blobs = await Promise.all(blobPromises)
+export const readPaste = (event: ClipboardEvent) => {
+  const data = event.clipboardData
+  if (!data) return
 
-  // ファイル名がとれないのでダミーの名前をつける
-  return blobs.map(blob => new File([blob], 'image.svg', { type: blob.type }))
+  const plainText = data.getData('text/plain')
+  const hasHtml = data.types.includes('text/html')
+  const files = [...data.files]
+
+  if (hasHtml) event.preventDefault()
+
+  return {
+    text: hasHtml ? getTextFromHtml(data).catch(() => plainText) : undefined,
+    files: data.types.includes('image/svg+xml')
+      ? readSvgFiles().then(svg => [...files, ...svg])
+      : files
+  }
 }
 
 const usePaste = (
-  emit: (name: 'addAttachments', files: File[]) => void,
-  insertText: (text: string) => void
+  emit: (name: 'addAttachments', files: File[] | Promise<File[]>) => void
 ) => {
-  const onPaste = async (event: ClipboardEvent) => {
-    const dt = event?.clipboardData
-    if (!dt) return
+  const preparePaste = (event: ClipboardEvent) => {
+    const result = readPaste(event)
+    if (!result) return
 
-    emit('addAttachments', [...dt.files])
-
-    if (dt.types.includes('image/svg+xml')) {
-      // image/svg+xmlはChromeでdt.filesに含まれていない (2021/10/09 Chrome 96.0.4664.2)
-      // そのため、async clipboard apiから取る
-      const data = await readDataFromClipboard()
-      const files = await obtainFilesFromClipboardItems(data)
-      emit('addAttachments', files)
-    }
-
-    if (dt.types.includes('text/html')) {
-      event.preventDefault()
-      const text = await getTextFromHtml(dt)
-      insertText(text)
-      return
-    }
+    if (!Array.isArray(result.files) || result.files.length)
+      emit('addAttachments', result.files)
+    return result.text
   }
-  return { onPaste }
+
+  return { preparePaste }
 }
 
 export default usePaste

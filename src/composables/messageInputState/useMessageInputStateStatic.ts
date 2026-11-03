@@ -14,14 +14,22 @@ const useMessageInputStateStatic = () => {
    */
   const getMessageInputState = (channelId: MessageInputStateKey) => {
     const cId = unref(channelId)
-    const state = getStore(cId) ?? createDefaultValue()
+    const current = getStore(cId) ?? createDefaultValue()
+    const state = { text: current.text, attachments: [...current.attachments] }
 
     const isEmpty = state.text === '' && state.attachments.length === 0
 
     const clearState = () => {
-      state.text = ''
-      state.attachments = []
-      setStore(cId, state)
+      const latest = getStore(cId)
+      if (!latest) return
+
+      setStore(cId, {
+        text: latest.text === state.text ? '' : latest.text,
+        attachments: latest.attachments.filter(
+          attachment =>
+            !state.attachments.some(sent => sent.file === attachment.file)
+        )
+      })
     }
 
     return {

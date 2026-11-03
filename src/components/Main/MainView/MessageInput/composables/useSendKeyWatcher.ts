@@ -65,7 +65,10 @@ const isSendKeyInput = (
   sendWithModifierKey: SendKey
 ) => {
   return (
-    sendWithModifierKey === 'none' && inputEvent.inputType === 'insertLineBreak'
+    sendWithModifierKey === 'none' &&
+    !inputEvent.isComposing &&
+    (inputEvent.inputType === 'insertLineBreak' ||
+      inputEvent.inputType === 'insertParagraph')
   )
 }
 
@@ -98,7 +101,8 @@ const useSendKeyWatcher = (
   emit: ((event: 'postMessage') => void) &
     ((event: 'modifierKeyDown') => void) &
     ((event: 'modifierKeyUp') => void),
-  insertLineBreak: () => void
+  insertLineBreak: () => void,
+  handlesLineBreakOnKeyDown = false
 ) => {
   const { sendWithModifierKey, modifierKey } = useBrowserSettings()
 
@@ -120,7 +124,7 @@ const useSendKeyWatcher = (
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
-    if (touchDeviceFlag) return
+    if (touchDeviceFlag || event.isComposing) return
 
     if (withModifierKey(event, modifierKey.value) && !event.isComposing) {
       emit('modifierKeyDown')
@@ -159,10 +163,11 @@ const useSendKeyWatcher = (
       if (
         sendWithModifierKey.value === 'none' &&
         !withModifierKey(event, modifierKey.value) &&
-        !isLevel2InputEventsSupported
+        (handlesLineBreakOnKeyDown || !isLevel2InputEventsSupported)
       ) {
         event.preventDefault()
         emit('postMessage')
+
         return
       }
     }

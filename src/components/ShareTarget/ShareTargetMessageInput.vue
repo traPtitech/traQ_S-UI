@@ -1,20 +1,20 @@
 <template>
   <div :class="$style.container">
-    <label :for="id" :class="$style.label">メッセージ</label>
+    <div :id="labelId" :class="$style.label" @click="focus">メッセージ</div>
+
     <div ref="wrapperEle" :class="$style.wrapper">
       <div :class="$style.inputContainer">
         <div :class="$style.inputWrapper">
-          <textarea
-            :id="id"
-            ref="textareaRef"
+          <ReferenceInput
+            ref="inputRef"
+            v-model="state.text"
             :class="$style.input"
-            :value="state.text"
-            @input="
-              event =>
-                (state.text = (event.target as HTMLTextAreaElement).value)
-            "
+            placeholder="メッセージ"
+            :labelled-by="labelId"
+            :prepare-paste="preparePaste"
           />
         </div>
+
         <div :class="$style.controls">
           <MessageInputInsertStampButton
             :class="$style.button"
@@ -26,6 +26,7 @@
           />
         </div>
       </div>
+
       <MessageInputFileList
         :class="$style.fileList"
         channel-id="share-target"
@@ -40,6 +41,8 @@ import { onMounted, ref, shallowRef, toRef, useId } from 'vue'
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
+import usePaste from '/@/components/Main/MainView/MessageInput/composables/usePaste'
+import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { useStampHistory } from '/@/store/domain/stampHistory'
@@ -57,24 +60,33 @@ const { fetchStamps } = useStampsStore()
 const { fetchStampPalettes } = useStampPalettesStore()
 const { state } = useMessageInputState('share-target')
 const { addErrorToast } = useToastStore()
-const { addAttachment: addStateAttachment } = useMessageInputStateAttachment(
+const { captureDraft } = useMessageInputStateAttachment(
   'share-target',
   addErrorToast
 )
-const { addAttachment } = useAttachments(addStateAttachment)
 
-const textareaRef = shallowRef<HTMLTextAreaElement>()
+const { addAttachment } = useAttachments(() => captureDraft().addAttachments)
+
+const labelId = useId()
+const inputRef = shallowRef<InstanceType<typeof ReferenceInput>>()
+
+const { preparePaste } = usePaste((_event, files) => {
+  void captureDraft().addAttachments(files)
+})
+
 const focus = () => {
-  textareaRef.value?.focus()
+  inputRef.value?.focus()
 }
+
 onMounted(() => {
   focus()
 })
 
 const wrapperEle = ref<HTMLDivElement>()
+
 const { toggleStampPicker } = useTextStampPickerInvoker(
   toRef(state, 'text'),
-  textareaRef,
+  inputRef,
   wrapperEle
 )
 
@@ -83,8 +95,6 @@ fetchStamps()
 fetchStampPalettes()
 fetchStampHistory()
 fetchStampRecommendations()
-
-const id = useId()
 </script>
 
 <style lang="scss" module>

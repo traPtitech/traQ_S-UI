@@ -1,12 +1,17 @@
 import type { Editor } from '@tiptap/core'
 import { closeHistory } from '@tiptap/pm/history'
-import type { EditorProps } from '@tiptap/pm/view'
+import type { EditorProps, EditorView } from '@tiptap/pm/view'
 
 import { embeddingOrigin } from '../apis'
+import type { InputMode, InputPart, Reference } from '../references'
 import { readClipboardData, writeClipboardData } from './clipboard'
-import type { InputMode, InputPart, Reference } from './document'
 import { contentToParts } from './editorDocument'
 import { pastedChannelLinks } from './pastedChannelLinks'
+import { currentInputSelection } from './selection'
+
+export type PreparePaste = (
+  event: ClipboardEvent
+) => Promise<string> | undefined
 
 export const inputDataTransfer = (options: {
   editor: () => Editor | undefined
@@ -19,7 +24,7 @@ export const inputDataTransfer = (options: {
     range?: { from: number; to: number }
   ) => void
   insertText: (text: string, range?: { from: number; to: number }) => void
-  onPaste: (event: ClipboardEvent) => void
+  preparePaste?: PreparePaste
 }): NonNullable<EditorProps['handleDOMEvents']> => {
   const edit = (operation: () => void) => {
     const current = options.editor()
@@ -29,17 +34,15 @@ export const inputDataTransfer = (options: {
     current.view.dispatch(closeHistory(current.state.tr))
   }
 
-  const copy = (event: ClipboardEvent, cut: boolean) => {
-    const current = options.editor()
+  const copy = (view: EditorView, event: ClipboardEvent, cut: boolean) => {
+    if (!event.clipboardData) return false
 
-    if (!current || !event.clipboardData || current.state.selection.empty)
-      return false
-
-    const parts = contentToParts(current.state.selection.content().content)
+    const selection = currentInputSelection(view)
+    if (selection.empty) return false
 
     writeClipboardData(
       event.clipboardData,
-      parts,
+      contentToParts(selection.content().content),
       options.mode(),
       location.origin,
       options.label
@@ -48,21 +51,30 @@ export const inputDataTransfer = (options: {
     event.preventDefault()
 
     if (cut && !options.readonly())
-      edit(() => current.commands.deleteSelection())
+      edit(() =>
+        view.dispatch(
+          view.state.tr
+            .setSelection(selection)
+            .deleteSelection()
+            .scrollIntoView()
+        )
+      )
 
     return true
   }
 
   return {
-    copy: (_view, event) => copy(event, false),
-    cut: (_view, event) => copy(event, true),
+    copy: (view, event) => copy(view, event, false),
+    cut: (view, event) => copy(view, event, true),
 
     paste: (view, event) => {
       const data = event.clipboardData
 
       if (!data || options.readonly()) return false
 
-      const { doc, selection } = view.state
+      const { doc } = view.state
+      const { from, to } = currentInputSelection(view)
+      const range = { from, to }
 
       const parts =
         readClipboardData(data, options.mode(), location.origin) ??
@@ -70,29 +82,37 @@ export const inputDataTransfer = (options: {
           ? pastedChannelLinks(data.getData('text/plain'), {
               origins: [location.origin, embeddingOrigin],
               channelPathToId: options.channelPathToId,
-              before: doc.textBetween(1, selection.from, '', '\uFFFC'),
-              after: doc.textBetween(
-                selection.to,
-                doc.content.size - 1,
-                '',
-                '\uFFFC'
-              )
+              before: doc.textBetween(1, from, '', '\uFFFC'),
+              after: doc.textBetween(to, doc.content.size - 1, '', '\uFFFC')
             })
           : undefined)
 
       if (parts) {
         event.preventDefault()
-        edit(() => options.insertParts(parts))
+        edit(() => options.insertParts(parts, range))
 
         return true
       }
 
-      options.onPaste(event)
+      const pending = options.preparePaste?.(event)
+      if (pending) {
+        event.preventDefault()
+        void pending.then(text => {
+          const current = options.editor()
+          if (
+            current &&
+            !current.isDestroyed &&
+            current.view === view &&
+            view.state.doc === doc
+          )
+            edit(() => options.insertText(text, range))
+        })
+      }
 
       if (event.defaultPrevented) return true
 
       event.preventDefault()
-      edit(() => options.insertText(data.getData('text/plain')))
+      edit(() => options.insertText(data.getData('text/plain'), range))
 
       return true
     },

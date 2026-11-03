@@ -1,0 +1,143 @@
+import { ref } from 'vue'
+
+import usePostMessage from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
+import apis from '/@/lib/apis'
+import { encodeReference } from '/@/lib/references'
+import type { Attachment } from '/@/store/ui/messageInputStateStore'
+
+const mocks = vi.hoisted(() => ({
+  state: { text: 'first draft', attachments: [] as Attachment[] },
+  classify: vi.fn(),
+  post: vi.fn(),
+  upload: vi.fn(),
+  clear: vi.fn(),
+  error: vi.fn()
+}))
+
+vi.mock('/@/composables/messageInputState/useMessageInputStateStatic', () => ({
+  default: () => ({
+    getMessageInputState: () => ({
+      state: { ...mocks.state, attachments: [...mocks.state.attachments] },
+      isEmpty: false,
+      clearState: mocks.clear
+    })
+  })
+}))
+vi.mock('/@/composables/useChannelPath', () => ({
+  default: () => ({
+    channelIdToShortPathString: () => '#test',
+    channelPathStringToId: (path: string) => {
+      if (path === 'general') return 'channel-id'
+      throw new Error('unknown channel')
+    }
+  })
+}))
+vi.mock('/@/store/entities/channels', async () => {
+  const { ref } = await import('vue')
+  return { useChannelsStore: () => ({ channelsMap: ref(new Map()) }) }
+})
+vi.mock('/@/store/entities/users', () => ({
+  useUsersStore: () => ({
+    usersMapInitialFetchPromise: Promise.resolve(),
+    findUserByName: (name: string) =>
+      name.toLowerCase() === 'alice' ? { id: 'user-id' } : undefined
+  })
+}))
+vi.mock('/@/store/entities/groups', () => ({
+  useGroupsStore: () => ({
+    userGroupsMapInitialFetchPromise: Promise.resolve(),
+    getUserGroupByName: (name: string) =>
+      name === 'team' ? { id: 'group-id' } : undefined
+  })
+}))
+vi.mock('/@/store/ui/toast', () => ({
+  useToastStore: () => ({ addErrorToast: mocks.error })
+}))
+vi.mock('/@/lib/markdown/markdown', () => ({ isEmbeddedLink: mocks.classify }))
+
+beforeEach(() => {
+  vi.spyOn(apis, 'postMessage').mockImplementation(mocks.post)
+  vi.spyOn(apis, 'postFile').mockImplementation(mocks.upload)
+
+  for (const mock of [
+    mocks.classify,
+    mocks.post,
+    mocks.upload,
+    mocks.clear,
+    mocks.error
+  ])
+    mock.mockReset()
+
+  mocks.state = { text: 'first draft', attachments: [] }
+  mocks.classify.mockResolvedValue(false)
+  mocks.post.mockResolvedValue({})
+  mocks.upload.mockResolvedValue({ data: { id: 'uploaded-file' } })
+})
+
+it('locks before content preparation and keeps the original channel and draft', async () => {
+  const classification = Promise.withResolvers<boolean>()
+  mocks.classify.mockReturnValueOnce(classification.promise)
+  const channel = ref('first-channel')
+  const posting = usePostMessage(channel)
+  const pending = posting.postMessage()
+  expect(posting.isPosting.value).toBe(true)
+  channel.value = 'second-channel'
+  mocks.state.text = 'second draft'
+  expect(await posting.postMessage()).toBe(false)
+  classification.resolve(false)
+  expect(await pending).toBe(true)
+  expect(mocks.post).toHaveBeenCalledExactlyOnceWith('first-channel', {
+    content: 'first draft'
+  })
+  expect(posting.isPosting.value).toBe(false)
+})
+
+it('unlocks when preparation fails and allows a retry', async () => {
+  vi.spyOn(console, 'error').mockImplementation(() => undefined)
+  mocks.classify.mockRejectedValueOnce(new Error('parse failed'))
+  const posting = usePostMessage('channel')
+  expect(await posting.postMessage()).toBe(false)
+  expect(posting.isPosting.value).toBe(false)
+  expect(mocks.clear).not.toHaveBeenCalled()
+  expect(await posting.postMessage()).toBe(true)
+})
+
+it('resolves typed references on posting and keeps explicit IDs and literal text', async () => {
+  const selected = encodeReference({
+    type: 'user',
+    raw: '@alice',
+    id: 'selected-id'
+  })
+  const literal =
+    '`@alice` $@team$ https://example.test/#general [#general](https://example.test) :@alice: #missing'
+  mocks.state.text = `@Alice @team #general ${selected}\n${literal}`
+
+  expect(await usePostMessage('channel').postMessage()).toBe(true)
+  expect(mocks.post).toHaveBeenCalledExactlyOnceWith('channel', {
+    content:
+      [
+        encodeReference({ type: 'user', raw: '@Alice', id: 'user-id' }),
+        encodeReference({ type: 'group', raw: '@team', id: 'group-id' }),
+        encodeReference({ type: 'channel', raw: '#general', id: 'channel-id' }),
+        selected
+      ].join(' ') +
+      '\n' +
+      literal
+  })
+})
+
+it('unlocks after an upload failure without posting or clearing the draft', async () => {
+  vi.spyOn(console, 'error').mockImplementation(() => undefined)
+
+  mocks.state.attachments = [
+    { file: new File(['data'], 'file.txt'), type: 'file' }
+  ]
+
+  mocks.upload.mockRejectedValueOnce(new Error('offline'))
+  const posting = usePostMessage('channel')
+  expect(await posting.postMessage()).toBe(false)
+  expect(posting.isPosting.value).toBe(false)
+  expect(posting.progress.value).toBe(0)
+  expect(mocks.post).not.toHaveBeenCalled()
+  expect(mocks.clear).not.toHaveBeenCalled()
+})

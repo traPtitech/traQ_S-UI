@@ -2,6 +2,7 @@ import type { Editor, JSONContent } from '@tiptap/core'
 import { closeHistory } from '@tiptap/pm/history'
 import type { Fragment, Node as ProseMirrorNode } from '@tiptap/pm/model'
 
+import { normalizeMessageParts } from '../message/content'
 import {
   type InputMode,
   type InputPart,
@@ -9,7 +10,6 @@ import {
   serializeInput
 } from '../references'
 import { inputHistory } from './inputHistory'
-import { normalizeMessageParts } from './message'
 
 export const partsToContent = (parts: readonly InputPart[]): JSONContent => ({
   type: 'doc',

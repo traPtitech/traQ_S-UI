@@ -1,10 +1,10 @@
+import { normalizeMessageSource } from '/@/lib/message/content'
 import {
   decodeClipboard,
   decodeClipboardHtml,
   encodeClipboard,
   encodeClipboardHtml
 } from '/@/lib/referenceInput/clipboard'
-import { messageContent } from '/@/lib/referenceInput/message'
 import {
   type Reference,
   encodeReference,
@@ -65,7 +65,9 @@ describe('reference input persistence', () => {
   })
 
   it('keeps hand-typed names as text and explicit references as IDs', () => {
-    expect(messageContent(`@alice ${embedded}`)).toBe(`@alice ${embedded}`)
+    expect(normalizeMessageSource(`@alice ${embedded}`)).toBe(
+      `@alice ${embedded}`
+    )
     expect(inputText(parseInput(embedded, 'message'))).toBe('@alice')
   })
 
@@ -80,13 +82,13 @@ describe('reference input persistence', () => {
     ['$$\n', '\n$$'],
     ['```\n', '']
   ])('removes reference semantics inside %s … %s', (before, after) => {
-    expect(messageContent(`${before}${embedded}${after}`)).toBe(
+    expect(normalizeMessageSource(`${before}${embedded}${after}`)).toBe(
       `${before}@alice${after}`
     )
   })
 
   it('keeps references after a closed code block active', () => {
-    expect(messageContent(`~~~\n${embedded}\n~~~\n${embedded}`)).toBe(
+    expect(normalizeMessageSource(`~~~\n${embedded}\n~~~\n${embedded}`)).toBe(
       `~~~\n@alice\n~~~\n${embedded}`
     )
   })
@@ -94,17 +96,19 @@ describe('reference input persistence', () => {
   it('distinguishes list indentation from an indented code block', () => {
     const source = `1. item\n\n    ${embedded}\n\n        ${embedded}`
 
-    expect(messageContent(source)).toBe(
+    expect(normalizeMessageSource(source)).toBe(
       `1. item\n\n    ${embedded}\n\n        @alice`
     )
   })
 
   it('handles nested list fences and escaped inline delimiters', () => {
-    expect(messageContent(`- item\n  ~~~\n  ${embedded}\n  ~~~`)).toBe(
+    expect(normalizeMessageSource(`- item\n  ~~~\n  ${embedded}\n  ~~~`)).toBe(
       '- item\n  ~~~\n  @alice\n  ~~~'
     )
 
-    expect(messageContent(`\\\`${embedded}\\\``)).toBe(`\\\`${embedded}\\\``)
+    expect(normalizeMessageSource(`\\\`${embedded}\\\``)).toBe(
+      `\\\`${embedded}\\\``
+    )
   })
 
   it('only restores matching-server structured clipboard content', () => {

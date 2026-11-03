@@ -2,7 +2,7 @@ import { Extension } from '@tiptap/core'
 import { Plugin } from '@tiptap/pm/state'
 
 import { contentToParts } from './editorDocument'
-import { normalizeMessageParts } from './message'
+import { normalizeMessageParts } from '../message/content'
 
 export const messageExtension = Extension.create({
   name: 'messageReferences',
