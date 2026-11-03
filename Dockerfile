@@ -3,12 +3,13 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY scripts/patch-dependencies.js ./scripts/
+COPY build/deepmerge ./build/deepmerge/
 RUN npm ci
 COPY . .
 RUN NODE_ENV=production npm run build:with-font
 
 
-FROM docker.io/library/caddy:2.11.4-alpine@sha256:5f5c8640aae01df9654968d946d8f1a56c497f1dd5c5cda4cf95ab7c14d58648
+FROM docker.io/library/caddy:2.11.6-alpine@sha256:d44355d3c2149dc580ce2cac735955d1c08d3d00882c30489c241aa51a5c10d9
 EXPOSE 80
 
 COPY build/docker/Caddyfile /etc/caddy/Caddyfile

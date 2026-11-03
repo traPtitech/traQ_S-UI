@@ -30,6 +30,18 @@ export type Config = Readonly<{
    */
   enableSearch?: boolean
   /**
+   * アクティビティの送信先。省略時は収集しない。
+   * HTTPS または localhost などの安全なコンテキストでのみ利用可能。
+   */
+  telemetry?: Readonly<{
+    /** 同一オリジンの HTTP(S) URL。相対 URL も指定可能 */
+    endpoint: string
+    /** 収集対象のホスト名。省略時はすべて、空配列なら収集しない */
+    hosts?: readonly string[]
+    /** 省略時は location.hostname */
+    environment?: string
+  }>
+  /**
    * アプリ一覧に表示されるサービス
    * 省略時はアプリ一覧ボタンを非表示にする
    */
