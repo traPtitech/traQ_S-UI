@@ -25,13 +25,14 @@
     "test:e2e": "node scripts/run-e2e.mjs --build --ui",
     "test:e2e:only-run": "node scripts/run-e2e.mjs --ui",
     "test:e2e:only-run-headless": "node scripts/run-e2e.mjs",
+    "test:e2e-editor": "playwright test --config playwright.editor.config.ts",
     "test:e2e-headless": "node scripts/run-e2e.mjs --build",
     "test:unit": "vitest run --coverage",
     "test:unit:watch": "vitest -w",
     "type-check": "node scripts/patch-dependencies.js && npm run type-check:src && npm run type-check:test && npm run type-check:storybook",
     "type-check:src": "vue-tsc --noEmit",
     "type-check:storybook": "vue-tsc --noEmit --project .storybook/tsconfig.json",
-    "type-check:test": "vue-tsc --noEmit --project tests/unit/tsconfig.json && tsc --noEmit --project tests/e2e/tsconfig.json"
+    "type-check:test": "vue-tsc --noEmit --project tests/unit/tsconfig.json && tsc --noEmit --project tests/e2e/tsconfig.json && vue-tsc --noEmit --project tests/e2e/editor/tsconfig.json"
   },
   "overrides": {
     "@actions/core": "3.0.1",
