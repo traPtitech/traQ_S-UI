@@ -3,6 +3,8 @@ import { Node, extensions } from '@tiptap/core'
 import type { InputMode, Reference } from '../references'
 import { compositionSafeShortcuts } from './composition'
 import { inputHistoryExtension } from './inputHistory'
+import { inputLifecycleExtension } from './inputLifecycle'
+import { markdownExtension } from './markdownExtension'
 import { messageExtension } from './messageExtension'
 import { referenceNode } from './referenceNode'
 
@@ -46,5 +48,6 @@ export const inputExtensions = ({
 
   referenceNode(label, isComposing),
   inputHistoryExtension(isComposing),
-  ...(mode === 'message' ? [messageExtension] : [])
+  inputLifecycleExtension,
+  ...(mode === 'message' ? [markdownExtension, messageExtension] : [])
 ]

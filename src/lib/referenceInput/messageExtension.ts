@@ -3,13 +3,21 @@ import { Plugin } from '@tiptap/pm/state'
 
 import { normalizeMessageParts } from '../message/content'
 import { contentToParts } from './editorDocument'
+import { inputLifecycleKey } from './inputLifecycle'
 
 export const messageExtension = Extension.create({
   name: 'messageReferences',
   addProseMirrorPlugins: () => [
     new Plugin({
       appendTransaction: (transactions, _oldState, state) => {
-        if (!transactions.some(tr => tr.docChanged)) return null
+        if (inputLifecycleKey.getState(state)?.composing) return null
+
+        const compositionEnded = transactions.some(
+          tr => tr.getMeta(inputLifecycleKey)?.composing === false
+        )
+
+        if (!compositionEnded && !transactions.some(tr => tr.docChanged))
+          return null
 
         const parts = contentToParts(state.doc)
         const normalized = normalizeMessageParts(parts)

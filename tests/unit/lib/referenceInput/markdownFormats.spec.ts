@@ -267,9 +267,9 @@ describe('Markdown source decorations', () => {
       'math-block'
     ])
 
-    expect(formats.map(format => format.replacement)).toEqual([
-      { type: 'math', text: 'x **y** z', display: false },
-      { type: 'math', text: 'a _b_ c\n', display: true }
+    expect(formats.map(format => format.kind)).toEqual([
+      'source-only',
+      'source-only'
     ])
   })
 
@@ -308,8 +308,8 @@ describe('Markdown source decorations', () => {
     expect(
       markdownFormats(':traq.large: :@alice:').map(format => format.replacement)
     ).toEqual([
-      { type: 'markdown', text: ':traq.large:' },
-      { type: 'markdown', text: ':@alice:' }
+      { type: 'stamp', text: ':traq.large:' },
+      { type: 'stamp', text: ':@alice:' }
     ])
 
     expect(markdownFormats('`:traq:`').map(format => format.className)).toEqual(
@@ -371,8 +371,7 @@ describe('Markdown source decorations', () => {
         from: 0,
         to: table.length,
         content: { from: 0, to: table.length },
-        syntax: [],
-        replacement: { type: 'block', text: table }
+        syntax: []
       }
     ])
 
