@@ -45,16 +45,13 @@ const replaceNameMap: Record<string, string> = {
 function checkDuplicateStampNames(emojis: { [unicodeString: string]: string }) {
   const nameToUnicodeStringsMap = Object.entries(emojis).reduce<
     Record<string, string[]>
-  >(
-    (grouped, [unicodeString, name]) => {
-      if (!grouped[name]) {
-        grouped[name] = []
-      }
-      grouped[name].push(unicodeString)
-      return grouped
-    },
-    {}
-  )
+  >((grouped, [unicodeString, name]) => {
+    if (!grouped[name]) {
+      grouped[name] = []
+    }
+    grouped[name].push(unicodeString)
+    return grouped
+  }, {})
   const duplicateNames = Object.entries(nameToUnicodeStringsMap).filter(
     ([, unicodeStrings]) => unicodeStrings.length > 1
   )
