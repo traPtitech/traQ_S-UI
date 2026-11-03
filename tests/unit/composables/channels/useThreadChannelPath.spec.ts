@@ -12,6 +12,7 @@ const parent = {
   id: parentId,
   name: 'general',
   parentId: null,
+  parentMessageId: null,
   archived: false,
   force: false,
   topic: '',
