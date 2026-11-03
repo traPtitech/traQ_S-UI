@@ -13,7 +13,6 @@ export default [
       '**/dist',
       '**/storybook',
       '**/node_modules',
-      'public/new-relic.js',
       'tests/e2e/report/**',
       'tests/e2e/results/**'
     ]
