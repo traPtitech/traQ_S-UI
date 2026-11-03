@@ -14,6 +14,7 @@ import { useTrueChangedPromise } from '/@/store/utils/promise'
 import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 
 import { entityMitt } from './mitt'
+import { isThreadChannel, useThreadsStore } from './threads'
 
 const getChannel = createSingleflight(apis.getChannel.bind(apis))
 const getChannels = createSingleflight(apis.getChannels.bind(apis))
@@ -111,19 +112,30 @@ const useChannelsStorePinia = defineStore('entities/channels', () => {
     dmUserId?: UserId
   }) => {
     const old = channelsMap.value.get(channelId)
-    // 元々存在していなかったものが来たら追加として処理する
+    // DMのときは変化しないはずなので未登録の場合のみ追加する
+    if (dmUserId) {
+      if (old) return
+      await addChannel({ channelId, dmUserId })
+      return
+    }
+
+    const [{ data: channel }, shared] = await getChannel(channelId)
+    if (shared) return
+
+    if (isThreadChannel(channel)) {
+      const threadsStore = useThreadsStore()
+      if (!threadsStore.threadsMap.value.has(channelId)) return
+      threadsStore.setThread(channel)
+      return
+    }
+
+    // スレッドではないことを確認してから追加として処理する
     if (!old) {
       await addChannel({ channelId, dmUserId })
       return
     }
 
-    // DMのときは変化しないはずなので処理しない
-    if (dmUserId) return
-
     const oldPath = channelIdToPathString(channelId, channelsMap.value)
-
-    const [{ data: channel }, shared] = await getChannel(channelId)
-    if (shared) return
 
     // 親チャンネルが変わったときは`children`が不整合にならないように親チャンネルの情報を更新する
     if (old.parentId !== channel.parentId) {

@@ -53,7 +53,7 @@ import { computed } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
 import useChannelPath from '/@/composables/useChannelPath'
-import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import useEnsureThread from '/@/composables/useEnsureThread'
 import { useUsersStore } from '/@/store/entities/users'
 
 import ChannelName from './ChannelName.vue'
@@ -88,12 +88,12 @@ if (userState.value === undefined) {
   fetchUser({ userId: props.message.userId })
 }
 
+useEnsureThread(() => props.message.channelId)
+
 const { channelIdToShortPathString } = useChannelPath()
 
-const path = computed(() =>
-  setFallbackForNullishOrOnError('unknown').exec(() =>
-    channelIdToShortPathString(props.message.channelId)
-  )
+const path = computed(
+  () => channelIdToShortPathString(props.message.channelId) ?? 'unknown'
 )
 
 const onClickContextMenuButton = (e: MouseEvent) => {

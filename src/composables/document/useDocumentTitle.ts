@@ -1,7 +1,6 @@
 import { computed, watchEffect } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
-import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
 import { isolateBidiText } from '/@/lib/basic/string'
 import { fallbackChannelPath } from '/@/lib/config'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
@@ -17,11 +16,12 @@ const useDocumentTitle = () => {
 
   const primaryViewTitle = computed(() => {
     switch (primaryView.value.type) {
-      case 'channel': {
+      case 'channel':
+      case 'thread': {
         const channelId = primaryView.value.channelId
 
-        return setFallbackForNullishOrOnError(fallbackChannelPath).exec(() =>
-          channelIdToShortPathString(channelId, true)
+        return (
+          channelIdToShortPathString(channelId, true) ?? fallbackChannelPath
         )
       }
 

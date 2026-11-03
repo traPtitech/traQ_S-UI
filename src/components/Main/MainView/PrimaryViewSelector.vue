@@ -5,6 +5,12 @@
     :channel-id="primaryView.channelId"
     :entry-message-id="primaryView.entryMessageId"
   />
+  <ThreadView
+    v-else-if="primaryView.type === 'thread'"
+    :is-ready="isReady"
+    :channel-id="primaryView.channelId"
+    :entry-message-id="primaryView.entryMessageId"
+  />
   <DMView
     v-else-if="primaryView.type === 'dm'"
     :is-ready="isReady"
@@ -27,6 +33,7 @@ import ChannelView from './ChannelView/ChannelView.vue'
 import ClipsView from './ClipsView/ClipsView.vue'
 import DMView from './DMView/DMView.vue'
 import NullView from './NullView/NullView.vue'
+import ThreadView from './ThreadView/ThreadView.vue'
 
 const { primaryView } = useMainViewStore()
 

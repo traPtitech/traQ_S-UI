@@ -67,3 +67,25 @@ export const createMutex = () => {
 
   return { lock, unlock }
 }
+
+/** 共有している処理は中止せず、この呼び出しで結果を待つことだけを中止する。 */
+export const waitWithAbort = <T>(
+  promise: Promise<T>,
+  signal: AbortSignal
+): Promise<T> =>
+  new Promise((resolve, reject) => {
+    const onAbort = () => reject(signal.reason)
+    if (signal.aborted) onAbort()
+    else signal.addEventListener('abort', onAbort, { once: true })
+    promise.then(
+      value => {
+        signal.removeEventListener('abort', onAbort)
+        if (signal.aborted) reject(signal.reason)
+        else resolve(value)
+      },
+      error => {
+        signal.removeEventListener('abort', onAbort)
+        reject(signal.aborted ? signal.reason : error)
+      }
+    )
+  })
