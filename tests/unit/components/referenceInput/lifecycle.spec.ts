@@ -106,33 +106,38 @@ describe('reference input empty state', () => {
     }
   )
 
-  it('keeps a trailing newline nonempty while typing and clearing', async () => {
-    const wrapper = await makeInput('text')
+  it.each([false, true])(
+    'keeps a trailing newline nonempty while typing and clearing with Markdown %s',
+    async markdown => {
+      const wrapper = await makeInput('text')
+      await wrapper.setProps({ markdown })
+      await focus(wrapper)
+      const editor = wrapper.getComponent(EditorContent).props('editor')
 
-    await focus(wrapper)
-    const editor = wrapper.getComponent(EditorContent).props('editor')
+      if (!editor) throw new Error('Editor is not mounted')
 
-    if (!editor) throw new Error('Editor is not mounted')
+      editor.commands.setTextSelection(editor.state.doc.content.size - 1)
+      press(wrapper, 'Enter')
+      await nextTick()
 
-    editor.commands.setTextSelection(editor.state.doc.content.size - 1)
-    press(wrapper, 'Enter')
-    await nextTick()
+      expect(lastValue(wrapper)).toBe('text\n')
+      expect(
+        wrapper.vm.element?.querySelector('.ProseMirror-trailingBreak')
+      ).not.toBeNull()
+      expect(wrapper.vm.element?.getAttribute('data-is-empty')).toBe('false')
 
-    expect(lastValue(wrapper)).toBe('text\n')
-    expect(
-      wrapper.vm.element?.querySelector('.ProseMirror-trailingBreak')
-    ).not.toBeNull()
-    expect(wrapper.vm.element?.getAttribute('data-is-empty')).toBe('false')
-    editor.commands.setTextSelection({
-      from: 1,
-      to: editor.state.doc.content.size - 1
-    })
-    editor.commands.deleteSelection()
-    await nextTick()
+      editor.commands.setTextSelection({
+        from: 1,
+        to: editor.state.doc.content.size - 1
+      })
 
-    expect(lastValue(wrapper)).toBe('')
-    expect(wrapper.vm.element?.getAttribute('data-is-empty')).toBe('true')
-  })
+      editor.commands.deleteSelection()
+      await nextTick()
+
+      expect(lastValue(wrapper)).toBe('')
+      expect(wrapper.vm.element?.getAttribute('data-is-empty')).toBe('true')
+    }
+  )
 
   it('updates the empty state through Undo and Redo', async () => {
     const wrapper = await makeInput('text\n')
@@ -163,51 +168,55 @@ describe('reference input empty state', () => {
     expect(wrapper.vm.element?.getAttribute('data-is-empty')).toBe('true')
   })
 
-  it('updates the empty state as IME text is inserted and removed', async () => {
-    const wrapper = await makeInput()
+  it.each([false, true])(
+    'updates the empty state as IME text is inserted and removed with Markdown %s',
+    async markdown => {
+      const wrapper = await makeInput()
+      await wrapper.setProps({ markdown })
+      await focus(wrapper)
+      const editor = wrapper.getComponent(EditorContent).props('editor')
 
-    await focus(wrapper)
-    const editor = wrapper.getComponent(EditorContent).props('editor')
+      if (!editor) throw new Error('Editor is not mounted')
 
-    if (!editor) throw new Error('Editor is not mounted')
+      const element = editor.view.dom
 
-    const element = editor.view.dom
-    element.dispatchEvent(
-      new CompositionEvent('compositionstart', { bubbles: true })
-    )
-
-    try {
-      const paragraph = element.querySelector('p')
-
-      if (!paragraph) throw new Error('Missing paragraph')
-
-      const text = document.createTextNode('日本語')
-      paragraph.insertBefore(text, paragraph.firstChild)
-      document.getSelection()?.collapse(text, text.length)
-
-      await vi.waitFor(() => {
-        expect(lastValue(wrapper)).toBe('日本語')
-        expect(element.getAttribute('data-is-empty')).toBe('false')
-      })
-
-      const current = paragraph.firstChild
-
-      if (!(current instanceof Text))
-        throw new Error('Missing composition text')
-
-      current.data = ''
-      document.getSelection()?.collapse(current, 0)
-
-      await vi.waitFor(() => {
-        expect(lastValue(wrapper)).toBe('')
-        expect(element.getAttribute('data-is-empty')).toBe('true')
-      })
-    } finally {
       element.dispatchEvent(
-        new CompositionEvent('compositionend', { bubbles: true })
+        new CompositionEvent('compositionstart', { bubbles: true })
       )
+
+      try {
+        const paragraph = element.querySelector('p')
+
+        if (!paragraph) throw new Error('Missing paragraph')
+
+        const text = document.createTextNode('日本語')
+        paragraph.insertBefore(text, paragraph.firstChild)
+        document.getSelection()?.collapse(text, text.length)
+
+        await vi.waitFor(() => {
+          expect(lastValue(wrapper)).toBe('日本語')
+          expect(element.getAttribute('data-is-empty')).toBe('false')
+        })
+
+        const current = paragraph.firstChild
+
+        if (!(current instanceof Text))
+          throw new Error('Missing composition text')
+
+        current.data = ''
+        document.getSelection()?.collapse(current, 0)
+
+        await vi.waitFor(() => {
+          expect(lastValue(wrapper)).toBe('')
+          expect(element.getAttribute('data-is-empty')).toBe('true')
+        })
+      } finally {
+        element.dispatchEvent(
+          new CompositionEvent('compositionend', { bubbles: true })
+        )
+      }
     }
-  })
+  )
 })
 
 it('clears Undo history when loading a different draft', async () => {
@@ -249,4 +258,50 @@ it('retains the draft when posting finishes without clearing it', async () => {
 
   expect(wrapper.vm.element?.textContent).toBe('@alice unsent message')
   expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+})
+
+it('preserves Undo for an external edit and resets it for a new document key', async () => {
+  const wrapper = await makeInput(embedded)
+  await wrapper.setProps({ documentKey: 'first' })
+  const editor = wrapper.getComponent(EditorContent).props('editor')
+  if (!editor) throw new Error('Editor is not mounted')
+
+  editor.commands.setTextSelection(2)
+  wrapper.vm.insertText(' draft')
+  await nextTick()
+  await wrapper.setProps({
+    modelValue: `${embedded} draft\nhttps://example.com/file`
+  })
+  await focus(wrapper)
+  press(wrapper, 'z', { ctrlKey: true })
+  await nextTick()
+  expect(lastValue(wrapper)).toBe(`${embedded} draft`)
+  press(wrapper, 'z', { ctrlKey: true })
+  await nextTick()
+  expect(lastValue(wrapper)).toBe(embedded)
+
+  wrapper.vm.insertText('changed')
+  await nextTick()
+  await wrapper.setProps({ modelValue: embedded, documentKey: 'second' })
+  press(wrapper, 'z', { ctrlKey: true })
+  await nextTick()
+  expect(wrapper.vm.element?.textContent).toBe('@alice')
+})
+
+it('updates all accessible attributes through reactive props', async () => {
+  const wrapper = await makeInput('', 'search')
+  await wrapper.setProps({
+    placeholder: 'updated',
+    labelledBy: 'search-label',
+    testId: 'search-field'
+  })
+  const element = wrapper.vm.element
+  expect(element?.getAttribute('data-placeholder')).toBe('updated')
+  expect(element?.getAttribute('aria-labelledby')).toBe('search-label')
+  expect(element?.hasAttribute('aria-label')).toBe(false)
+  expect(element?.getAttribute('data-testid')).toBe('search-field')
+
+  await wrapper.setProps({ labelledBy: undefined, placeholder: 'another' })
+  expect(element?.getAttribute('aria-label')).toBe('another')
+  expect(element?.hasAttribute('aria-labelledby')).toBe(false)
 })

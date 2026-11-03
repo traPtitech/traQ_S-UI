@@ -7,24 +7,25 @@
       ref="inputRef"
       v-model="modelValue"
       :document-key="documentKey"
-      :class="$style.textarea"
+      :class="$style.editor"
       :style="inputStyle"
       :readonly="isPosting"
+      :markdown="isMarkdownEnabled"
       placeholder="メッセージを入力"
       :data-simple-padding="simplePadding"
       :data-shrink-to-one-line="shrinkToOneLine"
       :data-is-max-height-none="isMaxHeightNone"
-      :data-is-input-text-area-expanded="isInputTextAreaExpanded"
+      :data-is-expanded="isExpanded"
       :data-is-mobile="isMobile"
       :data-is-firefox="firefoxFlag"
-      test-id="message-input-textarea"
+      test-id="message-input-editor"
       :prepare-paste="preparePaste"
       @before-input="onBeforeInput"
       @keydown="onKeyDown"
       @keyup="onKeyUp"
       @focus="onFocus"
       @blur="onBlur"
-      @layout-change="updateShowIsInputTextareaExpandButtonVisibility"
+      @layout-change="updateExpandButtonVisibility"
     />
 
     <div :class="$style.over" />
@@ -40,15 +41,13 @@ import useSendKeyWatcher from '/@/composables/messageComposer/useSendKeyWatcher'
 import useResponsive from '/@/composables/useResponsive'
 import { isFirefox } from '/@/lib/dom/browser'
 import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
 const modelValue = defineModel<string>({ default: '' })
 
-const showTextAreaExpandButton = defineModel<boolean>(
-  'showTextAreaExpandButton',
-  {
-    default: false
-  }
-)
+const showExpandButton = defineModel<boolean>('showExpandButton', {
+  default: false
+})
 
 const props = withDefaults(
   defineProps<{
@@ -57,7 +56,7 @@ const props = withDefaults(
     simplePadding?: boolean
     shrinkToOneLine?: boolean
     isMaxHeightNone?: boolean
-    isInputTextAreaExpanded?: boolean
+    isExpanded?: boolean
   }>(),
   {
     documentKey: 'message',
@@ -65,7 +64,7 @@ const props = withDefaults(
     simplePadding: false,
     shrinkToOneLine: false,
     isMaxHeightNone: false,
-    isInputTextAreaExpanded: false
+    isExpanded: false
   }
 )
 
@@ -81,6 +80,12 @@ const emit = defineEmits<{
 const firefoxFlag = isFirefox()
 
 const { isMobile } = useResponsive()
+const { featureFlags } = useFeatureFlagSettings()
+
+const isMarkdownEnabled = computed(
+  () => featureFlags.value.inline_markdown.enabled
+)
+
 const inputRef = shallowRef<InstanceType<typeof ReferenceInput>>()
 const inputHandle = computed(() => inputRef.value)
 
@@ -93,7 +98,12 @@ const {
   onKeyDown,
   onKeyUp,
   onBlur: onBlurSendKeyWatcher
-} = useSendKeyWatcher(emit, () => inputRef.value?.insertLineBreak(), true)
+} = useSendKeyWatcher(
+  emit,
+  options => inputRef.value?.insertLineBreak(options),
+  true,
+  isMarkdownEnabled
+)
 
 const onFocus = () => {
   emit('focus')
@@ -112,7 +122,7 @@ const inputMaxHeight = computed(() => {
   }
 
   return (
-    (props.isInputTextAreaExpanded
+    (props.isExpanded
       ? collapsedMaxHeight.value * 2
       : collapsedMaxHeight.value) + 'px'
   )
@@ -125,20 +135,20 @@ const inputStyle = computed(() => ({
   '--max-height': inputMaxHeight.value
 }))
 
-const updateShowIsInputTextareaExpandButtonVisibility = () => {
+const updateExpandButtonVisibility = () => {
   nextTick(() => {
     if (inputHandle.value?.element) {
-      showTextAreaExpandButton.value =
+      showExpandButton.value =
         inputHandle.value.element.scrollHeight > collapsedMaxHeight.value
     }
   })
 }
 
-watch(modelValue, updateShowIsInputTextareaExpandButtonVisibility, {
+watch(modelValue, updateExpandButtonVisibility, {
   immediate: true
 })
 
-watch(inputMaxHeight, updateShowIsInputTextareaExpandButtonVisibility)
+watch(inputMaxHeight, updateExpandButtonVisibility)
 </script>
 
 <style lang="scss" module>
@@ -155,7 +165,7 @@ $vertical-padding: 8px;
   }
 }
 
-.textarea {
+.editor {
   @include color-text-primary;
   @include background-primary;
   width: 100%;
@@ -201,7 +211,7 @@ $vertical-padding: 8px;
   height: 0;
   pointer-events: none;
 
-  .textarea[data-shrink-to-one-line='true'] + & {
+  .editor[data-shrink-to-one-line='true'] + & {
     height: $vertical-padding;
   }
 }

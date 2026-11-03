@@ -30,8 +30,8 @@
       <MessageInputLeftControls
         v-model:is-left-controls-expanded="isLeftControlsExpanded"
         v-model:is-preview-shown="isPreviewShown"
-        v-model:is-input-text-area-expanded="isInputTextAreaExpanded"
-        :show-text-area-expand-button="showTextAreaExpandButton"
+        v-model:is-expanded="isExpanded"
+        :show-expand-button="showExpandButton"
         :class="$style.leftControls"
         @click-add-attachment="openAttachmentPicker"
       />
@@ -39,13 +39,13 @@
       <MessageInputEditor
         ref="messageInputRef"
         v-model="state.text"
-        v-model:show-text-area-expand-button="showTextAreaExpandButton"
+        v-model:show-expand-button="showExpandButton"
         :document-key="documentKey"
         :is-posting="isPosting"
         :shrink-to-one-line="
           (forceMobileStyle || isMobile) && isLeftControlsExpanded
         "
-        :is-input-text-area-expanded="isInputTextAreaExpanded"
+        :is-expanded="isExpanded"
         @focus="onFocus"
         @blur="onBlur"
         @add-attachments="onAddAttachments"
@@ -124,8 +124,8 @@ const { sendWithModifierKey } = useBrowserSettings()
 const { channelsMap } = useChannelsStore()
 const isLeftControlsExpanded = ref(false)
 const isPreviewShown = ref(false)
-const isInputTextAreaExpanded = ref(true)
-const showTextAreaExpandButton = ref(false)
+const isExpanded = ref(true)
+const showExpandButton = ref(false)
 
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false

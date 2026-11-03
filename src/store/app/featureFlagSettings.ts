@@ -46,6 +46,13 @@ export const featureFlagDescriptions = {
       'スタンプ履歴の代わりに、利用傾向に合わせたおすすめを表示するようにします。',
     defaultValue: true,
     endAt: new Date('2026-11-30T23:59')
+  },
+  inline_markdown: {
+    title: 'Markdown のインラインプレビューと補完',
+    description:
+      '入力欄で Markdown の装飾を表示し、改行・インデントの編集を補助します。',
+    defaultValue: true,
+    endAt: new Date('2026-11-30T23:59')
   }
 } as const satisfies Record<string, FeatureFlagDescription>
 

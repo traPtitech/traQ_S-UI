@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, useId, watch, watchEffect } from 'vue'
+import { computed, nextTick, proxyRefs, useId, watch, watchEffect } from 'vue'
 
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import { useResizeObserver } from '@vueuse/core'
@@ -58,6 +58,15 @@ import {
   replaceInputDocument,
   sourceToContent
 } from '/@/lib/referenceInput/editorDocument'
+import {
+  type InputLifecycle,
+  inputLifecycleKey
+} from '/@/lib/referenceInput/inputLifecycle'
+import {
+  type MarkdownLineBreakOptions,
+  markdownLineBreak
+} from '/@/lib/referenceInput/markdownLineBreak'
+import { markdownPreviewKey } from '/@/lib/referenceInput/markdownPreview'
 import { syncInputSelection } from '/@/lib/referenceInput/selection'
 import {
   type InputMode,
@@ -80,6 +89,7 @@ const props = withDefaults(
     placeholder?: string
     labelledBy?: string
     readonly?: boolean
+    markdown?: boolean
     preparePaste?: PreparePaste
     documentKey?: string | number
     testId?: string
@@ -89,6 +99,7 @@ const props = withDefaults(
     placeholder: '',
     labelledBy: undefined,
     readonly: false,
+    markdown: false,
     preparePaste: undefined,
     documentKey: undefined,
     testId: undefined
@@ -107,6 +118,22 @@ const emit = defineEmits<{
 const { label } = useReferenceLabels()
 const { channelPathStringToId } = useChannelPath()
 
+const updateInputLifecycle = (options: Partial<InputLifecycle>) => {
+  const current = editor.value
+  if (!current || current.isDestroyed) return
+  const previous = inputLifecycleKey.getState(current.state)
+
+  if (
+    Object.entries(options).every(
+      ([key, value]) => previous?.[key as keyof InputLifecycle] === value
+    )
+  )
+    return
+
+  current.view.dispatch(current.state.tr.setMeta(inputLifecycleKey, options))
+  nextTick(() => emit('layoutChange'))
+}
+
 const {
   isComposing,
   isCompositionKeyEvent,
@@ -115,7 +142,12 @@ const {
   end: endComposition
 } = useInputComposition({
   view: () => editor.value?.view,
-  onSettled: () => nextTick(updateTarget)
+  onChange: composing => updateInputLifecycle({ composing }),
+  onSettled: () =>
+    nextTick(() => {
+      updateTarget()
+      syncEditorAttributes()
+    })
 })
 
 const insertParts = (
@@ -157,9 +189,20 @@ const insertTextAt = (
 const insertText: ReferenceInputHandle['insertText'] = (text, { focus } = {}) =>
   insertTextAt(text, undefined, focus)
 
-const insertLineBreak = () => {
-  if (props.readonly || props.mode !== 'message' || isComposing()) return
-  insertText('\n')
+const insertLineBreak = (options: MarkdownLineBreakOptions = {}) => {
+  const current = editor.value
+
+  if (!current || props.readonly || props.mode !== 'message' || isComposing())
+    return
+
+  if (!props.markdown) {
+    insertText('\n')
+
+    return
+  }
+
+  current.view.dispatch(markdownLineBreak(current.state, options))
+  current.view.focus()
 }
 
 const {
@@ -169,6 +212,7 @@ const {
   selectedIndex,
   position,
   update: updateTarget,
+  updatePosition,
   hide: hideSuggestions,
   confirmCandidate: selectCandidate,
   continuePath: continueChannelPath,
@@ -201,6 +245,38 @@ const handleKeyAction = (event: KeyboardEvent) => {
 const iOSFlag = isIOS()
 let pendingIOSEnter: KeyboardEvent | undefined
 
+const editorAttributes = computed(() => {
+  const candidate = candidates.value[selectedIndex.value]
+
+  return {
+    role: props.mode === 'search' ? 'combobox' : 'textbox',
+    tabindex: '0',
+    'aria-autocomplete': 'list',
+    'aria-haspopup': 'grid',
+    ...(shown.value && candidates.value.length
+      ? { 'aria-controls': popupId }
+      : {}),
+    ...(props.mode === 'search'
+      ? {
+          'aria-expanded': String(shown.value && candidates.value.length > 0)
+        }
+      : {}),
+    ...(shown.value && candidate
+      ? {
+          'aria-activedescendant': candidateRowId(popupId, candidate.word)
+        }
+      : {}),
+    dir: 'auto',
+    ...(props.labelledBy
+      ? { 'aria-labelledby': props.labelledBy }
+      : { 'aria-label': props.placeholder }),
+    'aria-readonly': String(props.readonly),
+    'aria-multiline': String(props.mode === 'message'),
+    'data-placeholder': props.placeholder,
+    ...(props.testId ? { 'data-testid': props.testId } : {})
+  }
+})
+
 const editor = useEditor({
   extensions: inputExtensions({ label, mode: props.mode, isComposing }),
 
@@ -212,40 +288,10 @@ const editor = useEditor({
   enablePasteRules: false,
 
   editorProps: {
-    attributes: ({ doc }) => {
-      const candidate = candidates.value[selectedIndex.value]
-
-      return {
-        role: props.mode === 'search' ? 'combobox' : 'textbox',
-        tabindex: '0',
-        'aria-autocomplete': 'list',
-        'aria-haspopup': 'grid',
-        ...(shown.value && candidates.value.length
-          ? { 'aria-controls': popupId }
-          : {}),
-        ...(props.mode === 'search'
-          ? {
-              'aria-expanded': String(
-                shown.value && candidates.value.length > 0
-              )
-            }
-          : {}),
-        ...(shown.value && candidate
-          ? {
-              'aria-activedescendant': candidateRowId(popupId, candidate.word)
-            }
-          : {}),
-        dir: 'auto',
-        ...(props.labelledBy
-          ? { 'aria-labelledby': props.labelledBy }
-          : { 'aria-label': props.placeholder }),
-        'aria-readonly': String(props.readonly),
-        'aria-multiline': String(props.mode === 'message'),
-        'data-placeholder': props.placeholder,
-        'data-is-empty': String(doc.firstChild?.childCount === 0),
-        ...(props.testId ? { 'data-testid': props.testId } : {})
-      }
-    },
+    attributes: ({ doc }) => ({
+      ...editorAttributes.value,
+      'data-is-empty': String(doc.firstChild?.childCount === 0)
+    }),
 
     handleKeyDown: (_view, event) => {
       if (isCompositionKeyEvent(event)) return false
@@ -253,7 +299,10 @@ const editor = useEditor({
       if (handleKeyAction(event)) return true
 
       if (event.key === 'Enter') {
-        insertLineBreak()
+        insertLineBreak({
+          continueItem:
+            event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey
+        })
 
         return true
       }
@@ -327,7 +376,9 @@ const editor = useEditor({
 
           if (enter && handleKeyAction(enter)) return true
 
-          insertLineBreak()
+          insertLineBreak({
+            continueItem: event.inputType === 'insertLineBreak'
+          })
 
           return true
         }
@@ -361,34 +412,32 @@ const editor = useEditor({
   onSelectionUpdate: updateTarget,
 
   onFocus: () => {
+    updateInputLifecycle({ focused: true })
     emit('focus')
   },
 
   onBlur: () => {
     pendingIOSEnter = undefined
+    updateInputLifecycle({ focused: false })
     hideSuggestions()
     emit('blur')
   }
 })
 
-watchEffect(() => {
+watch(
+  () => [editor.value, props.markdown] as const,
+  () =>
+    updateInputLifecycle({
+      markdown: props.mode === 'message' && props.markdown
+    })
+)
+
+const syncEditorAttributes = () => {
   const current = editor.value
-  if (!current || current.isDestroyed) return
-  const selected = candidates.value[selectedIndex.value]
-  const expanded = shown.value && candidates.value.length > 0
+  if (current && !current.isDestroyed && !isComposing()) current.setOptions({})
+}
 
-  const attributes = {
-    'aria-controls': expanded ? popupId : undefined,
-    'aria-expanded': props.mode === 'search' ? String(expanded) : undefined,
-    'aria-activedescendant':
-      expanded && selected ? candidateRowId(popupId, selected.word) : undefined
-  }
-
-  for (const [name, value] of Object.entries(attributes)) {
-    if (value === undefined) current.view.dom.removeAttribute(name)
-    else current.view.dom.setAttribute(name, value)
-  }
-})
+watch([editor, editorAttributes], syncEditorAttributes)
 
 watch([model, () => props.documentKey], ([value, key], [, previousKey]) => {
   const current = editor.value
@@ -410,16 +459,49 @@ watch(
   value => editor.value?.setEditable(!value, false)
 )
 
+watchEffect(() => {
+  const current = editor.value
+
+  if (!current) return
+
+  const labels = contentToParts(current.state.doc)
+    .filter(p => p.type === 'reference')
+    .map(p => label(p.reference))
+
+  const serialized = JSON.stringify(labels)
+  if (markdownPreviewKey.getState(current.state)?.labels === serialized) return
+
+  current.view.dispatch(
+    current.state.tr.setMeta(markdownPreviewKey, { labels: serialized })
+  )
+})
+
 const focus: ReferenceInputHandle['focus'] = position =>
   editor.value?.commands.focus(position)
 const element = computed(() => editor.value?.view.dom)
 
-useResizeObserver(element, () => emit('layoutChange'))
+useResizeObserver(element, () => {
+  updatePosition()
+  emit('layoutChange')
+})
 
-defineExpose({ focus, insertText, insertLineBreak, element })
+defineExpose(
+  proxyRefs({
+    focus,
+    insertText,
+    insertLineBreak,
+    element
+  }) satisfies ReferenceInputHandle
+)
 </script>
 
 <style lang="scss" module>
+$spoiler-background: color-mix(
+  in srgb,
+  $theme-text-primary-default 10%,
+  transparent
+);
+
 .container {
   min-width: 0;
   overflow-y: auto;
@@ -443,7 +525,8 @@ defineExpose({ focus, insertText, insertLineBreak, element })
 .content :global(.tiptap[data-is-empty='true'])::before {
   content: attr(data-placeholder);
   position: absolute;
-  opacity: 0.5;
+  color: var(--input-placeholder-color, inherit);
+  opacity: var(--input-placeholder-opacity, 0.5);
   pointer-events: none;
 }
 
@@ -465,6 +548,129 @@ defineExpose({ focus, insertText, insertLineBreak, element })
 .content :global(.ProseMirror-hideselection *::selection) {
   // 選択背景を隠すときは、文字色も通常の表示にそろえる。
   color: currentColor;
+}
+
+.content :global(.markdown-input-source) {
+  color: $theme-ui-secondary-default;
+}
+
+.content :global(.markdown-input-syntax) {
+  opacity: 0.5;
+}
+
+.content :global(.markdown-input-strong) {
+  font-weight: bold;
+}
+
+.content :global(.markdown-input-emphasis) {
+  font-style: italic;
+}
+
+.content :global(.markdown-input-strike) {
+  text-decoration: line-through;
+}
+
+.content :global(.markdown-input-highlight) {
+  color: var(--markdown-mark-text);
+  background: var(--markdown-mark-background);
+  border-radius: 2px;
+}
+
+.content :global(.markdown-input-spoiler) {
+  border-radius: 3px;
+  background: $spoiler-background;
+}
+
+.content :global(.markdown-input-rendered img) {
+  max-width: 100%;
+  max-height: 240px;
+  vertical-align: middle;
+  border-radius: 4px;
+}
+
+.content :global(.markdown-input-link) {
+  color: $theme-accent-primary-default;
+  text-decoration: underline;
+}
+
+.content :global(.markdown-input-code),
+.content :global(.markdown-input-code-block) {
+  font-family: monospace;
+  background: var(--markdown-code-background);
+  border-radius: 3px;
+  box-decoration-break: clone;
+}
+
+.content :global(.markdown-input-code) {
+  padding: 0 0.2em;
+}
+
+.content :global(.markdown-input-code.markdown-input-spoiler) {
+  background:
+    linear-gradient($spoiler-background, $spoiler-background),
+    var(--markdown-code-background);
+}
+
+.content :global(.markdown-input-code-block) {
+  padding: 0.15em 0.4em;
+}
+
+.content :global(.markdown-input-quote) {
+  color: $theme-ui-secondary-default;
+}
+
+.content :global(.markdown-input-container-guide) {
+  display: inline-flex;
+  height: 1em;
+  vertical-align: -0.15em;
+  user-select: none;
+}
+
+.content :global(.markdown-input-quote-bar) {
+  border-left: 3px solid $theme-background-secondary-border;
+  margin-right: 0.4em;
+}
+
+.content :global(.markdown-input-h1),
+.content :global(.markdown-input-h2),
+.content :global(.markdown-input-h3),
+.content :global(.markdown-input-h4),
+.content :global(.markdown-input-h5),
+.content :global(.markdown-input-h6) {
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+.content :global(.markdown-input-h1) {
+  font-size: 1.8em;
+}
+
+.content :global(.markdown-input-h2) {
+  font-size: 1.5em;
+}
+
+.content :global(.markdown-input-h3) {
+  font-size: 1.25em;
+}
+
+.content :global(.markdown-input-bullet) {
+  color: $theme-ui-secondary-default;
+}
+
+.content :global(.markdown-input-rule) {
+  display: inline-block;
+  width: 100%;
+  border-bottom: 1px solid $theme-background-secondary-border;
+  vertical-align: middle;
+}
+
+.content :global(.markdown-input-hidden) {
+  // display:none にすると IME が末尾の記号を飛ばして変換範囲を作ってしまう。
+  font-size: 0;
+  line-height: 0;
+  white-space: normal;
+  padding: 0;
+  border: 0;
 }
 
 .srOnly {

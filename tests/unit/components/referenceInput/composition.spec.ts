@@ -3,6 +3,7 @@ import { nextTick } from 'vue'
 import { EditorContent } from '@tiptap/vue-3'
 
 import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
+import { markdownPreviewKey } from '/@/lib/referenceInput/markdownPreview'
 
 import { embedded, focus, lastValue, makeInput, press } from './fixture'
 
@@ -12,16 +13,19 @@ await vi.hoisted(async () => {
 
 describe('reference input composition deletions', () => {
   it.each([
-    { clause: false, finish: false },
-    { clause: true, finish: false },
-    { clause: false, finish: true }
+    { markdown: false, clause: false, finish: false },
+    { markdown: true, clause: false, finish: false },
+    { markdown: false, clause: true, finish: false },
+    { markdown: true, clause: true, finish: false },
+    { markdown: false, clause: false, finish: true },
+    { markdown: true, clause: false, finish: true }
   ])(
-    'preserves selected IME text during Backspace with clause $clause, and pending confirmation $finish',
-    async ({ clause, finish }) => {
+    'preserves selected IME text during Backspace with Markdown $markdown, clause $clause, and pending confirmation $finish',
+    async ({ markdown, clause, finish }) => {
       const prefix = 'before '
       const composition = 'あああああｄｓｓｓｓｓｓっさああ'
       const wrapper = await makeInput(prefix + composition)
-
+      await wrapper.setProps({ markdown })
       await focus(wrapper)
       const editor = wrapper.getComponent(EditorContent).props('editor')
 
@@ -168,3 +172,49 @@ it.each([
     expect(lastValue(wrapper)).toBe(`${embedded} `)
   }
 )
+
+it('keeps Markdown visible until the final composition text has been read from the DOM', async () => {
+  const wrapper = await makeInput('**first** and input')
+  await wrapper.setProps({ markdown: true })
+  await focus(wrapper)
+
+  const editor = wrapper.getComponent(EditorContent).props('editor')
+
+  if (!editor) throw new Error('Editor is not mounted')
+
+  editor.commands.setTextSelection(editor.state.doc.content.size - 1)
+  const element = editor.view.dom
+  const strong = element.querySelector('.markdown-input-strong')
+  const text = element.querySelector('p')?.lastChild
+
+  if (!(text instanceof Text)) throw new Error('Expected text at the caret')
+
+  element.dispatchEvent(
+    new CompositionEvent('compositionstart', { bubbles: true })
+  )
+
+  expect(element.querySelector('.markdown-input-strong')).toBe(strong)
+
+  text.appendData('日本語')
+  document.getSelection()?.collapse(text, text.length)
+
+  element.dispatchEvent(
+    new CompositionEvent('compositionend', { bubbles: true, data: '日本語' })
+  )
+
+  expect(markdownPreviewKey.getState(editor.state)?.composing).toBe(true)
+  expect(element.querySelector('.markdown-input-strong')).toBe(strong)
+
+  await vi.waitFor(() => {
+    expect(markdownPreviewKey.getState(editor.state)?.composing).toBe(false)
+    expect(lastValue(wrapper)).toBe('**first** and input日本語')
+  })
+
+  expect(editor.state.selection.head).toBe(
+    '**first** and input日本語'.length + 1
+  )
+
+  expect(element.querySelector('.markdown-input-strong')?.textContent).toBe(
+    'first'
+  )
+})

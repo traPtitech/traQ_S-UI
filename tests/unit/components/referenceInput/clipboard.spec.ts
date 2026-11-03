@@ -81,32 +81,35 @@ it('preserves the selection when asynchronous clipboard conversion has no text',
   expect(editor?.state.selection).toMatchObject({ from: 2, to: 5 })
 })
 
-it('pastes copied channel links as references and supports Undo', async () => {
-  setChannelTree()
-  const wrapper = await makeInput('before replace after')
+it.each([false, true])(
+  'pastes copied channel links as references with Markdown %s and supports Undo',
+  async markdown => {
+    setChannelTree()
+    const wrapper = await makeInput('before replace after')
+    await wrapper.setProps({ markdown })
+    await focus(wrapper)
 
-  await focus(wrapper)
+    const editor = wrapper.getComponent(EditorContent).props('editor')
+    editor?.commands.setTextSelection({ from: 8, to: 15 })
+    pasteText(wrapper, copiedChannelLink())
 
-  const editor = wrapper.getComponent(EditorContent).props('editor')
-  editor?.commands.setTextSelection({ from: 8, to: 15 })
-  pasteText(wrapper, copiedChannelLink())
+    const reference = encodeReference({
+      type: 'channel',
+      id: 'person',
+      raw: '#times/25/person'
+    })
 
-  const reference = encodeReference({
-    type: 'channel',
-    id: 'person',
-    raw: '#times/25/person'
-  })
+    expect(lastValue(wrapper)).toBe(`before ${reference} after`)
+    expect(wrapper.find('.reference-token').text()).toBe('#times/25/person')
 
-  expect(lastValue(wrapper)).toBe(`before ${reference} after`)
-  expect(wrapper.find('.reference-token').text()).toBe('#times/25/person')
+    press(wrapper, 'z', { ctrlKey: true })
+    expect(lastValue(wrapper)).toBe('before replace after')
+    expect(wrapper.find('.reference-token').exists()).toBe(false)
 
-  press(wrapper, 'z', { ctrlKey: true })
-  expect(lastValue(wrapper)).toBe('before replace after')
-  expect(wrapper.find('.reference-token').exists()).toBe(false)
-
-  press(wrapper, 'y', { ctrlKey: true })
-  expect(lastValue(wrapper)).toBe(`before ${reference} after`)
-})
+    press(wrapper, 'y', { ctrlKey: true })
+    expect(lastValue(wrapper)).toBe(`before ${reference} after`)
+  }
+)
 
 it('preserves the copied Markdown when pasted into an existing code span', async () => {
   setChannelTree()

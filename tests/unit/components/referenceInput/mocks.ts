@@ -54,6 +54,13 @@ vi.mock('/@/store/app/browserSettings', async () => {
   return { useBrowserSettings: () => ({ sendWithModifierKey, modifierKey }) }
 })
 
+vi.mock('/@/store/app/featureFlagSettings', async () => {
+  const { ref } = await import('vue')
+  const featureFlags = ref({ inline_markdown: { enabled: true } })
+
+  return { useFeatureFlagSettings: () => ({ featureFlags }) }
+})
+
 vi.mock('/@/store/entities/users', async () => {
   const { ref } = await import('vue')
   const usersMap = ref(new Map<string, User>())

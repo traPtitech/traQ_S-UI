@@ -65,7 +65,7 @@ describe.each([
 it('fills the first match and cycles the original prefix candidates', async () => {
   setBranchingChannelTree()
   const wrapper = await makeInput('', 'message', false)
-
+  await wrapper.setProps({ markdown: true })
   await focus(wrapper)
   wrapper.vm.insertText('#t')
   await nextTick()
@@ -110,53 +110,62 @@ describe.each(['message', 'search'] as const)(
     ])(
       'confirms with Tab after previewing with $key (Shift: $shiftKey)',
       async ({ key, shiftKey }) => {
-        setChannelTree()
-        const wrapper = await makeInput('', mode, false)
-        await focus(wrapper)
-        const prefix = mode === 'search' ? 'in:' : ''
-        wrapper.vm.insertText(prefix + '#times/25/pe')
-        await nextTick()
-        expect(press(wrapper, key, { shiftKey })).toBe(false)
-        await nextTick()
-        for (const [key, shiftKey] of [
-          ['ArrowUp', false],
-          ['ArrowDown', false],
-          ['Tab', true]
-        ] as const) {
+        for (const markdown of [true, false]) {
+          setChannelTree()
+          const wrapper = await makeInput('', mode, false)
+          await wrapper.setProps({ markdown })
+          await focus(wrapper)
+          const prefix = mode === 'search' ? 'in:' : ''
+          wrapper.vm.insertText(prefix + '#times/25/pe')
+          await nextTick()
           expect(press(wrapper, key, { shiftKey })).toBe(false)
           await nextTick()
+
+          for (const [key, shiftKey] of [
+            ['ArrowUp', false],
+            ['ArrowDown', false],
+            ['Tab', true]
+          ] as const) {
+            expect(press(wrapper, key, { shiftKey })).toBe(false)
+            await nextTick()
+
+            expect(
+              wrapper
+                .get('button[data-selected="true"]')
+                .attributes('aria-label')
+            ).toBe('#times/25/person')
+            expect(lastValue(wrapper)).toBe(prefix + '#times/25/person')
+            expect(wrapper.find('.reference-token').exists()).toBe(false)
+          }
+
+          expect(press(wrapper, 'Tab')).toBe(false)
+          await nextTick()
+
+          expect(lastValue(wrapper)).toBe(
+            encodeReference(
+              mode === 'search'
+                ? {
+                    type: 'search-in',
+                    id: 'person',
+                    raw: prefix + '#times/25/person',
+                    kind: 'channel'
+                  }
+                : {
+                    type: 'channel',
+                    id: 'person',
+                    raw: prefix + '#times/25/person'
+                  }
+            ) + ' '
+          )
+          expect(wrapper.find('.reference-token').text()).toBe(
+            prefix + '#times/25/person'
+          )
           expect(
-            wrapper.get('button[data-selected="true"]').attributes('aria-label')
-          ).toBe('#times/25/person')
-          expect(lastValue(wrapper)).toBe(prefix + '#times/25/person')
-          expect(wrapper.find('.reference-token').exists()).toBe(false)
+            wrapper.findComponent(DropdownSuggester).props('isShown')
+          ).toBe(false)
+          expect(document.activeElement).toBe(wrapper.vm.element)
+          expect(wrapper.emitted('keydown')).toBeUndefined()
         }
-        expect(press(wrapper, 'Tab')).toBe(false)
-        await nextTick()
-        expect(lastValue(wrapper)).toBe(
-          encodeReference(
-            mode === 'search'
-              ? {
-                  type: 'search-in',
-                  id: 'person',
-                  raw: prefix + '#times/25/person',
-                  kind: 'channel'
-                }
-              : {
-                  type: 'channel',
-                  id: 'person',
-                  raw: prefix + '#times/25/person'
-                }
-          ) + ' '
-        )
-        expect(wrapper.find('.reference-token').text()).toBe(
-          prefix + '#times/25/person'
-        )
-        expect(wrapper.findComponent(DropdownSuggester).props('isShown')).toBe(
-          false
-        )
-        expect(document.activeElement).toBe(wrapper.vm.element)
-        expect(wrapper.emitted('keydown')).toBeUndefined()
       }
     )
   }
@@ -196,58 +205,70 @@ describe.each(['message', 'search'] as const)(
     ])(
       'completes adjacent candidates directly with $key',
       async ({ key, paths }) => {
-        setBranchingChannelTree()
-        useChannelsStore().channelsMap.value.set('testing', {
-          id: 'testing',
-          name: 'testing',
-          parentId: null,
-          children: [],
-          archived: false,
-          force: false,
-          topic: ''
-        })
-        const wrapper = await makeInput('', mode, false)
-        await focus(wrapper)
-        const prefix = mode === 'search' ? 'in:' : ''
-        wrapper.vm.insertText(prefix + '#t')
-        await nextTick()
-        expect(
-          wrapper.get('button[data-selected="true"]').attributes('aria-label')
-        ).toBe('#team')
-        for (const path of paths) {
-          expect(press(wrapper, key)).toBe(false)
+        for (const markdown of [true, false]) {
+          setBranchingChannelTree()
+
+          useChannelsStore().channelsMap.value.set('testing', {
+            id: 'testing',
+            name: 'testing',
+            parentId: null,
+            children: [],
+            archived: false,
+            force: false,
+            topic: ''
+          })
+
+          const wrapper = await makeInput('', mode, false)
+          await wrapper.setProps({ markdown })
+          await focus(wrapper)
+          const prefix = mode === 'search' ? 'in:' : ''
+          wrapper.vm.insertText(prefix + '#t')
           await nextTick()
 
-          expect(lastValue(wrapper)).toBe(prefix + path)
           expect(
             wrapper.get('button[data-selected="true"]').attributes('aria-label')
-          ).toBe(path)
-          expect(wrapper.find('.reference-token').exists()).toBe(false)
-          expect(document.activeElement).toBe(wrapper.vm.element)
+          ).toBe('#team')
+
+          for (const path of paths) {
+            expect(press(wrapper, key)).toBe(false)
+            await nextTick()
+
+            expect(lastValue(wrapper)).toBe(prefix + path)
+            expect(
+              wrapper
+                .get('button[data-selected="true"]')
+                .attributes('aria-label')
+            ).toBe(path)
+            expect(wrapper.find('.reference-token').exists()).toBe(false)
+            expect(document.activeElement).toBe(wrapper.vm.element)
+          }
+
+          expect(
+            wrapper.emitted('update:modelValue')?.map(args => args[0])
+          ).toEqual([prefix + '#t', ...paths.map(path => prefix + path)])
+
+          press(wrapper, 'Tab')
+          await nextTick()
+          expect(lastValue(wrapper)).toBe(prefix + '#test')
+          press(wrapper, 'Tab', { shiftKey: true })
+          await nextTick()
+          expect(lastValue(wrapper)).toBe(prefix + '#team')
+          press(wrapper, 'Enter')
+          await nextTick()
+
+          expect(lastValue(wrapper)).toBe(
+            encodeReference(
+              mode === 'search'
+                ? {
+                    type: 'search-in',
+                    id: 'team',
+                    raw: prefix + '#team',
+                    kind: 'channel'
+                  }
+                : { type: 'channel', id: 'team', raw: prefix + '#team' }
+            ) + ' '
+          )
         }
-        expect(
-          wrapper.emitted('update:modelValue')?.map(args => args[0])
-        ).toEqual([prefix + '#t', ...paths.map(path => prefix + path)])
-        press(wrapper, 'Tab')
-        await nextTick()
-        expect(lastValue(wrapper)).toBe(prefix + '#test')
-        press(wrapper, 'Tab', { shiftKey: true })
-        await nextTick()
-        expect(lastValue(wrapper)).toBe(prefix + '#team')
-        press(wrapper, 'Enter')
-        await nextTick()
-        expect(lastValue(wrapper)).toBe(
-          encodeReference(
-            mode === 'search'
-              ? {
-                  type: 'search-in',
-                  id: 'team',
-                  raw: prefix + '#team',
-                  kind: 'channel'
-                }
-              : { type: 'channel', id: 'team', raw: prefix + '#team' }
-          ) + ' '
-        )
       }
     )
   }
@@ -379,7 +400,7 @@ it.each(['message', 'search'] as const)(
 it('cycles child candidates after descending from a unique parent', async () => {
   setBranchingChannelTree()
   const wrapper = await makeInput('', 'message', false)
-
+  await wrapper.setProps({ markdown: true })
   await focus(wrapper)
   wrapper.vm.insertText('#team/SysA')
   await nextTick()

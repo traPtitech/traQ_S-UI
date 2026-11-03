@@ -5,6 +5,7 @@ import { isComposingInput } from '/@/lib/referenceInput/composition'
 
 export default function useInputComposition(options: {
   view: () => EditorView | undefined
+  onChange: (composing: boolean) => void
   onSettled: () => void
 }) {
   let pending = false
@@ -15,6 +16,7 @@ export default function useInputComposition(options: {
   const { start: settle, stop } = useTimeoutFn(
     () => {
       pending = false
+      options.onChange(false)
       options.onSettled()
       const action = afterComposition
       afterComposition = undefined
@@ -56,6 +58,7 @@ export default function useInputComposition(options: {
       stop()
       afterComposition = undefined
       pending = true
+      options.onChange(true)
     },
 
     end: () => {

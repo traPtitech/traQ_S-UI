@@ -198,43 +198,51 @@ describe.each(['message', 'search'] as const)(
     it.each(['#t', '#team'])(
       'descends from %s, leaves leaf caret movement intact, and supports Undo',
       async text => {
-        setBranchingChannelTree()
-        const wrapper = await makeInput('', mode, false)
-        await focus(wrapper)
-        const prefix = mode === 'search' ? 'in:' : ''
-        wrapper.vm.insertText(prefix + text)
-        await nextTick()
-        for (const path of ['#team/SysAd', '#team/SysAd/Client']) {
-          expect(hintText(wrapper)).toContain('→ 子へ移動')
-          expect(press(wrapper, 'ArrowRight')).toBe(false)
+        for (const markdown of [true, false]) {
+          setBranchingChannelTree()
+          const wrapper = await makeInput('', mode, false)
+          await wrapper.setProps({ markdown })
+          await focus(wrapper)
+          const prefix = mode === 'search' ? 'in:' : ''
+          wrapper.vm.insertText(prefix + text)
           await nextTick()
-          expect(lastValue(wrapper)).toBe(prefix + path)
-          expect(wrapper.find('.reference-token').exists()).toBe(false)
+
+          for (const path of ['#team/SysAd', '#team/SysAd/Client']) {
+            expect(hintText(wrapper)).toContain('→ 子へ移動')
+            expect(press(wrapper, 'ArrowRight')).toBe(false)
+            await nextTick()
+            expect(lastValue(wrapper)).toBe(prefix + path)
+            expect(wrapper.find('.reference-token').exists()).toBe(false)
+            expect(
+              wrapper
+                .get('button[data-selected="true"]')
+                .attributes('aria-label')
+            ).toBe(path)
+            expect(document.activeElement).toBe(wrapper.vm.element)
+          }
+
           expect(
-            wrapper.get('button[data-selected="true"]').attributes('aria-label')
-          ).toBe(path)
-          expect(document.activeElement).toBe(wrapper.vm.element)
+            wrapper.emitted('update:modelValue')?.map(args => args[0])
+          ).toEqual([
+            prefix + text,
+            prefix + '#team/SysAd',
+            prefix + '#team/SysAd/Client'
+          ])
+          expect(wrapper.emitted('keydown')).toBeUndefined()
+          expect(hintText(wrapper)).not.toContain('→')
+          expect(press(wrapper, 'ArrowRight')).toBe(true)
+          expect(lastValue(wrapper)).toBe(prefix + '#team/SysAd/Client')
+          expect(wrapper.emitted('keydown')?.at(-1)?.[0]).toMatchObject({
+            key: 'ArrowRight'
+          })
+
+          press(wrapper, 'z', { ctrlKey: true })
+          await nextTick()
+          expect(lastValue(wrapper)).toBe(prefix + '#team/SysAd')
+          press(wrapper, 'z', { ctrlKey: true })
+          await nextTick()
+          expect(lastValue(wrapper)).toBe(prefix + text)
         }
-        expect(
-          wrapper.emitted('update:modelValue')?.map(args => args[0])
-        ).toEqual([
-          prefix + text,
-          prefix + '#team/SysAd',
-          prefix + '#team/SysAd/Client'
-        ])
-        expect(wrapper.emitted('keydown')).toBeUndefined()
-        expect(hintText(wrapper)).not.toContain('→')
-        expect(press(wrapper, 'ArrowRight')).toBe(true)
-        expect(lastValue(wrapper)).toBe(prefix + '#team/SysAd/Client')
-        expect(wrapper.emitted('keydown')?.at(-1)?.[0]).toMatchObject({
-          key: 'ArrowRight'
-        })
-        press(wrapper, 'z', { ctrlKey: true })
-        await nextTick()
-        expect(lastValue(wrapper)).toBe(prefix + '#team/SysAd')
-        press(wrapper, 'z', { ctrlKey: true })
-        await nextTick()
-        expect(lastValue(wrapper)).toBe(prefix + text)
       }
     )
   }
@@ -271,58 +279,67 @@ describe.each(['message', 'search'] as const)(
     ])(
       'cycles candidates with $key (Shift: $shiftKey) and confirms with Enter',
       async ({ key, shiftKey, backward }) => {
-        setBranchingChannelTree()
-        const wrapper = await makeInput('', mode, false)
-        await focus(wrapper)
-        const prefix = mode === 'search' ? 'in:' : ''
-        const text = prefix + '#team'
-        wrapper.vm.insertText(text)
-        await nextTick()
-        expect(wrapper.find('button[data-selected="true"]').exists()).toBe(
-          false
-        )
-        for (const path of backward
-          ? ['#team/SysDev', '#team/SysAd', '#team/SysDev']
-          : ['#team/SysAd', '#team/SysDev', '#team/SysAd']) {
-          expect(press(wrapper, key, { shiftKey })).toBe(false)
+        for (const markdown of [true, false]) {
+          setBranchingChannelTree()
+          const wrapper = await makeInput('', mode, false)
+          await wrapper.setProps({ markdown })
+          await focus(wrapper)
+          const prefix = mode === 'search' ? 'in:' : ''
+          const text = prefix + '#team'
+          wrapper.vm.insertText(text)
           await nextTick()
 
-          expect(
-            wrapper.get('button[data-selected="true"]').attributes('aria-label')
-          ).toBe(path)
-          expect(lastValue(wrapper)).toBe(prefix + path)
-          expect(wrapper.find('.reference-token').exists()).toBe(false)
-          expect(
-            wrapper.getComponent(EditorContent).props('editor')?.state.selection
-              .head
-          ).toBe((prefix + path).length + 1)
-          expect(
-            wrapper
-              .getComponent(DropdownSuggester)
-              .props('candidates')
-              ?.map((candidate: Candidate) => candidate.word.text)
-          ).toEqual(['#team/SysAd', '#team/SysDev'])
-          expect(document.activeElement).toBe(wrapper.vm.element)
+          expect(wrapper.find('button[data-selected="true"]').exists()).toBe(
+            false
+          )
+
+          for (const path of backward
+            ? ['#team/SysDev', '#team/SysAd', '#team/SysDev']
+            : ['#team/SysAd', '#team/SysDev', '#team/SysAd']) {
+            expect(press(wrapper, key, { shiftKey })).toBe(false)
+            await nextTick()
+
+            expect(
+              wrapper
+                .get('button[data-selected="true"]')
+                .attributes('aria-label')
+            ).toBe(path)
+            expect(lastValue(wrapper)).toBe(prefix + path)
+            expect(wrapper.find('.reference-token').exists()).toBe(false)
+            expect(
+              wrapper.getComponent(EditorContent).props('editor')?.state
+                .selection.head
+            ).toBe((prefix + path).length + 1)
+            expect(
+              wrapper
+                .getComponent(DropdownSuggester)
+                .props('candidates')
+                ?.map((candidate: Candidate) => candidate.word.text)
+            ).toEqual(['#team/SysAd', '#team/SysDev'])
+            expect(document.activeElement).toBe(wrapper.vm.element)
+          }
+
+          expect(wrapper.emitted('keydown')).toBeUndefined()
+          press(wrapper, 'Enter')
+          await nextTick()
+
+          expect(lastValue(wrapper)).toBe(
+            encodeReference(
+              mode === 'search'
+                ? {
+                    type: 'search-in',
+                    id: backward ? 'sysdev' : 'sysad',
+                    raw: prefix + (backward ? '#team/SysDev' : '#team/SysAd'),
+                    kind: 'channel'
+                  }
+                : {
+                    type: 'channel',
+                    id: backward ? 'sysdev' : 'sysad',
+                    raw: prefix + (backward ? '#team/SysDev' : '#team/SysAd')
+                  }
+            ) + ' '
+          )
         }
-        expect(wrapper.emitted('keydown')).toBeUndefined()
-        press(wrapper, 'Enter')
-        await nextTick()
-        expect(lastValue(wrapper)).toBe(
-          encodeReference(
-            mode === 'search'
-              ? {
-                  type: 'search-in',
-                  id: backward ? 'sysdev' : 'sysad',
-                  raw: prefix + (backward ? '#team/SysDev' : '#team/SysAd'),
-                  kind: 'channel'
-                }
-              : {
-                  type: 'channel',
-                  id: backward ? 'sysdev' : 'sysad',
-                  raw: prefix + (backward ? '#team/SysDev' : '#team/SysAd')
-                }
-          ) + ' '
-        )
       }
     )
   }

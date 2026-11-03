@@ -1,8 +1,11 @@
+import { type MaybeRefOrGetter, toValue, watch } from 'vue'
+
 import {
   checkLevel2InputEventsSupport,
   isMac,
   isMobilePlatform
 } from '/@/lib/dom/browser'
+import type { MarkdownLineBreakOptions } from '/@/lib/referenceInput/markdownLineBreak'
 import type { SendKey, SendKeys } from '/@/store/app/browserSettings'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 
@@ -101,10 +104,16 @@ const useSendKeyWatcher = (
   emit: ((event: 'postMessage') => void) &
     ((event: 'modifierKeyDown') => void) &
     ((event: 'modifierKeyUp') => void),
-  insertLineBreak: () => void,
-  handlesLineBreakOnKeyDown = false
+  insertLineBreak: (options?: MarkdownLineBreakOptions) => void,
+  handlesLineBreakOnKeyDown = false,
+  markdown: MaybeRefOrGetter<boolean> = false
 ) => {
   const { sendWithModifierKey, modifierKey } = useBrowserSettings()
+
+  watch(
+    () => toValue(markdown),
+    () => emit('modifierKeyUp')
+  )
 
   /*
    * 修飾キーが押されている際は先に発火する`keydown`イベントで
@@ -115,6 +124,7 @@ const useSendKeyWatcher = (
     if (event instanceof InputEvent) {
       if (
         !touchDeviceFlag &&
+        !(toValue(markdown) && event.inputType === 'insertLineBreak') &&
         isSendKeyInput(event, sendWithModifierKey.value)
       ) {
         event.preventDefault()
@@ -126,12 +136,11 @@ const useSendKeyWatcher = (
   const onKeyDown = (event: KeyboardEvent) => {
     if (touchDeviceFlag || event.isComposing) return
 
-    if (withModifierKey(event, modifierKey.value) && !event.isComposing) {
-      emit('modifierKeyDown')
-    }
+    const modifierPressed = withModifierKey(event, modifierKey.value)
+    if (modifierPressed) emit('modifierKeyDown')
 
     // https://github.com/traPtitech/traQ_R-UI/pull/945
-    if (event.key === 'Enter' && !event.isComposing) {
+    if (event.key === 'Enter') {
       /*
        * 修飾キーありで送信の設定の際に、送信が必要かの判定
        *
@@ -140,12 +149,16 @@ const useSendKeyWatcher = (
        *       下と同じような処理をする必要がある
        *       refs https://github.com/traPtitech/traQ_R-UI/pull/945#issuecomment-509942373
        */
-      if (
-        sendWithModifierKey.value === 'modifier' &&
-        withModifierKey(event, modifierKey.value)
-      ) {
+      if (sendWithModifierKey.value === 'modifier' && modifierPressed) {
         event.preventDefault()
         emit('postMessage')
+        return
+      }
+
+      if (toValue(markdown) && event.shiftKey) {
+        event.preventDefault()
+        insertLineBreak({ continueItem: true })
+
         return
       }
 
@@ -162,7 +175,7 @@ const useSendKeyWatcher = (
        */
       if (
         sendWithModifierKey.value === 'none' &&
-        !withModifierKey(event, modifierKey.value) &&
+        !modifierPressed &&
         (handlesLineBreakOnKeyDown || !isLevel2InputEventsSupported)
       ) {
         event.preventDefault()
