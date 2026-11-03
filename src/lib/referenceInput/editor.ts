@@ -5,6 +5,7 @@ import { compositionSafeShortcuts } from './composition'
 import { inputHistoryExtension } from './inputHistory'
 import { inputLifecycleExtension } from './inputLifecycle'
 import { markdownExtension } from './markdownExtension'
+import type { MarkdownLineBreakOptions } from './markdownLineBreak'
 import { messageExtension } from './messageExtension'
 import { referenceNode } from './referenceNode'
 
@@ -14,7 +15,7 @@ export interface ReferenceInputHandle {
   element?: HTMLElement
   focus: (position?: 'end') => void
   insertText: (text: string, options?: { focus?: boolean }) => void
-  insertLineBreak: () => void
+  insertLineBreak: (options?: MarkdownLineBreakOptions) => void
 }
 
 /** 組み込みの core keymap は無効化して使用する。 */
