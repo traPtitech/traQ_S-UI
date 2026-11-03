@@ -82,27 +82,24 @@ const {
   pageCount,
   currentSortKey,
   query,
+  searchRequest,
   executed
 } = useSearchMessages()
 
+watch(currentSortKey, resetPaging, { flush: 'sync' })
+
 watch(
-  // クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
-  () => [query.value, currentSortKey.value, currentPage.value] as const,
-  ([query, key], [oldQuery, oldKey]) => {
-    // クエリの変更時・ソートキーの変更時はページングをリセット
-    if (query !== oldQuery || key !== oldKey) {
-      resetPaging()
-    }
-    executeSearchForCurrentPage(query)
-  }
+  () => [searchRequest.value, currentSortKey.value, currentPage.value] as const,
+  () => executeSearchForCurrentPage()
 )
 
 onMounted(() => {
   // 初回マウント時に取得する
   if (!executed.value) {
-    executeSearchForCurrentPage(query.value)
+    executeSearchForCurrentPage()
   }
 })
+
 onBeforeUnmount(() => {
   // 検索クエリを空にして Enter を押したときにリセットされるようにする
   if (query.value === '') {
