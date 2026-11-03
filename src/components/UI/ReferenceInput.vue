@@ -1,0 +1,399 @@
+<template>
+  <div
+    :class="$style.container"
+    :data-readonly="readonly"
+    @mousedown.left.self.prevent="focus"
+  >
+    <EditorContent :editor="editor" :class="$style.content" />
+
+    <!-- 検索候補をパレット内に配置し、重なり順と外側クリックの判定範囲をそろえる。 -->
+    <DropdownSuggester
+      :popup-id="popupId"
+      :is-shown="shown && candidates.length > 0"
+      :width="380"
+      :position="position"
+      :placement="mode === 'search' ? 'below' : 'above'"
+      :teleport="mode !== 'search'"
+      :candidates="candidates"
+      :shortcuts="shortcuts"
+      :selected-index="selectedIndex"
+      @select="selectCandidate"
+      @continue-path="continueChannelPath"
+    />
+
+    <span :class="$style.srOnly" aria-live="polite">
+      {{ announcement }}
+    </span>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, nextTick, useId, watch, watchEffect } from 'vue'
+
+import { EditorContent, useEditor } from '@tiptap/vue-3'
+import { useResizeObserver } from '@vueuse/core'
+
+import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
+import useInputComposition from '/@/composables/referenceInput/useInputComposition'
+import useReferenceLabels from '/@/composables/referenceInput/useReferenceLabels'
+import useReferenceSuggestions from '/@/composables/referenceInput/useReferenceSuggestions'
+import useChannelPath from '/@/composables/useChannelPath'
+import { inputDataTransfer } from '/@/lib/referenceInput/dataTransfer'
+import {
+  type InputMode,
+  type InputPart,
+  parseInput,
+  serializeInput
+} from '/@/lib/referenceInput/document'
+import {
+  contentToParts,
+  inputExtensions,
+  partsToContent
+} from '/@/lib/referenceInput/editor'
+import { loadInputDocument } from '/@/lib/referenceInput/editorDocument'
+import { normalizeMessageParts } from '/@/lib/referenceInput/message'
+import {
+  candidateLabel,
+  candidateRowId
+} from '/@/lib/suggestion/candidatePresentation'
+
+const popupId = useId()
+const model = defineModel<string>({ default: '' })
+
+const props = withDefaults(
+  defineProps<{
+    mode?: InputMode
+    placeholder?: string
+    readonly?: boolean
+    testId?: string
+  }>(),
+  {
+    mode: 'message',
+    placeholder: '',
+    readonly: false,
+    testId: undefined
+  }
+)
+
+const emit = defineEmits<{
+  keydown: [event: KeyboardEvent]
+  keyup: [event: KeyboardEvent]
+  beforeInput: [event: InputEvent]
+  paste: [event: ClipboardEvent]
+  focus: []
+  blur: []
+  layoutChange: []
+}>()
+
+const { label } = useReferenceLabels()
+const { channelPathStringToId } = useChannelPath()
+
+const {
+  isComposing,
+  composingEvent,
+  start: startComposition,
+  end: endComposition
+} = useInputComposition({
+  view: () => editor.value?.view,
+  onSettled: () => nextTick(updateTarget)
+})
+
+const insertParts = (
+  parts: InputPart[],
+  range?: { from: number; to: number }
+) => {
+  const current = editor.value
+
+  if (!current || props.readonly) return
+
+  const content = partsToContent(parts).content?.[0]?.content ?? []
+
+  current
+    .chain()
+    .focus()
+    .insertContentAt(range ?? current.state.selection, content, {
+      parseOptions: { preserveWhitespace: 'full' }
+    })
+    .run()
+}
+
+const insertText = (text: string, range?: { from: number; to: number }) =>
+  insertParts(
+    [
+      {
+        type: 'text',
+        text: props.mode === 'search' ? text.replace(/[\r\n]+/g, ' ') : text
+      }
+    ],
+    range
+  )
+
+const insertLineBreak = () => {
+  if (props.readonly || props.mode !== 'message' || isComposing()) return
+  insertText('\n')
+}
+
+const {
+  shown,
+  candidates,
+  shortcuts,
+  selectedIndex,
+  position,
+  update: updateTarget,
+  hide: hideSuggestions,
+  select: selectCandidate,
+  continuePath: continueChannelPath,
+  onKeyDown: onSuggestionKeyDown
+} = useReferenceSuggestions({
+  editor: () => editor.value,
+  mode: () => props.mode,
+  isComposing,
+  insertParts
+})
+
+const announcement = computed(() => {
+  const candidate = candidates.value[selectedIndex.value]
+
+  return shown.value && candidate
+    ? `${candidateLabel(candidate.word, candidate.display)}、${selectedIndex.value + 1} / ${candidates.value.length}`
+    : ''
+})
+
+const editor = useEditor({
+  extensions: inputExtensions({ label, mode: props.mode, isComposing }),
+
+  content: partsToContent(
+    props.mode === 'message'
+      ? normalizeMessageParts(parseInput(model.value, props.mode))
+      : parseInput(model.value, props.mode)
+  ),
+
+  editable: !props.readonly,
+  enableCoreExtensions: { keymap: false },
+  enableInputRules: false,
+  enablePasteRules: false,
+
+  editorProps: {
+    attributes: ({ doc }) => {
+      const candidate = candidates.value[selectedIndex.value]
+
+      return {
+        role: props.mode === 'search' ? 'combobox' : 'textbox',
+        'aria-autocomplete': 'list',
+        'aria-haspopup': 'grid',
+        ...(shown.value && candidates.value.length
+          ? { 'aria-controls': popupId }
+          : {}),
+        ...(props.mode === 'search'
+          ? {
+              'aria-expanded': String(
+                shown.value && candidates.value.length > 0
+              )
+            }
+          : {}),
+        ...(shown.value && candidate
+          ? {
+              'aria-activedescendant': candidateRowId(popupId, candidate.word)
+            }
+          : {}),
+        dir: 'auto',
+        'aria-label': props.placeholder,
+        'aria-multiline': String(props.mode === 'message'),
+        'data-placeholder': props.placeholder,
+        'data-is-empty': String(doc.firstChild?.childCount === 0),
+        ...(props.testId ? { 'data-testid': props.testId } : {})
+      }
+    },
+
+    handleKeyDown: (_view, event) => {
+      if (composingEvent(event)) return false
+
+      if (onSuggestionKeyDown(event)) return true
+
+      emit('keydown', event)
+
+      if (event.defaultPrevented) return true
+
+      if (event.key === 'Enter') {
+        insertLineBreak()
+
+        return true
+      }
+
+      return false
+    },
+
+    handleDOMEvents: {
+      // IME の既定動作は許可し、ProseMirror の通常のキー処理だけを止める。
+      keydown: (_view, event) => composingEvent(event),
+
+      compositionstart: () => {
+        startComposition()
+        hideSuggestions()
+
+        return false
+      },
+
+      compositionend: () => {
+        endComposition()
+
+        return false
+      },
+
+      keyup: (_view, event) => {
+        emit('keyup', event)
+
+        return false
+      },
+
+      beforeinput: (_view, event) => {
+        if (isComposing() || event.isComposing || !event.cancelable)
+          return false
+
+        emit('beforeInput', event)
+
+        if (event.defaultPrevented) return true
+
+        if (
+          event.inputType === 'insertParagraph' ||
+          event.inputType === 'insertLineBreak'
+        ) {
+          event.preventDefault()
+
+          insertLineBreak()
+
+          return true
+        }
+
+        return false
+      },
+
+      ...inputDataTransfer({
+        editor: () => editor.value,
+        readonly: () => props.readonly,
+        mode: () => props.mode,
+        label,
+        channelPathToId: channelPathStringToId,
+        insertParts,
+        insertText,
+        onPaste: event => emit('paste', event)
+      })
+    }
+  },
+
+  onUpdate: ({ editor: current }) => {
+    model.value = serializeInput(contentToParts(current.state.doc))
+
+    nextTick(() => {
+      updateTarget()
+      emit('layoutChange')
+    })
+  },
+
+  onSelectionUpdate: updateTarget,
+
+  onFocus: () => {
+    emit('focus')
+  },
+
+  onBlur: () => {
+    hideSuggestions()
+    emit('blur')
+  }
+})
+
+watchEffect(() => {
+  const current = editor.value
+  if (!current || current.isDestroyed) return
+  const selected = candidates.value[selectedIndex.value]
+  const expanded = shown.value && candidates.value.length > 0
+
+  const attributes = {
+    'aria-controls': expanded ? popupId : undefined,
+    'aria-expanded': props.mode === 'search' ? String(expanded) : undefined,
+    'aria-activedescendant':
+      expanded && selected ? candidateRowId(popupId, selected.word) : undefined
+  }
+
+  for (const [name, value] of Object.entries(attributes)) {
+    if (value === undefined) current.view.dom.removeAttribute(name)
+    else current.view.dom.setAttribute(name, value)
+  }
+})
+
+watch(model, value => {
+  const current = editor.value
+
+  if (!current || !loadInputDocument(current, value, props.mode)) return
+
+  hideSuggestions()
+  emit('layoutChange')
+})
+
+watch(
+  () => props.readonly,
+  value => editor.value?.setEditable(!value, false)
+)
+
+const focus = () => editor.value?.commands.focus()
+const element = computed(() => editor.value?.view.dom)
+
+useResizeObserver(element, () => emit('layoutChange'))
+
+defineExpose({ focus, insertText, insertLineBreak, element })
+</script>
+
+<style lang="scss" module>
+.container {
+  min-width: 0;
+  overflow-y: auto;
+  cursor: text;
+}
+
+.content :global(.tiptap) {
+  outline: none;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  min-height: 1.5em;
+}
+
+.content :global(p) {
+  margin: 0;
+  white-space: pre-wrap;
+  // textarea と同じく、改行ごとに文字の方向を判定する。
+  unicode-bidi: plaintext;
+}
+
+.content :global(.tiptap[data-is-empty='true'])::before {
+  content: attr(data-placeholder);
+  position: absolute;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.content :global(.reference-token) {
+  color: $theme-accent-primary-default;
+  background: $theme-background-secondary-default;
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 0 2px;
+  box-decoration-break: clone;
+}
+
+.content :global(.ProseMirror-selectednode) {
+  outline: 2px solid $theme-accent-focus-default;
+}
+
+.content :global(.ProseMirror-hideselection *::selection) {
+  // 選択背景を隠すときは、文字色も通常の表示にそろえる。
+  color: currentColor;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+</style>

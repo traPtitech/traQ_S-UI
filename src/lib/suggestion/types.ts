@@ -3,10 +3,11 @@ interface WordBase {
   text: string
 }
 
-export interface WordWithId extends WordBase {
-  type: 'user' | 'user-group' | 'stamp' | 'channel'
-  id: string
-}
+type EntityWordKind = 'user' | 'user-group' | 'stamp' | 'channel'
+
+export type WordWithId = {
+  [Kind in EntityWordKind]: WordBase & { type: Kind; id: string }
+}[EntityWordKind]
 
 export interface WordWithoutId extends WordBase {
   type: 'stamp-effect'
@@ -14,11 +15,10 @@ export interface WordWithoutId extends WordBase {
 
 export type Word = WordWithId | WordWithoutId
 
-export interface Candidate {
-  word: Word
-  display?: string
-  canContinuePath?: boolean
-}
+export type Candidate = { display?: string } & (
+  | { word: Extract<Word, { type: 'channel' }>; canContinuePath?: boolean }
+  | { word: Exclude<Word, { type: 'channel' }>; canContinuePath?: never }
+)
 
 export type SuggestionShortcut = {
   keys: string[]
