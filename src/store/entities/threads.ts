@@ -17,6 +17,13 @@ export type ThreadChannel = Channel & {
   parentMessageId: string
 }
 
+// SDKにスレッドの型が追加されるまでは応答のフィールドで判定する
+export const isThreadChannel = (channel: Channel): channel is ThreadChannel =>
+  'parentMessageId' in channel &&
+  typeof channel.parentMessageId === 'string' &&
+  !!channel.parentMessageId &&
+  !!channel.parentId
+
 const getChannel = createSingleflight((id: ThreadChannelId) =>
   apis.getChannel(id)
 )
@@ -42,13 +49,7 @@ const useThreadsStorePinia = defineStore('entities/threads', () => {
 
     try {
       const [{ data: channel }, shared] = await getChannel(threadId)
-      // SDKにスレッドの型が追加されるまでは応答のフィールドで判定する
-      if (
-        !('parentMessageId' in channel) ||
-        typeof channel.parentMessageId !== 'string' ||
-        !channel.parentMessageId ||
-        !channel.parentId
-      ) {
+      if (!isThreadChannel(channel)) {
         deleteThread(threadId)
         return undefined
       }
@@ -88,7 +89,7 @@ const useThreadsStorePinia = defineStore('entities/threads', () => {
     fetchThreads()
   })
 
-  return { threadsMap, fetchThread, fetchThreads }
+  return { threadsMap, setThread, fetchThread, fetchThreads }
 })
 
 export const useThreadsStore = convertToRefsStore(useThreadsStorePinia)
