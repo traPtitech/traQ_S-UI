@@ -50,7 +50,7 @@
             :show-shortened-path="showShortenedPath"
             :is-selected="isSelected"
           />
-          <ChannelElementUnreadBadge
+          <UnreadBadge
             :is-noticeable="notificationState.isNoticeable"
             :unread-count="notificationState.unreadCount"
           />
@@ -82,6 +82,7 @@ import {
   type TypedProps,
   usePath
 } from '/@/components/Main/NavigationBar/ChannelList/composables/usePath'
+import UnreadBadge from '/@/components/UI/UnreadBadge.vue'
 import useFocus from '/@/composables/dom/useFocus'
 import useHover from '/@/composables/dom/useHover'
 import useChannelPath from '/@/composables/useChannelPath'
@@ -95,7 +96,6 @@ import useNotificationState from '../composables/useNotificationState'
 import ChannelElementIcon from './ChannelElementIcon.vue'
 import ChannelElementName from './ChannelElementName.vue'
 import ChannelElementTopic from './ChannelElementTopic.vue'
-import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 
 const props = withDefaults(
   defineProps<{

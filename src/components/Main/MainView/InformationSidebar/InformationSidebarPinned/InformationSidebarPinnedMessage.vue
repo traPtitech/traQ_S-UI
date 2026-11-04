@@ -1,0 +1,45 @@
+<template>
+  <div>
+    <MessagePanel
+      title-type="user"
+      hide-subtitle
+      line-clamp-content
+      :message="message"
+      :to="constructMessagesPath(message.id)"
+      show-context-menu-button
+      @click-context-menu-button="toggle"
+    />
+
+    <InformationSidebarPinnedMessageContextMenu
+      v-if="position"
+      :position="position"
+      :message-id="message.id"
+      :is-minimum="isArchived"
+      @close="close"
+    />
+  </div>
+</template>
+
+<script lang="ts" setup>
+import type { ActivityTimelineMessage, Message } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
+import useContextMenu from '/@/composables/useContextMenu'
+import { constructMessagesPath } from '/@/router'
+import { useChannelsStore } from '/@/store/entities/channels'
+
+import InformationSidebarPinnedMessageContextMenu from './InformationSidebarPinnedMessageContextMenu.vue'
+
+const props = defineProps<{
+  message: Message | ActivityTimelineMessage
+}>()
+
+const { position, toggle, close } = useContextMenu()
+const { channelsMap } = useChannelsStore()
+
+const isArchived = computed(
+  () => channelsMap.value.get(props.message.channelId)?.archived ?? false
+)
+</script>

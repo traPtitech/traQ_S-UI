@@ -1,39 +1,31 @@
 <template>
   <PrimaryViewSidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #page>
-      <PrimaryViewSidebarPage v-if="page === 'default'">
-        <template #header>
-          <SidebarHeader icon-string="#" :text="channelName" />
-        </template>
-        <template #content>
-          <ChannelSidebarContent
-            v-model:is-viewers-detail-open="isViewersDetailOpen"
-            :channel-id="channelId"
-            :viewer-ids="activeViewingUsers"
-            :inactive-viewer-ids="inactiveViewingUsers"
-            :pinned-messages-count="pinnedMessages.length"
-            @move-to-pinned="moveToPinnedPage"
-            @move-to-events="moveToEventsPage"
-          />
-        </template>
-      </PrimaryViewSidebarPage>
-      <SidebarPinnedPage
-        v-else-if="page === 'pinned'"
-        :pinned-messages="pinnedMessages"
-        @move-back="moveToDefaultPage"
-      />
-      <SidebarEventsPage
-        v-else-if="page === 'events'"
-        :channel-id="channelId"
-        @move-back="moveToDefaultPage"
-      />
+      <div :class="$style.panel">
+        <ChannelSidebarControls
+          v-model="sidebarMode"
+          :viewer-ids="activeViewingUsers"
+          :inactive-viewer-ids="inactiveViewingUsers"
+          @close="closeSidebar"
+          @open-viewers="openInformationViewers"
+        />
+        <ChannelInformationSidebar
+          v-if="sidebarMode === 'information'"
+          v-model:is-viewers-detail-open="isViewersDetailOpen"
+          :channel-id="channelId"
+          :pinned-messages="pinnedMessages"
+          :active-viewing-users="activeViewingUsers"
+          :inactive-viewing-users="inactiveViewingUsers"
+        />
+        <ChannelThreadsSidebar v-else :channel-id="channelId" />
+      </div>
     </template>
     <template #opener>
       <ChannelSidebarHidden
         :viewer-ids="activeViewingUsers"
         :inactive-viewer-ids="inactiveViewingUsers"
         @open="openSidebar"
-        @open-viewers="openViewers"
+        @open-viewers="openInformationViewers"
       />
     </template>
   </PrimaryViewSidebar>
@@ -42,22 +34,18 @@
 <script lang="ts" setup>
 import type { Pin } from '@traptitech/traq'
 
-import { computed } from 'vue'
+import { ref } from 'vue'
 
 import PrimaryViewSidebar from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebar.vue'
-import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
-import SidebarEventsPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarEventsPage.vue'
-import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
-import SidebarPinnedPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarPinnedPage.vue'
-import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
-import useToggle from '/@/composables/utils/useToggle'
-import { useChannelsStore } from '/@/store/entities/channels'
+import useSidebar from '/@/composables/mainView/useSidebar'
 import type { ChannelId, UserId } from '/@/types/entity-ids'
 
-import ChannelSidebarContent from './ChannelSidebarContent.vue'
+import ChannelInformationSidebar from './ChannelInformationSidebar/ChannelInformationSidebar.vue'
+import ChannelSidebarControls from './ChannelSidebarControls.vue'
 import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
+import ChannelThreadsSidebar from './ChannelThreadsSidebar/ChannelThreadsSidebar.vue'
 
-const props = defineProps<{
+defineProps<{
   channelId: ChannelId
   isSidebarOpenerReady: boolean
   pinnedMessages: Pin[]
@@ -65,23 +53,27 @@ const props = defineProps<{
   inactiveViewingUsers: UserId[]
 }>()
 
-const { channelsMap } = useChannelsStore()
-const {
-  page,
-  moveToDefaultPage,
-  moveToPinnedPage,
-  moveToEventsPage,
-  openSidebar
-} = useChannelSidebarCommon()
+const sidebarMode = ref<'information' | 'threads'>('information')
+const isViewersDetailOpen = ref(false)
+const { openSidebar, closeSidebar } = useSidebar()
 
-const channelName = computed(
-  () => channelsMap.value.get(props.channelId)?.name ?? ''
-)
-
-const { value: isViewersDetailOpen, open: openViewersDetail } = useToggle(false)
-
-const openViewers = () => {
+const openInformationViewers = () => {
+  sidebarMode.value = 'information'
+  isViewersDetailOpen.value = true
   openSidebar()
-  openViewersDetail()
 }
 </script>
+
+<style lang="scss" module>
+.panel {
+  position: relative;
+  height: 100%;
+}
+
+// The mobile drawer clips content outside its 320px width.
+[data-is-mobile] {
+  .panel {
+    padding-top: 56px;
+  }
+}
+</style>

@@ -1,5 +1,6 @@
 <template>
   <div
+    :title="tooltip"
     :data-is-large-padding="$boolAttr(largePadding)"
     :data-is-clickable="$boolAttr(clickable)"
     :class="$style.container"
@@ -24,6 +25,7 @@
 const props = withDefaults(
   defineProps<{
     title?: string
+    tooltip?: string
     largePadding?: boolean
     clickable?: boolean
     titleClickable?: boolean

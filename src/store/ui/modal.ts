@@ -112,14 +112,11 @@ const useModalStorePinia = defineStore('ui/modal', () => {
     )
     modalState.value = history.state.modalState
 
-    const { channelIdToPathString } = useChannelPath()
+    const { channelIdToLink } = useChannelPath()
     const primaryView = mainViewStore.primaryView.value
-    if (primaryView.type === 'channel') {
-      router.replace(
-        constructChannelPath(
-          channelIdToPathString(primaryView.channelId) as string
-        )
-      )
+    if (primaryView.type === 'channel' || primaryView.type === 'thread') {
+      const link = channelIdToLink(primaryView.channelId)
+      router.replace(link ?? constructChannelPath(primaryView.channelId))
     } else if (primaryView.type === 'dm') {
       router.replace(constructUserPath(primaryView.userName))
     } else {

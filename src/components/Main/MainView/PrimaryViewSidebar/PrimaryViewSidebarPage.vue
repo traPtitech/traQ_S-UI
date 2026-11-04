@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.header">
+    <div :class="$style.header" :data-show-close-button="showCloseButton">
       <AIcon
         v-if="showBackButton"
         :size="28"
@@ -10,7 +10,7 @@
         @click="emit('back')"
       />
       <slot name="header" />
-      <CloseButton :size="28" @close="closeSidebar" />
+      <CloseButton v-if="showCloseButton" :size="28" @close="closeSidebar" />
     </div>
     <div :class="$style.content">
       <slot name="content" />
@@ -26,9 +26,11 @@ import useSidebar from '/@/composables/mainView/useSidebar'
 withDefaults(
   defineProps<{
     showBackButton?: boolean
+    showCloseButton?: boolean
   }>(),
   {
-    showBackButton: false
+    showBackButton: false,
+    showCloseButton: true
   }
 )
 
@@ -54,6 +56,9 @@ const { closeSidebar } = useSidebar()
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  &[data-show-close-button='false'] {
+    justify-content: flex-start;
+  }
   width: 100%;
   align-items: center;
   flex-shrink: 0;

@@ -15,12 +15,12 @@
           />
         </template>
       </PrimaryViewSidebarPage>
-      <SidebarPinnedPage
+      <InformationSidebarPinnedPage
         v-else-if="page === 'pinned'"
         :pinned-messages="pinnedMessages"
         @move-back="moveToDefaultPage"
       />
-      <SidebarEventsPage
+      <InformationSidebarEventsPage
         v-else-if="page === 'events'"
         :channel-id="channelId"
         @move-back="moveToDefaultPage"
@@ -40,12 +40,12 @@
 import type { Pin } from '@traptitech/traq'
 
 import ChannelSidebarHidden from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelSidebarHidden.vue'
+import InformationSidebarEventsPage from '/@/components/Main/MainView/InformationSidebar/InformationSidebarEventsPage.vue'
+import InformationSidebarPinnedPage from '/@/components/Main/MainView/InformationSidebar/InformationSidebarPinnedPage.vue'
+import useChannelInformationSidebar from '/@/components/Main/MainView/InformationSidebar/composables/useChannelInformationSidebar'
 import PrimaryViewSidebar from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebar.vue'
 import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
-import SidebarEventsPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarEventsPage.vue'
 import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
-import SidebarPinnedPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarPinnedPage.vue'
-import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
 import type { ChannelId, UserId } from '/@/types/entity-ids'
 
 import SidebarContent from './DMSidebarContent.vue'
@@ -65,5 +65,5 @@ const {
   moveToPinnedPage,
   moveToEventsPage,
   openSidebar
-} = useChannelSidebarCommon()
+} = useChannelInformationSidebar()
 </script>

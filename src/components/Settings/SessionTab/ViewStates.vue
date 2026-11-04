@@ -16,7 +16,7 @@
 import { computed } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
-import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import useEnsureThread from '/@/composables/useEnsureThread'
 import { fallbackChannelPath } from '/@/lib/config'
 import { useViewStatesStore } from '/@/store/domain/viewStates'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -29,11 +29,11 @@ fetchViewStates()
 
 const { channelIdToPathString } = useChannelPath()
 
+useEnsureThread(() => [...monitoringChannels.value.values()])
+
 const monitoringChannelStrings = computed(() =>
-  [...monitoringChannels.value.values()].map(channelId =>
-    setFallbackForNullishOrOnError(fallbackChannelPath).exec(() =>
-      channelIdToPathString(channelId, true)
-    )
+  [...monitoringChannels.value.values()].map(
+    channelId => channelIdToPathString(channelId, true) ?? fallbackChannelPath
   )
 )
 </script>

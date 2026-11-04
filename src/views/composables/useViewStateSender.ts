@@ -26,6 +26,7 @@ const useViewStateSender = () => {
     }
     if (
       primaryView.value.type === 'channel' ||
+      primaryView.value.type === 'thread' ||
       primaryView.value.type === 'dm'
     ) {
       return primaryView.value.channelId

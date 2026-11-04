@@ -1,17 +1,17 @@
 <template>
   <div>
-    <ChannelSidebarViewers
+    <ChannelInformationSidebarViewers
       v-model="isViewersDetailOpen"
       :viewer-ids="viewerIds"
       :inactive-viewer-ids="inactiveViewerIds"
       :class="$style.item"
     />
-    <ChannelSidebarPinned
+    <ChannelInformationSidebarPinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.item"
       @click-link="emit('moveToPinned')"
     />
-    <ChannelSidebarEvents
+    <ChannelInformationSidebarEvents
       :class="$style.item"
       @click-link="emit('moveToEvents')"
     />
@@ -21,9 +21,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-import ChannelSidebarEvents from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelSidebarEvents.vue'
-import ChannelSidebarPinned from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelSidebarPinned.vue'
-import ChannelSidebarViewers from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelSidebarViewers.vue'
+import ChannelInformationSidebarEvents from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarEvents.vue'
+import ChannelInformationSidebarPinned from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarPinned.vue'
+import ChannelInformationSidebarViewers from '/@/components/Main/MainView/ChannelView/ChannelSidebar/ChannelInformationSidebar/ChannelInformationSidebarViewers.vue'
 import type { UserId } from '/@/types/entity-ids'
 
 withDefaults(

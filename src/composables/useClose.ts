@@ -9,25 +9,21 @@ import {
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useMainViewStore } from '/@/store/ui/mainView'
 
-import { setFallbackForNullishOrOnError } from '../lib/basic/fallback'
-
 const useClose = () => {
   const router = useRouter()
 
   const { primaryView } = useMainViewStore()
   const { startupChannelPath } = useBrowserSettings()
-  const { channelIdToPathString } = useChannelPath()
+  const { channelIdToLink } = useChannelPath()
 
   const close = () => {
     switch (primaryView.value.type) {
-      case 'channel': {
+      case 'channel':
+      case 'thread': {
         const channelId = primaryView.value.channelId
 
-        const channelPath = setFallbackForNullishOrOnError(
-          startupChannelPath.value
-        ).exec(() => channelIdToPathString(channelId))
-
-        router.push(constructChannelPath(channelPath))
+        const link = channelIdToLink(channelId)
+        router.push(link ?? constructChannelPath(startupChannelPath.value))
 
         break
       }
