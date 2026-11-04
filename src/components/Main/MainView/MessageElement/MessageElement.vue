@@ -35,6 +35,7 @@
         :stamps="message.stamps"
         :is-archived="isArchived"
       />
+      <MessageThread v-if="message.threadId" :thread-id="message.threadId" />
     </div>
   </ClickOutside>
 </template>
@@ -55,6 +56,7 @@ import type { MessageId, UserId } from '/@/types/entity-ids'
 import MessageContents from './MessageContents.vue'
 import MessagePinned from './MessagePinned.vue'
 import MessageStampList from './MessageStampList.vue'
+import MessageThread from './MessageThread.vue'
 import type { ChangeHeightData } from './composables/useElementRenderObserver'
 import useElementRenderObserver from './composables/useElementRenderObserver'
 
