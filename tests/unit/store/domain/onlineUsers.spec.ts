@@ -1,0 +1,185 @@
+import { createPinia, setActivePinia } from 'pinia'
+
+import { useOnlineUsers } from '/@/store/domain/onlineUsers'
+import type { UserId } from '/@/types/entity-ids'
+
+const { mockGetOnlineUsers, mockWsListener } = vi.hoisted(() => {
+  const listeners = new Map<string, Set<(payload: unknown) => void>>()
+
+  return {
+    mockGetOnlineUsers: vi.fn(),
+    mockWsListener: {
+      on: vi.fn((type: string, listener: (payload: unknown) => void) => {
+        const typeListeners = listeners.get(type) ?? new Set()
+        typeListeners.add(listener)
+        listeners.set(type, typeListeners)
+      }),
+      emit: (type: string, payload: unknown) => {
+        listeners.get(type)?.forEach(listener => listener(payload))
+      },
+      clear: () => {
+        listeners.clear()
+      }
+    }
+  }
+})
+
+vi.mock('/@/lib/apis', () => ({
+  default: {
+    getOnlineUsers: mockGetOnlineUsers
+  }
+}))
+
+vi.mock('/@/lib/websocket', () => ({
+  wsListener: mockWsListener
+}))
+
+describe('onlineUsers store', () => {
+  beforeEach(() => {
+    mockGetOnlineUsers.mockReset()
+    mockWsListener.clear()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('preserves websocket updates received during an HTTP fetch', async () => {
+    vi.useFakeTimers()
+    const initiallyOnline = '11111111-1111-4111-8111-111111111111' as UserId
+    const becameOnline = '22222222-2222-4222-8222-222222222222' as UserId
+    const stayedOnline = '33333333-3333-4333-8333-333333333333' as UserId
+    const offlineAt = '2030-01-02T03:05:00Z'
+    vi.setSystemTime(new Date('2040-01-01T00:00:00Z'))
+    let resolveFetch!: (response: { data: UserId[] }) => void
+    mockGetOnlineUsers.mockReturnValueOnce(
+      new Promise(resolve => {
+        resolveFetch = resolve
+      })
+    )
+
+    const pinia = createPinia()
+    setActivePinia(pinia)
+    const { fetchOnlineUsers, lastOnlineAt, onlineUsers, onlineUsersFetched } =
+      useOnlineUsers(pinia)
+    expect(onlineUsersFetched.value).toBe(false)
+    const fetch = fetchOnlineUsers()
+
+    mockWsListener.emit('USER_ONLINE', { id: becameOnline })
+    mockWsListener.emit('USER_OFFLINE', {
+      id: initiallyOnline,
+      last_online: offlineAt
+    })
+    expect(onlineUsersFetched.value).toBe(false)
+    resolveFetch({ data: [initiallyOnline, stayedOnline] })
+
+    await expect(fetch).resolves.toEqual(new Set([becameOnline, stayedOnline]))
+    expect(onlineUsers.value).toEqual(new Set([becameOnline, stayedOnline]))
+    expect(lastOnlineAt.value).toEqual(new Map([[initiallyOnline, offlineAt]]))
+    expect(onlineUsersFetched.value).toBe(true)
+  })
+
+  it('keeps the online status unknown after a failed initial fetch until a retry succeeds', async () => {
+    const error = new Error('network unavailable')
+    mockGetOnlineUsers
+      .mockRejectedValueOnce(error)
+      .mockResolvedValueOnce({ data: [] })
+    const pinia = createPinia()
+    setActivePinia(pinia)
+    const { fetchOnlineUsers, onlineUsersFetched } = useOnlineUsers(pinia)
+
+    await expect(fetchOnlineUsers()).rejects.toBe(error)
+    expect(onlineUsersFetched.value).toBe(false)
+
+    await fetchOnlineUsers()
+    expect(onlineUsersFetched.value).toBe(true)
+  })
+
+  it('fetches a fresh snapshot after reconnecting during a fetch', async () => {
+    const staleUser = '11111111-1111-4111-8111-111111111111' as UserId
+    const currentUser = '22222222-2222-4222-8222-222222222222' as UserId
+    let resolveInitialFetch!: (response: { data: UserId[] }) => void
+    let resolveReconnectFetch!: (response: { data: UserId[] }) => void
+    mockGetOnlineUsers
+      .mockReturnValueOnce(
+        new Promise(resolve => {
+          resolveInitialFetch = resolve
+        })
+      )
+      .mockReturnValueOnce(
+        new Promise(resolve => {
+          resolveReconnectFetch = resolve
+        })
+      )
+
+    const pinia = createPinia()
+    setActivePinia(pinia)
+    const { fetchOnlineUsers, lastOnlineAt, onlineUsers } =
+      useOnlineUsers(pinia)
+    const initialFetch = fetchOnlineUsers()
+
+    mockWsListener.emit('reconnect', undefined)
+    expect(mockGetOnlineUsers).toHaveBeenCalledOnce()
+
+    resolveInitialFetch({ data: [staleUser] })
+    await initialFetch
+    await vi.waitFor(() => expect(mockGetOnlineUsers).toHaveBeenCalledTimes(2))
+
+    resolveReconnectFetch({ data: [currentUser] })
+    await vi.waitFor(() =>
+      expect(onlineUsers.value).toEqual(new Set([currentUser]))
+    )
+    expect(lastOnlineAt.value.size).toBe(0)
+    await expect(fetchOnlineUsers()).resolves.toEqual(new Set([currentUser]))
+    expect(mockGetOnlineUsers).toHaveBeenCalledTimes(2)
+  })
+
+  it('preserves an offline timestamp across a refresh', async () => {
+    const userId = '11111111-1111-4111-8111-111111111111' as UserId
+    const offlineAt = '2030-01-02T03:05:00Z'
+    mockGetOnlineUsers
+      .mockResolvedValueOnce({ data: [userId] })
+      .mockResolvedValueOnce({ data: [] })
+
+    const pinia = createPinia()
+    setActivePinia(pinia)
+    const { fetchOnlineUsers, lastOnlineAt } = useOnlineUsers(pinia)
+    await fetchOnlineUsers()
+
+    mockWsListener.emit('USER_OFFLINE', { id: userId, last_online: offlineAt })
+    await fetchOnlineUsers({ ignoreCache: true })
+
+    expect(lastOnlineAt.value.get(userId)).toBe(offlineAt)
+  })
+
+  it('does not invent timestamps from snapshots, online events, or ping', async () => {
+    vi.useFakeTimers()
+    const userId = '11111111-1111-4111-8111-111111111111' as UserId
+    const browserTime = new Date('2040-01-01T00:00:00Z')
+    mockGetOnlineUsers.mockResolvedValueOnce({ data: [userId] })
+
+    vi.setSystemTime(browserTime)
+    const pinia = createPinia()
+    setActivePinia(pinia)
+    const { fetchOnlineUsers, lastOnlineAt } = useOnlineUsers(pinia)
+    await fetchOnlineUsers()
+    mockWsListener.emit('USER_ONLINE', { id: userId })
+    mockWsListener.emit('PING', null)
+    expect(lastOnlineAt.value.size).toBe(0)
+  })
+
+  it('accepts offline events from older servers without inventing a timestamp', async () => {
+    const userId = '11111111-1111-4111-8111-111111111111' as UserId
+    mockGetOnlineUsers.mockResolvedValueOnce({ data: [userId] })
+    const pinia = createPinia()
+    setActivePinia(pinia)
+    const { fetchOnlineUsers, onlineUsers, lastOnlineAt } =
+      useOnlineUsers(pinia)
+    await fetchOnlineUsers()
+
+    mockWsListener.emit('USER_OFFLINE', { id: userId })
+
+    expect(onlineUsers.value.has(userId)).toBe(false)
+    expect(lastOnlineAt.value.has(userId)).toBe(false)
+  })
+})
