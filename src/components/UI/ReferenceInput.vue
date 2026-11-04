@@ -16,6 +16,7 @@
       :teleport="mode !== 'search'"
       :candidates="candidates"
       :shortcuts="shortcuts"
+      :show-keyboard-hints="keyboardRecentlyUsed"
       :selected-index="selectedIndex"
       @select="selectCandidate"
       @continue-path="continueChannelPath"
@@ -34,6 +35,7 @@ import { EditorContent, useEditor } from '@tiptap/vue-3'
 import { useResizeObserver } from '@vueuse/core'
 
 import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
+import useRecentKeyboardInput from '/@/composables/dom/useRecentKeyboardInput'
 import useInputComposition from '/@/composables/referenceInput/useInputComposition'
 import useReferenceLabels from '/@/composables/referenceInput/useReferenceLabels'
 import useReferenceSuggestions from '/@/composables/referenceInput/useReferenceSuggestions'
@@ -66,6 +68,8 @@ import {
 
 const popupId = useId()
 const model = defineModel<string>({ default: '' })
+
+const keyboardRecentlyUsed = useRecentKeyboardInput()
 
 const props = withDefaults(
   defineProps<{

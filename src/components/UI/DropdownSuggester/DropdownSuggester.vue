@@ -49,7 +49,12 @@
         </div>
       </div>
 
-      <div :class="$style.hint" role="group" aria-label="補完のキーボード操作">
+      <div
+        v-if="showKeyboardHints"
+        :class="$style.hint"
+        role="group"
+        aria-label="補完のキーボード操作"
+      >
         <span v-for="shortcut in shortcuts" :key="shortcut.keys.join()">
           <template v-for="(key, index) in shortcut.keys" :key="key">
             <span v-if="index" :class="$style.hintDelimiter">
@@ -91,6 +96,7 @@ const props = withDefaults(
     position?: { top: number; left: number }
     candidates?: Candidate[]
     shortcuts: SuggestionShortcut[]
+    showKeyboardHints: boolean
     selectedIndex: number
     placement?: 'above' | 'below'
     teleport?: boolean

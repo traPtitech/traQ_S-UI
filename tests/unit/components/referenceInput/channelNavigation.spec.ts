@@ -19,6 +19,13 @@ await vi.hoisted(async () => {
   await import('./mocks')
 })
 
+const hintText = (wrapper: Awaited<ReturnType<typeof makeInput>>) =>
+  wrapper
+    .getComponent(DropdownSuggester)
+    .props('shortcuts')
+    .map(({ keys, description }) => `${keys.join('・')} ${description}`)
+    .join(' ')
+
 it.each(['message', 'search'] as const)(
   'continues a channel path by tapping in %s mode and embeds only the final choice',
   async mode => {
@@ -112,11 +119,7 @@ it.each(['message', 'search'] as const)(
     await focus(wrapper)
     const prefix = mode === 'search' ? 'in:' : ''
 
-    const help = () =>
-      wrapper
-        .get('[aria-label="補完のキーボード操作"]')
-        .text()
-        .replace(/·/g, '・')
+    const help = () => hintText(wrapper)
 
     wrapper.vm.insertText(prefix + '#ti')
     await nextTick()
@@ -141,9 +144,7 @@ it.each(['message', 'search'] as const)(
     press(wrapper, 'Tab')
     await nextTick()
 
-    expect(wrapper.find('[aria-label="補完のキーボード操作"]').exists()).toBe(
-      false
-    )
+    expect(wrapper.getComponent(DropdownSuggester).props('isShown')).toBe(false)
     expect(wrapper.find('.reference-token').text()).toBe(
       prefix + '#times/25/person'
     )
@@ -158,11 +159,7 @@ it.each(['message', 'search'] as const)(
     await focus(wrapper)
     const prefix = mode === 'search' ? 'in:' : ''
 
-    const help = () =>
-      wrapper
-        .get('[aria-label="補完のキーボード操作"]')
-        .text()
-        .replace(/·/g, '・')
+    const help = () => hintText(wrapper)
 
     wrapper.vm.insertText(prefix + '#t')
     await nextTick()
@@ -191,9 +188,7 @@ it.each(['message', 'search'] as const)(
     press(wrapper, 'Enter')
     await nextTick()
     expect(wrapper.find('.reference-token').text()).toBe(prefix + '#team')
-    expect(wrapper.find('[aria-label="補完のキーボード操作"]').exists()).toBe(
-      false
-    )
+    expect(wrapper.getComponent(DropdownSuggester).props('isShown')).toBe(false)
   }
 )
 
@@ -210,9 +205,7 @@ describe.each(['message', 'search'] as const)(
         wrapper.vm.insertText(prefix + text)
         await nextTick()
         for (const path of ['#team/SysAd', '#team/SysAd/Client']) {
-          expect(
-            wrapper.get('[aria-label="補完のキーボード操作"]').text()
-          ).toContain('→ 子へ移動')
+          expect(hintText(wrapper)).toContain('→ 子へ移動')
           expect(press(wrapper, 'ArrowRight')).toBe(false)
           await nextTick()
           expect(lastValue(wrapper)).toBe(prefix + path)
@@ -230,9 +223,7 @@ describe.each(['message', 'search'] as const)(
           prefix + '#team/SysAd/Client'
         ])
         expect(wrapper.emitted('keydown')).toBeUndefined()
-        expect(
-          wrapper.get('[aria-label="補完のキーボード操作"]').text()
-        ).not.toContain('→')
+        expect(hintText(wrapper)).not.toContain('→')
         expect(press(wrapper, 'ArrowRight')).toBe(true)
         expect(lastValue(wrapper)).toBe(prefix + '#team/SysAd/Client')
         expect(wrapper.emitted('keydown')?.at(-1)?.[0]).toMatchObject({
