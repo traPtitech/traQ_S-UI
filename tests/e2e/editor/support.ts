@@ -26,7 +26,11 @@ export const test = base.extend<{
           await route.fulfill({
             json: { canonicalOrigin: 'http://127.0.0.1:4174' }
           })
-        } else if (path === '/api/v3/users' || path === '/api/v3/groups') {
+        } else if (
+          path === '/api/v3/users' ||
+          path === '/api/v3/groups' ||
+          path === '/api/v3/activity/onlines'
+        ) {
           await route.fulfill({ json: [] })
         } else if (path === '/api/v3/files/icon') {
           await route.fulfill({

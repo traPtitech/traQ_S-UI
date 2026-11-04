@@ -43,6 +43,7 @@ import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageIn
 import useTextStampPickerInvoker from '/@/components/Main/MainView/composables/useTextStampPickerInvoker'
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
+import useRecentKeyboardInput from '/@/composables/dom/useRecentKeyboardInput'
 import { resolveTheme } from '/@/lib/theme/resolve'
 import { getThemeVariables } from '/@/lib/theme/variables'
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
@@ -60,6 +61,8 @@ const readonly = ref(false)
 const posts = ref(0)
 const theme = getThemeVariables(resolveTheme(window.defaultLightTheme))
 const flags = useFeatureFlagSettings()
+
+useRecentKeyboardInput()
 
 const messageInput = ref<InstanceType<typeof MessageInputEditor>>()
 const inputFrame = ref<HTMLElement>()
