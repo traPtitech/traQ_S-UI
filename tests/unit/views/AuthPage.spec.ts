@@ -1,18 +1,23 @@
 import type { MyUserDetail } from '@traptitech/traq'
 import { UserAccountState } from '@traptitech/traq'
 
-import { defineComponent } from 'vue'
+import { createApp, defineComponent } from 'vue'
+import { routerKey } from 'vue-router'
 
 import type { VueWrapper } from '@vue/test-utils'
 import { flushPromises, mount } from '@vue/test-utils'
 import { AxiosHeaders } from 'axios'
-import { createPinia } from 'pinia'
+import { createPinia, disposePinia } from 'pinia'
 import type { MockInstance } from 'vitest'
 
 import AuthenticateMainView from '/@/components/Authenticate/AuthenticateMainView.vue'
 import apis from '/@/lib/apis'
+import { telemetry } from '/@/lib/telemetry'
 import router, { RouteName } from '/@/router'
+import { useMeStore } from '/@/store/domain/me'
 import useLoginCheck from '/@/views/composables/useLoginCheck'
+
+vi.mock('/@/lib/telemetry', () => ({ telemetry: { track: vi.fn() } }))
 
 vi.mock('/@/lib/websocket', () => ({
   wsListener: { on: vi.fn() }
@@ -83,6 +88,7 @@ describe('AuthPage', () => {
   }
 
   beforeEach(() => {
+    vi.mocked(telemetry.track).mockClear()
     getMe = vi.spyOn(apis, 'getMe').mockRejectedValue({
       isAxiosError: true,
       response: { status: 401 }
@@ -126,6 +132,23 @@ describe('AuthPage', () => {
       type: RouteName.Login,
       show: true
     })
+  })
+
+  it('tracks one app start after the first successful session check', async ({
+    onTestFinished
+  }) => {
+    const storePinia = createPinia()
+    onTestFinished(() => disposePinia(storePinia))
+    createApp(AuthRouter).use(storePinia).provide(routerKey, router)
+    const { fetchMe } = useMeStore(storePinia)
+
+    expect(await fetchMe(false)).toBeUndefined()
+    expect(telemetry.track).not.toHaveBeenCalled()
+
+    getMe.mockResolvedValue(meResponse)
+    await Promise.all([fetchMe(), fetchMe()])
+
+    expect(telemetry.track).toHaveBeenCalledExactlyOnceWith('app_started', {})
   })
 
   it('keeps the registration page open when logged out without retrying 401', async () => {
