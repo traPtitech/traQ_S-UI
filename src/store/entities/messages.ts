@@ -12,6 +12,7 @@ import { wsListener } from '/@/lib/websocket'
 import { useMeStore } from '/@/store/domain/me'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type {
+  ChannelId,
   ExternalUrl,
   FileId,
   MessageId,
@@ -36,6 +37,17 @@ type OptimisticStamp = {
 export const messageMitt = mitt<MessageEventMap>()
 
 const getMessage = createSingleflight(apis.getMessage.bind(apis))
+const getLatestMessage = createSingleflight((channelId: ChannelId) =>
+  apis.getMessages(
+    channelId,
+    1,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    'desc'
+  )
+)
 const getFileMeta = createSingleflight(apis.getFileMeta.bind(apis))
 const getOgp = createSingleflight(apis.getOgp.bind(apis))
 
@@ -74,6 +86,13 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
       messagesMap.value.set(message.id, message)
     }
     return message
+  }
+  const fetchLatestMessage = async (channelId: ChannelId) => {
+    const [{ data: messages }, shared] = await getLatestMessage(channelId)
+    if (!shared) {
+      extendMessagesMap(messages)
+    }
+    return messages[0]
   }
   const updateMessageStamps = (
     messageId: MessageId,
@@ -363,6 +382,7 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     ogpDataMap,
     extendMessagesMap,
     fetchMessage,
+    fetchLatestMessage,
     fetchFileMetaData,
     fetchOgpData,
     addStampLocally,
