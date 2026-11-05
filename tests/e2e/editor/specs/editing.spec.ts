@@ -13,7 +13,7 @@ test('repositions an open completion menu on scroll without changing its selecti
     element.style.marginTop = '300px'
   })
   await input.focus()
-  await page.keyboard.insertText('@al')
+  await input.pressSequentially('@al')
   await input.press('Tab')
   const menu = page.getByRole('grid', { name: '入力候補' })
   await expect(menu).toBeVisible()
@@ -174,7 +174,7 @@ test('keeps stamp suggestions clear of the caret after previewing a candidate', 
   })
 
   await input.focus()
-  await page.keyboard.insertText(':ok')
+  await input.pressSequentially(':ok')
 
   const menu = page.getByRole('grid', { name: '入力候補' })
   await expect(

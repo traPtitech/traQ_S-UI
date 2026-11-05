@@ -47,22 +47,28 @@ test('keeps wheel scrolling through stamp suggestions until keyboard navigation 
   })
   await load({ text: '', markdown: true })
   await input.focus()
-  await page.keyboard.insertText(':scroll_')
+  await input.pressSequentially(':scroll_')
 
   const menu = page.getByRole('grid', { name: '入力候補' })
   await expect(menu.getByRole('row')).toHaveCount(20)
   const scrollArea = menu.getByRole('row').first().locator('..')
   await scrollArea.hover()
-  await page.mouse.wheel(0, 400)
-  await page.evaluate(
-    () =>
-      new Promise(resolve =>
-        requestAnimationFrame(() => requestAnimationFrame(resolve))
-      )
-  )
-  await expect
-    .poll(() => scrollArea.evaluate(element => element.scrollTop))
-    .toBeGreaterThan(200)
+  // ホイール1回あたりの移動量はブラウザーにより異なる。
+  // 続けてスクロールしても選択中の候補へ引き戻されないことを確認する。
+  for (let i = 0; i < 2; i++) {
+    const previousTop = await scrollArea.evaluate(element => element.scrollTop)
+    await page.mouse.wheel(0, 120)
+    await page.evaluate(
+      () =>
+        new Promise(resolve =>
+          requestAnimationFrame(() => requestAnimationFrame(resolve))
+        )
+    )
+    await expect
+      .poll(() => scrollArea.evaluate(element => element.scrollTop))
+      .toBeGreaterThan(previousTop)
+  }
+  await expect(menu.locator('[aria-selected="true"]')).not.toBeInViewport()
 
   await input.press('ArrowDown')
   await expect(menu.locator('[aria-selected="true"]')).toBeInViewport({
@@ -117,15 +123,15 @@ for (const markdown of [false, true]) {
   }) => {
     await load({ text: '', markdown })
     await input.focus()
-    await page.keyboard.insertText(stamp)
-    await page.keyboard.insertText('o')
+    await input.pressSequentially(stamp)
+    await input.press('o')
 
     const source = page.getByTestId('source')
     const menu = page.getByRole('grid', { name: '入力候補' })
     await expect(source).toHaveText(stamp + 'o')
     await expect(menu).toHaveCount(0)
 
-    await page.keyboard.insertText(':ok')
+    await input.pressSequentially(':ok')
     await expect(
       menu.getByRole('gridcell').filter({ hasText: 'ok_hand' })
     ).toBeVisible()
@@ -147,7 +153,7 @@ for (const confirmation of ['Enter', 'Tab', 'click']) {
     await page.setViewportSize({ width: 900, height: 720 })
     await load({ text: '', markdown: true })
     await input.focus()
-    await page.keyboard.insertText(':ok')
+    await input.pressSequentially(':ok')
 
     const menu = page.getByRole('grid', { name: '入力候補' })
     const candidate = menu.getByRole('gridcell').filter({ hasText: 'ok_hand' })

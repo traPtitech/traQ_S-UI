@@ -9,7 +9,7 @@ for (const stamp of [':scroll_00', ':@alice']) {
     await load({ text: '', markdown: true })
     await input.focus()
     const prefix = stamp + '.atsumori.atsumori.conga.flashy'
-    await page.keyboard.insertText(prefix + '.atsu')
+    await input.pressSequentially(prefix + '.atsu')
 
     const menu = page.getByRole('grid', { name: '入力候補' })
     const fifth = menu.getByRole('gridcell', { name: '.atsumori', exact: true })
@@ -84,7 +84,8 @@ for (const markdown of [false, true]) {
     }) => {
       await load({ text: '', markdown })
       await input.focus()
-      await page.keyboard.insertText(prefix)
+      // insertText は Firefox で IME 経由になるため、通常のキー入力を使う。
+      await input.pressSequentially(prefix)
 
       const source = page.getByTestId('source')
       const menu = page.getByRole('grid', { name: '入力候補' })
@@ -108,13 +109,13 @@ for (const markdown of [false, true]) {
         menu.getByRole('gridcell').filter({ hasText: /^\.large$/ })
       ).toHaveCount(1)
 
-      await page.keyboard.insertText('la')
+      await input.pressSequentially('la')
       await input.press('.')
       await expect(source).toHaveText(completed + '.large.')
       await expect(rotationPreview).toHaveAttribute('title', completed + ':')
       await expect(rotationPreview).toHaveClass(/\blarge\b/)
 
-      await page.keyboard.insertText('sm')
+      await input.pressSequentially('sm')
       await input.press('Tab')
       await expect(source).toHaveText(completed + '.large.small')
       await input.press('Enter')
