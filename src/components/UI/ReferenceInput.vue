@@ -451,6 +451,8 @@ defineExpose({ focus, insertText, insertLineBreak, element })
 }
 
 .content :global(.reference-token) {
+  // 長い参照全体が次の行へ送られ、先頭に空行ができるのを防ぐ。
+  word-break: break-all;
   color: $theme-accent-primary-default;
   background: $theme-background-secondary-default;
   font-weight: bold;
