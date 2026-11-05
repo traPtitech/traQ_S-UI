@@ -117,6 +117,9 @@ it('restores suggestions after importing the confirmed composition text', async 
   text.data = '@al'
   document.getSelection()?.collapse(text, text.length)
 
+  await vi.waitFor(() => expect(lastValue(wrapper)).toBe('@al'))
+  expect(wrapper.findComponent(DropdownSuggester).props('isShown')).toBe(false)
+
   element.dispatchEvent(
     new CompositionEvent('compositionend', { bubbles: true })
   )

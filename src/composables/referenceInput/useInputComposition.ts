@@ -9,12 +9,16 @@ export default function useInputComposition(options: {
 }) {
   let pending = false
   let endedAt = -Infinity
+  let afterComposition: (() => void) | undefined
 
   // DOM の取り込みが終わるまで、compositionend 後も編集コマンドを抑止する。
   const { start: settle, stop } = useTimeoutFn(
     () => {
       pending = false
       options.onSettled()
+      const action = afterComposition
+      afterComposition = undefined
+      action?.()
     },
     0,
     { immediate: false }
@@ -29,6 +33,17 @@ export default function useInputComposition(options: {
 
   return {
     isComposing,
+    finish: (action: () => void) => {
+      if (!isComposing()) {
+        action()
+
+        return
+      }
+
+      afterComposition = action
+      // ブラウザーに変換を確定させてから、候補の置換を行う。
+      options.view()?.dom.blur()
+    },
     composingEvent: (event: KeyboardEvent) =>
       isComposingInput(
         options.view() ?? { composing: false },
@@ -39,6 +54,7 @@ export default function useInputComposition(options: {
 
     start: () => {
       stop()
+      afterComposition = undefined
       pending = true
     },
 

@@ -109,6 +109,7 @@ const { channelPathStringToId } = useChannelPath()
 const {
   isComposing,
   composingEvent,
+  finish: finishComposition,
   start: startComposition,
   end: endComposition
 } = useInputComposition({
@@ -175,6 +176,7 @@ const {
   editor: () => editor.value,
   mode: () => props.mode,
   isComposing,
+  finishComposition,
   insertParts
 })
 

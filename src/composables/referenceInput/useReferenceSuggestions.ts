@@ -5,6 +5,7 @@ import { closeHistory } from '@tiptap/pm/history'
 import { useEventListener } from '@vueuse/core'
 
 import useWordSuggestionList from '/@/composables/suggestion/useWordSuggestionList'
+import { isTouchDevice } from '/@/lib/dom/browser'
 import {
   type SuggestionTarget,
   acceptsCandidate,
@@ -28,12 +29,14 @@ type Options = {
   editor: () => Editor | undefined
   mode: () => InputMode
   isComposing: () => boolean
+  finishComposition: (action: () => void) => void
   insertParts: (parts: InputPart[], range: { from: number; to: number }) => void
 }
 
 const CARET_GAP = 8
 
 const useReferenceSuggestions = (options: Options) => {
+  const touchDevice = isTouchDevice()
   const { channelsMap, userIdToDmChannelIdMap } = useChannelsStore()
   const { upsertLocalStampHistory } = useStampHistory()
   const { recordStampUsage } = useStampRecommendations()
@@ -118,17 +121,15 @@ const useReferenceSuggestions = (options: Options) => {
     state.value = { status: 'closed' }
   }
 
+  const canSuggestDuringComposition = (current?: SuggestionTarget) =>
+    touchDevice && !!current && /^[\x21-\x7e]+$/.test(current.word)
+
   const update = () => {
     if (applyingCompletion) return
 
     const editor = options.editor()
 
-    if (
-      !editor ||
-      !editor.isEditable ||
-      options.isComposing() ||
-      !editor.isFocused
-    ) {
+    if (!editor || !editor.isEditable || !editor.isFocused) {
       hide()
 
       return
@@ -153,6 +154,12 @@ const useReferenceSuggestions = (options: Options) => {
         from,
         options.mode()
       )
+    }
+
+    if (options.isComposing() && !canSuggestDuringComposition(next)) {
+      hide()
+
+      return
     }
 
     if (!keepCycle) {
@@ -202,11 +209,37 @@ const useReferenceSuggestions = (options: Options) => {
     passive: true
   })
 
+  const deferCompositionAction = (action: () => void) => {
+    if (!options.isComposing()) return false
+
+    const editor = options.editor()
+    if (editor && canSuggestDuringComposition(target.value)) {
+      const { doc, selection } = editor.state
+      options.finishComposition(() => {
+        if (
+          options.editor() !== editor ||
+          editor.isDestroyed ||
+          !editor.isEditable ||
+          options.isComposing() ||
+          editor.state.doc !== doc ||
+          !editor.state.selection.eq(selection)
+        )
+          return
+
+        editor.view.focus()
+        update()
+        action()
+      })
+    }
+
+    return true
+  }
+
   const select = (word: Word) => {
     const current = target.value
 
-    if (!current || !options.editor()?.isEditable || options.isComposing())
-      return
+    if (!current || !options.editor()?.isEditable) return
+    if (deferCompositionAction(() => select(word))) return
 
     const parts = completeCandidate(current, word, dmChannelId)
     if (!parts) return
@@ -304,11 +337,12 @@ const useReferenceSuggestions = (options: Options) => {
 
     if (
       !current ||
-      options.isComposing() ||
       !canContinuePath(word) ||
       !acceptsCandidate(current, word, dmChannelId)
     )
       return
+
+    if (deferCompositionAction(() => continuePath(word, appendSlash))) return
 
     state.value = {
       status: 'suggesting',
@@ -346,7 +380,8 @@ const useReferenceSuggestions = (options: Options) => {
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
-    if (!shown.value || !candidates.value.length) return false
+    if (options.isComposing() || !shown.value || !candidates.value.length)
+      return false
 
     const action = suggestionKeyAction(event, keyContext.value)
     const candidate = candidates.value[selectedIndex.value]
