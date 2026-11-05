@@ -43,9 +43,11 @@ import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageIn
 import useTextStampPickerInvoker from '/@/components/Main/MainView/composables/useTextStampPickerInvoker'
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
+import useHtmlDataset from '/@/composables/document/useHtmlDataset'
 import useRecentKeyboardInput from '/@/composables/dom/useRecentKeyboardInput'
 import { resolveTheme } from '/@/lib/theme/resolve'
 import { getThemeVariables } from '/@/lib/theme/variables'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
@@ -63,6 +65,8 @@ const theme = getThemeVariables(resolveTheme(window.defaultLightTheme))
 const flags = useFeatureFlagSettings()
 
 useRecentKeyboardInput()
+const { ecoMode } = useBrowserSettings()
+useHtmlDataset('ecoMode', ecoMode)
 
 const messageInput = ref<InstanceType<typeof MessageInputEditor>>()
 const inputFrame = ref<HTMLElement>()
@@ -115,6 +119,11 @@ const ready = Promise.all([
 
 window.editorHarness = {
   ready,
+
+  async setEcoMode(enabled) {
+    ecoMode.value = enabled
+    await nextTick()
+  },
 
   async load(draft) {
     await ready

@@ -181,8 +181,8 @@ test('keeps stamp suggestions clear of the caret after previewing a candidate', 
     menu.getByRole('row').filter({ hasText: 'ok_hand' })
   ).toBeVisible()
   await input.press('Tab')
-  await expect(page.getByTestId('source')).toHaveText(':ok_hand:')
-  await expect(input.locator('.message-emoji')).toBeVisible()
+  await expect(page.getByTestId('source')).toHaveText(':ok_hand')
+  await expect(input.locator('.message-emoji')).toHaveCount(0)
   await expect(menu).toBeVisible()
 
   await expect
