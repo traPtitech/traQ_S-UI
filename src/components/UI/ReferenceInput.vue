@@ -40,6 +40,7 @@ import useInputComposition from '/@/composables/referenceInput/useInputCompositi
 import useReferenceLabels from '/@/composables/referenceInput/useReferenceLabels'
 import useReferenceSuggestions from '/@/composables/referenceInput/useReferenceSuggestions'
 import useChannelPath from '/@/composables/useChannelPath'
+import { isIOS } from '/@/lib/dom/browser'
 import { normalizeMessageParts } from '/@/lib/message/content'
 import {
   type PreparePaste,
@@ -55,6 +56,7 @@ import {
   loadInputDocument,
   replaceInputDocument
 } from '/@/lib/referenceInput/editorDocument'
+import { currentInputSelection } from '/@/lib/referenceInput/selection'
 import {
   type InputMode,
   type InputPart,
@@ -184,6 +186,17 @@ const announcement = computed(() => {
     : ''
 })
 
+const handleKeyAction = (event: KeyboardEvent) => {
+  if (onSuggestionKeyDown(event)) return true
+
+  emit('keydown', event)
+
+  return event.defaultPrevented
+}
+
+const iOSFlag = isIOS()
+let pendingIOSEnter: KeyboardEvent | undefined
+
 const editor = useEditor({
   extensions: inputExtensions({ label, mode: props.mode, isComposing }),
 
@@ -237,11 +250,7 @@ const editor = useEditor({
     handleKeyDown: (_view, event) => {
       if (composingEvent(event)) return false
 
-      if (onSuggestionKeyDown(event)) return true
-
-      emit('keydown', event)
-
-      if (event.defaultPrevented) return true
+      if (handleKeyAction(event)) return true
 
       if (event.key === 'Enter') {
         insertLineBreak()
@@ -253,10 +262,31 @@ const editor = useEditor({
     },
 
     handleDOMEvents: {
-      // IME の既定動作は許可し、ProseMirror の通常のキー処理だけを止める。
-      keydown: (_view, event) => composingEvent(event),
+      keydown: (_view, event) => {
+        pendingIOSEnter = undefined
+
+        // IME の既定動作は許可し、ProseMirror の通常のキー処理だけを止める。
+        if (composingEvent(event)) return true
+
+        if (
+          iOSFlag &&
+          event.key === 'Enter' &&
+          !event.ctrlKey &&
+          !event.altKey &&
+          !event.metaKey
+        ) {
+          // iOS の既定動作を許可し、Enter は続く beforeinput で一度だけ処理する。
+          // ProseMirror の遅延 Enter 処理は登録させない。
+          pendingIOSEnter = event
+
+          return true
+        }
+
+        return false
+      },
 
       compositionstart: () => {
+        pendingIOSEnter = undefined
         startComposition()
         hideSuggestions()
 
@@ -270,12 +300,16 @@ const editor = useEditor({
       },
 
       keyup: (_view, event) => {
+        pendingIOSEnter = undefined
         emit('keyup', event)
 
         return false
       },
 
-      beforeinput: (_view, event) => {
+      beforeinput: (view, event) => {
+        const enter = pendingIOSEnter
+        pendingIOSEnter = undefined
+
         if (isComposing() || event.isComposing || !event.cancelable)
           return false
 
@@ -288,6 +322,12 @@ const editor = useEditor({
           event.inputType === 'insertLineBreak'
         ) {
           event.preventDefault()
+
+          const selection = currentInputSelection(view)
+          if (!selection.eq(view.state.selection))
+            view.dispatch(view.state.tr.setSelection(selection))
+
+          if (enter && handleKeyAction(enter)) return true
 
           insertLineBreak()
 
@@ -326,6 +366,7 @@ const editor = useEditor({
   },
 
   onBlur: () => {
+    pendingIOSEnter = undefined
     hideSuggestions()
     emit('blur')
   }
