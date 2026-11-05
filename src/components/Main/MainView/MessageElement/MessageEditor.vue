@@ -102,7 +102,7 @@ const { toggleStampPicker } = useTextStampPickerInvoker(
 )
 
 onMounted(() => {
-  inputHandle.value?.focus()
+  inputHandle.value?.focus('end')
 })
 </script>
 

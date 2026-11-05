@@ -2,7 +2,7 @@
   <div
     :class="$style.container"
     :data-readonly="readonly"
-    @mousedown.left.self.prevent="focus"
+    @mousedown.left.self.prevent="focus()"
   >
     <EditorContent :editor="editor" :class="$style.content" />
 
@@ -413,7 +413,8 @@ watch(
   value => editor.value?.setEditable(!value, false)
 )
 
-const focus = () => editor.value?.commands.focus()
+const focus: ReferenceInputHandle['focus'] = position =>
+  editor.value?.commands.focus(position)
 const element = computed(() => editor.value?.view.dom)
 
 useResizeObserver(element, () => emit('layoutChange'))

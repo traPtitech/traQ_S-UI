@@ -10,7 +10,7 @@ export { partsToContent, contentToParts } from './editorDocument'
 
 export interface ReferenceInputHandle {
   element?: HTMLElement
-  focus: () => void
+  focus: (position?: 'end') => void
   insertText: (text: string, options?: { focus?: boolean }) => void
   insertLineBreak: () => void
 }
