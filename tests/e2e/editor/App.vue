@@ -62,6 +62,10 @@ const mode = ref<EditorDraft['mode']>('message')
 const readonly = ref(false)
 const posts = ref(0)
 const theme = getThemeVariables(resolveTheme(window.defaultLightTheme))
+// Teleported suggestion and stamp picker menus also need the application theme.
+for (const [property, value] of Object.entries(theme)) {
+  document.documentElement.style.setProperty(property, value)
+}
 const flags = useFeatureFlagSettings()
 
 useRecentKeyboardInput()
@@ -78,6 +82,33 @@ const { toggleStampPicker } = useTextStampPickerInvoker(
 
 const channels = useChannelsStore()
 channels.bothChannelsMapFetched.value = true
+for (const channel of [
+  {
+    id: 'mobile-times',
+    name: 'times',
+    parentId: null,
+    children: ['mobile-year25']
+  },
+  {
+    id: 'mobile-year25',
+    name: '25',
+    parentId: 'mobile-times',
+    children: ['mobile-person']
+  },
+  {
+    id: 'mobile-person',
+    name: 'person',
+    parentId: 'mobile-year25',
+    children: []
+  }
+]) {
+  channels.channelsMap.value.set(channel.id, {
+    ...channel,
+    archived: false,
+    force: false,
+    topic: ''
+  })
+}
 const { stampsMap, stampsMapFetched } = useStampsStore()
 for (const name of [
   'ok_hand',

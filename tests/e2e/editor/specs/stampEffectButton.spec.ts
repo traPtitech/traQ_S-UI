@@ -10,18 +10,14 @@ for (const markdown of [false, true]) {
     test(`chains effects by tapping for ${prefix} with Markdown ${markdown}`, async ({
       page,
       input,
-      load
+      load,
+      isMobile
     }, testInfo) => {
-      await page.setViewportSize({ width: 390, height: 720 })
+      if (!isMobile) await page.setViewportSize({ width: 390, height: 720 })
       await page.addStyleTag({
         content: '[data-testid="input-frame"] { margin-top: 240px; }'
       })
       await load({ text: '', markdown })
-      // The application supplies the theme at the root for teleported menus.
-      await page.evaluate(() => {
-        const theme = document.querySelector<HTMLElement>('main')?.style.cssText
-        if (theme) document.documentElement.style.cssText = theme
-      })
       await input.focus()
       await page.keyboard.insertText(prefix)
       const menu = page.getByRole('grid', { name: '入力候補' })

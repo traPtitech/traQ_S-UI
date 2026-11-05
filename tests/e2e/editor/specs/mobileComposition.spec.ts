@@ -66,7 +66,7 @@ for (const [prefix, candidate, result] of [
     })
 
     const menu = page.getByRole('grid', { name: '入力候補' })
-    await menu.getByRole('gridcell', { name: candidate, exact: true }).click()
+    await menu.getByRole('gridcell', { name: candidate, exact: true }).tap()
 
     await expect(page.getByTestId('source')).toHaveJSProperty(
       'textContent',

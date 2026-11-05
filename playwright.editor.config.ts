@@ -1,6 +1,11 @@
 import { defineConfig, devices } from '@playwright/test'
 
 const baseURL = 'http://127.0.0.1:4174/tests/e2e/editor/'
+const mobileSpecs = [
+  '**/mobileTouch.spec.ts',
+  '**/stampEffectButton.spec.ts',
+  '**/referenceLayout.spec.ts'
+]
 
 export default defineConfig({
   testDir: './tests/e2e/editor/specs',
@@ -27,8 +32,35 @@ export default defineConfig({
     timeout: 120_000
   },
   projects: [
-    { name: 'chromium', use: devices['Desktop Chrome'] },
-    { name: 'firefox', use: devices['Desktop Firefox'] },
-    { name: 'webkit', use: devices['Desktop Safari'] }
+    {
+      name: 'chromium',
+      use: devices['Desktop Chrome'],
+      testIgnore: '**/mobileTouch.spec.ts'
+    },
+    {
+      name: 'firefox',
+      use: devices['Desktop Firefox'],
+      testIgnore: '**/mobileTouch.spec.ts'
+    },
+    {
+      name: 'webkit',
+      use: devices['Desktop Safari'],
+      testIgnore: '**/mobileTouch.spec.ts'
+    },
+    {
+      name: 'mobile-chromium',
+      use: devices['Pixel 7'],
+      testMatch: [...mobileSpecs, '**/mobileComposition.spec.ts']
+    },
+    {
+      name: 'mobile-webkit',
+      use: devices['iPhone 13'],
+      testMatch: mobileSpecs
+    },
+    {
+      name: 'tablet-webkit',
+      use: devices['iPad Pro 11'],
+      testMatch: [...mobileSpecs, '**/mobileInput.spec.ts']
+    }
   ]
 })

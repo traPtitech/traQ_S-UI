@@ -192,7 +192,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   test-e2e-editor:
-    name: editor E2E (${{ matrix.os }}, ${{ matrix.browser }})
+    name: editor E2E (${{ matrix.os }}, ${{ matrix.project || matrix.browser }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     needs: [packages]
@@ -220,6 +220,15 @@ jobs:
             browser: firefox
           - os: macos-latest
             browser: webkit
+          - os: ubuntu-latest
+            browser: chromium
+            project: mobile-chromium
+          - os: macos-latest
+            browser: webkit
+            project: mobile-webkit
+          - os: macos-latest
+            browser: webkit
+            project: tablet-webkit
 
     steps:
       - name: checkout
@@ -238,13 +247,13 @@ jobs:
         run: npx playwright install --with-deps ${{ matrix.browser }}
 
       - name: run editor E2E
-        run: npm run test:e2e-editor -- --project=${{ matrix.browser }}
+        run: npm run test:e2e-editor -- --project=${{ matrix.project || matrix.browser }}
 
       - name: upload editor E2E failure artifacts
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ failure() }}
         with:
-          name: editor-e2e-${{ matrix.os }}-${{ matrix.browser }}
+          name: editor-e2e-${{ matrix.os }}-${{ matrix.project || matrix.browser }}
           path: |
             ./tests/e2e/results/editor
             ./tests/e2e/report/editor
