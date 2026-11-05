@@ -18,7 +18,7 @@ for (const stamp of [':scroll_00', ':@alice']) {
 
     await input.press('.')
     await expect(page.getByTestId('source')).toHaveText(prefix + '.atsumori.')
-    await expect(menu.getByRole('gridcell')).toHaveCount(3)
+    await expect(menu.getByRole('row')).toHaveCount(3)
     for (const size of ['.small', '.large', '.ex-large'])
       await expect(
         menu.getByRole('gridcell', { name: size, exact: true })

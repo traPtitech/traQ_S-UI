@@ -115,3 +115,40 @@ test('hides suggestions for a selected composition clause and non-ASCII input', 
   await session.send('Input.insertText', { text: ':ok' })
   await session.detach()
 })
+
+test('opens effect candidates from a composing stamp by touch', async ({
+  page,
+  input,
+  load
+}) => {
+  await page.addStyleTag({
+    content: '[data-testid="input-frame"] { margin-top: 240px; }'
+  })
+  await load({ text: '', markdown: true })
+  await input.focus()
+  const session = await page.context().newCDPSession(page)
+  await session.send('Input.imeSetComposition', {
+    text: ':ok',
+    selectionStart: 3,
+    selectionEnd: 3
+  })
+  const menu = page.getByRole('grid', { name: '入力候補' })
+  await menu
+    .getByRole('button', { name: ':ok_hand にエフェクトを追加', exact: true })
+    .tap()
+
+  await expect(page.getByTestId('source')).toHaveText(':ok_hand.')
+  await expect
+    .poll(() => caret(input))
+    .toMatchObject({
+      composing: false,
+      focused: true
+    })
+  await menu.getByRole('gridcell', { name: '.large', exact: true }).tap()
+  await expect(page.getByTestId('source')).toHaveJSProperty(
+    'textContent',
+    ':ok_hand.large: '
+  )
+  await expect(page.getByTestId('posts')).toHaveText('0')
+  await session.detach()
+})
