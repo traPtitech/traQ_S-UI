@@ -510,13 +510,13 @@ it.each([':ng:', ':test:', ':test.large:', ':@alice:'])(
   }
 )
 
-it('preserves preview lengths and the closing colon while cycling stamps', async () => {
+it('preserves preview lengths and leaves stamps open while cycling', async () => {
   const wrapper = await makeInput()
   await focus(wrapper)
   wrapper.vm.insertText(':te')
   await nextTick()
 
-  for (const text of [':test:', ':testing:', ':test:']) {
+  for (const text of [':test', ':testing', ':test']) {
     press(wrapper, 'Tab')
     await nextTick()
     expect(lastValue(wrapper)).toBe(text)
@@ -527,14 +527,14 @@ it('preserves preview lengths and the closing colon while cycling stamps', async
   expect(lastValue(wrapper)).toBe(':test: ')
 })
 
-it('confirms a unique stamp with Tab only after completing its closing colon', async () => {
+it('closes a unique stamp with Tab only when confirming it', async () => {
   const wrapper = await makeInput()
   await focus(wrapper)
   wrapper.vm.insertText(':testi')
   await nextTick()
   press(wrapper, 'Tab')
   await nextTick()
-  expect(lastValue(wrapper)).toBe(':testing:')
+  expect(lastValue(wrapper)).toBe(':testing')
   expect(wrapper.getComponent(DropdownSuggester).props('isShown')).toBe(true)
 
   press(wrapper, 'Tab')

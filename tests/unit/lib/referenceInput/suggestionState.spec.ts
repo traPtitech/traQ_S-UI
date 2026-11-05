@@ -7,7 +7,8 @@ const context = {
   cycling: false,
   count: 1,
   canDescend: false,
-  hasChildTarget: false
+  hasChildTarget: false,
+  canAppendEffect: false
 }
 
 it.each([
@@ -32,13 +33,29 @@ it.each([
 it.each(['ctrlKey', 'metaKey', 'altKey'] as const)(
   'leaves modified shortcuts to the host: %s',
   modifier => {
-    for (const key of ['Tab', 'Enter', 'ArrowRight', '/'])
+    for (const key of ['Tab', 'Enter', 'ArrowRight', '/', '.'])
       expect(
         suggestionKeyAction(
           new KeyboardEvent('keydown', { key, [modifier]: true }),
-          context
+          { ...context, canAppendEffect: true }
         )
       ).toBeUndefined()
+  }
+)
+
+it.each([false, true])(
+  'offers dot completion only for stamps, with cycling %s',
+  cycling => {
+    for (const canAppendEffect of [false, true]) {
+      const current = { ...context, cycling, canAppendEffect }
+      expect(
+        suggestionKeyAction(new KeyboardEvent('keydown', { key: '.' }), current)
+      ).toBe(canAppendEffect ? 'append-effect' : undefined)
+      expect(
+        suggestionShortcuts(current).find(hint => hint.keys.includes('.'))
+          ?.description
+      ).toBe(canAppendEffect ? '補完' : undefined)
+    }
   }
 )
 

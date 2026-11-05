@@ -71,7 +71,7 @@ it('keeps user icon completion as Markdown text', async () => {
   await nextTick()
   press(wrapper, 'Enter')
 
-  expect(lastValue(wrapper)).toBe(':@alice')
+  expect(lastValue(wrapper)).toBe(':@alice: ')
 })
 
 it('updates a renamed label and falls back after deletion without modifying the source', async () => {

@@ -10,7 +10,8 @@ import {
   acceptsCandidate,
   completeCandidate,
   completedChannelPath,
-  findSuggestionTarget
+  findSuggestionTarget,
+  isStampSuggestion
 } from '/@/lib/referenceInput/suggestion'
 import {
   type SuggestionState,
@@ -63,7 +64,7 @@ const useReferenceSuggestions = (options: Options) => {
 
   const { suggestedCandidateWords, parentChannel } = useWordSuggestionList(
     () => target.value?.word ?? '',
-    2
+    1
   )
 
   const canContinuePath = (word: Word) =>
@@ -86,7 +87,11 @@ const useReferenceSuggestions = (options: Options) => {
           ? { word, display: word.text, canContinuePath: canContinuePath(word) }
           : {
               word,
-              display: word.type === 'stamp' ? `${word.text}:` : word.text
+              display: word.type === 'stamp' ? `${word.text}:` : word.text,
+              preview:
+                current.mode === 'message' && current.intent === 'stamp-effect'
+                  ? `${current.stampPrefix}${word.text}:`
+                  : undefined
             }
       )
   })
@@ -103,7 +108,8 @@ const useReferenceSuggestions = (options: Options) => {
     cycling: !!cycle.value,
     count: candidates.value.length,
     canDescend: !!candidates.value[selectedIndex.value]?.canContinuePath,
-    hasChildTarget: !!childTarget.value
+    hasChildTarget: !!childTarget.value,
+    canAppendEffect: !!target.value && isStampSuggestion(target.value)
   }))
 
   const shortcuts = computed(() => suggestionShortcuts(keyContext.value))
@@ -151,7 +157,9 @@ const useReferenceSuggestions = (options: Options) => {
 
     if (!keepCycle) {
       state.value =
-        next && next.word.length >= 2
+        next &&
+        (next.word.length >= 2 ||
+          (next.mode === 'message' && next.intent === 'stamp-effect'))
           ? {
               status: 'suggesting',
               target: next,
@@ -171,9 +179,7 @@ const useReferenceSuggestions = (options: Options) => {
     const current = target.value
     if (!editor || editor.isDestroyed || !shown.value || !current) return
 
-    const stamp =
-      current.mode === 'message' &&
-      ['user-icon', 'stamp', 'stamp-effect'].includes(current.intent)
+    const stamp = isStampSuggestion(current)
     const { view } = editor
     const start = view.coordsAtPos(current.from, -1)
     const top = current.mode === 'search' ? start.bottom : start.top
@@ -251,10 +257,15 @@ const useReferenceSuggestions = (options: Options) => {
     const candidate = choices[index]
     if (!candidate) return
 
-    const parts = completeCandidate(current, candidate.word, dmChannelId)
+    const parts = completeCandidate(
+      current,
+      candidate.word,
+      dmChannelId,
+      'complete'
+    )
     if (!parts) return
 
-    // 確定時と同じ表記を原文へ反映
+    // 補完中はスタンプの終端を閉じず、エフェクトを続けられるようにする。
     const text = inputText(parts).replace(/ $/, '')
 
     const next: Extract<SuggestionState, { status: 'cycling' }> = {
@@ -275,6 +286,17 @@ const useReferenceSuggestions = (options: Options) => {
       if (state.value === next) state.value = { ...next, doc: editor.state.doc }
       update()
     }
+  }
+
+  const appendEffect = (word: Word) => {
+    const current = target.value
+    if (!current || !isStampSuggestion(current) || options.isComposing()) return
+
+    const parts = completeCandidate(current, word, dmChannelId, 'complete')
+    if (!parts) return
+
+    insertCompletionText(inputText(parts) + '.', current)
+    update()
   }
 
   const continuePath = (word: Word, appendSlash = false) => {
@@ -332,6 +354,10 @@ const useReferenceSuggestions = (options: Options) => {
     switch (action) {
       case 'append-path':
         if (candidate) continuePath(candidate.word, true)
+        break
+
+      case 'append-effect':
+        if (candidate) appendEffect(candidate.word)
         break
 
       case 'descend':

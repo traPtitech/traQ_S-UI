@@ -26,6 +26,7 @@ type KeyContext = {
   count: number
   canDescend: boolean
   hasChildTarget: boolean
+  canAppendEffect: boolean
 }
 
 type SuggestionAction =
@@ -35,6 +36,7 @@ type SuggestionAction =
   | 'confirm'
   | 'descend'
   | 'append-path'
+  | 'append-effect'
   | 'dismiss'
 
 const tabAction = (context: KeyContext): SuggestionAction =>
@@ -72,6 +74,8 @@ export const suggestionKeyAction = (
       return context.hasChildTarget ? 'descend' : undefined
     case '/':
       return context.canDescend ? 'append-path' : undefined
+    case '.':
+      return context.canAppendEffect ? 'append-effect' : undefined
     case 'Enter':
       return 'confirm'
     case 'Escape':
@@ -89,12 +93,16 @@ export const suggestionShortcuts = (
     confirm: '確定',
     descend: '子へ移動',
     'append-path': '子へ移動',
+    'append-effect': '補完',
     dismiss: '閉じる'
   }
 
   const hints = [
     { keys: ['Tab'], description: descriptions[tabAction(context)] }
   ]
+
+  if (context.canAppendEffect)
+    hints.push({ keys: ['.'], description: descriptions['append-effect'] })
 
   if (context.count > 1)
     hints.push({ keys: ['↑', '↓'], description: descriptions.next })

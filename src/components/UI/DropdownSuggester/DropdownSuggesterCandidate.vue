@@ -24,6 +24,7 @@
     <DropdownSuggesterStampEffect
       v-else-if="candidate.type === 'stamp-effect'"
       :effect-name-with-dot="candidate.text"
+      :content="preview"
     />
 
     <span :class="$style.name">
@@ -53,6 +54,7 @@ withDefaults(
   defineProps<{
     candidate: Word
     display?: string
+    preview?: string
     isSelected?: boolean
   }>(),
   {

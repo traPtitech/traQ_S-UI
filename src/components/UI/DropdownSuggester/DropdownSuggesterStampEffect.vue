@@ -6,23 +6,11 @@
 import { computed } from 'vue'
 
 import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
-import { useStampsStore } from '/@/store/entities/stamps'
 
 const props = defineProps<{
   effectNameWithDot: string
+  content?: string
 }>()
-
-const { initialRecentStamps } = useStampsStore()
-
-const stampName = computed(() => {
-  const initialStamps = initialRecentStamps.value.map(stamp => stamp.name)
-
-  return initialStamps[0]
-})
-
-const content = computed(() =>
-  stampName.value ? `:${stampName.value}${props.effectNameWithDot}:` : undefined
-)
 
 const isShown = computed(
   () =>

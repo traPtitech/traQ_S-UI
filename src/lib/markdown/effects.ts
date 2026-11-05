@@ -59,3 +59,6 @@ type SizeEffects =
 // 一致しなかったらneverになって型エラーが出る
 export const animeEffectSet = new Set<AnimeEffects>(animeEffects)
 export const sizeEffectSet = new Set<SizeEffects>(sizeEffects)
+
+// @traptitech/traq-markdown-it の描画上限と合わせる（サイズ指定は含まない）。
+export const maxAnimeEffectCount = 5

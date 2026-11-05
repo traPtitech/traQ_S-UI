@@ -24,6 +24,7 @@
             :tabindex="-1"
             :candidate="candidate.word"
             :display="candidate.display"
+            :preview="candidate.preview"
             :is-selected="selectedIndex === index"
             @mousedown.prevent
             @click="select(candidate.word)"

@@ -12,7 +12,10 @@
       :key="effect"
       :name="effect"
       :is-selected="animeEffects.includes(effect)"
-      :is-disabled="!animeEffects.includes(effect) && animeEffects.length >= 5"
+      :is-disabled="
+        !animeEffects.includes(effect) &&
+        animeEffects.length >= maxAnimeEffectCount
+      "
       @click="updateAnimeEffect(effect)"
     />
   </div>
@@ -21,7 +24,11 @@
 <script lang="ts" setup>
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
 
-import { animeEffectSet, sizeEffectSet } from '/@/lib/markdown/effects'
+import {
+  animeEffectSet,
+  maxAnimeEffectCount,
+  sizeEffectSet
+} from '/@/lib/markdown/effects'
 
 import StampPickerEffectSelectorItem from './StampPickerEffectSelectorItem.vue'
 

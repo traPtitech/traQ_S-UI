@@ -95,6 +95,79 @@ describe('reference suggestion rules', () => {
   )
 
   it.each([
+    ':test.',
+    ':test.la',
+    ':test.large.ro',
+    ':@alice.',
+    ':@alice.ro',
+    ':@Webhook#bot.ro',
+    ':0xff0000.ro',
+    ':hsl(120, 100%, 50%).ro'
+  ])('finds effects inside an open stamp: %s', text => {
+    expect(targetFor(text)).toMatchObject({
+      intent: 'stamp-effect',
+      word: text.slice(text.lastIndexOf('.'))
+    })
+  })
+
+  it.each([
+    '.',
+    'text.',
+    'file.la',
+    ':test:.',
+    ':test:word.la',
+    ':@alice:.ro',
+    'https://example.',
+    'https://example.ro',
+    '\\:test.ro',
+    '```\n:test.ro'
+  ])('does not offer stamp effects outside an open stamp: %s', text => {
+    expect(
+      findSuggestionTarget(text, text.length + 1, 'message')
+    ).toBeUndefined()
+  })
+
+  it.each([
+    [':st', stamp, ':stamp'],
+    [':@al', user, '@alice'],
+    [':stamp.la', { type: 'stamp-effect', text: '.large' }, '.large']
+  ] satisfies Array<[string, Word, string]>)(
+    'closes %s only when confirming',
+    (text, word, completed) => {
+      const target = targetFor(text)
+      expect(completeCandidate(target, word, dm, 'complete')).toEqual([
+        { type: 'text', text: completed }
+      ])
+      expect(completeCandidate(target, word, dm)).toEqual([
+        { type: 'text', text: completed + ': ' }
+      ])
+    }
+  )
+
+  it.each([':stamp', ':@alice', ':0xff0000', ':hsl(120, 50.5%, 40.5%)'])(
+    'limits %s to five animations, counting repeats and aliases but not sizes',
+    prefix => {
+      const animations = '.atsumori.atsumori.conga.flashy'
+      const fifth = targetFor(prefix + '.large' + animations + '.a')
+      const sixth = targetFor(prefix + animations + '.atsumori.large.a')
+      const animation: Word = { type: 'stamp-effect', text: '.atsumori' }
+      const alias: Word = { type: 'stamp-effect', text: '.marquee' }
+      const size: Word = { type: 'stamp-effect', text: '.small' }
+
+      for (const word of [animation, alias]) {
+        expect(acceptsCandidate(fifth, word, dm)).toBe(true)
+        expect(acceptsCandidate(sixth, word, dm)).toBe(false)
+        expect(completeCandidate(sixth, word, dm, 'complete')).toBeUndefined()
+        expect(completeCandidate(sixth, word, dm)).toBeUndefined()
+      }
+      expect(acceptsCandidate(sixth, size, dm)).toBe(true)
+
+      const overLimit = targetFor(prefix + animations + '.atsumori.rotate.')
+      expect(acceptsCandidate(overLimit, size, dm)).toBe(false)
+    }
+  )
+
+  it.each([
     ['from', user, true],
     ['from', group, true],
     ['from', channel, false],
@@ -137,7 +210,7 @@ describe('reference suggestion rules', () => {
 
   it('keeps user icons as text and selected groups as references', () => {
     expect(completeCandidate(targetFor(':@al'), user, dm)).toEqual([
-      { type: 'text', text: '@alice' }
+      { type: 'text', text: '@alice: ' }
     ])
 
     expect(completeCandidate(targetFor('@te'), group, dm)).toEqual([

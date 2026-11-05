@@ -2,6 +2,11 @@ import type { Word } from '/@/lib/suggestion/types'
 
 import { analyzeMarkdownSource } from '../markdown/analysis'
 import {
+  animeEffectSet,
+  maxAnimeEffectCount,
+  sizeEffectSet
+} from '../markdown/effects'
+import {
   type InputMode,
   type InputPart,
   type SearchOperator,
@@ -16,10 +21,19 @@ export type SuggestionTarget = {
 } & (
   | {
       mode: 'message'
-      intent: 'mention' | 'user-icon' | 'channel' | 'stamp' | 'stamp-effect'
+      intent: 'mention' | 'user-icon' | 'channel' | 'stamp'
+    }
+  | {
+      mode: 'message'
+      intent: 'stamp-effect'
+      stampPrefix: string
     }
   | { mode: 'search'; operator: SearchOperator }
 )
+
+export const isStampSuggestion = (target: SuggestionTarget) =>
+  target.mode === 'message' &&
+  ['user-icon', 'stamp', 'stamp-effect'].includes(target.intent)
 
 export const findSuggestionTarget = (
   before: string,
@@ -56,6 +70,24 @@ export const findSuggestionTarget = (
   // スタンプの終端を、次のスタンプやユーザーアイコンの開始に使わない。
   if (word.startsWith(':') && closesStamp(start)) return
 
+  if (word.startsWith('.')) {
+    // 閉じればスタンプになる範囲でだけ、エフェクト候補を表示する。
+    const closed = before.slice(0, start) + ':'
+    const stamp = analyzeMarkdownSource(closed).nodes.find(
+      node => node.kind === 'stamp' && node.to === closed.length
+    )
+    if (!stamp) return
+
+    return {
+      mode,
+      intent: 'stamp-effect',
+      word,
+      from: cursor - word.length,
+      to: cursor,
+      stampPrefix: before.slice(stamp.from, start)
+    }
+  }
+
   const icon =
     /^[@＠]/.test(word) && before[start - 1] === ':' && !closesStamp(start - 1)
 
@@ -65,9 +97,7 @@ export const findSuggestionTarget = (
       ? 'mention'
       : /^[#＃]/.test(word)
         ? 'channel'
-        : word.startsWith(':')
-          ? 'stamp'
-          : 'stamp-effect'
+        : 'stamp'
 
   return { mode, intent, word, from: cursor - word.length, to: cursor }
 }
@@ -88,7 +118,10 @@ export const acceptsCandidate = (
       case 'stamp':
         return word.type === 'stamp'
       case 'stamp-effect':
-        return word.type === 'stamp-effect'
+        return (
+          word.type === 'stamp-effect' &&
+          acceptsStampEffect(target.stampPrefix, word.text)
+        )
     }
   }
 
@@ -101,19 +134,36 @@ export const acceptsCandidate = (
   return word.type === 'user' || word.type === 'user-group'
 }
 
+const acceptsStampEffect = (stampPrefix: string, effect: string) => {
+  // hsl() など色スタンプ内の小数点はエフェクトの区切りに数えない。
+  const effects = (stampPrefix + effect)
+    .slice(stampPrefix.lastIndexOf(')') + 1)
+    .split('.')
+    .slice(1)
+  const animations: ReadonlySet<string> = animeEffectSet
+  const sizes: ReadonlySet<string> = sizeEffectSet
+
+  return (
+    effects.every(name => animations.has(name) || sizes.has(name)) &&
+    effects.filter(name => animations.has(name)).length <= maxAnimeEffectCount
+  )
+}
+
 export const completeCandidate = (
   target: SuggestionTarget,
   word: Word,
-  dmChannelId: (userId: string) => string | undefined
+  dmChannelId: (userId: string) => string | undefined,
+  action: 'complete' | 'confirm' = 'confirm'
 ): InputPart[] | undefined => {
   if (!acceptsCandidate(target, word, dmChannelId)) return
 
-  if (target.mode === 'message' && target.intent === 'user-icon')
-    return [{ type: 'text', text: word.text }]
-
-  if (word.type === 'stamp' || word.type === 'stamp-effect')
+  if (
+    word.type === 'stamp' ||
+    word.type === 'stamp-effect' ||
+    (target.mode === 'message' && target.intent === 'user-icon')
+  )
     return [
-      { type: 'text', text: word.text + (word.type === 'stamp' ? ': ' : '') }
+      { type: 'text', text: word.text + (action === 'confirm' ? ': ' : '') }
     ]
 
   const entityKind = word.type === 'user-group' ? 'group' : word.type
