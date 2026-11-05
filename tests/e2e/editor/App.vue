@@ -27,6 +27,7 @@
     />
     <StampPickerContainer />
 
+    <button type="button" data-testid="send" @click="submitDraft">送信</button>
     <button type="button" data-testid="outside">入力欄の外へ</button>
     <pre data-testid="source">{{ text }}</pre>
     <output data-testid="posts">{{ posts }}</output>
@@ -40,6 +41,7 @@ import { until } from '@vueuse/core'
 
 import MessageInputEditor from '/@/components/Main/MainView/MessageInput/MessageInputEditor.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
+import usePostMessage from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
 import useTextStampPickerInvoker from '/@/components/Main/MainView/composables/useTextStampPickerInvoker'
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
@@ -53,6 +55,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
+import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 
 import type { EditorDraft } from './harness'
 
@@ -131,6 +134,14 @@ for (const name of [
 stampsMapFetched.value = true
 
 const users = useUsersStore()
+const inputStates = useMessageInputStateStore()
+const { postMessage } = usePostMessage('mobile-person', 'share-target')
+
+// Exercise the production posting pipeline; the test intercepts the API request.
+const submitDraft = async () => {
+  inputStates.setStore('share-target', { text: text.value, attachments: [] })
+  if (await postMessage()) posts.value++
+}
 
 const ready = Promise.all([
   users.fetchUsers(),

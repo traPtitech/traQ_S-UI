@@ -3,6 +3,7 @@ import { defineConfig, devices } from '@playwright/test'
 const baseURL = 'http://127.0.0.1:4174/tests/e2e/editor/'
 const mobileSpecs = [
   '**/mobileTouch.spec.ts',
+  '**/messageSubmission.spec.ts',
   '**/stampEffectButton.spec.ts',
   '**/referenceLayout.spec.ts'
 ]
