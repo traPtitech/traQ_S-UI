@@ -31,20 +31,33 @@
           />
 
           <div
-            v-if="candidate.canContinuePath"
+            v-if="candidate.canContinuePath || candidate.canAppendEffect"
             role="gridcell"
-            :class="$style.pathCell"
+            :class="$style.actionCell"
           >
             <button
               :tabindex="-1"
               type="button"
-              :class="$style.continuePath"
-              :aria-label="`${candidate.word.text} の子チャンネルを補完`"
-              title="子チャンネルを補完"
+              :class="$style.continueButton"
+              :aria-label="
+                candidate.canContinuePath
+                  ? `${candidate.word.text} の子チャンネルを補完`
+                  : `${candidate.word.text} にエフェクトを追加`
+              "
+              :title="
+                candidate.canContinuePath
+                  ? '子チャンネルを補完'
+                  : 'エフェクトを追加'
+              "
               @mousedown.prevent
-              @click="emit('continuePath', candidate.word)"
+              @click="
+                candidate.canContinuePath
+                  ? emit('continuePath', candidate.word)
+                  : emit('appendEffect', candidate.word)
+              "
             >
-              /...
+              <span>{{ candidate.canContinuePath ? '/' : '.' }}</span>
+              <span :class="$style.dots">…</span>
             </button>
           </div>
         </div>
@@ -114,6 +127,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'select', _word: Word): void
   (e: 'continuePath', _word: Word): void
+  (e: 'appendEffect', _word: Word): void
 }>()
 
 const MARGIN = 8
@@ -204,7 +218,6 @@ watch(
     font-family: inherit;
     font-size: inherit;
     font-weight: 600;
-    line-height: 1.4;
     text-align: center;
   }
 }
@@ -213,17 +226,17 @@ watch(
   margin-inline: 1px;
 }
 
-.pathCell {
+.actionCell {
   display: flex;
   margin-left: auto;
 }
 
-.continuePath {
+.continueButton {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  font-weight: 550;
-  letter-spacing: 0.1rem;
+  font-weight: 600;
+  letter-spacing: 0.2rem;
   margin-left: auto;
   padding: 2px 14px;
   text-align: center;
@@ -241,6 +254,12 @@ watch(
       transparent
     );
   }
+}
+
+.dots {
+  color: $theme-ui-tertiary-default;
+  font-weight: 400;
+  font-size: 85%;
 }
 
 @media (pointer: coarse) {

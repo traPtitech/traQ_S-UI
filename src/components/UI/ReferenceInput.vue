@@ -20,6 +20,7 @@
       :selected-index="selectedIndex"
       @select="selectCandidate"
       @continue-path="continueChannelPath"
+      @append-effect="appendStampEffect"
     />
 
     <span :class="$style.srOnly" aria-live="polite">
@@ -171,6 +172,7 @@ const {
   hide: hideSuggestions,
   select: selectCandidate,
   continuePath: continueChannelPath,
+  appendEffect: appendStampEffect,
   onKeyDown: onSuggestionKeyDown
 } = useReferenceSuggestions({
   editor: () => editor.value,

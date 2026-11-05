@@ -90,6 +90,7 @@ const useReferenceSuggestions = (options: Options) => {
           ? { word, display: word.text, canContinuePath: canContinuePath(word) }
           : {
               word,
+              canAppendEffect: isStampSuggestion(current),
               display: word.type === 'stamp' ? `${word.text}:` : word.text,
               preview:
                 current.mode === 'message' && current.intent === 'stamp-effect'
@@ -323,7 +324,13 @@ const useReferenceSuggestions = (options: Options) => {
 
   const appendEffect = (word: Word) => {
     const current = target.value
-    if (!current || !isStampSuggestion(current) || options.isComposing()) return
+    if (
+      !current ||
+      !isStampSuggestion(current) ||
+      !options.editor()?.isEditable
+    )
+      return
+    if (deferCompositionAction(() => appendEffect(word))) return
 
     const parts = completeCandidate(current, word, dmChannelId, 'complete')
     if (!parts) return
@@ -433,6 +440,7 @@ const useReferenceSuggestions = (options: Options) => {
     hide,
     select,
     continuePath,
+    appendEffect,
     onKeyDown
   }
 }

@@ -9,6 +9,76 @@ await vi.hoisted(async () => {
 })
 
 it.each([
+  [':te', ':test', ':test'],
+  [':@al', '@alice', ':@alice'],
+  [':test.la', '.large', ':test.large']
+])(
+  'continues %s from the effect action button',
+  async (prefix, candidateText, completed) => {
+    const wrapper = await makeInput()
+    await focus(wrapper)
+    wrapper.vm.insertText(prefix)
+    await nextTick()
+    const menu = wrapper.getComponent(DropdownSuggester)
+    const candidate = menu
+      .props('candidates')
+      ?.find(candidate => candidate.word.text === candidateText)
+    if (!candidate) throw new Error('Missing stamp candidate')
+    expect(candidate.canAppendEffect).toBe(true)
+
+    menu.vm.$emit('appendEffect', candidate.word)
+    await nextTick()
+
+    expect(lastValue(wrapper)).toBe(completed + '.')
+    expect(menu.props('isShown')).toBe(true)
+    expect(menu.props('candidates')).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          word: { type: 'stamp-effect', text: '.rotate' },
+          canAppendEffect: true
+        })
+      ])
+    )
+  }
+)
+
+it('does not offer the effect action for regular mentions or search', async () => {
+  for (const mode of ['message', 'search'] as const) {
+    const wrapper = await makeInput('', mode)
+    await focus(wrapper)
+    wrapper.vm.insertText(mode === 'message' ? '@al' : 'from:al')
+    await nextTick()
+    const candidates = wrapper
+      .getComponent(DropdownSuggester)
+      .props('candidates')
+    expect(candidates?.length).toBeGreaterThan(0)
+    expect(candidates?.some(candidate => candidate.canAppendEffect)).toBe(false)
+  }
+})
+
+it('keeps the animation limit when continuing from the effect button', async () => {
+  const wrapper = await makeInput()
+  await focus(wrapper)
+  const prefix = ':test.atsumori.atsumori.conga.flashy'
+  wrapper.vm.insertText(prefix + '.atsu')
+  await nextTick()
+  const menu = wrapper.getComponent(DropdownSuggester)
+  const candidate = menu.props('candidates')?.[0]
+  if (!candidate) throw new Error('Missing fifth animation candidate')
+
+  menu.vm.$emit('appendEffect', candidate.word)
+  await nextTick()
+
+  expect(lastValue(wrapper)).toBe(prefix + '.atsumori.')
+  expect(
+    menu
+      .props('candidates')
+      ?.map(candidate => candidate.word.text)
+      .sort()
+  ).toEqual(['.ex-large', '.large', '.small'])
+})
+
+it.each([
   [':te', ':test'],
   [':@al', ':@alice'],
   [':test.la', ':test.large']
