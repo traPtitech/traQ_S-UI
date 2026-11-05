@@ -1,6 +1,6 @@
 <template>
   <router-link :to="to">
-    <div :class="$style.container">
+    <div :class="$style.container" :data-embedded="$boolAttr(embedded)">
       <div :class="$style.header">
         <UserName
           v-if="titleType === 'user'"
@@ -67,13 +67,15 @@ const props = withDefaults(
     message: Message | ActivityTimelineMessage
     lineClampContent?: boolean
     showContextMenuButton?: boolean
+    embedded?: boolean
     to: string
   }>(),
   {
     titleType: 'channel' as const,
     hideSubtitle: false,
     lineClampContent: false,
-    showContextMenuButton: false
+    showContextMenuButton: false,
+    embedded: false
   }
 )
 
@@ -106,6 +108,10 @@ const onClickContextMenuButton = (e: MouseEvent) => {
   @include background-primary;
   border-radius: 4px;
   padding: 8px 16px;
+  &[data-embedded] {
+    padding: 0;
+    background: transparent;
+  }
 }
 .header {
   display: flex;

@@ -6,7 +6,7 @@
     :data-type="type"
     :data-is-danger="$boolAttr(isDanger)"
   >
-    <div :class="$style.label">
+    <div :class="$style.label" :data-compact="$boolAttr(compact)">
       <AIcon v-if="icon" :mdi="mdi" :name="icon" />
       {{ label }}
     </div>
@@ -47,6 +47,7 @@ type Props = {
   disabled?: boolean
   icon?: string
   mdi?: boolean
+  compact?: boolean
 } & (NonDangerType | DangerType)
 
 const {
@@ -55,7 +56,8 @@ const {
   disabled = false,
   type = 'primary',
   isDanger = false,
-  mdi = false
+  mdi = false,
+  compact = false
 } = defineProps<Props>()
 
 const spinnerColor = computed(() => {
@@ -112,6 +114,9 @@ const spinnerColor = computed(() => {
   justify-content: center;
   gap: 8px;
   margin: 8px 32px;
+  &[data-compact] {
+    margin-inline: 24px;
+  }
   .container[data-is-loading] & {
     visibility: hidden;
   }

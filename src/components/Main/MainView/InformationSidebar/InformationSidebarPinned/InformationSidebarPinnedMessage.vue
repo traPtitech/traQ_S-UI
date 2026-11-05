@@ -29,6 +29,7 @@ import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
 import useContextMenu from '/@/composables/useContextMenu'
 import { constructMessagesPath } from '/@/router'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useThreadsStore } from '/@/store/entities/threads'
 
 import InformationSidebarPinnedMessageContextMenu from './InformationSidebarPinnedMessageContextMenu.vue'
 
@@ -38,8 +39,12 @@ const props = defineProps<{
 
 const { position, toggle, close } = useContextMenu()
 const { channelsMap } = useChannelsStore()
+const { threadsMap } = useThreadsStore()
 
 const isArchived = computed(
-  () => channelsMap.value.get(props.message.channelId)?.archived ?? false
+  () =>
+    threadsMap.value.get(props.message.channelId)?.archived ??
+    channelsMap.value.get(props.message.channelId)?.archived ??
+    false
 )
 </script>
