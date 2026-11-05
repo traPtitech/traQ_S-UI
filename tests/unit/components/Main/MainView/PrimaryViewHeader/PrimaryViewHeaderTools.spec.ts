@@ -7,6 +7,7 @@ import boolAttr from '/@/bool-attr'
 import ChannelHeaderTools from '/@/components/Main/MainView/ChannelView/ChannelHeader/ChannelHeaderTools.vue'
 import useChannelState from '/@/components/Main/MainView/ChannelView/ChannelHeader/composables/useChannelState'
 import ThreadHeaderTools from '/@/components/Main/MainView/ThreadView/ThreadHeader/ThreadHeaderTools.vue'
+import ThreadHeaderToolsMenu from '/@/components/Main/MainView/ThreadView/ThreadHeader/ThreadHeaderToolsMenu.vue'
 import { useQall } from '/@/composables/qall/useQall'
 import useChannelSubscriptionState from '/@/composables/subscription/useChannelSubscriptionState'
 import useResponsive from '/@/composables/useResponsive'
@@ -165,10 +166,49 @@ describe('ThreadHeaderTools integration', () => {
       expect(wrapper.findAll('[role="button"]')).toHaveLength(2)
       expect(wrapper.find('[aria-pressed]').exists()).toBe(false)
       await wrapper.get('[aria-label="その他"]').trigger('click')
+      const items = wrapper.findAll('[role="menuitem"]')
+      expect(items.map(item => item.text())).toEqual([
+        '通知設定',
+        'スレッドリンクをコピー',
+        '名前を変更',
+        'アーカイブ'
+      ])
+      await items[0]?.trigger('click')
       expect(wrapper.find('[role="menu"]').exists()).toBe(false)
     }
     expect(wrapper.emitted('clickMore')).toHaveLength(2)
     expect(apis.addMyStar).not.toHaveBeenCalled()
     expect(apis.removeMyStar).not.toHaveBeenCalled()
+  })
+})
+
+describe('ThreadHeaderToolsMenu', () => {
+  it('shows the design items and respects search and archive display states', async () => {
+    const wrapper = mount(ThreadHeaderToolsMenu, {
+      attachTo: document.body,
+      global
+    })
+    wrappers.push(wrapper)
+    expect(
+      wrapper.findAll('[role="menuitem"]').map(item => item.text())
+    ).toEqual([
+      '通知設定',
+      'スレッド内検索',
+      'スレッドリンクをコピー',
+      '名前を変更',
+      'アーカイブ'
+    ])
+    expect(document.activeElement).toBe(
+      wrapper.get('[role="menuitem"]').element
+    )
+
+    await wrapper.setProps({ showSearch: false, isArchived: true })
+    expect(wrapper.text()).not.toContain('スレッド内検索')
+    expect(wrapper.text()).toContain('アーカイブ解除')
+
+    await wrapper.setProps({ isParentArchived: true })
+    expect(wrapper.text()).not.toContain('アーカイブ')
+    await wrapper.get('[role="menuitem"]').trigger('keydown', { key: 'Enter' })
+    expect(wrapper.emitted('clickItem')).toHaveLength(1)
   })
 })

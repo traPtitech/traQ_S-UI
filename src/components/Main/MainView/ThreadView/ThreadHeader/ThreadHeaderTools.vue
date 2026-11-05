@@ -3,7 +3,14 @@
     :notification="notification"
     @click-notification="changeNotification"
     @click-more="emit('clickMore')"
-  />
+  >
+    <template #menu="{ close }">
+      <ThreadHeaderToolsMenu
+        :show-search="isSearchEnabled"
+        @click-item="close"
+      />
+    </template>
+  </PrimaryViewHeaderTools>
 </template>
 
 <script lang="ts" setup>
@@ -11,9 +18,13 @@ import { computed, ref } from 'vue'
 
 import PrimaryViewHeaderTools from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderTools.vue'
 
+import ThreadHeaderToolsMenu from './ThreadHeaderToolsMenu.vue'
+
 const emit = defineEmits<{
   (e: 'clickMore'): void
 }>()
+
+const isSearchEnabled = window.traQConfig.enableSearch ?? false
 
 const notificationDescriptions = {
   'notified-or-subscribed': 'チャンネルの通知設定を引き継ぐ',
