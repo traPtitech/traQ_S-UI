@@ -102,27 +102,44 @@ it('unlocks when preparation fails and allows a retry', async () => {
   expect(await posting.postMessage()).toBe(true)
 })
 
-it('resolves typed references on posting and keeps explicit IDs and literal text', async () => {
+it('posts plain names as text while preserving explicitly selected references', async () => {
+  const selected = [
+    { type: 'user', raw: '@alice', id: 'selected-user' },
+    { type: 'group', raw: '@team', id: 'selected-group' },
+    { type: 'channel', raw: '#general', id: 'selected-channel' }
+  ] as const
+  const literal =
+    '`@alice` $@team$ https://example.test/#general [#general](https://example.test) :@alice: #missing'
+  const text = `@Alice @team #general ${selected.map(encodeReference).join(' ')}\n${literal}`
+  mocks.state.text = text
+
+  expect(await usePostMessage('channel').postMessage()).toBe(true)
+  expect(mocks.post).toHaveBeenCalledExactlyOnceWith('channel', {
+    content: text
+  })
+})
+
+it.each(['@alice', '＠Alice', '@team', '#general', '＃general'])(
+  'does not turn plain %s into a reference when posting',
+  async text => {
+    mocks.state.text = text
+    expect(await usePostMessage('channel').postMessage()).toBe(true)
+    expect(mocks.post).toHaveBeenCalledExactlyOnceWith('channel', {
+      content: text
+    })
+  }
+)
+
+it('does not restore references made literal by Markdown', async () => {
   const selected = encodeReference({
     type: 'user',
     raw: '@alice',
     id: 'selected-id'
   })
-  const literal =
-    '`@alice` $@team$ https://example.test/#general [#general](https://example.test) :@alice: #missing'
-  mocks.state.text = `@Alice @team #general ${selected}\n${literal}`
-
+  mocks.state.text = '`' + selected + '`\n' + selected
   expect(await usePostMessage('channel').postMessage()).toBe(true)
   expect(mocks.post).toHaveBeenCalledExactlyOnceWith('channel', {
-    content:
-      [
-        encodeReference({ type: 'user', raw: '@Alice', id: 'user-id' }),
-        encodeReference({ type: 'group', raw: '@team', id: 'group-id' }),
-        encodeReference({ type: 'channel', raw: '#general', id: 'channel-id' }),
-        selected
-      ].join(' ') +
-      '\n' +
-      literal
+    content: '`@alice`\n' + selected
   })
 })
 

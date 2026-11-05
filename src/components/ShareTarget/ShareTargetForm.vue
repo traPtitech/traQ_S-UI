@@ -45,7 +45,7 @@ const { detail } = useMeStore()
 const homeChannelId = computed(() => detail.value?.homeChannel ?? nilUuid)
 
 const { fetchChannels } = useChannelsStore()
-// 投稿先チャンネルとメッセージでの置換に必要
+// 投稿先チャンネルと入力候補に必要
 fetchChannels()
 const { channelOptions } = useChannelOptions('-----')
 
@@ -58,7 +58,7 @@ watch(
   { immediate: true }
 )
 
-// メッセージでの置換に必要
+// 入力候補に必要
 const { fetchUsers } = useUsersStore()
 fetchUsers()
 const { fetchUserGroups } = useGroupsStore()

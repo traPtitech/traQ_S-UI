@@ -3,13 +3,7 @@ import {
   isLiteralSource
 } from '/@/lib/markdown/analysis'
 import { getMarkdown } from '/@/lib/markdown/parser'
-import { resolveMessageReferences } from '/@/lib/message/content'
-
-const resolver = {
-  userId: () => 'user-id',
-  groupId: () => undefined,
-  channelId: () => 'channel-id'
-}
+import { normalizeMessageSource } from '/@/lib/message/content'
 
 it.each([
   '``` @alice',
@@ -23,7 +17,7 @@ it.each([
   '`@alice` $@alice$',
   '$$\n@alice\n$$'
 ])(
-  'keeps parser literal regions out of message reference resolution: %s',
+  'preserves parser literal regions during message normalization: %s',
   text => {
     const analysis = analyzeMarkdownSource(text)
     const literals = analysis.nodes.filter(isLiteralSource)
@@ -32,7 +26,7 @@ it.each([
     expect(
       literals.some(node => text.slice(node.from, node.to).includes('@alice'))
     ).toBe(true)
-    expect(resolveMessageReferences(text, resolver)).toBe(text)
+    expect(normalizeMessageSource(text)).toBe(text)
 
     for (const node of analysis.nodes) {
       expect(node.from).toBeGreaterThanOrEqual(0)

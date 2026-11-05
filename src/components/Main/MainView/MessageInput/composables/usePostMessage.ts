@@ -6,12 +6,10 @@ import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
 import { nilUuid } from '/@/lib/basic/uuid'
 import { isEmbeddedLink } from '/@/lib/markdown/markdown'
-import { resolveMessageReferences } from '/@/lib/message/content'
+import { normalizeMessageSource } from '/@/lib/message/content'
 import { uploadAttachments } from '/@/lib/message/uploadAttachments'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
 import { useChannelsStore } from '/@/store/entities/channels'
-import { useGroupsStore } from '/@/store/entities/groups'
-import { useUsersStore } from '/@/store/entities/users'
 import type { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
 import { useToastStore } from '/@/store/ui/toast'
 
@@ -46,12 +44,9 @@ const usePostMessage = (
   inputStateKey = channelId
 ) => {
   const { getMessageInputState } = useMessageInputStateStatic()
-  const { channelIdToShortPathString, channelPathStringToId } = useChannelPath()
+  const { channelIdToShortPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
-  const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
-  const { usersMapInitialFetchPromise, findUserByName } = useUsersStore()
-  const { userGroupsMapInitialFetchPromise, getUserGroupByName } =
-    useGroupsStore()
+  const { channelsMap } = useChannelsStore()
 
   const isForce = computed(() => channelsMap.value.get(unref(channelId))?.force)
 
@@ -83,23 +78,8 @@ const usePostMessage = (
     let posted = false
 
     try {
-      await Promise.all([
-        usersMapInitialFetchPromise,
-        userGroupsMapInitialFetchPromise,
-        bothChannelsMapInitialFetchPromise
-      ])
-
-      const embeddedText = resolveMessageReferences(state.text, {
-        userId: name => findUserByName(name)?.id,
-        groupId: name => getUserGroupByName(name)?.id,
-        channelId: path => {
-          try {
-            return channelPathStringToId(path)
-          } catch {
-            return undefined
-          }
-        }
-      })
+      // 確定済みの参照を保ち、プレーンテキストを送信時に名前解決しない。
+      const embeddedText = normalizeMessageSource(state.text)
 
       const dummyFileUrls = state.attachments.map(() =>
         buildFilePathForPost(nilUuid)

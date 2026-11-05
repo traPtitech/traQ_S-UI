@@ -47,12 +47,6 @@ export const isLiteralSource = (node: MarkdownSourceNode) =>
   node.kind === 'math' ||
   node.kind === 'math-block'
 
-export const protectsMessageReferences = (node: MarkdownSourceNode) =>
-  isLiteralSource(node) ||
-  node.kind === 'link' ||
-  node.kind === 'image' ||
-  node.kind === 'stamp'
-
 let parser: ReturnType<typeof createMarkdownParser>['md'] | undefined
 
 const getParser = () => {
