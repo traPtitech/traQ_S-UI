@@ -14,11 +14,11 @@ for (const [width, markdown] of [
     page,
     input,
     load,
-    selectDocumentOffsets
+    selectEditorOffsets
   }) => {
     await page.setViewportSize({ width, height: 720 })
     await load({ text: source, markdown })
-    await selectDocumentOffsets(1)
+    await selectEditorOffsets(1)
     const token = input.locator('.reference-token')
     await expect(token).toHaveText(label)
 

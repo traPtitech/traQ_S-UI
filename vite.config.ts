@@ -12,6 +12,12 @@ import packageJson from './package.json' with { type: 'json' }
 import { getBackendOrigin } from './tests/e2e/config.ts'
 import webManifest from './webmanifest.ts'
 
+const nodeTests = [
+  'tests/unit/lib/basic/!(timer).spec.ts',
+  'tests/unit/lib/markdown/{source,syntax}.spec.ts',
+  'tests/unit/lib/referenceInput/suggestion.spec.ts'
+]
+
 const keepAliveAgent = new HttpsAgent({ keepAlive: true })
 
 const localhostCerts =
@@ -123,14 +129,32 @@ export default defineConfig(({ mode }) =>
       env: {
         TZ: 'UTC'
       },
-      include: ['tests/unit/**/*.spec.ts'],
       globals: true,
-      setupFiles: [
-        'tests/unit/setup.ts',
-        'tests/unit/expectExtends.ts',
-        'fake-indexeddb/auto'
+      projects: [
+        {
+          extends: true,
+          test: {
+            name: 'node',
+            include: nodeTests,
+            environment: 'node',
+            setupFiles: ['tests/unit/expectExtends.ts']
+          }
+        },
+        {
+          extends: true,
+          test: {
+            name: 'dom',
+            include: ['tests/unit/**/*.spec.ts'],
+            exclude: nodeTests,
+            environment: 'jsdom',
+            setupFiles: [
+              'tests/unit/setup.ts',
+              'tests/unit/expectExtends.ts',
+              'fake-indexeddb/auto'
+            ]
+          }
+        }
       ],
-      environment: 'jsdom',
       reporters:
         process.env.GITHUB_ACTIONS === 'true'
           ? ['default', 'github-actions']

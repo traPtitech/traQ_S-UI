@@ -5,11 +5,11 @@ for (const width of [900, 390]) {
     page,
     input,
     load,
-    selectDocumentOffsets
+    selectEditorOffsets
   }) => {
     await page.setViewportSize({ width, height: 720 })
     await load({ text: 'abcde', markdown: true })
-    await selectDocumentOffsets(1, 3)
+    await selectEditorOffsets(1, 3)
     await page.getByRole('button', { name: 'スタンプを挿入' }).click()
 
     const search = page.getByPlaceholder('スタンプを検索')

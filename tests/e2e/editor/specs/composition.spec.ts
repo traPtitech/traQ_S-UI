@@ -14,12 +14,12 @@ for (const context of [
         page,
         input,
         load,
-        selectDocumentOffsets
+        selectEditorOffsets
       }) => {
         const prefix = 'before '
         await load({ ...context, text: prefix + sample })
 
-        await selectDocumentOffsets(
+        await selectEditorOffsets(
           prefix.length + (selection === 'clause' ? 5 : sample.length),
           prefix.length + (selection === 'clause' ? 12 : 0)
         )
@@ -98,11 +98,11 @@ test('keeps surrounding Markdown stable while composing and cancelling', async (
   page,
   input,
   load,
-  selectDocumentOffsets
+  selectEditorOffsets
 }) => {
   const source = '**bold** before '
   await load({ text: source, markdown: true })
-  await selectDocumentOffsets(source.length)
+  await selectEditorOffsets(source.length)
 
   await input.dispatchEvent('compositionstart')
 
@@ -172,11 +172,11 @@ test.describe('Chromium CDP composition', () => {
         page,
         input,
         load,
-        selectDocumentOffsets
+        selectEditorOffsets
       }) => {
         const prefix = 'before '
         await load({ text: prefix, markdown })
-        await selectDocumentOffsets(prefix.length)
+        await selectEditorOffsets(prefix.length)
         const session = await page.context().newCDPSession(page)
 
         await input.evaluate(element => {

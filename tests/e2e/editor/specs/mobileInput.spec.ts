@@ -61,11 +61,11 @@ for (const device of ['iPad Pro 11', 'Desktop Safari']) {
           page,
           input,
           load,
-          selectDocumentOffsets
+          selectEditorOffsets
         }) => {
           await page.clock.install()
           await load({ text: 'hello', markdown })
-          await selectDocumentOffsets(5)
+          await selectEditorOffsets(5)
 
           for (let count = 1; count <= 2; count++) {
             if (software) await softwareEnter(input)
@@ -92,11 +92,11 @@ for (const device of ['iPad Pro 11', 'Desktop Safari']) {
         page,
         input,
         load,
-        selectDocumentOffsets
+        selectEditorOffsets
       }) => {
         await page.clock.install()
         await load({ text: '- item', markdown: true })
-        await selectDocumentOffsets(6)
+        await selectEditorOffsets(6)
 
         await softwareEnter(input, inputType)
         await page.clock.runFor(250)

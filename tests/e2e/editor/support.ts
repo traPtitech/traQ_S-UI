@@ -8,7 +8,8 @@ export type EditorElement = HTMLElement & { editor: Editor }
 export const test = base.extend<{
   input: Locator
   load: (draft: EditorDraft) => Promise<void>
-  selectDocumentOffsets: (anchor: number, head?: number) => Promise<void>
+  /** Paragraph offsets; each reference atom occupies one position. */
+  selectEditorOffsets: (anchor: number, head?: number) => Promise<void>
   modifier: 'Meta' | 'Control'
 }>({
   page: [
@@ -72,7 +73,7 @@ export const test = base.extend<{
     })
   },
 
-  selectDocumentOffsets: async ({ input }, use) => {
+  selectEditorOffsets: async ({ input }, use) => {
     await use(async (anchor, head = anchor) => {
       await input.focus()
 

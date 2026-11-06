@@ -86,3 +86,78 @@ for (const markdown of [false, true]) {
     await expectSubmittedContent(page, isMobile, selected + '#times')
   })
 }
+
+test('consumes a submission once and starts a fresh undo history', async ({
+  page,
+  input,
+  load,
+  modifier,
+  isMobile
+}) => {
+  const { promise: response, resolve: finish } = Promise.withResolvers<void>()
+  let requests = 0
+
+  await page.route('**/api/v3/channels/mobile-person/messages', async route => {
+    requests++
+    await response
+    await route.fulfill({ json: {} })
+  })
+
+  await load({ text: '', markdown: true })
+  await input.fill('sent message')
+  if (isMobile) await page.getByTestId('send').tap()
+  else await input.press(`${modifier}+Enter`)
+  await expect(input).toHaveAttribute('aria-readonly', 'true')
+  if (!isMobile) await expect(input).toBeFocused()
+  await expect.poll(() => requests).toBe(1)
+  await page.getByTestId('send').click()
+  expect(requests).toBe(1)
+
+  finish()
+  await expect(page.getByTestId('posts')).toHaveText('1')
+  await expect(page.getByTestId('source')).toHaveText('')
+  await expect(input).toHaveAttribute('aria-readonly', 'false')
+  await input.press(`${modifier}+z`)
+  await expect(page.getByTestId('source')).toHaveText('')
+})
+
+test('preserves a failed submission and permits retry', async ({
+  page,
+  input,
+  load,
+  modifier,
+  isMobile
+}) => {
+  let requests = 0
+  await page.route('**/api/v3/channels/mobile-person/messages', route => {
+    requests++
+    return route.fulfill({ status: requests === 1 ? 500 : 201, json: {} })
+  })
+
+  await load({ text: 'retry this draft', markdown: true })
+  if (isMobile) await page.getByTestId('send').tap()
+  else await input.press(`${modifier}+Enter`)
+  await expect.poll(() => requests).toBe(1)
+  await expect(input).toHaveAttribute('aria-readonly', 'false')
+  await expect(page.getByTestId('source')).toHaveText('retry this draft')
+  await expect(page.getByTestId('posts')).toHaveText('0')
+
+  if (isMobile) await page.getByTestId('send').tap()
+  else await input.press(`${modifier}+Enter`)
+  await expect(page.getByTestId('posts')).toHaveText('1')
+  await expect(page.getByTestId('source')).toHaveText('')
+  expect(requests).toBe(2)
+})
+
+test('switches identical drafts by document identity', async ({
+  page,
+  input,
+  load,
+  modifier
+}) => {
+  await load({ documentKey: 'first', text: '', markdown: false })
+  await input.fill('same content')
+  await load({ documentKey: 'second', text: 'same content', markdown: false })
+  await input.press(`${modifier}+z`)
+  await expect(page.getByTestId('source')).toHaveText('same content')
+})

@@ -38,14 +38,14 @@ test('keeps literal math boundaries editable alongside rendered text', async ({
   page,
   input,
   load,
-  selectDocumentOffsets,
+  selectEditorOffsets,
   modifier
 }) => {
   const text = '**before** $x^2$ **after**'
   const boundary = text.indexOf('$x^2$') + '$x^2$'.length
   await load({ text, markdown: true })
   await expect(input.locator('.markdown-input-source')).toHaveText('$x^2$')
-  await selectDocumentOffsets(boundary)
+  await selectEditorOffsets(boundary)
   await input.press('ArrowLeft')
   await page.keyboard.insertText('+y')
   await expect(page.getByTestId('source')).toHaveText(
@@ -63,7 +63,7 @@ for (const direction of ['caret', 'forward', 'backward'] as const) {
     page,
     input,
     load,
-    selectDocumentOffsets,
+    selectEditorOffsets,
     modifier
   }) => {
     const text = '**before** $x^2$ **after**'
@@ -73,7 +73,7 @@ for (const direction of ['caret', 'forward', 'backward'] as const) {
     const anchor = direction === 'forward' ? start : end
     const head = direction === 'backward' ? start : end
     await load({ text, markdown: true })
-    await selectDocumentOffsets(boundary)
+    await selectEditorOffsets(boundary)
 
     const before = await input.evaluate(
       (element: EditorElement, { anchor, head }) => {
@@ -142,7 +142,9 @@ test('keeps the composer focused through posting and allows moving focus away', 
 }) => {
   await load({ text: 'sending', markdown: false })
   await input.focus()
-  await load({ text: 'sending', markdown: false, readonly: true })
+  await page.evaluate(() =>
+    window.editorHarness.updateOptions({ readonly: true })
+  )
 
   await expect(input).toBeFocused()
   await expect(input).toHaveAttribute('aria-readonly', 'true')
@@ -152,7 +154,9 @@ test('keeps the composer focused through posting and allows moving focus away', 
   await page.keyboard.type('next message')
   await expect(page.getByTestId('source')).toHaveText('next message')
 
-  await load({ text: 'next message', markdown: false, readonly: true })
+  await page.evaluate(() =>
+    window.editorHarness.updateOptions({ readonly: true })
+  )
   const outside = page.getByTestId('outside')
   await outside.focus()
   await load({ text: '', markdown: false })
@@ -205,7 +209,7 @@ for (const markdown of [false, true]) {
       page,
       input,
       load,
-      selectDocumentOffsets,
+      selectEditorOffsets,
       modifier
     }) => {
       await load({ text: '', markdown })
@@ -229,7 +233,7 @@ for (const markdown of [false, true]) {
       }
 
       await load({ text: 'typed', markdown })
-      await selectDocumentOffsets(5)
+      await selectEditorOffsets(5)
       await input.press('Enter')
 
       await expect(page.getByTestId('source')).toHaveJSProperty(
@@ -263,10 +267,10 @@ for (const markdown of [false, true]) {
       page,
       input,
       load,
-      selectDocumentOffsets
+      selectEditorOffsets
     }) => {
       await load({ text: 'alpha beta', markdown })
-      await selectDocumentOffsets(5)
+      await selectEditorOffsets(5)
       const padding = input.locator('..').locator('..')
       const frame = padding.locator('..')
 
@@ -311,11 +315,11 @@ for (const markdown of [false, true]) {
       page,
       input,
       load,
-      selectDocumentOffsets
+      selectEditorOffsets
     }) => {
       const text = '**aaa** [bbb](https://example.test) $x^2$'
       await load({ text, markdown })
-      await selectDocumentOffsets(7)
+      await selectEditorOffsets(7)
       await input.press('ArrowLeft')
 
       await expect
@@ -381,10 +385,10 @@ test('supports sibling items, continuation lines, child items, and quote exit', 
   page,
   input,
   load,
-  selectDocumentOffsets
+  selectEditorOffsets
 }) => {
   await load({ text: '- aaa', markdown: true })
-  await selectDocumentOffsets(5)
+  await selectEditorOffsets(5)
   await input.press('Enter')
 
   await expect(page.getByTestId('source')).toHaveJSProperty(
@@ -411,7 +415,7 @@ test('supports sibling items, continuation lines, child items, and quote exit', 
   await expect(input).toBeFocused()
 
   await load({ text: '> quote', markdown: true })
-  await selectDocumentOffsets(7)
+  await selectEditorOffsets(7)
   await input.press('Enter')
 
   await expect(page.getByTestId('source')).toHaveJSProperty(
@@ -431,11 +435,11 @@ test('indents a selection, outdents it, and undoes without losing focus', async 
   page,
   input,
   load,
-  selectDocumentOffsets,
+  selectEditorOffsets,
   modifier
 }) => {
   await load({ text: 'aaa\nbbb', markdown: true })
-  await selectDocumentOffsets(0, 7)
+  await selectEditorOffsets(0, 7)
   await input.press('Tab')
 
   await expect(page.getByTestId('source')).toHaveJSProperty(
@@ -499,13 +503,15 @@ test('toggles the Markdown flag without changing a draft or selection', async ({
   page,
   input,
   load,
-  selectDocumentOffsets
+  selectEditorOffsets
 }) => {
   const text = '**bold**'
   await load({ text, markdown: true })
-  await selectDocumentOffsets(4)
+  await selectEditorOffsets(4)
   await expect(input.locator('.markdown-input-strong')).toHaveText('bold')
-  await load({ text, markdown: false })
+  await page.evaluate(() =>
+    window.editorHarness.updateOptions({ markdown: false })
+  )
   await expect(input.locator('.markdown-input-strong')).toHaveCount(0)
   await expect
     .poll(() => caret(input))

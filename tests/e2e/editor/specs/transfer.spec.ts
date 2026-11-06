@@ -38,10 +38,10 @@ for (const operation of ['copy', 'cut', 'paste', 'paste HTML'] as const) {
     input,
     load,
     page,
-    selectDocumentOffsets
+    selectEditorOffsets
   }) => {
     await load({ text: 'abcde', markdown: false })
-    await selectDocumentOffsets(0, 1)
+    await selectEditorOffsets(0, 1)
     page.on('dialog', dialog => dialog.accept())
 
     const copied = await input.evaluate((element: EditorElement, operation) => {
@@ -96,10 +96,10 @@ test('inserts dropped text at its coordinates while the caret is elsewhere', asy
   page,
   input,
   load,
-  selectDocumentOffsets
+  selectEditorOffsets
 }) => {
   await load({ text: 'before after', markdown: false })
-  await selectDocumentOffsets(12)
+  await selectEditorOffsets(12)
 
   const drop = await input.evaluate(element => {
     const text = element.querySelector('p')?.firstChild

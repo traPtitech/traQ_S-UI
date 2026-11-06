@@ -5,16 +5,16 @@
         v-if="mode === 'message'"
         ref="messageInput"
         v-model="text"
-        :document-key="documentRevision"
-        :is-posting="readonly"
+        :document-key="documentKey"
+        :is-posting="readonly || isPosting"
         simple-padding
-        @post-message="posts++"
+        @post-message="submitDraft"
       />
 
       <ReferenceInput
         v-else
         v-model="text"
-        :document-key="documentRevision"
+        :document-key="documentKey"
         mode="search"
         placeholder="検索"
         :readonly="readonly"
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, toRef } from 'vue'
 
 import { until } from '@vueuse/core'
 
@@ -47,6 +47,7 @@ import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerCont
 import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
 import useHtmlDataset from '/@/composables/document/useHtmlDataset'
 import useRecentKeyboardInput from '/@/composables/dom/useRecentKeyboardInput'
+import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import { resolveTheme } from '/@/lib/theme/resolve'
 import { getThemeVariables } from '/@/lib/theme/variables'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
@@ -55,12 +56,13 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
-import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 
 import type { EditorDraft } from './harness'
 
-const text = ref('')
-const documentRevision = ref(0)
+const draftKey = ref('editor-0')
+let nextDocument = 0
+const { state, documentKey } = useMessageInputState(draftKey)
+const text = toRef(state, 'text')
 const mode = ref<EditorDraft['mode']>('message')
 const readonly = ref(false)
 const posts = ref(0)
@@ -134,12 +136,10 @@ for (const name of [
 stampsMapFetched.value = true
 
 const users = useUsersStore()
-const inputStates = useMessageInputStateStore()
-const { postMessage } = usePostMessage('mobile-person', 'share-target')
+const { postMessage, isPosting } = usePostMessage('mobile-person', draftKey)
 
 // Exercise the production posting pipeline; the test intercepts the API request.
 const submitDraft = async () => {
-  inputStates.setStore('share-target', { text: text.value, attachments: [] })
   if (await postMessage()) posts.value++
 }
 
@@ -167,12 +167,19 @@ window.editorHarness = {
     await nextTick()
   },
 
+  async updateOptions(options) {
+    if (options.markdown !== undefined)
+      await flags.updateFeatureFlagStatus('inline_markdown', options.markdown)
+    if (options.readonly !== undefined) readonly.value = options.readonly
+    await nextTick()
+  },
+
   async load(draft) {
     await ready
     await flags.updateFeatureFlagStatus('inline_markdown', draft.markdown)
     mode.value = draft.mode ?? 'message'
     readonly.value = draft.readonly ?? false
-    if (text.value !== draft.text) documentRevision.value++
+    draftKey.value = draft.documentKey ?? `editor-${++nextDocument}`
     text.value = draft.text
     posts.value = 0
     await nextTick()
