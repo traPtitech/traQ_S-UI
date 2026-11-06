@@ -104,7 +104,9 @@ test('consumes a submission once and starts a fresh undo history', async ({
   })
 
   await load({ text: '', markdown: true })
-  await input.fill('sent message')
+  // Firefox fill() commits composition and triggers the IME Enter guard.
+  await input.pressSequentially('sent message')
+  await expect(page.getByTestId('source')).toHaveText('sent message')
   if (isMobile) await page.getByTestId('send').tap()
   else await input.press(`${modifier}+Enter`)
   await expect(input).toHaveAttribute('aria-readonly', 'true')

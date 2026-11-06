@@ -56,6 +56,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
+import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 
 import type { EditorDraft } from './harness'
 
@@ -144,6 +145,7 @@ const submitDraft = async () => {
 }
 
 const ready = Promise.all([
+  useMessageInputStateStore().restoringPromise,
   users.fetchUsers(),
   useGroupsStore().fetchUserGroups(),
   until(flags.restoring).toBe(false)
