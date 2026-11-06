@@ -4,7 +4,12 @@
       <div :class="$style.header">
         <FileModalContentHeader :file-id="fileMeta.id" is-white />
       </div>
-      <video controls draggable="false" :src="fileRawPath" />
+      <video
+        controls
+        draggable="false"
+        :src="fileRawPath"
+        :poster="filePosterPath"
+      />
       <div :class="$style.footer">
         <FileModalContentFooter :file-id="fileMeta.id" is-white />
       </div>
@@ -21,7 +26,7 @@ const props = defineProps<{
   fileId: string
 }>()
 
-const { fileMeta, fileRawPath } = useFileMeta(props)
+const { fileMeta, fileRawPath, filePosterPath } = useFileMeta(props)
 </script>
 
 <style lang="scss" module>
