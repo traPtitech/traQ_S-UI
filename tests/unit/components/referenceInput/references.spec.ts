@@ -1,14 +1,20 @@
 import { nextTick } from 'vue'
 
-import { EditorContent } from '@tiptap/vue-3'
-
 import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
+import { encodeReference } from '/@/lib/references'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
 
-import { createUser } from '../../fixtures/entities'
+import {
+  createChannel,
+  createUser,
+  createUserGroup
+} from '../../../fixtures/entities'
 import {
   embedded,
   focus,
+  getEditor,
   installReferenceInputFixture,
   lastValue,
   makeInput,
@@ -25,8 +31,7 @@ it('uses the native caret when software Backspace precedes selectionchange', asy
   const wrapper = await makeInput({ source: embedded + 'abc' })
   await focus(wrapper)
 
-  const editor = wrapper.getComponent(EditorContent).props('editor')
-  if (!editor) throw new Error('Editor is not mounted')
+  const editor = getEditor(wrapper)
 
   editor.commands.setTextSelection(2)
   const text = editor.view.dom.querySelector('p')?.lastChild
@@ -52,8 +57,7 @@ it.each(['message', 'search'] as const)(
   'does not dispatch transactions while an idle %s input is mounted',
   async mode => {
     const wrapper = await makeInput({ mode })
-    const editor = wrapper.getComponent(EditorContent).props('editor')
-    if (!editor) throw new Error('Editor is not mounted')
+    const editor = getEditor(wrapper)
 
     await new Promise(resolve => setTimeout(resolve, 80))
     const dispatch = vi.spyOn(editor.view, 'dispatch')
@@ -68,10 +72,7 @@ it('reopens a reference for a software keyboard Backspace without keydown', asyn
   const wrapper = await makeInput({ source: embedded })
   await focus(wrapper)
 
-  wrapper
-    .findComponent(EditorContent)
-    .props('editor')
-    ?.commands.setTextSelection(2)
+  getEditor(wrapper)?.commands.setTextSelection(2)
 
   const event = new InputEvent('beforeinput', {
     inputType: 'deleteContentBackward',
@@ -95,10 +96,7 @@ it('does not reopen a reference during composition', async () => {
   const wrapper = await makeInput({ source: embedded })
   await focus(wrapper)
 
-  wrapper
-    .findComponent(EditorContent)
-    .props('editor')
-    ?.commands.setTextSelection(2)
+  getEditor(wrapper)?.commands.setTextSelection(2)
 
   const event = new InputEvent('beforeinput', {
     inputType: 'deleteContentBackward',
@@ -158,3 +156,50 @@ it('updates a renamed label and falls back after deletion without modifying the 
   expect(wrapper.text()).toContain('@alice')
   expect(lastValue(wrapper)).toBeUndefined()
 })
+
+it.each(['user', 'group', 'channel'] as const)(
+  'renames a %s reference without rebuilding adjacent Markdown or changing undo',
+  async type => {
+    const id = 'renamed-id'
+    const rename = (name: string) => {
+      if (type === 'user')
+        useUsersStore().usersMap.value.set(id, createUser({ id, name }))
+      if (type === 'group')
+        useGroupsStore().userGroupsMap.value.set(
+          id,
+          createUserGroup({ id, name })
+        )
+      if (type === 'channel')
+        useChannelsStore().channelsMap.value.set(
+          id,
+          createChannel({ id, name })
+        )
+    }
+
+    rename('before')
+    const reference = encodeReference({
+      type,
+      id,
+      raw: type === 'channel' ? '#before' : '@before'
+    })
+    const source = reference + ' :test: tail'
+    const wrapper = await makeInput({ source })
+    await wrapper.setProps({ markdown: true })
+    await focus(wrapper)
+    const editor = getEditor(wrapper)
+    editor.commands.setTextSelection(editor.state.doc.content.size - 1)
+    editor.commands.insertContent('!')
+    await nextTick()
+    const widget = wrapper.find('.markdown-input-rendered').element
+
+    rename('after')
+    await nextTick()
+
+    expect(wrapper.find('.reference-token').text()).toContain('after')
+    expect(wrapper.find('.markdown-input-rendered').element).toBe(widget)
+    expect(lastValue(wrapper)).toBe(source + '!')
+
+    press(wrapper, 'z', { ctrlKey: true })
+    expect(lastValue(wrapper)).toBe(source)
+  }
+)

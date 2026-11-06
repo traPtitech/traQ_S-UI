@@ -1,10 +1,9 @@
 import { nextTick } from 'vue'
 
-import { EditorContent } from '@tiptap/vue-3'
-
 import {
   embedded,
   focus,
+  getEditor,
   installReferenceInputFixture,
   lastValue,
   makeInput,
@@ -42,10 +41,7 @@ const releaseEnter = (wrapper: Awaited<ReturnType<typeof makeInput>>) =>
 it('inserts one newline per iOS Enter, including after the delayed fallback', async () => {
   const wrapper = await makeInput({ source: 'hello' })
   await focus(wrapper)
-  wrapper
-    .getComponent(EditorContent)
-    .props('editor')
-    ?.commands.setTextSelection(6)
+  getEditor(wrapper).commands.setTextSelection(6)
   vi.useFakeTimers()
 
   for (let count = 1; count <= 2; count++) {
@@ -75,8 +71,8 @@ it('handles a software keyboard newline without a keydown', async () => {
 it('uses the current DOM selection before selectionchange is delivered', async () => {
   const wrapper = await makeInput({ source: 'hello' })
   await focus(wrapper)
-  const editor = wrapper.getComponent(EditorContent).props('editor')
-  if (!editor) throw new Error('Editor is not mounted')
+  const editor = getEditor(wrapper)
+
   editor.commands.setTextSelection(6)
   const text = editor.view.dom.querySelector('p')?.firstChild
   if (!(text instanceof Text)) throw new Error('Missing text')

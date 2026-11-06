@@ -5,6 +5,7 @@ import { EditorContent } from '@tiptap/vue-3'
 import {
   embedded,
   focus,
+  getEditor,
   installReferenceInputFixture,
   lastValue,
   makeInput,
@@ -44,9 +45,7 @@ describe('reference input padding focus', () => {
   it('restores focus from padding without changing the selection', async () => {
     const wrapper = await makeInput({ source: 'hello' })
     await focus(wrapper)
-    const editor = wrapper.getComponent(EditorContent).props('editor')
-
-    if (!editor) throw new Error('Editor is not mounted')
+    const editor = getEditor(wrapper)
 
     editor.commands.setTextSelection({ from: 2, to: 4 })
     const selection = editor.state.selection.toJSON()
@@ -121,9 +120,7 @@ describe('reference input empty state', () => {
       const wrapper = await makeInput({ source: 'text' })
       await wrapper.setProps({ markdown })
       await focus(wrapper)
-      const editor = wrapper.getComponent(EditorContent).props('editor')
-
-      if (!editor) throw new Error('Editor is not mounted')
+      const editor = getEditor(wrapper)
 
       editor.commands.setTextSelection(editor.state.doc.content.size - 1)
       press(wrapper, 'Enter')
@@ -151,9 +148,7 @@ describe('reference input empty state', () => {
   it('updates the empty state through Undo and Redo', async () => {
     const wrapper = await makeInput({ source: 'text\n' })
     await focus(wrapper)
-    const editor = wrapper.getComponent(EditorContent).props('editor')
-
-    if (!editor) throw new Error('Editor is not mounted')
+    const editor = getEditor(wrapper)
 
     editor.commands.setTextSelection({
       from: 1,
@@ -183,9 +178,7 @@ describe('reference input empty state', () => {
       const wrapper = await makeInput()
       await wrapper.setProps({ markdown })
       await focus(wrapper)
-      const editor = wrapper.getComponent(EditorContent).props('editor')
-
-      if (!editor) throw new Error('Editor is not mounted')
+      const editor = getEditor(wrapper)
 
       const element = editor.view.dom
 
@@ -272,8 +265,7 @@ it('retains the draft when posting finishes without clearing it', async () => {
 it('preserves Undo for an external edit and resets it for a new document key', async () => {
   const wrapper = await makeInput({ source: embedded })
   await wrapper.setProps({ documentKey: 'first' })
-  const editor = wrapper.getComponent(EditorContent).props('editor')
-  if (!editor) throw new Error('Editor is not mounted')
+  const editor = getEditor(wrapper)
 
   editor.commands.setTextSelection(2)
   wrapper.vm.insertText(' draft')

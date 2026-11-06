@@ -1,5 +1,3 @@
-import { EditorContent } from '@tiptap/vue-3'
-
 import usePaste from '/@/composables/messageComposer/usePaste'
 import { REFERENCE_CLIPBOARD_TYPE } from '/@/lib/referenceInput/clipboard'
 import { encodeReference } from '/@/lib/references'
@@ -7,6 +5,7 @@ import { encodeReference } from '/@/lib/references'
 import {
   embedded,
   focus,
+  getEditor,
   installReferenceInputFixture,
   lastValue,
   makeInput,
@@ -31,8 +30,8 @@ it.each([
     await wrapper.setProps({ preparePaste: usePaste(emit).preparePaste })
     await focus(wrapper)
 
-    const editor = wrapper.getComponent(EditorContent).props('editor')
-    editor?.commands.setTextSelection({ from: 2, to: 5 })
+    const editor = getEditor(wrapper)
+    editor.commands.setTextSelection({ from: 2, to: 5 })
 
     const file = new File(['png'], 'image.png', { type: 'image/png' })
     const event = new Event('paste', { bubbles: true, cancelable: true })
@@ -49,7 +48,7 @@ it.each([
 
     expect(event.defaultPrevented).toBe(true)
     expect(emit).toHaveBeenCalledExactlyOnceWith('addAttachments', [file])
-    expect(editor?.state.doc.textContent).toBe(expected)
+    expect(editor.state.doc.textContent).toBe(expected)
   }
 )
 
@@ -75,13 +74,13 @@ it('preserves the selection when asynchronous clipboard conversion has no text',
     preparePaste: () => ({ type: 'text', text: Promise.resolve('') })
   })
   await focus(wrapper)
-  const editor = wrapper.getComponent(EditorContent).props('editor')
-  editor?.commands.setTextSelection({ from: 2, to: 5 })
+  const editor = getEditor(wrapper)
+  editor.commands.setTextSelection({ from: 2, to: 5 })
   pasteText(wrapper, '')
 
   await Promise.resolve()
-  expect(editor?.state.doc.textContent).toBe('hello')
-  expect(editor?.state.selection).toMatchObject({ from: 2, to: 5 })
+  expect(editor.state.doc.textContent).toBe('hello')
+  expect(editor.state.selection).toMatchObject({ from: 2, to: 5 })
 })
 
 it.each([false, true])(
@@ -92,8 +91,8 @@ it.each([false, true])(
     await wrapper.setProps({ markdown })
     await focus(wrapper)
 
-    const editor = wrapper.getComponent(EditorContent).props('editor')
-    editor?.commands.setTextSelection({ from: 8, to: 15 })
+    const editor = getEditor(wrapper)
+    editor.commands.setTextSelection({ from: 8, to: 15 })
     pasteText(wrapper, copiedChannelLink())
 
     const reference = encodeReference({
@@ -119,10 +118,7 @@ it('preserves the copied Markdown when pasted into an existing code span', async
   const wrapper = await makeInput({ source: '`before  after`' })
   await focus(wrapper)
 
-  wrapper
-    .getComponent(EditorContent)
-    .props('editor')
-    ?.commands.setTextSelection(9)
+  getEditor(wrapper).commands.setTextSelection(9)
 
   pasteText(wrapper, copiedChannelLink())
 

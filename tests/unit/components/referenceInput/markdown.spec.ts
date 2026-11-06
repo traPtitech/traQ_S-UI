@@ -1,9 +1,8 @@
 import { nextTick } from 'vue'
 
-import { EditorContent } from '@tiptap/vue-3'
-
 import {
   focus,
+  getEditor,
   installReferenceInputFixture,
   lastValue,
   makeInput,
@@ -26,8 +25,8 @@ describe('Markdown line break input paths', () => {
       const wrapper = await makeInput({ source: '- item' })
       await wrapper.setProps({ markdown: true })
       await focus(wrapper)
-      const editor = wrapper.findComponent(EditorContent).props('editor')
-      editor?.commands.setTextSelection(editor.state.doc.content.size - 1)
+      const editor = getEditor(wrapper)
+      editor.commands.setTextSelection(editor.state.doc.content.size - 1)
       press(wrapper, 'Enter')
       await nextTick()
 
@@ -43,8 +42,8 @@ describe('Markdown line break input paths', () => {
     const wrapper = await makeInput({ source: '- item' })
     await wrapper.setProps({ markdown: true })
     await focus(wrapper)
-    const editor = wrapper.findComponent(EditorContent).props('editor')
-    editor?.commands.setTextSelection(editor.state.doc.content.size - 1)
+    const editor = getEditor(wrapper)
+    editor.commands.setTextSelection(editor.state.doc.content.size - 1)
     press(wrapper, 'Enter', { shiftKey: true })
     await nextTick()
 
@@ -55,8 +54,8 @@ describe('Markdown line break input paths', () => {
     const wrapper = await makeInput({ source: '- item' })
     await wrapper.setProps({ markdown: true })
     await focus(wrapper)
-    const editor = wrapper.findComponent(EditorContent).props('editor')
-    editor?.commands.setTextSelection(editor.state.doc.content.size - 1)
+    const editor = getEditor(wrapper)
+    editor.commands.setTextSelection(editor.state.doc.content.size - 1)
 
     wrapper.vm.element?.dispatchEvent(
       new InputEvent('beforeinput', {
@@ -85,8 +84,8 @@ describe('Markdown line break input paths', () => {
         const wrapper = await makeInput({ source: before })
         await wrapper.setProps({ markdown: true })
         await focus(wrapper)
-        const editor = wrapper.findComponent(EditorContent).props('editor')
-        editor?.commands.setTextSelection(editor.state.doc.content.size - 1)
+        const editor = getEditor(wrapper)
+        editor.commands.setTextSelection(editor.state.doc.content.size - 1)
 
         if (viaKeyboard) {
           press(wrapper, 'Enter')
@@ -110,8 +109,8 @@ describe('Markdown line break input paths', () => {
   it('inserts a plain newline with Markdown disabled', async () => {
     const wrapper = await makeInput({ source: '> quote' })
     await focus(wrapper)
-    const editor = wrapper.findComponent(EditorContent).props('editor')
-    editor?.commands.setTextSelection(editor.state.doc.content.size - 1)
+    const editor = getEditor(wrapper)
+    editor.commands.setTextSelection(editor.state.doc.content.size - 1)
     press(wrapper, 'Enter')
     await nextTick()
 
@@ -137,7 +136,7 @@ describe('Markdown line break input paths', () => {
 it('toggles inline Markdown without changing the draft or its selection', async () => {
   const wrapper = await makeInput({ source: '**hello** and _world_' })
   await focus(wrapper)
-  const content = wrapper.getComponent(EditorContent).props('editor')
+  const content = getEditor(wrapper)
   content?.commands.setTextSelection(5)
   await wrapper.setProps({ markdown: true })
 

@@ -1,13 +1,12 @@
 import { nextTick } from 'vue'
 
-import { EditorContent } from '@tiptap/vue-3'
-
 import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
 import { encodeReference } from '/@/lib/references'
 import { type Candidate } from '/@/lib/suggestion/types'
 
 import {
   focus,
+  getEditor,
   installReferenceInputFixture,
   lastValue,
   makeInput,
@@ -309,10 +308,9 @@ describe.each(['message', 'search'] as const)(
             ).toBe(path)
             expect(lastValue(wrapper)).toBe(prefix + path)
             expect(wrapper.find('.reference-token').exists()).toBe(false)
-            expect(
-              wrapper.getComponent(EditorContent).props('editor')?.state
-                .selection.head
-            ).toBe((prefix + path).length + 1)
+            expect(getEditor(wrapper).state.selection.head).toBe(
+              (prefix + path).length + 1
+            )
             expect(
               wrapper
                 .getComponent(DropdownSuggester)

@@ -1,10 +1,9 @@
-import { EditorContent } from '@tiptap/vue-3'
 import { mount } from '@vue/test-utils'
 
 import MessageEditor from '/@/components/Main/MainView/MessageElement/MessageEditor.vue'
 import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
 
-import { embedded, installReferenceInputFixture } from './fixture'
+import { embedded, getEditor, installReferenceInputFixture } from './fixture'
 
 await vi.hoisted(async () => {
   await import('./mocks')
@@ -53,8 +52,8 @@ it.each(['', 'first\nsecond\n', `hello ${embedded}`, ':test:'])(
     try {
       const input = wrapper.getComponent(ReferenceInput)
       await vi.waitFor(() => {
-        const editor = input.getComponent(EditorContent).props('editor')
-        if (!editor) throw new Error('Editor is not mounted')
+        const editor = getEditor(input)
+
         expect(document.activeElement).toBe(input.vm.element)
         expect(editor.state.selection.head).toBe(
           editor.state.doc.content.size - 1

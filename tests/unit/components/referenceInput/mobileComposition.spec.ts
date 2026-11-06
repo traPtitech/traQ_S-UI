@@ -1,12 +1,11 @@
 import { nextTick } from 'vue'
 
-import { EditorContent } from '@tiptap/vue-3'
-
 import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
 
 import {
   embedded,
   focus,
+  getEditor,
   installReferenceInputFixture,
   lastValue,
   makeInput,
@@ -28,8 +27,8 @@ const compose = async (
   wrapper: Awaited<ReturnType<typeof makeInput>>,
   value: string
 ) => {
-  const editor = wrapper.getComponent(EditorContent).props('editor')
-  if (!editor) throw new Error('Editor is not mounted')
+  const editor = getEditor(wrapper)
+
   editor.commands.setTextSelection(prefix.length + 1)
   const element = editor.view.dom
   element.dispatchEvent(

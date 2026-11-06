@@ -1,13 +1,12 @@
 import { nextTick } from 'vue'
 
-import { EditorContent } from '@tiptap/vue-3'
-
 import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
 import { markdownPreviewKey } from '/@/lib/referenceInput/markdownPreview'
 
 import {
   embedded,
   focus,
+  getEditor,
   installReferenceInputFixture,
   lastValue,
   makeInput,
@@ -36,9 +35,7 @@ describe('reference input composition deletions', () => {
       const wrapper = await makeInput({ source: prefix + composition })
       await wrapper.setProps({ markdown })
       await focus(wrapper)
-      const editor = wrapper.getComponent(EditorContent).props('editor')
-
-      if (!editor) throw new Error('Editor is not mounted')
+      const editor = getEditor(wrapper)
 
       editor.commands.setTextSelection(
         clause
@@ -114,7 +111,7 @@ it('restores suggestions after importing the confirmed composition text', async 
   const wrapper = await makeInput({ source: '@alice' })
   await focus(wrapper)
 
-  const editor = wrapper.findComponent(EditorContent).props('editor')
+  const editor = getEditor(wrapper)
   if (!editor) throw new Error('Expected editor')
 
   editor.commands.setTextSelection(7)
@@ -187,9 +184,7 @@ it('keeps Markdown visible until the final composition text has been read from t
   await wrapper.setProps({ markdown: true })
   await focus(wrapper)
 
-  const editor = wrapper.getComponent(EditorContent).props('editor')
-
-  if (!editor) throw new Error('Editor is not mounted')
+  const editor = getEditor(wrapper)
 
   editor.commands.setTextSelection(editor.state.doc.content.size - 1)
   const element = editor.view.dom

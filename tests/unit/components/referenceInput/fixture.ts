@@ -1,8 +1,7 @@
-import type { Stamp, User } from '@traptitech/traq'
-
 import { nextTick } from 'vue'
 
-import { mount } from '@vue/test-utils'
+import { EditorContent } from '@tiptap/vue-3'
+import { type VueWrapper, mount } from '@vue/test-utils'
 
 import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
 import { encodeReference } from '/@/lib/references'
@@ -14,7 +13,11 @@ import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
 
-import { createChannel } from '../../fixtures/entities'
+import {
+  createChannel,
+  createStamp,
+  createUser
+} from '../../../fixtures/entities'
 import { resetReferenceEntities } from '../../fixtures/referenceEntities'
 
 export const embedded = encodeReference({
@@ -58,6 +61,13 @@ export const makeInput = async ({
   await nextTick()
 
   return wrapper
+}
+
+export const getEditor = (wrapper: Pick<VueWrapper, 'getComponent'>) => {
+  const editor = wrapper.getComponent(EditorContent).props('editor')
+  if (!editor) throw new Error('ReferenceInput editor is not mounted')
+
+  return editor
 }
 
 export const focus = async (wrapper: Awaited<ReturnType<typeof makeInput>>) => {
@@ -126,22 +136,14 @@ export const installReferenceInputFixture = () => {
   beforeEach(() => {
     resetReferenceEntities()
 
-    const user: User = {
-      id: 'original-id',
-      name: 'alice',
-      displayName: 'Alice',
-      state: 1,
-      bot: false,
-      iconFileId: '',
-      updatedAt: '2026-01-01T00:00:00Z'
-    }
+    const user = createUser({ id: 'original-id', iconFileId: '' })
 
     useUsersStore().usersMap.value.set(user.id, user)
     useGroupsStore().userGroupsMap.value.clear()
     useStampsStore().stampsMap.value.clear()
 
     for (const name of ['test', 'testing']) {
-      const stamp: Stamp = {
+      const stamp = createStamp({
         id: name + '-stamp',
         name,
         fileId: '',
@@ -149,7 +151,7 @@ export const installReferenceInputFixture = () => {
         creatorId: user.id,
         createdAt: user.updatedAt,
         updatedAt: user.updatedAt
-      }
+      })
 
       useStampsStore().stampsMap.value.set(stamp.id, stamp)
     }

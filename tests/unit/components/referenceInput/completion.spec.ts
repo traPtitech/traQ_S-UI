@@ -1,7 +1,5 @@
 import { nextTick } from 'vue'
 
-import { EditorContent } from '@tiptap/vue-3'
-
 import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
 import { encodeReference } from '/@/lib/references'
 import { type Candidate } from '/@/lib/suggestion/types'
@@ -10,6 +8,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import {
   embedded,
   focus,
+  getEditor,
   installReferenceInputFixture,
   lastValue,
   makeInput,
@@ -180,10 +179,7 @@ it('previews a fully typed candidate before confirming with a second Tab', async
   const wrapper = await makeInput({ source: text })
   await focus(wrapper)
 
-  wrapper
-    .getComponent(EditorContent)
-    .props('editor')
-    ?.commands.setTextSelection(text.length + 1)
+  getEditor(wrapper).commands.setTextSelection(text.length + 1)
 
   await nextTick()
   press(wrapper, 'Tab')
@@ -375,10 +371,9 @@ it.each(['message', 'search'] as const)(
           .props('candidates')
           ?.map((candidate: Candidate) => candidate.word.text)
       ).toEqual([path])
-      expect(
-        wrapper.getComponent(EditorContent).props('editor')?.state.selection
-          .head
-      ).toBe((prefix + path).length + 1)
+      expect(getEditor(wrapper).state.selection.head).toBe(
+        (prefix + path).length + 1
+      )
       expect(document.activeElement).toBe(wrapper.vm.element)
     }
 
@@ -479,8 +474,7 @@ it('releases the old candidate list when the caret leaves the completion', async
   await nextTick()
   press(wrapper, 'Tab')
   await nextTick()
-  const editor = wrapper.getComponent(EditorContent).props('editor')
-  if (!editor) throw new Error('Editor is not mounted')
+  const editor = getEditor(wrapper)
 
   editor.commands.setTextSelection(1)
   await nextTick()
@@ -513,8 +507,7 @@ it.each(['message', 'search'] as const)(
       mode
     })
     await focus(wrapper)
-    const editor = wrapper.getComponent(EditorContent).props('editor')
-    if (!editor) throw new Error('Editor is not mounted')
+    const editor = getEditor(wrapper)
 
     let layoutShift = 0
 
@@ -756,10 +749,7 @@ it.each(['message', 'search'] as const)(
     const wrapper = await makeInput({ source: reference, mode })
     await focus(wrapper)
 
-    wrapper
-      .findComponent(EditorContent)
-      .props('editor')
-      ?.commands.setTextSelection(2)
+    getEditor(wrapper)?.commands.setTextSelection(2)
 
     press(wrapper, 'Backspace')
     await nextTick()

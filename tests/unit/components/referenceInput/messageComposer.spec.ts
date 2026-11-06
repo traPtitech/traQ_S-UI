@@ -1,6 +1,5 @@
 import { nextTick } from 'vue'
 
-import { EditorContent } from '@tiptap/vue-3'
 import { mount } from '@vue/test-utils'
 
 import MessageInputEditor from '/@/components/Main/MainView/MessageInput/MessageInputEditor.vue'
@@ -11,6 +10,7 @@ import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
 import {
+  getEditor,
   installReferenceInputFixture,
   press,
   setBranchingChannelTree
@@ -38,9 +38,7 @@ it('retains Undo when a busy operation ends with an empty draft', async () => {
   try {
     await nextTick()
     const input = wrapper.getComponent(ReferenceInput)
-    const editor = input.getComponent(EditorContent).props('editor')
-
-    if (!editor) throw new Error('Editor is not mounted')
+    const editor = getEditor(input)
 
     editor.commands.selectAll()
     editor.commands.deleteSelection()
