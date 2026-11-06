@@ -57,7 +57,7 @@ import {
   replaceInputDocument,
   sourceToContent
 } from '/@/lib/referenceInput/editorDocument'
-import { currentInputSelection } from '/@/lib/referenceInput/selection'
+import { syncInputSelection } from '/@/lib/referenceInput/selection'
 import {
   type InputMode,
   type InputPart,
@@ -108,7 +108,7 @@ const { channelPathStringToId } = useChannelPath()
 
 const {
   isComposing,
-  composingEvent,
+  isCompositionKeyEvent,
   finish: finishComposition,
   start: startComposition,
   end: endComposition
@@ -169,7 +169,7 @@ const {
   position,
   update: updateTarget,
   hide: hideSuggestions,
-  select: selectCandidate,
+  confirmCandidate: selectCandidate,
   continuePath: continueChannelPath,
   appendEffect: appendStampEffect,
   onKeyDown: onSuggestionKeyDown
@@ -247,7 +247,7 @@ const editor = useEditor({
     },
 
     handleKeyDown: (_view, event) => {
-      if (composingEvent(event)) return false
+      if (isCompositionKeyEvent(event)) return false
 
       if (handleKeyAction(event)) return true
 
@@ -265,7 +265,7 @@ const editor = useEditor({
         pendingIOSEnter = undefined
 
         // IME の既定動作は許可し、ProseMirror の通常のキー処理だけを止める。
-        if (composingEvent(event)) return true
+        if (isCompositionKeyEvent(event)) return true
 
         if (
           iOSFlag &&
@@ -322,9 +322,7 @@ const editor = useEditor({
         ) {
           event.preventDefault()
 
-          const selection = currentInputSelection(view)
-          if (!selection.eq(view.state.selection))
-            view.dispatch(view.state.tr.setSelection(selection))
+          syncInputSelection(view)
 
           if (enter && handleKeyAction(enter)) return true
 

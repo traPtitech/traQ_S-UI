@@ -5,23 +5,28 @@ import type { Editor } from '@tiptap/core'
 import useWordSuggestionList from '/@/composables/suggestion/useWordSuggestionList'
 import { isTouchDevice } from '/@/lib/dom/browser'
 import { editInput } from '/@/lib/referenceInput/editOperation'
+import { editorTextBetween } from '/@/lib/referenceInput/editorText'
 import {
   type SuggestionTarget,
   acceptsCandidate,
-  completedChannelPath,
-  confirmCandidateParts,
   findSuggestionTarget,
-  isStampSuggestion,
-  previewCandidateText
+  isStampSuggestion
 } from '/@/lib/referenceInput/suggestion'
 import {
   type SuggestionState,
+  type SuggestionTransition,
+  appendSuggestionEffect,
+  confirmSuggestion,
+  continueSuggestionPath,
+  descendSuggestionPath,
+  keepsSuggestionCycle,
   previewSuggestion,
+  suggestTarget,
   suggestionKeyAction,
   suggestionShortcuts
 } from '/@/lib/referenceInput/suggestionState'
 import { type InputMode, type InputPart } from '/@/lib/references'
-import type { Candidate, Word } from '/@/lib/suggestion/types'
+import type { Candidate, SuggestionWord } from '/@/lib/suggestion/types'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -76,7 +81,7 @@ const useReferenceSuggestions = (options: Options) => {
     1
   )
 
-  const canContinuePath = (word: Word) =>
+  const canContinuePath = (word: SuggestionWord) =>
     word.type === 'channel' &&
     (channelsMap.value
       .get(word.id)
@@ -145,11 +150,11 @@ const useReferenceSuggestions = (options: Options) => {
     const { from, to } = editor.state.selection
 
     // 手入力やカーソル移動があれば、現在の原文から候補を検索し直す。
-    const keepCycle =
-      cycle.value &&
-      editor.state.doc === cycle.value.doc &&
-      from === to &&
-      to === cycle.value.target.to
+    const keepCycle = keepsSuggestionCycle(
+      state.value,
+      editor.state.doc,
+      editor.state.selection
+    )
 
     let next: SuggestionTarget | undefined
 
@@ -157,7 +162,7 @@ const useReferenceSuggestions = (options: Options) => {
       next = cycle.value?.target
     } else if (from === to) {
       next = findSuggestionTarget(
-        editor.state.doc.textBetween(1, from, '', '\uFFFC'),
+        editorTextBetween(editor.state.doc, 1, from),
         from,
         options.mode()
       )
@@ -170,16 +175,7 @@ const useReferenceSuggestions = (options: Options) => {
     }
 
     if (!keepCycle) {
-      state.value =
-        next &&
-        (next.word.length >= 2 ||
-          (next.mode === 'message' && next.intent === 'stamp-effect'))
-          ? {
-              status: 'suggesting',
-              target: next,
-              selection: { type: 'candidate', index: 0 }
-            }
-          : { status: 'closed' }
+      state.value = suggestTarget(next)
 
       if (state.value.status !== 'closed' && parentChannel.value)
         state.value = { ...state.value, selection: { type: 'parent' } }
@@ -214,136 +210,93 @@ const useReferenceSuggestions = (options: Options) => {
     return true
   }
 
-  const select = (word: Word) => {
-    const current = target.value
+  const applyTransition = (transition: SuggestionTransition | undefined) => {
     const editor = options.editor()
+    if (!transition || !editor?.isEditable || options.isComposing())
+      return false
 
-    if (!current || !editor?.isEditable) return
-    if (deferCompositionAction(() => select(word))) return
-
-    const parts = confirmCandidateParts(current, word, dmChannelId)
-    if (!parts) return
-
-    editInput(editor, () => options.insertParts(parts, current))
-
-    if (word.type === 'stamp') {
-      upsertLocalStampHistory(word.id, new Date())
-      recordStampUsage(word.id)
-    }
-
-    hide()
-  }
-
-  const insertCompletionText = (
-    text: string,
-    range: { from: number; to: number }
-  ) => {
-    const editor = options.editor()
-    if (!editor || options.isComposing()) return
-
-    if (
-      editor.state.doc.textBetween(range.from, range.to, '', '\uFFFC') === text
-    )
-      return
-
-    editInput(editor, () =>
-      options.insertParts([{ type: 'text', text }], range)
-    )
-  }
-
-  const previewCandidate = (backward: boolean, moveFromSelection: boolean) => {
-    const editor = options.editor()
-    const current = target.value
-    if (!editor || !current || options.isComposing()) return
-
-    if (state.value.status === 'closed') return
-
-    const preview = previewSuggestion(
-      state.value,
-      candidates.value,
-      editor.state.doc,
-      backward,
-      moveFromSelection,
-      dmChannelId
-    )
-    if (!preview) return
-
-    const next = preview.state
-
+    const next = transition.nextState
     state.value = next
     applyingCompletion = true
 
     try {
-      insertCompletionText(preview.edit.text, preview.edit.range)
+      const edit = transition.edit
+      if (edit) {
+        const onlyPart = edit.parts.length === 1 ? edit.parts[0] : undefined
+        const unchanged =
+          onlyPart?.type === 'text' &&
+          editorTextBetween(
+            editor.state.doc,
+            edit.range.from,
+            edit.range.to
+          ) === onlyPart.text
+
+        if (!unchanged)
+          editInput(editor, () => options.insertParts(edit.parts, edit.range))
+      }
+
+      const stampId = transition.effects?.recordStamp
+      if (stampId) {
+        upsertLocalStampHistory(stampId, new Date())
+        recordStampUsage(stampId)
+      }
     } finally {
       applyingCompletion = false
-      if (state.value === next) state.value = { ...next, doc: editor.state.doc }
-      update()
+      if (state.value === next && next.status === 'cycling')
+        state.value = { ...next, doc: editor.state.doc }
+      if (transition.effects?.refreshTarget) update()
     }
+
+    return true
   }
 
-  const appendEffect = (word: Word) => {
-    const current = target.value
-    if (
-      !current ||
-      !isStampSuggestion(current) ||
-      !options.editor()?.isEditable
+  const confirmCandidate = (word: SuggestionWord) => {
+    if (deferCompositionAction(() => confirmCandidate(word))) return
+
+    applyTransition(confirmSuggestion(state.value, word, dmChannelId))
+  }
+
+  const cycleCandidatePreview = (
+    backward: boolean,
+    moveFromSelection: boolean
+  ) => {
+    const editor = options.editor()
+    if (!editor || state.value.status === 'closed') return
+
+    applyTransition(
+      previewSuggestion(
+        state.value,
+        candidates.value,
+        editor.state.doc,
+        backward,
+        moveFromSelection,
+        dmChannelId
+      )
     )
-      return
+  }
+
+  const appendEffect = (word: SuggestionWord) => {
     if (deferCompositionAction(() => appendEffect(word))) return
 
-    const text = previewCandidateText(current, word, dmChannelId)
-    if (text === undefined) return
-
-    insertCompletionText(text + '.', current)
-    update()
+    applyTransition(appendSuggestionEffect(state.value, word, dmChannelId))
   }
 
-  const continuePath = (word: Word, appendSlash = false) => {
-    const current = target.value
-
-    if (
-      !current ||
-      !canContinuePath(word) ||
-      !acceptsCandidate(current, word, dmChannelId)
-    )
-      return
-
+  const continuePath = (word: SuggestionWord, appendSlash = false) => {
+    if (!canContinuePath(word)) return
     if (deferCompositionAction(() => continuePath(word, appendSlash))) return
 
-    state.value = {
-      status: 'suggesting',
-      target: current,
-      selection: { type: 'parent' }
-    }
-
-    insertCompletionText(
-      completedChannelPath(current, word.text + (appendSlash ? '/' : '')),
-      current
+    applyTransition(
+      continueSuggestionPath(state.value, word, appendSlash, dmChannelId)
     )
-
-    update()
   }
 
-  const descendAndPreviewChild = (word: Word) => {
-    const current = target.value
+  const descendAndPreviewChild = (word: SuggestionWord) => {
+    if (!canContinuePath(word)) return
 
-    if (
-      !current ||
-      options.isComposing() ||
-      !canContinuePath(word) ||
-      !acceptsCandidate(current, word, dmChannelId)
+    const changed = applyTransition(
+      descendSuggestionPath(state.value, word, dmChannelId)
     )
-      return
-
-    // 置換範囲は保ち、子候補の検索に使うパスだけを切り替える。
-    state.value = {
-      status: 'suggesting',
-      target: { ...current, word: word.text },
-      selection: { type: 'parent' }
-    }
-
-    previewCandidate(false, false)
+    if (changed) cycleCandidatePreview(false, false)
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
@@ -369,12 +322,12 @@ const useReferenceSuggestions = (options: Options) => {
       case 'preview':
       case 'next':
       case 'previous':
-        previewCandidate(action === 'previous', event.key !== 'Tab')
+        cycleCandidatePreview(action === 'previous', event.key !== 'Tab')
         break
 
       case 'confirm': {
         const word = candidate?.word ?? parentChannel.value
-        if (word) select(word)
+        if (word) confirmCandidate(word)
         break
       }
 
@@ -398,7 +351,7 @@ const useReferenceSuggestions = (options: Options) => {
     update,
     updatePosition,
     hide,
-    select,
+    confirmCandidate,
     continuePath,
     appendEffect,
     onKeyDown

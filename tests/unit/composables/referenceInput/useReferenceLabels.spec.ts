@@ -1,58 +1,60 @@
-import type { Channel, User, UserGroup } from '@traptitech/traq'
-
 import { computed } from 'vue'
 
 import useReferenceLabels from '/@/composables/referenceInput/useReferenceLabels'
+import useChannelPath from '/@/composables/useChannelPath'
 import { type Reference, encodeReference } from '/@/lib/references'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
 
-vi.mock('/@/store/entities/users', async () => {
-  const { ref } = await import('vue')
-  const usersMap = ref(new Map())
+import {
+  createChannel,
+  createUser,
+  createUserGroup
+} from '../../fixtures/entities'
+import { resetReferenceEntities } from '../../fixtures/referenceEntities'
 
-  return { useUsersStore: () => ({ usersMap }) }
+await vi.hoisted(async () => {
+  await import('../../fixtures/referenceEntities')
 })
 
-vi.mock('/@/store/entities/groups', async () => {
-  const { ref } = await import('vue')
-  const userGroupsMap = ref(new Map())
+beforeEach(resetReferenceEntities)
 
-  return { useGroupsStore: () => ({ userGroupsMap }) }
-})
+it('uses fetched state, hash prefixes, nested paths and DM names from the real resolver', () => {
+  const channels = useChannelsStore()
+  channels.channelsMap.value.set(
+    'parent',
+    createChannel({ id: 'parent', name: 'team', children: ['child'] })
+  )
+  channels.channelsMap.value.set(
+    'child',
+    createChannel({ id: 'child', name: 'work', parentId: 'parent' })
+  )
+  channels.dmChannelsMap.value.set('dm', { id: 'dm', userId: 'user-id' })
+  useUsersStore().usersMap.value.set('user-id', createUser())
 
-vi.mock('/@/store/entities/channels', async () => {
-  const { ref } = await import('vue')
+  const { channelIdToPathString, channelPathStringToId } = useChannelPath()
+  channels.bothChannelsMapFetched.value = false
+  expect(channelIdToPathString('child', true)).toBeNull()
+  channels.bothChannelsMapFetched.value = true
+  expect(channelIdToPathString('child')).toBe('team/work')
+  expect(channelIdToPathString('child', true)).toBe('#team/work')
+  expect(channelPathStringToId('team/work')).toBe('child')
+  expect(channelIdToPathString('dm')).toBe('alice')
+  expect(channelIdToPathString('dm', true)).toBe('@alice')
 
-  const channelsMap = ref(new Map()),
-    dmChannelsMap = ref(new Map())
-
-  return { useChannelsStore: () => ({ channelsMap, dmChannelsMap }) }
-})
-
-vi.mock('/@/composables/useChannelPath', async () => {
-  const { useChannelsStore } = await import('/@/store/entities/channels')
-
-  return {
-    default: () => ({
-      channelIdToPathString: (id: string) =>
-        `#${useChannelsStore().channelsMap.value.get(id)?.name}`
-    })
-  }
-})
-
-beforeEach(() => {
-  useUsersStore().usersMap.value.clear()
-  useGroupsStore().userGroupsMap.value.clear()
-  useChannelsStore().channelsMap.value.clear()
-  useChannelsStore().dmChannelsMap.value.clear()
+  channels.channelsMap.value.set(
+    'child',
+    createChannel({ id: 'child', name: 'renamed', parentId: 'parent' })
+  )
+  expect(channelPathStringToId('team/renamed')).toBe('child')
+  expect(channelIdToPathString('child', true)).toBe('#team/renamed')
 })
 
 describe('reference labels shared by inputs and history', () => {
   it('reacts to renamed users in a persisted search without changing the saved query', () => {
     const { usersMap } = useUsersStore()
-    usersMap.value.set('user-id', { id: 'user-id', name: 'alice' } as User)
+    usersMap.value.set('user-id', createUser({ id: 'user-id', name: 'alice' }))
 
     const reference = {
       type: 'search-from',
@@ -67,7 +69,10 @@ describe('reference labels shared by inputs and history', () => {
 
     expect(displayed.value).toBe(`topic ${label(reference)}`)
 
-    usersMap.value.set('user-id', { id: 'user-id', name: 'renamed' } as User)
+    usersMap.value.set(
+      'user-id',
+      createUser({ id: 'user-id', name: 'renamed' })
+    )
 
     expect(displayed.value).toBe('topic from:@renamed')
 
@@ -78,13 +83,19 @@ describe('reference labels shared by inputs and history', () => {
   })
 
   it('uses the explicit group kind instead of guessing from users', () => {
-    useUsersStore().usersMap.value.set('same-id', {
-      name: 'wrong-user'
-    } as User)
+    useUsersStore().usersMap.value.set(
+      'same-id',
+      createUser({
+        name: 'wrong-user'
+      })
+    )
 
-    useGroupsStore().userGroupsMap.value.set('same-id', {
-      name: 'team'
-    } as UserGroup)
+    useGroupsStore().userGroupsMap.value.set(
+      'same-id',
+      createUserGroup({
+        name: 'team'
+      })
+    )
 
     expect(
       useReferenceLabels().label({
@@ -100,10 +111,13 @@ describe('reference labels shared by inputs and history', () => {
     { type: 'channel', id: 'channel-id', raw: '#old' },
     { type: 'search-in', id: 'channel-id', raw: 'in:#old', kind: 'channel' }
   ] satisfies Reference[])('resolves a channel path for %j', reference => {
-    useChannelsStore().channelsMap.value.set('channel-id', {
-      id: 'channel-id',
-      name: 'new-path'
-    } as Channel)
+    useChannelsStore().channelsMap.value.set(
+      'channel-id',
+      createChannel({
+        id: 'channel-id',
+        name: 'new-path'
+      })
+    )
 
     expect(useReferenceLabels().label(reference)).toBe(
       `${reference.type === 'search-in' ? 'in:' : ''}#new-path`
@@ -116,7 +130,7 @@ describe('reference labels shared by inputs and history', () => {
       userId: 'user-id'
     })
 
-    useUsersStore().usersMap.value.set('user-id', { name: 'alice' } as User)
+    useUsersStore().usersMap.value.set('user-id', createUser({ name: 'alice' }))
 
     expect(
       useReferenceLabels().label({

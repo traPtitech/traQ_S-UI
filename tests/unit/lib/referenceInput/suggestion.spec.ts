@@ -6,12 +6,20 @@ import {
   previewCandidateText
 } from '/@/lib/referenceInput/suggestion'
 import { type InputMode, type SearchOperator } from '/@/lib/references'
-import type { Word } from '/@/lib/suggestion/types'
+import type { SuggestionWord } from '/@/lib/suggestion/types'
 
-const user: Word = { type: 'user', id: 'user-id', text: '@alice' }
-const group: Word = { type: 'user-group', id: 'group-id', text: '@team' }
-const channel: Word = { type: 'channel', id: 'channel-id', text: '#times/25' }
-const stamp: Word = { type: 'stamp', id: 'stamp-id', text: ':stamp' }
+const user: SuggestionWord = { type: 'user', id: 'user-id', text: '@alice' }
+const group: SuggestionWord = {
+  type: 'user-group',
+  id: 'group-id',
+  text: '@team'
+}
+const channel: SuggestionWord = {
+  type: 'channel',
+  id: 'channel-id',
+  text: '#times/25'
+}
+const stamp: SuggestionWord = { type: 'stamp', id: 'stamp-id', text: ':stamp' }
 const dm = (id: string) => (id === user.id ? 'dm-id' : undefined)
 
 const targetFor = (text: string, mode: InputMode = 'message') => {
@@ -132,7 +140,7 @@ describe('reference suggestion rules', () => {
     [':st', stamp, ':stamp'],
     [':@al', user, '@alice'],
     [':stamp.la', { type: 'stamp-effect', text: '.large' }, '.large']
-  ] satisfies Array<[string, Word, string]>)(
+  ] satisfies Array<[string, SuggestionWord, string]>)(
     'closes %s only when confirming',
     (text, word, completed) => {
       const target = targetFor(text)
@@ -149,9 +157,12 @@ describe('reference suggestion rules', () => {
       const animations = '.atsumori.atsumori.conga.flashy'
       const fifth = targetFor(prefix + '.large' + animations + '.a')
       const sixth = targetFor(prefix + animations + '.atsumori.large.a')
-      const animation: Word = { type: 'stamp-effect', text: '.atsumori' }
-      const alias: Word = { type: 'stamp-effect', text: '.marquee' }
-      const size: Word = { type: 'stamp-effect', text: '.small' }
+      const animation: SuggestionWord = {
+        type: 'stamp-effect',
+        text: '.atsumori'
+      }
+      const alias: SuggestionWord = { type: 'stamp-effect', text: '.marquee' }
+      const size: SuggestionWord = { type: 'stamp-effect', text: '.small' }
 
       for (const word of [animation, alias]) {
         expect(acceptsCandidate(fifth, word, dm)).toBe(true)
@@ -178,7 +189,7 @@ describe('reference suggestion rules', () => {
     ['in', group, false],
     ['in', stamp, false],
     ['from', stamp, false]
-  ] satisfies Array<[SearchOperator, Word, boolean]>)(
+  ] satisfies Array<[SearchOperator, SuggestionWord, boolean]>)(
     '%s accepts the proper entity kind: %j',
     (operator, word, allowed) => {
       const target = targetFor(`${operator}:a`, 'search')

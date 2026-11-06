@@ -45,14 +45,14 @@ import {
   candidateLabel,
   candidateTypeLabel
 } from '/@/lib/suggestion/candidatePresentation'
-import type { Word } from '/@/lib/suggestion/types'
+import type { SuggestionWord } from '/@/lib/suggestion/types'
 
 import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 
 withDefaults(
   defineProps<{
-    candidate: Word
+    candidate: SuggestionWord
     display?: string
     preview?: string
     isSelected?: boolean

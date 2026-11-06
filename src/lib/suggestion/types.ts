@@ -1,4 +1,4 @@
-interface WordBase {
+interface SuggestionWordBase {
   delimiter?: string
   text: string
 }
@@ -6,25 +6,25 @@ interface WordBase {
 type EntityWordKind = 'user' | 'user-group' | 'stamp' | 'channel'
 
 export type WordWithId = {
-  [Kind in EntityWordKind]: WordBase & { type: Kind; id: string }
+  [Kind in EntityWordKind]: SuggestionWordBase & { type: Kind; id: string }
 }[EntityWordKind]
 
-export interface WordWithoutId extends WordBase {
+export interface WordWithoutId extends SuggestionWordBase {
   type: 'stamp-effect'
 }
 
-export type Word = WordWithId | WordWithoutId
+export type SuggestionWord = WordWithId | WordWithoutId
 
-export type ChannelWord = Extract<Word, { type: 'channel' }>
+export type ChannelWord = Extract<SuggestionWord, { type: 'channel' }>
 
 export type Candidate = { display?: string; preview?: string } & (
   | {
-      word: Extract<Word, { type: 'channel' }>
+      word: Extract<SuggestionWord, { type: 'channel' }>
       canContinuePath?: boolean
       canAppendEffect?: never
     }
   | {
-      word: Exclude<Word, { type: 'channel' }>
+      word: Exclude<SuggestionWord, { type: 'channel' }>
       canContinuePath?: never
       canAppendEffect?: boolean
     }

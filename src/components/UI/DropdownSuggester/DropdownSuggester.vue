@@ -87,15 +87,15 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 
-import { suggestionPopupStyle } from '/@/composables/referenceInput/useSuggestionPosition'
 import {
   candidateKey,
   candidateRowId
 } from '/@/lib/suggestion/candidatePresentation'
+import { suggestionPopupStyle } from '/@/lib/suggestion/popupStyle'
 import type {
   Candidate,
   SuggestionShortcut,
-  Word
+  SuggestionWord
 } from '/@/lib/suggestion/types'
 
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
@@ -123,16 +123,16 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'select', _word: Word): void
-  (e: 'continuePath', _word: Word): void
-  (e: 'appendEffect', _word: Word): void
+  (e: 'select', _word: SuggestionWord): void
+  (e: 'continuePath', _word: SuggestionWord): void
+  (e: 'appendEffect', _word: SuggestionWord): void
 }>()
 
 const styledPosition = computed(() =>
   suggestionPopupStyle(props.position, props.width)
 )
 
-const select = (word: Word) => {
+const select = (word: SuggestionWord) => {
   emit('select', word)
 }
 

@@ -1,7 +1,19 @@
 import type { Node } from '@tiptap/pm/model'
 
-import type { Candidate, SuggestionShortcut } from '../suggestion/types'
-import { type SuggestionTarget, previewCandidateText } from './suggestion'
+import type { InputPart } from '../references'
+import type {
+  Candidate,
+  SuggestionShortcut,
+  SuggestionWord
+} from '../suggestion/types'
+import {
+  type SuggestionTarget,
+  acceptsCandidate,
+  completedChannelPath,
+  confirmCandidateParts,
+  isStampSuggestion,
+  previewCandidateText
+} from './suggestion'
 
 export type CandidateSelection =
   { type: 'parent' } | { type: 'candidate'; index: number }
@@ -20,6 +32,35 @@ export type SuggestionState =
       candidates: Candidate[]
       doc: Node
     }
+
+export type SuggestionTransition = {
+  nextState: SuggestionState
+  edit?: { parts: InputPart[]; range: { from: number; to: number } }
+  effects?: { refreshTarget?: boolean; recordStamp?: string }
+}
+
+export const keepsSuggestionCycle = (
+  state: SuggestionState,
+  doc: Node,
+  selection: { from: number; to: number }
+) =>
+  state.status === 'cycling' &&
+  state.doc === doc &&
+  selection.from === selection.to &&
+  selection.to === state.target.to
+
+export const suggestTarget = (
+  target: SuggestionTarget | undefined
+): SuggestionState =>
+  target &&
+  (target.word.length >= 2 ||
+    (target.mode === 'message' && target.intent === 'stamp-effect'))
+    ? {
+        status: 'suggesting',
+        target,
+        selection: { type: 'candidate', index: 0 }
+      }
+    : { status: 'closed' }
 
 type KeyContext = {
   cycling: boolean
@@ -129,7 +170,7 @@ export const previewSuggestion = (
   backward: boolean,
   moveFromSelection: boolean,
   dmChannelId: (userId: string) => string | undefined
-) => {
+): SuggestionTransition | undefined => {
   const selected =
     state.selection.type === 'candidate' ? state.selection.index : -1
   let index = backward ? candidates.length - 1 : 0
@@ -152,5 +193,99 @@ export const previewSuggestion = (
     doc
   }
 
-  return { state: next, edit: { text, range: state.target } }
+  return {
+    nextState: next,
+    edit: { parts: [{ type: 'text', text }], range: state.target },
+    effects: { refreshTarget: true }
+  }
+}
+
+export const confirmSuggestion = (
+  state: SuggestionState,
+  word: SuggestionWord,
+  dmChannelId: (userId: string) => string | undefined
+): SuggestionTransition | undefined => {
+  if (state.status === 'closed') return
+
+  const parts = confirmCandidateParts(state.target, word, dmChannelId)
+  if (!parts) return
+
+  return {
+    nextState: { status: 'closed' },
+    edit: { parts, range: state.target },
+    effects: word.type === 'stamp' ? { recordStamp: word.id } : undefined
+  }
+}
+
+export const appendSuggestionEffect = (
+  state: SuggestionState,
+  word: SuggestionWord,
+  dmChannelId: (userId: string) => string | undefined
+): SuggestionTransition | undefined => {
+  if (state.status === 'closed' || !isStampSuggestion(state.target)) return
+
+  const text = previewCandidateText(state.target, word, dmChannelId)
+  if (text === undefined) return
+
+  return {
+    nextState: state,
+    edit: { parts: [{ type: 'text', text: text + '.' }], range: state.target },
+    effects: { refreshTarget: true }
+  }
+}
+
+export const continueSuggestionPath = (
+  state: SuggestionState,
+  word: SuggestionWord,
+  appendSlash: boolean,
+  dmChannelId: (userId: string) => string | undefined
+): SuggestionTransition | undefined => {
+  if (
+    state.status === 'closed' ||
+    word.type !== 'channel' ||
+    !acceptsCandidate(state.target, word, dmChannelId)
+  )
+    return
+
+  return {
+    nextState: {
+      status: 'suggesting',
+      target: state.target,
+      selection: { type: 'parent' }
+    },
+    edit: {
+      parts: [
+        {
+          type: 'text',
+          text: completedChannelPath(
+            state.target,
+            word.text + (appendSlash ? '/' : '')
+          )
+        }
+      ],
+      range: state.target
+    },
+    effects: { refreshTarget: true }
+  }
+}
+
+export const descendSuggestionPath = (
+  state: SuggestionState,
+  word: SuggestionWord,
+  dmChannelId: (userId: string) => string | undefined
+): SuggestionTransition | undefined => {
+  if (
+    state.status === 'closed' ||
+    word.type !== 'channel' ||
+    !acceptsCandidate(state.target, word, dmChannelId)
+  )
+    return
+
+  return {
+    nextState: {
+      status: 'suggesting',
+      target: { ...state.target, word: word.text },
+      selection: { type: 'parent' }
+    }
+  }
 }

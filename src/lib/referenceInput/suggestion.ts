@@ -1,4 +1,4 @@
-import type { Word } from '/@/lib/suggestion/types'
+import type { SuggestionWord } from '/@/lib/suggestion/types'
 
 import { analyzeMarkdownSource } from '../markdown/analysis'
 import {
@@ -105,7 +105,7 @@ export const findSuggestionTarget = (
 
 export const acceptsCandidate = (
   target: SuggestionTarget,
-  word: Word,
+  word: SuggestionWord,
   dmChannelId: (userId: string) => string | undefined
 ) => {
   if (target.mode === 'message') {
@@ -152,7 +152,7 @@ const acceptsStampEffect = (stampPrefix: string, effect: string) => {
 
 export const previewCandidateText = (
   target: SuggestionTarget,
-  word: Word,
+  word: SuggestionWord,
   dmChannelId: (userId: string) => string | undefined
 ): string | undefined => {
   if (!acceptsCandidate(target, word, dmChannelId)) return
@@ -164,7 +164,7 @@ export const previewCandidateText = (
 
 export const confirmCandidateParts = (
   target: SuggestionTarget,
-  word: Word,
+  word: SuggestionWord,
   dmChannelId: (userId: string) => string | undefined
 ): InputPart[] | undefined => {
   if (!acceptsCandidate(target, word, dmChannelId)) return
