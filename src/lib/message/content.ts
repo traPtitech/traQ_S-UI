@@ -1,22 +1,24 @@
 import { isLiteralSource } from '../markdown/analysis'
 import { isEmbeddedLink } from '../markdown/compatibility/embeddingLinks'
-import {
-  type EditorTextAnalysis,
-  analyzeEditorText,
-  partsToEditorText
-} from '../referenceInput/editorText'
 import { type InputPart, parseInput, serializeInput } from '../references'
+import {
+  type ProjectedInputAnalysis,
+  analyzeProjectedInput,
+  partsToProjectedText
+} from '../references/projection'
 
 export const normalizeMessageParts = (
   parts: readonly InputPart[],
-  analysis?: EditorTextAnalysis
+  analysis?: ProjectedInputAnalysis
 ): InputPart[] => {
   if (!parts.some(part => part.type === 'reference')) return [...parts]
 
-  const editorText = partsToEditorText(parts)
+  const projectedText = partsToProjectedText(parts)
 
   const ranges = (
-    analysis?.source === editorText ? analysis : analyzeEditorText(editorText)
+    analysis?.source === projectedText
+      ? analysis
+      : analyzeProjectedInput(projectedText)
   ).nodes
     .filter(isLiteralSource)
     .sort((a, b) => a.from - b.from)
@@ -39,7 +41,7 @@ export const normalizeMessageParts = (
 export const normalizeMessageSource = (source: string) =>
   serializeInput(normalizeMessageParts(parseInput(source, 'message')))
 
-export const prepareMessageContent = (
+export const createMessageContentBuilder = (
   source: string,
   embeddingOrigin: string
 ) => {

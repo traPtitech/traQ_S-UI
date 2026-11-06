@@ -9,9 +9,19 @@ export const corpusReference = encodeReference({
 const inline =
   '**bold** _em_ ~~strike~~ ==mark== !!hidden!! `code` $x^2$ :test: ![image][asset] example.dev'
 
-export const markdownCorpus = ['\n', '\r\n', '\r'].flatMap(newline =>
-  ['', '> ', '- ', '> - '].map(prefix =>
-    [
+export const markdownCorpus = [
+  ['LF', '\n'],
+  ['CRLF', '\r\n'],
+  ['CR', '\r']
+].flatMap(([lineEnding, newline]) =>
+  [
+    ['paragraph', ''],
+    ['quote', '> '],
+    ['list', '- '],
+    ['quoted-list', '> - ']
+  ].map(([container, prefix]) => ({
+    name: lineEnding + '/' + container,
+    source: [
       prefix + '😀 日本語 ' + inline + ' ' + corpusReference,
       '',
       '[asset]: https://example.com/image.png "title"',
@@ -32,5 +42,5 @@ export const markdownCorpus = ['\n', '\r\n', '\r'].flatMap(newline =>
       '\\*escaped\\* unfinished !{ **',
       'embedded NUL \0'
     ].join(newline)
-  )
+  }))
 )

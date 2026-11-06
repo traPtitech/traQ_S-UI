@@ -1,7 +1,6 @@
 import type { Editor } from '@tiptap/core'
 import type { EditorProps, EditorView } from '@tiptap/pm/view'
 
-import { embeddingOrigin } from '../apis'
 import type { InputMode, InputPart, Reference } from '../references'
 import { readClipboardData, writeClipboardData } from './clipboard'
 import { editInput } from './editOperation'
@@ -20,6 +19,7 @@ export const inputDataTransfer = (options: {
   readonly: () => boolean
   mode: () => InputMode
   label: (reference: Reference) => string
+  channelLinkOrigins: () => readonly string[]
   channelPathToId: (path: string) => string | undefined
   insertParts: (
     parts: InputPart[],
@@ -81,7 +81,7 @@ export const inputDataTransfer = (options: {
         readClipboardData(data, options.mode(), location.origin) ??
         (options.mode() === 'message' && !data.files?.length
           ? pastedChannelLinks(data.getData('text/plain'), {
-              origins: [location.origin, embeddingOrigin],
+              origins: options.channelLinkOrigins(),
               channelPathToId: options.channelPathToId,
               before: editorTextBetween(doc, 1, from),
               after: editorTextBetween(doc, to)

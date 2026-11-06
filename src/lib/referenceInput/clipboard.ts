@@ -2,8 +2,8 @@ import {
   type InputMode,
   type InputPart,
   type Reference,
-  inputText,
   isReference,
+  partsToDisplayText,
   referenceMatchesMode
 } from '../references'
 
@@ -71,7 +71,7 @@ export const encodeClipboardHtml = (
   parts: readonly InputPart[],
   mode: InputMode,
   origin: string,
-  text = inputText(parts)
+  text = partsToDisplayText(parts)
 ) => {
   const span = document.createElement('span')
   span.setAttribute(ATTRIBUTE, encodeClipboard(parts, mode, origin))
@@ -99,7 +99,7 @@ export const decodeClipboardHtml = (
 
 export const copyMessageParts = async (
   parts: readonly InputPart[],
-  plainText = inputText(parts)
+  plainText = partsToDisplayText(parts)
 ) => {
   if (typeof ClipboardItem !== 'undefined' && navigator.clipboard.write) {
     try {
@@ -129,7 +129,7 @@ export const writeClipboardData = (
   origin: string,
   label?: (reference: Reference) => string
 ) => {
-  const text = inputText(parts, label)
+  const text = partsToDisplayText(parts, label)
 
   data.setData('text/plain', text)
   data.setData('text/html', encodeClipboardHtml(parts, mode, origin, text))

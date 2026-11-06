@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-import usePostMessage from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
+import usePostMessage from '/@/composables/messageComposer/usePostMessage'
 import apis from '/@/lib/apis'
 import { encodeReference } from '/@/lib/references'
 import type { Attachment } from '/@/store/ui/messageInputStateStore'

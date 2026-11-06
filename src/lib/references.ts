@@ -90,7 +90,7 @@ export const serializeInput = (parts: readonly InputPart[]) =>
     )
     .join('')
 
-export const inputText = (
+export const partsToDisplayText = (
   parts: readonly InputPart[],
   label: (reference: Reference) => string = reference => reference.raw
 ) => parts.map(p => (p.type === 'text' ? p.text : label(p.reference))).join('')

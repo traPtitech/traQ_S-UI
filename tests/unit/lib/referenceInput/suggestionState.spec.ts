@@ -39,8 +39,7 @@ it('retains the original candidate set while cycling and bounds the edit to the 
     state,
     userCandidates,
     doc,
-    false,
-    false,
+    { direction: 'next', initialSelection: 'boundary' },
     dmChannelId
   )
   expect(first?.edit).toEqual({
@@ -65,8 +64,7 @@ it('retains the original candidate set while cycling and bounds the edit to the 
     cycling,
     userCandidates,
     doc,
-    true,
-    true,
+    { direction: 'previous', initialSelection: 'advance' },
     dmChannelId
   )
   expect(previous?.nextState).toMatchObject({

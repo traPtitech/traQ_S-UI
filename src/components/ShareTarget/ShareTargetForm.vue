@@ -19,9 +19,9 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 
-import usePostMessage from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
 import FormButton from '/@/components/UI/FormButton.vue'
 import FormSelectorFilterable from '/@/components/UI/FormSelectorFilterable.vue'
+import usePostMessage from '/@/composables/messageComposer/usePostMessage'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useChannelOptions from '/@/composables/useChannelOptions'
 import { nilUuid } from '/@/lib/basic/uuid'
@@ -64,7 +64,6 @@ fetchUsers()
 const { fetchUserGroups } = useGroupsStore()
 fetchUserGroups()
 
-// FIXME: 親子関係なのにprovide-injectを乱用してるの微妙
 const { state } = useMessageInputState('share-target')
 watch(
   () => props.defaultText,

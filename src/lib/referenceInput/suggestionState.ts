@@ -163,19 +163,27 @@ export const suggestionShortcuts = (
   )
 }
 
+export type SuggestionNavigation = {
+  direction: 'next' | 'previous'
+  initialSelection: 'boundary' | 'advance'
+}
+
 export const previewSuggestion = (
   state: Exclude<SuggestionState, { status: 'closed' }>,
   candidates: Candidate[],
   doc: Node,
-  backward: boolean,
-  moveFromSelection: boolean,
+  navigation: SuggestionNavigation,
   dmChannelId: (userId: string) => string | undefined
 ): SuggestionTransition | undefined => {
   const selected =
     state.selection.type === 'candidate' ? state.selection.index : -1
+  const backward = navigation.direction === 'previous'
   let index = backward ? candidates.length - 1 : 0
 
-  if ((state.status === 'cycling' || moveFromSelection) && selected >= 0)
+  if (
+    (state.status === 'cycling' || navigation.initialSelection === 'advance') &&
+    selected >= 0
+  )
     index =
       (selected + (backward ? -1 : 1) + candidates.length) % candidates.length
 

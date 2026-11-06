@@ -9,8 +9,8 @@ import { createMarkdownAnalysisParser } from '/@/lib/markdown/syntax'
 
 import { markdownCorpus } from '../../fixtures/markdownCorpus'
 
-it.each(markdownCorpus.map((source, index) => ({ source, index })))(
-  'maps the supported syntax without dropping ranges in corpus $index',
+it.each(markdownCorpus)(
+  'maps the supported syntax without dropping ranges in corpus $name',
   ({ source }) => {
     const normalized = source.replace(/\r\n?/g, '\n').replace(/\0/g, '\uFFFD')
     const parser = createMarkdownAnalysisParser().use(trackMarkdownSource)

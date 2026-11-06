@@ -1,4 +1,4 @@
-import type { Channel, User, UserGroup } from '@traptitech/traq'
+import type { Channel, Stamp, User, UserGroup } from '@traptitech/traq'
 
 const timestamp = '2026-01-01T00:00:00Z'
 
@@ -34,6 +34,17 @@ export const createUserGroup = (
   icon: '',
   members: [],
   admins: [],
+  createdAt: timestamp,
+  updatedAt: timestamp,
+  ...overrides
+})
+
+export const createStamp = (overrides: Partial<Stamp> = {}): Stamp => ({
+  id: 'stamp-id',
+  name: 'test',
+  fileId: 'icon-id',
+  isUnicode: false,
+  creatorId: 'user-id',
   createdAt: timestamp,
   updatedAt: timestamp,
   ...overrides

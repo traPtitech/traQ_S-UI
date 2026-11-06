@@ -11,7 +11,7 @@ import {
   createChannel,
   createUser,
   createUserGroup
-} from '../../fixtures/entities'
+} from '../../../fixtures/entities'
 import { resetReferenceEntities } from '../../fixtures/referenceEntities'
 
 await vi.hoisted(async () => {

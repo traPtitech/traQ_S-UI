@@ -35,12 +35,11 @@
 import { computed, nextTick, shallowRef, watch } from 'vue'
 
 import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
+import usePaste from '/@/composables/messageComposer/usePaste'
+import useSendKeyWatcher from '/@/composables/messageComposer/useSendKeyWatcher'
 import useResponsive from '/@/composables/useResponsive'
 import { isFirefox } from '/@/lib/dom/browser'
 import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
-
-import usePaste from './composables/usePaste'
-import useSendKeyWatcher from './composables/useSendKeyWatcher'
 
 const modelValue = defineModel<string>({ default: '' })
 

@@ -66,7 +66,7 @@ import useSearchLink from '/@/composables/contextMenu/useSearchLink'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import apis from '/@/lib/apis'
 import type { Point } from '/@/lib/basic/point'
-import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
+import { restoreEmbeddingLabels } from '/@/lib/markdown/internalLinkUnembedder'
 import { copyMessageParts } from '/@/lib/referenceInput/clipboard'
 import { parseInput } from '/@/lib/references'
 import { useMeStore } from '/@/store/domain/me'
@@ -104,7 +104,7 @@ const useCopyMd = (messageId: Ref<MessageId>) => {
 
   const copyMd = async () => {
     const content = messagesMap.value.get(messageId.value)?.content ?? ''
-    const replacedContent = replaceBack(content)
+    const replacedContent = restoreEmbeddingLabels(content)
 
     await execWithToast(
       'Markdown をコピーしました',

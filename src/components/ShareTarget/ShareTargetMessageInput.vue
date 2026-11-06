@@ -42,8 +42,10 @@ import { onMounted, ref, shallowRef, toRef, useId } from 'vue'
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
-import usePaste from '/@/components/Main/MainView/MessageInput/composables/usePaste'
 import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
+import useAttachmentPicker from '/@/composables/messageComposer/useAttachmentPicker'
+import usePaste from '/@/composables/messageComposer/usePaste'
+import useTextStampPickerInvoker from '/@/composables/messageComposer/useTextStampPickerInvoker'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { useStampHistory } from '/@/store/domain/stampHistory'
@@ -51,9 +53,6 @@ import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useToastStore } from '/@/store/ui/toast'
-
-import useAttachmentPicker from '../Main/MainView/MessageInput/composables/useAttachmentPicker'
-import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
 
 const { fetchStampHistory } = useStampHistory()
 const { fetchStampRecommendations } = useStampRecommendations()

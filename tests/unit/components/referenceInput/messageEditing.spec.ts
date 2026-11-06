@@ -25,12 +25,9 @@ vi.mock(
   })
 )
 
-vi.mock(
-  '/@/components/Main/MainView/composables/useTextStampPickerInvoker',
-  () => ({
-    default: () => ({ toggleStampPicker: vi.fn() })
-  })
-)
+vi.mock('/@/composables/messageComposer/useTextStampPickerInvoker', () => ({
+  default: () => ({ toggleStampPicker: vi.fn() })
+}))
 
 it.each(['', 'first\nsecond\n', `hello ${embedded}`, ':test:'])(
   'starts editing at the end of %j',

@@ -1,18 +1,21 @@
 import { nilUuid } from '/@/lib/basic/uuid'
 import { normalizeMessageSource } from '/@/lib/message/content'
-import { prepareMessageContent } from '/@/lib/message/content'
+import { createMessageContentBuilder } from '/@/lib/message/content'
 import {
   type Reference,
   encodeReference,
-  inputText,
-  parseInput
+  parseInput,
+  partsToDisplayText
 } from '/@/lib/references'
 
 const EMBEDDING_ORIGIN = 'https://q.example.com'
 
-describe('prepareMessageContent', () => {
+describe('createMessageContentBuilder', () => {
   it.each(TEST_CASES)('$description', ({ input, files, expected }) => {
-    const content = prepareMessageContent(input, EMBEDDING_ORIGIN)(files ?? [])
+    const content = createMessageContentBuilder(
+      input,
+      EMBEDDING_ORIGIN
+    )(files ?? [])
     expect(content).toBe(expected)
   })
 })
@@ -192,7 +195,7 @@ describe('message reference normalization', () => {
     expect(normalizeMessageSource(`@alice ${embedded}`)).toBe(
       `@alice ${embedded}`
     )
-    expect(inputText(parseInput(embedded, 'message'))).toBe('@alice')
+    expect(partsToDisplayText(parseInput(embedded, 'message'))).toBe('@alice')
   })
 
   it.each([

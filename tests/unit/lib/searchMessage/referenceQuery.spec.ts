@@ -1,4 +1,8 @@
-import { encodeReference, inputText, parseInput } from '/@/lib/references'
+import {
+  encodeReference,
+  parseInput,
+  partsToDisplayText
+} from '/@/lib/references'
 import type { StoreForParser } from '/@/lib/searchMessage/parserBase'
 import { createQueryParser } from '/@/lib/searchMessage/queryParser'
 
@@ -82,9 +86,9 @@ describe('persisted search references', () => {
   it('accepts old text history and resolves it only on execution', async () => {
     const result = await createQueryParser(createStore())('from:alice')
 
-    expect(inputText(parseInput(result.serializedQuery, 'search'))).toBe(
-      'from:alice'
-    )
+    expect(
+      partsToDisplayText(parseInput(result.serializedQuery, 'search'))
+    ).toBe('from:alice')
 
     expect(parseInput(result.serializedQuery, 'search')).toMatchObject([
       { type: 'reference', reference: { id: 'user-before-rename' } }

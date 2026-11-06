@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import { computed, onScopeDispose, ref, watch } from 'vue'
 
-import useAttachmentPicker from '/@/components/Main/MainView/MessageInput/composables/useAttachmentPicker'
+import useAttachmentPicker from '/@/composables/messageComposer/useAttachmentPicker'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
 import { normalizeMessageSource } from '/@/lib/message/content'

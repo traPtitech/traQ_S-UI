@@ -1,4 +1,4 @@
-import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
+import { restoreEmbeddingLabels } from '/@/lib/markdown/internalLinkUnembedder'
 
 /**
  * 置換前, 置換後
@@ -31,7 +31,7 @@ const specs: Spec[] = [
 describe('internalLinkUnembedder', () => {
   specs.forEach(([before, after], i) => {
     it(`can unembed internal links ${i}`, () => {
-      expect(replaceBack(before)).toEqual(after)
+      expect(restoreEmbeddingLabels(before)).toEqual(after)
     })
   })
 })

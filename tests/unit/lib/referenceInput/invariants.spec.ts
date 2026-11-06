@@ -2,21 +2,23 @@ import { redo, undo } from '@tiptap/pm/history'
 
 import { normalizeMessageSource } from '/@/lib/message/content'
 import { contentToParts } from '/@/lib/referenceInput/editorDocument'
+import { editorTextBetween } from '/@/lib/referenceInput/editorText'
 import {
-  editorTextBetween,
-  partsToEditorText
-} from '/@/lib/referenceInput/editorText'
-import { inputText, parseInput, serializeInput } from '/@/lib/references'
+  parseInput,
+  partsToDisplayText,
+  serializeInput
+} from '/@/lib/references'
+import { partsToProjectedText } from '/@/lib/references/projection'
 
 import { corpusReference, markdownCorpus } from '../../fixtures/markdownCorpus'
 import { createInputEditor, readSource } from './fixture'
 
-it.each(markdownCorpus.map((source, index) => ({ source, index })))(
-  'preserves source, normalization and editor coordinates in corpus $index',
+it.each(markdownCorpus)(
+  'preserves source, normalization and editor coordinates in corpus $name',
   ({ source }) => {
     const parts = parseInput(source, 'message')
     expect(serializeInput(parts)).toBe(source)
-    inputText(parts, () => '@renamed')
+    partsToDisplayText(parts, () => '@renamed')
     expect(serializeInput(parts)).toBe(source)
 
     const normalized = normalizeMessageSource(source)
@@ -26,7 +28,9 @@ it.each(markdownCorpus.map((source, index) => ({ source, index })))(
     const { doc } = editor.state
     expect(doc.childCount).toBe(1)
     expect(doc.firstChild?.type.name).toBe('paragraph')
-    expect(editorTextBetween(doc)).toBe(partsToEditorText(contentToParts(doc)))
+    expect(editorTextBetween(doc)).toBe(
+      partsToProjectedText(contentToParts(doc))
+    )
     expect(editorTextBetween(doc).length).toBe(doc.content.size - 2)
   }
 )

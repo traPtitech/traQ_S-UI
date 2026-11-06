@@ -1,23 +1,17 @@
-import type { Position } from './detector'
 import { forEachData } from './detector'
 
-export const replaceBack = (text: string) => {
-  const internalLinks: Array<Position & { newText: string }> = []
+export const restoreEmbeddingLabels = (text: string) => {
+  const chunks: string[] = []
+  let offset = 0
+
   forEachData(text, (data, position) => {
     if (!data) return
 
-    internalLinks.push({ ...position, newText: data.raw })
+    chunks.push(text.slice(offset, position.start), data.raw)
+    offset = position.start + position.length
   })
 
-  let newText = text
-  let shortenedLength = 0
-  internalLinks.forEach(pos => {
-    const prefix = newText.slice(0, pos.start + shortenedLength)
-    const suffix = newText.slice(pos.start + shortenedLength + pos.length)
+  chunks.push(text.slice(offset))
 
-    newText = `${prefix}${pos.newText}${suffix}`
-    shortenedLength += pos.newText.length - pos.length
-  })
-
-  return newText
+  return chunks.join('')
 }

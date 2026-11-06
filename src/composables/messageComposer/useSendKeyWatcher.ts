@@ -1,14 +1,14 @@
 import {
   checkLevel2InputEventsSupport,
   isMac,
-  isTouchDevice
+  isMobilePlatform
 } from '/@/lib/dom/browser'
 import type { SendKey, SendKeys } from '/@/store/app/browserSettings'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const isLevel2InputEventsSupported = checkLevel2InputEventsSupport()
 const macFlag = isMac()
-const touchDeviceFlag = isTouchDevice()
+const touchDeviceFlag = isMobilePlatform()
 
 interface ModifierKeys {
   altKey?: boolean

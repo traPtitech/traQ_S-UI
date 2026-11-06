@@ -1,4 +1,4 @@
-import { computed, ref, unref } from 'vue'
+import { type Ref, computed, ref, unref } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
 import apis, {
@@ -9,8 +9,8 @@ import apis, {
 import { countLength } from '/@/lib/basic/string'
 import { nilUuid } from '/@/lib/basic/uuid'
 import {
-  normalizeMessageSource,
-  prepareMessageContent
+  createMessageContentBuilder,
+  normalizeMessageSource
 } from '/@/lib/message/content'
 import { uploadAttachments } from '/@/lib/message/uploadAttachments'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
@@ -18,10 +18,11 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import type { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
 import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 import { useToastStore } from '/@/store/ui/toast'
+import type { ChannelId } from '/@/types/entity-ids'
 
 const usePostMessage = (
-  channelId: MessageInputStateKey,
-  inputStateKey = channelId
+  channelId: ChannelId | Ref<ChannelId>,
+  draftKey: MessageInputStateKey = channelId
 ) => {
   const { captureDraftSnapshot, consumeSnapshot } = useMessageInputStateStore()
   const { channelIdToShortPathString } = useChannelPath()
@@ -43,7 +44,7 @@ const usePostMessage = (
 
   const postMessage = async () => {
     // awaitによって変化しないようにあえてリアクティブでないものを取得する
-    const snapshot = captureDraftSnapshot(inputStateKey)
+    const snapshot = captureDraftSnapshot(draftKey)
     const { state, isEmpty } = snapshot
     // awaitの前でunrefしておかないと別のチャンネルに投稿されうる
     const cId = unref(channelId)
@@ -60,7 +61,7 @@ const usePostMessage = (
 
     try {
       // 確定済みの参照を保ち、プレーンテキストを送信時に名前解決しない。
-      const createContent = prepareMessageContent(
+      const createContent = createMessageContentBuilder(
         normalizeMessageSource(state.text),
         embeddingOrigin
       )

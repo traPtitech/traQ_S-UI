@@ -58,10 +58,10 @@ import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageIn
 import MessageInputKeyGuide from '/@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputUploadProgress from '/@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue'
-import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
 import FormButton from '/@/components/UI/FormButton.vue'
+import useModifierKey from '/@/composables/messageComposer/useModifierKey'
+import useTextStampPickerInvoker from '/@/composables/messageComposer/useTextStampPickerInvoker'
 
-import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
 import { useMessageEditing } from './composables/useMessageEditing'
 
 const props = defineProps<{

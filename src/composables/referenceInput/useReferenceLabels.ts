@@ -2,8 +2,8 @@ import useChannelPath from '/@/composables/useChannelPath'
 import {
   type InputMode,
   type Reference,
-  inputText,
   parseInput,
+  partsToDisplayText,
   searchOperator
 } from '/@/lib/references'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -72,7 +72,7 @@ const useReferenceLabels = () => {
   }
 
   const displayInput = (source: string, mode: InputMode) =>
-    inputText(parseInput(source, mode), label)
+    partsToDisplayText(parseInput(source, mode), label)
 
   return { label, displayInput }
 }

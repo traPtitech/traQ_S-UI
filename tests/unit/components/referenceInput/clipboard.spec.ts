@@ -1,6 +1,6 @@
 import { EditorContent } from '@tiptap/vue-3'
 
-import usePaste from '/@/components/Main/MainView/MessageInput/composables/usePaste'
+import usePaste from '/@/composables/messageComposer/usePaste'
 import { REFERENCE_CLIPBOARD_TYPE } from '/@/lib/referenceInput/clipboard'
 import { encodeReference } from '/@/lib/references'
 

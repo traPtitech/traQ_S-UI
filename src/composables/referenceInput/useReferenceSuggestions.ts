@@ -3,7 +3,7 @@ import { computed, shallowRef } from 'vue'
 import type { Editor } from '@tiptap/core'
 
 import useWordSuggestionList from '/@/composables/suggestion/useWordSuggestionList'
-import { isTouchDevice } from '/@/lib/dom/browser'
+import { isMobilePlatform } from '/@/lib/dom/browser'
 import { editInput } from '/@/lib/referenceInput/editOperation'
 import { editorTextBetween } from '/@/lib/referenceInput/editorText'
 import {
@@ -13,6 +13,7 @@ import {
   isStampSuggestion
 } from '/@/lib/referenceInput/suggestion'
 import {
+  type SuggestionNavigation,
   type SuggestionState,
   type SuggestionTransition,
   appendSuggestionEffect,
@@ -42,7 +43,7 @@ type Options = {
 }
 
 const useReferenceSuggestions = (options: Options) => {
-  const touchDevice = isTouchDevice()
+  const allowAsciiSuggestionsDuringComposition = isMobilePlatform()
   const { channelsMap, userIdToDmChannelIdMap } = useChannelsStore()
   const { upsertLocalStampHistory } = useStampHistory()
   const { recordStampUsage } = useStampRecommendations()
@@ -134,7 +135,9 @@ const useReferenceSuggestions = (options: Options) => {
   }
 
   const canSuggestDuringComposition = (current?: SuggestionTarget) =>
-    touchDevice && !!current && /^[\x21-\x7e]+$/.test(current.word)
+    allowAsciiSuggestionsDuringComposition &&
+    !!current &&
+    /^[\x21-\x7e]+$/.test(current.word)
 
   const update = () => {
     if (applyingCompletion) return
@@ -256,10 +259,7 @@ const useReferenceSuggestions = (options: Options) => {
     applyTransition(confirmSuggestion(state.value, word, dmChannelId))
   }
 
-  const cycleCandidatePreview = (
-    backward: boolean,
-    moveFromSelection: boolean
-  ) => {
+  const cycleCandidatePreview = (navigation: SuggestionNavigation) => {
     const editor = options.editor()
     if (!editor || state.value.status === 'closed') return
 
@@ -268,8 +268,7 @@ const useReferenceSuggestions = (options: Options) => {
         state.value,
         candidates.value,
         editor.state.doc,
-        backward,
-        moveFromSelection,
+        navigation,
         dmChannelId
       )
     )
@@ -296,7 +295,8 @@ const useReferenceSuggestions = (options: Options) => {
     const changed = applyTransition(
       descendSuggestionPath(state.value, word, dmChannelId)
     )
-    if (changed) cycleCandidatePreview(false, false)
+    if (changed)
+      cycleCandidatePreview({ direction: 'next', initialSelection: 'boundary' })
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
@@ -322,7 +322,10 @@ const useReferenceSuggestions = (options: Options) => {
       case 'preview':
       case 'next':
       case 'previous':
-        cycleCandidatePreview(action === 'previous', event.key !== 'Tab')
+        cycleCandidatePreview({
+          direction: action === 'previous' ? 'previous' : 'next',
+          initialSelection: event.key === 'Tab' ? 'boundary' : 'advance'
+        })
         break
 
       case 'confirm': {

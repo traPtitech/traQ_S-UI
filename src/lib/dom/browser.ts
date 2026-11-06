@@ -59,7 +59,7 @@ export const isPWA = () => {
   return matchMedia('(display-mode: standalone)').matches
 }
 
-export const isTouchDevice = () => {
+export const isMobilePlatform = () => {
   return isIOS() || ua.includes('android')
 }
 

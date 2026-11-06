@@ -66,11 +66,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, toRef, watch, watchEffect } from 'vue'
+import { computed, ref, toRef, watchEffect } from 'vue'
 
 import { $boolAttr } from '/@/bool-attr'
 import AIcon from '/@/components/UI/AIcon.vue'
 import useFocus from '/@/composables/dom/useFocus'
+import useAttachmentPicker from '/@/composables/messageComposer/useAttachmentPicker'
+import useModifierKey from '/@/composables/messageComposer/useModifierKey'
+import usePostMessage from '/@/composables/messageComposer/usePostMessage'
+import useTextStampPickerInvoker from '/@/composables/messageComposer/useTextStampPickerInvoker'
+import { useTypingActivity } from '/@/composables/messageComposer/useTypingActivity'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import useResponsive from '/@/composables/useResponsive'
@@ -80,7 +85,6 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import { useToastStore } from '/@/store/ui/toast'
 import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 
-import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
 import MessageInputEditor from './MessageInputEditor.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
@@ -89,9 +93,6 @@ import MessageInputPreview from './MessageInputPreview.vue'
 import MessageInputRightControls from './MessageInputRightControls.vue'
 import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
-import useAttachmentPicker from './composables/useAttachmentPicker'
-import useModifierKey from './composables/useModifierKey'
-import usePostMessage from './composables/usePostMessage'
 
 const props = defineProps<{
   channelId: ChannelId | DMChannelId
@@ -106,8 +107,7 @@ const emit = defineEmits<{
 
 const { isMobile } = useResponsive()
 const channelId = toRef(props, 'channelId')
-const { state, isEmpty, isTextEmpty, documentKey } =
-  useMessageInputState(channelId)
+const { state, isEmpty, documentKey } = useMessageInputState(channelId)
 const { addErrorToast } = useToastStore()
 
 const { captureDraftTarget, addAttachments: onAddAttachments } =
@@ -140,18 +140,13 @@ watchEffect(() => {
 })
 
 const { isTyping } = useViewStateSenderStore()
-let timeoutId: NodeJS.Timeout
-
-watch(state, () => {
-  isTyping.value = !isTextEmpty.value && isFocused.value
-
-  if (isTyping.value) {
-    clearTimeout(timeoutId)
+useTypingActivity({
+  text: () => state.text,
+  focused: isFocused,
+  documentKey,
+  onChange: typing => {
+    isTyping.value = typing
   }
-
-  timeoutId = setTimeout(() => {
-    isTyping.value = false
-  }, 10000)
 })
 
 const { postMessage, isPosting, progress } = usePostMessage(channelId)

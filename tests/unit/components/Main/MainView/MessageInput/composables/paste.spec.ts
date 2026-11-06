@@ -1,4 +1,4 @@
-import usePaste from '/@/components/Main/MainView/MessageInput/composables/usePaste'
+import usePaste from '/@/composables/messageComposer/usePaste'
 import { getTextFromHtml } from '/@/lib/dom/dataTransfer'
 
 vi.mock('/@/lib/dom/dataTransfer', () => ({ getTextFromHtml: vi.fn() }))

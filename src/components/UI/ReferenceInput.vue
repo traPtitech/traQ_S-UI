@@ -41,6 +41,7 @@ import useInputComposition from '/@/composables/referenceInput/useInputCompositi
 import useReferenceLabels from '/@/composables/referenceInput/useReferenceLabels'
 import useReferenceSuggestions from '/@/composables/referenceInput/useReferenceSuggestions'
 import useChannelPath from '/@/composables/useChannelPath'
+import { embeddingOrigin } from '/@/lib/apis'
 import { isIOS } from '/@/lib/dom/browser'
 import {
   type PreparePaste,
@@ -339,6 +340,7 @@ const editor = useEditor({
         readonly: () => props.readonly,
         mode: () => props.mode,
         label,
+        channelLinkOrigins: () => [location.origin, embeddingOrigin],
         channelPathToId: channelPathStringToId,
         insertParts,
         insertText: insertTextAt,

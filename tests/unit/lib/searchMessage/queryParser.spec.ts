@@ -1,4 +1,4 @@
-import { inputText, parseInput } from '/@/lib/references'
+import { parseInput, partsToDisplayText } from '/@/lib/references'
 import type { StoreForParser } from '/@/lib/searchMessage/parserBase'
 import {
   createQueryParser,
@@ -372,7 +372,7 @@ describe('parseQuery', () => {
       async ({ query, expectedNormalizedQuery, expectedQueryObject }) => {
         const { serializedQuery, queryObject } = await parseQuery(query)
 
-        expect(inputText(parseInput(serializedQuery, 'search'))).toBe(
+        expect(partsToDisplayText(parseInput(serializedQuery, 'search'))).toBe(
           expectedNormalizedQuery
         )
 
