@@ -12,11 +12,11 @@
 <script lang="ts" setup>
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
 
-import { computed, ref, watchEffect } from 'vue'
+import { computed } from 'vue'
 
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
+import { useRenderedMarkdown } from '/@/composables/markdown/useRenderedMarkdown'
 import { constructStampString } from '/@/lib/markdown/constructStampString'
-import { render } from '/@/lib/markdown/markdown'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { StampId } from '/@/types/entity-ids'
 
@@ -38,14 +38,7 @@ const previewText = computed(() => {
   return constructStampString(stampName, props.sizeEffect, props.animeEffects)
 })
 
-const rendered = ref('')
-watchEffect(async () => {
-  if (!props.stampId) {
-    rendered.value = ''
-    return
-  }
-  rendered.value = (await render(previewText.value)).renderedText
-})
+const { renderedContent: rendered } = useRenderedMarkdown(previewText)
 </script>
 
 <style lang="scss" module>

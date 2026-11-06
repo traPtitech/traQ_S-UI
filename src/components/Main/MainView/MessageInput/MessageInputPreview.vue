@@ -11,14 +11,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { computed } from 'vue'
 
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
+import { useRenderedMarkdown } from '/@/composables/markdown/useRenderedMarkdown'
 import useResponsive from '/@/composables/useResponsive'
 import { isMessage } from '/@/lib/guard/embeddingOrUrl'
-import { render } from '/@/lib/markdown/markdown'
 import { normalizeMessageSource } from '/@/lib/message/content'
-import type { MessageId } from '/@/types/entity-ids'
 
 import MessageQuoteList from '../MessageElement/Embeddings/MessageQuoteList.vue'
 
@@ -28,25 +27,13 @@ const props = defineProps<{
 }>()
 
 const { isMobile } = useResponsive()
-const previewRendered = ref('')
-const quoteMessageIds = ref<MessageId[]>([])
+const { rendered, renderedContent: previewRendered } = useRenderedMarkdown(() =>
+  normalizeMessageSource(props.text)
+)
 
-watchEffect(async onCleanup => {
-  let active = true
-
-  onCleanup(() => {
-    active = false
-  })
-
-  const { renderedText, embeddings } = await render(
-    normalizeMessageSource(props.text)
-  )
-
-  if (!active) return
-
-  previewRendered.value = renderedText
-  quoteMessageIds.value = embeddings.filter(isMessage).map(({ id }) => id)
-})
+const quoteMessageIds = computed(
+  () => rendered.value?.embeddings.filter(isMessage).map(({ id }) => id) ?? []
+)
 </script>
 
 <style lang="scss" module>

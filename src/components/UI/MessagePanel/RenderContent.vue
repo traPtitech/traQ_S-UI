@@ -24,14 +24,12 @@
 </template>
 
 <script lang="ts">
-import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
+import { computed, watchEffect } from 'vue'
 
-import { computed, ref, watchEffect } from 'vue'
-
+import { useRenderedMarkdown } from '/@/composables/markdown/useRenderedMarkdown'
 import type { AttachmentType } from '/@/lib/basic/file'
 import { mimeToFileType } from '/@/lib/basic/file'
 import { isFile } from '/@/lib/guard/embeddingOrUrl'
-import { renderInline } from '/@/lib/markdown/markdown'
 import { useMessagesStore } from '/@/store/entities/messages'
 
 const getUniqueFileTypes = (fileTypes: Array<[AttachmentType, boolean]>) => {
@@ -69,9 +67,8 @@ const props = withDefaults(
 
 const { fileMetaDataMap, fetchFileMetaData } = useMessagesStore()
 
-const rendered = ref<MarkdownRenderResult>()
-watchEffect(async () => {
-  rendered.value = await renderInline(props.content)
+const { rendered, renderedContent } = useRenderedMarkdown(() => props.content, {
+  inline: true
 })
 
 const files = computed(() => rendered.value?.embeddings.filter(isFile) ?? [])
@@ -94,7 +91,6 @@ const fileTypes = computed(() =>
 const hasMessage = computed(() =>
   rendered.value?.embeddings.some(e => e.type === 'message')
 )
-const renderedContent = computed(() => rendered.value?.renderedText)
 </script>
 
 <style lang="scss" module>

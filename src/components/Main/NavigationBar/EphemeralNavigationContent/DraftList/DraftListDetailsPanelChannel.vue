@@ -17,11 +17,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watchEffect } from 'vue'
+import { computed } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
+import { useRenderedMarkdown } from '/@/composables/markdown/useRenderedMarkdown'
 import useChannelPath from '/@/composables/useChannelPath'
-import { renderInline } from '/@/lib/markdown/markdown'
 import type { ReadonlyMessageInputState } from '/@/store/ui/messageInputStateStore'
 import type { ChannelId } from '/@/types/entity-ids'
 
@@ -38,10 +38,8 @@ const channelPath = computed(
 const channelLink = computed(() => channelIdToLink(props.channelId) ?? '')
 const hasAttachments = computed(() => props.state.attachments.length > 0)
 
-const renderedContent = ref()
-watchEffect(async () => {
-  const { renderedText } = await renderInline(props.state.text)
-  renderedContent.value = renderedText
+const { renderedContent } = useRenderedMarkdown(() => props.state.text, {
+  inline: true
 })
 </script>
 
