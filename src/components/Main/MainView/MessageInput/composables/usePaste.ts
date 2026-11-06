@@ -1,4 +1,5 @@
 import { getTextFromHtml } from '/@/lib/dom/dataTransfer'
+import type { PreparePaste } from '/@/lib/referenceInput/dataTransfer'
 
 const readSvgFiles = async (): Promise<File[]> => {
   try {
@@ -34,10 +35,8 @@ export const readPaste = (event: ClipboardEvent) => {
   const hasHtml = data.types.includes('text/html')
   const files = [...data.files]
 
-  if (hasHtml) event.preventDefault()
-
   return {
-    text: hasHtml ? getTextFromHtml(data).catch(() => plainText) : undefined,
+    text: hasHtml ? getTextFromHtml(data).catch(() => plainText) : plainText,
     files: data.types.includes('image/svg+xml')
       ? readSvgFiles().then(svg => [...files, ...svg])
       : files
@@ -47,13 +46,16 @@ export const readPaste = (event: ClipboardEvent) => {
 const usePaste = (
   emit: (name: 'addAttachments', files: File[] | Promise<File[]>) => void
 ) => {
-  const preparePaste = (event: ClipboardEvent) => {
+  const preparePaste: PreparePaste = event => {
     const result = readPaste(event)
     if (!result) return
 
     if (!Array.isArray(result.files) || result.files.length)
       emit('addAttachments', result.files)
+
     return result.text
+      ? { type: 'text', text: result.text }
+      : { type: 'handled' }
   }
 
   return { preparePaste }

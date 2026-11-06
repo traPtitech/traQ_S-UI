@@ -1,4 +1,4 @@
-import { TextSelection } from '@tiptap/pm/state'
+import { type Selection, TextSelection } from '@tiptap/pm/state'
 import type { EditorView } from '@tiptap/pm/view'
 
 export const currentInputSelection = (view: EditorView) => {
@@ -23,4 +23,15 @@ export const currentInputSelection = (view: EditorView) => {
   if (anchor === selection.anchor && head === selection.head) return selection
 
   return TextSelection.between(doc.resolve(anchor), doc.resolve(head))
+}
+
+export const syncInputSelection = (
+  view: EditorView,
+  selection: Selection = currentInputSelection(view)
+) => {
+  // 編集前に同期し、Undo にも DOM の選択位置を保存する。
+  if (!selection.eq(view.state.selection))
+    view.dispatch(view.state.tr.setSelection(selection))
+
+  return view.state
 }

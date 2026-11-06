@@ -11,6 +11,7 @@ import {
 
 import type { Reference } from '../references'
 import { compositionSafeShortcuts, isComposingInput } from './composition'
+import { syncInputSelection } from './selection'
 
 const reopenReference =
   (label: (reference: Reference) => string): Command =>
@@ -109,7 +110,7 @@ export const referenceNode = (
                 !event.cancelable ||
                 isComposingInput(view, event, isComposing) ||
                 !view.editable ||
-                !reopenReference(label)(view.state, view.dispatch)
+                !reopenReference(label)(syncInputSelection(view), view.dispatch)
               )
                 return false
 

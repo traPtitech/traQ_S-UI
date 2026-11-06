@@ -6,12 +6,14 @@ import type { InputMode, InputPart, Reference } from '../references'
 import { readClipboardData, writeClipboardData } from './clipboard'
 import { editInput } from './editOperation'
 import { contentToParts } from './editorDocument'
+import { editorTextBetween } from './editorText'
 import { pastedChannelLinks } from './pastedChannelLinks'
 import { currentInputSelection } from './selection'
 
-export type PreparePaste = (
-  event: ClipboardEvent
-) => Promise<string> | undefined
+export type PastePlan =
+  { type: 'handled' } | { type: 'text'; text: string | Promise<string> }
+
+export type PreparePaste = (event: ClipboardEvent) => PastePlan | undefined
 
 export const inputDataTransfer = (options: {
   editor: () => Editor | undefined
@@ -81,8 +83,8 @@ export const inputDataTransfer = (options: {
           ? pastedChannelLinks(data.getData('text/plain'), {
               origins: [location.origin, embeddingOrigin],
               channelPathToId: options.channelPathToId,
-              before: doc.textBetween(1, from, '', '\uFFFC'),
-              after: doc.textBetween(to, doc.content.size - 1, '', '\uFFFC')
+              before: editorTextBetween(doc, 1, from),
+              after: editorTextBetween(doc, to)
             })
           : undefined)
 
@@ -93,10 +95,14 @@ export const inputDataTransfer = (options: {
         return true
       }
 
-      const pending = options.preparePaste?.(event)
-      if (pending) {
+      const plan = options.preparePaste?.(event)
+      if (plan) {
         event.preventDefault()
-        void pending.then(text => {
+        if (plan.type === 'handled') return true
+
+        const insert = (text: string) => {
+          if (!text) return
+
           const current = options.editor()
           if (
             current &&
@@ -105,13 +111,17 @@ export const inputDataTransfer = (options: {
             view.state.doc === doc
           )
             edit(() => options.insertText(text, range))
-        })
+        }
+
+        if (typeof plan.text === 'string') insert(plan.text)
+        else void plan.text.then(insert).catch(() => undefined)
+
+        return true
       }
 
-      if (event.defaultPrevented) return true
-
       event.preventDefault()
-      edit(() => options.insertText(data.getData('text/plain'), range))
+      const text = data.getData('text/plain')
+      if (text) edit(() => options.insertText(text, range))
 
       return true
     },

@@ -30,11 +30,12 @@ it('keeps converted text when clipboard permission lookup fails', async () => {
   const emit = vi.fn()
   const { preparePaste } = usePaste(emit)
   const event = clipboardEvent()
-  const text = preparePaste(event)
+  const plan = preparePaste(event)
 
-  expect(event.defaultPrevented).toBe(true)
+  expect(event.defaultPrevented).toBe(false)
   expect(emit).toHaveBeenCalledOnce()
-  expect(await text).toBe('converted')
+  expect(plan?.type).toBe('text')
+  expect(plan?.type === 'text' && (await plan.text)).toBe('converted')
   expect(await emit.mock.calls[0]?.[1]).toEqual([])
 })
 
@@ -48,7 +49,7 @@ it('falls back to plain text without waiting for optional SVG extraction', async
   const emit = vi.fn()
   const result = usePaste(emit).preparePaste(clipboardEvent())
 
-  expect(await result).toBe('fallback text')
+  expect(result?.type === 'text' && (await result.text)).toBe('fallback text')
   permission.resolve({ state: 'denied' } as PermissionStatus)
   expect(await emit.mock.calls[0]?.[1]).toEqual([])
 })

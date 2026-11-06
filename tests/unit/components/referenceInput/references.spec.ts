@@ -13,6 +13,33 @@ await vi.hoisted(async () => {
   await import('./mocks')
 })
 
+it('uses the native caret when software Backspace precedes selectionchange', async () => {
+  const wrapper = await makeInput(embedded + 'abc')
+  await focus(wrapper)
+
+  const editor = wrapper.getComponent(EditorContent).props('editor')
+  if (!editor) throw new Error('Editor is not mounted')
+
+  editor.commands.setTextSelection(2)
+  const text = editor.view.dom.querySelector('p')?.lastChild
+  if (!(text instanceof Text)) throw new Error('Missing text')
+
+  document.getSelection()?.setBaseAndExtent(text, 3, text, 3)
+
+  const event = new InputEvent('beforeinput', {
+    inputType: 'deleteContentBackward',
+    bubbles: true,
+    cancelable: true
+  })
+
+  wrapper.vm.element?.dispatchEvent(event)
+
+  expect(event.defaultPrevented).toBe(false)
+  expect(wrapper.find('.reference-token').exists()).toBe(true)
+  expect(editor.state.selection.head).toBe(5)
+  expect(lastValue(wrapper)).toBeUndefined()
+})
+
 it('reopens a reference for a software keyboard Backspace without keydown', async () => {
   const wrapper = await makeInput(embedded)
   await focus(wrapper)

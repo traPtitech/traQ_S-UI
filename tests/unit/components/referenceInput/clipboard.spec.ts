@@ -1,5 +1,6 @@
 import { EditorContent } from '@tiptap/vue-3'
 
+import usePaste from '/@/components/Main/MainView/MessageInput/composables/usePaste'
 import { REFERENCE_CLIPBOARD_TYPE } from '/@/lib/referenceInput/clipboard'
 import { encodeReference } from '/@/lib/references'
 
@@ -16,6 +17,39 @@ await vi.hoisted(async () => {
   await import('./mocks')
 })
 
+it.each([
+  { text: '', expected: 'hello' },
+  { text: 'image caption', expected: 'himage captiono' }
+])(
+  'preserves the selected text for a file-only paste: $text',
+  async ({ text, expected }) => {
+    const wrapper = await makeInput('hello')
+    const emit = vi.fn()
+    await wrapper.setProps({ preparePaste: usePaste(emit).preparePaste })
+    await focus(wrapper)
+
+    const editor = wrapper.getComponent(EditorContent).props('editor')
+    editor?.commands.setTextSelection({ from: 2, to: 5 })
+
+    const file = new File(['png'], 'image.png', { type: 'image/png' })
+    const event = new Event('paste', { bubbles: true, cancelable: true })
+
+    Object.defineProperty(event, 'clipboardData', {
+      value: {
+        types: text ? ['Files', 'text/plain'] : ['Files'],
+        files: [file],
+        getData: (type: string) => (type === 'text/plain' ? text : '')
+      }
+    })
+
+    wrapper.vm.element?.dispatchEvent(event)
+
+    expect(event.defaultPrevented).toBe(true)
+    expect(emit).toHaveBeenCalledExactlyOnceWith('addAttachments', [file])
+    expect(editor?.state.doc.textContent).toBe(expected)
+  }
+)
+
 const copiedChannelLink = () =>
   `[#times/25/person](${location.origin}/channels/times/25/person)`
 
@@ -31,6 +65,21 @@ const pasteText = (
 
   wrapper.vm.element?.dispatchEvent(event)
 }
+
+it('preserves the selection when asynchronous clipboard conversion has no text', async () => {
+  const wrapper = await makeInput('hello')
+  await wrapper.setProps({
+    preparePaste: () => ({ type: 'text', text: Promise.resolve('') })
+  })
+  await focus(wrapper)
+  const editor = wrapper.getComponent(EditorContent).props('editor')
+  editor?.commands.setTextSelection({ from: 2, to: 5 })
+  pasteText(wrapper, '')
+
+  await Promise.resolve()
+  expect(editor?.state.doc.textContent).toBe('hello')
+  expect(editor?.state.selection).toMatchObject({ from: 2, to: 5 })
+})
 
 it('pastes copied channel links as references and supports Undo', async () => {
   setChannelTree()
