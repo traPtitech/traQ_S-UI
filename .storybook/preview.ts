@@ -2,15 +2,18 @@ import { computed } from 'vue'
 
 import type { Preview } from '@storybook/vue3-vite'
 import { setup } from '@storybook/vue3-vite'
+import { VueQueryPlugin } from '@tanstack/vue-query'
 import { createPinia } from 'pinia'
 
 import boolAttr from '/@/bool-attr'
+import { createQueryClient } from '/@/lib/queryClient'
 import '/@/styles/global.scss'
 
 import ThemeProvider from './ThemeProvider.vue'
 
 setup(app => {
   app.use(createPinia())
+  app.use(VueQueryPlugin, { queryClient: createQueryClient() })
   app.use(boolAttr)
 })
 

@@ -1,12 +1,18 @@
+import type { App } from 'vue'
 import { createApp } from 'vue'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type Options = {}
+import { VueQueryPlugin } from '@tanstack/vue-query'
+
+import { createQueryClient } from '/@/lib/queryClient'
+
+type Options = {
+  setup?: (app: App) => void
+}
 
 export const withSetup =
   <A extends readonly unknown[], R>(
     composable: (...args: A) => R,
-    _options: Options = {}
+    options: Options = {}
   ) =>
   (...args: A) => {
     let result!: R
@@ -18,6 +24,7 @@ export const withSetup =
         return () => {}
       }
     })
+    options.setup?.(app)
     app.mount(document.createElement('div'))
 
     const funcs = {
@@ -28,3 +35,12 @@ export const withSetup =
 
     return [result, funcs] as const
   }
+
+export const withQuerySetup = <A extends readonly unknown[], R>(
+  composable: (...args: A) => R
+) =>
+  withSetup(composable, {
+    setup: app => {
+      app.use(VueQueryPlugin, { queryClient: createQueryClient() })
+    }
+  })

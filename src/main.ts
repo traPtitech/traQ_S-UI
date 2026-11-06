@@ -1,8 +1,11 @@
 import { createApp } from 'vue'
 
+import { VueQueryPlugin } from '@tanstack/vue-query'
+
 import App from './App.vue'
 import boolAttr from './bool-attr'
 import { initializeMeta } from './lib/apis'
+import { createQueryClient } from './lib/queryClient'
 import { deleteStampCacheIDB } from './lib/stampCache'
 import { setupGlobalFuncs } from './markdown-bridge'
 import router from './router'
@@ -19,6 +22,7 @@ const bootstrap = async () => {
   const app = createApp(App)
   app.use(router)
   app.use(store)
+  app.use(VueQueryPlugin, { queryClient: createQueryClient() })
 
   app.use(boolAttr)
 

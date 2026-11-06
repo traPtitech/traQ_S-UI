@@ -1,3 +1,5 @@
+import type * as Vue from 'vue'
+
 const { initializeMeta, createApp, app, setupGlobalFuncs } = vi.hoisted(() => {
   const app = { use: vi.fn(), mount: vi.fn(), config: {} }
   return {
@@ -8,7 +10,10 @@ const { initializeMeta, createApp, app, setupGlobalFuncs } = vi.hoisted(() => {
   }
 })
 
-vi.mock('vue', () => ({ createApp }))
+vi.mock('vue', async importOriginal => ({
+  ...(await importOriginal<typeof Vue>()),
+  createApp
+}))
 vi.mock('/@/lib/apis', () => ({ initializeMeta }))
 vi.mock('/@/App.vue', () => ({ default: {} }))
 vi.mock('/@/bool-attr', () => ({ default: {} }))

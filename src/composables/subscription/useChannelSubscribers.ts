@@ -1,42 +1,59 @@
-import { ref, watchEffect } from 'vue'
+import { computed, watch } from 'vue'
+
+import { useQuery, useQueryClient } from '@tanstack/vue-query'
 
 import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
-import { createSingleflight } from '/@/lib/basic/async'
 import { wsListener } from '/@/lib/websocket'
 import type { ChannelId } from '/@/types/entity-ids'
-
-const getChannelSubscribers = createSingleflight(
-  apis.getChannelSubscribers.bind(apis)
-)
 
 /**
  * 閲覧中のチャンネルでないとwsからのイベントが来ないため変化しないので注意
  */
 const useChannelSubscribers = (props: { channelId: ChannelId }) => {
-  const subscribers = ref(new Set<string>())
+  const queryClient = useQueryClient()
+  const queryKey = computed(
+    () => ['channel-subscribers', props.channelId] as const
+  )
 
-  const fetch = async () => {
-    try {
-      const [res] = await getChannelSubscribers(props.channelId)
-      subscribers.value = new Set(res.data)
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e)
-      subscribers.value.clear()
-    }
-  }
+  const request = useQuery({
+    queryKey,
 
-  // 表示されたまたはチャンネルが変わったとき
-  watchEffect(() => {
-    fetch()
+    queryFn: async ({ queryKey: [, channelId], signal }) =>
+      (await apis.getChannelSubscribers(channelId, { signal })).data
   })
+
+  watch(request.error, error => {
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.error(error)
+    }
+  })
+
+  const subscribers = computed(
+    () => new Set(request.isError.value ? [] : request.data.value)
+  )
+
+  const refresh = async () => {
+    const filters = {
+      queryKey: queryKey.value,
+      exact: true,
+      type: 'active' as const
+    }
+
+    await queryClient.cancelQueries(filters)
+    await queryClient.refetchQueries(filters, { cancelRefetch: false })
+  }
 
   useMittListener(wsListener, 'CHANNEL_SUBSCRIBERS_CHANGED', ({ id }) => {
     if (id !== props.channelId) return
-    fetch()
+
+    void refresh()
   })
-  useMittListener(wsListener, 'reconnect', fetch)
+
+  useMittListener(wsListener, 'reconnect', () => {
+    void refresh()
+  })
 
   return subscribers
 }
