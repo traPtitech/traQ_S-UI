@@ -57,7 +57,7 @@ const useMessageInputStateStorePinia = defineStore(
       messageInputState: new Map<ChannelId, MessageInputState>()
     }
 
-    const [state] = useIndexedDbValue(
+    const [state, , restoringPromise] = useIndexedDbValue(
       'store/ui/messageInputStateStore',
       1,
       {
@@ -179,6 +179,7 @@ const useMessageInputStateStorePinia = defineStore(
     }
 
     return {
+      restoringPromise,
       inputChannels,
       hasInputChannel,
       getStore,

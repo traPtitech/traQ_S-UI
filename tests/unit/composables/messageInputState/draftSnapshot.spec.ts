@@ -11,7 +11,7 @@ vi.mock('/@/composables/storage/useIndexedDbValue', () => ({
     _version: number,
     _migrations: unknown,
     initial: object
-  ) => [reactive(initial)]
+  ) => [reactive(initial), ref(false), Promise.resolve()]
 }))
 
 vi.mock('/@/store/entities/channels', () => ({
