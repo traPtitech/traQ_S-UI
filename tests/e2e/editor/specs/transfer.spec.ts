@@ -1,37 +1,35 @@
 import { type EditorElement, expect, test } from '../support'
 
-test('preserves references through real clipboard copy, cut, paste and Undo', async ({
-  page,
-  input,
-  load,
-  modifier,
-  browserName
-}) => {
-  test.skip(
-    browserName !== 'chromium',
-    'clipboard permissions are exercised in Chromium'
-  )
+test(
+  'preserves references through real clipboard copy, cut, paste and Undo',
+  { tag: '@chromium' },
+  async ({ page, input, load, modifier, browserName }) => {
+    test.skip(
+      browserName !== 'chromium',
+      'clipboard permissions are exercised in Chromium'
+    )
 
-  await page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
-  const reference =
-    '!{"type":"user","id":"11111111-1111-4111-8111-111111111111","raw":"@alice"}'
-  await load({ text: reference, markdown: true })
-  await input.focus()
-  await input.press(`${modifier}+a`)
-  await input.press(`${modifier}+c`)
+    await page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
+    const reference =
+      '!{"type":"user","id":"11111111-1111-4111-8111-111111111111","raw":"@alice"}'
+    await load({ text: reference, markdown: true })
+    await input.focus()
+    await input.press(`${modifier}+a`)
+    await input.press(`${modifier}+c`)
 
-  await expect
-    .poll(() => page.evaluate(() => navigator.clipboard.readText()))
-    .toBe('@alice')
+    await expect
+      .poll(() => page.evaluate(() => navigator.clipboard.readText()))
+      .toBe('@alice')
 
-  await input.press(`${modifier}+x`)
-  await expect(page.getByTestId('source')).toHaveText('')
-  await input.press(`${modifier}+v`)
-  await expect(page.getByTestId('source')).toHaveText(reference)
-  await expect(input.locator('.reference-token')).toHaveText('@alice')
-  await input.press(`${modifier}+z`)
-  await expect(page.getByTestId('source')).toHaveText('')
-})
+    await input.press(`${modifier}+x`)
+    await expect(page.getByTestId('source')).toHaveText('')
+    await input.press(`${modifier}+v`)
+    await expect(page.getByTestId('source')).toHaveText(reference)
+    await expect(input.locator('.reference-token')).toHaveText('@alice')
+    await input.press(`${modifier}+z`)
+    await expect(page.getByTestId('source')).toHaveText('')
+  }
+)
 
 for (const operation of ['copy', 'cut', 'paste', 'paste HTML'] as const) {
   test(`uses the current DOM selection for ${operation} before selectionchange`, async ({

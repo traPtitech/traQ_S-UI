@@ -57,30 +57,29 @@ for (const device of ['iPad Pro 11', 'Desktop Safari']) {
 
     for (const markdown of [false, true]) {
       for (const software of [false, true]) {
-        test(`inserts one newline per Enter with Markdown ${markdown}, software events ${software}`, async ({
-          page,
-          input,
-          load,
-          selectEditorOffsets
-        }) => {
-          await page.clock.install()
-          await load({ text: 'hello', markdown })
-          await selectEditorOffsets(5)
+        test(
+          `inserts one newline per Enter with Markdown ${markdown}, software events ${software}`,
+          { tag: ['@synthetic-input', '@webkit', '@tablet'] },
+          async ({ page, input, load, selectEditorOffsets }) => {
+            await page.clock.install()
+            await load({ text: 'hello', markdown })
+            await selectEditorOffsets(5)
 
-          for (let count = 1; count <= 2; count++) {
-            if (software) await softwareEnter(input)
-            else await input.press('Enter')
+            for (let count = 1; count <= 2; count++) {
+              if (software) await softwareEnter(input)
+              else await input.press('Enter')
 
-            // Also run ProseMirror's delayed iOS Enter fallback.
-            await page.clock.runFor(250)
-            await expect(page.getByTestId('source')).toHaveJSProperty(
-              'textContent',
-              'hello' + '\n'.repeat(count)
-            )
-            await expect(page.getByTestId('posts')).toHaveText('0')
-            await expect(input).toBeFocused()
+              // Also run ProseMirror's delayed iOS Enter fallback.
+              await page.clock.runFor(250)
+              await expect(page.getByTestId('source')).toHaveJSProperty(
+                'textContent',
+                'hello' + '\n'.repeat(count)
+              )
+              await expect(page.getByTestId('posts')).toHaveText('0')
+              await expect(input).toBeFocused()
+            }
           }
-        })
+        )
       }
     }
 
@@ -88,53 +87,52 @@ for (const device of ['iPad Pro 11', 'Desktop Safari']) {
       ['insertParagraph', '- item\n- '],
       ['insertLineBreak', '- item\n  ']
     ] as const) {
-      test(`keeps Markdown list continuation for ${inputType}`, async ({
-        page,
-        input,
-        load,
-        selectEditorOffsets
-      }) => {
-        await page.clock.install()
-        await load({ text: '- item', markdown: true })
-        await selectEditorOffsets(6)
+      test(
+        `keeps Markdown list continuation for ${inputType}`,
+        { tag: ['@synthetic-input', '@webkit', '@tablet'] },
+        async ({ page, input, load, selectEditorOffsets }) => {
+          await page.clock.install()
+          await load({ text: '- item', markdown: true })
+          await selectEditorOffsets(6)
 
-        await softwareEnter(input, inputType)
-        await page.clock.runFor(250)
+          await softwareEnter(input, inputType)
+          await page.clock.runFor(250)
 
-        await expect(page.getByTestId('source')).toHaveJSProperty(
-          'textContent',
-          expected
-        )
-        await expect(page.getByTestId('posts')).toHaveText('0')
-      })
+          await expect(page.getByTestId('source')).toHaveJSProperty(
+            'textContent',
+            expected
+          )
+          await expect(page.getByTestId('posts')).toHaveText('0')
+        }
+      )
     }
 
-    test('confirms a stamp without inserting a delayed newline', async ({
-      page,
-      input,
-      load
-    }) => {
-      await page.clock.install()
-      await load({ text: '', markdown: true })
-      await input.pressSequentially(':ok')
-      const menu = page.getByRole('grid', { name: '入力候補' })
-      await expect(menu).toBeVisible()
+    test(
+      'confirms a stamp without inserting a delayed newline',
+      { tag: ['@synthetic-input', '@webkit', '@tablet'] },
+      async ({ page, input, load }) => {
+        await page.clock.install()
+        await load({ text: '', markdown: true })
+        await input.pressSequentially(':ok')
+        const menu = page.getByRole('grid', { name: '入力候補' })
+        await expect(menu).toBeVisible()
 
-      await softwareEnter(input)
-      await page.clock.runFor(250)
-      await expect(page.getByTestId('source')).toHaveJSProperty(
-        'textContent',
-        ':ok_hand: '
-      )
-      await expect(menu).toHaveCount(0)
+        await softwareEnter(input)
+        await page.clock.runFor(250)
+        await expect(page.getByTestId('source')).toHaveJSProperty(
+          'textContent',
+          ':ok_hand: '
+        )
+        await expect(menu).toHaveCount(0)
 
-      await softwareEnter(input)
-      await page.clock.runFor(250)
-      await expect(page.getByTestId('source')).toHaveJSProperty(
-        'textContent',
-        ':ok_hand: \n'
-      )
-      await expect(page.getByTestId('posts')).toHaveText('0')
-    })
+        await softwareEnter(input)
+        await page.clock.runFor(250)
+        await expect(page.getByTestId('source')).toHaveJSProperty(
+          'textContent',
+          ':ok_hand: \n'
+        )
+        await expect(page.getByTestId('posts')).toHaveText('0')
+      }
+    )
   })
 }

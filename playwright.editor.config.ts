@@ -1,12 +1,6 @@
 import { defineConfig, devices } from '@playwright/test'
 
 const baseURL = 'http://127.0.0.1:4174/tests/e2e/editor/'
-const mobileSpecs = [
-  '**/mobileTouch.spec.ts',
-  '**/messageSubmission.spec.ts',
-  '**/stampEffectButton.spec.ts',
-  '**/referenceLayout.spec.ts'
-]
 
 export default defineConfig({
   testDir: './tests/e2e/editor/specs',
@@ -36,32 +30,35 @@ export default defineConfig({
     {
       name: 'chromium',
       use: devices['Desktop Chrome'],
-      testIgnore: '**/mobileTouch.spec.ts'
+      grepInvert: /@touch|@webkit/
     },
     {
       name: 'firefox',
       use: devices['Desktop Firefox'],
-      testIgnore: '**/mobileTouch.spec.ts'
+      grepInvert: /@touch|@chromium|@webkit/
     },
     {
       name: 'webkit',
       use: devices['Desktop Safari'],
-      testIgnore: '**/mobileTouch.spec.ts'
+      grepInvert: /@touch|@chromium/
     },
     {
       name: 'mobile-chromium',
       use: devices['Pixel 7'],
-      testMatch: [...mobileSpecs, '**/mobileComposition.spec.ts']
+      grep: /@mobile|@android/,
+      grepInvert: /@webkit/
     },
     {
       name: 'mobile-webkit',
       use: devices['iPhone 13'],
-      testMatch: mobileSpecs
+      grep: /@mobile/,
+      grepInvert: /@chromium/
     },
     {
       name: 'tablet-webkit',
       use: devices['iPad Pro 11'],
-      testMatch: [...mobileSpecs, '**/mobileInput.spec.ts']
+      grep: /@mobile|@tablet/,
+      grepInvert: /@chromium/
     }
   ]
 })
