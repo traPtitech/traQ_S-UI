@@ -1,4 +1,73 @@
-import { createMutex, createSingleflight } from '/@/lib/basic/async'
+import { flushPromises } from '@vue/test-utils'
+
+import {
+  createMutex,
+  createOrderedTask,
+  createSingleflight
+} from '/@/lib/basic/async'
+
+describe('createOrderedTask', () => {
+  it('prepares in parallel and waits for earlier commits', async () => {
+    const run = createOrderedTask()
+    const pending = Promise.withResolvers<string>()
+    const received: string[] = []
+    const commit = (value: string) => {
+      received.push(value)
+    }
+    const prepareSecond = vi.fn(async () => 'second')
+
+    const first = run(() => pending.promise, commit)
+    const second = run(prepareSecond, commit)
+    await flushPromises()
+
+    expect(prepareSecond).toHaveBeenCalledOnce()
+    expect(received).toEqual([])
+
+    pending.resolve('first')
+    await Promise.all([first, second])
+
+    expect(received).toEqual(['first', 'second'])
+  })
+
+  it('does not let a failed preparation release the tasks before it', async () => {
+    const run = createOrderedTask()
+    const pending = Promise.withResolvers<string>()
+    const received: string[] = []
+    const commit = (value: string) => {
+      received.push(value)
+    }
+    const first = run(() => pending.promise, commit)
+    const failed = run(async () => {
+      throw new Error('failed')
+    }, commit)
+    const third = run(async () => 'third', commit)
+
+    await expect(failed).rejects.toThrow('failed')
+    expect(received).toEqual([])
+
+    pending.resolve('first')
+    await Promise.all([first, third])
+
+    expect(received).toEqual(['first', 'third'])
+  })
+
+  it('releases later tasks when a commit fails', async () => {
+    const run = createOrderedTask()
+    const first = run(
+      async () => 'first',
+      () => {
+        throw new Error('failed')
+      }
+    )
+    const second = run(
+      async () => 'second',
+      value => value
+    )
+
+    await expect(first).rejects.toThrow('failed')
+    await expect(second).resolves.toBe('second')
+  })
+})
 
 describe('createSingleFlight', () => {
   const createSff = () => {

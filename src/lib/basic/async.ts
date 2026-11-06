@@ -1,5 +1,31 @@
 import type { MaybePromise } from '/@/types/utility'
 
+/** 準備は並列に実行し、結果の反映だけを呼び出し順に行う。失敗しても後続を止めない。 */
+export const createOrderedTask = () => {
+  let pending = Promise.resolve()
+
+  return async <T, Result>(
+    prepare: () => Promise<T>,
+    commit: (value: T) => MaybePromise<Result>
+  ): Promise<Result> => {
+    const previous = pending
+    let release!: () => void
+    const completed = new Promise<void>(resolve => {
+      release = resolve
+    })
+    pending = previous.then(() => completed)
+
+    try {
+      const value = await prepare()
+      await previous
+
+      return await commit(value)
+    } finally {
+      release()
+    }
+  }
+}
+
 /**
  * 取得中の処理があればその処理を行わずに実行中の処理が完了した結果を受け取る
  *
