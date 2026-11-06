@@ -325,10 +325,13 @@ describe('parseQuery', () => {
   ]
 
   const store: StoreForParser = {
-    getCurrentChannelId: () => mockCurrentChannelId,
+    getCurrentChannel: () => ({
+      kind: 'channel',
+      id: mockCurrentChannelId,
+      label: mockCurrentChannelPath
+    }),
     getMyDmChannelId: () => mockMyDmChannelId,
     getMyUserId: () => mockMyUserId,
-    getCurrentChannelPathOrUserName: () => mockCurrentChannelPath,
     getMyUserName: () => mockMyUserName,
     channelPathToId: channelPath => {
       if (channelPath === mockChannelName) {

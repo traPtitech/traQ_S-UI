@@ -98,8 +98,7 @@ export type ResolvedFilter =
     }[ReferenceFilter['type']]
 
 type SearchContext = {
-  channelId?: string
-  channelLabel?: string
+  channel: ReturnType<StoreForParser['getCurrentChannel']>
   dmChannelId?: string
   userId?: string
   userName?: string
@@ -118,17 +117,21 @@ const resolveFilter = (
 
   if (filter.type === 'in') {
     const self = filter.value === MeToken
-    const value = self ? context.dmChannelId : context.channelId
+    const value = self ? context.dmChannelId : context.channel?.id
     if (!value)
       throw new Error('検索対象のユーザーまたはチャンネルを取得できません')
 
     return {
       type: 'in',
       value,
-      raw: self ? `in:@${context.userName}` : `in:${context.channelLabel}`,
-      kind:
-        filter.kind ??
-        (self || context.channelLabel?.startsWith('@') ? 'dm' : undefined)
+      raw: self
+        ? context.userName
+          ? `in:@${context.userName}`
+          : filter.raw
+        : context.channel?.label
+          ? `in:${context.channel.label}`
+          : filter.raw,
+      kind: self ? 'dm' : context.channel?.kind
     }
   }
 
@@ -353,8 +356,7 @@ export const createQueryParser = (store: StoreForParser) => {
 
   return async (query: string): Promise<ResolvedSearchQuery> => {
     const context: SearchContext = {
-      channelId: store.getCurrentChannelId(),
-      channelLabel: store.getCurrentChannelPathOrUserName(),
+      channel: store.getCurrentChannel(),
       dmChannelId: store.getMyDmChannelId(),
       userId: store.getMyUserId(),
       userName: store.getMyUserName()

@@ -72,13 +72,6 @@ const getStoreForParser = ({
     return group?.id
   }
 
-  const getCurrentChannelId = () => {
-    return primaryView.value.type === 'channel' ||
-      primaryView.value.type === 'dm'
-      ? primaryView.value.channelId
-      : undefined
-  }
-
   const userNameToDmChannelId = async (
     userName: string
   ): Promise<DMChannelId | undefined> => {
@@ -87,18 +80,22 @@ const getStoreForParser = ({
     return userIdToDmChannelId(id)
   }
 
-  const getCurrentChannelPathOrUserName = () => {
-    const channelId = getCurrentChannelId()
-    if (!channelId) return undefined
+  const getCurrentChannel: StoreForParser['getCurrentChannel'] = () => {
+    const view = primaryView.value
+    if (view.type !== 'channel' && view.type !== 'dm') return
 
-    const path = channelIdToPath(channelId)
-    if (path) return `#${path}`
+    const id = view.channelId
 
-    const userId = dmChannelsMap.value.get(channelId)?.userId
-    if (!userId) return undefined
+    if (view.type === 'channel') {
+      const path = channelIdToPath(id)
 
-    const userName = usersMap.value.get(userId)?.name
-    if (userName) return `@${userName}`
+      return { kind: 'channel', id, label: path ? `#${path}` : undefined }
+    }
+
+    const userId = dmChannelsMap.value.get(id)?.userId
+    const user = userId ? usersMap.value.get(userId) : undefined
+
+    return { kind: 'dm', id, label: user ? `@${user.name}` : undefined }
   }
 
   const getMyDmChannelId = () => {
@@ -117,8 +114,7 @@ const getStoreForParser = ({
     userNameToDmChannelId,
     userNameToId,
     userGroupNameToId,
-    getCurrentChannelPathOrUserName,
-    getCurrentChannelId,
+    getCurrentChannel,
     getMyDmChannelId,
     getMyUserName,
     getMyUserId

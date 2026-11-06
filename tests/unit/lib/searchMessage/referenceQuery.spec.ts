@@ -11,8 +11,11 @@ const createStore = (): StoreForParser => ({
   userNameToDmChannelId: () => 'dm-id',
   userNameToId: () => 'user-before-rename',
   userGroupNameToId: () => undefined,
-  getCurrentChannelPathOrUserName: () => '#first',
-  getCurrentChannelId: () => 'first-channel',
+  getCurrentChannel: () => ({
+    kind: 'channel',
+    id: 'first-channel',
+    label: '#first'
+  }),
   getMyDmChannelId: () => 'my-dm',
   getMyUserName: () => 'me',
   getMyUserId: () => 'my-id'
@@ -57,7 +60,11 @@ describe('persisted search references', () => {
     const store = createStore()
     const parse = createQueryParser(store)
     const first = await parse('hello in:here from:me to:me')
-    store.getCurrentChannelId = () => 'other-channel'
+    store.getCurrentChannel = () => ({
+      kind: 'channel',
+      id: 'other-channel',
+      label: '#other'
+    })
     store.getMyUserId = () => 'other-user'
     const second = await parse(first.serializedQuery)
 
@@ -97,15 +104,36 @@ describe('persisted search references', () => {
 
   it('rejects unresolved relative constraints instead of widening the search', async () => {
     const store = createStore()
-    store.getCurrentChannelId = () => undefined
+    store.getCurrentChannel = () => undefined
     await expect(createQueryParser(store)('in:here')).rejects.toThrow()
   })
+
+  it.each(['channel', 'dm'] as const)(
+    'keeps the current %s identity before its display label is available',
+    async kind => {
+      const store = createStore()
+      store.getCurrentChannel = () => ({ kind, id: 'current-channel' })
+
+      const result = await createQueryParser(store)('in:here')
+
+      expect(result.queryObject.in).toBe('current-channel')
+      expect(parseInput(result.serializedQuery, 'search')).toMatchObject([
+        {
+          type: 'reference',
+          reference: { type: 'search-in', id: 'current-channel', kind }
+        }
+      ])
+    }
+  )
 
   it('captures the relative context before an asynchronous name lookup', async () => {
     const store = createStore()
 
     store.userNameToId = async () => {
-      store.getCurrentChannelId = () => 'changed-during-lookup'
+      store.getCurrentChannel = () => ({
+        kind: 'channel',
+        id: 'changed-during-lookup'
+      })
 
       return 'user-id'
     }

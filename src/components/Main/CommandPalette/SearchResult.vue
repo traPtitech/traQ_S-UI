@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
@@ -73,7 +73,6 @@ const selectorItems: PopupSelectorItem<SearchMessageSortKey>[] &
 ]
 
 const {
-  executeSearchForCurrentPage,
   fetchingSearchResult,
   searchResult,
   currentPage,
@@ -81,24 +80,8 @@ const {
   resetPaging,
   pageCount,
   currentSortKey,
-  query,
-  searchRequest,
-  executed
+  query
 } = useSearchMessages()
-
-watch(currentSortKey, resetPaging, { flush: 'sync' })
-
-watch(
-  () => [searchRequest.value, currentSortKey.value, currentPage.value] as const,
-  () => executeSearchForCurrentPage()
-)
-
-onMounted(() => {
-  // 初回マウント時に取得する
-  if (!executed.value) {
-    executeSearchForCurrentPage()
-  }
-})
 
 onBeforeUnmount(() => {
   // 検索クエリを空にして Enter を押したときにリセットされるようにする

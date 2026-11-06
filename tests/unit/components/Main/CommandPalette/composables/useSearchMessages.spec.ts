@@ -88,19 +88,20 @@ const create = () => {
   }
 }
 
-const run = (search: ReturnType<typeof create>, query: string) => {
+const run = async (query: string) => {
   useCommandPalette().searchRequest.value = {
     serializedQuery: query,
     queryObject: { word: query }
   }
 
-  return search.executeSearchForCurrentPage()
+  await flushPromises()
 }
 
 beforeEach(() => {
   Object.values(mocks).forEach(mock => mock.mockReset())
 
-  const { searchState } = useCommandPalette()
+  const { searchState, searchRequest } = useCommandPalette()
+  searchRequest.value = undefined
 
   searchState.value = {
     executed: false,
@@ -124,9 +125,9 @@ describe('search request lifecycle', () => {
       .mockResolvedValueOnce(response('latest'))
 
     const search = create()
-    const pending = run(search, 'first')
+    const pending = run('first')
     await flushPromises()
-    await run(search, 'second')
+    await run('second')
     first.resolve(response('stale'))
     await pending
 
@@ -142,7 +143,7 @@ describe('search request lifecycle', () => {
     const result = Promise.withResolvers<Response>()
     mocks.search.mockReturnValue(result.promise)
     const search = create()
-    const pending = run(search, 'query')
+    const pending = run('query')
     await flushPromises()
     search.dispose()
     result.resolve(response('late'))
@@ -156,9 +157,9 @@ describe('search request lifecycle', () => {
     const result = Promise.withResolvers<Response>()
     mocks.search.mockReturnValue(result.promise)
     const search = create()
-    const pending = run(search, 'query')
+    const pending = run('query')
     await flushPromises()
-    await run(search, '')
+    await run('')
     result.resolve(response('stale'))
     await pending
 
@@ -174,34 +175,42 @@ describe('search request lifecycle', () => {
       .mockReturnValueOnce(nextPage.promise)
 
     const search = create()
-    await run(search, 'query')
+    await run('query')
 
     expect(search.executed.value).toBe(true)
 
     search.currentPage.value = 1
-    const pending = run(search, 'query')
     await flushPromises()
     search.dispose()
+    const reopenedResult = Promise.withResolvers<Response>()
+    mocks.search.mockReturnValueOnce(reopenedResult.promise)
     const reopened = create()
 
     expect(reopened.executed.value).toBe(false)
     expect(reopened.currentPage.value).toBe(1)
 
     nextPage.resolve(response('ignored-page'))
-    await pending
+    await flushPromises()
 
     expect(reopened.executed.value).toBe(false)
     expect(mocks.extend).toHaveBeenCalledTimes(1)
+
+    reopenedResult.resolve(response('reopened-page'))
+    await flushPromises()
+    expect(reopened.searchResult.value.map(message => message.id)).toEqual([
+      'reopened-page'
+    ])
   })
 
   it('retains completed results when the palette is reopened', async () => {
     mocks.search.mockResolvedValue(response('completed'))
     const search = create()
-    await run(search, 'query')
+    await run('query')
     search.dispose()
     const reopened = create()
 
     expect(reopened.executed.value).toBe(true)
+    expect(mocks.search).toHaveBeenCalledOnce()
 
     expect(reopened.searchResult.value.map(message => message.id)).toEqual([
       'completed'
@@ -211,7 +220,7 @@ describe('search request lifecycle', () => {
   it('clears loading when the API rejects a resolved request', async () => {
     mocks.search.mockRejectedValue(new Error('offline'))
     const search = create()
-    await run(search, 'hello')
+    await run('hello')
     expect(search.fetchingSearchResult.value).toBe(false)
     expect(mocks.error).toHaveBeenCalledOnce()
   })
@@ -219,14 +228,16 @@ describe('search request lifecycle', () => {
   it('reuses the resolved conditions for paging and sorting', async () => {
     mocks.search.mockResolvedValue(response('page'))
     const search = create()
-    await run(search, 'hello')
+    await run('hello')
     const request = useCommandPalette().searchRequest.value
     search.currentPage.value = 1
+    await flushPromises()
+    expect(mocks.search.mock.calls[1]?.[14]).toBe(20)
     search.currentSortKey.value = '-createdAt'
-    await search.executeSearchForCurrentPage()
+    await flushPromises()
     expect(useCommandPalette().searchRequest.value).toBe(request)
     expect(mocks.search.mock.calls[1]?.[0]).toBe('hello')
-    expect(mocks.search.mock.calls[1]?.[14]).toBe(20)
-    expect(mocks.search.mock.calls[1]?.[15]).toBe('-createdAt')
+    expect(mocks.search.mock.calls[2]?.[14]).toBe(0)
+    expect(mocks.search.mock.calls[2]?.[15]).toBe('-createdAt')
   })
 })

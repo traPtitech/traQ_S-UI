@@ -1,7 +1,7 @@
 import type { Message } from '@traptitech/traq'
 
 import type { DeepReadonly, Ref } from 'vue'
-import { computed, onScopeDispose, ref } from 'vue'
+import { computed, onMounted, onScopeDispose, ref, watch } from 'vue'
 
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
@@ -115,7 +115,7 @@ const useSearchMessages = () => {
     if (fetchingSearchResult.value) searchState.value.executed = false
   })
 
-  const fetchAndRenderMessagesOnCurrentPageBySearch = async () => {
+  const fetchCurrentSearchPage = async () => {
     const request = searchRequest.value
     const id = ++requestId
 
@@ -156,6 +156,16 @@ const useSearchMessages = () => {
     }
   }
 
+  watch(currentSortKey, resetPaging, { flush: 'sync' })
+
+  watch([searchRequest, currentSortKey, currentPage], () => {
+    void fetchCurrentSearchPage()
+  })
+
+  onMounted(() => {
+    if (!executed.value) void fetchCurrentSearchPage()
+  })
+
   return {
     resetPaging,
 
@@ -170,8 +180,7 @@ const useSearchMessages = () => {
     pageCount,
     jumpToPage,
 
-    fetchingSearchResult,
-    executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch
+    fetchingSearchResult
   }
 }
 

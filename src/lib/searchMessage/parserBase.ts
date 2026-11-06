@@ -93,8 +93,8 @@ export type StoreForParser = {
   userNameToDmChannelId: UserNameToDmChannelId
   userNameToId: UserNameToId
   userGroupNameToId: UserGroupNameToId
-  getCurrentChannelPathOrUserName: () => string | undefined
-  getCurrentChannelId: () => ChannelId | undefined
+  getCurrentChannel: () =>
+    { kind: 'channel' | 'dm'; id: ChannelId; label?: string } | undefined
   getMyDmChannelId: () => DMChannelId | undefined
   getMyUserName: () => string | undefined
   getMyUserId: () => UserId | undefined
