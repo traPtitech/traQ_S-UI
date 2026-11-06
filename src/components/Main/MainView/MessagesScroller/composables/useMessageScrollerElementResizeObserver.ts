@@ -23,7 +23,8 @@ const useMessageScrollerElementResizeObserver = (
 
     if (
       scrollerProps.lastLoadKind === 'around' &&
-      scrollerProps.entryMessageId
+      scrollerProps.entryMessageId &&
+      scrollerProps.messageIds.includes(scrollerProps.entryMessageId)
     ) {
       // エントリーメッセージがあり、かつ初回ロードの場合
       // エントリーより上にあった場合はスクロール位置をずらす

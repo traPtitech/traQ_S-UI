@@ -23,7 +23,10 @@
         <slot
           :message-id="messageId"
           :on-change-height="onChangeHeight"
-          :on-entry-message-loaded="onEntryMessageLoaded"
+          :on-entry-message-loaded="
+            (relativePos: number) =>
+              onEntryMessageLoaded(messageId, relativePos)
+          "
         />
       </template>
     </div>
@@ -112,12 +115,37 @@ const rootRef = shallowRef<HTMLElement | null>(null)
 const state = reactive({
   height: 0,
   scrollTop: lastScrollPosition.value,
+  pendingEntryMessageId: props.entryMessageId,
   // 古いメッセージを読み込むとき、読み込み開始直後は高さの調整を無効化する
   skipResizeAdjustment: false
 })
 
-const { onChangeHeight, onEntryMessageLoaded } =
+const { onChangeHeight, onEntryMessageLoaded: scrollToEntryMessage } =
   useMessageScrollerElementResizeObserver(rootRef, props, state)
+
+watch(
+  () => [props.entryMessageId, props.messageIds.length === 0] as const,
+  ([entryMessageId, isEmpty], [previousEntryMessageId]) => {
+    if (entryMessageId !== previousEntryMessageId || isEmpty) {
+      state.pendingEntryMessageId = entryMessageId
+    }
+  },
+  { flush: 'sync' }
+)
+
+const onEntryMessageLoaded = (messageId: MessageId, relativePos: number) => {
+  if (
+    !rootRef.value ||
+    rootRef.value.clientHeight <= 0 ||
+    messageId !== state.pendingEntryMessageId
+  )
+    return
+
+  scrollToEntryMessage(relativePos)
+  state.height = rootRef.value.scrollHeight
+  state.scrollTop = rootRef.value.scrollTop
+  state.pendingEntryMessageId = undefined
+}
 
 onMounted(() => {
   // 表示されている
@@ -134,9 +162,11 @@ watch(
 
     await nextTick()
     const scrollHeight = rootRef.value.scrollHeight
-    rootRef.value.scrollTop = scrollHeight
+
+    if (!props.entryMessageId) rootRef.value.scrollTop = scrollHeight
+
     state.height = scrollHeight
-    state.scrollTop = scrollHeight
+    state.scrollTop = rootRef.value.scrollTop
   },
   {
     flush: 'post'
@@ -147,6 +177,20 @@ watch(
   () => [props.messageIds.slice(), props.isLoading] as const,
   ([ids, isLoading], [prevIds, wasLoading]) => {
     if (!rootRef.value) return
+
+    if (
+      state.pendingEntryMessageId &&
+      !isLoading &&
+      !ids.includes(state.pendingEntryMessageId)
+    ) {
+      state.pendingEntryMessageId = undefined
+    }
+
+    if (state.pendingEntryMessageId) {
+      state.height = rootRef.value.scrollHeight
+
+      return
+    }
 
     if (
       ids.length === prevIds.length &&
@@ -232,7 +276,8 @@ const requestLoadMessages = () => {
   const { clientHeight, scrollHeight, scrollTop } = rootRef.value
   state.scrollTop = scrollTop
 
-  if (props.isLoading || clientHeight <= 0) return
+  if (props.isLoading || clientHeight <= 0 || state.pendingEntryMessageId)
+    return
 
   if (state.scrollTop < LOAD_MORE_THRESHOLD && !props.hasReachedOldest) {
     emit('requestLoadOlder')
@@ -246,16 +291,21 @@ const requestLoadMessages = () => {
   }
 }
 
-let lastCheckedMessageIds = props.messageIds
+let lastCheckedMessageIds = state.pendingEntryMessageId
+  ? undefined
+  : props.messageIds
 
 watch(
   () =>
-    props.isLoading || !stampsMapFetched.value ? undefined : props.messageIds,
+    props.isLoading || !stampsMapFetched.value || state.pendingEntryMessageId
+      ? undefined
+      : props.messageIds,
   messageIds => {
     if (!messageIds || messageIds === lastCheckedMessageIds) return
 
     lastCheckedMessageIds = messageIds
-    requestLoadMessages()
+
+    if (messageIds.length > 0) requestLoadMessages()
   },
   { flush: 'post' }
 )
