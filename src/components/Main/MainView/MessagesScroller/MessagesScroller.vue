@@ -15,7 +15,7 @@
       data-testid="channel-viewport"
     >
       <MessagesScrollerSeparator
-        v-if="isReachedEnd"
+        v-if="hasReachedOldest"
         title="これ以上メッセージはありません"
         :class="$style.noMoreSeparator"
       />
@@ -32,24 +32,22 @@
 </template>
 
 <script lang="ts">
-import type { ComponentPublicInstance, Ref } from 'vue'
+import type { Ref } from 'vue'
 import { nextTick, onMounted, reactive, shallowRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useEventListener } from '@vueuse/core'
 import { throttle } from 'throttle-debounce'
 
+import type { PageLoadKind } from '/@/composables/utils/usePagedList'
 import { isMessageScrollerRoute } from '/@/router'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import type { MessageId } from '/@/types/entity-ids'
 
 import useMessageScrollerElementResizeObserver from './composables/useMessageScrollerElementResizeObserver'
-import type { LoadingDirection } from './composables/useMessagesFetcher'
 
-export interface MessageScrollerInstance extends ComponentPublicInstance {
-  $el: HTMLDivElement
-}
+export type { MessageScrollerInstance } from './types'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -60,6 +58,7 @@ const useScrollRestoration = (
 ) => {
   const { lastScrollPosition } = useMainViewStore()
   const route = useRoute()
+
   watch(
     () => route.name,
     async (to, from) => {
@@ -84,11 +83,11 @@ import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 const props = withDefaults(
   defineProps<{
     messageIds: MessageId[]
-    isReachedEnd: boolean
-    isReachedLatest: boolean
+    hasReachedOldest: boolean
+    isCaughtUp: boolean
     isLoading?: boolean
     entryMessageId?: MessageId
-    lastLoadingDirection: LoadingDirection
+    lastLoadKind: PageLoadKind
   }>(),
   {
     isLoading: false
@@ -96,9 +95,9 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'requestLoadFormer'): void
-  (e: 'requestLoadLatter'): void
-  (e: 'resetIsReachedLatest'): void
+  (e: 'requestLoadOlder'): void
+  (e: 'requestLoadNewer'): void
+  (e: 'invalidateLatest'): void
   (e: 'scrollPassive'): void
 }>()
 
@@ -109,6 +108,7 @@ const { lastScrollPosition } = useMainViewStore()
 const { stampsMapFetched } = useStampsStore()
 
 const rootRef = shallowRef<HTMLElement | null>(null)
+
 const state = reactive({
   height: 0,
   scrollTop: lastScrollPosition.value,
@@ -144,80 +144,121 @@ watch(
 )
 
 watch(
-  () => props.messageIds,
-  (ids, prevIds) => {
+  () => [props.messageIds.slice(), props.isLoading] as const,
+  ([ids, isLoading], [prevIds, wasLoading]) => {
     if (!rootRef.value) return
+
+    if (
+      ids.length === prevIds.length &&
+      ids.every((id, index) => id === prevIds[index])
+    ) {
+      // 空ページでも到達表示などによって高さが変わる場合がある。
+      if (!isLoading) state.height = rootRef.value.scrollHeight
+
+      return
+    }
+
     /* state.height の更新を忘れないようにすること */
 
     const newHeight = rootRef.value.scrollHeight
-    if (
-      props.lastLoadingDirection === 'latest' ||
-      props.lastLoadingDirection === 'former'
-    ) {
-      if (ids.length - prevIds.length === -1) {
-        // 削除された場合は何もしない
-        state.height = newHeight
-        return
-      }
-      // XXX: 追加時にここは0になる
-      if (ids.length - prevIds.length === 0) {
-        const scrollBottom =
-          rootRef.value.scrollTop + rootRef.value.clientHeight
+    const currentIds = new Set(ids)
+    const retainedIds = prevIds.filter(id => currentIds.has(id))
 
-        // 一番下のメッセージあたりを見ているときに、
-        // 新規に一つ追加された場合は一番下までスクロール
-        if (state.height - 50 <= scrollBottom) {
-          rootRef.value.scrollTo({
-            top: newHeight
-          })
-        }
-        state.height = newHeight
-        return
+    const removedOnly =
+      ids.length < prevIds.length &&
+      ids.every((id, index) => retainedIds[index] === id)
+
+    if (removedOnly) {
+      state.height = newHeight
+
+      return
+    }
+
+    const previousIds = new Set(prevIds)
+    const retainedPreviousIds = ids.filter(id => previousIds.has(id))
+
+    const insertedOnly =
+      prevIds.length > 0 &&
+      ids.length > prevIds.length &&
+      prevIds.every((id, index) => retainedPreviousIds[index] === id)
+
+    const liveInsertion = insertedOnly && !isLoading && !wasLoading
+
+    if (liveInsertion) {
+      const scrollBottom = rootRef.value.scrollTop + rootRef.value.clientHeight
+
+      // 末尾付近を見ていた場合だけ新着メッセージへ追従する。
+      if (state.height - 50 <= scrollBottom) {
+        rootRef.value.scrollTo({ top: newHeight })
       }
-      //上に追加された時はスクロール位置を変更する。
-      if (props.lastLoadingDirection === 'former') {
-        // onChangeHeight の調整を一時的に無効化
-        state.skipResizeAdjustment = true
-        rootRef.value.scrollTo({
-          top: newHeight - state.height
-        })
-        state.height = newHeight
-        // 十分に DOMが更新されたら無効化を解除
+
+      state.height = newHeight
+
+      return
+    }
+
+    const prepended =
+      prevIds.length > 0 &&
+      ids.length > prevIds.length &&
+      prevIds.every(
+        (id, index) => ids[ids.length - prevIds.length + index] === id
+      )
+
+    if (prepended) {
+      // 上への追加分だけ位置を補正し、同じ変更に対する高さ通知との二重調整を防ぐ。
+      state.skipResizeAdjustment = true
+
+      rootRef.value.scrollTo({
+        top: rootRef.value.scrollTop + newHeight - state.height
+      })
+
+      requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            state.skipResizeAdjustment = false
-          })
+          state.skipResizeAdjustment = false
         })
-      }
+      })
+    } else if (prevIds.length === 0 && props.lastLoadKind === 'latest') {
+      rootRef.value.scrollTo({ top: newHeight })
+    }
 
-      if (props.lastLoadingDirection === 'latest') {
-        // チャンネルを移動したとき、
-        rootRef.value.scrollTo({
-          top: newHeight
-        })
-        state.height = newHeight
-      }
-    } else state.height = newHeight
+    state.height = newHeight
   },
-  { deep: true, flush: 'post' }
+  { flush: 'post' }
 )
 
 const requestLoadMessages = () => {
-  if (!rootRef.value) return
+  if (!rootRef.value || !stampsMapFetched.value) return
+
   const { clientHeight, scrollHeight, scrollTop } = rootRef.value
   state.scrollTop = scrollTop
 
-  if (props.isLoading) return
-  if (state.scrollTop < LOAD_MORE_THRESHOLD && !props.isReachedEnd) {
-    emit('requestLoadFormer')
+  if (props.isLoading || clientHeight <= 0) return
+
+  if (state.scrollTop < LOAD_MORE_THRESHOLD && !props.hasReachedOldest) {
+    emit('requestLoadOlder')
   }
+
   if (
     scrollHeight - state.scrollTop - clientHeight < LOAD_MORE_THRESHOLD &&
-    !props.isReachedLatest
+    !props.isCaughtUp
   ) {
-    emit('requestLoadLatter')
+    emit('requestLoadNewer')
   }
 }
+
+let lastCheckedMessageIds = props.messageIds
+
+watch(
+  () =>
+    props.isLoading || !stampsMapFetched.value ? undefined : props.messageIds,
+  messageIds => {
+    if (!messageIds || messageIds === lastCheckedMessageIds) return
+
+    lastCheckedMessageIds = messageIds
+    requestLoadMessages()
+  },
+  { flush: 'post' }
+)
 
 const handleScroll = throttle(17, requestLoadMessages)
 
@@ -225,7 +266,8 @@ const visibilitychangeListener = () => {
   if (document.visibilityState === 'visible') {
     requestLoadMessages()
   }
-  emit('resetIsReachedLatest')
+
+  emit('invalidateLatest')
 }
 
 useEventListener(document, 'visibilitychange', visibilitychangeListener)

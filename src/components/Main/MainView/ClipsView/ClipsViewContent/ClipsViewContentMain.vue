@@ -4,11 +4,11 @@
     <MessagesScroller
       ref="scrollerRef"
       :message-ids="messageIds"
-      :is-reached-end="isReachedEnd"
-      :is-reached-latest="isReachedLatest"
+      :has-reached-oldest="hasReachedOldest"
+      :is-caught-up="isCaughtUp"
       :is-loading="isLoading"
-      :last-loading-direction="lastLoadingDirection"
-      @request-load-former="onLoadFormerMessagesRequest"
+      :last-load-kind="lastLoadKind"
+      @request-load-older="onLoadOlderMessagesRequest"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
         <ClipElement
@@ -41,11 +41,11 @@ const props = defineProps<{
 const scrollerRef = shallowRef<MessageScrollerInstance>()
 const {
   messageIds,
-  isReachedEnd,
-  isReachedLatest,
+  hasReachedOldest,
+  isCaughtUp,
   isLoading,
-  lastLoadingDirection,
-  onLoadFormerMessagesRequest
+  lastLoadKind,
+  onLoadOlderMessagesRequest
 } = useClipsFetcher(scrollerRef, props)
 </script>
 

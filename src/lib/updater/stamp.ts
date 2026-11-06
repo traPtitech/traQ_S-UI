@@ -15,14 +15,15 @@ export const useStampUpdater = () => {
     messageId: MessageId,
     stampId: StampId
   ) => {
-    const cancel = addStampLocally(messageId, stampId)
+    const operation = addStampLocally(messageId, stampId)
     upsertLocalStampHistory(stampId, new Date())
     recordStampUsage(stampId)
     try {
       await apis.addMessageStamp(messageId, stampId)
+      await operation?.commit()
     } catch {
       addErrorToast('メッセージにスタンプを追加できませんでした')
-      cancel?.()
+      await operation?.rollback()
     }
   }
 
@@ -30,12 +31,13 @@ export const useStampUpdater = () => {
     messageId: MessageId,
     stampId: StampId
   ) => {
-    const cancel = removeStampLocally(messageId, stampId)
+    const operation = removeStampLocally(messageId, stampId)
     try {
       await apis.removeMessageStamp(messageId, stampId)
+      await operation?.commit()
     } catch {
       addErrorToast('メッセージからスタンプを削除できませんでした')
-      cancel?.()
+      await operation?.rollback()
     }
   }
 

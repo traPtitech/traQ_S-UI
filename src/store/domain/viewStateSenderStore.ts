@@ -13,7 +13,7 @@ const useViewStateSenderStorePinia = defineStore(
     /**
      * 最新のメッセージを受け取る必要があるかどうか
      *
-     * messageFetcherの`isReachedLatest`と同期する必要がある
+     * 最新側に未取得区間がなく、新着を表示に取り込める状態と同期する必要がある
      */
     const shouldReceiveLatestMessages = ref(false)
     /** タイピング中かどうか */

@@ -25,12 +25,13 @@ const isMessageShow = ref(false)
 const scrollerRef = shallowRef<MessageScrollerInstance>()
 const {
   messageIds,
-  isReachedEnd,
-  isReachedLatest,
+  hasReachedOldest,
+  isCaughtUp,
+  invalidateLatest,
   isLoading,
-  lastLoadingDirection,
-  onLoadFormerMessagesRequest,
-  onLoadLatterMessagesRequest
+  lastLoadKind,
+  onLoadOlderMessagesRequest,
+  onLoadNewerMessagesRequest
 } = useChannelMessageFetcher(scrollerRef, props)
 
 const { channelsMap } = useChannelsStore()
@@ -40,8 +41,10 @@ const isArchived = computed(
 
 const { unreadChannelsMap } = useSubscriptionStore()
 
-const resetIsReachedLatest = () => {
+const invalidateLatestIfUnread = () => {
   if (!unreadChannelsMap.value.get(props.channelId)) return
+
+  invalidateLatest()
 }
 
 const showToNewMessageButton = ref(false)
@@ -60,7 +63,7 @@ const handleScroll = () => {
   if (!element || isLoading.value) return
   const { scrollTop, scrollHeight, clientHeight } = element
   showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop
-  if (!isReachedLatest.value) {
+  if (!isCaughtUp.value) {
     showToNewMessageButton.value = true
   }
 }
@@ -91,14 +94,14 @@ const handleScroll = () => {
               v-if="isMessageShow"
               ref="scrollerRef"
               :message-ids="messageIds"
-              :is-reached-end="isReachedEnd"
-              :is-reached-latest="isReachedLatest"
+              :has-reached-oldest="hasReachedOldest"
+              :is-caught-up="isCaughtUp"
               :is-loading="isLoading"
-              :last-loading-direction="lastLoadingDirection"
-              @request-load-former="onLoadFormerMessagesRequest"
-              @request-load-latter="onLoadLatterMessagesRequest"
+              :last-load-kind="lastLoadKind"
+              @request-load-older="onLoadOlderMessagesRequest"
+              @request-load-newer="onLoadNewerMessagesRequest"
               @scroll-passive="handleScroll"
-              @reset-is-reached-latest="resetIsReachedLatest"
+              @invalidate-latest="invalidateLatestIfUnread"
             >
               <template
                 #default="{ messageId, onChangeHeight, onEntryMessageLoaded }"

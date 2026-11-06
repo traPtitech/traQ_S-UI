@@ -4,15 +4,15 @@
     <MessagesScroller
       ref="scrollerRef"
       :message-ids="messageIds"
-      :is-reached-end="isReachedEnd"
-      :is-reached-latest="isReachedLatest"
+      :has-reached-oldest="hasReachedOldest"
+      :is-caught-up="isCaughtUp"
       :is-loading="isLoading"
       :entry-message-id="entryMessageId"
-      :last-loading-direction="lastLoadingDirection"
-      @request-load-former="onLoadFormerMessagesRequest"
-      @request-load-latter="onLoadLatterMessagesRequest"
+      :last-load-kind="lastLoadKind"
+      @request-load-older="onLoadOlderMessagesRequest"
+      @request-load-newer="onLoadNewerMessagesRequest"
       @scroll-passive="handleScroll"
-      @reset-is-reached-latest="resetIsReachedLatest"
+      @invalidate-latest="invalidateLatestIfUnread"
     >
       <template #default="{ messageId, onChangeHeight, onEntryMessageLoaded }">
         <MessagesScrollerSeparator
@@ -82,13 +82,14 @@ const router = useRouter()
 const scrollerRef = shallowRef<MessageScrollerInstance>()
 const {
   messageIds,
-  isReachedEnd,
-  isReachedLatest,
+  hasReachedOldest,
+  isCaughtUp,
+  invalidateLatest,
   isLoading,
-  lastLoadingDirection,
+  lastLoadKind,
   unreadSince,
-  onLoadFormerMessagesRequest,
-  onLoadLatterMessagesRequest
+  onLoadOlderMessagesRequest,
+  onLoadNewerMessagesRequest
 } = useChannelMessageFetcher(scrollerRef, props)
 
 const { messagesMap } = useMessagesStore()
@@ -120,9 +121,9 @@ const messagePinnedUserMap = computed(
 )
 
 const { unreadChannelsMap } = useSubscriptionStore()
-const resetIsReachedLatest = () => {
+const invalidateLatestIfUnread = () => {
   if (!unreadChannelsMap.value.get(props.channelId)) return
-  isReachedLatest.value = false
+  invalidateLatest()
 }
 
 const showToNewMessageButton = ref(false)
@@ -150,7 +151,7 @@ const handleScroll = () => {
   if (!element || isLoading.value) return
   const { scrollTop, scrollHeight, clientHeight } = element
   showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop
-  if (!isReachedLatest.value) {
+  if (!isCaughtUp.value) {
     showToNewMessageButton.value = true
   }
 }

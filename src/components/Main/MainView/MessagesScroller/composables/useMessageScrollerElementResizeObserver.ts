@@ -1,15 +1,14 @@
 import type { Ref } from 'vue'
 
 import type { ChangeHeightData } from '/@/components/Main/MainView/MessageElement/composables/useElementRenderObserver'
+import type { PageLoadKind } from '/@/composables/utils/usePagedList'
 import type { MessageId } from '/@/types/entity-ids'
-
-import type { LoadingDirection } from './useMessagesFetcher'
 
 const useMessageScrollerElementResizeObserver = (
   rootRef: Ref<HTMLElement | null>,
   scrollerProps: {
     messageIds: MessageId[]
-    lastLoadingDirection: LoadingDirection
+    lastLoadKind: PageLoadKind
     entryMessageId?: MessageId
   },
   viewPortState: {
@@ -23,7 +22,7 @@ const useMessageScrollerElementResizeObserver = (
     }
 
     if (
-      scrollerProps.lastLoadingDirection === 'around' &&
+      scrollerProps.lastLoadKind === 'around' &&
       scrollerProps.entryMessageId
     ) {
       // エントリーメッセージがあり、かつ初回ロードの場合
@@ -42,8 +41,8 @@ const useMessageScrollerElementResizeObserver = (
         viewPortState.height = rootRef.value.scrollHeight
       }
     } else if (
-      scrollerProps.lastLoadingDirection === 'latest' ||
-      scrollerProps.lastLoadingDirection === 'former'
+      scrollerProps.lastLoadKind === 'latest' ||
+      scrollerProps.lastLoadKind === 'previous'
     ) {
       // 古いメッセージを読み込んですぐはここで高さの調整をしない
       if (viewPortState.skipResizeAdjustment) {
