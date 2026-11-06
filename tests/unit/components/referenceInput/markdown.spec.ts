@@ -23,7 +23,7 @@ describe('Markdown line break input paths', () => {
   ])(
     'changes only a newly completed empty marker with %s',
     async (key, after) => {
-      const wrapper = await makeInput('- item')
+      const wrapper = await makeInput({ source: '- item' })
       await wrapper.setProps({ markdown: true })
       await focus(wrapper)
       const editor = wrapper.findComponent(EditorContent).props('editor')
@@ -40,7 +40,7 @@ describe('Markdown line break input paths', () => {
   )
 
   it('uses Shift+Enter to continue the same list item', async () => {
-    const wrapper = await makeInput('- item')
+    const wrapper = await makeInput({ source: '- item' })
     await wrapper.setProps({ markdown: true })
     await focus(wrapper)
     const editor = wrapper.findComponent(EditorContent).props('editor')
@@ -52,7 +52,7 @@ describe('Markdown line break input paths', () => {
   })
 
   it('continues the same item for a software keyboard soft line break', async () => {
-    const wrapper = await makeInput('- item')
+    const wrapper = await makeInput({ source: '- item' })
     await wrapper.setProps({ markdown: true })
     await focus(wrapper)
     const editor = wrapper.findComponent(EditorContent).props('editor')
@@ -82,7 +82,7 @@ describe('Markdown line break input paths', () => {
     'uses the same continuation for keydown and beforeinput after %s',
     async (before, after) => {
       for (const viaKeyboard of [true, false]) {
-        const wrapper = await makeInput(before)
+        const wrapper = await makeInput({ source: before })
         await wrapper.setProps({ markdown: true })
         await focus(wrapper)
         const editor = wrapper.findComponent(EditorContent).props('editor')
@@ -108,7 +108,7 @@ describe('Markdown line break input paths', () => {
   )
 
   it('inserts a plain newline with Markdown disabled', async () => {
-    const wrapper = await makeInput('> quote')
+    const wrapper = await makeInput({ source: '> quote' })
     await focus(wrapper)
     const editor = wrapper.findComponent(EditorContent).props('editor')
     editor?.commands.setTextSelection(editor.state.doc.content.size - 1)
@@ -119,7 +119,7 @@ describe('Markdown line break input paths', () => {
   })
 
   it('allows the parent to handle submission before any Markdown line break', async () => {
-    const wrapper = await makeInput('> quote')
+    const wrapper = await makeInput({ source: '> quote' })
 
     await wrapper.setProps({
       markdown: true,
@@ -135,7 +135,7 @@ describe('Markdown line break input paths', () => {
 })
 
 it('toggles inline Markdown without changing the draft or its selection', async () => {
-  const wrapper = await makeInput('**hello** and _world_')
+  const wrapper = await makeInput({ source: '**hello** and _world_' })
   await focus(wrapper)
   const content = wrapper.getComponent(EditorContent).props('editor')
   content?.commands.setTextSelection(5)
@@ -159,7 +159,7 @@ it('toggles inline Markdown without changing the draft or its selection', async 
 })
 
 it('updates inline rendering when another draft is loaded', async () => {
-  const wrapper = await makeInput('**first**')
+  const wrapper = await makeInput({ source: '**first**' })
   await wrapper.setProps({ markdown: true })
   await wrapper.setProps({ modelValue: '_next_' })
 

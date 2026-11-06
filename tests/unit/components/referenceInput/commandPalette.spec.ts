@@ -126,7 +126,7 @@ it.each(['mouse', 'touch'])(
 )
 
 it('creates a selected search condition with its ID', async () => {
-  const wrapper = await makeInput('', 'search')
+  const wrapper = await makeInput({ mode: 'search' })
   await focus(wrapper)
   wrapper.vm.insertText('from:al')
   await nextTick()

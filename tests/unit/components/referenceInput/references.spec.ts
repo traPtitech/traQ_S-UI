@@ -1,5 +1,3 @@
-import { type User } from '@traptitech/traq'
-
 import { nextTick } from 'vue'
 
 import { EditorContent } from '@tiptap/vue-3'
@@ -7,6 +5,7 @@ import { EditorContent } from '@tiptap/vue-3'
 import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
 import { useUsersStore } from '/@/store/entities/users'
 
+import { createUser } from '../../fixtures/entities'
 import {
   embedded,
   focus,
@@ -23,7 +22,7 @@ await vi.hoisted(async () => {
 installReferenceInputFixture()
 
 it('uses the native caret when software Backspace precedes selectionchange', async () => {
-  const wrapper = await makeInput(embedded + 'abc')
+  const wrapper = await makeInput({ source: embedded + 'abc' })
   await focus(wrapper)
 
   const editor = wrapper.getComponent(EditorContent).props('editor')
@@ -49,8 +48,24 @@ it('uses the native caret when software Backspace precedes selectionchange', asy
   expect(lastValue(wrapper)).toBeUndefined()
 })
 
+it.each(['message', 'search'] as const)(
+  'does not dispatch transactions while an idle %s input is mounted',
+  async mode => {
+    const wrapper = await makeInput({ mode })
+    const editor = wrapper.getComponent(EditorContent).props('editor')
+    if (!editor) throw new Error('Editor is not mounted')
+
+    await new Promise(resolve => setTimeout(resolve, 80))
+    const dispatch = vi.spyOn(editor.view, 'dispatch')
+
+    await new Promise(resolve => setTimeout(resolve, 160))
+
+    expect(dispatch).not.toHaveBeenCalled()
+  }
+)
+
 it('reopens a reference for a software keyboard Backspace without keydown', async () => {
-  const wrapper = await makeInput(embedded)
+  const wrapper = await makeInput({ source: embedded })
   await focus(wrapper)
 
   wrapper
@@ -77,7 +92,7 @@ it('reopens a reference for a software keyboard Backspace without keydown', asyn
 })
 
 it('does not reopen a reference during composition', async () => {
-  const wrapper = await makeInput(embedded)
+  const wrapper = await makeInput({ source: embedded })
   await focus(wrapper)
 
   wrapper
@@ -113,19 +128,25 @@ it('keeps user icon completion as Markdown text', async () => {
 it('updates a renamed label and falls back after deletion without modifying the source', async () => {
   const { usersMap } = useUsersStore()
 
-  usersMap.value.set('original-id', {
-    id: 'original-id',
-    name: 'before'
-  } as User)
+  usersMap.value.set(
+    'original-id',
+    createUser({
+      id: 'original-id',
+      name: 'before'
+    })
+  )
 
-  const wrapper = await makeInput(embedded)
+  const wrapper = await makeInput({ source: embedded })
 
   expect(wrapper.text()).toContain('@before')
 
-  usersMap.value.set('original-id', {
-    id: 'original-id',
-    name: 'after'
-  } as User)
+  usersMap.value.set(
+    'original-id',
+    createUser({
+      id: 'original-id',
+      name: 'after'
+    })
+  )
 
   await nextTick()
 

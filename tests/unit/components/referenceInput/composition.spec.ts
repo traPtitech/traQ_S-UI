@@ -33,7 +33,7 @@ describe('reference input composition deletions', () => {
     async ({ markdown, clause, finish }) => {
       const prefix = 'before '
       const composition = 'あああああｄｓｓｓｓｓｓっさああ'
-      const wrapper = await makeInput(prefix + composition)
+      const wrapper = await makeInput({ source: prefix + composition })
       await wrapper.setProps({ markdown })
       await focus(wrapper)
       const editor = wrapper.getComponent(EditorContent).props('editor')
@@ -111,7 +111,7 @@ it('protects composition Enter from submission and suggestion selection', async 
 })
 
 it('restores suggestions after importing the confirmed composition text', async () => {
-  const wrapper = await makeInput('@alice')
+  const wrapper = await makeInput({ source: '@alice' })
   await focus(wrapper)
 
   const editor = wrapper.findComponent(EditorContent).props('editor')
@@ -183,7 +183,7 @@ it.each([
 )
 
 it('keeps Markdown visible until the final composition text has been read from the DOM', async () => {
-  const wrapper = await makeInput('**first** and input')
+  const wrapper = await makeInput({ source: '**first** and input' })
   await wrapper.setProps({ markdown: true })
   await focus(wrapper)
 

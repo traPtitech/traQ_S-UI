@@ -47,7 +47,7 @@ describe.each([
   it.each(['Enter', 'click'])(
     'keeps %s separate from typing in Undo history',
     async method => {
-      const wrapper = await makeInput('', mode, false)
+      const wrapper = await makeInput({ mode, suggestions: 'real' })
       await focus(wrapper)
       wrapper.vm.insertText(text)
       await nextTick()
@@ -67,7 +67,7 @@ describe.each([
 
 it('fills the first match and cycles the original prefix candidates', async () => {
   setBranchingChannelTree()
-  const wrapper = await makeInput('', 'message', false)
+  const wrapper = await makeInput({ suggestions: 'real' })
   await wrapper.setProps({ markdown: true })
   await focus(wrapper)
   wrapper.vm.insertText('#t')
@@ -115,7 +115,7 @@ describe.each(['message', 'search'] as const)(
       async ({ key, shiftKey }) => {
         for (const markdown of [true, false]) {
           setChannelTree()
-          const wrapper = await makeInput('', mode, false)
+          const wrapper = await makeInput({ mode, suggestions: 'real' })
           await wrapper.setProps({ markdown })
           await focus(wrapper)
           const prefix = mode === 'search' ? 'in:' : ''
@@ -177,7 +177,7 @@ describe.each(['message', 'search'] as const)(
 it('previews a fully typed candidate before confirming with a second Tab', async () => {
   setChannelTree()
   const text = '#times/25/person'
-  const wrapper = await makeInput(text)
+  const wrapper = await makeInput({ source: text })
   await focus(wrapper)
 
   wrapper
@@ -221,7 +221,7 @@ describe.each(['message', 'search'] as const)(
             topic: ''
           })
 
-          const wrapper = await makeInput('', mode, false)
+          const wrapper = await makeInput({ mode, suggestions: 'real' })
           await wrapper.setProps({ markdown })
           await focus(wrapper)
           const prefix = mode === 'search' ? 'in:' : ''
@@ -301,7 +301,7 @@ it('retains only the original matches while cycling an exact parent path', async
     topic: ''
   })
 
-  const wrapper = await makeInput('', 'message', false)
+  const wrapper = await makeInput({ suggestions: 'real' })
   await focus(wrapper)
   wrapper.vm.insertText('#ti')
   await nextTick()
@@ -332,7 +332,7 @@ it.each(['message', 'search'] as const)(
   'descends through unique parents with Tab and confirms only the leaf in %s mode',
   async mode => {
     setChannelTree()
-    const wrapper = await makeInput('', mode)
+    const wrapper = await makeInput({ mode })
     await focus(wrapper)
     const prefix = mode === 'search' ? 'in:' : ''
     wrapper.vm.insertText(prefix + '#ti')
@@ -402,7 +402,7 @@ it.each(['message', 'search'] as const)(
 
 it('cycles child candidates after descending from a unique parent', async () => {
   setBranchingChannelTree()
-  const wrapper = await makeInput('', 'message', false)
+  const wrapper = await makeInput({ suggestions: 'real' })
   await wrapper.setProps({ markdown: true })
   await focus(wrapper)
   wrapper.vm.insertText('#team/SysA')
@@ -508,7 +508,10 @@ it.each(['message', 'search'] as const)(
     })
 
     const prefix = mode === 'search' ? 'in:' : ''
-    const wrapper = await makeInput(`before ${prefix}#t after`, mode)
+    const wrapper = await makeInput({
+      source: `before ${prefix}#t after`,
+      mode
+    })
     await focus(wrapper)
     const editor = wrapper.getComponent(EditorContent).props('editor')
     if (!editor) throw new Error('Editor is not mounted')
@@ -631,7 +634,7 @@ it('undoes a preview and starts the next completion from the restored text', asy
 it.each(['message', 'search'] as const)(
   'navigates user candidates without confirming them in %s mode',
   async mode => {
-    const wrapper = await makeInput('', mode)
+    const wrapper = await makeInput({ mode })
     await focus(wrapper)
     const text = mode === 'search' ? 'from:al' : '@al'
     wrapper.vm.insertText(text)
@@ -750,7 +753,7 @@ it.each(['message', 'search'] as const)(
           })
 
     const text = mode === 'message' ? '@alice' : 'from:@alice'
-    const wrapper = await makeInput(reference, mode)
+    const wrapper = await makeInput({ source: reference, mode })
     await focus(wrapper)
 
     wrapper

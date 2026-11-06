@@ -30,49 +30,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, proxyRefs, useId, watch, watchEffect } from 'vue'
+import { computed, proxyRefs, useId } from 'vue'
 
-import { EditorContent, useEditor } from '@tiptap/vue-3'
-import { useResizeObserver } from '@vueuse/core'
+import { EditorContent } from '@tiptap/vue-3'
 
 import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
 import useRecentKeyboardInput from '/@/composables/dom/useRecentKeyboardInput'
-import useInputComposition from '/@/composables/referenceInput/useInputComposition'
-import useReferenceLabels from '/@/composables/referenceInput/useReferenceLabels'
-import useReferenceSuggestions from '/@/composables/referenceInput/useReferenceSuggestions'
-import useChannelPath from '/@/composables/useChannelPath'
-import { embeddingOrigin } from '/@/lib/apis'
-import { isIOS } from '/@/lib/dom/browser'
-import {
-  type PreparePaste,
-  inputDataTransfer
-} from '/@/lib/referenceInput/dataTransfer'
-import {
-  type ReferenceInputHandle,
-  contentToParts,
-  inputExtensions
-} from '/@/lib/referenceInput/editor'
-import {
-  loadInputDocument,
-  partsToInlineContent,
-  replaceInputDocument,
-  sourceToContent
-} from '/@/lib/referenceInput/editorDocument'
-import { createInputEventHandlers } from '/@/lib/referenceInput/inputEvents'
-import {
-  type InputRuntimeState,
-  inputLifecycleKey
-} from '/@/lib/referenceInput/inputLifecycle'
-import {
-  type MarkdownLineBreakOptions,
-  markdownLineBreak
-} from '/@/lib/referenceInput/markdownLineBreak'
-import { markdownPreviewKey } from '/@/lib/referenceInput/markdownPreview'
-import {
-  type InputMode,
-  type InputPart,
-  serializeInput
-} from '/@/lib/references'
+import useReferenceEditor from '/@/composables/referenceInput/useReferenceEditor'
+import type { PreparePaste } from '/@/lib/referenceInput/dataTransfer'
+import type { ReferenceInputHandle } from '/@/lib/referenceInput/editor'
+import type { InputMode } from '/@/lib/references'
 import {
   candidateLabel,
   candidateRowId
@@ -116,95 +83,50 @@ const emit = defineEmits<{
   layoutChange: []
 }>()
 
-const { label } = useReferenceLabels()
-const { channelPathStringToId } = useChannelPath()
+const { editor, suggestions, focus, insertText, insertLineBreak, element } =
+  useReferenceEditor({
+    model,
+    props,
+    attributes: ({ shown, candidates, selectedIndex }) => {
+      const candidate = candidates.value[selectedIndex.value]
 
-const updateInputRuntimeState = (options: Partial<InputRuntimeState>) => {
-  const current = editor.value
-  if (!current || current.isDestroyed) return
-  const previous = inputLifecycleKey.getState(current.state)
-
-  if (
-    Object.entries(options).every(
-      ([key, value]) => previous?.[key as keyof InputRuntimeState] === value
-    )
-  )
-    return
-
-  current.view.dispatch(current.state.tr.setMeta(inputLifecycleKey, options))
-  nextTick(() => emit('layoutChange'))
-}
-
-const {
-  isComposing,
-  isCompositionKeyEvent,
-  finish: finishComposition,
-  start: startComposition,
-  end: endComposition
-} = useInputComposition({
-  view: () => editor.value?.view,
-  onChange: composing => updateInputRuntimeState({ composing }),
-  onSettled: () =>
-    nextTick(() => {
-      updateTarget()
-      syncEditorAttributes()
-    })
-})
-
-const insertParts = (
-  parts: InputPart[],
-  range?: { from: number; to: number },
-  focus = true
-) => {
-  const current = editor.value
-
-  if (!current || props.readonly) return
-
-  const content = partsToInlineContent(parts)
-  const chain = current.chain()
-  if (focus) chain.focus()
-
-  chain
-    .insertContentAt(range ?? current.state.selection, content, {
-      parseOptions: { preserveWhitespace: 'full' }
-    })
-    .run()
-}
-
-const insertTextAt = (
-  text: string,
-  range?: { from: number; to: number },
-  focus?: boolean
-) =>
-  insertParts(
-    [
-      {
-        type: 'text',
-        text: props.mode === 'search' ? text.replace(/[\r\n]+/g, ' ') : text
+      return {
+        role: props.mode === 'search' ? 'combobox' : 'textbox',
+        tabindex: '0',
+        'aria-autocomplete': 'list',
+        'aria-haspopup': 'grid',
+        ...(shown.value && candidates.value.length
+          ? { 'aria-controls': popupId }
+          : {}),
+        ...(props.mode === 'search'
+          ? {
+              'aria-expanded': String(
+                shown.value && candidates.value.length > 0
+              )
+            }
+          : {}),
+        ...(shown.value && candidate
+          ? {
+              'aria-activedescendant': candidateRowId(popupId, candidate.word)
+            }
+          : {}),
+        dir: 'auto',
+        ...(props.labelledBy
+          ? { 'aria-labelledby': props.labelledBy }
+          : { 'aria-label': props.placeholder }),
+        'aria-readonly': String(props.readonly),
+        'aria-multiline': String(props.mode === 'message'),
+        'data-placeholder': props.placeholder,
+        ...(props.testId ? { 'data-testid': props.testId } : {})
       }
-    ],
-    range,
-    focus
-  )
-
-const insertText: ReferenceInputHandle['insertText'] = (text, { focus } = {}) =>
-  insertTextAt(text, undefined, focus)
-
-const insertLineBreak = (options: MarkdownLineBreakOptions = {}) => {
-  const current = editor.value
-
-  if (!current || props.readonly || props.mode !== 'message' || isComposing())
-    return
-
-  if (!props.markdown) {
-    insertText('\n')
-
-    return
-  }
-
-  current.view.dispatch(markdownLineBreak(current.state, options))
-  current.view.focus()
-}
+    },
+    onKeyDown: event => emit('keydown', event),
+    onKeyUp: event => emit('keyup', event),
+    onBeforeInput: event => emit('beforeInput', event),
+    onFocus: () => emit('focus'),
+    onBlur: () => emit('blur'),
+    onLayoutChange: () => emit('layoutChange')
+  })
 
 const {
   shown,
@@ -212,20 +134,10 @@ const {
   shortcuts,
   selectedIndex,
   position,
-  update: updateTarget,
-  updatePosition,
-  hide: hideSuggestions,
   confirmCandidate: selectCandidate,
   continuePath: continueChannelPath,
-  appendEffect: appendStampEffect,
-  onKeyDown: onSuggestionKeyDown
-} = useReferenceSuggestions({
-  editor: () => editor.value,
-  mode: () => props.mode,
-  isComposing,
-  finishComposition,
-  insertParts
-})
+  appendEffect: appendStampEffect
+} = suggestions
 
 const announcement = computed(() => {
   const candidate = candidates.value[selectedIndex.value]
@@ -233,178 +145,6 @@ const announcement = computed(() => {
   return shown.value && candidate
     ? `${candidateLabel(candidate.word, candidate.display)}、${selectedIndex.value + 1} / ${candidates.value.length}`
     : ''
-})
-
-const handleKeyAction = (event: KeyboardEvent) => {
-  if (onSuggestionKeyDown(event)) return true
-
-  emit('keydown', event)
-
-  return event.defaultPrevented
-}
-
-const inputEvents = createInputEventHandlers({
-  isIOS: isIOS(),
-  isComposing,
-  isCompositionKeyEvent,
-  handleKeyAction,
-  insertLineBreak,
-  startComposition,
-  endComposition,
-  hideSuggestions,
-  onKeyUp: event => emit('keyup', event),
-  onBeforeInput: event => emit('beforeInput', event)
-})
-
-const editorAttributes = computed(() => {
-  const candidate = candidates.value[selectedIndex.value]
-
-  return {
-    role: props.mode === 'search' ? 'combobox' : 'textbox',
-    tabindex: '0',
-    'aria-autocomplete': 'list',
-    'aria-haspopup': 'grid',
-    ...(shown.value && candidates.value.length
-      ? { 'aria-controls': popupId }
-      : {}),
-    ...(props.mode === 'search'
-      ? {
-          'aria-expanded': String(shown.value && candidates.value.length > 0)
-        }
-      : {}),
-    ...(shown.value && candidate
-      ? {
-          'aria-activedescendant': candidateRowId(popupId, candidate.word)
-        }
-      : {}),
-    dir: 'auto',
-    ...(props.labelledBy
-      ? { 'aria-labelledby': props.labelledBy }
-      : { 'aria-label': props.placeholder }),
-    'aria-readonly': String(props.readonly),
-    'aria-multiline': String(props.mode === 'message'),
-    'data-placeholder': props.placeholder,
-    ...(props.testId ? { 'data-testid': props.testId } : {})
-  }
-})
-
-const editor = useEditor({
-  extensions: inputExtensions({ label, mode: props.mode, isComposing }),
-
-  content: sourceToContent(model.value, props.mode),
-
-  editable: !props.readonly,
-  enableCoreExtensions: { keymap: false },
-  enableInputRules: false,
-  enablePasteRules: false,
-
-  editorProps: {
-    attributes: ({ doc }) => ({
-      ...editorAttributes.value,
-      'data-is-empty': String(doc.firstChild?.childCount === 0)
-    }),
-
-    ...inputEvents,
-
-    handleDOMEvents: {
-      ...inputEvents.handleDOMEvents,
-
-      ...inputDataTransfer({
-        editor: () => editor.value,
-        readonly: () => props.readonly,
-        mode: () => props.mode,
-        label,
-        channelLinkOrigins: () => [location.origin, embeddingOrigin],
-        channelPathToId: channelPathStringToId,
-        insertParts,
-        insertText: insertTextAt,
-        preparePaste: event => props.preparePaste?.(event)
-      })
-    }
-  },
-
-  onUpdate: ({ editor: current }) => {
-    model.value = serializeInput(contentToParts(current.state.doc))
-
-    nextTick(() => {
-      updateTarget()
-      emit('layoutChange')
-    })
-  },
-
-  onSelectionUpdate: updateTarget,
-
-  onFocus: () => {
-    updateInputRuntimeState({ focused: true })
-    emit('focus')
-  },
-
-  onBlur: () => {
-    updateInputRuntimeState({ focused: false })
-    hideSuggestions()
-    emit('blur')
-  }
-})
-
-watch(
-  () => [editor.value, props.markdown] as const,
-  () =>
-    updateInputRuntimeState({
-      markdown: props.mode === 'message' && props.markdown
-    })
-)
-
-const syncEditorAttributes = () => {
-  const current = editor.value
-  if (current && !current.isDestroyed && !isComposing()) current.setOptions({})
-}
-
-watch([editor, editorAttributes], syncEditorAttributes)
-
-watch([model, () => props.documentKey], ([value, key], [, previousKey]) => {
-  const current = editor.value
-  if (!current) return
-
-  const changed =
-    key === undefined || key !== previousKey
-      ? loadInputDocument(current, value, props.mode, key !== previousKey)
-      : replaceInputDocument(current, value, props.mode)
-
-  if (!changed) return
-
-  hideSuggestions()
-  emit('layoutChange')
-})
-
-watch(
-  () => props.readonly,
-  value => editor.value?.setEditable(!value, false)
-)
-
-watchEffect(() => {
-  const current = editor.value
-
-  if (!current) return
-
-  const labels = contentToParts(current.state.doc)
-    .filter(p => p.type === 'reference')
-    .map(p => label(p.reference))
-
-  const serialized = JSON.stringify(labels)
-  if (markdownPreviewKey.getState(current.state)?.labels === serialized) return
-
-  current.view.dispatch(
-    current.state.tr.setMeta(markdownPreviewKey, { labels: serialized })
-  )
-})
-
-const focus: ReferenceInputHandle['focus'] = position =>
-  editor.value?.commands.focus(position)
-const element = computed(() => editor.value?.view.dom)
-
-useResizeObserver(element, () => {
-  updatePosition()
-  emit('layoutChange')
 })
 
 defineExpose(

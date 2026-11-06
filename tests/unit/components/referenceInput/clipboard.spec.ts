@@ -26,7 +26,7 @@ it.each([
 ])(
   'preserves the selected text for a file-only paste: $text',
   async ({ text, expected }) => {
-    const wrapper = await makeInput('hello')
+    const wrapper = await makeInput({ source: 'hello' })
     const emit = vi.fn()
     await wrapper.setProps({ preparePaste: usePaste(emit).preparePaste })
     await focus(wrapper)
@@ -70,7 +70,7 @@ const pasteText = (
 }
 
 it('preserves the selection when asynchronous clipboard conversion has no text', async () => {
-  const wrapper = await makeInput('hello')
+  const wrapper = await makeInput({ source: 'hello' })
   await wrapper.setProps({
     preparePaste: () => ({ type: 'text', text: Promise.resolve('') })
   })
@@ -88,7 +88,7 @@ it.each([false, true])(
   'pastes copied channel links as references with Markdown %s and supports Undo',
   async markdown => {
     setChannelTree()
-    const wrapper = await makeInput('before replace after')
+    const wrapper = await makeInput({ source: 'before replace after' })
     await wrapper.setProps({ markdown })
     await focus(wrapper)
 
@@ -116,7 +116,7 @@ it.each([false, true])(
 
 it('preserves the copied Markdown when pasted into an existing code span', async () => {
   setChannelTree()
-  const wrapper = await makeInput('`before  after`')
+  const wrapper = await makeInput({ source: '`before  after`' })
   await focus(wrapper)
 
   wrapper
@@ -148,7 +148,7 @@ it('keeps links from other servers as ordinary Markdown', async () => {
 
 it('keeps copied channel Markdown as plain text in search input', async () => {
   setChannelTree()
-  const wrapper = await makeInput('', 'search')
+  const wrapper = await makeInput({ mode: 'search' })
   await focus(wrapper)
   pasteText(wrapper, copiedChannelLink())
 
@@ -157,7 +157,7 @@ it('keeps copied channel Markdown as plain text in search input', async () => {
 })
 
 it('copies plain labels and restores IDs only from structured data from this server', async () => {
-  const wrapper = await makeInput(embedded)
+  const wrapper = await makeInput({ source: embedded })
   await focus(wrapper)
   press(wrapper, 'a', { ctrlKey: true })
   const data = new Map<string, string>()

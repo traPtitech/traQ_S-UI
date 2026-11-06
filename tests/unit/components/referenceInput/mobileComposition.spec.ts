@@ -51,7 +51,7 @@ it.each([':te', '@al', '#ti', ':@al', ':test.la'])(
   'shows mobile ASCII candidates during composition for %s',
   async value => {
     setChannelTree()
-    const wrapper = await makeInput(prefix)
+    const wrapper = await makeInput({ source: prefix })
     await focus(wrapper)
     const editor = await compose(wrapper, value)
 
@@ -64,7 +64,7 @@ it.each([':te', '@al', '#ti', ':@al', ':test.la'])(
 )
 
 it('waits for compositionend before replacing a tapped candidate', async () => {
-  const wrapper = await makeInput(prefix)
+  const wrapper = await makeInput({ source: prefix })
   await focus(wrapper)
   const editor = await compose(wrapper, '@al')
   const menu = wrapper.getComponent(DropdownSuggester)
@@ -86,7 +86,7 @@ it('waits for compositionend before replacing a tapped candidate', async () => {
 })
 
 it('discards a deferred candidate when composition changes before confirmation', async () => {
-  const wrapper = await makeInput(prefix)
+  const wrapper = await makeInput({ source: prefix })
   await focus(wrapper)
   const editor = await compose(wrapper, '@al')
   const menu = wrapper.getComponent(DropdownSuggester)

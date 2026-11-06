@@ -1,10 +1,6 @@
-import type {
-  Channel,
-  DMChannel,
-  Stamp,
-  User,
-  UserGroup
-} from '@traptitech/traq'
+await vi.hoisted(async () => {
+  await import('../../fixtures/referenceEntities')
+})
 
 vi.mock('/@/store/app/commandPalette', async () => {
   const { computed, ref } = await import('vue')
@@ -61,55 +57,6 @@ vi.mock('/@/store/app/featureFlagSettings', async () => {
   return { useFeatureFlagSettings: () => ({ featureFlags }) }
 })
 
-vi.mock('/@/store/entities/users', async () => {
-  const { ref } = await import('vue')
-  const usersMap = ref(new Map<string, User>())
-
-  return { useUsersStore: () => ({ usersMap }) }
-})
-
-vi.mock('/@/store/entities/groups', async () => {
-  const { ref } = await import('vue')
-
-  const userGroupsMap = ref(new Map<string, UserGroup>())
-  return { useGroupsStore: () => ({ userGroupsMap }) }
-})
-
-vi.mock('/@/store/entities/channels', async () => {
-  const { ref } = await import('vue')
-  const channelsMap = ref(new Map<string, Channel>())
-  const dmChannelsMap = ref(new Map<string, DMChannel>())
-  const userIdToDmChannelIdMap = ref(new Map<string, string>())
-
-  return {
-    useChannelsStore: () => ({
-      channelsMap,
-      dmChannelsMap,
-      userIdToDmChannelIdMap
-    })
-  }
-})
-
-vi.mock('/@/composables/useChannelPath', async () => {
-  const { channelIdToPathString } = await import('/@/lib/channel')
-  const { useChannelsStore } = await import('/@/store/entities/channels')
-
-  return {
-    default: () => ({
-      channelIdToPathString: (id: string) =>
-        '#' + channelIdToPathString(id, useChannelsStore().channelsMap.value),
-
-      channelPathStringToId: (path: string) => {
-        const channels = useChannelsStore().channelsMap.value
-
-        return [...channels.keys()].find(
-          id => channelIdToPathString(id, channels) === path
-        )
-      }
-    })
-  }
-})
-
 vi.mock('/@/store/domain/stampHistory', () => ({
   useStampHistory: () => ({ upsertLocalStampHistory: vi.fn() })
 }))
@@ -118,8 +65,4 @@ vi.mock('/@/store/domain/stampRecommendations', () => ({
   useStampRecommendations: () => ({ recordStampUsage: vi.fn() })
 }))
 
-vi.mock('/@/store/entities/stamps', async () => {
-  const { ref } = await import('vue')
-  const stampsMap = ref(new Map<string, Stamp>())
-  return { useStampsStore: () => ({ stampsMap }) }
-})
+export {}

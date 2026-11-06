@@ -1,4 +1,4 @@
-import type { Channel, Stamp, User } from '@traptitech/traq'
+import type { Stamp, User } from '@traptitech/traq'
 
 import { nextTick } from 'vue'
 
@@ -14,23 +14,30 @@ import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
 
+import { createChannel } from '../../fixtures/entities'
+import { resetReferenceEntities } from '../../fixtures/referenceEntities'
+
 export const embedded = encodeReference({
   type: 'user',
   id: 'original-id',
   raw: '@alice'
 })
 
-export const wrappers: ReturnType<typeof mount<typeof ReferenceInput>>[] = []
+const wrappers: ReturnType<typeof mount<typeof ReferenceInput>>[] = []
 
-export const makeInput = async (
-  value = '',
-  mode: 'message' | 'search' = 'message',
-  stubSuggestions = true
-) => {
+export const makeInput = async ({
+  source = '',
+  mode = 'message',
+  suggestions = 'stub'
+}: {
+  source?: string
+  mode?: 'message' | 'search'
+  suggestions?: 'real' | 'stub'
+} = {}) => {
   const wrapper = mount(ReferenceInput, {
     attachTo: document.body,
     props: {
-      modelValue: value,
+      modelValue: source,
       mode,
       placeholder: 'message',
       'onUpdate:modelValue': (value: string) => {
@@ -39,7 +46,7 @@ export const makeInput = async (
     },
     global: {
       stubs: {
-        DropdownSuggester: stubSuggestions,
+        DropdownSuggester: suggestions === 'stub',
         DropdownSuggesterUserIcon: true,
         AStamp: true,
         teleport: true
@@ -83,7 +90,7 @@ export const setChannelTree = () => {
     { id: 'year25', name: '25', parentId: 'times', children: ['person'] },
     { id: 'person', name: 'person', parentId: 'year25', children: [] }
   ])
-    channelsMap.value.set(channel.id, channel as Channel)
+    channelsMap.value.set(channel.id, createChannel(channel))
 }
 
 export const setBranchingChannelTree = () => {
@@ -102,7 +109,7 @@ export const setBranchingChannelTree = () => {
     { id: 'ops', name: 'Ops', parentId: 'sysad', children: [] },
     { id: 'test', name: 'test', parentId: null, children: [] }
   ])
-    channelsMap.value.set(channel.id, channel as Channel)
+    channelsMap.value.set(channel.id, createChannel(channel))
 }
 
 export const installReferenceInputFixture = () => {
@@ -114,11 +121,11 @@ export const installReferenceInputFixture = () => {
 
   afterEach(() => {
     wrappers.splice(0).forEach(wrapper => wrapper.unmount())
-    useUsersStore().usersMap.value.clear()
-    useChannelsStore().channelsMap.value.clear()
   })
 
   beforeEach(() => {
+    resetReferenceEntities()
+
     const user: User = {
       id: 'original-id',
       name: 'alice',

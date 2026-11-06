@@ -52,7 +52,7 @@ it.each([
 
 it('does not offer the effect action for regular mentions or search', async () => {
   for (const mode of ['message', 'search'] as const) {
-    const wrapper = await makeInput('', mode)
+    const wrapper = await makeInput({ mode })
     await focus(wrapper)
     wrapper.vm.insertText(mode === 'message' ? '@al' : 'from:al')
     await nextTick()

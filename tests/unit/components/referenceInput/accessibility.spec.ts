@@ -29,7 +29,7 @@ it('connects a search combobox to its active candidate and announces entity kind
     updatedAt: '2026-01-01T00:00:00Z'
   })
 
-  const wrapper = await makeInput('', 'search', false)
+  const wrapper = await makeInput({ mode: 'search', suggestions: 'real' })
   await focus(wrapper)
   wrapper.vm.insertText('from:al')
   await nextTick()
@@ -56,7 +56,7 @@ it('connects a search combobox to its active candidate and announces entity kind
 it.each(['ctrlKey', 'metaKey', 'altKey', 'shiftKey'] as const)(
   'leaves %s + ArrowDown to the editor',
   async modifier => {
-    const wrapper = await makeInput('', 'message', false)
+    const wrapper = await makeInput({ suggestions: 'real' })
     await focus(wrapper)
     wrapper.vm.insertText('@al')
     await nextTick()

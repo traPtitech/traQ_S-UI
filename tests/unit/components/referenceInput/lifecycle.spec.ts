@@ -21,7 +21,7 @@ describe('reference input padding focus', () => {
   it.each(['message', 'search'] as const)(
     'focuses the %s input when its padding is pressed',
     async mode => {
-      const wrapper = await makeInput('hello', mode)
+      const wrapper = await makeInput({ source: 'hello', mode })
 
       const event = new MouseEvent('mousedown', {
         button: 0,
@@ -42,7 +42,7 @@ describe('reference input padding focus', () => {
   )
 
   it('restores focus from padding without changing the selection', async () => {
-    const wrapper = await makeInput('hello')
+    const wrapper = await makeInput({ source: 'hello' })
     await focus(wrapper)
     const editor = wrapper.getComponent(EditorContent).props('editor')
 
@@ -62,7 +62,7 @@ describe('reference input padding focus', () => {
   })
 
   it('does not intercept pointer events from child components', async () => {
-    const wrapper = await makeInput('hello')
+    const wrapper = await makeInput({ source: 'hello' })
 
     const event = new MouseEvent('mousedown', {
       button: 0,
@@ -79,7 +79,7 @@ describe('reference input padding focus', () => {
   it.each([1, 2])(
     'leaves mouse button %s unchanged on padding',
     async button => {
-      const wrapper = await makeInput('hello')
+      const wrapper = await makeInput({ source: 'hello' })
 
       const event = new MouseEvent('mousedown', {
         button,
@@ -99,7 +99,7 @@ describe('reference input empty state', () => {
   it.each(['message', 'search'] as const)(
     'tracks document content when loading or clearing a %s input',
     async mode => {
-      const wrapper = await makeInput('', mode)
+      const wrapper = await makeInput({ mode })
 
       expect(wrapper.vm.element?.getAttribute('data-is-empty')).toBe('true')
 
@@ -118,7 +118,7 @@ describe('reference input empty state', () => {
   it.each([false, true])(
     'keeps a trailing newline nonempty while typing and clearing with Markdown %s',
     async markdown => {
-      const wrapper = await makeInput('text')
+      const wrapper = await makeInput({ source: 'text' })
       await wrapper.setProps({ markdown })
       await focus(wrapper)
       const editor = wrapper.getComponent(EditorContent).props('editor')
@@ -149,7 +149,7 @@ describe('reference input empty state', () => {
   )
 
   it('updates the empty state through Undo and Redo', async () => {
-    const wrapper = await makeInput('text\n')
+    const wrapper = await makeInput({ source: 'text\n' })
     await focus(wrapper)
     const editor = wrapper.getComponent(EditorContent).props('editor')
 
@@ -229,7 +229,7 @@ describe('reference input empty state', () => {
 })
 
 it('clears Undo history when loading a different draft', async () => {
-  const wrapper = await makeInput('first')
+  const wrapper = await makeInput({ source: 'first' })
   wrapper.vm.insertText(' edit')
   await nextTick()
   await wrapper.setProps({ modelValue: 'second' })
@@ -242,7 +242,7 @@ it('clears Undo history when loading a different draft', async () => {
 it.each(['sent message', `${embedded} sent message`])(
   'clears the submitted draft when posting finishes: %s',
   async message => {
-    const wrapper = await makeInput(message)
+    const wrapper = await makeInput({ source: message })
     await wrapper.setProps({ readonly: true })
     await wrapper.setProps({ readonly: false, modelValue: '' })
 
@@ -261,7 +261,7 @@ it.each(['sent message', `${embedded} sent message`])(
 )
 
 it('retains the draft when posting finishes without clearing it', async () => {
-  const wrapper = await makeInput(`${embedded} unsent message`)
+  const wrapper = await makeInput({ source: `${embedded} unsent message` })
   await wrapper.setProps({ readonly: true })
   await wrapper.setProps({ readonly: false })
 
@@ -270,7 +270,7 @@ it('retains the draft when posting finishes without clearing it', async () => {
 })
 
 it('preserves Undo for an external edit and resets it for a new document key', async () => {
-  const wrapper = await makeInput(embedded)
+  const wrapper = await makeInput({ source: embedded })
   await wrapper.setProps({ documentKey: 'first' })
   const editor = wrapper.getComponent(EditorContent).props('editor')
   if (!editor) throw new Error('Editor is not mounted')
@@ -298,7 +298,7 @@ it('preserves Undo for an external edit and resets it for a new document key', a
 })
 
 it('updates all accessible attributes through reactive props', async () => {
-  const wrapper = await makeInput('', 'search')
+  const wrapper = await makeInput({ mode: 'search' })
   await wrapper.setProps({
     placeholder: 'updated',
     labelledBy: 'search-label',

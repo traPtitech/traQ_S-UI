@@ -33,7 +33,7 @@ it.each(['message', 'search'] as const)(
   'continues a channel path by tapping in %s mode and embeds only the final choice',
   async mode => {
     setChannelTree()
-    const wrapper = await makeInput('', mode, false)
+    const wrapper = await makeInput({ mode, suggestions: 'real' })
     await focus(wrapper)
     const prefix = mode === 'search' ? 'in:' : ''
     wrapper.vm.insertText(`${prefix}#ti`)
@@ -89,7 +89,7 @@ it.each(['message', 'search'] as const)(
 
 it('can still select a parent channel directly', async () => {
   setChannelTree()
-  const wrapper = await makeInput('', 'message', false)
+  const wrapper = await makeInput({ suggestions: 'real' })
   await focus(wrapper)
   wrapper.vm.insertText('#ti')
   await nextTick()
@@ -118,7 +118,7 @@ it.each(['message', 'search'] as const)(
   'updates shortcut hints while completing a unique channel path in %s mode',
   async mode => {
     setChannelTree()
-    const wrapper = await makeInput('', mode, false)
+    const wrapper = await makeInput({ mode, suggestions: 'real' })
     await focus(wrapper)
     const prefix = mode === 'search' ? 'in:' : ''
 
@@ -158,7 +158,7 @@ it.each(['message', 'search'] as const)(
   'updates shortcut hints for cycling, manual edits, and parent confirmation in %s mode',
   async mode => {
     setBranchingChannelTree()
-    const wrapper = await makeInput('', mode, false)
+    const wrapper = await makeInput({ mode, suggestions: 'real' })
     await focus(wrapper)
     const prefix = mode === 'search' ? 'in:' : ''
 
@@ -203,7 +203,7 @@ describe.each(['message', 'search'] as const)(
       async text => {
         for (const markdown of [true, false]) {
           setBranchingChannelTree()
-          const wrapper = await makeInput('', mode, false)
+          const wrapper = await makeInput({ mode, suggestions: 'real' })
           await wrapper.setProps({ markdown })
           await focus(wrapper)
           const prefix = mode === 'search' ? 'in:' : ''
@@ -284,7 +284,7 @@ describe.each(['message', 'search'] as const)(
       async ({ key, shiftKey, backward }) => {
         for (const markdown of [true, false]) {
           setBranchingChannelTree()
-          const wrapper = await makeInput('', mode, false)
+          const wrapper = await makeInput({ mode, suggestions: 'real' })
           await wrapper.setProps({ markdown })
           await focus(wrapper)
           const prefix = mode === 'search' ? 'in:' : ''
@@ -352,7 +352,7 @@ it.each(['message', 'search'] as const)(
   'confirms the current parent with Enter before selecting a child in %s mode',
   async mode => {
     setChannelTree()
-    const wrapper = await makeInput('', mode)
+    const wrapper = await makeInput({ mode })
     await focus(wrapper)
     const prefix = mode === 'search' ? 'in:' : ''
     wrapper.vm.insertText(`${prefix}#times`)

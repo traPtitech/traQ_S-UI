@@ -40,7 +40,7 @@ const releaseEnter = (wrapper: Awaited<ReturnType<typeof makeInput>>) =>
   )
 
 it('inserts one newline per iOS Enter, including after the delayed fallback', async () => {
-  const wrapper = await makeInput('hello')
+  const wrapper = await makeInput({ source: 'hello' })
   await focus(wrapper)
   wrapper
     .getComponent(EditorContent)
@@ -73,7 +73,7 @@ it('handles a software keyboard newline without a keydown', async () => {
 })
 
 it('uses the current DOM selection before selectionchange is delivered', async () => {
-  const wrapper = await makeInput('hello')
+  const wrapper = await makeInput({ source: 'hello' })
   await focus(wrapper)
   const editor = wrapper.getComponent(EditorContent).props('editor')
   if (!editor) throw new Error('Editor is not mounted')
@@ -108,7 +108,7 @@ it('confirms a suggestion without a delayed newline or parent key action', async
 })
 
 it('lets the search parent handle Enter once and discards the consumed key', async () => {
-  const wrapper = await makeInput('query', 'search')
+  const wrapper = await makeInput({ source: 'query', mode: 'search' })
   const onKeydown = vi.fn((event: KeyboardEvent) => event.preventDefault())
   await wrapper.setProps({ onKeydown })
   await focus(wrapper)
