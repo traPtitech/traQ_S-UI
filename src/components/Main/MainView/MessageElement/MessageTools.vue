@@ -43,6 +43,13 @@
         />
       </template>
       <AIcon
+        v-if="!showThreadButton"
+        mdi
+        name="reply-all"
+        :size="28"
+        :class="$style.icon"
+      />
+      <AIcon
         v-if="!isMinimum"
         mdi
         name="emoticon-outline"
@@ -111,10 +118,12 @@ const props = withDefaults(
     messageId: MessageId
     isMinimum?: boolean
     show?: boolean
+    showThreadButton?: boolean
   }>(),
   {
     isMinimum: false,
-    show: false
+    show: false,
+    showThreadButton: false
   }
 )
 

@@ -15,6 +15,7 @@
       :entry-message-id="entryMessageId"
       :pinned-messages="pinnedMessages"
       :typing-users="typingUsers"
+      :show-thread-button="showThreadButton"
     />
   </div>
 </template>
@@ -104,6 +105,7 @@ const props = defineProps<{
   entryMessageId?: ChannelId
   pinnedMessages: Pin[]
   typingUsers: UserId[]
+  showThreadButton?: boolean
 }>()
 
 const { canDrop, onDrop, onDragStart, onDragOver } = useDragDrop(

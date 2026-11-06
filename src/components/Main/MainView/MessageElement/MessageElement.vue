@@ -24,6 +24,7 @@
         :class="$style.tools"
         :message-id="messageId"
         :is-minimum="isArchived"
+        :show-thread-button="showThreadButton"
       />
       <MessageContents
         :class="$style.messageContents"
@@ -66,10 +67,12 @@ const props = withDefaults(
     pinnedUserId?: UserId
     isEntryMessage?: boolean
     isArchived?: boolean
+    showThreadButton?: boolean
   }>(),
   {
     isEntryMessage: false,
-    isArchived: false
+    isArchived: false,
+    showThreadButton: false
   }
 )
 
