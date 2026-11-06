@@ -1,4 +1,4 @@
-import { getMarkdown } from '/@/lib/markdown/parser'
+import { getMarkdownRenderer } from '/@/lib/markdown/parser'
 import { markdownFormats } from '/@/lib/referenceInput/markdown'
 
 const inspect = (source: string) =>
@@ -24,7 +24,7 @@ describe('Markdown source decorations', () => {
   )
 
   it('uses equivalent settings without mutating the message parser', () => {
-    const renderer = getMarkdown()
+    const renderer = getMarkdownRenderer()
     const text = 'example.dev https://example.com'
     const formats = inspect(text)
     const container = document.createElement('div')
@@ -69,7 +69,9 @@ describe('Markdown source decorations', () => {
       type: 'markdown',
       text
     })
-    expect(getMarkdown().render(text).renderedText).not.toContain('<img')
+    expect(getMarkdownRenderer().render(text).renderedText).not.toContain(
+      '<img'
+    )
   })
 
   it('tracks nested emphasis without losing the original delimiters', () => {

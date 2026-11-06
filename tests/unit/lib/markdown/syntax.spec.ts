@@ -33,6 +33,10 @@ const syntax = (tokens: Token[]): unknown[] =>
 it.each([
   '***bold*** ~~strike~~ ==mark== !!spoiler!!',
   '$x^2$\n\n$$\nx+1\n$$',
+  '$$5 $ x$ $x $ $x$2 $x\\$y$ $x\\\\$ end',
+  '$unclosed $$ $ $\t$ a$1$ b$2$3',
+  '> $$\n> x + y\n> $$\n\n- $$x$$\n  end',
+  '$$unclosed\n\n  body\n- stop',
   ':test.large: :@alice: :hsl(120, 50.5%, 40.5%).spin:',
   '> - **nested**\n>   `literal`\n\n\tindented',
   '| a | b |\n| --- | --- |\n| **x** | \\| y |',

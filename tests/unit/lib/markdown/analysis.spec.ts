@@ -2,7 +2,7 @@ import {
   analyzeMarkdownSource,
   isLiteralSource
 } from '/@/lib/markdown/analysis'
-import { getMarkdown } from '/@/lib/markdown/parser'
+import { getMarkdownRenderer } from '/@/lib/markdown/parser'
 import { normalizeMessageSource } from '/@/lib/message/content'
 
 it.each([
@@ -49,7 +49,7 @@ it.each(['```\n```', '~~~\n~~~~  ', '> ```\n> ```', '- ```\n  ```'])(
       literal?.syntax.map(range => text.slice(range.from, range.to))
     ).toHaveLength(2)
     expect(
-      getMarkdown()
+      getMarkdownRenderer()
         .md.parse(text, {})
         .find(token => token.type === 'fence')?.content
     ).toBe('')

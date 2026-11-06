@@ -1,17 +1,22 @@
 import type Token from 'markdown-it/lib/token.mjs'
 
 import type { MarkdownSourceNode } from './analysis'
+import type { PositionedToken } from './compatibility/source'
+import { markdownTableCellPositions } from './compatibility/tableSource'
 import type { MarkdownLineContext } from './lineContexts'
-import type { PositionedToken } from './source'
-import { markdownTableCellPositions } from './tableSource'
 
 type AddNode = (node: MarkdownSourceNode) => void
 const styles = new Set(['strong', 'em', 's', 'a', 'mark', 'span'])
 
+export type SourceMappingDiagnostic =
+  | { reason: 'invalid-range'; node: MarkdownSourceNode }
+  | { reason: 'unmapped-inline'; content: string }
+
 export const collectSourceNodes = (
   source: string,
   tokens: Token[],
-  contexts: readonly MarkdownLineContext[]
+  contexts: readonly MarkdownLineContext[],
+  diagnose?: (diagnostic: SourceMappingDiagnostic) => void
 ): MarkdownSourceNode[] => {
   const lines = source.split('\n')
   const starts: number[] = []
@@ -30,6 +35,7 @@ export const collectSourceNodes = (
   const add = (node: MarkdownSourceNode) => {
     const { from, to, content, syntax } = node
     const key = `${node.kind}:${from}:${to}:${content.from}:${content.to}`
+    if (seen.has(key)) return
 
     if (
       ![
@@ -47,10 +53,11 @@ export const collectSourceNodes = (
       syntax.some(
         range => range.from < from || range.from > range.to || range.to > to
       ) ||
-      (from === to && node.kind !== 'container') ||
-      seen.has(key)
-    )
+      (from === to && node.kind !== 'container')
+    ) {
+      diagnose?.({ reason: 'invalid-range', node })
       return
+    }
 
     seen.add(key)
     nodes.push(node)
@@ -95,7 +102,7 @@ export const collectSourceNodes = (
 
       inTable = true
     } else if (token.type === 'inline' && token.children) {
-      collectInlineNodes(source, token, cell, add)
+      collectInlineNodes(source, token, cell, add, diagnose)
     } else {
       collectBlockNode(token, { lines, lineStart, lineEnd }, add)
     }
@@ -110,13 +117,17 @@ const collectInlineNodes = (
   source: string,
   token: Token,
   cell: number[] | undefined,
-  add: AddNode
+  add: AddNode,
+  diagnose?: (diagnostic: SourceMappingDiagnostic) => void
 ) => {
   // 引用・リストの接頭辞やインデントを除かれた各行を、原文中の位置へ対応づける。
   const positions =
     cell ?? (token as PositionedToken).meta?.originalPositions ?? []
 
-  if (positions.length !== token.content.length) return
+  if (positions.length !== token.content.length) {
+    diagnose?.({ reason: 'unmapped-inline', content: token.content })
+    return
+  }
   const at = (position: number) => positions[position] ?? NaN
   const stack: PositionedToken[] = []
 

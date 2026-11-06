@@ -2,8 +2,8 @@ import type MarkdownIt from 'markdown-it'
 import type { RuleInline } from 'markdown-it/lib/parser_inline.mjs'
 import type Token from 'markdown-it/lib/token.mjs'
 
+import type { SourceRange as Range } from '../types'
 import { trackBlockSource } from './blockSource'
-import type { SourceRange as Range } from './types'
 
 type InlineTokenSource = { -readonly [Key in keyof Range]: Range[Key] } & {
   markerWidth?: number

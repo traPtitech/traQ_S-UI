@@ -2,12 +2,15 @@ import MarkdownIt from 'markdown-it'
 import type Token from 'markdown-it/lib/token.mjs'
 
 import {
+  type PositionedToken,
+  trackMarkdownSource
+} from '../markdown/compatibility/source'
+import { markdownTableCellPositions } from '../markdown/compatibility/tableSource'
+import {
   type MarkdownLineContext,
   markdownLineContexts
 } from '../markdown/lineContexts'
-import { type PositionedToken, trackMarkdownSource } from '../markdown/source'
 import { createMarkdownAnalysisParser } from '../markdown/syntax'
-import { markdownTableCellPositions } from '../markdown/tableSource'
 
 type Range = { from: number; to: number }
 

@@ -1,63 +1,10 @@
-import type { Store } from '@traptitech/traq-markdown-it'
-
-import useChannelPath from '/@/composables/useChannelPath'
 import { embeddingOrigin } from '/@/lib/apis'
-import { useMeStore } from '/@/store/domain/me'
-import { useChannelsStore } from '/@/store/entities/channels'
-import { useGroupsStore } from '/@/store/entities/groups'
-import { useStampsStore } from '/@/store/entities/stamps'
-import { useUsersStore } from '/@/store/entities/users'
 
+import { renderInlineWithEnvironment } from './compatibility/renderer'
+import { markdownStore } from './store'
 import { configureMarkdownDialect } from './syntax'
 import { traQMarkdownIt } from './traq-markdown-it'
 import type { MarkdownEnvironment } from './types'
-
-const storeProvider: Store = {
-  getUser(id) {
-    const { usersMap } = useUsersStore()
-    return usersMap.value.get(id)
-  },
-
-  getChannel(id) {
-    const { channelsMap } = useChannelsStore()
-    return channelsMap.value.get(id)
-  },
-
-  getUserGroup(id) {
-    const { userGroupsMap } = useGroupsStore()
-    return userGroupsMap.value.get(id)
-  },
-
-  getMe() {
-    const { detail } = useMeStore()
-    return detail.value
-  },
-
-  getStampByName(name) {
-    const { getStampByName } = useStampsStore()
-    return getStampByName(name)
-  },
-
-  getUserByName(name) {
-    const { findUserByName } = useUsersStore()
-    return findUserByName(name)
-  },
-
-  generateChannelHref(id) {
-    const { channelIdToLink } = useChannelPath()
-    return `${embeddingOrigin}${channelIdToLink(id) as string}`
-  },
-
-  generateUserHref(id) {
-    return `javascript:openUserModal(${encodeURIComponent(JSON.stringify(id))})`
-  },
-
-  generateUserGroupHref(id) {
-    return `javascript:openGroupModal(${encodeURIComponent(
-      JSON.stringify(id)
-    )})`
-  }
-}
 
 const autoDirectionTokenTypes = new Set([
   'paragraph_open',
@@ -70,7 +17,7 @@ const autoDirectionTokenTypes = new Set([
 let markdown: traQMarkdownIt | undefined
 
 export const createMarkdownRenderer = () => {
-  const markdown = new traQMarkdownIt(storeProvider, [], embeddingOrigin)
+  const markdown = new traQMarkdownIt(markdownStore, [], embeddingOrigin)
 
   configureMarkdownDialect(markdown.md)
 
@@ -83,24 +30,14 @@ export const createMarkdownRenderer = () => {
   return markdown
 }
 
-export const getMarkdown = () => (markdown ??= createMarkdownRenderer())
+export const getMarkdownRenderer = () => (markdown ??= createMarkdownRenderer())
 
-export const renderMarkdownInline = (
+export const renderInlineWithCurrentEntities = (
   text: string,
   environment?: MarkdownEnvironment
 ) => {
-  const markdown = getMarkdown()
+  const markdown = getMarkdownRenderer()
   if (!environment) return markdown.renderInline(text)
 
-  const tokens = markdown.md.parse(text, { ...environment })
-  const embeddings = markdown.embeddingExtractor.extract(tokens)
-
-  markdown.embeddingExtractor.removeTailEmbeddings(tokens)
-  markdown.embeddingExtractor.replace(tokens)
-
-  return {
-    rawText: text,
-    renderedText: markdown._renderInline(tokens),
-    embeddings
-  }
+  return renderInlineWithEnvironment(markdown, text, environment)
 }

@@ -3,8 +3,6 @@ import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
 
-import { isDefined } from '../basic/array'
-import { getMarkdown, renderMarkdownInline } from './parser'
 import type { MarkdownEnvironment } from './types'
 
 const waitForInitialFetch = () => {
@@ -22,25 +20,31 @@ const waitForInitialFetch = () => {
 }
 
 export const render = async (text: string) => {
-  await waitForInitialFetch()
-  return getMarkdown().render(text)
+  const [, { getMarkdownRenderer }] = await Promise.all([
+    waitForInitialFetch(),
+    import('./parser')
+  ])
+
+  return getMarkdownRenderer().render(text)
 }
 
 export const renderInline = async (
   text: string,
   environment?: MarkdownEnvironment
 ) => {
-  await waitForInitialFetch()
+  const [, { renderInlineWithCurrentEntities }] = await Promise.all([
+    waitForInitialFetch(),
+    import('./parser')
+  ])
 
-  return renderMarkdownInline(text, environment)
+  return renderInlineWithCurrentEntities(text, environment)
 }
 
 export const parse = async (text: string) => {
-  await waitForInitialFetch()
-  return getMarkdown().md.parse(text, {})
-}
+  const [, { getMarkdownRenderer }] = await Promise.all([
+    waitForInitialFetch(),
+    import('./parser')
+  ])
 
-export const isEmbeddedLink = async (text: string) => {
-  await waitForInitialFetch()
-  return isDefined(getMarkdown().embeddingExtractor.urlToEmbeddingData(text))
+  return getMarkdownRenderer().md.parse(text, {})
 }

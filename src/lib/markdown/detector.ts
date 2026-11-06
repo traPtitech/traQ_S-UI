@@ -37,7 +37,7 @@ const isStructData = (value: unknown): value is StructData => {
  * https://github.com/traPtitech/traQ_S-UI/pull/3515 の図を参照
  *
  * @param shortcut funcがtrueまたはfalseを返すときに即時に実行を終わるかどうか(nullのときは行わない)
- * @returns shortcutした場合はその値、そうでない場合はnull
+ * @returns shortcutした場合はその値、そうでない場合はundefined
  */
 export const forEachData = (
   text: string,

@@ -1,6 +1,6 @@
 import { type Store, traQMarkdownIt } from '@traptitech/traq-markdown-it'
 
-import { trackMarkdownSource } from '/@/lib/markdown/source'
+import { trackMarkdownSource } from '/@/lib/markdown/compatibility/source'
 
 const store: Store = {
   getChannel: id => ({ id }),

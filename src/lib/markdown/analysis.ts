@@ -1,12 +1,11 @@
 import type MarkdownIt from 'markdown-it'
 
+import { trackMarkdownSource } from './compatibility/source'
 import { type MarkdownLineContext, markdownLineContexts } from './lineContexts'
-import { trackMarkdownSource } from './source'
 import { collectSourceNodes } from './sourceNodes'
 import { createMarkdownAnalysisParser } from './syntax'
 import type { MarkdownEnvironment, SourceRange } from './types'
 
-export type { SourceRange, MarkdownEnvironment } from './types'
 type SourceNodeBase = SourceRange & {
   readonly content: SourceRange
   readonly syntax: readonly SourceRange[]
