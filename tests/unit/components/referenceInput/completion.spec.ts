@@ -10,6 +10,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import {
   embedded,
   focus,
+  installReferenceInputFixture,
   lastValue,
   makeInput,
   press,
@@ -20,6 +21,8 @@ import {
 await vi.hoisted(async () => {
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 describe.each([
   {

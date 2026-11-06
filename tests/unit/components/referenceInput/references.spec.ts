@@ -7,11 +7,20 @@ import { EditorContent } from '@tiptap/vue-3'
 import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
 import { useUsersStore } from '/@/store/entities/users'
 
-import { embedded, focus, lastValue, makeInput, press } from './fixture'
+import {
+  embedded,
+  focus,
+  installReferenceInputFixture,
+  lastValue,
+  makeInput,
+  press
+} from './fixture'
 
 await vi.hoisted(async () => {
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 it('uses the native caret when software Backspace precedes selectionchange', async () => {
   const wrapper = await makeInput(embedded + 'abc')

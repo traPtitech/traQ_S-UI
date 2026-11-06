@@ -8,6 +8,7 @@ import { type Candidate } from '/@/lib/suggestion/types'
 
 import {
   focus,
+  installReferenceInputFixture,
   lastValue,
   makeInput,
   press,
@@ -18,6 +19,8 @@ import {
 await vi.hoisted(async () => {
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 const hintText = (wrapper: Awaited<ReturnType<typeof makeInput>>) =>
   wrapper

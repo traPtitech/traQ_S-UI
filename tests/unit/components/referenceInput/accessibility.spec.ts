@@ -2,11 +2,19 @@ import { nextTick } from 'vue'
 
 import { useGroupsStore } from '/@/store/entities/groups'
 
-import { focus, lastValue, makeInput, press } from './fixture'
+import {
+  focus,
+  installReferenceInputFixture,
+  lastValue,
+  makeInput,
+  press
+} from './fixture'
 
 await vi.hoisted(async () => {
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 it('connects a search combobox to its active candidate and announces entity kinds', async () => {
   useGroupsStore().userGroupsMap.value.set('group-id', {

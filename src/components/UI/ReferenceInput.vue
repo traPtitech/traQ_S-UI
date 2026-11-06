@@ -58,8 +58,9 @@ import {
   replaceInputDocument,
   sourceToContent
 } from '/@/lib/referenceInput/editorDocument'
+import { createInputEventHandlers } from '/@/lib/referenceInput/inputEvents'
 import {
-  type InputLifecycle,
+  type InputRuntimeState,
   inputLifecycleKey
 } from '/@/lib/referenceInput/inputLifecycle'
 import {
@@ -67,7 +68,6 @@ import {
   markdownLineBreak
 } from '/@/lib/referenceInput/markdownLineBreak'
 import { markdownPreviewKey } from '/@/lib/referenceInput/markdownPreview'
-import { syncInputSelection } from '/@/lib/referenceInput/selection'
 import {
   type InputMode,
   type InputPart,
@@ -85,6 +85,7 @@ const keyboardRecentlyUsed = useRecentKeyboardInput()
 
 const props = withDefaults(
   defineProps<{
+    /** Mount 中は変更しない。 */
     mode?: InputMode
     placeholder?: string
     labelledBy?: string
@@ -118,14 +119,14 @@ const emit = defineEmits<{
 const { label } = useReferenceLabels()
 const { channelPathStringToId } = useChannelPath()
 
-const updateInputLifecycle = (options: Partial<InputLifecycle>) => {
+const updateInputRuntimeState = (options: Partial<InputRuntimeState>) => {
   const current = editor.value
   if (!current || current.isDestroyed) return
   const previous = inputLifecycleKey.getState(current.state)
 
   if (
     Object.entries(options).every(
-      ([key, value]) => previous?.[key as keyof InputLifecycle] === value
+      ([key, value]) => previous?.[key as keyof InputRuntimeState] === value
     )
   )
     return
@@ -142,7 +143,7 @@ const {
   end: endComposition
 } = useInputComposition({
   view: () => editor.value?.view,
-  onChange: composing => updateInputLifecycle({ composing }),
+  onChange: composing => updateInputRuntimeState({ composing }),
   onSettled: () =>
     nextTick(() => {
       updateTarget()
@@ -242,8 +243,18 @@ const handleKeyAction = (event: KeyboardEvent) => {
   return event.defaultPrevented
 }
 
-const iOSFlag = isIOS()
-let pendingIOSEnter: KeyboardEvent | undefined
+const inputEvents = createInputEventHandlers({
+  isIOS: isIOS(),
+  isComposing,
+  isCompositionKeyEvent,
+  handleKeyAction,
+  insertLineBreak,
+  startComposition,
+  endComposition,
+  hideSuggestions,
+  onKeyUp: event => emit('keyup', event),
+  onBeforeInput: event => emit('beforeInput', event)
+})
 
 const editorAttributes = computed(() => {
   const candidate = candidates.value[selectedIndex.value]
@@ -293,98 +304,10 @@ const editor = useEditor({
       'data-is-empty': String(doc.firstChild?.childCount === 0)
     }),
 
-    handleKeyDown: (_view, event) => {
-      if (isCompositionKeyEvent(event)) return false
-
-      if (handleKeyAction(event)) return true
-
-      if (event.key === 'Enter') {
-        insertLineBreak({
-          continueItem:
-            event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey
-        })
-
-        return true
-      }
-
-      return false
-    },
+    ...inputEvents,
 
     handleDOMEvents: {
-      keydown: (_view, event) => {
-        pendingIOSEnter = undefined
-
-        // IME の既定動作は許可し、ProseMirror の通常のキー処理だけを止める。
-        if (isCompositionKeyEvent(event)) return true
-
-        if (
-          iOSFlag &&
-          event.key === 'Enter' &&
-          !event.ctrlKey &&
-          !event.altKey &&
-          !event.metaKey
-        ) {
-          // iOS の既定動作を許可し、Enter は続く beforeinput で一度だけ処理する。
-          // ProseMirror の遅延 Enter 処理は登録させない。
-          pendingIOSEnter = event
-
-          return true
-        }
-
-        return false
-      },
-
-      compositionstart: () => {
-        pendingIOSEnter = undefined
-        startComposition()
-        hideSuggestions()
-
-        return false
-      },
-
-      compositionend: () => {
-        endComposition()
-
-        return false
-      },
-
-      keyup: (_view, event) => {
-        pendingIOSEnter = undefined
-        emit('keyup', event)
-
-        return false
-      },
-
-      beforeinput: (view, event) => {
-        const enter = pendingIOSEnter
-        pendingIOSEnter = undefined
-
-        if (isComposing() || event.isComposing || !event.cancelable)
-          return false
-
-        emit('beforeInput', event)
-
-        if (event.defaultPrevented) return true
-
-        if (
-          event.inputType === 'insertParagraph' ||
-          event.inputType === 'insertLineBreak'
-        ) {
-          event.preventDefault()
-
-          syncInputSelection(view)
-
-          if (enter && handleKeyAction(enter)) return true
-
-          insertLineBreak({
-            continueItem: event.inputType === 'insertLineBreak'
-          })
-
-          return true
-        }
-
-        return false
-      },
+      ...inputEvents.handleDOMEvents,
 
       ...inputDataTransfer({
         editor: () => editor.value,
@@ -412,13 +335,12 @@ const editor = useEditor({
   onSelectionUpdate: updateTarget,
 
   onFocus: () => {
-    updateInputLifecycle({ focused: true })
+    updateInputRuntimeState({ focused: true })
     emit('focus')
   },
 
   onBlur: () => {
-    pendingIOSEnter = undefined
-    updateInputLifecycle({ focused: false })
+    updateInputRuntimeState({ focused: false })
     hideSuggestions()
     emit('blur')
   }
@@ -427,7 +349,7 @@ const editor = useEditor({
 watch(
   () => [editor.value, props.markdown] as const,
   () =>
-    updateInputLifecycle({
+    updateInputRuntimeState({
       markdown: props.mode === 'message' && props.markdown
     })
 )

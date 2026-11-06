@@ -5,11 +5,20 @@ import { EditorContent } from '@tiptap/vue-3'
 import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
 import { markdownPreviewKey } from '/@/lib/referenceInput/markdownPreview'
 
-import { embedded, focus, lastValue, makeInput, press } from './fixture'
+import {
+  embedded,
+  focus,
+  installReferenceInputFixture,
+  lastValue,
+  makeInput,
+  press
+} from './fixture'
 
 await vi.hoisted(async () => {
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 describe('reference input composition deletions', () => {
   it.each([

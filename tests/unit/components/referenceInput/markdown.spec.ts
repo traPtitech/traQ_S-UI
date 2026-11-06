@@ -2,11 +2,19 @@ import { nextTick } from 'vue'
 
 import { EditorContent } from '@tiptap/vue-3'
 
-import { focus, lastValue, makeInput, press } from './fixture'
+import {
+  focus,
+  installReferenceInputFixture,
+  lastValue,
+  makeInput,
+  press
+} from './fixture'
 
 await vi.hoisted(async () => {
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 describe('Markdown line break input paths', () => {
   it.each([

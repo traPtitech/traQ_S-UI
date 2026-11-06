@@ -4,11 +4,13 @@ import { mount } from '@vue/test-utils'
 import MessageEditor from '/@/components/Main/MainView/MessageElement/MessageEditor.vue'
 import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
 
-import { embedded } from './fixture'
+import { embedded, installReferenceInputFixture } from './fixture'
 
 await vi.hoisted(async () => {
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 vi.mock(
   '/@/components/Main/MainView/MessageElement/composables/useMessageEditing',

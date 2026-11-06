@@ -2,11 +2,19 @@ import { nextTick } from 'vue'
 
 import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSuggester.vue'
 
-import { focus, lastValue, makeInput, press } from './fixture'
+import {
+  focus,
+  installReferenceInputFixture,
+  lastValue,
+  makeInput,
+  press
+} from './fixture'
 
 await vi.hoisted(async () => {
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 it.each([
   [':te', ':test', ':test'],

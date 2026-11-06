@@ -8,11 +8,20 @@ import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
 import { encodeReference } from '/@/lib/references'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 
-import { focus, lastValue, makeInput, press, setChannelTree } from './fixture'
+import {
+  focus,
+  installReferenceInputFixture,
+  lastValue,
+  makeInput,
+  press,
+  setChannelTree
+} from './fixture'
 
 await vi.hoisted(async () => {
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 it.each(['mouse', 'touch'])(
   'keeps the command palette open while completing a channel with %s',

@@ -2,11 +2,20 @@ import { nextTick } from 'vue'
 
 import { EditorContent } from '@tiptap/vue-3'
 
-import { embedded, focus, lastValue, makeInput, press } from './fixture'
+import {
+  embedded,
+  focus,
+  installReferenceInputFixture,
+  lastValue,
+  makeInput,
+  press
+} from './fixture'
 
 await vi.hoisted(async () => {
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 describe('reference input padding focus', () => {
   it.each(['message', 'search'] as const)(

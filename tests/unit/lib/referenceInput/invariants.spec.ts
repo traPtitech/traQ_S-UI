@@ -11,7 +11,13 @@ import {
 import { partsToProjectedText } from '/@/lib/references/projection'
 
 import { corpusReference, markdownCorpus } from '../../fixtures/markdownCorpus'
-import { createInputEditor, readSource } from './fixture'
+import {
+  createInputEditor,
+  installInputEditorFixture,
+  readSource
+} from './fixture'
+
+installInputEditorFixture()
 
 it.each(markdownCorpus)(
   'preserves source, normalization and editor coordinates in corpus $name',

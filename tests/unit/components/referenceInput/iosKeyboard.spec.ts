@@ -2,7 +2,14 @@ import { nextTick } from 'vue'
 
 import { EditorContent } from '@tiptap/vue-3'
 
-import { embedded, focus, lastValue, makeInput, press } from './fixture'
+import {
+  embedded,
+  focus,
+  installReferenceInputFixture,
+  lastValue,
+  makeInput,
+  press
+} from './fixture'
 
 await vi.hoisted(async () => {
   vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(
@@ -11,6 +18,8 @@ await vi.hoisted(async () => {
   vi.spyOn(navigator, 'vendor', 'get').mockReturnValue('Apple Computer, Inc.')
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 afterEach(() => vi.useRealTimers())
 

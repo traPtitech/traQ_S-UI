@@ -105,49 +105,51 @@ export const setBranchingChannelTree = () => {
     channelsMap.value.set(channel.id, channel as Channel)
 }
 
-beforeAll(() => {
-  Range.prototype.getClientRects = () => [] as unknown as DOMRectList
-  Range.prototype.getBoundingClientRect = () => new DOMRect()
-  HTMLElement.prototype.scrollIntoView = vi.fn()
-})
+export const installReferenceInputFixture = () => {
+  beforeAll(() => {
+    Range.prototype.getClientRects = () => [] as unknown as DOMRectList
+    Range.prototype.getBoundingClientRect = () => new DOMRect()
+    HTMLElement.prototype.scrollIntoView = vi.fn()
+  })
 
-afterEach(() => {
-  wrappers.splice(0).forEach(wrapper => wrapper.unmount())
-  useUsersStore().usersMap.value.clear()
-  useChannelsStore().channelsMap.value.clear()
-})
+  afterEach(() => {
+    wrappers.splice(0).forEach(wrapper => wrapper.unmount())
+    useUsersStore().usersMap.value.clear()
+    useChannelsStore().channelsMap.value.clear()
+  })
 
-beforeEach(() => {
-  const user: User = {
-    id: 'original-id',
-    name: 'alice',
-    displayName: 'Alice',
-    state: 1,
-    bot: false,
-    iconFileId: '',
-    updatedAt: '2026-01-01T00:00:00Z'
-  }
-
-  useUsersStore().usersMap.value.set(user.id, user)
-  useGroupsStore().userGroupsMap.value.clear()
-  useStampsStore().stampsMap.value.clear()
-
-  for (const name of ['test', 'testing']) {
-    const stamp: Stamp = {
-      id: name + '-stamp',
-      name,
-      fileId: '',
-      isUnicode: false,
-      creatorId: user.id,
-      createdAt: user.updatedAt,
-      updatedAt: user.updatedAt
+  beforeEach(() => {
+    const user: User = {
+      id: 'original-id',
+      name: 'alice',
+      displayName: 'Alice',
+      state: 1,
+      bot: false,
+      iconFileId: '',
+      updatedAt: '2026-01-01T00:00:00Z'
     }
 
-    useStampsStore().stampsMap.value.set(stamp.id, stamp)
-  }
+    useUsersStore().usersMap.value.set(user.id, user)
+    useGroupsStore().userGroupsMap.value.clear()
+    useStampsStore().stampsMap.value.clear()
 
-  useBrowserSettings().sendWithModifierKey.value = 'none'
-  useFeatureFlagSettings().featureFlags.value.inline_markdown.enabled = true
-  useCommandPalette().presentation.value = undefined
-  useCommandPalette().currentInput.value = ''
-})
+    for (const name of ['test', 'testing']) {
+      const stamp: Stamp = {
+        id: name + '-stamp',
+        name,
+        fileId: '',
+        isUnicode: false,
+        creatorId: user.id,
+        createdAt: user.updatedAt,
+        updatedAt: user.updatedAt
+      }
+
+      useStampsStore().stampsMap.value.set(stamp.id, stamp)
+    }
+
+    useBrowserSettings().sendWithModifierKey.value = 'none'
+    useFeatureFlagSettings().featureFlags.value.inline_markdown.enabled = true
+    useCommandPalette().presentation.value = undefined
+    useCommandPalette().currentInput.value = ''
+  })
+}

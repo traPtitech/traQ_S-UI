@@ -1,27 +1,29 @@
 import { Extension } from '@tiptap/core'
 import { Plugin, PluginKey } from '@tiptap/pm/state'
 
-export type InputLifecycle = {
+export type InputRuntimeState = {
   composing: boolean
   focused: boolean
   markdown: boolean
 }
 
-export const inputLifecycleKey = new PluginKey<InputLifecycle>('inputLifecycle')
+export const inputLifecycleKey = new PluginKey<InputRuntimeState>(
+  'inputLifecycle'
+)
 
 export const inputLifecycleExtension = Extension.create({
   name: 'inputLifecycle',
   priority: 1000,
 
   addProseMirrorPlugins: () => [
-    new Plugin<InputLifecycle>({
+    new Plugin<InputRuntimeState>({
       key: inputLifecycleKey,
       state: {
         init: () => ({ composing: false, focused: false, markdown: false }),
         apply: (transaction, previous) => ({
           ...previous,
           ...(transaction.getMeta(inputLifecycleKey) as
-            Partial<InputLifecycle> | undefined)
+            Partial<InputRuntimeState> | undefined)
         })
       }
     })

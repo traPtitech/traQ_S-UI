@@ -7,6 +7,7 @@ import DropdownSuggester from '/@/components/UI/DropdownSuggester/DropdownSugges
 import {
   embedded,
   focus,
+  installReferenceInputFixture,
   lastValue,
   makeInput,
   setChannelTree
@@ -18,6 +19,8 @@ await vi.hoisted(async () => {
   )
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 const prefix = 'before '
 

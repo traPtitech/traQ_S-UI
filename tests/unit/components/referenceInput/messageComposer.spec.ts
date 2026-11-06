@@ -10,11 +10,17 @@ import { encodeReference } from '/@/lib/references'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
-import { press, setBranchingChannelTree } from './fixture'
+import {
+  installReferenceInputFixture,
+  press,
+  setBranchingChannelTree
+} from './fixture'
 
 await vi.hoisted(async () => {
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 it('retains Undo when a busy operation ends with an empty draft', async () => {
   const wrapper = mount(MessageInputEditor, {

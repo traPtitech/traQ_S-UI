@@ -7,6 +7,7 @@ import { encodeReference } from '/@/lib/references'
 import {
   embedded,
   focus,
+  installReferenceInputFixture,
   lastValue,
   makeInput,
   press,
@@ -16,6 +17,8 @@ import {
 await vi.hoisted(async () => {
   await import('./mocks')
 })
+
+installReferenceInputFixture()
 
 it.each([
   { text: '', expected: 'hello' },
