@@ -9,6 +9,7 @@ import useIndexedDbValue, {
 } from '/@/composables/storage/useIndexedDbValue'
 import type { AttachmentType } from '/@/lib/basic/file'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useToastStore } from '/@/store/ui/toast'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ChannelId } from '/@/types/entity-ids'
 
@@ -61,6 +62,10 @@ const useMessageInputStateStorePinia = defineStore(
     const initialValue = {
       messageInputState: new Map<ChannelId, MessageInputState>()
     }
+    const changedDuringRestoration = new Set<ChannelId>()
+    const restorationState = ref<'restoring' | 'ready' | 'error'>('restoring')
+    const { channelsMap } = useChannelsStore()
+    const { addErrorToast } = useToastStore()
 
     const [state, , restoringPromise] = useIndexedDbValue(
       'store/ui/messageInputStateStore',
@@ -72,10 +77,38 @@ const useMessageInputStateStorePinia = defineStore(
           await promisifyRequest(setReq)
         }
       },
-      initialValue
+      initialValue,
+      saved => {
+        const drafts = new Map(saved.messageInputState)
+
+        for (const id of changedDuringRestoration) {
+          const current = state.messageInputState.get(id)
+
+          if (current) drafts.set(id, current)
+          else drafts.delete(id)
+        }
+
+        for (const id of drafts.keys()) {
+          if (channelsMap.value.get(id)?.archived) drafts.delete(id)
+        }
+
+        return { messageInputState: drafts }
+      }
     )
 
-    const { channelsMap } = useChannelsStore()
+    void restoringPromise.then(
+      () => {
+        changedDuringRestoration.clear()
+        restorationState.value = 'ready'
+      },
+      () => {
+        changedDuringRestoration.clear()
+        restorationState.value = 'error'
+        addErrorToast(
+          '下書きを復元できませんでした。この画面での変更は保存されません'
+        )
+      }
+    )
 
     const states = toRef(() => state.messageInputState)
     const inputChannels = computed(() => readonly([...states.value]))
@@ -112,6 +145,10 @@ const useMessageInputStateStorePinia = defineStore(
     ) => {
       const id = unref(draftKey)
       const st = virtualIds.has(id) ? virtualChannelStates : states
+
+      if (restorationState.value === 'restoring' && !virtualIds.has(id)) {
+        changedDuringRestoration.add(id)
+      }
 
       if ((st.value.get(id)?.text ?? '') !== value.text) {
         textVersions.set(id, (textVersions.get(id) ?? 0) + 1)
@@ -196,6 +233,7 @@ const useMessageInputStateStorePinia = defineStore(
 
     return {
       restoringPromise,
+      restorationState,
       inputChannels,
       hasInputChannel,
       getDraft,
