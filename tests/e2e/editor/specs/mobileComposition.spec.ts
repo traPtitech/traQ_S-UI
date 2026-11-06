@@ -15,12 +15,11 @@ for (const prefix of [':ok', '@al', ':@al', ':ok_hand.la']) {
   test(
     `shows mobile suggestions while composing ${prefix}`,
     { tag: ['@native-ime', '@chromium', '@android'] },
-    async ({ page, input, load }) => {
+    async ({ cdp, page, input, load }) => {
       await load({ text: '', markdown: true })
       await input.focus()
-      const session = await page.context().newCDPSession(page)
 
-      await session.send('Input.imeSetComposition', {
+      await cdp.send('Input.imeSetComposition', {
         text: prefix,
         selectionStart: prefix.length,
         selectionEnd: prefix.length
@@ -39,9 +38,8 @@ for (const prefix of [':ok', '@al', ':@al', ':ok_hand.la']) {
       await expect(page.getByTestId('source')).toHaveText(prefix)
       await expect(page.getByTestId('posts')).toHaveText('0')
 
-      await session.send('Input.insertText', { text: prefix })
+      await cdp.send('Input.insertText', { text: prefix })
       await expect.poll(() => caret(input)).toMatchObject({ composing: false })
-      await session.detach()
     }
   )
 }
@@ -54,11 +52,10 @@ for (const [prefix, candidate, result] of [
   test(
     `commits composition before tapping ${candidate}`,
     { tag: ['@native-ime', '@chromium', '@android'] },
-    async ({ page, input, load }) => {
+    async ({ cdp, page, input, load }) => {
       await load({ text: '', markdown: true })
       await input.focus()
-      const session = await page.context().newCDPSession(page)
-      await session.send('Input.imeSetComposition', {
+      await cdp.send('Input.imeSetComposition', {
         text: prefix,
         selectionStart: prefix.length,
         selectionEnd: prefix.length
@@ -81,7 +78,6 @@ for (const [prefix, candidate, result] of [
       await input.press('x')
       await expect(page.getByTestId('source')).toHaveText(result + 'x')
       await expect(page.getByTestId('posts')).toHaveText('0')
-      await session.detach()
     }
   )
 }
@@ -89,10 +85,9 @@ for (const [prefix, candidate, result] of [
 test(
   'hides suggestions for a selected composition clause and non-ASCII input',
   { tag: ['@native-ime', '@chromium', '@android'] },
-  async ({ page, input, load }) => {
+  async ({ cdp, page, input, load }) => {
     await load({ text: '', markdown: true })
     await input.focus()
-    const session = await page.context().newCDPSession(page)
     const menu = page.getByRole('grid', { name: '入力候補' })
 
     for (const [text, anchor, head, shown] of [
@@ -101,7 +96,7 @@ test(
       [':お', 2, 2, false],
       [':ok', 3, 3, true]
     ] as const) {
-      await session.send('Input.imeSetComposition', {
+      await cdp.send('Input.imeSetComposition', {
         text,
         selectionStart: anchor,
         selectionEnd: head
@@ -111,22 +106,20 @@ test(
       await expect.poll(() => caret(input)).toMatchObject({ composing: true })
     }
 
-    await session.send('Input.insertText', { text: ':ok' })
-    await session.detach()
+    await cdp.send('Input.insertText', { text: ':ok' })
   }
 )
 
 test(
   'opens effect candidates from a composing stamp by touch',
   { tag: ['@native-ime', '@chromium', '@android'] },
-  async ({ page, input, load }) => {
+  async ({ cdp, page, input, load }) => {
     await page.addStyleTag({
       content: '[data-testid="input-frame"] { margin-top: 240px; }'
     })
     await load({ text: '', markdown: true })
     await input.focus()
-    const session = await page.context().newCDPSession(page)
-    await session.send('Input.imeSetComposition', {
+    await cdp.send('Input.imeSetComposition', {
       text: ':ok',
       selectionStart: 3,
       selectionEnd: 3
@@ -149,6 +142,5 @@ test(
       ':ok_hand.large: '
     )
     await expect(page.getByTestId('posts')).toHaveText('0')
-    await session.detach()
   }
 )

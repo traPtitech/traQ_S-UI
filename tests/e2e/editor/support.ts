@@ -1,4 +1,9 @@
-import { type Locator, test as base, expect } from '@playwright/test'
+import {
+  type CDPSession,
+  type Locator,
+  test as base,
+  expect
+} from '@playwright/test'
 import type { Editor } from '@tiptap/core'
 
 import type { EditorDraft } from './harness'
@@ -6,6 +11,7 @@ import type { EditorDraft } from './harness'
 export type EditorElement = HTMLElement & { editor: Editor }
 
 export const test = base.extend<{
+  cdp: CDPSession
   input: Locator
   load: (draft: EditorDraft) => Promise<void>
   /** Paragraph offsets; each reference atom occupies one position. */
@@ -56,6 +62,16 @@ export const test = base.extend<{
     },
     { scope: 'test', timeout: 60_000 }
   ],
+
+  cdp: async ({ page }, use) => {
+    const session = await page.context().newCDPSession(page)
+
+    try {
+      await use(session)
+    } finally {
+      await session.detach()
+    }
+  },
 
   input: async ({ page }, use) => {
     const frame = page.getByTestId('input-frame')

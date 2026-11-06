@@ -41,12 +41,12 @@ import { until } from '@vueuse/core'
 
 import MessageInputEditor from '/@/components/Main/MainView/MessageInput/MessageInputEditor.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-import usePostMessage from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
-import useTextStampPickerInvoker from '/@/components/Main/MainView/composables/useTextStampPickerInvoker'
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
 import useHtmlDataset from '/@/composables/document/useHtmlDataset'
 import useRecentKeyboardInput from '/@/composables/dom/useRecentKeyboardInput'
+import usePostMessage from '/@/composables/messageComposer/usePostMessage'
+import useTextStampPickerInvoker from '/@/composables/messageComposer/useTextStampPickerInvoker'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import { resolveTheme } from '/@/lib/theme/resolve'
 import { getThemeVariables } from '/@/lib/theme/variables'
@@ -58,6 +58,7 @@ import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
 import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 
+import { createChannel, createStamp, createUser } from '../../fixtures/entities'
 import type { EditorDraft } from './harness'
 
 const draftKey = ref('editor-0')
@@ -108,12 +109,7 @@ for (const channel of [
     children: []
   }
 ]) {
-  channels.channelsMap.value.set(channel.id, {
-    ...channel,
-    archived: false,
-    force: false,
-    topic: ''
-  })
+  channels.channelsMap.value.set(channel.id, createChannel(channel))
 }
 const { stampsMap, stampsMapFetched } = useStampsStore()
 for (const name of [
@@ -124,15 +120,15 @@ for (const name of [
   )
 ]) {
   const id = name.replaceAll('_', '-')
-  stampsMap.value.set(id, {
+  stampsMap.value.set(
     id,
-    name,
-    creatorId: '11111111-1111-4111-8111-111111111111',
-    createdAt: '2026-01-01T00:00:00Z',
-    updatedAt: '2026-01-01T00:00:00Z',
-    fileId: 'icon',
-    isUnicode: false
-  })
+    createStamp({
+      id,
+      name,
+      creatorId: '11111111-1111-4111-8111-111111111111',
+      fileId: 'icon'
+    })
+  )
 }
 stampsMapFetched.value = true
 
@@ -150,15 +146,11 @@ const ready = Promise.all([
   useGroupsStore().fetchUserGroups(),
   until(flags.restoring).toBe(false)
 ]).then(() => {
-  users.usersMap.value.set('11111111-1111-4111-8111-111111111111', {
+  const user = createUser({
     id: '11111111-1111-4111-8111-111111111111',
-    name: 'alice',
-    displayName: 'Alice',
-    state: 1,
-    bot: false,
-    iconFileId: 'icon',
-    updatedAt: '2026-01-01T00:00:00Z'
+    iconFileId: 'icon'
   })
+  users.usersMap.value.set(user.id, user)
 })
 
 window.editorHarness = {

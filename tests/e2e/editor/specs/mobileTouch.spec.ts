@@ -122,7 +122,7 @@ for (const markdown of [false, true]) {
 test(
   'scrolls suggestions with a touch gesture without selecting a stamp',
   { tag: ['@mobile', '@touch', '@chromium'] },
-  async ({ browserName, page, input, load }) => {
+  async ({ cdp, browserName, page, input, load }) => {
     test.skip(
       browserName !== 'chromium',
       'Trusted swipe input uses Chromium CDP'
@@ -135,48 +135,43 @@ test(
     const scrollArea = menu.getByRole('row').first().locator('..')
     const bounds = await scrollArea.boundingBox()
     if (!bounds) throw new Error('Missing suggestion scroll area')
-    const session = await page.context().newCDPSession(page)
 
-    try {
-      for (let i = 0; i < 2; i++) {
-        const previousTop = await scrollArea.evaluate(
-          element => element.scrollTop
-        )
-        const start = {
-          x: bounds.x + bounds.width / 2,
-          y: bounds.y + bounds.height * 0.75
-        }
-        await session.send('Input.dispatchTouchEvent', {
-          type: 'touchStart',
-          touchPoints: [start]
-        })
-        for (let step = 1; step <= 10; step++) {
-          await session.send('Input.dispatchTouchEvent', {
-            type: 'touchMove',
-            touchPoints: [{ x: start.x, y: start.y - step * 10 }]
-          })
-          await page.evaluate(
-            () => new Promise(resolve => requestAnimationFrame(resolve))
-          )
-        }
-        await session.send('Input.dispatchTouchEvent', {
-          type: 'touchEnd',
-          touchPoints: []
-        })
-        await expect
-          .poll(() => scrollArea.evaluate(element => element.scrollTop))
-          .toBeGreaterThan(previousTop)
-        await expect(page.getByTestId('source')).toHaveText(':scroll_')
+    for (let i = 0; i < 2; i++) {
+      const previousTop = await scrollArea.evaluate(
+        element => element.scrollTop
+      )
+      const start = {
+        x: bounds.x + bounds.width / 2,
+        y: bounds.y + bounds.height * 0.75
       }
-      await expect(menu.locator('[aria-selected="true"]')).not.toBeInViewport()
-      await expect.poll(() => caret(input)).toMatchObject({ focused: true })
-
-      await page.keyboard.insertText('x')
-      await expect(page.getByTestId('source')).toHaveText(':scroll_x')
-      await expect(input).toBeFocused()
-      await expect(page.getByTestId('posts')).toHaveText('0')
-    } finally {
-      await session.detach()
+      await cdp.send('Input.dispatchTouchEvent', {
+        type: 'touchStart',
+        touchPoints: [start]
+      })
+      for (let step = 1; step <= 10; step++) {
+        await cdp.send('Input.dispatchTouchEvent', {
+          type: 'touchMove',
+          touchPoints: [{ x: start.x, y: start.y - step * 10 }]
+        })
+        await page.evaluate(
+          () => new Promise(resolve => requestAnimationFrame(resolve))
+        )
+      }
+      await cdp.send('Input.dispatchTouchEvent', {
+        type: 'touchEnd',
+        touchPoints: []
+      })
+      await expect
+        .poll(() => scrollArea.evaluate(element => element.scrollTop))
+        .toBeGreaterThan(previousTop)
+      await expect(page.getByTestId('source')).toHaveText(':scroll_')
     }
+    await expect(menu.locator('[aria-selected="true"]')).not.toBeInViewport()
+    await expect.poll(() => caret(input)).toMatchObject({ focused: true })
+
+    await page.keyboard.insertText('x')
+    await expect(page.getByTestId('source')).toHaveText(':scroll_x')
+    await expect(input).toBeFocused()
+    await expect(page.getByTestId('posts')).toHaveText('0')
   }
 )

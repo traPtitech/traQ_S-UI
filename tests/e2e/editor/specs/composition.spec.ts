@@ -169,11 +169,10 @@ test.describe('Chromium CDP composition', () => {
       test(
         `Chromium CDP composition: Markdown ${markdown}, ${selection}`,
         { tag: ['@native-ime', '@chromium'] },
-        async ({ page, input, load, selectEditorOffsets }) => {
+        async ({ cdp, page, input, load, selectEditorOffsets }) => {
           const prefix = 'before '
           await load({ text: prefix, markdown })
           await selectEditorOffsets(prefix.length)
-          const session = await page.context().newCDPSession(page)
 
           await input.evaluate(element => {
             element.dataset['compositionEnds'] = '0'
@@ -207,7 +206,7 @@ test.describe('Chromium CDP composition', () => {
 
             const head = selection === 'clause' ? 12 - removed : text.length
 
-            await session.send('Input.imeSetComposition', {
+            await cdp.send('Input.imeSetComposition', {
               text,
               selectionStart: anchor,
               selectionEnd: head
@@ -228,7 +227,7 @@ test.describe('Chromium CDP composition', () => {
             await expect(input).toHaveAttribute('data-composition-ends', '0')
           }
 
-          await session.send('Input.insertText', { text })
+          await cdp.send('Input.insertText', { text })
 
           await expect(page.getByTestId('source')).toHaveJSProperty(
             'textContent',
@@ -251,7 +250,6 @@ test.describe('Chromium CDP composition', () => {
             prefix + text.slice(0, -1)
           )
           await expect(page.getByTestId('posts')).toHaveText('0')
-          await session.detach()
         }
       )
     }
