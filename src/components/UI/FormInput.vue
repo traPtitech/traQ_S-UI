@@ -66,7 +66,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import useShowPassword from '/@/composables/dom/useShowPassword'
 import useOnInput from '/@/composables/useOnInput'
-import { isTouchDevice } from '/@/lib/dom/browser'
+import { shouldAutoFocus } from '/@/lib/dom/browser'
 
 const modelValue = defineModel<T>({ required: true })
 
@@ -128,7 +128,7 @@ const { isPasswordShown, togglePassword, typeWithShown } =
   useShowPassword(props)
 
 onMounted(() => {
-  if (!props.focusOnMount || isTouchDevice()) return
+  if (!props.focusOnMount || !shouldAutoFocus()) return
   focus()
 })
 

@@ -1,7 +1,7 @@
 import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
 
 import type { Ref } from 'vue'
-import { computed, ref, watch } from 'vue'
+import { computed, onScopeDispose, ref, watch } from 'vue'
 
 import { useEventListener } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore } from 'pinia'
@@ -10,6 +10,7 @@ import { throttle } from 'throttle-debounce'
 import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import type { Point } from '/@/lib/basic/point'
+import { isWebKit } from '/@/lib/dom/browser'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { StampId } from '/@/types/entity-ids'
@@ -19,7 +20,10 @@ export type SelectedStampData = {
   sizeEffect?: SizeEffect
   animeEffects?: AnimeEffect[]
 }
-export type StampSelectHandler = (stamp: SelectedStampData) => void
+export type StampSelectHandler = (
+  stamp: SelectedStampData,
+  options?: { allowFocus?: boolean }
+) => void
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const defaultSelectHandler = (_: SelectedStampData) => {}
 
@@ -146,17 +150,39 @@ export const useStampPickerInvoker = (
     }
   })
 
-  const setPosition = throttle(100, () => {
+  const setPosition = () => {
     if (!element.value) return
 
     const rect = element.value.getBoundingClientRect()
-    position.value = getPositionFromAlignment(newAlignment, rect)
+    const point = getPositionFromAlignment(newAlignment, rect)
+    const viewport = isWebKit() ? window.visualViewport : undefined
+    position.value = {
+      x: point.x + (viewport?.offsetLeft ?? 0),
+      y: point.y + (viewport?.offsetTop ?? 0)
+    }
+  }
+
+  const updatePosition = throttle(100, () => {
+    if (
+      !isThisOpen.value ||
+      !isStampPickerShown.value ||
+      selectHandler.value !== newSelectHandler
+    ) {
+      return
+    }
+    setPosition()
   })
+  onScopeDispose(() => updatePosition.cancel())
 
   useEventListener(
     computed(() => (isThisOpen.value ? window : null)),
     'resize',
-    setPosition
+    updatePosition
+  )
+  useEventListener(
+    computed(() => (isThisOpen.value ? window.visualViewport : null)),
+    ['resize', 'scroll'],
+    updatePosition
   )
 
   const openStampPicker = () => {

@@ -16,7 +16,7 @@ const useResponsive = () => {
   }
 
   const updateIsTouchDevice = (event: MediaQueryListEvent) => {
-    isTouchDevice.value = event.matches
+    isTouchDevice.value = !event.matches
   }
 
   useEventListener(isMobileQuery, 'change', updateIsMobile)
