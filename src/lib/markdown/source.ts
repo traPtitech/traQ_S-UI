@@ -3,13 +3,15 @@ import type { RuleInline } from 'markdown-it/lib/parser_inline.mjs'
 import type Token from 'markdown-it/lib/token.mjs'
 
 import { trackBlockSource } from './blockSource'
+import type { SourceRange as Range } from './types'
 
-type Range = { from: number; to: number }
-type SourceRange = Range & { markerWidth?: number }
+type InlineTokenSource = { -readonly [Key in keyof Range]: Range[Key] } & {
+  markerWidth?: number
+}
 
 export type PositionedToken = Token & {
   meta: {
-    source?: SourceRange
+    source?: InlineTokenSource
     match?: RegExpMatchArray
     originalPositions?: number[]
     fenceClosingLine?: number
@@ -18,11 +20,11 @@ export type PositionedToken = Token & {
   size?: number
 }
 
-/** 解析結果に原文位置を加える。 */
+/** markdown-it 14 の State/ruler/token 契約に依存する。更新時は source・analysis の範囲/parity テストを確認する。 */
 export const trackMarkdownSource = (parser: MarkdownIt) => {
   trackBlockSource(parser)
   const InlineState = parser.inline.State
-  const sources = new WeakMap<Token, SourceRange>()
+  const sources = new WeakMap<Token, InlineTokenSource>()
 
   parser.inline.State = class extends InlineState {
     private lastPosition = -1

@@ -1,6 +1,6 @@
 import type Token from 'markdown-it/lib/token.mjs'
 
-type Range = Readonly<{ from: number; to: number }>
+import type { SourceRange as Range } from './types'
 
 type ListMarker = Readonly<{ marker: string; leading: string; spacing: string }>
 

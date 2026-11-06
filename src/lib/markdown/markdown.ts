@@ -4,7 +4,8 @@ import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
 
 import { isDefined } from '../basic/array'
-import { getMarkdown } from './parser'
+import { getMarkdown, renderMarkdownInline } from './parser'
+import type { MarkdownEnvironment } from './types'
 
 const waitForInitialFetch = () => {
   const { usersMapInitialFetchPromise } = useUsersStore()
@@ -25,9 +26,13 @@ export const render = async (text: string) => {
   return getMarkdown().render(text)
 }
 
-export const renderInline = async (text: string) => {
+export const renderInline = async (
+  text: string,
+  environment?: MarkdownEnvironment
+) => {
   await waitForInitialFetch()
-  return getMarkdown().renderInline(text)
+
+  return renderMarkdownInline(text, environment)
 }
 
 export const parse = async (text: string) => {

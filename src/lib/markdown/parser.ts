@@ -8,7 +8,9 @@ import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
 
+import { configureMarkdownDialect } from './syntax'
 import { traQMarkdownIt } from './traq-markdown-it'
+import type { MarkdownEnvironment } from './types'
 
 const storeProvider: Store = {
   getUser(id) {
@@ -67,9 +69,10 @@ const autoDirectionTokenTypes = new Set([
 
 let markdown: traQMarkdownIt | undefined
 
-/** 投稿表示と入力欄で、同じ設定・拡張を持つパーサーを使う。 */
-export const createMarkdownParser = () => {
+export const createMarkdownRenderer = () => {
   const markdown = new traQMarkdownIt(storeProvider, [], embeddingOrigin)
+
+  configureMarkdownDialect(markdown.md)
 
   markdown.md.core.ruler.after('inline', 'bidi-auto-direction', state => {
     for (const token of state.tokens) {
@@ -80,4 +83,24 @@ export const createMarkdownParser = () => {
   return markdown
 }
 
-export const getMarkdown = () => (markdown ??= createMarkdownParser())
+export const getMarkdown = () => (markdown ??= createMarkdownRenderer())
+
+export const renderMarkdownInline = (
+  text: string,
+  environment?: MarkdownEnvironment
+) => {
+  const markdown = getMarkdown()
+  if (!environment) return markdown.renderInline(text)
+
+  const tokens = markdown.md.parse(text, { ...environment })
+  const embeddings = markdown.embeddingExtractor.extract(tokens)
+
+  markdown.embeddingExtractor.removeTailEmbeddings(tokens)
+  markdown.embeddingExtractor.replace(tokens)
+
+  return {
+    rawText: text,
+    renderedText: markdown._renderInline(tokens),
+    embeddings
+  }
+}

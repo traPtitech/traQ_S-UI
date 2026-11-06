@@ -5,8 +5,8 @@ import {
   type MarkdownLineContext,
   markdownLineContexts
 } from '../markdown/lineContexts'
-import { createMarkdownParser } from '../markdown/parser'
 import { type PositionedToken, trackMarkdownSource } from '../markdown/source'
+import { createMarkdownAnalysisParser } from '../markdown/syntax'
 import { markdownTableCellPositions } from '../markdown/tableSource'
 
 type Range = { from: number; to: number }
@@ -46,11 +46,11 @@ export type MarkdownAnalysis = {
   formats: MarkdownFormat[]
 }
 
-let parser: ReturnType<typeof createMarkdownParser>['md'] | undefined
+let parser: ReturnType<typeof createMarkdownAnalysisParser> | undefined
 
 const getParser = () => {
   if (!parser) {
-    parser = createMarkdownParser().md
+    parser = createMarkdownAnalysisParser()
     parser.use(trackMarkdownSource)
 
     // 表示可否の判定前の画像記法を、編集中は一つの原文範囲として扱う。
