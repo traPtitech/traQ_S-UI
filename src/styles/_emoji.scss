@@ -1,6 +1,9 @@
 @use 'sass:meta';
-@include meta.load-css('@traptitech/traq-markdown-it/src/css/stamp');
+@include meta.load-css('@traq-flavored-markdown/traq-plugin/styles/stamp');
 
-html[data-eco-mode='false'] {
-  @include meta.load-css('@traptitech/traq-markdown-it/src/css/stampEffect');
+html[data-eco-mode='true'] .emoji-effect {
+  &,
+  .emoji {
+    animation: none !important;
+  }
 }

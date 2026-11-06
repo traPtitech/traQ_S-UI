@@ -1,5 +1,3 @@
-import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
-
 import type { Ref } from 'vue'
 import { computed, ref, watch } from 'vue'
 
@@ -10,6 +8,7 @@ import { throttle } from 'throttle-debounce'
 import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import type { Point } from '/@/lib/basic/point'
+import type { AnimeEffect, SizeEffect } from '/@/lib/markdown/effects'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { StampId } from '/@/types/entity-ids'

@@ -1,8 +1,7 @@
-import type { AnimeEffect, SizeEffect } from '@traptitech/traq-markdown-it'
-
 import { computed, ref } from 'vue'
 
 import useToggle from '/@/composables/utils/useToggle'
+import type { AnimeEffect, SizeEffect } from '/@/lib/markdown/effects'
 
 const useEffectSelector = () => {
   const { value: shouldShowEffectSelector, toggle: toggleShowEffect } =

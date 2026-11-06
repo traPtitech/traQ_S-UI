@@ -1,21 +1,15 @@
-import type { Store } from '@traptitech/traq-markdown-it'
-import { traQMarkdownIt } from '@traptitech/traq-markdown-it'
+import { readFile } from 'node:fs/promises'
 
-import type { KatexOptions } from 'katex'
+import { createRuntime, presets } from '@traq-flavored-markdown/sdk'
+import { withDefaultAdapters } from '@traq-flavored-markdown/sdk/adapters'
+import { createHtmlRenderer } from '@traq-flavored-markdown/sdk/renderer'
 
-const store: Store = {
-  getChannel: id => ({ id }),
-  getMe: () => ({ id: '' }),
-  getStampByName: name => ({ name, fileId: '' }),
-  getUser: id => ({ id }),
-  getUserByName: _name => ({ iconFileId: '' }),
-  getUserGroup: _id => ({ members: [] }),
-  generateChannelHref: () => '',
-  generateUserHref: () => '',
-  generateUserGroupHref: () => ''
-}
-
-const md = new traQMarkdownIt(store, [], 'https://example.com')
+const runtime = await createRuntime(
+  await readFile('node_modules/@traq-flavored-markdown/sdk/dist/parser.wasm')
+)
+const parser = runtime.createParser(presets.traq.v1)
+const renderer = createHtmlRenderer(withDefaultAdapters())
+afterAll(() => runtime.dispose())
 
 describe('Markdown math', () => {
   it.each([
@@ -25,18 +19,16 @@ describe('Markdown math', () => {
 $$`
   ])('renders %s with the KaTeX stylesheet classes', text => {
     const container = document.createElement('div')
-    container.innerHTML = md.render(text).renderedText
+    container.innerHTML = renderer.render(parser.parse(text))
 
     expect(container.querySelector('.katex .katex-base .mfrac')).not.toBeNull()
     expect(container.querySelector('.katex-error')).toBeNull()
   })
 
-  it('does not enable trusted rendering through inherited options', () => {
-    const options = Object.create({ trust: true }) as KatexOptions
+  it('does not enable trusted HTML commands', () => {
     const container = document.createElement('div')
-    container.innerHTML = md.katexOptions.katex.renderToString(
-      String.raw`\href{https://example.com}{link}`,
-      options
+    container.innerHTML = renderer.render(
+      parser.parse(String.raw`$\href{https://example.com}{link}$`)
     )
 
     expect(container.querySelector('a')).toBeNull()
