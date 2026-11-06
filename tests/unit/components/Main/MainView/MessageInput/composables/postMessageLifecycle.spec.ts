@@ -7,7 +7,6 @@ import type { Attachment } from '/@/store/ui/messageInputStateStore'
 
 const mocks = vi.hoisted(() => ({
   state: { text: 'first draft', attachments: [] as Attachment[] },
-  classify: vi.fn(),
   post: vi.fn(),
   upload: vi.fn(),
   clear: vi.fn(),
@@ -39,30 +38,22 @@ vi.mock('/@/store/entities/channels', async () => {
 vi.mock('/@/store/ui/toast', () => ({
   useToastStore: () => ({ addErrorToast: mocks.error })
 }))
-vi.mock('/@/lib/markdown/markdown', () => ({ isEmbeddedLink: mocks.classify }))
 
 beforeEach(() => {
   vi.spyOn(apis, 'postMessage').mockImplementation(mocks.post)
   vi.spyOn(apis, 'postFile').mockImplementation(mocks.upload)
 
-  for (const mock of [
-    mocks.classify,
-    mocks.post,
-    mocks.upload,
-    mocks.clear,
-    mocks.error
-  ])
+  for (const mock of [mocks.post, mocks.upload, mocks.clear, mocks.error])
     mock.mockReset()
 
   mocks.state = { text: 'first draft', attachments: [] }
-  mocks.classify.mockResolvedValue(false)
   mocks.post.mockResolvedValue({})
   mocks.upload.mockResolvedValue({ data: { id: 'uploaded-file' } })
 })
 
-it('locks before content preparation and keeps the original channel and draft', async () => {
-  const classification = Promise.withResolvers<boolean>()
-  mocks.classify.mockReturnValueOnce(classification.promise)
+it('locks before posting and keeps the original channel and draft', async () => {
+  const response = Promise.withResolvers<object>()
+  mocks.post.mockReturnValueOnce(response.promise)
   const channel = ref('first-channel')
   const posting = usePostMessage(channel)
   const pending = posting.postMessage()
@@ -70,7 +61,7 @@ it('locks before content preparation and keeps the original channel and draft', 
   channel.value = 'second-channel'
   mocks.state.text = 'second draft'
   expect(await posting.postMessage()).toBe(false)
-  classification.resolve(false)
+  response.resolve({})
   expect(await pending).toBe(true)
   expect(mocks.post).toHaveBeenCalledExactlyOnceWith('first-channel', {
     content: 'first draft'
@@ -78,9 +69,9 @@ it('locks before content preparation and keeps the original channel and draft', 
   expect(posting.isPosting.value).toBe(false)
 })
 
-it('unlocks when preparation fails and allows a retry', async () => {
+it('unlocks when posting fails and allows a retry', async () => {
   vi.spyOn(console, 'error').mockImplementation(() => undefined)
-  mocks.classify.mockRejectedValueOnce(new Error('parse failed'))
+  mocks.post.mockRejectedValueOnce(new Error('offline'))
   const posting = usePostMessage('channel')
   expect(await posting.postMessage()).toBe(false)
   expect(posting.isPosting.value).toBe(false)

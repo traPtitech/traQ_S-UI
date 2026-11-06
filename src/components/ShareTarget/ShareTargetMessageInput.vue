@@ -23,7 +23,7 @@
           />
           <MessageInputUploadButton
             :class="$style.button"
-            @click="addAttachment"
+            @click="openAttachmentPicker"
           />
         </div>
       </div>
@@ -52,7 +52,7 @@ import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useToastStore } from '/@/store/ui/toast'
 
-import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
+import useAttachmentPicker from '../Main/MainView/MessageInput/composables/useAttachmentPicker'
 import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
 
 const { fetchStampHistory } = useStampHistory()
@@ -61,18 +61,20 @@ const { fetchStamps } = useStampsStore()
 const { fetchStampPalettes } = useStampPalettesStore()
 const { state, documentKey } = useMessageInputState('share-target')
 const { addErrorToast } = useToastStore()
-const { captureDraft } = useMessageInputStateAttachment(
+const { captureDraftTarget } = useMessageInputStateAttachment(
   'share-target',
   addErrorToast
 )
 
-const { addAttachment } = useAttachments(() => captureDraft().addAttachments)
+const { openAttachmentPicker } = useAttachmentPicker(
+  () => captureDraftTarget().addAttachments
+)
 
 const labelId = useId()
 const inputRef = shallowRef<InstanceType<typeof ReferenceInput>>()
 
 const { preparePaste } = usePaste((_event, files) => {
-  void captureDraft().addAttachments(files)
+  void captureDraftTarget().addAttachments(files)
 })
 
 const focus = () => {

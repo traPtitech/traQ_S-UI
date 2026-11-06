@@ -33,7 +33,7 @@
         v-model:is-input-text-area-expanded="isInputTextAreaExpanded"
         :show-text-area-expand-button="showTextAreaExpandButton"
         :class="$style.leftControls"
-        @click-add-attachment="addAttachment"
+        @click-add-attachment="openAttachmentPicker"
       />
 
       <MessageInputEditor
@@ -89,7 +89,7 @@ import MessageInputPreview from './MessageInputPreview.vue'
 import MessageInputRightControls from './MessageInputRightControls.vue'
 import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
-import useAttachments from './composables/useAttachments'
+import useAttachmentPicker from './composables/useAttachmentPicker'
 import useModifierKey from './composables/useModifierKey'
 import usePostMessage from './composables/usePostMessage'
 
@@ -110,10 +110,12 @@ const { state, isEmpty, isTextEmpty, documentKey } =
   useMessageInputState(channelId)
 const { addErrorToast } = useToastStore()
 
-const { captureDraft, addAttachments: onAddAttachments } =
+const { captureDraftTarget, addAttachments: onAddAttachments } =
   useMessageInputStateAttachment(channelId, addErrorToast)
 
-const { addAttachment } = useAttachments(() => captureDraft().addAttachments)
+const { openAttachmentPicker } = useAttachmentPicker(
+  () => captureDraftTarget().addAttachments
+)
 
 const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
   useModifierKey()

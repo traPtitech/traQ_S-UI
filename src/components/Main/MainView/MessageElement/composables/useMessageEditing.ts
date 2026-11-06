@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import { computed, onScopeDispose, ref, watch } from 'vue'
 
-import useAttachments from '/@/components/Main/MainView/MessageInput/composables/useAttachments'
+import useAttachmentPicker from '/@/components/Main/MainView/MessageInput/composables/useAttachmentPicker'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
 import { normalizeMessageSource } from '/@/lib/message/content'
@@ -115,7 +115,7 @@ const useAttachmentsEditor = (
     }
   }
 
-  const { addAttachment } = useAttachments(captureAttachments)
+  const { openAttachmentPicker } = useAttachmentPicker(captureAttachments)
   const onAddAttachments = (files: File[] | Promise<File[]>) =>
     captureAttachments()(files)
 
@@ -123,7 +123,7 @@ const useAttachmentsEditor = (
     isPostingAttachment: isPosting,
     attachmentPostProgress: progress,
     onAddAttachments,
-    addAttachment
+    openAttachmentPicker
   }
 }
 

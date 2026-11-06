@@ -8,16 +8,16 @@ import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 import useMessageInputState from './useMessageInputState'
 
 const useMessageInputStateAttachment = (
-  channelId: MessageInputStateKey,
+  draftKey: MessageInputStateKey,
   onError: (message: string) => void
 ) => {
-  const { state } = useMessageInputState(channelId)
+  const { state } = useMessageInputState(draftKey)
   const { updateDraft } = useMessageInputStateStore()
 
   const attachments = computed(() => state.attachments)
 
-  const captureDraft = () => {
-    const key = unref(channelId)
+  const captureDraftTarget = () => {
+    const key = unref(draftKey)
 
     const update = (apply: Parameters<typeof updateDraft>[1]) =>
       updateDraft(key, apply)
@@ -53,14 +53,15 @@ const useMessageInputStateAttachment = (
     return { addTextToLast, addAttachment, addAttachments }
   }
 
-  const addTextToLast = (text: string) => captureDraft().addTextToLast(text)
-  const addAttachment = (file: File) => captureDraft().addAttachment(file)
+  const addTextToLast = (text: string) =>
+    captureDraftTarget().addTextToLast(text)
+  const addAttachment = (file: File) => captureDraftTarget().addAttachment(file)
   const addAttachments = (files: File[] | Promise<File[]>) =>
-    captureDraft().addAttachments(files)
+    captureDraftTarget().addAttachments(files)
 
   const removeAttachmentAt = (index: number) => {
     if (0 <= index && index < state.attachments.length) {
-      updateDraft(channelId, draft => {
+      updateDraft(draftKey, draft => {
         draft.attachments.splice(index, 1)
       })
     }
@@ -68,7 +69,7 @@ const useMessageInputStateAttachment = (
 
   return {
     attachments,
-    captureDraft,
+    captureDraftTarget,
     addTextToLast,
     addAttachment,
     addAttachments,

@@ -1,21 +1,23 @@
+import { isLiteralSource } from '../markdown/analysis'
+import { isEmbeddedLink } from '../markdown/compatibility/embeddingLinks'
 import {
-  type MarkdownSourceAnalysis,
-  analyzeMarkdownSource,
-  isLiteralSource
-} from '../markdown/analysis'
+  type EditorTextAnalysis,
+  analyzeEditorText,
+  partsToEditorText
+} from '../referenceInput/editorText'
 import { type InputPart, parseInput, serializeInput } from '../references'
 
 export const normalizeMessageParts = (
   parts: readonly InputPart[],
-  analysis?: MarkdownSourceAnalysis
+  analysis?: EditorTextAnalysis
 ): InputPart[] => {
   if (!parts.some(part => part.type === 'reference')) return [...parts]
 
-  const source = parts
-    .map(part => (part.type === 'text' ? part.text : '\uFFFC'))
-    .join('')
+  const editorText = partsToEditorText(parts)
 
-  const ranges = (analysis ?? analyzeMarkdownSource(source)).nodes
+  const ranges = (
+    analysis?.source === editorText ? analysis : analyzeEditorText(editorText)
+  ).nodes
     .filter(isLiteralSource)
     .sort((a, b) => a.from - b.from)
 
@@ -37,11 +39,14 @@ export const normalizeMessageParts = (
 export const normalizeMessageSource = (source: string) =>
   serializeInput(normalizeMessageParts(parseInput(source, 'message')))
 
-export const prepareMessageContent = async (source: string) => {
+export const prepareMessageContent = (
+  source: string,
+  embeddingOrigin: string
+) => {
   const trimmed = source.trimEnd()
   const lastLine = trimmed.split('\n').at(-1) ?? ''
-  const { isEmbeddedLink } = await import('../markdown/markdown')
-  const endsWithEmbed = trimmed !== '' && (await isEmbeddedLink(lastLine))
+  const endsWithEmbed =
+    trimmed !== '' && isEmbeddedLink(lastLine, embeddingOrigin)
   const text = endsWithEmbed ? trimmed : source
   const delimiter = trimmed === '' || endsWithEmbed ? '\n' : '\n\n'
 

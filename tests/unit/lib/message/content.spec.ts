@@ -1,32 +1,19 @@
-import { createTestingPinia } from '@pinia/testing'
-import { vi } from 'vitest'
-
 import { nilUuid } from '/@/lib/basic/uuid'
+import { normalizeMessageSource } from '/@/lib/message/content'
 import { prepareMessageContent } from '/@/lib/message/content'
+import {
+  type Reference,
+  encodeReference,
+  inputText,
+  parseInput
+} from '/@/lib/references'
 
 const EMBEDDING_ORIGIN = 'https://q.example.com'
 
-vi.mock('/@/lib/markdown/markdown', () => ({
-  isEmbeddedLink: vi.fn((text: string) => {
-    try {
-      const url = new URL(text)
-      return url.protocol === 'http:' || url.protocol === 'https:'
-    } catch {
-      return false
-    }
-  })
-}))
-
-describe('usePostMessage', () => {
-  describe('prepareMessageContent', () => {
-    beforeAll(() => {
-      createTestingPinia()
-    })
-
-    it.each(TEST_CASES)('$description', async ({ input, files, expected }) => {
-      const content = (await prepareMessageContent(input))(files ?? [])
-      expect(content).toBe(expected)
-    })
+describe('prepareMessageContent', () => {
+  it.each(TEST_CASES)('$description', ({ input, files, expected }) => {
+    const content = prepareMessageContent(input, EMBEDDING_ORIGIN)(files ?? [])
+    expect(content).toBe(expected)
   })
 })
 
@@ -196,3 +183,55 @@ const TEST_CASES: TestCase[] = [
     expected: `${LINK}\n${FILE_LINKS}`
   }
 ]
+
+const reference: Reference = { type: 'user', id: 'selected-id', raw: '@alice' }
+const embedded = encodeReference(reference)
+
+describe('message reference normalization', () => {
+  it('keeps hand-typed names as text and explicit references as IDs', () => {
+    expect(normalizeMessageSource(`@alice ${embedded}`)).toBe(
+      `@alice ${embedded}`
+    )
+    expect(inputText(parseInput(embedded, 'message'))).toBe('@alice')
+  })
+
+  it.each([
+    ['`', '`'],
+    ['``', '``'],
+    ['```js\n', '\n```'],
+    ['~~~\n', '\n~~~'],
+    ['> ```\n> ', '\n> ```'],
+    ['    ', ''],
+    ['$', '$'],
+    ['$$\n', '\n$$'],
+    ['```\n', '']
+  ])('removes reference semantics inside %s … %s', (before, after) => {
+    expect(normalizeMessageSource(`${before}${embedded}${after}`)).toBe(
+      `${before}@alice${after}`
+    )
+  })
+
+  it('keeps references after a closed code block active', () => {
+    expect(normalizeMessageSource(`~~~\n${embedded}\n~~~\n${embedded}`)).toBe(
+      `~~~\n@alice\n~~~\n${embedded}`
+    )
+  })
+
+  it('distinguishes list indentation from an indented code block', () => {
+    const source = `1. item\n\n    ${embedded}\n\n        ${embedded}`
+
+    expect(normalizeMessageSource(source)).toBe(
+      `1. item\n\n    ${embedded}\n\n        @alice`
+    )
+  })
+
+  it('handles nested list fences and escaped inline delimiters', () => {
+    expect(normalizeMessageSource(`- item\n  ~~~\n  ${embedded}\n  ~~~`)).toBe(
+      '- item\n  ~~~\n  @alice\n  ~~~'
+    )
+
+    expect(normalizeMessageSource(`\\\`${embedded}\\\``)).toBe(
+      `\\\`${embedded}\\\``
+    )
+  })
+})

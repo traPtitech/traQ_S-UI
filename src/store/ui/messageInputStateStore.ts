@@ -1,11 +1,11 @@
 import type { Ref } from 'vue'
-import { computed, ref, toRef, unref, watch } from 'vue'
+import { computed, readonly, ref, toRef, unref, watch } from 'vue'
 
 import { promisifyRequest } from 'idb-keyval'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import useIndexedDbValue, {
-  key
+  key as indexedDbKey
 } from '/@/composables/storage/useIndexedDbValue'
 import type { AttachmentType } from '/@/lib/basic/file'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -30,6 +30,11 @@ export interface MessageInputState {
   attachments: Attachment[]
 }
 
+export type ReadonlyMessageInputState = Readonly<{
+  text: string
+  attachments: readonly Readonly<Attachment>[]
+}>
+
 export type Attachment = {
   file: File
   type: AttachmentType
@@ -44,9 +49,9 @@ export const createDefaultValue = (): MessageInputState => ({
 })
 
 export type DraftSnapshot = Readonly<{
-  key: string
+  draftKey: string
   textVersion: number
-  state: Readonly<{ text: string; attachments: readonly Attachment[] }>
+  state: ReadonlyMessageInputState
   isEmpty: boolean
 }>
 
@@ -63,7 +68,7 @@ const useMessageInputStateStorePinia = defineStore(
       {
         1: async getStore => {
           const store = getStore()
-          const setReq = store.put(initialValue, key)
+          const setReq = store.put(initialValue, indexedDbKey)
           await promisifyRequest(setReq)
         }
       },
@@ -73,7 +78,7 @@ const useMessageInputStateStorePinia = defineStore(
     const { channelsMap } = useChannelsStore()
 
     const states = toRef(() => state.messageInputState)
-    const inputChannels = computed(() => [...states.value])
+    const inputChannels = computed(() => readonly([...states.value]))
     const hasInputChannel = computed(() => inputChannels.value.length > 0)
     const virtualChannelStates = ref(
       new Map<VirtualChannelId, MessageInputState>()
@@ -92,74 +97,85 @@ const useMessageInputStateStorePinia = defineStore(
       { deep: true }
     )
 
-    const getStore = (cId: MessageInputStateKey) => {
-      const cId_ = unref(cId)
-      const st = virtualIds.has(cId_) ? virtualChannelStates : states
-      return st.value.get(cId_)
+    const getDraft = (
+      draftKey: MessageInputStateKey
+    ): ReadonlyMessageInputState | undefined => {
+      const id = unref(draftKey)
+      const st = virtualIds.has(id) ? virtualChannelStates : states
+      const draft = st.value.get(id)
+      return draft ? readonly(draft) : undefined
     }
 
-    const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
-      const cId_ = unref(cId)
-      const st = virtualIds.has(cId_) ? virtualChannelStates : states
+    const replaceDraft = (
+      draftKey: MessageInputStateKey,
+      value: ReadonlyMessageInputState
+    ) => {
+      const id = unref(draftKey)
+      const st = virtualIds.has(id) ? virtualChannelStates : states
 
-      if ((st.value.get(cId_)?.text ?? '') !== v.text) {
-        textVersions.set(cId_, (textVersions.get(cId_) ?? 0) + 1)
+      if ((st.value.get(id)?.text ?? '') !== value.text) {
+        textVersions.set(id, (textVersions.get(id) ?? 0) + 1)
       }
 
-      // 空のときは削除、空でないときはセット
-      if (v && (v.text !== '' || v.attachments.length > 0)) {
-        // コピーしないと参照が変わらないから上書きされる
-        // toRawしちゃうとreactiveで包めなくなるので、そうはしない
-        st.value.set(cId_, { ...v })
+      if (value.text !== '' || value.attachments.length > 0) {
+        st.value.set(id, {
+          ...value,
+          attachments: value.attachments.map(attachment => ({ ...attachment }))
+        })
       } else {
-        st.value.delete(cId_)
+        st.value.delete(id)
       }
     }
 
     const updateDraft = (
-      key: MessageInputStateKey,
+      draftKey: MessageInputStateKey,
       update: (draft: MessageInputState) => void
     ) => {
-      const current = getStore(key) ?? createDefaultValue()
-      const draft = { ...current, attachments: [...current.attachments] }
+      const current = getDraft(draftKey) ?? createDefaultValue()
+      const draft = {
+        ...current,
+        attachments: current.attachments.map(attachment => ({ ...attachment }))
+      }
 
       update(draft)
-      setStore(key, draft)
+      replaceDraft(draftKey, draft)
     }
 
-    const getDocumentKey = (key: MessageInputStateKey) => {
-      const id = unref(key)
+    const getDocumentKey = (draftKey: MessageInputStateKey) => {
+      const id = unref(draftKey)
 
       return `${id}:${documentRevisions.value.get(id) ?? 0}`
     }
 
-    const captureDraftSnapshot = (key: MessageInputStateKey): DraftSnapshot => {
-      const id = unref(key)
-      const current = getStore(id) ?? createDefaultValue()
+    const captureDraftSnapshot = (
+      draftKey: MessageInputStateKey
+    ): DraftSnapshot => {
+      const id = unref(draftKey)
+      const current = getDraft(id) ?? createDefaultValue()
       const state = {
         text: current.text,
         attachments: [...current.attachments]
       }
 
       return {
-        key: id,
+        draftKey: id,
         textVersion: textVersions.get(id) ?? 0,
-        state,
+        state: readonly(state),
         isEmpty: state.text === '' && state.attachments.length === 0
       }
     }
 
     const consumeSnapshot = (snapshot: DraftSnapshot) => {
-      const { key, state } = snapshot
-      const latest = getStore(key)
+      const { draftKey, state } = snapshot
+      const latest = getDraft(draftKey)
 
       if (!latest) return
 
       const consumesText =
-        (textVersions.get(key) ?? 0) === snapshot.textVersion &&
+        (textVersions.get(draftKey) ?? 0) === snapshot.textVersion &&
         latest.text === state.text
 
-      updateDraft(key, draft => {
+      updateDraft(draftKey, draft => {
         if (consumesText) draft.text = ''
 
         const sentFiles = new Set(
@@ -172,8 +188,8 @@ const useMessageInputStateStorePinia = defineStore(
 
       if (consumesText) {
         documentRevisions.value.set(
-          key,
-          (documentRevisions.value.get(key) ?? 0) + 1
+          draftKey,
+          (documentRevisions.value.get(draftKey) ?? 0) + 1
         )
       }
     }
@@ -182,8 +198,8 @@ const useMessageInputStateStorePinia = defineStore(
       restoringPromise,
       inputChannels,
       hasInputChannel,
-      getStore,
-      setStore,
+      getDraft,
+      replaceDraft,
       updateDraft,
       getDocumentKey,
       captureDraftSnapshot,

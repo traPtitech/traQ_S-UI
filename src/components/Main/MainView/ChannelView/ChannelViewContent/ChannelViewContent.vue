@@ -34,7 +34,7 @@ const { key: renderKey } = useRenderKey('messages')
 
 const useDragDrop = (channelId: Ref<ChannelId>) => {
   const { addErrorToast } = useToastStore()
-  const { captureDraft } = useMessageInputStateAttachment(
+  const { captureDraftTarget } = useMessageInputStateAttachment(
     channelId,
     addErrorToast
   )
@@ -54,7 +54,7 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
     isDragStartInside.value = false
 
     if (droppable && event.dataTransfer) {
-      const draft = captureDraft()
+      const draft = captureDraftTarget()
       const result = await getTextOrFile(event.dataTransfer)
       if (result) {
         if (typeof result === 'string') {

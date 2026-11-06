@@ -12,8 +12,9 @@ vi.mock('/@/store/ui/messageInputStateStore', async () => {
   return {
     createDefaultValue: () => ({ text: '', attachments: [] }),
     useMessageInputStateStore: () => ({
-      getStore: (key: unknown) => values.get(unref(key)),
-      setStore: (key: unknown, value: unknown) => values.set(unref(key), value),
+      getDraft: (key: unknown) => values.get(unref(key)),
+      replaceDraft: (key: unknown, value: unknown) =>
+        values.set(unref(key), value),
       getDocumentKey: (key: unknown) => unref(key),
       updateDraft: (
         key: unknown,
@@ -30,9 +31,9 @@ vi.mock('/@/store/ui/messageInputStateStore', async () => {
 })
 
 it('keeps a pending batch and later files in its starting draft', async () => {
-  const { getStore, setStore } = useMessageInputStateStore()
-  setStore('first', { text: 'first draft', attachments: [] })
-  setStore('second', { text: 'second draft', attachments: [] })
+  const { getDraft, replaceDraft } = useMessageInputStateStore()
+  replaceDraft('first', { text: 'first draft', attachments: [] })
+  replaceDraft('second', { text: 'second draft', attachments: [] })
   const key = ref('first')
   const scope = effectScope()
   const error = vi.fn()
@@ -55,9 +56,9 @@ it('keeps a pending batch and later files in its starting draft', async () => {
     await nextTick()
 
     expect(
-      getStore('first')?.attachments.map(attachment => attachment.file.name)
+      getDraft('first')?.attachments.map(attachment => attachment.file.name)
     ).toEqual(['first.txt', 'second.txt'])
-    expect(getStore(unref(key))).toMatchObject({
+    expect(getDraft(unref(key))).toMatchObject({
       text: 'second draft',
       attachments: []
     })
@@ -68,9 +69,9 @@ it('keeps a pending batch and later files in its starting draft', async () => {
 })
 
 it('captures the target before asynchronous clipboard files are available', async () => {
-  const { getStore, setStore } = useMessageInputStateStore()
-  setStore('first', { text: 'first', attachments: [] })
-  setStore('second', { text: 'second', attachments: [] })
+  const { getDraft, replaceDraft } = useMessageInputStateStore()
+  replaceDraft('first', { text: 'first', attachments: [] })
+  replaceDraft('second', { text: 'second', attachments: [] })
   const key = ref('first')
   const scope = effectScope()
   const input = scope.run(() => useMessageInputStateAttachment(key, vi.fn()))
@@ -85,8 +86,8 @@ it('captures the target before asynchronous clipboard files are available', asyn
     await nextTick()
     files.resolve([file])
     await pending
-    expect(getStore('first')?.attachments).toHaveLength(1)
-    expect(getStore('second')?.attachments).toHaveLength(0)
+    expect(getDraft('first')?.attachments).toHaveLength(1)
+    expect(getDraft('second')?.attachments).toHaveLength(0)
   } finally {
     scope.stop()
   }

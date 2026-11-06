@@ -32,7 +32,7 @@
         <MessageInputUploadButton
           :class="$style.iconButton"
           :disabled="isBusy"
-          @click="addAttachment"
+          @click="openAttachmentPicker"
         />
       </div>
     </div>
@@ -82,7 +82,7 @@ const {
   isBusy,
   isPostingAttachment,
   attachmentPostProgress,
-  addAttachment,
+  openAttachmentPicker,
   onAddAttachments
 } = useMessageEditing(props, text, emit)
 

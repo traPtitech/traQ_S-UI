@@ -3,21 +3,21 @@ import { computed, reactive } from 'vue'
 import type { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
 import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 
-const useMessageInputState = (channelId: MessageInputStateKey) => {
-  const { getStore, updateDraft, getDocumentKey } = useMessageInputStateStore()
+const useMessageInputState = (draftKey: MessageInputStateKey) => {
+  const { getDraft, updateDraft, getDocumentKey } = useMessageInputStateStore()
 
   const state = reactive({
     text: computed({
-      get: () => getStore(channelId)?.text ?? '',
+      get: () => getDraft(draftKey)?.text ?? '',
       set: text =>
-        updateDraft(channelId, draft => {
+        updateDraft(draftKey, draft => {
           draft.text = text
         })
     }),
-    attachments: computed(() => getStore(channelId)?.attachments ?? [])
+    attachments: computed(() => getDraft(draftKey)?.attachments ?? [])
   })
 
-  const documentKey = computed(() => getDocumentKey(channelId))
+  const documentKey = computed(() => getDocumentKey(draftKey))
 
   const isTextEmpty = computed(() => state.text === '')
   const isAttachmentEmpty = computed(() => state.attachments.length === 0)

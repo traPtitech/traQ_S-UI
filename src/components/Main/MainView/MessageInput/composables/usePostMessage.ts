@@ -1,7 +1,11 @@
 import { computed, ref, unref } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
-import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
+import apis, {
+  buildFilePathForPost,
+  embeddingOrigin,
+  formatResizeError
+} from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
 import { nilUuid } from '/@/lib/basic/uuid'
 import {
@@ -56,8 +60,9 @@ const usePostMessage = (
 
     try {
       // 確定済みの参照を保ち、プレーンテキストを送信時に名前解決しない。
-      const createContent = await prepareMessageContent(
-        normalizeMessageSource(state.text)
+      const createContent = prepareMessageContent(
+        normalizeMessageSource(state.text),
+        embeddingOrigin
       )
 
       const dummyFileUrls = state.attachments.map(() =>

@@ -1,6 +1,8 @@
 import { useFileSelect } from '/@/composables/dom/useFileSelect'
 
-const useAttachments = (capture: () => (files: File[]) => Promise<void>) => {
+const useAttachmentPicker = (
+  capture: () => (files: File[]) => Promise<void>
+) => {
   let addAttachments: ReturnType<typeof capture> | undefined
 
   const { selectImage } = useFileSelect({ multiple: true }, async files => {
@@ -8,11 +10,11 @@ const useAttachments = (capture: () => (files: File[]) => Promise<void>) => {
   })
 
   return {
-    addAttachment: () => {
+    openAttachmentPicker: () => {
       addAttachments = capture()
       selectImage()
     }
   }
 }
 
-export default useAttachments
+export default useAttachmentPicker

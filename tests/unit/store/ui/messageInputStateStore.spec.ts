@@ -40,9 +40,9 @@ describe('useMessageInputStateStore', () => {
   it('keeps normal channel inputs visible as drafts', () => {
     const store = useMessageInputStateStore()
 
-    store.setStore(channelId, messageInputState('draft'))
+    store.replaceDraft(channelId, messageInputState('draft'))
 
-    expect(store.getStore(channelId)).toEqual(messageInputState('draft'))
+    expect(store.getDraft(channelId)).toEqual(messageInputState('draft'))
     expect(store.inputChannels.value).toEqual([
       [channelId, messageInputState('draft')]
     ])
@@ -52,10 +52,10 @@ describe('useMessageInputStateStore', () => {
   it('removes normal channel inputs when they become empty', () => {
     const store = useMessageInputStateStore()
 
-    store.setStore(channelId, messageInputState('draft'))
-    store.setStore(channelId, messageInputState(''))
+    store.replaceDraft(channelId, messageInputState('draft'))
+    store.replaceDraft(channelId, messageInputState(''))
 
-    expect(store.getStore(channelId)).toBeUndefined()
+    expect(store.getDraft(channelId)).toBeUndefined()
     expect(store.inputChannels.value).toEqual([])
     expect(store.hasInputChannel.value).toBe(false)
   })
@@ -64,14 +64,14 @@ describe('useMessageInputStateStore', () => {
     const store = useMessageInputStateStore()
     const { channelsMap } = useChannelsStore()
 
-    store.setStore(channelId, messageInputState('draft'))
+    store.replaceDraft(channelId, messageInputState('draft'))
     channelsMap.value.set(channelId, channel({ archived: false }))
     await nextTick()
 
     channelsMap.value.set(channelId, channel({ archived: true }))
     await nextTick()
 
-    expect(store.getStore(channelId)).toBeUndefined()
+    expect(store.getDraft(channelId)).toBeUndefined()
     expect(store.inputChannels.value).toEqual([])
     expect(store.hasInputChannel.value).toBe(false)
   })
@@ -79,9 +79,9 @@ describe('useMessageInputStateStore', () => {
   it('keeps virtual channel inputs available but hidden from drafts', () => {
     const store = useMessageInputStateStore()
 
-    store.setStore(virtualChannelId, messageInputState('shared text'))
+    store.replaceDraft(virtualChannelId, messageInputState('shared text'))
 
-    expect(store.getStore(virtualChannelId)).toEqual(
+    expect(store.getDraft(virtualChannelId)).toEqual(
       messageInputState('shared text')
     )
     expect(store.inputChannels.value).toEqual([])
@@ -91,21 +91,21 @@ describe('useMessageInputStateStore', () => {
   it('separates virtual channel inputs from normal channel inputs', () => {
     const store = useMessageInputStateStore()
 
-    store.setStore(channelId, messageInputState('draft'))
-    store.setStore(virtualChannelId, messageInputState('shared text'))
+    store.replaceDraft(channelId, messageInputState('draft'))
+    store.replaceDraft(virtualChannelId, messageInputState('shared text'))
 
-    expect(store.getStore(channelId)).toEqual(messageInputState('draft'))
-    expect(store.getStore(virtualChannelId)).toEqual(
+    expect(store.getDraft(channelId)).toEqual(messageInputState('draft'))
+    expect(store.getDraft(virtualChannelId)).toEqual(
       messageInputState('shared text')
     )
     expect(store.inputChannels.value).toEqual([
       [channelId, messageInputState('draft')]
     ])
 
-    store.setStore(virtualChannelId, messageInputState(''))
+    store.replaceDraft(virtualChannelId, messageInputState(''))
 
-    expect(store.getStore(channelId)).toEqual(messageInputState('draft'))
-    expect(store.getStore(virtualChannelId)).toBeUndefined()
+    expect(store.getDraft(channelId)).toEqual(messageInputState('draft'))
+    expect(store.getDraft(virtualChannelId)).toBeUndefined()
     expect(store.inputChannels.value).toEqual([
       [channelId, messageInputState('draft')]
     ])
