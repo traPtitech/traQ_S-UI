@@ -3,10 +3,7 @@ import { computed, unref } from 'vue'
 import { mimeToFileType } from '/@/lib/basic/file'
 import { getResizedFile } from '/@/lib/resize'
 import type { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
-import {
-  createDefaultValue,
-  useMessageInputStateStore
-} from '/@/store/ui/messageInputStateStore'
+import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 
 import useMessageInputState from './useMessageInputState'
 
@@ -15,24 +12,15 @@ const useMessageInputStateAttachment = (
   onError: (message: string) => void
 ) => {
   const { state } = useMessageInputState(channelId)
-  const { getStore, setStore } = useMessageInputStateStore()
+  const { updateDraft } = useMessageInputStateStore()
 
   const attachments = computed(() => state.attachments)
 
   const captureDraft = () => {
     const key = unref(channelId)
 
-    const update = (apply: (draft: typeof state) => void) => {
-      if (unref(channelId) === key) {
-        apply(state)
-        return
-      }
-
-      const current = getStore(key) ?? createDefaultValue()
-      const draft = { ...current, attachments: [...current.attachments] }
-      apply(draft)
-      setStore(key, draft)
-    }
+    const update = (apply: Parameters<typeof updateDraft>[1]) =>
+      updateDraft(key, apply)
 
     const addTextToLast = (text: string) =>
       update(draft => {
@@ -72,7 +60,9 @@ const useMessageInputStateAttachment = (
 
   const removeAttachmentAt = (index: number) => {
     if (0 <= index && index < state.attachments.length) {
-      state.attachments.splice(index, 1)
+      updateDraft(channelId, draft => {
+        draft.attachments.splice(index, 1)
+      })
     }
   }
 

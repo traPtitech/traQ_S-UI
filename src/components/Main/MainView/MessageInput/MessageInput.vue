@@ -40,7 +40,7 @@
         ref="messageInputRef"
         v-model="state.text"
         v-model:show-text-area-expand-button="showTextAreaExpandButton"
-        :document-key="channelId"
+        :document-key="documentKey"
         :is-posting="isPosting"
         :shrink-to-one-line="
           (forceMobileStyle || isMobile) && isLeftControlsExpanded
@@ -106,7 +106,8 @@ const emit = defineEmits<{
 
 const { isMobile } = useResponsive()
 const channelId = toRef(props, 'channelId')
-const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
+const { state, isEmpty, isTextEmpty, documentKey } =
+  useMessageInputState(channelId)
 const { addErrorToast } = useToastStore()
 
 const { captureDraft, addAttachments: onAddAttachments } =

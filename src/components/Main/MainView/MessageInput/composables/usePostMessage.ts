@@ -1,49 +1,25 @@
 import { computed, ref, unref } from 'vue'
 
-import useMessageInputStateStatic from '/@/composables/messageInputState/useMessageInputStateStatic'
 import useChannelPath from '/@/composables/useChannelPath'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
 import { nilUuid } from '/@/lib/basic/uuid'
-import { isEmbeddedLink } from '/@/lib/markdown/markdown'
-import { normalizeMessageSource } from '/@/lib/message/content'
+import {
+  normalizeMessageSource,
+  prepareMessageContent
+} from '/@/lib/message/content'
 import { uploadAttachments } from '/@/lib/message/uploadAttachments'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
 import { useChannelsStore } from '/@/store/entities/channels'
 import type { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
+import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 import { useToastStore } from '/@/store/ui/toast'
-
-export const createContent = async (
-  embeddedText: string,
-  fileUrls: string[]
-) => {
-  const joinContents = (delimiter: string, contents: string[]) =>
-    contents.filter(Boolean).join(delimiter)
-
-  const embeddedUrls = fileUrls.join('\n')
-  const trimmedEmbeddedText = embeddedText.trimEnd()
-
-  if (trimmedEmbeddedText === '') {
-    return joinContents('\n', [embeddedText, embeddedUrls])
-  }
-
-  const trimmedEmbeddedTextLines = trimmedEmbeddedText.split(`\n`)
-
-  if (
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    await isEmbeddedLink(trimmedEmbeddedTextLines.at(-1)!)
-  ) {
-    return joinContents('\n', [trimmedEmbeddedText, embeddedUrls])
-  }
-
-  return joinContents('\n\n', [embeddedText, embeddedUrls])
-}
 
 const usePostMessage = (
   channelId: MessageInputStateKey,
   inputStateKey = channelId
 ) => {
-  const { getMessageInputState } = useMessageInputStateStatic()
+  const { captureDraftSnapshot, consumeSnapshot } = useMessageInputStateStore()
   const { channelIdToShortPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
   const { channelsMap } = useChannelsStore()
@@ -63,7 +39,8 @@ const usePostMessage = (
 
   const postMessage = async () => {
     // awaitによって変化しないようにあえてリアクティブでないものを取得する
-    const { state, isEmpty, clearState } = getMessageInputState(inputStateKey)
+    const snapshot = captureDraftSnapshot(inputStateKey)
+    const { state, isEmpty } = snapshot
     // awaitの前でunrefしておかないと別のチャンネルに投稿されうる
     const cId = unref(channelId)
 
@@ -79,13 +56,15 @@ const usePostMessage = (
 
     try {
       // 確定済みの参照を保ち、プレーンテキストを送信時に名前解決しない。
-      const embeddedText = normalizeMessageSource(state.text)
+      const createContent = await prepareMessageContent(
+        normalizeMessageSource(state.text)
+      )
 
       const dummyFileUrls = state.attachments.map(() =>
         buildFilePathForPost(nilUuid)
       )
 
-      const dummyText = await createContent(embeddedText, dummyFileUrls)
+      const dummyText = createContent(dummyFileUrls)
 
       if (countLength(dummyText) > MESSAGE_MAX_LENGTH) {
         addErrorToast('メッセージが長すぎます')
@@ -101,10 +80,10 @@ const usePostMessage = (
       )
 
       await apis.postMessage(cId, {
-        content: await createContent(embeddedText, fileUrls)
+        content: createContent(fileUrls)
       })
 
-      clearState()
+      consumeSnapshot(snapshot)
       posted = true
     } catch (e) {
       // eslint-disable-next-line no-console

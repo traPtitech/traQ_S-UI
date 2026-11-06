@@ -6,7 +6,7 @@
     <ReferenceInput
       ref="inputRef"
       v-model="modelValue"
-      :document-key="`${documentKey}:${documentRevision}`"
+      :document-key="documentKey"
       :class="$style.textarea"
       :style="inputStyle"
       :readonly="isPosting"
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref, shallowRef, watch } from 'vue'
+import { computed, nextTick, shallowRef, watch } from 'vue'
 
 import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
 import useResponsive from '/@/composables/useResponsive'
@@ -78,16 +78,6 @@ const emit = defineEmits<{
   (e: 'modifierKeyDown'): void
   (e: 'modifierKeyUp'): void
 }>()
-
-const documentRevision = ref(0)
-
-watch(
-  () => props.isPosting,
-  (posting, wasPosting) => {
-    if (wasPosting && !posting && modelValue.value === '')
-      documentRevision.value++
-  }
-)
 
 const firefoxFlag = isFirefox()
 

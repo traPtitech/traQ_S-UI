@@ -1,8 +1,13 @@
-import { analyzeMarkdownSource, isLiteralSource } from '../markdown/analysis'
+import {
+  type MarkdownSourceAnalysis,
+  analyzeMarkdownSource,
+  isLiteralSource
+} from '../markdown/analysis'
 import { type InputPart, parseInput, serializeInput } from '../references'
 
 export const normalizeMessageParts = (
-  parts: readonly InputPart[]
+  parts: readonly InputPart[],
+  analysis?: MarkdownSourceAnalysis
 ): InputPart[] => {
   if (!parts.some(part => part.type === 'reference')) return [...parts]
 
@@ -10,8 +15,8 @@ export const normalizeMessageParts = (
     .map(part => (part.type === 'text' ? part.text : '\uFFFC'))
     .join('')
 
-  const ranges = analyzeMarkdownSource(source)
-    .nodes.filter(isLiteralSource)
+  const ranges = (analysis ?? analyzeMarkdownSource(source)).nodes
+    .filter(isLiteralSource)
     .sort((a, b) => a.from - b.from)
 
   let offset = 0
@@ -31,3 +36,15 @@ export const normalizeMessageParts = (
 
 export const normalizeMessageSource = (source: string) =>
   serializeInput(normalizeMessageParts(parseInput(source, 'message')))
+
+export const prepareMessageContent = async (source: string) => {
+  const trimmed = source.trimEnd()
+  const lastLine = trimmed.split('\n').at(-1) ?? ''
+  const { isEmbeddedLink } = await import('../markdown/markdown')
+  const endsWithEmbed = trimmed !== '' && (await isEmbeddedLink(lastLine))
+  const text = endsWithEmbed ? trimmed : source
+  const delimiter = trimmed === '' || endsWithEmbed ? '\n' : '\n\n'
+
+  return (fileUrls: readonly string[]) =>
+    [text, fileUrls.join('\n')].filter(Boolean).join(delimiter)
+}

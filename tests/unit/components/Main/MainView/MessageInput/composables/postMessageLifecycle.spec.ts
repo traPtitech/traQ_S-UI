@@ -14,13 +14,13 @@ const mocks = vi.hoisted(() => ({
   error: vi.fn()
 }))
 
-vi.mock('/@/composables/messageInputState/useMessageInputStateStatic', () => ({
-  default: () => ({
-    getMessageInputState: () => ({
+vi.mock('/@/store/ui/messageInputStateStore', () => ({
+  useMessageInputStateStore: () => ({
+    captureDraftSnapshot: () => ({
       state: { ...mocks.state, attachments: [...mocks.state.attachments] },
-      isEmpty: false,
-      clearState: mocks.clear
-    })
+      isEmpty: false
+    }),
+    consumeSnapshot: mocks.clear
   })
 }))
 vi.mock('/@/composables/useChannelPath', () => ({
@@ -36,20 +36,6 @@ vi.mock('/@/store/entities/channels', async () => {
   const { ref } = await import('vue')
   return { useChannelsStore: () => ({ channelsMap: ref(new Map()) }) }
 })
-vi.mock('/@/store/entities/users', () => ({
-  useUsersStore: () => ({
-    usersMapInitialFetchPromise: Promise.resolve(),
-    findUserByName: (name: string) =>
-      name.toLowerCase() === 'alice' ? { id: 'user-id' } : undefined
-  })
-}))
-vi.mock('/@/store/entities/groups', () => ({
-  useGroupsStore: () => ({
-    userGroupsMapInitialFetchPromise: Promise.resolve(),
-    getUserGroupByName: (name: string) =>
-      name === 'team' ? { id: 'group-id' } : undefined
-  })
-}))
 vi.mock('/@/store/ui/toast', () => ({
   useToastStore: () => ({ addErrorToast: mocks.error })
 }))

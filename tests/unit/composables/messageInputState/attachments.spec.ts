@@ -13,7 +13,18 @@ vi.mock('/@/store/ui/messageInputStateStore', async () => {
     createDefaultValue: () => ({ text: '', attachments: [] }),
     useMessageInputStateStore: () => ({
       getStore: (key: unknown) => values.get(unref(key)),
-      setStore: (key: unknown, value: unknown) => values.set(unref(key), value)
+      setStore: (key: unknown, value: unknown) => values.set(unref(key), value),
+      getDocumentKey: (key: unknown) => unref(key),
+      updateDraft: (
+        key: unknown,
+        update: (draft: { text: string; attachments: unknown[] }) => void
+      ) => {
+        const current = values.get(unref(key)) ?? { text: '', attachments: [] }
+        const draft = { ...current, attachments: [...current.attachments] }
+
+        update(draft)
+        values.set(unref(key), draft)
+      }
     })
   }
 })

@@ -1,5 +1,6 @@
 import { nextTick } from 'vue'
 
+import { EditorContent } from '@tiptap/vue-3'
 import { mount } from '@vue/test-utils'
 
 import MessageInputEditor from '/@/components/Main/MainView/MessageInput/MessageInputEditor.vue'
@@ -12,6 +13,41 @@ import { press, setBranchingChannelTree } from './fixture'
 
 await vi.hoisted(async () => {
   await import('./mocks')
+})
+
+it('retains Undo when a busy operation ends with an empty draft', async () => {
+  const wrapper = mount(MessageInputEditor, {
+    attachTo: document.body,
+    props: {
+      modelValue: 'draft',
+      documentKey: 'same-message',
+      'onUpdate:modelValue': value => {
+        void wrapper.setProps({ modelValue: value })
+      }
+    },
+    global: { stubs: { DropdownSuggester: true } }
+  })
+
+  try {
+    await nextTick()
+    const input = wrapper.getComponent(ReferenceInput)
+    const editor = input.getComponent(EditorContent).props('editor')
+
+    if (!editor) throw new Error('Editor is not mounted')
+
+    editor.commands.selectAll()
+    editor.commands.deleteSelection()
+    await nextTick()
+    await wrapper.setProps({ isPosting: true })
+    await wrapper.setProps({ isPosting: false })
+    editor.view.focus()
+    press(input, 'z', { ctrlKey: true })
+    await nextTick()
+
+    expect(wrapper.props('modelValue')).toBe('draft')
+  } finally {
+    wrapper.unmount()
+  }
 })
 
 describe('suggestion confirmation with Enter send mode', () => {

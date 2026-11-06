@@ -8,6 +8,7 @@
           <ReferenceInput
             ref="inputRef"
             v-model="state.text"
+            :document-key="documentKey"
             :class="$style.input"
             placeholder="メッセージ"
             :labelled-by="labelId"
@@ -58,7 +59,7 @@ const { fetchStampHistory } = useStampHistory()
 const { fetchStampRecommendations } = useStampRecommendations()
 const { fetchStamps } = useStampsStore()
 const { fetchStampPalettes } = useStampPalettesStore()
-const { state } = useMessageInputState('share-target')
+const { state, documentKey } = useMessageInputState('share-target')
 const { addErrorToast } = useToastStore()
 const { captureDraft } = useMessageInputStateAttachment(
   'share-target',

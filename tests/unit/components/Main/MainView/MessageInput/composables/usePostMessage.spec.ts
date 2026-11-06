@@ -1,8 +1,8 @@
 import { createTestingPinia } from '@pinia/testing'
 import { vi } from 'vitest'
 
-import { createContent } from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
 import { nilUuid } from '/@/lib/basic/uuid'
+import { prepareMessageContent } from '/@/lib/message/content'
 
 const EMBEDDING_ORIGIN = 'https://q.example.com'
 
@@ -18,13 +18,13 @@ vi.mock('/@/lib/markdown/markdown', () => ({
 }))
 
 describe('usePostMessage', () => {
-  describe('createContent', () => {
+  describe('prepareMessageContent', () => {
     beforeAll(() => {
       createTestingPinia()
     })
 
     it.each(TEST_CASES)('$description', async ({ input, files, expected }) => {
-      const content = await createContent(input, files ?? [])
+      const content = (await prepareMessageContent(input))(files ?? [])
       expect(content).toBe(expected)
     })
   })

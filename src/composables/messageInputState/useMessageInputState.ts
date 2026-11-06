@@ -1,40 +1,23 @@
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive } from 'vue'
 
-import type {
-  MessageInputState,
-  MessageInputStateKey
-} from '/@/store/ui/messageInputStateStore'
-import {
-  createDefaultValue,
-  useMessageInputStateStore
-} from '/@/store/ui/messageInputStateStore'
+import type { MessageInputStateKey } from '/@/store/ui/messageInputStateStore'
+import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
 
 const useMessageInputState = (channelId: MessageInputStateKey) => {
-  const { getStore, setStore } = useMessageInputStateStore()
+  const { getStore, updateDraft, getDocumentKey } = useMessageInputStateStore()
 
-  const state: MessageInputState = reactive(
-    getStore(channelId) ?? createDefaultValue()
-  )
-  watch(
-    () => getStore(channelId),
-    v => {
-      if (v) {
-        state.text = v.text
-        state.attachments = v.attachments
-      } else {
-        state.text = ''
-        state.attachments = []
-      }
-    },
-    { deep: true }
-  )
-  watch(
-    state,
-    v => {
-      setStore(channelId, v)
-    },
-    { deep: true, immediate: true }
-  )
+  const state = reactive({
+    text: computed({
+      get: () => getStore(channelId)?.text ?? '',
+      set: text =>
+        updateDraft(channelId, draft => {
+          draft.text = text
+        })
+    }),
+    attachments: computed(() => getStore(channelId)?.attachments ?? [])
+  })
+
+  const documentKey = computed(() => getDocumentKey(channelId))
 
   const isTextEmpty = computed(() => state.text === '')
   const isAttachmentEmpty = computed(() => state.attachments.length === 0)
@@ -43,7 +26,8 @@ const useMessageInputState = (channelId: MessageInputStateKey) => {
   return {
     state,
     isTextEmpty,
-    isEmpty
+    isEmpty,
+    documentKey
   }
 }
 
