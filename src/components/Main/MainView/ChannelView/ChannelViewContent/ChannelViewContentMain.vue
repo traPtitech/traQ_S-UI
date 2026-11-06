@@ -31,6 +31,7 @@
           :is-archived="isArchived"
           :is-entry-message="messageId === entryMessageId"
           :pinned-user-id="messagePinnedUserMap.get(messageId)"
+          :show-thread-button="showThreadButton"
           @change-height="onChangeHeight"
           @entry-message-loaded="onEntryMessageLoaded"
         />
@@ -75,6 +76,7 @@ const props = defineProps<{
   entryMessageId?: string
   pinnedMessages: Pin[]
   typingUsers: UserId[]
+  showThreadButton: boolean
 }>()
 
 const router = useRouter()

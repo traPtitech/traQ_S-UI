@@ -11,6 +11,7 @@
     :channel-id="primaryView.channelId"
     :entry-message-id="primaryView.entryMessageId"
     :user-name="primaryView.userName"
+    :show-thread-button="showThreadButton"
   />
   <ClipsView
     v-else-if="primaryView.type === 'clips'"
@@ -21,6 +22,8 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, watch } from 'vue'
+
 import { useMainViewStore } from '/@/store/ui/mainView'
 
 import ChannelView from './ChannelView/ChannelView.vue'
@@ -29,6 +32,19 @@ import DMView from './DMView/DMView.vue'
 import NullView from './NullView/NullView.vue'
 
 const { primaryView } = useMainViewStore()
+
+const showThreadButton = ref(false)
+watch(
+  () => primaryView.value.type,
+  value => {
+    if (value === 'dm') {
+      showThreadButton.value = true
+    } else {
+      showThreadButton.value = false
+    }
+  },
+  { immediate: true }
+)
 
 defineProps<{
   isReady: boolean

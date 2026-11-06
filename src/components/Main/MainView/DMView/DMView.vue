@@ -9,6 +9,7 @@
         :entry-message-id="entryMessageId"
         :pinned-messages="pinnedMessages"
         :typing-users="typingUsers"
+        :show-thread-button="showThreadButton"
       />
     </template>
     <template #sidebar>
@@ -41,6 +42,7 @@ const props = defineProps<{
   channelId: ChannelId
   entryMessageId?: MessageId
   userName: string
+  showThreadButton: boolean
 }>()
 
 const channelId = toRef(props, 'channelId')
