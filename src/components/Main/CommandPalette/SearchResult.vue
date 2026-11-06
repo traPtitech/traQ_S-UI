@@ -2,28 +2,41 @@
   <div v-if="fetchingSearchResult" :class="$style.empty">
     <LoadingSpinner :class="$style.spinner" color="ui-secondary" />
   </div>
-  <div v-else-if="searchResult.length > 0" :class="$style.container">
-    <PopupSelector
-      v-model="currentSortKey"
-      :items="selectorItems"
-      :class="$style.sortSelector"
-      small
-    />
-    <div ref="resultListEle" :class="$style.resultList">
-      <div
-        v-for="message in searchResult"
-        :key="message.id"
-        :class="$style.elementContainer"
-      >
-        <SearchResultMessageElement
-          :message="message"
-          :current-sort-key="currentSortKey"
-          @click-open="openMessage"
-          @rendered="didRender(message.id)"
-        />
+  <div v-else-if="searchError !== undefined" :class="$style.empty" role="alert">
+    <p>検索に失敗しました</p>
+    <FormButton label="再試行" type="secondary" @click="searchForCurrentPage" />
+  </div>
+  <div v-else-if="hasCurrentResult && queryEntered" :class="$style.container">
+    <template v-if="searchResult.length > 0">
+      <PopupSelector
+        v-model="currentSortKey"
+        :items="selectorItems"
+        :class="$style.sortSelector"
+        small
+      />
+      <div ref="resultListEle" :class="$style.resultList">
+        <div
+          v-for="message in searchResult"
+          :key="message.id"
+          :class="$style.elementContainer"
+        >
+          <SearchResultMessageElement
+            :message="message"
+            :current-sort-key="currentSortKey"
+            @click-open="openMessage"
+            @rendered="didRender(message.id)"
+          />
+        </div>
       </div>
+    </template>
+    <div v-else :class="$style.empty">
+      {{
+        pageCount > 1
+          ? 'このページに表示できるメッセージはありません'
+          : '見つかりませんでした'
+      }}
     </div>
-    <div :class="$style.navigation">
+    <div v-if="pageCount > 0" :class="$style.navigation">
       <div
         :class="$style.navigationButton"
         data-direction="previous"
@@ -45,13 +58,13 @@
       </div>
     </div>
   </div>
-  <div v-else-if="queryEntered" :class="$style.empty">見つかりませんでした</div>
 </template>
 
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import type { PopupSelectorItem } from '/@/components/UI/PopupSelector.vue'
 import PopupSelector from '/@/components/UI/PopupSelector.vue'
@@ -75,6 +88,7 @@ const selectorItems: PopupSelectorItem<SearchMessageSortKey>[] &
 const {
   executeSearchForCurrentPage,
   fetchingSearchResult,
+  searchError,
   searchResult,
   currentPage,
   jumpToPage: changePage,
@@ -82,8 +96,12 @@ const {
   pageCount,
   currentSortKey,
   query,
-  executed
+  hasCurrentResult
 } = useSearchMessages()
+
+const searchForCurrentPage = () => {
+  void executeSearchForCurrentPage().catch(() => undefined)
+}
 
 watch(
   // クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
@@ -93,14 +111,14 @@ watch(
     if (query !== oldQuery || key !== oldKey) {
       resetPaging()
     }
-    executeSearchForCurrentPage(query)
+    searchForCurrentPage()
   }
 )
 
 onMounted(() => {
   // 初回マウント時に取得する
-  if (!executed.value) {
-    executeSearchForCurrentPage(query.value)
+  if (!hasCurrentResult.value) {
+    searchForCurrentPage()
   }
 })
 onBeforeUnmount(() => {

@@ -506,7 +506,6 @@ const useMessagesStorePinia = defineStore('entities/messages', () => {
     messagesMap,
     fileMetaDataMap,
     ogpDataMap,
-    extendMessagesMap: writeMessages,
     withMessageUpdates,
     isMessageDeleted,
     fetchMessage,

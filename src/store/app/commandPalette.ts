@@ -16,9 +16,9 @@ type CommandPaletteMode = 'command' | 'search'
 
 type SearchState = {
   /**
-   * 検索を実行したかどうか
+   * 現在の条件で検索結果を取得済みかどうか
    */
-  executed: boolean
+  hasCurrentResult: boolean
 
   /**
    * 検索結果
@@ -75,7 +75,7 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
 
   /** 検索の状態 */
   const searchState = ref<SearchState>({
-    executed: false,
+    hasCurrentResult: false,
     totalCount: 0,
     searchResult: [],
     currentPage: 0,
@@ -116,6 +116,7 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
       focusTarget: options?.focusTarget ?? 'input'
     }
   }
+
   const closeCommandPalette = () => {
     presentation.value = undefined
   }
@@ -138,6 +139,7 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
       state.searchHistories.pop()
     }
   }
+
   const removeSearchHistory = (oldHistory: string) => {
     const index = state.searchHistories.indexOf(oldHistory)
     if (index !== -1) {
@@ -146,17 +148,17 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
   }
 
   const setSearchResult = (
-    executed: boolean,
+    hasCurrentResult: boolean,
     messages: Message[],
     totalCount: number
   ) => {
-    searchState.value.executed = executed
+    searchState.value.hasCurrentResult = hasCurrentResult
     searchState.value.searchResult = messages
     searchState.value.totalCount = totalCount
   }
 
   const resetPaging = () => {
-    searchState.value.executed = false
+    searchState.value.hasCurrentResult = false
     searchState.value.searchResult = []
     searchState.value.totalCount = 0
     searchState.value.currentPage = 0

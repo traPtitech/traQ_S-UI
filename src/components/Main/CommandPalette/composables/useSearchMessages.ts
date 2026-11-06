@@ -1,9 +1,10 @@
 import type { Message } from '@traptitech/traq'
 
 import type { DeepReadonly, Ref } from 'vue'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 import useQueryParser from '/@/composables/searchMessage/useQueryParser'
+import useLatestRequest from '/@/composables/utils/useLatestRequest'
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
 import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
@@ -34,6 +35,7 @@ const useSortMessages = (
         )
     }
   })
+
   return { sortedMessages }
 }
 
@@ -57,6 +59,7 @@ const usePaging = (
     if (totalCount.value <= 0) {
       return
     }
+
     currentPage.value = Math.max(0, Math.min(page, pageCount.value - 1))
   }
 
@@ -71,26 +74,38 @@ const usePaging = (
 const useSearchMessages = () => {
   const limit = 20
   const { parseQuery, toSearchMessageParam } = useQueryParser()
+
   const { query, searchState, setSearchResult, resetPaging, addSearchHistory } =
     useCommandPalette()
-  const { extendMessagesMap } = useMessagesStore()
+
+  const { withMessageUpdates, isMessageDeleted, messagesMap } =
+    useMessagesStore()
 
   const currentSortKey = computed({
     get: () => searchState.value.currentSortKey,
+
     set: sortKey => {
       searchState.value.currentSortKey = sortKey
     }
   })
+
   const currentPage = computed({
     get: () => searchState.value.currentPage,
+
     set: page => {
       searchState.value.currentPage = page
     }
   })
 
   // TODO: リファクタ
-  const executed = computed(() => searchState.value.executed)
-  const searchResult = computed(() => searchState.value.searchResult)
+  const hasCurrentResult = computed(() => searchState.value.hasCurrentResult)
+  const searchResult = computed(() =>
+    hasCurrentResult.value
+      ? searchState.value.searchResult
+          .filter(message => !isMessageDeleted(message.id))
+          .map(message => messagesMap.value.get(message.id) ?? message)
+      : []
+  )
   const totalCount = computed(() => searchState.value.totalCount)
 
   const { sortedMessages } = useSortMessages(searchResult, currentSortKey)
@@ -101,30 +116,48 @@ const useSearchMessages = () => {
     totalCount
   )
 
-  const fetchingSearchResult = ref(false)
+  const search = useLatestRequest({
+    source: () => ({
+      query: query.value,
+      offset: currentOffset.value,
+      sort: currentSortKey.value
+    }),
 
-  const fetchAndRenderMessagesOnCurrentPageBySearch = async (query: string) => {
-    if (query === '') {
+    autoLoad: false,
+
+    fetch: ({ query, offset, sort }, signal) =>
+      withMessageUpdates(async cacheMessages => {
+        const { normalizedQuery, queryObject } = await parseQuery(query)
+        signal.throwIfAborted()
+
+        const { data } = await apis.searchMessages(
+          ...toSearchMessageParam(queryObject, { limit, offset, sort }),
+          { signal }
+        )
+
+        return {
+          ...data,
+          hits: cacheMessages(data.hits),
+          normalizedQuery
+        }
+      }, signal),
+
+    onSuccess: ({ hits, totalHits, normalizedQuery }) => {
+      addSearchHistory(normalizedQuery)
+      setSearchResult(true, hits, totalHits)
+    }
+  })
+
+  const executeSearchForCurrentPage = async () => {
+    if (query.value === '') {
+      search.reset()
       resetPaging()
+
       return
     }
 
-    fetchingSearchResult.value = true
-    const { normalizedQuery, queryObject } = await parseQuery(query)
-    addSearchHistory(normalizedQuery)
-
-    const option = {
-      limit,
-      offset: currentOffset.value,
-      sort: currentSortKey.value
-    }
-    const {
-      data: { hits, totalHits }
-    } = await apis.searchMessages(...toSearchMessageParam(queryObject, option))
-    extendMessagesMap(hits)
-    fetchingSearchResult.value = false
-
-    setSearchResult(true, hits, totalHits)
+    searchState.value.hasCurrentResult = false
+    await search.execute()
   }
 
   return {
@@ -135,14 +168,15 @@ const useSearchMessages = () => {
     totalCount,
     currentSortKey,
     searchResult: sortedMessages,
-    executed,
+    hasCurrentResult,
 
     pageCount,
     showingRange,
     jumpToPage,
 
-    fetchingSearchResult,
-    executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch
+    fetchingSearchResult: search.isLoading,
+    searchError: search.error,
+    executeSearchForCurrentPage
   }
 }
 

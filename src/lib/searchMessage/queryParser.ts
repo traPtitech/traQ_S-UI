@@ -315,24 +315,25 @@ export const toSearchMessageParam = (
     offset: number
     sort: SearchMessageSortKey
   }>
-): SearchMessageQuery => [
-  obj.word,
-  obj.after,
-  obj.before,
-  obj.in,
-  obj.to,
-  obj.from,
-  obj.citation,
-  obj.bot,
-  obj.hasUrl,
-  obj.hasAttachments,
-  obj.hasImage,
-  obj.hasVideo,
-  obj.hasAudio,
-  options?.limit,
-  options?.offset,
-  options?.sort
-]
+) =>
+  [
+    obj.word,
+    obj.after,
+    obj.before,
+    obj.in,
+    obj.to,
+    obj.from,
+    obj.citation,
+    obj.bot,
+    obj.hasUrl,
+    obj.hasAttachments,
+    obj.hasImage,
+    obj.hasVideo,
+    obj.hasAudio,
+    options?.limit,
+    options?.offset,
+    options?.sort
+  ] satisfies SearchMessageQuery
 
 const emptySearchMessageQueryObject: SearchMessageQueryObject = {
   word: undefined,
