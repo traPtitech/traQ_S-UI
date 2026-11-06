@@ -1,7 +1,7 @@
 import { closeHistory } from '@tiptap/pm/history'
 import { type EditorState, TextSelection } from '@tiptap/pm/state'
 
-import { analyzeMarkdownSource } from '../markdown/analysis'
+import { analyzeEditorProbe } from './documentAnalysis'
 import {
   editorSource,
   toDocumentPosition,
@@ -51,7 +51,7 @@ export const markdownLineBreak = (
       ? source.slice(0, position) + '\uFFFC' + source.slice(position)
       : source
 
-    const context = analyzeMarkdownSource(probe).lines.find(
+    const context = analyzeEditorProbe(state.doc, probe).lines.find(
       line => line.from === start
     )
 

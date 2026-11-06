@@ -4,7 +4,14 @@ import { NodeSelection } from '@tiptap/pm/state'
 import { contentToParts, partsToContent } from '/@/lib/referenceInput/editor'
 import { encodeReference, parseInput, serializeInput } from '/@/lib/references'
 
-import { createInputEditor, pressKey, readSource as source } from './fixture'
+import {
+  createInputEditor,
+  installInputEditorFixture,
+  pressKey,
+  readSource as source
+} from './fixture'
+
+installInputEditorFixture()
 
 const embedded = encodeReference({
   type: 'user',

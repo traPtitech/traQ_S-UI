@@ -3,7 +3,14 @@ import { redo, undo } from '@tiptap/pm/history'
 import { inputLifecycleKey } from '/@/lib/referenceInput/inputLifecycle'
 import { encodeReference } from '/@/lib/references'
 
-import { createInputEditor, pressKey, readSource as source } from './fixture'
+import {
+  createInputEditor,
+  installInputEditorFixture,
+  pressKey,
+  readSource as source
+} from './fixture'
+
+installInputEditorFixture()
 
 const create = (source: string, position?: number) => {
   const editor = createInputEditor(source)

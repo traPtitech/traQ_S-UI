@@ -3,7 +3,13 @@ import { undo } from '@tiptap/pm/history'
 import { markdownIndent } from '/@/lib/referenceInput/markdownIndent'
 import { encodeReference } from '/@/lib/references'
 
-import { createInputEditor, readSource as source } from './fixture'
+import {
+  createInputEditor,
+  installInputEditorFixture,
+  readSource as source
+} from './fixture'
+
+installInputEditorFixture()
 
 const create = createInputEditor
 

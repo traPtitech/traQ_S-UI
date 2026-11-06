@@ -67,6 +67,7 @@ describe('Markdown source decorations', () => {
 
     expect(markdownFormats(text)[0]?.replacement).toEqual({
       type: 'markdown',
+      environment: { references: undefined },
       text
     })
     expect(getMarkdownRenderer().render(text).renderedText).not.toContain(
@@ -298,6 +299,7 @@ describe('Markdown source decorations', () => {
 
     expect(image?.replacement).toEqual({
       type: 'markdown',
+      environment: { references: undefined },
       text: '![alt](https://example.com/image.png "title")'
     })
 
@@ -308,8 +310,16 @@ describe('Markdown source decorations', () => {
     expect(
       markdownFormats(':traq.large: :@alice:').map(format => format.replacement)
     ).toEqual([
-      { type: 'stamp', text: ':traq.large:' },
-      { type: 'stamp', text: ':@alice:' }
+      {
+        type: 'stamp',
+        text: ':traq.large:',
+        environment: { references: undefined }
+      },
+      {
+        type: 'stamp',
+        text: ':@alice:',
+        environment: { references: undefined }
+      }
     ])
 
     expect(markdownFormats('`:traq:`').map(format => format.className)).toEqual(

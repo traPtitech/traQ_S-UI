@@ -9,7 +9,13 @@ import { markdownLineBreak } from '/@/lib/referenceInput/markdownLineBreak'
 import { markdownListInputKey } from '/@/lib/referenceInput/markdownListInput'
 import { encodeReference } from '/@/lib/references'
 
-import { createInputEditor, readSource as source } from './fixture'
+import {
+  createInputEditor,
+  installInputEditorFixture,
+  readSource as source
+} from './fixture'
+
+installInputEditorFixture()
 
 const renderer = new traQMarkdownIt({} as Store, [], 'https://example.com')
 

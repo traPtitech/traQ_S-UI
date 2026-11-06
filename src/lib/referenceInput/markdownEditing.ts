@@ -5,6 +5,7 @@ import {
 } from '@tiptap/pm/state'
 import type { EditorView } from '@tiptap/pm/view'
 
+import type { SourceRange } from '../markdown/types'
 import {
   toDocumentPosition,
   toDocumentRange,
@@ -12,8 +13,6 @@ import {
 } from './editorSource'
 import type { MarkdownFormat } from './markdown'
 import { currentInputSelection } from './selection'
-
-type SourceRange = Pick<MarkdownFormat, 'from' | 'to'>
 
 export type MarkdownEditingState = {
   enabled: boolean

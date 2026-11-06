@@ -47,4 +47,6 @@ export const pressKey = (
   return event
 }
 
-afterEach(() => editors.splice(0).forEach(editor => editor.destroy()))
+export const installInputEditorFixture = () => {
+  afterEach(() => editors.splice(0).forEach(editor => editor.destroy()))
+}

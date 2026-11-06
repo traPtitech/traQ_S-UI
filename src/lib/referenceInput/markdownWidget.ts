@@ -24,7 +24,10 @@ export const renderMarkdownWidget = (
 
   void import('../markdown/markdown')
     .then(async ({ renderInline }) => {
-      const { renderedText } = await renderInline(replacement.text)
+      const { renderedText } = await renderInline(
+        replacement.text,
+        replacement.environment
+      )
 
       if (span.isConnected) span.innerHTML = renderedText
     })

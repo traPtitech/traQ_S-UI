@@ -2,10 +2,12 @@ import {
   type MarkdownSourceNode,
   analyzeMarkdownSource
 } from '../markdown/analysis'
-import type { SourceRange } from '../markdown/types'
+import type { MarkdownSourceAnalysis } from '../markdown/analysis'
+import type { MarkdownEnvironment, SourceRange } from '../markdown/types'
 
 type FormatBase = SourceRange & {
   readonly className: string
+  readonly style?: 'strong' | 'emphasis' | 'strike' | 'highlight' | 'spoiler'
   readonly syntax: readonly SourceRange[]
   readonly content: SourceRange
 }
@@ -22,6 +24,7 @@ export type MarkdownFormat = FormatBase &
         readonly replacement: Readonly<{
           type: 'markdown' | 'stamp'
           text: string
+          environment: MarkdownEnvironment
         }>
         readonly container?: never
       }
@@ -32,7 +35,7 @@ export type MarkdownFormat = FormatBase &
       }
     | {
         readonly kind: 'list-marker' | 'rule'
-        readonly replacement: string
+        readonly replacement?: never
         readonly container?: never
       }
   )
@@ -40,7 +43,7 @@ export type MarkdownFormat = FormatBase &
 export const isMarkdownSourceOnly = (format: MarkdownFormat) =>
   format.kind === 'source-only'
 
-const styles: Record<string, string | undefined> = {
+const styles: Record<string, FormatBase['style']> = {
   strong: 'strong',
   em: 'emphasis',
   s: 'strike',
@@ -48,7 +51,11 @@ const styles: Record<string, string | undefined> = {
   span: 'spoiler'
 }
 
-const toFormat = (node: MarkdownSourceNode, source: string): MarkdownFormat => {
+const toFormat = (
+  node: MarkdownSourceNode,
+  analysis: MarkdownSourceAnalysis
+): MarkdownFormat => {
+  const { source, environment } = analysis
   const { from, to, content, syntax } = node
   const base = { from, to, content, syntax }
 
@@ -57,6 +64,7 @@ const toFormat = (node: MarkdownSourceNode, source: string): MarkdownFormat => {
       return {
         ...base,
         kind: 'inline-style',
+        style: styles[node.tag],
         className: styles[node.tag] ?? node.tag
       }
 
@@ -80,7 +88,8 @@ const toFormat = (node: MarkdownSourceNode, source: string): MarkdownFormat => {
         className: 'rendered',
         replacement: {
           type: node.kind === 'image' ? 'markdown' : 'stamp',
-          text: source.slice(from, to)
+          text: source.slice(from, to),
+          environment
         }
       }
 
@@ -96,30 +105,30 @@ const toFormat = (node: MarkdownSourceNode, source: string): MarkdownFormat => {
       return {
         ...base,
         kind: 'list-marker',
-        className: 'bullet',
-        replacement: source.slice(content.from, content.to)
+        className: 'bullet'
       }
 
     case 'rule':
-      return { ...base, kind: 'rule', className: 'rule', replacement: '' }
+      return { ...base, kind: 'rule', className: 'rule' }
   }
 }
 
-let cached:
-  | {
-      analysis: ReturnType<typeof analyzeMarkdownSource>
-      formats: readonly MarkdownFormat[]
-    }
-  | undefined
+const formatsByAnalysis = new WeakMap<
+  MarkdownSourceAnalysis,
+  readonly MarkdownFormat[]
+>()
 
-export const markdownFormats = (source: string): readonly MarkdownFormat[] => {
-  const analysis = analyzeMarkdownSource(source)
+export const markdownFormats = (
+  source: string | MarkdownSourceAnalysis
+): readonly MarkdownFormat[] => {
+  const analysis =
+    typeof source === 'string' ? analyzeMarkdownSource(source) : source
+  let formats = formatsByAnalysis.get(analysis)
 
-  if (cached?.analysis !== analysis)
-    cached = {
-      analysis,
-      formats: analysis.nodes.map(node => toFormat(node, source))
-    }
+  if (!formats) {
+    formats = analysis.nodes.map(node => toFormat(node, analysis))
+    formatsByAnalysis.set(analysis, formats)
+  }
 
-  return cached.formats
+  return formats
 }

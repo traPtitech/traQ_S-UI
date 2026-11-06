@@ -2,6 +2,7 @@ import { Extension } from '@tiptap/core'
 import { Plugin } from '@tiptap/pm/state'
 
 import { normalizeMessageParts } from '../message/content'
+import { analyzeEditorDocument } from './documentAnalysis'
 import { contentToParts } from './editorDocument'
 import { inputLifecycleKey } from './inputLifecycle'
 
@@ -20,7 +21,12 @@ export const messageExtension = Extension.create({
           return null
 
         const parts = contentToParts(state.doc)
-        const normalized = normalizeMessageParts(parts)
+        const normalized = normalizeMessageParts(
+          parts,
+          parts.some(part => part.type === 'reference')
+            ? analyzeEditorDocument(state.doc)
+            : undefined
+        )
         const tr = state.tr
         let index = 0
 

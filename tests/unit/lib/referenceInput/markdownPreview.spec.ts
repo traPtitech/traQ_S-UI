@@ -5,7 +5,13 @@ import { inputLifecycleKey } from '/@/lib/referenceInput/inputLifecycle'
 import { markdownPreviewKey } from '/@/lib/referenceInput/markdownPreview'
 import { type Reference, encodeReference } from '/@/lib/references'
 
-import { createInputEditor, readSource as source } from './fixture'
+import {
+  createInputEditor,
+  installInputEditorFixture,
+  readSource as source
+} from './fixture'
+
+installInputEditorFixture()
 
 const renderPreview = vi.hoisted(() =>
   vi.fn(async (_text: string) => ({

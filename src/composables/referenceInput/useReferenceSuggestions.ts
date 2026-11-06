@@ -4,6 +4,7 @@ import type { Editor } from '@tiptap/core'
 
 import useWordSuggestionList from '/@/composables/suggestion/useWordSuggestionList'
 import { isMobilePlatform } from '/@/lib/dom/browser'
+import { analyzeEditorProbe } from '/@/lib/referenceInput/documentAnalysis'
 import { editInput } from '/@/lib/referenceInput/editOperation'
 import { editorTextBetween } from '/@/lib/referenceInput/editorText'
 import {
@@ -167,7 +168,8 @@ const useReferenceSuggestions = (options: Options) => {
       next = findSuggestionTarget(
         editorTextBetween(editor.state.doc, 1, from),
         from,
-        options.mode()
+        options.mode(),
+        source => analyzeEditorProbe(editor.state.doc, source)
       )
     }
 
