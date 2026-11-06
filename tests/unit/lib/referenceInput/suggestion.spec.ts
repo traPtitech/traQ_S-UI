@@ -1,8 +1,9 @@
 import {
   acceptsCandidate,
-  completeCandidate,
   completedChannelPath,
-  findSuggestionTarget
+  confirmCandidateParts,
+  findSuggestionTarget,
+  previewCandidateText
 } from '/@/lib/referenceInput/suggestion'
 import { type InputMode, type SearchOperator } from '/@/lib/references'
 import type { Word } from '/@/lib/suggestion/types'
@@ -135,10 +136,8 @@ describe('reference suggestion rules', () => {
     'closes %s only when confirming',
     (text, word, completed) => {
       const target = targetFor(text)
-      expect(completeCandidate(target, word, dm, 'complete')).toEqual([
-        { type: 'text', text: completed }
-      ])
-      expect(completeCandidate(target, word, dm)).toEqual([
+      expect(previewCandidateText(target, word, dm)).toBe(completed)
+      expect(confirmCandidateParts(target, word, dm)).toEqual([
         { type: 'text', text: completed + ': ' }
       ])
     }
@@ -157,8 +156,8 @@ describe('reference suggestion rules', () => {
       for (const word of [animation, alias]) {
         expect(acceptsCandidate(fifth, word, dm)).toBe(true)
         expect(acceptsCandidate(sixth, word, dm)).toBe(false)
-        expect(completeCandidate(sixth, word, dm, 'complete')).toBeUndefined()
-        expect(completeCandidate(sixth, word, dm)).toBeUndefined()
+        expect(previewCandidateText(sixth, word, dm)).toBeUndefined()
+        expect(confirmCandidateParts(sixth, word, dm)).toBeUndefined()
       }
       expect(acceptsCandidate(sixth, size, dm)).toBe(true)
 
@@ -185,14 +184,16 @@ describe('reference suggestion rules', () => {
       const target = targetFor(`${operator}:a`, 'search')
 
       expect(acceptsCandidate(target, word, dm)).toBe(allowed)
-      expect(completeCandidate(target, word, dm) !== undefined).toBe(allowed)
+      expect(confirmCandidateParts(target, word, dm) !== undefined).toBe(
+        allowed
+      )
     }
   )
 
   it('resolves a selected DM to the channel ID and rejects a missing DM', () => {
     const target = targetFor('in:@al', 'search')
 
-    expect(completeCandidate(target, user, dm)).toEqual([
+    expect(confirmCandidateParts(target, user, dm)).toEqual([
       {
         type: 'reference',
         reference: {
@@ -205,15 +206,15 @@ describe('reference suggestion rules', () => {
       { type: 'text', text: ' ' }
     ])
 
-    expect(completeCandidate(target, user, () => undefined)).toBeUndefined()
+    expect(confirmCandidateParts(target, user, () => undefined)).toBeUndefined()
   })
 
   it('keeps user icons as text and selected groups as references', () => {
-    expect(completeCandidate(targetFor(':@al'), user, dm)).toEqual([
+    expect(confirmCandidateParts(targetFor(':@al'), user, dm)).toEqual([
       { type: 'text', text: '@alice: ' }
     ])
 
-    expect(completeCandidate(targetFor('@te'), group, dm)).toEqual([
+    expect(confirmCandidateParts(targetFor('@te'), group, dm)).toEqual([
       {
         type: 'reference',
         reference: { type: 'group', id: 'group-id', raw: '@team' }
@@ -242,6 +243,6 @@ it.each([':@al', ':＠al'])(
   text => {
     const target = targetFor(text)
     expect(acceptsCandidate(target, group, dm)).toBe(false)
-    expect(completeCandidate(target, group, dm)).toBeUndefined()
+    expect(confirmCandidateParts(target, group, dm)).toBeUndefined()
   }
 )

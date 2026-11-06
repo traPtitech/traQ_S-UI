@@ -15,6 +15,8 @@ export interface WordWithoutId extends WordBase {
 
 export type Word = WordWithId | WordWithoutId
 
+export type ChannelWord = Extract<Word, { type: 'channel' }>
+
 export type Candidate = { display?: string; preview?: string } & (
   | {
       word: Extract<Word, { type: 'channel' }>

@@ -1,7 +1,7 @@
 import type { Node } from '@tiptap/pm/model'
 
 import type { Candidate, SuggestionShortcut } from '../suggestion/types'
-import type { SuggestionTarget } from './suggestion'
+import { type SuggestionTarget, previewCandidateText } from './suggestion'
 
 export type CandidateSelection =
   { type: 'parent' } | { type: 'candidate'; index: number }
@@ -120,4 +120,37 @@ export const suggestionShortcuts = (
       description
     })
   )
+}
+
+export const previewSuggestion = (
+  state: Exclude<SuggestionState, { status: 'closed' }>,
+  candidates: Candidate[],
+  doc: Node,
+  backward: boolean,
+  moveFromSelection: boolean,
+  dmChannelId: (userId: string) => string | undefined
+) => {
+  const selected =
+    state.selection.type === 'candidate' ? state.selection.index : -1
+  let index = backward ? candidates.length - 1 : 0
+
+  if ((state.status === 'cycling' || moveFromSelection) && selected >= 0)
+    index =
+      (selected + (backward ? -1 : 1) + candidates.length) % candidates.length
+
+  const candidate = candidates[index]
+  if (!candidate) return
+
+  const text = previewCandidateText(state.target, candidate.word, dmChannelId)
+  if (text === undefined) return
+
+  const next: Extract<SuggestionState, { status: 'cycling' }> = {
+    status: 'cycling',
+    selection: { type: 'candidate', index },
+    candidates,
+    target: { ...state.target, to: state.target.from + text.length },
+    doc
+  }
+
+  return { state: next, edit: { text, range: state.target } }
 }

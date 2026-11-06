@@ -1,10 +1,10 @@
 import type { Editor } from '@tiptap/core'
-import { closeHistory } from '@tiptap/pm/history'
 import type { EditorProps, EditorView } from '@tiptap/pm/view'
 
 import { embeddingOrigin } from '../apis'
 import type { InputMode, InputPart, Reference } from '../references'
 import { readClipboardData, writeClipboardData } from './clipboard'
+import { editInput } from './editOperation'
 import { contentToParts } from './editorDocument'
 import { pastedChannelLinks } from './pastedChannelLinks'
 import { currentInputSelection } from './selection'
@@ -29,9 +29,8 @@ export const inputDataTransfer = (options: {
   const edit = (operation: () => void) => {
     const current = options.editor()
     if (!current || options.readonly()) return
-    current.view.dispatch(closeHistory(current.state.tr))
-    operation()
-    current.view.dispatch(closeHistory(current.state.tr))
+
+    editInput(current, operation)
   }
 
   const copy = (view: EditorView, event: ClipboardEvent, cut: boolean) => {

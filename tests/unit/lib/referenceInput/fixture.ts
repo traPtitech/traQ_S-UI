@@ -1,8 +1,10 @@
 import { Editor } from '@tiptap/core'
 
-import { inputExtensions, partsToContent } from '/@/lib/referenceInput/editor'
-import { readInputDocument } from '/@/lib/referenceInput/editorDocument'
-import { parseInput } from '/@/lib/references'
+import { inputExtensions } from '/@/lib/referenceInput/editor'
+import {
+  readInputDocument,
+  sourceToContent
+} from '/@/lib/referenceInput/editorDocument'
 
 const editors: Editor[] = []
 
@@ -17,7 +19,7 @@ export const createInputEditor = (
       ...options,
       mode
     }),
-    content: partsToContent(parseInput(source, mode)),
+    content: sourceToContent(source, mode),
     enableCoreExtensions: { keymap: false },
     enableInputRules: false,
     enablePasteRules: false,

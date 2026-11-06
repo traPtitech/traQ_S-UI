@@ -21,6 +21,47 @@ await vi.hoisted(async () => {
   await import('./mocks')
 })
 
+describe.each([
+  {
+    mode: 'message',
+    text: '@al',
+    word: { type: 'user', id: 'original-id', text: '@alice' },
+    result: 'original-id'
+  },
+  {
+    mode: 'search',
+    text: 'from:@al',
+    word: { type: 'user', id: 'original-id', text: '@alice' },
+    result: 'original-id'
+  },
+  {
+    mode: 'message',
+    text: ':te',
+    word: { type: 'stamp', id: 'test-stamp', text: ':test' },
+    result: ':test: '
+  }
+] as const)('direct confirmation of $text', ({ mode, text, word, result }) => {
+  it.each(['Enter', 'click'])(
+    'keeps %s separate from typing in Undo history',
+    async method => {
+      const wrapper = await makeInput('', mode, false)
+      await focus(wrapper)
+      wrapper.vm.insertText(text)
+      await nextTick()
+
+      if (method === 'Enter') press(wrapper, 'Enter')
+      else wrapper.getComponent(DropdownSuggester).vm.$emit('select', word)
+
+      await nextTick()
+      expect(lastValue(wrapper)).toContain(result)
+
+      press(wrapper, 'z', { ctrlKey: true })
+      await nextTick()
+      expect(lastValue(wrapper)).toBe(text)
+    }
+  )
+})
+
 it('fills the first match and cycles the original prefix candidates', async () => {
   setBranchingChannelTree()
   const wrapper = await makeInput('', 'message', false)

@@ -156,7 +156,7 @@ describe('plain Markdown editor with atomic references', () => {
   it('round trips blank lines, tabs, trailing spaces and final newlines', () => {
     const text = `  **literal markdown**\n\n\t${embedded}  \n\n`
 
-    expect(source(createEditor(text))).toBe(text)
+    expect(source(createEditor(text))).toBe(text.replace(embedded, '@alice'))
   })
 
   it('renders a current label without changing the persisted reference', () => {

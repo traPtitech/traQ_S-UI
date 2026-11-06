@@ -1,9 +1,9 @@
-import type { Word } from './types'
+import type { ChannelWord } from './types'
 
 /** 区切りを入力する前から子の候補を表示する。 */
 export const channelSuggestions = (
   prefix: string,
-  search: (prefix: string) => Word[]
+  search: (prefix: string) => ChannelWord[]
 ) => {
   const matches = search(prefix)
 

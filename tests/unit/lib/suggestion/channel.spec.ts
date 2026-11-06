@@ -1,8 +1,8 @@
 import TrieTree from '/@/lib/basic/trieTree'
 import { channelSuggestions } from '/@/lib/suggestion/channel'
-import type { Word } from '/@/lib/suggestion/types'
+import type { ChannelWord } from '/@/lib/suggestion/types'
 
-const words = (...paths: string[]): Word[] =>
+const words = (...paths: string[]): ChannelWord[] =>
   paths.map((text, index) => ({
     type: 'channel',
     id: String(index),

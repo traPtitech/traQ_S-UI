@@ -38,7 +38,8 @@ export const isStampSuggestion = (target: SuggestionTarget) =>
 export const findSuggestionTarget = (
   before: string,
   cursor: number,
-  mode: InputMode
+  mode: InputMode,
+  analyze = analyzeMarkdownSource
 ): SuggestionTarget | undefined => {
   const text = /[^\s\uFFFC]*$/.exec(before)?.[0] ?? ''
 
@@ -63,7 +64,7 @@ export const findSuggestionTarget = (
 
   const start = before.length - word.length
   const closesStamp = (position: number) =>
-    analyzeMarkdownSource(before).nodes.some(
+    analyze(before).nodes.some(
       node => node.kind === 'stamp' && node.to === position + 1
     )
 
@@ -73,7 +74,7 @@ export const findSuggestionTarget = (
   if (word.startsWith('.')) {
     // 閉じればスタンプになる範囲でだけ、エフェクト候補を表示する。
     const closed = before.slice(0, start) + ':'
-    const stamp = analyzeMarkdownSource(closed).nodes.find(
+    const stamp = analyze(closed).nodes.find(
       node => node.kind === 'stamp' && node.to === closed.length
     )
     if (!stamp) return
@@ -149,11 +150,22 @@ const acceptsStampEffect = (stampPrefix: string, effect: string) => {
   )
 }
 
-export const completeCandidate = (
+export const previewCandidateText = (
   target: SuggestionTarget,
   word: Word,
-  dmChannelId: (userId: string) => string | undefined,
-  action: 'complete' | 'confirm' = 'confirm'
+  dmChannelId: (userId: string) => string | undefined
+): string | undefined => {
+  if (!acceptsCandidate(target, word, dmChannelId)) return
+
+  return target.mode === 'search'
+    ? target.operator + ':' + word.text
+    : word.text
+}
+
+export const confirmCandidateParts = (
+  target: SuggestionTarget,
+  word: Word,
+  dmChannelId: (userId: string) => string | undefined
 ): InputPart[] | undefined => {
   if (!acceptsCandidate(target, word, dmChannelId)) return
 
@@ -162,9 +174,7 @@ export const completeCandidate = (
     word.type === 'stamp-effect' ||
     (target.mode === 'message' && target.intent === 'user-icon')
   )
-    return [
-      { type: 'text', text: word.text + (action === 'confirm' ? ': ' : '') }
-    ]
+    return [{ type: 'text', text: word.text + ': ' }]
 
   const entityKind = word.type === 'user-group' ? 'group' : word.type
   let reference: SelectedReference

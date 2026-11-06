@@ -3,7 +3,7 @@ import type { MaybeRefOrGetter } from 'vue'
 
 import { compareString } from '/@/lib/basic/string'
 import { channelSuggestions } from '/@/lib/suggestion/channel'
-import type { Word } from '/@/lib/suggestion/types'
+import type { ChannelWord, Word } from '/@/lib/suggestion/types'
 
 import useChannelCandidateSearch from './candidates/useChannelCandidateSearch'
 import useStampCandidateSearch from './candidates/useStampCandidateSearch'
@@ -36,37 +36,39 @@ const useWordSuggestionList = (
   const searchStampEffect = useStampEffectCandidateSearch()
   const searchChannel = useChannelCandidateSearch()
 
-  const suggestions = computed<{ words: Word[]; parentChannel?: Word }>(() => {
-    const input = toValue(word)
+  const suggestions = computed<{ words: Word[]; parentChannel?: ChannelWord }>(
+    () => {
+      const input = toValue(word)
 
-    if (input.length < minLength) {
-      return { words: [] }
-    }
-
-    const prefix = input.replace(replaceRegex, c => replaceMap[c] ?? c)
-
-    switch (prefix[0]) {
-      case '@':
-        return {
-          words: mergeMentionCandidates(
-            searchUser(prefix),
-            searchUserGroup(prefix)
-          )
-        }
-
-      case '#':
-        return channelSuggestions(prefix, value =>
-          searchChannel(value, { stopAtNextDelimiter: true })
-        )
-
-      case ':':
-        return { words: searchStamp(prefix) }
-      case '.':
-        return { words: searchStampEffect(prefix) }
-      default:
+      if (input.length < minLength) {
         return { words: [] }
+      }
+
+      const prefix = input.replace(replaceRegex, c => replaceMap[c] ?? c)
+
+      switch (prefix[0]) {
+        case '@':
+          return {
+            words: mergeMentionCandidates(
+              searchUser(prefix),
+              searchUserGroup(prefix)
+            )
+          }
+
+        case '#':
+          return channelSuggestions(prefix, value =>
+            searchChannel(value, { stopAtNextDelimiter: true })
+          )
+
+        case ':':
+          return { words: searchStamp(prefix) }
+        case '.':
+          return { words: searchStampEffect(prefix) }
+        default:
+          return { words: [] }
+      }
     }
-  })
+  )
 
   return {
     suggestedCandidateWords: computed(() => suggestions.value.words),

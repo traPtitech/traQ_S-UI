@@ -87,9 +87,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 
-import { useEventListener } from '@vueuse/core'
-
-import { isIOS } from '/@/lib/dom/browser'
+import { suggestionPopupStyle } from '/@/composables/referenceInput/useSuggestionPosition'
 import {
   candidateKey,
   candidateRowId
@@ -130,23 +128,9 @@ const emit = defineEmits<{
   (e: 'appendEffect', _word: Word): void
 }>()
 
-const MARGIN = 8
-
-const iOSFlag = isIOS()
-
-const viewportOffset = ref(window.visualViewport?.offsetTop ?? 0)
-
-useEventListener(window.visualViewport, ['resize', 'scroll'], () => {
-  viewportOffset.value = window.visualViewport?.offsetTop ?? 0
-})
-
-const styledPosition = computed(() => ({
-  top: `${
-    iOSFlag ? viewportOffset.value + props.position.top : props.position.top
-  }px`,
-  left: `max(${MARGIN}px, min(${props.position.left}px, calc(100vw - ${props.width + MARGIN}px)))`,
-  width: `min(${props.width}px, calc(100vw - ${2 * MARGIN}px))`
-}))
+const styledPosition = computed(() =>
+  suggestionPopupStyle(props.position, props.width)
+)
 
 const select = (word: Word) => {
   emit('select', word)

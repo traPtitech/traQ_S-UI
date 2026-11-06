@@ -1,29 +1,32 @@
-import { computed, ref, shallowRef } from 'vue'
+import { computed, shallowRef } from 'vue'
 
 import type { Editor } from '@tiptap/core'
-import { closeHistory } from '@tiptap/pm/history'
-import { useEventListener } from '@vueuse/core'
 
 import useWordSuggestionList from '/@/composables/suggestion/useWordSuggestionList'
 import { isTouchDevice } from '/@/lib/dom/browser'
+import { editInput } from '/@/lib/referenceInput/editOperation'
 import {
   type SuggestionTarget,
   acceptsCandidate,
-  completeCandidate,
   completedChannelPath,
+  confirmCandidateParts,
   findSuggestionTarget,
-  isStampSuggestion
+  isStampSuggestion,
+  previewCandidateText
 } from '/@/lib/referenceInput/suggestion'
 import {
   type SuggestionState,
+  previewSuggestion,
   suggestionKeyAction,
   suggestionShortcuts
 } from '/@/lib/referenceInput/suggestionState'
-import { type InputMode, type InputPart, inputText } from '/@/lib/references'
+import { type InputMode, type InputPart } from '/@/lib/references'
 import type { Candidate, Word } from '/@/lib/suggestion/types'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useChannelsStore } from '/@/store/entities/channels'
+
+import { useSuggestionPosition } from './useSuggestionPosition'
 
 type Options = {
   editor: () => Editor | undefined
@@ -32,8 +35,6 @@ type Options = {
   finishComposition: (action: () => void) => void
   insertParts: (parts: InputPart[], range: { from: number; to: number }) => void
 }
-
-const CARET_GAP = 8
 
 const useReferenceSuggestions = (options: Options) => {
   const touchDevice = isTouchDevice()
@@ -62,7 +63,12 @@ const useReferenceSuggestions = (options: Options) => {
     state.value.status === 'cycling' ? state.value : undefined
   )
 
-  const position = ref({ top: 0, left: 0 })
+  const { position, updatePosition } = useSuggestionPosition({
+    editor: options.editor,
+    target: () => target.value,
+    shown: () => shown.value
+  })
+
   let applyingCompletion = false
 
   const { suggestedCandidateWords, parentChannel } = useWordSuggestionList(
@@ -182,34 +188,6 @@ const useReferenceSuggestions = (options: Options) => {
     updatePosition(!!keepCycle)
   }
 
-  const updatePosition = (keepHorizontal = false) => {
-    const editor = options.editor()
-    const current = target.value
-    if (!editor || editor.isDestroyed || !shown.value || !current) return
-
-    const stamp = isStampSuggestion(current)
-    const { view } = editor
-    const start = view.coordsAtPos(current.from, -1)
-    const top = current.mode === 'search' ? start.bottom : start.top
-
-    position.value = {
-      top: stamp
-        ? Math.min(top, view.coordsAtPos(current.to, -1).top) - CARET_GAP
-        : top,
-      left: keepHorizontal ? position.value.left : start.left
-    }
-  }
-
-  const reposition = () => updatePosition()
-  useEventListener(document, 'scroll', reposition, {
-    capture: true,
-    passive: true
-  })
-  useEventListener(window, 'resize', reposition, { passive: true })
-  useEventListener(window.visualViewport, ['resize', 'scroll'], reposition, {
-    passive: true
-  })
-
   const deferCompositionAction = (action: () => void) => {
     if (!options.isComposing()) return false
 
@@ -238,14 +216,15 @@ const useReferenceSuggestions = (options: Options) => {
 
   const select = (word: Word) => {
     const current = target.value
+    const editor = options.editor()
 
-    if (!current || !options.editor()?.isEditable) return
+    if (!current || !editor?.isEditable) return
     if (deferCompositionAction(() => select(word))) return
 
-    const parts = completeCandidate(current, word, dmChannelId)
+    const parts = confirmCandidateParts(current, word, dmChannelId)
     if (!parts) return
 
-    options.insertParts(parts, current)
+    editInput(editor, () => options.insertParts(parts, current))
 
     if (word.type === 'stamp') {
       upsertLocalStampHistory(word.id, new Date())
@@ -267,10 +246,9 @@ const useReferenceSuggestions = (options: Options) => {
     )
       return
 
-    // 補完を一回の Undo で戻せるように前後の入力と履歴を分ける。
-    editor.view.dispatch(closeHistory(editor.state.tr))
-    options.insertParts([{ type: 'text', text }], range)
-    editor.view.dispatch(closeHistory(editor.state.tr))
+    editInput(editor, () =>
+      options.insertParts([{ type: 'text', text }], range)
+    )
   }
 
   const previewCandidate = (backward: boolean, moveFromSelection: boolean) => {
@@ -278,43 +256,25 @@ const useReferenceSuggestions = (options: Options) => {
     const current = target.value
     if (!editor || !current || options.isComposing()) return
 
-    const choices = candidates.value
-    let index = backward ? choices.length - 1 : 0
+    if (state.value.status === 'closed') return
 
-    // Tab は最初の候補を反映し、上下矢印は現在の選択から直接移動する。
-    if ((cycle.value || moveFromSelection) && selectedIndex.value >= 0) {
-      index =
-        (selectedIndex.value + (backward ? -1 : 1) + choices.length) %
-        choices.length
-    }
-
-    const candidate = choices[index]
-    if (!candidate) return
-
-    const parts = completeCandidate(
-      current,
-      candidate.word,
-      dmChannelId,
-      'complete'
+    const preview = previewSuggestion(
+      state.value,
+      candidates.value,
+      editor.state.doc,
+      backward,
+      moveFromSelection,
+      dmChannelId
     )
-    if (!parts) return
+    if (!preview) return
 
-    // 補完中はスタンプの終端を閉じず、エフェクトを続けられるようにする。
-    const text = inputText(parts).replace(/ $/, '')
-
-    const next: Extract<SuggestionState, { status: 'cycling' }> = {
-      status: 'cycling',
-      selection: { type: 'candidate', index },
-      candidates: choices,
-      target: { ...current, to: current.from + text.length },
-      doc: editor.state.doc
-    }
+    const next = preview.state
 
     state.value = next
     applyingCompletion = true
 
     try {
-      insertCompletionText(text, current)
+      insertCompletionText(preview.edit.text, preview.edit.range)
     } finally {
       applyingCompletion = false
       if (state.value === next) state.value = { ...next, doc: editor.state.doc }
@@ -332,10 +292,10 @@ const useReferenceSuggestions = (options: Options) => {
       return
     if (deferCompositionAction(() => appendEffect(word))) return
 
-    const parts = completeCandidate(current, word, dmChannelId, 'complete')
-    if (!parts) return
+    const text = previewCandidateText(current, word, dmChannelId)
+    if (text === undefined) return
 
-    insertCompletionText(inputText(parts) + '.', current)
+    insertCompletionText(text + '.', current)
     update()
   }
 
@@ -365,7 +325,7 @@ const useReferenceSuggestions = (options: Options) => {
     update()
   }
 
-  const completeChildPath = (word: Word) => {
+  const descendAndPreviewChild = (word: Word) => {
     const current = target.value
 
     if (
@@ -403,7 +363,7 @@ const useReferenceSuggestions = (options: Options) => {
         break
 
       case 'descend':
-        if (childTarget.value) completeChildPath(childTarget.value)
+        if (childTarget.value) descendAndPreviewChild(childTarget.value)
         break
 
       case 'preview':

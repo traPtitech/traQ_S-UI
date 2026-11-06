@@ -42,7 +42,6 @@ import useReferenceLabels from '/@/composables/referenceInput/useReferenceLabels
 import useReferenceSuggestions from '/@/composables/referenceInput/useReferenceSuggestions'
 import useChannelPath from '/@/composables/useChannelPath'
 import { isIOS } from '/@/lib/dom/browser'
-import { normalizeMessageParts } from '/@/lib/message/content'
 import {
   type PreparePaste,
   inputDataTransfer
@@ -50,18 +49,18 @@ import {
 import {
   type ReferenceInputHandle,
   contentToParts,
-  inputExtensions,
-  partsToContent
+  inputExtensions
 } from '/@/lib/referenceInput/editor'
 import {
   loadInputDocument,
-  replaceInputDocument
+  partsToInlineContent,
+  replaceInputDocument,
+  sourceToContent
 } from '/@/lib/referenceInput/editorDocument'
 import { currentInputSelection } from '/@/lib/referenceInput/selection'
 import {
   type InputMode,
   type InputPart,
-  parseInput,
   serializeInput
 } from '/@/lib/references'
 import {
@@ -127,7 +126,7 @@ const insertParts = (
 
   if (!current || props.readonly) return
 
-  const content = partsToContent(parts).content?.[0]?.content ?? []
+  const content = partsToInlineContent(parts)
   const chain = current.chain()
   if (focus) chain.focus()
 
@@ -204,11 +203,7 @@ let pendingIOSEnter: KeyboardEvent | undefined
 const editor = useEditor({
   extensions: inputExtensions({ label, mode: props.mode, isComposing }),
 
-  content: partsToContent(
-    props.mode === 'message'
-      ? normalizeMessageParts(parseInput(model.value, props.mode))
-      : parseInput(model.value, props.mode)
-  ),
+  content: sourceToContent(model.value, props.mode),
 
   editable: !props.readonly,
   enableCoreExtensions: { keymap: false },
