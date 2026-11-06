@@ -52,14 +52,17 @@ export const getDateRepresentationWithoutSameDate = (
   return timeString
 }
 
-export const getDateRepresentation = (date: Readonly<Date> | string) => {
+export const getDateRepresentation = (
+  date: Readonly<Date> | string,
+  today = new Date()
+) => {
   const displayDate = new Date(date)
   if (Number.isNaN(displayDate.getTime())) {
     return ''
   }
-  const today = new Date()
   const timeString = getTimeString(displayDate)
-  const yesterday = new Date(today.getTime() - 1000 * 60 * 60 * 24)
+  const yesterday = new Date(today)
+  yesterday.setDate(today.getDate() - 1)
 
   if (
     displayDate.getFullYear() === today.getFullYear() &&

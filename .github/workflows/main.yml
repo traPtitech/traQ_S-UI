@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -53,8 +53,6 @@ jobs:
 
       - name: npm ci
         run: npm ci
-        env:
-          CYPRESS_INSTALL_BINARY: 0
 
       - name: run lint
         run: npm run lint:no-fix -- --max-warnings=0
@@ -71,7 +69,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -86,8 +84,6 @@ jobs:
 
       - name: npm ci
         run: npm ci
-        env:
-          CYPRESS_INSTALL_BINARY: 0
 
       - name: run format
         run: npx prettier --cache --check .
@@ -104,15 +100,13 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: ./.node-version
           cache: npm
 
       - name: npm ci
         run: npm ci
-        env:
-          CYPRESS_INSTALL_BINARY: 0
 
       - name: run type-check
         run: npm run type-check
@@ -129,7 +123,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -143,11 +137,12 @@ jobs:
 
       - name: npm ci
         run: npm ci
-        env:
-          CYPRESS_INSTALL_BINARY: 0
 
       - name: run build
         run: npm run build:may-with-font
+
+      - name: run storybook:build
+        run: npm run storybook:build
 
   test-unit:
     name: run test:unit
@@ -161,20 +156,18 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: ./.node-version
           cache: npm
 
       - name: npm ci
         run: npm ci
-        env:
-          CYPRESS_INSTALL_BINARY: 0
 
       - name: run test:unit
         run: npm run test:unit
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage
           path: ./coverage
@@ -189,29 +182,29 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: coverage
           path: ./coverage
 
-      - uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+      - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   test-e2e:
     name: run test:e2e
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: [packages]
     permissions:
       contents: read
 
-    if: (github.repository_owner == 'traPtitech' && github.actor != 'dependabot[bot]')
     steps:
       - name: checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -226,14 +219,16 @@ jobs:
       - name: npm ci
         run: npm ci
 
+      - name: install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
       - name: run test:e2e
         run: npm run test:e2e-headless
-        if: env.CYPRESS_username != null
-        env:
-          CYPRESS_username: ${{ secrets.traQ_username }}
-          CYPRESS_password: ${{ secrets.traQ_password }}
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: failed-screenshots
-          path: ./tests/e2e/screenshots
+          name: playwright-results
+          path: |
+            ./tests/e2e/results
+            ./tests/e2e/report
+            ./tests/e2e/logs
         if: ${{ failure() }}

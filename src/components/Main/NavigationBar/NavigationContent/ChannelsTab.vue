@@ -33,10 +33,7 @@
           <template v-else-if="filterStarChannel">
             <template v-if="starredChannels.length > 0">
               <ChannelTreeComponent
-                v-if="
-                  featureFlags.dose_construct_strict_starred_channel_tree
-                    .enabled
-                "
+                v-if="strictStarredChannelTree"
                 :id="starredPanelId"
                 :channels="starredTopLevelChannels"
               />
@@ -76,7 +73,6 @@ import { filterTrees } from '/@/lib/basic/tree'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 import { constructTreeFromIds } from '/@/lib/channelTree'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useStarredChannels } from '/@/store/domain/starredChannels'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -94,7 +90,8 @@ const { starredChannelSet } = useStarredChannels()
 const { channelsMap } = useChannelsStore()
 const { channelIdToPathString } = useChannelPath()
 
-const { showArchivedChannels, filterStarChannel } = useBrowserSettings()
+const { showArchivedChannels, filterStarChannel, strictStarredChannelTree } =
+  useBrowserSettings()
 
 // filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
 const topLevelChannels = computed(() =>
@@ -141,8 +138,6 @@ const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
     .map(v => tree[v.index])
     .filter((v): v is ChannelTreeNode => v !== undefined)
 }
-
-const { featureFlags } = useFeatureFlagSettings()
 
 const channelListForFilter = computed(() =>
   [...channelsMap.value.values()].filter(

@@ -30,6 +30,18 @@ export type Config = Readonly<{
    */
   enableSearch?: boolean
   /**
+   * アクティビティの送信先。省略時は収集しない。
+   * HTTPS または localhost などの安全なコンテキストでのみ利用可能。
+   */
+  telemetry?: Readonly<{
+    /** 同一オリジンの HTTP(S) URL。相対 URL も指定可能 */
+    endpoint: string
+    /** 収集対象のホスト名。省略時はすべて、空配列なら収集しない */
+    hosts?: readonly string[]
+    /** 省略時は location.hostname */
+    environment?: string
+  }>
+  /**
    * アプリ一覧に表示されるサービス
    * 省略時はアプリ一覧ボタンを非表示にする
    */
@@ -129,9 +141,9 @@ export type Config = Readonly<{
   fallbackChannelPath?: string
 
   /**
-   * traQバックエンドのオリジン
-   * フロントエンドとは異なるドメインでホストする場合に指定する
-   * 省略時は `location.origin` を使用
+   * 共有リンクなどに使うオリジン。メタ情報より優先
+   * 省略時・空文字列時はメタ情報を使い、利用できない場合は `location.origin`
+   * 開発時は設定済みの `DEV_SERVER` を優先
    *
    * @example 'https://q.trap.jp'
    */

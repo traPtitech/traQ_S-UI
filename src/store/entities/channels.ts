@@ -37,6 +37,7 @@ const useChannelsStorePinia = defineStore('entities/channels', () => {
   const deleteChannel = (channelId: ChannelId) => {
     channelsMap.value.delete(channelId)
     dmChannelsMap.value.delete(channelId)
+    entityMitt.emit('deleteChannel')
   }
 
   const fetchUserDMChannel = async (userId: UserId) => {

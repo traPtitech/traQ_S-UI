@@ -29,6 +29,7 @@ const props = withDefaults(
     content?: string
     acceptAction?: boolean
     inline?: boolean
+    beforeNavigate?: () => Promise<void>
   }>(),
   {
     content: '',
@@ -52,7 +53,9 @@ watchEffect(async () => {
 })
 const renderedContent = computed(() => rendered.value?.renderedText)
 
-const { onClick } = useMarkdownInternalHandler()
+const { onClick } = useMarkdownInternalHandler(() =>
+  props.beforeNavigate ? props.beforeNavigate() : Promise.resolve()
+)
 </script>
 
 <style lang="scss" module>

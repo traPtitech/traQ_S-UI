@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 /dist
+/storybook
 .certs
 
 # local env files
@@ -27,6 +28,6 @@ yarn-error.log*
 /coverage
 .eslintcache
 
-/tests/e2e/screenshots
-/tests/e2e/videos
-/cypress.env.json
+/tests/e2e/results
+/tests/e2e/report
+/tests/e2e/logs

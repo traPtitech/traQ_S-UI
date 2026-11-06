@@ -1,16 +1,15 @@
-FROM --platform=$BUILDPLATFORM docker.io/library/node:26.8.1-alpine@sha256:2d984a15c9b54fd0aeb608b8e0d0d83529eb34d2966db27a1fb4f1edc3d298a3 AS build
+FROM --platform=$BUILDPLATFORM docker.io/library/node:26.12.1-alpine@sha256:ae8e1c19d56886270987e99b3cfcef13a919f0655b376ae322bc64ada76f88cd AS build
 WORKDIR /app
 
-ENV CYPRESS_INSTALL_BINARY=0
-
 COPY package*.json ./
-COPY patches/ ./patches/
+COPY scripts/patch-dependencies.js ./scripts/
+COPY build/deepmerge ./build/deepmerge/
 RUN npm ci
 COPY . .
 RUN NODE_ENV=production npm run build:with-font
 
 
-FROM docker.io/library/caddy:2.11.4-alpine@sha256:5f5c8640aae01df9654968d946d8f1a56c497f1dd5c5cda4cf95ab7c14d58648
+FROM docker.io/library/caddy:2.11.6-alpine@sha256:d44355d3c2149dc580ce2cac735955d1c08d3d00882c30489c241aa51a5c10d9
 EXPOSE 80
 
 COPY build/docker/Caddyfile /etc/caddy/Caddyfile
