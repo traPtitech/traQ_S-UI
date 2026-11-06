@@ -1,15 +1,15 @@
 import type { Node } from '@tiptap/pm/model'
 
 import {
-  type MarkdownSourceAnalysis,
-  analyzeMarkdownSource
-} from '../markdown/analysis'
-import { editorSource } from './editorSource'
+  type EditorTextAnalysis,
+  analyzeEditorText,
+  editorTextBetween
+} from './editorText'
 
 type DocumentAnalysis = {
-  source: string
-  analysis?: MarkdownSourceAnalysis
-  probe?: MarkdownSourceAnalysis
+  editorText: string
+  analysis?: EditorTextAnalysis
+  probe?: EditorTextAnalysis
 }
 
 const documents = new WeakMap<Node, DocumentAnalysis>()
@@ -18,7 +18,7 @@ const documentAnalysis = (doc: Node) => {
   let cached = documents.get(doc)
 
   if (!cached) {
-    cached = { source: editorSource(doc) }
+    cached = { editorText: editorTextBetween(doc) }
     documents.set(doc, cached)
   }
 
@@ -28,14 +28,14 @@ const documentAnalysis = (doc: Node) => {
 export const analyzeEditorDocument = (doc: Node) => {
   const cached = documentAnalysis(doc)
 
-  return (cached.analysis ??= analyzeMarkdownSource(cached.source))
+  return (cached.analysis ??= analyzeEditorText(cached.editorText))
 }
 
 export const analyzeEditorProbe = (doc: Node, source: string) => {
   const cached = documentAnalysis(doc)
 
-  if (source === cached.source) return analyzeEditorDocument(doc)
+  if (source === cached.editorText) return analyzeEditorDocument(doc)
   if (source === cached.probe?.source) return cached.probe
 
-  return (cached.probe = analyzeMarkdownSource(source))
+  return (cached.probe = analyzeEditorText(source))
 }

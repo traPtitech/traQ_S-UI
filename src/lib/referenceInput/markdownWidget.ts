@@ -8,7 +8,7 @@ export const renderMarkdownWidget = (
 ) => {
   const { replacement } = format
   const span = document.createElement('span')
-  span.className = `markdown-input-${format.className} markdown-body`
+  span.className = `markdown-input-${format.classSuffix} markdown-body`
 
   if (replacement.type === 'stamp' && getActivePinia()) {
     // 取得済みのスタンプは、原文を一度表示せずにウィジェットを組み立てる。

@@ -3,16 +3,14 @@ import {
   TextSelection,
   type Transaction
 } from '@tiptap/pm/state'
-import type { EditorView } from '@tiptap/pm/view'
 
 import type { SourceRange } from '../markdown/types'
 import {
   toDocumentPosition,
   toDocumentRange,
-  toSourceOffset
-} from './editorSource'
+  toEditorOffset
+} from './editorCoordinates'
 import type { MarkdownFormat } from './markdown'
-import { currentInputSelection } from './selection'
 
 export type MarkdownEditingState = {
   enabled: boolean
@@ -92,8 +90,8 @@ export const retainMarkdownSource = (
 
     const mapped = {
       ...range,
-      from: toSourceOffset(from.pos),
-      to: toSourceOffset(to.pos)
+      from: toEditorOffset(from.pos),
+      to: toEditorOffset(to.pos)
     }
 
     if (
@@ -107,70 +105,6 @@ export const retainMarkdownSource = (
   }
 
   return retained
-}
-
-/** Markdown の境界でも、原文に対応する見える位置へカーソルを置く。 */
-export const restoreMarkdownSourceCaret = (view: EditorView) => {
-  if (
-    !view.hasFocus() ||
-    !(view.state.selection instanceof TextSelection) ||
-    !view.state.selection.empty
-  )
-    return
-
-  const selection = view.dom.ownerDocument.getSelection()
-
-  if (!selection || !selection.isCollapsed) return
-
-  const position = view.state.selection.head
-  let point = view.domAtPos(position, 1)
-
-  const previous =
-    point.node instanceof Element
-      ? point.node.childNodes[point.offset - 1]
-      : point.offset === 0
-        ? point.node.previousSibling
-        : undefined
-
-  if (
-    previous instanceof Element &&
-    previous.classList.contains('markdown-input-source')
-  ) {
-    point = view.domAtPos(position, -1)
-  }
-
-  const element =
-    point.node instanceof Element ? point.node : point.node.parentElement
-
-  let hidden = element?.closest('.markdown-input-hidden')
-
-  while (hidden?.parentElement?.closest('.markdown-input-hidden')) {
-    hidden = hidden.parentElement.closest('.markdown-input-hidden')
-  }
-
-  if (hidden && view.dom.contains(hidden) && hidden.parentNode) {
-    const start = view.posAtDOM(hidden, 0)
-    const end = view.posAtDOM(hidden, hidden.childNodes.length)
-
-    if (position !== start && position !== end) return
-
-    const offset = Array.prototype.indexOf.call(
-      hidden.parentNode.childNodes,
-      hidden
-    ) as number
-
-    point = {
-      node: hidden.parentNode,
-      offset: offset + (position === end ? 1 : 0)
-    }
-  }
-
-  if (
-    selection.anchorNode !== point.node ||
-    selection.anchorOffset !== point.offset
-  ) {
-    selection.collapse(point.node, point.offset)
-  }
 }
 
 const adjacentPosition = (
@@ -254,22 +188,12 @@ export const enterMarkdownSource = (
 
 /** DOM の可視範囲ではなく、原文上の選択範囲を削除する。 */
 export const deleteMarkdownSource = (
-  view: EditorView,
+  state: EditorState,
   preview: MarkdownEditingState,
   direction: Direction
 ): SourceEdit | undefined => {
-  let state = view.state
-  if (!(state.selection instanceof TextSelection)) return
-
-  const selection = currentInputSelection(view)
-
+  const { selection } = state
   if (!(selection instanceof TextSelection)) return
-
-  // Undo が削除前の DOM 選択位置を保存するよう、編集とは別に同期する。
-  if (!selection.eq(state.selection)) {
-    view.dispatch(state.tr.setSelection(selection))
-    state = view.state
-  }
 
   const transaction = state.tr
 

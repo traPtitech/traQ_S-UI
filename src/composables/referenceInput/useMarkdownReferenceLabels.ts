@@ -22,11 +22,11 @@ export default function useMarkdownReferenceLabels(
       .map(part => label(part.reference))
 
     const serialized = JSON.stringify(labels)
-    if (preview.labels === serialized) return
+    if (preview.referenceLabelKey === serialized) return
 
     current.view.dispatch(
       current.state.tr.setMeta(markdownPreviewKey, {
-        labels: serialized
+        referenceLabelKey: serialized
       })
     )
   })

@@ -64,7 +64,9 @@ describe('Markdown image widgets with the message renderer', () => {
     const source = '![x](https://example.com/image.png)'
     const widget = render(source)
     await vi.waitFor(() =>
-      expect(widget.innerHTML).toBe(renderInlineWithCurrentEntities(source).renderedText)
+      expect(widget.innerHTML).toBe(
+        renderInlineWithCurrentEntities(source).renderedText
+      )
     )
     expect(widget.querySelector('img')).toBeNull()
   })
@@ -74,6 +76,8 @@ describe('Markdown image widgets with the message renderer', () => {
     expect(
       markdownFormats(source).some(format => format.kind === 'rendered-inline')
     ).toBe(false)
-    expect(renderInlineWithCurrentEntities(source).renderedText).not.toContain('<img')
+    expect(renderInlineWithCurrentEntities(source).renderedText).not.toContain(
+      '<img'
+    )
   })
 })

@@ -1,11 +1,8 @@
 import { closeHistory } from '@tiptap/pm/history'
 import { type EditorState, TextSelection } from '@tiptap/pm/state'
 
-import {
-  editorSource,
-  toDocumentPosition,
-  toSourceOffset
-} from './editorSource'
+import { toDocumentPosition, toEditorOffset } from './editorCoordinates'
+import { editorTextBetween } from './editorText'
 
 /** 通常の Tab は空白を挿入し、範囲選択中は各行のインデントをまとめて変更する。 */
 export const markdownIndent = (
@@ -23,11 +20,11 @@ export const markdownIndent = (
     return transaction.scrollIntoView()
   }
 
-  const source = editorSource(state.doc)
+  const source = editorTextBetween(state.doc)
 
-  const position = toSourceOffset(from)
+  const position = toEditorOffset(from)
   let start = position === 0 ? 0 : source.lastIndexOf('\n', position - 1) + 1
-  const finish = empty ? toSourceOffset(to) : toSourceOffset(to) - 1
+  const finish = empty ? toEditorOffset(to) : toEditorOffset(to) - 1
 
   while (start <= finish) {
     const point = transaction.mapping.map(toDocumentPosition(start))

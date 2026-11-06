@@ -6,7 +6,7 @@ import type { MarkdownSourceAnalysis } from '../markdown/analysis'
 import type { MarkdownEnvironment, SourceRange } from '../markdown/types'
 
 type FormatBase = SourceRange & {
-  readonly className: string
+  readonly classSuffix: string
   readonly style?: 'strong' | 'emphasis' | 'strike' | 'highlight' | 'spoiler'
   readonly syntax: readonly SourceRange[]
   readonly content: SourceRange
@@ -15,7 +15,7 @@ type FormatBase = SourceRange & {
 export type MarkdownFormat = FormatBase &
   (
     | {
-        readonly kind: 'inline-style' | 'literal' | 'source-only'
+        readonly kind: 'text-style' | 'literal' | 'source-only'
         readonly replacement?: never
         readonly container?: never
       }
@@ -25,6 +25,7 @@ export type MarkdownFormat = FormatBase &
           type: 'markdown' | 'stamp'
           text: string
           environment: MarkdownEnvironment
+          environmentRevision: number
         }>
         readonly container?: never
       }
@@ -53,7 +54,8 @@ const styles: Record<string, FormatBase['style']> = {
 
 const toFormat = (
   node: MarkdownSourceNode,
-  analysis: MarkdownSourceAnalysis
+  analysis: MarkdownSourceAnalysis,
+  environmentRevision: number
 ): MarkdownFormat => {
   const { source, environment } = analysis
   const { from, to, content, syntax } = node
@@ -63,33 +65,34 @@ const toFormat = (
     case 'style':
       return {
         ...base,
-        kind: 'inline-style',
+        kind: 'text-style',
         style: styles[node.tag],
-        className: styles[node.tag] ?? node.tag
+        classSuffix: styles[node.tag] ?? node.tag
       }
 
     case 'link':
-      return { ...base, kind: 'inline-style', className: 'link' }
+      return { ...base, kind: 'text-style', classSuffix: 'link' }
 
     case 'code':
     case 'code-block':
-      return { ...base, kind: 'literal', className: node.kind }
+      return { ...base, kind: 'literal', classSuffix: node.kind }
 
     case 'math':
     case 'math-block':
     case 'table':
-      return { ...base, kind: 'source-only', className: node.kind }
+      return { ...base, kind: 'source-only', classSuffix: node.kind }
 
     case 'image':
     case 'stamp':
       return {
         ...base,
         kind: 'rendered-inline',
-        className: 'rendered',
+        classSuffix: 'rendered',
         replacement: {
           type: node.kind === 'image' ? 'markdown' : 'stamp',
           text: source.slice(from, to),
-          environment
+          environment,
+          environmentRevision
         }
       }
 
@@ -97,7 +100,7 @@ const toFormat = (
       return {
         ...base,
         kind: 'container',
-        className: node.container.quoteDepth ? 'quote' : 'list-item',
+        classSuffix: node.container.quoteDepth ? 'quote' : 'list-item',
         container: node.container
       }
 
@@ -105,13 +108,16 @@ const toFormat = (
       return {
         ...base,
         kind: 'list-marker',
-        className: 'bullet'
+        classSuffix: 'bullet'
       }
 
     case 'rule':
-      return { ...base, kind: 'rule', className: 'rule' }
+      return { ...base, kind: 'rule', classSuffix: 'rule' }
   }
 }
+
+let lastEnvironment = ''
+let environmentRevision = 0
 
 const formatsByAnalysis = new WeakMap<
   MarkdownSourceAnalysis,
@@ -126,7 +132,15 @@ export const markdownFormats = (
   let formats = formatsByAnalysis.get(analysis)
 
   if (!formats) {
-    formats = analysis.nodes.map(node => toFormat(node, analysis))
+    const environment = JSON.stringify(analysis.environment)
+    if (environment !== lastEnvironment) {
+      lastEnvironment = environment
+      environmentRevision++
+    }
+
+    formats = analysis.nodes.map(node =>
+      toFormat(node, analysis, environmentRevision)
+    )
     formatsByAnalysis.set(analysis, formats)
   }
 

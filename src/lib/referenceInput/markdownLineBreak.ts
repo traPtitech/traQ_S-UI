@@ -2,11 +2,8 @@ import { closeHistory } from '@tiptap/pm/history'
 import { type EditorState, TextSelection } from '@tiptap/pm/state'
 
 import { analyzeEditorProbe } from './documentAnalysis'
-import {
-  editorSource,
-  toDocumentPosition,
-  toSourceOffset
-} from './editorSource'
+import { toDocumentPosition, toEditorOffset } from './editorCoordinates'
+import { editorTextBetween, referencePlaceholder } from './editorText'
 import {
   type MarkdownListCompletion,
   markdownListInputKey
@@ -37,9 +34,9 @@ export const markdownLineBreak = (
   let completion: MarkdownListCompletion | undefined
 
   if (empty && state.selection instanceof TextSelection) {
-    const source = editorSource(state.doc)
+    const source = editorTextBetween(state.doc)
 
-    const position = toSourceOffset(from)
+    const position = toEditorOffset(from)
     const start =
       position === 0 ? 0 : source.lastIndexOf('\n', position - 1) + 1
     const next = source.indexOf('\n', position)
@@ -48,7 +45,9 @@ export const markdownLineBreak = (
 
     // 空の継続行はトークンの末尾から外れることがあるため、入力位置に仮の本文を置いて調べる。
     const probe = /^[ \t]*$/.test(line)
-      ? source.slice(0, position) + '\uFFFC' + source.slice(position)
+      ? source.slice(0, position) +
+        referencePlaceholder +
+        source.slice(position)
       : source
 
     const context = analyzeEditorProbe(state.doc, probe).lines.find(

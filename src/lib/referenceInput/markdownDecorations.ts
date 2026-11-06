@@ -1,7 +1,7 @@
 import { type EditorState, TextSelection } from '@tiptap/pm/state'
 import { Decoration, DecorationSet } from '@tiptap/pm/view'
 
-import { toDocumentPosition } from './editorSource'
+import { toDocumentPosition } from './editorCoordinates'
 import { type MarkdownFormat, isMarkdownSourceOnly } from './markdown'
 import { markdownSourceActive, markdownSourceVisible } from './markdownEditing'
 import { type PreviewState, markdownPreviewKey } from './markdownPreviewState'
@@ -11,23 +11,23 @@ export const buildMarkdownDecorations = (
   state: EditorState,
   preview: PreviewState,
   previous?: PreviewState
-): Pick<PreviewState, 'decorations' | 'rendered' | 'anchor'> => {
+): Pick<PreviewState, 'decorations' | 'decorationCache' | 'anchor'> => {
   if (!preview.enabled)
     return {
       decorations: DecorationSet.empty,
-      rendered: new Map(),
+      decorationCache: new Map(),
       anchor: undefined
     }
 
   const reusable =
     previous?.enabled &&
     previous.formats === preview.formats &&
-    previous.labels === preview.labels
+    previous.referenceLabelKey === preview.referenceLabelKey
 
   let result = reusable ? previous.decorations : DecorationSet.empty
   const added: Decoration[] = []
   const removed: Decoration[] = []
-  const rendered: PreviewState['rendered'] = new Map()
+  const decorationCache: PreviewState['decorationCache'] = new Map()
   const syntax = preview.syntax
   const previousAnchor = reusable ? previous.anchor : undefined
   let anchor: PreviewState['anchor']
@@ -89,21 +89,21 @@ export const buildMarkdownDecorations = (
       format
     )
 
-    const cached = reusable ? previous.rendered.get(format) : undefined
+    const cached = reusable ? previous.decorationCache.get(format) : undefined
 
     if (
       cached &&
       cached.visible === sourceVisible &&
       cached.active === active
     ) {
-      rendered.set(format, cached)
+      decorationCache.set(format, cached)
       continue
     }
 
     if (cached) removed.push(...cached.decorations)
     const decorations: Decoration[] = []
-    rendered.set(format, { visible: sourceVisible, active, decorations })
-    const className = `markdown-input-${format.className}`
+    decorationCache.set(format, { visible: sourceVisible, active, decorations })
+    const className = `markdown-input-${format.classSuffix}`
 
     if (
       format.container &&
@@ -226,7 +226,7 @@ export const buildMarkdownDecorations = (
             return span
           },
           {
-            key: `${className}:${format.from}:${JSON.stringify(format.replacement)}:${preview.labels}`,
+            key: `${className}:${format.from}:${JSON.stringify([format.replacement.type, format.replacement.text, format.replacement.environmentRevision])}:${preview.referenceLabelKey}`,
             // 原文を開く際にも、先頭のカーソル用要素を同じ DOM に残す。
             side: 2
           }
@@ -239,7 +239,7 @@ export const buildMarkdownDecorations = (
 
   result = result.remove(removed)
 
-  return { decorations: result.add(state.doc, added), rendered, anchor }
+  return { decorations: result.add(state.doc, added), decorationCache, anchor }
 }
 
 const markdownContentRanges = (

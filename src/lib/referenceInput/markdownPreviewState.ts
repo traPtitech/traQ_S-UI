@@ -5,10 +5,10 @@ import type { MarkdownFormat } from './markdown'
 import type { MarkdownEditingState } from './markdownEditing'
 
 export type PreviewState = MarkdownEditingState & {
-  labels: string
+  referenceLabelKey: string
   compositionDecorations: DecorationSet | undefined
   decorations: DecorationSet
-  rendered: Map<
+  decorationCache: Map<
     MarkdownFormat,
     { visible: boolean; active: boolean; decorations: Decoration[] }
   >

@@ -3,7 +3,7 @@ import { markdownFormats } from '/@/lib/referenceInput/markdown'
 
 const inspect = (source: string) =>
   markdownFormats(source).map(format => ({
-    type: format.className,
+    type: format.classSuffix,
     source: source.slice(format.from, format.to),
     content: source.slice(format.content.from, format.content.to),
     syntax: format.syntax.map(range => source.slice(range.from, range.to))
@@ -57,7 +57,7 @@ describe('Markdown source decorations', () => {
   it('keeps separate markers for nested lists on the same line', () => {
     expect(
       markdownFormats('- - **a**').filter(
-        format => format.className === 'bullet'
+        format => format.classSuffix === 'bullet'
       )
     ).toHaveLength(2)
   })
@@ -68,6 +68,7 @@ describe('Markdown source decorations', () => {
     expect(markdownFormats(text)[0]?.replacement).toEqual({
       type: 'markdown',
       environment: { references: undefined },
+      environmentRevision: expect.any(Number),
       text
     })
     expect(getMarkdownRenderer().render(text).renderedText).not.toContain(
@@ -184,7 +185,7 @@ describe('Markdown source decorations', () => {
       const text = `${prefix}example.com\n${prefix}https://example.dev`
 
       const links = markdownFormats(text).filter(
-        format => format.className === 'link'
+        format => format.classSuffix === 'link'
       )
 
       expect(
@@ -204,7 +205,7 @@ describe('Markdown source decorations', () => {
       '| one | two |\n| --- | --- |\n| \\| example.com | example.com |'
 
     const links = markdownFormats(text).filter(
-      format => format.className === 'link'
+      format => format.classSuffix === 'link'
     )
 
     expect(links.map(format => format.from)).toEqual([
@@ -263,7 +264,7 @@ describe('Markdown source decorations', () => {
   it('does not interpret emphasis inside a math expression', () => {
     const formats = markdownFormats('$x **y** z$\n\n$$a _b_ c$$')
 
-    expect(formats.map(format => format.className)).toEqual([
+    expect(formats.map(format => format.classSuffix)).toEqual([
       'math',
       'math-block'
     ])
@@ -300,6 +301,7 @@ describe('Markdown source decorations', () => {
     expect(image?.replacement).toEqual({
       type: 'markdown',
       environment: { references: undefined },
+      environmentRevision: expect.any(Number),
       text: '![alt](https://example.com/image.png "title")'
     })
 
@@ -313,18 +315,20 @@ describe('Markdown source decorations', () => {
       {
         type: 'stamp',
         text: ':traq.large:',
-        environment: { references: undefined }
+        environment: { references: undefined },
+        environmentRevision: expect.any(Number)
       },
       {
         type: 'stamp',
         text: ':@alice:',
-        environment: { references: undefined }
+        environment: { references: undefined },
+        environmentRevision: expect.any(Number)
       }
     ])
 
-    expect(markdownFormats('`:traq:`').map(format => format.className)).toEqual(
-      ['code']
-    )
+    expect(
+      markdownFormats('`:traq:`').map(format => format.classSuffix)
+    ).toEqual(['code'])
   })
 
   it.each(['***nested***', '___nested___', '~~nested~~', '**one** **two**'])(
@@ -374,9 +378,9 @@ describe('Markdown source decorations', () => {
     const table = '| **same** | **same** |\n| --- | --- |\n| one | two |'
     const formats = markdownFormats(table)
 
-    expect(formats.filter(format => format.className === 'table')).toEqual([
+    expect(formats.filter(format => format.classSuffix === 'table')).toEqual([
       {
-        className: 'table',
+        classSuffix: 'table',
         kind: 'source-only',
         from: 0,
         to: table.length,
@@ -387,7 +391,7 @@ describe('Markdown source decorations', () => {
 
     expect(
       formats
-        .filter(format => format.className === 'strong')
+        .filter(format => format.classSuffix === 'strong')
         .map(format => ({ from: format.from, to: format.to }))
     ).toEqual([
       { from: 2, to: 10 },
@@ -410,7 +414,7 @@ describe('Markdown source decorations', () => {
 
       expect(
         markdownFormats(text)
-          .filter(format => format.className === 'strong')
+          .filter(format => format.classSuffix === 'strong')
           .map(format => format.from)
       ).toEqual([...text.matchAll(/\*\*same\*\*/g)].map(match => match.index))
     }
@@ -435,7 +439,7 @@ describe('Markdown source decorations', () => {
       const text = `| first | second |\n| --- | --- |\n| ${cell} | ${cell} |`
 
       const formats = markdownFormats(text).filter(
-        format => format.className === type
+        format => format.classSuffix === type
       )
 
       expect(formats.map(format => text.slice(format.from, format.to))).toEqual(
@@ -459,7 +463,7 @@ describe('Markdown source decorations', () => {
 
     expect(
       markdownFormats(text)
-        .filter(format => format.className === 'strong')
+        .filter(format => format.classSuffix === 'strong')
         .map(format => text.slice(format.content.from, format.content.to))
     ).toEqual(['visible', 'next', 'last'])
   })
@@ -470,7 +474,7 @@ describe('Markdown source decorations', () => {
 
     expect(
       markdownFormats(text)
-        .filter(format => format.className === 'strong')
+        .filter(format => format.classSuffix === 'strong')
         .map(format => text.slice(format.content.from, format.content.to))
     ).toEqual(['bold', 'after'])
   })
