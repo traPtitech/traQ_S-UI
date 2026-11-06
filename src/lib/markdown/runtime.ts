@@ -5,6 +5,7 @@ export {
   mentionsUser
 } from '@traq-flavored-markdown/sdk/browser'
 export {
-  endsWithEmbedding,
+  endsWithResourceCard,
   messageRenderers
 } from '@traq-flavored-markdown/sdk/renderer'
+export { withDefaultAdapters } from '@traq-flavored-markdown/sdk/adapters'

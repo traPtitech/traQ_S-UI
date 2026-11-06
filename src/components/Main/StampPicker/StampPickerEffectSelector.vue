@@ -19,11 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-import type {
-  AnimeEffect,
-  SizeEffect
-} from '@traq-flavored-markdown/traq-plugin/stamp-effects'
-
+import type { AnimeEffect, SizeEffect } from '/@/lib/markdown/effects'
 import { animeEffectSet, sizeEffectSet } from '/@/lib/markdown/effects'
 
 import StampPickerEffectSelectorItem from './StampPickerEffectSelectorItem.vue'

@@ -1,9 +1,13 @@
-import type { Extractor, LookupKind, Parser } from '@traq-flavored-markdown/sdk'
-import type { Options } from '@traq-flavored-markdown/sdk/renderer'
+import type {
+  Extractor,
+  Parser,
+  ReferenceKind
+} from '@traq-flavored-markdown/sdk'
+import type { HtmlRendererOptions } from '@traq-flavored-markdown/sdk/renderer'
 import type { messageRenderers } from '@traq-flavored-markdown/sdk/renderer'
 
 import useChannelPath from '/@/composables/useChannelPath'
-import { embeddingOrigin } from '/@/lib/apis'
+import { buildFilePath, embeddingOrigin } from '/@/lib/apis'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
@@ -12,32 +16,45 @@ import { useUsersStore } from '/@/store/entities/users'
 
 import type { MarkdownRenderResult } from './types'
 
-const storeProvider: NonNullable<Options['store']> = {
-  getUserGroup(id) {
-    const { userGroupsMap } = useGroupsStore()
-    return userGroupsMap.value.get(id)
+const presentation: HtmlRendererOptions = {
+  references: {
+    resolve(reference) {
+      const { detail } = useMeStore()
+      switch (reference.type) {
+        case 'channel': {
+          const { channelIdToLink } = useChannelPath()
+          return { href: `${embeddingOrigin}${channelIdToLink(reference.id)}` }
+        }
+        case 'user':
+          return {
+            href: `${embeddingOrigin}/users/${encodeURIComponent(reference.id)}`,
+            highlight: reference.id === detail.value?.id
+          }
+        case 'group': {
+          const { userGroupsMap } = useGroupsStore()
+          return {
+            href: `${embeddingOrigin}/groups/${encodeURIComponent(reference.id)}`,
+            highlight: userGroupsMap.value
+              .get(reference.id)
+              ?.members.some(member => member.id === detail.value?.id)
+          }
+        }
+      }
+    }
   },
-  getMe() {
-    const { detail } = useMeStore()
-    return detail.value
-  },
-  getStampByName(name) {
-    const { getStampByName } = useStampsStore()
-    return getStampByName(name)
-  },
-  getUserByName(name) {
-    const { findUserByName } = useUsersStore()
-    return findUserByName(name)
-  },
-  generateChannelHref(id) {
-    const { channelIdToLink } = useChannelPath()
-    return `${embeddingOrigin}${channelIdToLink(id) as string}`
-  },
-  generateUserHref(id) {
-    return `${embeddingOrigin}/users/${encodeURIComponent(id)}`
-  },
-  generateUserGroupHref(id) {
-    return `${embeddingOrigin}/groups/${encodeURIComponent(id)}`
+  stamps: {
+    resolve(stamp) {
+      const fileId =
+        stamp.type === 'normal'
+          ? useStampsStore().getStampByName(stamp.name)?.fileId
+          : useUsersStore().findUserByName(stamp.name)?.iconFileId
+      return fileId
+        ? {
+            url: buildFilePath(fileId),
+            title: stamp.type === 'user' ? `@${stamp.name}` : stamp.name
+          }
+        : undefined
+    }
   }
 }
 
@@ -46,11 +63,12 @@ let extractor: Extractor
 let renderers: ReturnType<typeof messageRenderers>
 let loading: Promise<void> | undefined
 
-const withAutoDirection = <T extends { renderedText: string }>(
-  result: T
-): T => ({
-  ...result,
-  renderedText: result.renderedText.replace(
+const toRenderResult = (
+  result: ReturnType<ReturnType<typeof messageRenderers>['standard']['render']>
+): MarkdownRenderResult => ({
+  rawText: result.rawText,
+  embeddings: result.cards,
+  renderedText: result.html.replace(
     /<(p|h[1-6]|li|th|td)(?=[\s>])/g,
     '<$1 dir="auto"'
   )
@@ -79,7 +97,8 @@ const withFallback = async <T>(
 
 const loadMarkdown = () =>
   (loading ??= (async () => {
-    const { loadRuntime, presets, messageRenderers } = await import('./runtime')
+    const { loadRuntime, presets, messageRenderers, withDefaultAdapters } =
+      await import('./runtime')
 
     const runtime = await loadRuntime()
 
@@ -88,7 +107,7 @@ const loadMarkdown = () =>
       origin: embeddingOrigin
     })
     renderers = messageRenderers({
-      store: storeProvider,
+      ...withDefaultAdapters(presentation),
       origin: embeddingOrigin
     })
   })().catch(error => {
@@ -120,22 +139,22 @@ export const parse = async (text: string) => {
 export const render = (text: string) =>
   withFallback(fallbackRender(text), async () => {
     const document = await parse(text)
-    return withAutoDirection(renderers.standard.render(document))
+    return toRenderResult(renderers.standard.render(document))
   })
 
 export const renderCondensed = (text: string) =>
   withFallback(fallbackRender(text), async () => {
     const document = await parse(text)
-    return withAutoDirection(renderers.condensed.render(document))
+    return toRenderResult(renderers.condensed.render(document))
   })
 
 export const endsWithEmbeddedLink = (text: string) =>
   withFallback(false, async () => {
     await waitForMarkdownReady()
 
-    const { endsWithEmbedding } = await import('./runtime')
+    const { endsWithResourceCard } = await import('./runtime')
 
-    return endsWithEmbedding(parser.parse(text), embeddingOrigin)
+    return endsWithResourceCard(parser.parse(text), embeddingOrigin)
   })
 
 const extractMarkdown = async (text: string) => {
@@ -146,20 +165,20 @@ const extractMarkdown = async (text: string) => {
 
 export const embedInternalLinks = (
   text: string,
-  resolve: (kind: LookupKind, name: string) => string | undefined
+  resolve: (kind: ReferenceKind, name: string) => string | undefined
 ) =>
   withFallback(text, async () => {
     const result = await extractMarkdown(text)
     const { embedReferences } = await import('./runtime')
 
-    return embedReferences(text, result.embedding, resolve)
+    return embedReferences(text, result.referenceEmbedding, resolve)
   })
 
 export const unembedInternalLinks = (text: string) =>
   withFallback(text, async () => {
     const result = await extractMarkdown(text)
 
-    return result.embedding.unembeddedText
+    return result.referenceEmbedding.unembeddedText
   })
 
 export const detectMentionOfMe = async (

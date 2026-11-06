@@ -1,4 +1,4 @@
-import type { Document, Node } from '@traq-flavored-markdown/sdk'
+import type { ParsedDocument, ReadonlyNode } from '@traq-flavored-markdown/sdk'
 import { names } from '@traq-flavored-markdown/sdk/nodes'
 
 export const formatUrl = (text: string, embeddingOrigin: string) => {
@@ -25,8 +25,8 @@ export const formatUrl = (text: string, embeddingOrigin: string) => {
   }
 }
 
-export const format = (document: Document, embeddingOrigin: string) => {
-  const render = (node: Node): string => {
+export const format = (document: ParsedDocument, embeddingOrigin: string) => {
+  const render = (node: ReadonlyNode): string => {
     switch (node.kind) {
       case names.Text:
         return node.data.value
@@ -58,5 +58,5 @@ export const format = (document: Document, embeddingOrigin: string) => {
         return (node.children ?? []).map(render).join('')
     }
   }
-  return document.children.map(render).join('')
+  return document.document.children.map(render).join('')
 }

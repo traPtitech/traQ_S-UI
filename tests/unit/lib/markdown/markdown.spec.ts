@@ -26,6 +26,7 @@ vi.mock('/@/lib/markdown/runtime', () => ({
     createExtractor: () => ({ extract: vi.fn() })
   }),
   presets: { traq: { v1: {} } },
+  withDefaultAdapters: (options: unknown) => options,
   messageRenderers: () => ({
     standard: { render: vi.fn() },
     condensed: { render: vi.fn() }

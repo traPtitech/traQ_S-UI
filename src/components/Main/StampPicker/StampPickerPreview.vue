@@ -12,13 +12,9 @@
 <script lang="ts" setup>
 import { computed, ref, watchEffect } from 'vue'
 
-import type {
-  AnimeEffect,
-  SizeEffect
-} from '@traq-flavored-markdown/traq-plugin/stamp-effects'
-
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import { constructStampString } from '/@/lib/markdown/constructStampString'
+import type { AnimeEffect, SizeEffect } from '/@/lib/markdown/effects'
 import { render } from '/@/lib/markdown/markdown'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { StampId } from '/@/types/entity-ids'
