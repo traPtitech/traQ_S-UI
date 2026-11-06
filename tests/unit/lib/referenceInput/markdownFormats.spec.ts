@@ -68,7 +68,7 @@ describe('Markdown source decorations', () => {
     expect(markdownFormats(text)[0]?.replacement).toEqual({
       type: 'markdown',
       environment: { references: undefined },
-      environmentRevision: expect.any(Number),
+      environmentKey: expect.any(String),
       text
     })
     expect(getMarkdownRenderer().render(text).renderedText).not.toContain(
@@ -301,7 +301,7 @@ describe('Markdown source decorations', () => {
     expect(image?.replacement).toEqual({
       type: 'markdown',
       environment: { references: undefined },
-      environmentRevision: expect.any(Number),
+      environmentKey: expect.any(String),
       text: '![alt](https://example.com/image.png "title")'
     })
 
@@ -316,13 +316,13 @@ describe('Markdown source decorations', () => {
         type: 'stamp',
         text: ':traq.large:',
         environment: { references: undefined },
-        environmentRevision: expect.any(Number)
+        environmentKey: expect.any(String)
       },
       {
         type: 'stamp',
         text: ':@alice:',
         environment: { references: undefined },
-        environmentRevision: expect.any(Number)
+        environmentKey: expect.any(String)
       }
     ])
 

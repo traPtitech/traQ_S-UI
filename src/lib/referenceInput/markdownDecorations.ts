@@ -1,10 +1,10 @@
-import { type EditorState, TextSelection } from '@tiptap/pm/state'
+import type { EditorState } from '@tiptap/pm/state'
 import { Decoration, DecorationSet } from '@tiptap/pm/view'
 
 import { toDocumentPosition } from './editorCoordinates'
 import { type MarkdownFormat, isMarkdownSourceOnly } from './markdown'
 import { markdownSourceActive, markdownSourceVisible } from './markdownEditing'
-import { type PreviewState, markdownPreviewKey } from './markdownPreviewState'
+import type { PreviewState } from './markdownPreviewState'
 import { renderMarkdownWidget } from './markdownWidget'
 
 export const buildMarkdownDecorations = (
@@ -19,10 +19,7 @@ export const buildMarkdownDecorations = (
       anchor: undefined
     }
 
-  const reusable =
-    previous?.enabled &&
-    previous.formats === preview.formats &&
-    previous.referenceLabelKey === preview.referenceLabelKey
+  const reusable = previous?.enabled && previous.formats === preview.formats
 
   let result = reusable ? previous.decorations : DecorationSet.empty
   const added: Decoration[] = []
@@ -198,35 +195,9 @@ export const buildMarkdownDecorations = (
       decorations.push(
         Decoration.widget(
           toDocumentPosition(format.content.from),
-          view => {
-            const span = renderMarkdownWidget(format)
-
-            span.addEventListener('mousedown', event => event.preventDefault())
-
-            span.addEventListener('click', event => {
-              event.preventDefault()
-
-              const { left, width } = span.getBoundingClientRect()
-              const rtl = getComputedStyle(span).direction === 'rtl'
-              const rightHalf = event.clientX >= left + width / 2
-              const after = event.detail > 0 && rightHalf !== rtl
-              const caret = toDocumentPosition(after ? format.to : format.from)
-
-              view.dispatch(
-                view.state.tr
-                  .setSelection(TextSelection.create(view.state.doc, caret))
-                  .setMeta(markdownPreviewKey, {
-                    revealed: [{ from: format.from, to: format.to }]
-                  })
-              )
-
-              view.focus()
-            })
-
-            return span
-          },
+          () => renderMarkdownWidget(format),
           {
-            key: `${className}:${format.from}:${JSON.stringify([format.replacement.type, format.replacement.text, format.replacement.environmentRevision])}:${preview.referenceLabelKey}`,
+            key: `${className}:${format.from}:${JSON.stringify([format.replacement.type, format.replacement.text, format.replacement.environmentKey])}`,
             // 原文を開く際にも、先頭のカーソル用要素を同じ DOM に残す。
             side: 2
           }

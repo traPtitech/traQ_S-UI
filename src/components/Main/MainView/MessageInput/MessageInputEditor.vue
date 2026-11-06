@@ -101,7 +101,6 @@ const {
 } = useSendKeyWatcher(
   emit,
   options => inputRef.value?.insertLineBreak(options),
-  true,
   isMarkdownEnabled
 )
 

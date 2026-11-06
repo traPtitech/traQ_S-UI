@@ -5,7 +5,6 @@ import type { MarkdownFormat } from './markdown'
 import type { MarkdownEditingState } from './markdownEditing'
 
 export type PreviewState = MarkdownEditingState & {
-  referenceLabelKey: string
   compositionDecorations: DecorationSet | undefined
   decorations: DecorationSet
   decorationCache: Map<

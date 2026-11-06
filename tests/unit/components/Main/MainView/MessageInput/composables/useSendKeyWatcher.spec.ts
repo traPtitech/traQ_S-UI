@@ -1,14 +1,13 @@
 import { nextTick, ref } from 'vue'
 
-import useSendKeyWatcher from '/@/components/Main/MainView/MessageInput/composables/useSendKeyWatcher'
+import useSendKeyWatcher from '/@/composables/messageComposer/useSendKeyWatcher'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 import { withSetup } from '../../../../../testUtils'
 
 vi.mock('/@/lib/dom/browser', () => ({
-  checkLevel2InputEventsSupport: () => true,
   isMac: () => false,
-  isTouchDevice: () => false
+  isMobilePlatform: () => false
 }))
 
 vi.mock('/@/store/app/browserSettings', async () => {
@@ -35,7 +34,6 @@ const setup = (enabled = true) => {
   const [watcher, component] = withSetup(useSendKeyWatcher)(
     emit,
     lineBreak,
-    true,
     markdown
   )
 

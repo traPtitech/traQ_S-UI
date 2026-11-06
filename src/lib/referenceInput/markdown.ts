@@ -25,7 +25,7 @@ export type MarkdownFormat = FormatBase &
           type: 'markdown' | 'stamp'
           text: string
           environment: MarkdownEnvironment
-          environmentRevision: number
+          environmentKey: string
         }>
         readonly container?: never
       }
@@ -55,7 +55,7 @@ const styles: Record<string, FormatBase['style']> = {
 const toFormat = (
   node: MarkdownSourceNode,
   analysis: MarkdownSourceAnalysis,
-  environmentRevision: number
+  environmentKey: string
 ): MarkdownFormat => {
   const { source, environment } = analysis
   const { from, to, content, syntax } = node
@@ -92,7 +92,7 @@ const toFormat = (
           type: node.kind === 'image' ? 'markdown' : 'stamp',
           text: source.slice(from, to),
           environment,
-          environmentRevision
+          environmentKey
         }
       }
 
@@ -116,9 +116,6 @@ const toFormat = (
   }
 }
 
-let lastEnvironment = ''
-let environmentRevision = 0
-
 const formatsByAnalysis = new WeakMap<
   MarkdownSourceAnalysis,
   readonly MarkdownFormat[]
@@ -132,14 +129,9 @@ export const markdownFormats = (
   let formats = formatsByAnalysis.get(analysis)
 
   if (!formats) {
-    const environment = JSON.stringify(analysis.environment)
-    if (environment !== lastEnvironment) {
-      lastEnvironment = environment
-      environmentRevision++
-    }
-
+    const environmentKey = JSON.stringify(analysis.environment)
     formats = analysis.nodes.map(node =>
-      toFormat(node, analysis, environmentRevision)
+      toFormat(node, analysis, environmentKey)
     )
     formatsByAnalysis.set(analysis, formats)
   }

@@ -39,8 +39,6 @@ import {
   serializeInput
 } from '/@/lib/references'
 
-import useMarkdownReferenceLabels from './useMarkdownReferenceLabels'
-
 type SuggestionPresentation = Pick<
   ReturnType<typeof useReferenceSuggestions>,
   'shown' | 'candidates' | 'selectedIndex'
@@ -290,8 +288,6 @@ export default function useReferenceEditor(options: ReferenceEditorOptions) {
     () => props.readonly,
     value => editor.value?.setEditable(!value, false)
   )
-
-  useMarkdownReferenceLabels(editor, label)
 
   const focus: ReferenceInputHandle['focus'] = position =>
     editor.value?.commands.focus(position)

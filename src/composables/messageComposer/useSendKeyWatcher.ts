@@ -1,17 +1,12 @@
 import { type MaybeRefOrGetter, toValue, watch } from 'vue'
 
-import {
-  checkLevel2InputEventsSupport,
-  isMac,
-  isMobilePlatform
-} from '/@/lib/dom/browser'
+import { isMac, isMobilePlatform } from '/@/lib/dom/browser'
 import type { MarkdownLineBreakOptions } from '/@/lib/referenceInput/markdownLineBreak'
 import type { SendKey, SendKeys } from '/@/store/app/browserSettings'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 
-const isLevel2InputEventsSupported = checkLevel2InputEventsSupport()
 const macFlag = isMac()
-const touchDeviceFlag = isMobilePlatform()
+const usesMobileSubmissionPolicy = isMobilePlatform()
 
 interface ModifierKeys {
   altKey?: boolean
@@ -57,12 +52,6 @@ const withModifierKey = (keyEvent: KeyboardEvent, settingsKeys: SendKeys) => {
   return hasModifierKey(keyEvent, settingsKeys)
 }
 
-/**
- * 改行の挿入のイベントであり、送信する必要があるかどうか
- * (タッチ端末では無視する)
- *
- * 修飾キーなしで送信の設定の際に、送信が必要かの判定で利用
- */
 const isSendKeyInput = (
   inputEvent: InputEvent,
   sendWithModifierKey: SendKey
@@ -75,12 +64,6 @@ const isSendKeyInput = (
   )
 }
 
-/**
- * 修飾キーを押した状態での改行で、それによって改行を挿入する必要があるかどうか
- * 修飾キーなしでの改行はデフォルトのものを利用
- *
- * 修飾キーなしで送信の設定の際に、改行の挿入が必要かの判定で利用
- */
 const needBreakLineInsert = (
   keyEvent: KeyboardEvent,
   sendWithModifierKey: SendKey,
@@ -94,18 +77,11 @@ const needBreakLineInsert = (
   )
 }
 
-/**
- * contextに対して発火されるイベント
- * - `postMessage`: 投稿トリガー時
- * - `modifierKeyDown`: 修飾キーが押された
- * - `modifierKeyUp`: 修飾キーが離された
- */
 const useSendKeyWatcher = (
   emit: ((event: 'postMessage') => void) &
     ((event: 'modifierKeyDown') => void) &
     ((event: 'modifierKeyUp') => void),
   insertLineBreak: (options?: MarkdownLineBreakOptions) => void,
-  handlesLineBreakOnKeyDown = false,
   markdown: MaybeRefOrGetter<boolean> = false
 ) => {
   const { sendWithModifierKey, modifierKey } = useBrowserSettings()
@@ -115,15 +91,10 @@ const useSendKeyWatcher = (
     () => emit('modifierKeyUp')
   )
 
-  /*
-   * 修飾キーが押されている際は先に発火する`keydown`イベントで
-   * 既にpreventされているため`beforeinput`イベントは発火しない
-   * したがって、これが発火したときは修飾キーが押されていないことが保障されている
-   */
   const onBeforeInput = (event: Event) => {
     if (event instanceof InputEvent) {
       if (
-        !touchDeviceFlag &&
+        !usesMobileSubmissionPolicy &&
         !(toValue(markdown) && event.inputType === 'insertLineBreak') &&
         isSendKeyInput(event, sendWithModifierKey.value)
       ) {
@@ -134,21 +105,12 @@ const useSendKeyWatcher = (
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
-    if (touchDeviceFlag || event.isComposing) return
+    if (usesMobileSubmissionPolicy || event.isComposing) return
 
     const modifierPressed = withModifierKey(event, modifierKey.value)
     if (modifierPressed) emit('modifierKeyDown')
 
-    // https://github.com/traPtitech/traQ_R-UI/pull/945
     if (event.key === 'Enter') {
-      /*
-       * 修飾キーありで送信の設定の際に、送信が必要かの判定
-       *
-       * TODO: ここでSafariの場合、
-       *       変換確定のEnterでもこの分岐に入ってしまうため、
-       *       下と同じような処理をする必要がある
-       *       refs https://github.com/traPtitech/traQ_R-UI/pull/945#issuecomment-509942373
-       */
       if (sendWithModifierKey.value === 'modifier' && modifierPressed) {
         event.preventDefault()
         emit('postMessage')
@@ -162,22 +124,7 @@ const useSendKeyWatcher = (
         return
       }
 
-      /*
-       * 修飾キーなしで送信の設定の際に、
-       * `beforeinput`イベントに対応していないブラウザの場合、
-       * 送信が必要かの判定
-       *
-       * `beforeinput`イベントが利用できる場合はここで処理しない
-       * Safari出ない場合はここで処理を行ってもよいが、
-       * Safariの場合は変換確定のEnterでの`keydown`イベントの
-       * isComposingがfalseなので、変換確定でも送信がされてしまうため、
-       * `beforeinput`で判定を行うようにする
-       */
-      if (
-        sendWithModifierKey.value === 'none' &&
-        !modifierPressed &&
-        (handlesLineBreakOnKeyDown || !isLevel2InputEventsSupported)
-      ) {
+      if (sendWithModifierKey.value === 'none' && !modifierPressed) {
         event.preventDefault()
         emit('postMessage')
 
@@ -194,7 +141,10 @@ const useSendKeyWatcher = (
   }
 
   const onKeyUp = (event: KeyboardEvent) => {
-    if (!touchDeviceFlag && isModifierKey(event, modifierKey.value)) {
+    if (
+      !usesMobileSubmissionPolicy &&
+      isModifierKey(event, modifierKey.value)
+    ) {
       emit('modifierKeyUp')
     }
   }

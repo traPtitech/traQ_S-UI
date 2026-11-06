@@ -16,7 +16,6 @@ export const markdownPreviewState: StateField<PreviewState> = {
     enabled: false,
     focused: false,
     composing: false,
-    referenceLabelKey: '',
     compositionDecorations: undefined,
     decorations: DecorationSet.empty,
     decorationCache: new Map(),
@@ -27,7 +26,7 @@ export const markdownPreviewState: StateField<PreviewState> = {
 
   apply: (transaction, previous, oldState, newState) => {
     const options = transaction.getMeta(markdownPreviewKey) as
-      Partial<Pick<PreviewState, 'referenceLabelKey' | 'revealed'>> | undefined
+      Partial<Pick<PreviewState, 'revealed'>> | undefined
 
     const lifecycle = inputLifecycleKey.getState(newState)
     const next = {

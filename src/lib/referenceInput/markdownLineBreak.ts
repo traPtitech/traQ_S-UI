@@ -1,9 +1,10 @@
 import { closeHistory } from '@tiptap/pm/history'
 import { type EditorState, TextSelection } from '@tiptap/pm/state'
 
+import { referencePlaceholder } from '../references/projection'
 import { analyzeEditorProbe } from './documentAnalysis'
 import { toDocumentPosition, toEditorOffset } from './editorCoordinates'
-import { editorTextBetween, referencePlaceholder } from './editorText'
+import { editorTextBetween } from './editorText'
 import {
   type MarkdownListCompletion,
   markdownListInputKey

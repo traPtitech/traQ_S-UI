@@ -7,6 +7,33 @@ import { deleteMarkdownSource, enterMarkdownSource } from './markdownEditing'
 import { type PreviewState, markdownPreviewKey } from './markdownPreviewState'
 import { currentInputSelection, syncInputSelection } from './selection'
 
+const acceptsPreviewPointer = (view: EditorView, event: MouseEvent) => {
+  const preview = markdownPreviewKey.getState(view.state)
+
+  return (
+    preview?.enabled &&
+    view.editable &&
+    !preview.composing &&
+    !view.composing &&
+    event.button === 0 &&
+    !event.shiftKey &&
+    !event.ctrlKey &&
+    !event.metaKey &&
+    !event.altKey
+  )
+}
+
+const clickedWidget = (view: EditorView, event: MouseEvent) => {
+  if (!acceptsPreviewPointer(view, event)) return
+
+  const widget =
+    event.target instanceof Element
+      ? event.target.closest<HTMLElement>('.markdown-input-rendered')
+      : null
+
+  return widget && view.dom.contains(widget) ? widget : undefined
+}
+
 const deleteAtInputSelection = (
   view: EditorView,
   preview: PreviewState,
@@ -19,18 +46,7 @@ const deleteAtInputSelection = (
 export const markdownPreviewEvents: EditorProps = {
   handleClick: (view, position, event) => {
     const preview = markdownPreviewKey.getState(view.state)
-    if (
-      !preview?.enabled ||
-      !view.editable ||
-      preview.composing ||
-      view.composing ||
-      event.button !== 0 ||
-      event.shiftKey ||
-      event.ctrlKey ||
-      event.metaKey ||
-      event.altKey
-    )
-      return false
+    if (!preview || !acceptsPreviewPointer(view, event)) return false
 
     // Chromium は原文が隠れていると、直後の空白も装飾の先頭に割り当てる。
     let caret = position
@@ -118,6 +134,46 @@ export const markdownPreviewEvents: EditorProps = {
   },
 
   handleDOMEvents: {
+    mousedown: (view, event) => {
+      if (!clickedWidget(view, event)) return false
+
+      event.preventDefault()
+      return true
+    },
+
+    click: (view, event) => {
+      const widget = clickedWidget(view, event)
+      if (!widget) return false
+
+      const position = view.posAtDOM(widget, 0)
+      const preview = markdownPreviewKey.getState(view.state)
+      const format = preview?.formats.find(
+        format =>
+          format.kind === 'rendered-inline' &&
+          toDocumentPosition(format.content.from) === position
+      )
+
+      if (!format) return false
+
+      const { left, width } = widget.getBoundingClientRect()
+      const rtl = getComputedStyle(widget).direction === 'rtl'
+      const rightHalf = event.clientX >= left + width / 2
+      const after = event.detail > 0 && rightHalf !== rtl
+      const caret = toDocumentPosition(after ? format.to : format.from)
+
+      view.dispatch(
+        view.state.tr
+          .setSelection(TextSelection.create(view.state.doc, caret))
+          .setMeta(markdownPreviewKey, {
+            revealed: [{ from: format.from, to: format.to }]
+          })
+      )
+      view.focus()
+      event.preventDefault()
+
+      return true
+    },
+
     beforeinput: (view, event) => {
       const preview = markdownPreviewKey.getState(view.state)
 
