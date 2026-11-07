@@ -145,6 +145,22 @@ $ npm run test:e2e:only-run-headless
 $ npm run test:e2e:only-run-headless -- --spec tests/e2e/specs/login.spec.ts
 ```
 
+#### 入力欄の e2e テスト実行
+
+入力欄専用の画面を使う Playwright テストは、Docker やバックエンドを起動せずに実行できます。
+API はテスト内でモックし、Vite サーバーを `http://127.0.0.1:4174` に起動します。
+
+```shell
+$ npx playwright install chromium firefox webkit
+$ npm run test:e2e-editor
+```
+
+モバイル向けのケースのみを実行する場合は、端末プロファイルを指定します。
+
+```shell
+$ npm run test:e2e-editor -- --project=mobile-chromium --project=mobile-webkit --project=tablet-webkit
+```
+
 #### lint の実行と auto-fix による修正
 
 ```shell

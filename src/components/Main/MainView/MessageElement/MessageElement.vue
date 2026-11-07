@@ -3,6 +3,7 @@
     <div
       v-if="message"
       ref="bodyRef"
+      :data-message-id="messageId"
       :class="$style.body"
       :data-is-mobile="$boolAttr(isMobile)"
       :data-is-pinned="$boolAttr(message.pinned)"

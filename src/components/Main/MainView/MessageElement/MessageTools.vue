@@ -54,6 +54,7 @@
         v-if="isMine"
         mdi
         name="pencil"
+        data-testid="message-edit-button"
         :size="28"
         :class="$style.icon"
         @click="editMessage"
