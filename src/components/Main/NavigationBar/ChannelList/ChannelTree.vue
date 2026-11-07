@@ -13,7 +13,11 @@
     <div
       v-for="{ vItem, item, key } in displayedRows"
       :key="key"
-      :ref="el => virtualizer.measureElement(el as Element | null)"
+      :ref="
+        showTopic
+          ? el => virtualizer.measureElement(el as Element | null)
+          : undefined
+      "
       :class="$style.row"
       :data-index="vItem.index"
       :data-key="key"
@@ -95,7 +99,6 @@ const virtualizer = useVirtualizer(
     getScrollElement: () => props.scrollElement,
     initialOffset: () => props.scrollElement?.scrollTop ?? 0,
     estimateSize: () => 36,
-    useCachedMeasurements: !props.showTopic,
     overscan: 5,
     getItemKey: (index: number) => flatItems.value[index]?.key ?? index,
     scrollMargin: props.scrollMargin

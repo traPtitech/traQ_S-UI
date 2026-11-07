@@ -45,7 +45,7 @@ describe('ChannelTree', () => {
   })
 
   it.each([false, true])(
-    'トピック表示が %s の場合も仮想行の前後の余白を保持する',
+    '仮想行の前後の余白を保持し、トピック表示が %s の場合だけ高さを監視する',
     showTopic => {
       const channels = Array.from({ length: 50 }, (_, index) => ({
         id: String(index) as ChannelId,
@@ -71,6 +71,9 @@ describe('ChannelTree', () => {
       expect(wrapper.element.style.paddingTop).toBe('360px')
       expect(wrapper.element.style.paddingBottom).toBe('1368px')
       expect(wrapper.findAll('[data-key]')).toHaveLength(2)
+      expect(virtualizerMock.measureElement).toHaveBeenCalledTimes(
+        showTopic ? 2 : 0
+      )
 
       wrapper.unmount()
     }
