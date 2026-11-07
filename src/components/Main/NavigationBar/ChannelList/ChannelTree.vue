@@ -1,12 +1,15 @@
 <template>
-  <div :class="$style.inner">
-    <div
-      v-if="!treeAnimation"
-      aria-hidden="true"
-      :class="$style.spacer"
-      :style="{ height: `${virtualPadding.start}px` }"
-    />
-
+  <div
+    :class="$style.inner"
+    :style="
+      treeAnimation
+        ? undefined
+        : {
+            paddingTop: `${virtualPadding.start}px`,
+            paddingBottom: `${virtualPadding.end}px`
+          }
+    "
+  >
     <div
       v-for="{ vItem, item, key } in displayedRows"
       :key="key"
@@ -35,13 +38,6 @@
         @click-hash="() => handleToggle(item.key)"
       />
     </div>
-
-    <div
-      v-if="!treeAnimation"
-      aria-hidden="true"
-      :class="$style.spacer"
-      :style="{ height: `${virtualPadding.end}px` }"
-    />
 
     <ChannelTreeAnimation
       v-if="treeAnimation"
@@ -131,18 +127,11 @@ const virtualPadding = computed(() => {
     )
   }
 })
-
-defineExpose({
-  totalSize: computed(() => virtualizer.value.getTotalSize())
-})
 </script>
 
 <style lang="scss" module>
 .inner {
   position: relative;
-}
-.spacer {
-  overflow-anchor: none;
 }
 .row {
   width: 100%;
