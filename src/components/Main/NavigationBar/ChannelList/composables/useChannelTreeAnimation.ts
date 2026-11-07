@@ -2,6 +2,7 @@ import { computed, nextTick, shallowRef } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 
 import type { Virtualizer } from '@tanstack/vue-virtual'
+import { useEventListener } from '@vueuse/core'
 
 import {
   CHANNEL_TREE_ANIMATION_DURATION_MS,
@@ -20,6 +21,7 @@ interface ChannelTreeAnimationOptions<
   virtualizer: Ref<Virtualizer<TScrollElement, TItemElement>>
   flatItems: ComputedRef<FlatChannelItem[]>
   expandedNodeKeys: Ref<Set<string>>
+  scrollElement: Readonly<Ref<TScrollElement | null>>
   scrollMargin: ComputedRef<number>
   toggle: (itemKey: string) => void
 }
@@ -31,6 +33,7 @@ const useChannelTreeAnimation = <
   virtualizer,
   flatItems,
   expandedNodeKeys,
+  scrollElement,
   scrollMargin,
   toggle
 }: ChannelTreeAnimationOptions<TScrollElement, TItemElement>) => {
@@ -62,6 +65,12 @@ const useChannelTreeAnimation = <
       resolveTreeAnimation = undefined
     }
   }
+
+  useEventListener(scrollElement, 'scroll', () => {
+    if (treeAnimation.value) {
+      finishTreeAnimation(treeAnimation.value.id)
+    }
+  })
 
   const toggleWithAnimation = async (itemKey: string) => {
     const prePositions = new Map(

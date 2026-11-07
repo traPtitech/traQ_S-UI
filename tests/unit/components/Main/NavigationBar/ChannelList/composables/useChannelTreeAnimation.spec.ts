@@ -1,4 +1,5 @@
-import { computed, ref, shallowRef } from 'vue'
+import { computed, effectScope, ref, shallowRef } from 'vue'
+import type { EffectScope } from 'vue'
 
 import type { VirtualItem, Virtualizer } from '@tanstack/vue-virtual'
 
@@ -14,6 +15,7 @@ const childNode: ChannelTreeNode = {
   active: true,
   archived: false
 }
+
 const rootNode: ChannelTreeNode = {
   id: 'root' as ChannelId,
   name: 'root',
@@ -21,6 +23,7 @@ const rootNode: ChannelTreeNode = {
   active: true,
   archived: false
 }
+
 const siblingNode: ChannelTreeNode = {
   id: 'sibling' as ChannelId,
   name: 'sibling',
@@ -30,11 +33,13 @@ const siblingNode: ChannelTreeNode = {
 }
 
 const rootItem: FlatChannelItem = { node: rootNode, depth: 0, key: '/root' }
+
 const childItem: FlatChannelItem = {
   node: childNode,
   depth: 1,
   key: '/root/child'
 }
+
 const siblingItem: FlatChannelItem = {
   node: siblingNode,
   depth: 0,
@@ -54,7 +59,14 @@ const virtualItem = (
   lane: 0
 })
 
+const scopes: EffectScope[] = []
+
 const setup = (initiallyExpanded: boolean) => {
+  const scope = effectScope()
+  scopes.push(scope)
+
+  const scrollElement = ref(document.createElement('div'))
+  const visibleIndices = ref<Set<number> | null>(null)
   const isExpanded = ref(initiallyExpanded)
   const expandedNodeKeys = ref(new Set(initiallyExpanded ? ['/root'] : []))
   const flatItems = computed(() =>
@@ -62,31 +74,82 @@ const setup = (initiallyExpanded: boolean) => {
       ? [rootItem, childItem, siblingItem]
       : [rootItem, siblingItem]
   )
+
   const virtualizer = shallowRef({
     getVirtualItems: () =>
-      isExpanded.value
+      (isExpanded.value
         ? [
             virtualItem(0, '/root', 0),
             virtualItem(1, '/root/child', 36),
             virtualItem(2, '/sibling', 72)
           ]
-        : [virtualItem(0, '/root', 0), virtualItem(1, '/sibling', 36)],
+        : [virtualItem(0, '/root', 0), virtualItem(1, '/sibling', 36)]
+      ).filter(
+        item => !visibleIndices.value || visibleIndices.value.has(item.index)
+      ),
     getTotalSize: () => (isExpanded.value ? 108 : 72)
   } as unknown as Virtualizer<HTMLElement, HTMLElement>)
 
-  return useChannelTreeAnimation({
-    virtualizer,
-    flatItems,
-    expandedNodeKeys,
-    scrollMargin: computed(() => 0),
-    toggle: () => {
-      isExpanded.value = !isExpanded.value
-      expandedNodeKeys.value = new Set(isExpanded.value ? ['/root'] : [])
-    }
-  })
+  const animation = scope.run(() =>
+    useChannelTreeAnimation({
+      virtualizer,
+      flatItems,
+      expandedNodeKeys,
+      scrollElement,
+      scrollMargin: computed(() => 0),
+      toggle: () => {
+        isExpanded.value = !isExpanded.value
+        expandedNodeKeys.value = new Set(isExpanded.value ? ['/root'] : [])
+      }
+    })
+  )
+  if (!animation) throw new Error('Animation scope is inactive')
+
+  return { ...animation, scrollElement, visibleIndices }
 }
 
 describe('useChannelTreeAnimation', () => {
+  afterEach(() => {
+    for (const scope of scopes.splice(0)) scope.stop()
+  })
+
+  it('スクロール時にアニメーションを終了し、新たに表示範囲に入った子行を描画する', async () => {
+    const {
+      treeAnimation,
+      displayedRows,
+      handleToggle,
+      scrollElement,
+      visibleIndices
+    } = setup(false)
+    visibleIndices.value = new Set([0])
+
+    handleToggle('/root')
+    await vi.waitFor(() => expect(treeAnimation.value).not.toBeNull())
+    expect(treeAnimation.value?.rows).toHaveLength(0)
+
+    visibleIndices.value = new Set([1, 2])
+    scrollElement.value.dispatchEvent(new Event('scroll'))
+
+    expect(treeAnimation.value).toBeNull()
+    expect(displayedRows.value.map(row => row.key)).toEqual([
+      '/root/child',
+      '/sibling'
+    ])
+  })
+
+  it.each([true, false])(
+    'スクロールで展開状態 %s のアニメーションを終了する',
+    async open => {
+      const { treeAnimation, handleToggle, scrollElement } = setup(open)
+      handleToggle('/root')
+      await vi.waitFor(() => expect(treeAnimation.value).not.toBeNull())
+
+      scrollElement.value.dispatchEvent(new Event('scroll'))
+
+      expect(treeAnimation.value).toBeNull()
+    }
+  )
+
   it.each([
     ['collapse', true],
     ['expand', false]

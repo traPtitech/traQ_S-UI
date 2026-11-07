@@ -111,6 +111,7 @@ const { displayedRows, treeAnimation, finishTreeAnimation, handleToggle } =
     virtualizer,
     flatItems,
     expandedNodeKeys,
+    scrollElement: toRef(props, 'scrollElement'),
     scrollMargin: computed(() => props.scrollMargin),
     toggle
   })
