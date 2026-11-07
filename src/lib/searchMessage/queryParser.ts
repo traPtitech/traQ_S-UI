@@ -1,5 +1,6 @@
 // APIに投げる検索クエリに対する実装
 import type apis from '/@/lib/apis'
+import { encodeReference, parseInput } from '/@/lib/references'
 import type {
   ChannelId,
   MessageId,
@@ -15,7 +16,7 @@ import type {
 } from './parserBase'
 import { MeToken } from './parserBase'
 import {
-  HereToken,
+  type HereToken,
   channelOrDmChannelParser,
   dateParser,
   makePrefixedFilterExtractor,
@@ -61,10 +62,21 @@ export type Filter =
   | {
       type: 'in'
       raw: string
+      kind?: 'channel' | 'dm'
       value: typeof HereToken | typeof MeToken | ChannelId
     }
-  | { type: 'to'; raw: string; value: typeof MeToken | UserId | UserGroupId }
-  | { type: 'from'; raw: string; value: typeof MeToken | UserId | UserGroupId }
+  | {
+      type: 'to'
+      raw: string
+      value: typeof MeToken | UserId | UserGroupId
+      kind?: 'user' | 'group'
+    }
+  | {
+      type: 'from'
+      raw: string
+      value: typeof MeToken | UserId | UserGroupId
+      kind?: 'user' | 'group'
+    }
   | { type: 'citation'; raw: string; value: MessageId }
   | { type: 'attrFlag'; raw: string; value: AttrFlagFilterKey; negate: boolean }
   | {
@@ -73,6 +85,89 @@ export type Filter =
       value: MediaFlagFilterKey
       negate: boolean
     }
+
+type ReferenceFilter = Extract<Filter, { type: 'in' | 'from' | 'to' }>
+
+export type ResolvedFilter =
+  | Exclude<Filter, ReferenceFilter>
+  | {
+      [Type in ReferenceFilter['type']]: Omit<
+        Extract<ReferenceFilter, { type: Type }>,
+        'value'
+      > & { value: string }
+    }[ReferenceFilter['type']]
+
+type SearchContext = {
+  channel: ReturnType<StoreForParser['getCurrentChannel']>
+  dmChannelId?: string
+  userId?: string
+  userName?: string
+}
+
+const resolveFilter = (
+  filter: Filter | string,
+  context: SearchContext
+): ResolvedFilter | string => {
+  if (typeof filter === 'string') return filter
+  if (filter.type !== 'in' && filter.type !== 'from' && filter.type !== 'to')
+    return filter
+
+  if (typeof filter.value !== 'symbol')
+    return { ...filter, value: filter.value }
+
+  if (filter.type === 'in') {
+    const self = filter.value === MeToken
+    const value = self ? context.dmChannelId : context.channel?.id
+    if (!value)
+      throw new Error('検索対象のユーザーまたはチャンネルを取得できません')
+
+    return {
+      type: 'in',
+      value,
+      raw: self
+        ? context.userName
+          ? `in:@${context.userName}`
+          : filter.raw
+        : context.channel?.label
+          ? `in:${context.channel.label}`
+          : filter.raw,
+      kind: self ? 'dm' : context.channel?.kind
+    }
+  }
+
+  if (!context.userId)
+    throw new Error('検索対象のユーザーまたはチャンネルを取得できません')
+
+  return {
+    type: filter.type,
+    value: context.userId,
+    raw: `${filter.type}:@!${context.userName}`,
+    kind: filter.kind ?? 'user'
+  }
+}
+
+const serializeFilter = (filter: ResolvedFilter | string) => {
+  if (typeof filter === 'string') return filter
+  if (filter.type !== 'in' && filter.type !== 'from' && filter.type !== 'to')
+    return filter.raw
+
+  return encodeReference(
+    filter.type === 'in'
+      ? {
+          type: 'search-in',
+          id: filter.value,
+          raw: filter.raw,
+          kind: filter.kind
+        }
+      : {
+          type: `search-${filter.type}`,
+          id: filter.value,
+          raw: filter.raw,
+          kind: filter.kind
+        }
+  )
+}
+
 export type FilterType = Filter['type']
 
 /** フィルターを得るためのextractor */
@@ -135,6 +230,7 @@ const parser = async (
   extracted: ExtractedFilter<FilterType>
 ): Promise<Filter | undefined> => {
   const type = extracted.type
+
   switch (type) {
     case 'after':
     case 'before': {
@@ -143,12 +239,20 @@ const parser = async (
         ? { type, raw: rawQuery(extracted), value: result }
         : undefined
     }
+
     case 'in': {
       const result = await channelOrDmChannelParser(store, extracted)
+
       return result
-        ? { type, raw: rawQuery(extracted), value: result }
+        ? {
+            type,
+            raw: rawQuery(extracted),
+            value: typeof result === 'symbol' ? result : result.id,
+            kind: typeof result === 'symbol' ? undefined : result.kind
+          }
         : undefined
     }
+
     case 'to':
     case 'from': {
       const result = await userOrUserGroupParser(
@@ -156,10 +260,17 @@ const parser = async (
         store.userGroupNameToId,
         extracted
       )
+
       return result
-        ? { type, raw: rawQuery(extracted), value: result }
+        ? {
+            type,
+            raw: rawQuery(extracted),
+            value: typeof result === 'symbol' ? result : result.id,
+            kind: typeof result === 'symbol' ? undefined : result.kind
+          }
         : undefined
     }
+
     case 'citation': {
       const result = messageParser(extracted)
       return result
@@ -200,10 +311,7 @@ const parseQueryFragmentToFilterWithoutStore = parseToFilterBase(
 
 /** 実際のクエリに対応するオブジェクトへの変換 */
 const filterOrStringToSearchMessageQuery = (
-  currentChannelId: string | undefined,
-  myDmChannelId: string | undefined,
-  myUserId: string | undefined,
-  f: Filter | string
+  f: ResolvedFilter | string
 ): SearchMessageQueryObject => {
   if (typeof f === 'string') {
     return { word: f }
@@ -216,15 +324,14 @@ const filterOrStringToSearchMessageQuery = (
         [f.type]: f.value.toISOString()
       }
     case 'in': {
-      if (f.value === HereToken) return { in: currentChannelId }
-      if (f.value === MeToken) return { in: myDmChannelId }
       return { in: f.value }
     }
     case 'to':
     case 'from': {
-      const user = f.value === MeToken ? myUserId : f.value
-      return { [f.type]: user }
+      const ids = [f.value]
+      return f.type === 'from' ? { from: ids } : { to: ids }
     }
+
     case 'citation':
       return { [f.type]: f.value }
     case 'attrFlag':
@@ -237,73 +344,63 @@ const filterOrStringToSearchMessageQuery = (
   }
 }
 
-/**
- * クエリをパースし、検索ワードとフィルタに変換する
- */
+export type ResolvedSearchQuery = {
+  serializedQuery: string
+  queryObject: SearchMessageQueryObject
+}
+
+/** クエリ中の参照を確定し、保存用表現と API 条件をまとめる。 */
 export const createQueryParser = (store: StoreForParser) => {
   const parseQueryFragmentToFilter =
     parseQueryFragmentToFilterWithoutStore(store)
 
-  return async (
-    query: string
-  ): Promise<{
-    normalizedQuery: string
-    queryObject: SearchMessageQueryObject
-  }> => {
-    const parseds = await Promise.all(
-      query
-        .split(' ')
-        .filter(q => q)
-        .map(parseQueryFragmentToFilter)
+  return async (query: string): Promise<ResolvedSearchQuery> => {
+    const context: SearchContext = {
+      channel: store.getCurrentChannel(),
+      dmChannelId: store.getMyDmChannelId(),
+      userId: store.getMyUserId(),
+      userName: store.getMyUserName()
+    }
+
+    const fragments: Array<string | Filter> = parseInput(
+      query,
+      'search'
+    ).flatMap<string | Filter>(part => {
+      if (part.type === 'text') return part.text.split(' ').filter(Boolean)
+
+      const reference = part.reference
+      const base = { value: reference.id, raw: reference.raw }
+
+      switch (reference.type) {
+        case 'search-in':
+          return [{ ...base, type: 'in', kind: reference.kind }]
+        case 'search-from':
+          return [{ ...base, type: 'from', kind: reference.kind }]
+        case 'search-to':
+          return [{ ...base, type: 'to', kind: reference.kind }]
+        default:
+          return []
+      }
+    })
+
+    const parsedFragments = await Promise.all(
+      fragments.map(fragment =>
+        typeof fragment === 'string'
+          ? parseQueryFragmentToFilter(fragment)
+          : fragment
+      )
     )
 
-    const currentChannelPathOrUserName = store.getCurrentChannelPathOrUserName()
-    const currentChannelId = store.getCurrentChannelId()
-    const myDmChannelId = store.getMyDmChannelId()
-    const myUserName = store.getMyUserName()
-    const myUserId = store.getMyUserId()
-
-    const normalizedQuery = parseds
-      .map(q =>
-        parsedFilterToNormalizedString(
-          q,
-          currentChannelPathOrUserName,
-          myUserName
-        )
-      )
-      .join(' ')
-
-    const queryObject = parseds
-      .map(f =>
-        filterOrStringToSearchMessageQuery(
-          currentChannelId,
-          myDmChannelId,
-          myUserId,
-          f
-        )
-      )
+    const resolved = parsedFragments.map(fragment =>
+      resolveFilter(fragment, context)
+    )
+    const serializedQuery = resolved.map(serializeFilter).join(' ')
+    const queryObject = resolved
+      .map(filterOrStringToSearchMessageQuery)
       .reduce(mergeSearchMessageQueryObject, emptySearchMessageQueryObject)
 
-    return { normalizedQuery, queryObject }
+    return { serializedQuery, queryObject }
   }
-}
-
-const parsedFilterToNormalizedString = (
-  f: string | Filter,
-  currentChannelPathOrUserName: string | undefined,
-  myUserName: string | undefined
-) => {
-  if (typeof f === 'string') return f
-
-  if (f.type === 'in') {
-    if (f.value === HereToken) return `in:${currentChannelPathOrUserName}`
-    if (f.value === MeToken) return `in:@${myUserName}`
-  }
-
-  if ((f.type === 'from' || f.type === 'to') && f.value === MeToken) {
-    return `${f.type}:@!${myUserName}`
-  }
-  return f.raw
 }
 
 // util

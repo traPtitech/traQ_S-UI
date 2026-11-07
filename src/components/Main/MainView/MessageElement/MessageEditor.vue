@@ -5,12 +5,14 @@
       v-if="isPostingAttachment"
       :progress="attachmentPostProgress"
     />
+
     <div :class="$style.inputContainer">
-      <MessageInputTextArea
-        ref="textareaComponentRef"
+      <MessageInputEditor
+        ref="messageInputRef"
         v-model="text"
+        :document-key="messageId"
         :class="$style.inputTextArea"
-        :is-posting="isPostingAttachment"
+        :is-posting="isBusy"
         simple-padding
         is-max-height-none
         @add-attachments="onAddAttachments"
@@ -18,133 +20,49 @@
         @modifier-key-up="onModifierKeyUp"
         @post-message="editMessage"
       />
+
       <!-- divで包まないとホバー時の拡大の中心位置がずれる -->
       <div>
         <MessageInputInsertStampButton
           :class="$style.iconButton"
-          :disabled="isPostingAttachment"
+          :disabled="isBusy"
           @click="toggleStampPicker"
         />
+
         <MessageInputUploadButton
           :class="$style.iconButton"
-          :disabled="isPostingAttachment"
-          @click="addAttachment"
+          :disabled="isBusy"
+          @click="openAttachmentPicker"
         />
       </div>
     </div>
+
     <div :class="$style.controls">
-      <FormButton label="キャンセル" type="tertiary" @click="cancel" />
       <FormButton
-        label="OK"
-        :disabled="isPostingAttachment"
-        @click="editMessage"
+        label="キャンセル"
+        type="tertiary"
+        :disabled="isBusy"
+        @click="cancel"
       />
+
+      <FormButton label="OK" :disabled="isBusy" @click="editMessage" />
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import type { Ref } from 'vue'
+<script lang="ts" setup>
 import { computed, onMounted, ref, shallowRef } from 'vue'
 
-import type { AxiosProgressEvent } from 'axios'
-
-import useAttachments from '/@/components/Main/MainView/MessageInput/composables/useAttachments'
-import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
-import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
-import { countLength } from '/@/lib/basic/string'
-import { getResizedFile } from '/@/lib/resize'
-import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
-import { useToastStore } from '/@/store/ui/toast'
-
-import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
-
-const useEditMessage = (
-  props: { messageId: string },
-  text: Ref<string>,
-  emit: (e: 'finishEditing') => void
-) => {
-  const { addErrorToast } = useToastStore()
-  const editMessage = async () => {
-    if (countLength(text.value) > MESSAGE_MAX_LENGTH) {
-      addErrorToast('メッセージが長すぎます')
-      return
-    }
-
-    try {
-      await apis.editMessage(props.messageId, {
-        content: text.value
-      })
-      emit('finishEditing')
-    } catch {
-      addErrorToast('メッセージの編集に失敗しました')
-    }
-  }
-  const cancel = () => {
-    emit('finishEditing')
-  }
-  return { editMessage, cancel }
-}
-
-const useAttachmentsEditor = (
-  props: { channelId: string },
-  text: Ref<string>
-) => {
-  const { addErrorToast } = useToastStore()
-
-  const isPosting = ref(false)
-  const progress = ref(0)
-
-  const postAttachment = async (file: File) => {
-    if (isPosting.value) return
-
-    isPosting.value = true
-    const attachmentFile = await getResizedFile(file)
-    const { data } = await apis.postFile(attachmentFile, props.channelId, {
-      /**
-       * https://github.com/axios/axios#request-config
-       */
-      onUploadProgress(e: AxiosProgressEvent) {
-        if (e.total === undefined || e.total === 0) return
-        progress.value = e.loaded / e.total
-      }
-    })
-
-    const fileUrl = buildFilePathForPost(data.id)
-    text.value = text.value !== '' ? `${text.value}\n${fileUrl}` : fileUrl
-    progress.value = 0
-    isPosting.value = false
-  }
-
-  const { addAttachment } = useAttachments(postAttachment)
-  const onAddAttachments = async (files: File[]) => {
-    for (const file of files) {
-      try {
-        await postAttachment(file)
-      } catch (err) {
-        addErrorToast(
-          formatResizeError(err, 'ファイルのアップロードに失敗しました')
-        )
-      }
-    }
-  }
-
-  return {
-    isPostingAttachment: isPosting,
-    attachmentPostProgress: progress,
-    onAddAttachments,
-    addAttachment
-  }
-}
-</script>
-
-<script lang="ts" setup>
+import MessageInputEditor from '/@/components/Main/MainView/MessageInput/MessageInputEditor.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 import MessageInputKeyGuide from '/@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
-import MessageInputTextArea from '/@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputUploadProgress from '/@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
+import useModifierKey from '/@/composables/messageComposer/useModifierKey'
+import useTextStampPickerInvoker from '/@/composables/messageComposer/useTextStampPickerInvoker'
+
+import { useMessageEditing } from './composables/useMessageEditing'
 
 const props = defineProps<{
   rawContent: string
@@ -158,31 +76,33 @@ const emit = defineEmits<{
 
 const text = ref(props.rawContent)
 
-const { editMessage, cancel } = useEditMessage(props, text, emit)
+const {
+  editMessage,
+  cancel,
+  isBusy,
+  isPostingAttachment,
+  attachmentPostProgress,
+  openAttachmentPicker,
+  onAddAttachments
+} = useMessageEditing(props, text, emit)
+
 const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
   useModifierKey()
 
-const textareaComponentRef =
-  shallowRef<InstanceType<typeof MessageInputTextArea>>()
+const messageInputRef = shallowRef<InstanceType<typeof MessageInputEditor>>()
 
-const textareaRef = computed(() => textareaComponentRef.value?.textareaRef)
+const inputHandle = computed(() => messageInputRef.value?.inputHandle)
 
 const containerEle = ref<HTMLDivElement>()
+
 const { toggleStampPicker } = useTextStampPickerInvoker(
   text,
-  textareaRef,
+  inputHandle,
   containerEle
 )
 
-const {
-  isPostingAttachment,
-  attachmentPostProgress,
-  addAttachment,
-  onAddAttachments
-} = useAttachmentsEditor(props, text)
-
 onMounted(() => {
-  textareaRef.value?.focus()
+  inputHandle.value?.focus('end')
 })
 </script>
 

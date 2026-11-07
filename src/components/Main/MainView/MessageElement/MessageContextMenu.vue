@@ -63,11 +63,12 @@ import { computed, toRef } from 'vue'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
 import usePinToggler from '/@/composables/contextMenu/usePinToggler'
 import useSearchLink from '/@/composables/contextMenu/useSearchLink'
-import useCopyText from '/@/composables/toast/useCopyText'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import apis from '/@/lib/apis'
 import type { Point } from '/@/lib/basic/point'
-import { unembedInternalLinks } from '/@/lib/markdown/markdown'
+import { restoreEmbeddingLabels } from '/@/lib/markdown/internalLinkUnembedder'
+import { copyMessageParts } from '/@/lib/referenceInput/clipboard'
+import { parseInput } from '/@/lib/references'
 import { useMeStore } from '/@/store/domain/me'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
@@ -93,18 +94,25 @@ const useMessageChanger = (messageId: Ref<MessageId>) => {
       }
     )
   }
+
   return { editMessage, deleteMessage }
 }
 
 const useCopyMd = (messageId: Ref<MessageId>) => {
   const { messagesMap } = useMessagesStore()
-  const { copyText } = useCopyText()
+  const { execWithToast } = useExecWithToast()
 
   const copyMd = async () => {
     const content = messagesMap.value.get(messageId.value)?.content ?? ''
-    const replacedContent = await unembedInternalLinks(content)
-    copyText(replacedContent, 'Markdown')
+    const replacedContent = restoreEmbeddingLabels(content)
+
+    await execWithToast(
+      'Markdown をコピーしました',
+      'Markdown のコピーに失敗しました',
+      () => copyMessageParts(parseInput(content, 'message'), replacedContent)
+    )
   }
+
   return { copyMd }
 }
 

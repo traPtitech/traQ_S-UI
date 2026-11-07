@@ -93,8 +93,8 @@ export type StoreForParser = {
   userNameToDmChannelId: UserNameToDmChannelId
   userNameToId: UserNameToId
   userGroupNameToId: UserGroupNameToId
-  getCurrentChannelPathOrUserName: () => string | undefined
-  getCurrentChannelId: () => ChannelId | undefined
+  getCurrentChannel: () =>
+    { kind: 'channel' | 'dm'; id: ChannelId; label?: string } | undefined
   getMyDmChannelId: () => DMChannelId | undefined
   getMyUserName: () => string | undefined
   getMyUserId: () => UserId | undefined
@@ -175,14 +175,19 @@ export const MeToken = Symbol('in:me / from:me / to:me')
 export const channelOrDmChannelParser = async <T extends string>(
   { channelPathToId, userNameToDmChannelId }: StoreForParser,
   extracted: ExtractedFilter<T>
-): Promise<ChannelId | typeof HereToken | typeof MeToken | undefined> => {
+): Promise<
+  | { kind: 'channel' | 'dm'; id: ChannelId }
+  | typeof HereToken
+  | typeof MeToken
+  | undefined
+> => {
   const body = extracted.prefix === '#' ? `#${extracted.body}` : extracted.body
   if (body === 'here') return HereToken
   if (body === 'me') return MeToken
 
   const channelName = body.startsWith('#') ? body.slice(1) : body
   const channelPath = channelPathToId(channelName)
-  if (channelPath) return channelPath
+  if (channelPath) return { kind: 'channel', id: channelPath }
 
   const userName = body.startsWith('@!')
     ? body.slice(2)
@@ -190,14 +195,20 @@ export const channelOrDmChannelParser = async <T extends string>(
       ? body.slice(1)
       : body
 
-  return userNameToDmChannelId(userName)
+  const id = await userNameToDmChannelId(userName)
+  return id ? { kind: 'dm', id } : undefined
 }
 
 export const userOrUserGroupParser = async <T extends string>(
   userNameToId: UserNameToId,
   userGroupNameToId: UserGroupNameToId,
   extracted: ExtractedFilter<T>
-): Promise<UserId | UserGroupId | typeof MeToken | undefined> => {
+): Promise<
+  | { kind: 'user'; id: UserId }
+  | { kind: 'group'; id: UserGroupId }
+  | typeof MeToken
+  | undefined
+> => {
   const body = extracted.prefix === '@' ? `@${extracted.body}` : extracted.body
   if (body === 'me') return MeToken
 
@@ -208,13 +219,14 @@ export const userOrUserGroupParser = async <T extends string>(
     : userNameOrUserGroupName
 
   const userId = await userNameToId(userName)
-  if (userId) return userId
+  if (userId) return { kind: 'user', id: userId }
 
   const userGroupName = body.startsWith('@&')
     ? userNameOrUserGroupName.slice(1)
     : userNameOrUserGroupName
 
-  return await userGroupNameToId(userGroupName)
+  const id = await userGroupNameToId(userGroupName)
+  return id ? { kind: 'group', id } : undefined
 }
 
 export const messageParser = <T extends string>(

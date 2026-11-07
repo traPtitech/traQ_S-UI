@@ -18,11 +18,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref, watchEffect } from 'vue'
-
 import useMarkdownInternalHandler from '/@/composables/markdown/useMarkdownInternalHandler'
-import { render, renderCondensed } from '/@/lib/markdown/markdown'
-import type { MarkdownRenderResult } from '/@/lib/markdown/types'
+import { useRenderedMarkdown } from '/@/composables/markdown/useRenderedMarkdown'
 
 const props = withDefaults(
   defineProps<{
@@ -41,17 +38,10 @@ const emit = defineEmits<{
   render: []
 }>()
 
-const rendered = ref<MarkdownRenderResult>()
-watchEffect(async () => {
-  if (props.inline) {
-    rendered.value = await renderCondensed(props.content)
-  } else {
-    rendered.value = await render(props.content)
-  }
-  await nextTick()
-  emit('render')
+const { renderedContent } = useRenderedMarkdown(() => props.content, {
+  inline: () => props.inline,
+  onRendered: () => emit('render')
 })
-const renderedContent = computed(() => rendered.value?.renderedText)
 
 const { onClick } = useMarkdownInternalHandler(() =>
   props.beforeNavigate ? props.beforeNavigate() : Promise.resolve()

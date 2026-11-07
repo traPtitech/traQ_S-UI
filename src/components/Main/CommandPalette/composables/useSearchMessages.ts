@@ -1,14 +1,17 @@
 import type { Message } from '@traptitech/traq'
 
 import type { DeepReadonly, Ref } from 'vue'
-import { computed, ref } from 'vue'
+import { computed, onMounted, onScopeDispose, ref, watch } from 'vue'
 
-import useQueryParser from '/@/composables/searchMessage/useQueryParser'
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
-import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
+import {
+  type SearchMessageSortKey,
+  toSearchMessageParam
+} from '/@/lib/searchMessage/queryParser'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useToastStore } from '/@/store/ui/toast'
 
 const useSortMessages = (
   messages: Ref<DeepReadonly<Message[]>>,
@@ -34,6 +37,7 @@ const useSortMessages = (
         )
     }
   })
+
   return { sortedMessages }
 }
 
@@ -45,24 +49,18 @@ const usePaging = (
   /** 現在のオフセット */
   const currentOffset = computed(() => currentPage.value * itemsPerPage)
 
-  /** 「n件目 - m件目 まで表示」に使う値、1-indexed*/
-  const showingRange = computed(() => [
-    currentOffset.value + 1,
-    currentOffset.value + 1 + itemsPerPage
-  ])
-
   const pageCount = computed(() => Math.ceil(totalCount.value / itemsPerPage))
 
   const jumpToPage = (page: number) => {
     if (totalCount.value <= 0) {
       return
     }
+
     currentPage.value = Math.max(0, Math.min(page, pageCount.value - 1))
   }
 
   return {
     currentOffset,
-    showingRange,
     pageCount,
     jumpToPage
   }
@@ -70,10 +68,18 @@ const usePaging = (
 
 const useSearchMessages = () => {
   const limit = 20
-  const { parseQuery, toSearchMessageParam } = useQueryParser()
-  const { query, searchState, setSearchResult, resetPaging, addSearchHistory } =
-    useCommandPalette()
+
+  const {
+    query,
+    searchRequest,
+    searchState,
+    setSearchResult,
+    resetPaging,
+    addSearchHistory
+  } = useCommandPalette()
+
   const { extendMessagesMap } = useMessagesStore()
+  const { addErrorToast } = useToastStore()
 
   const currentSortKey = computed({
     get: () => searchState.value.currentSortKey,
@@ -81,6 +87,7 @@ const useSearchMessages = () => {
       searchState.value.currentSortKey = sortKey
     }
   })
+
   const currentPage = computed({
     get: () => searchState.value.currentPage,
     set: page => {
@@ -88,49 +95,82 @@ const useSearchMessages = () => {
     }
   })
 
-  // TODO: リファクタ
   const executed = computed(() => searchState.value.executed)
   const searchResult = computed(() => searchState.value.searchResult)
   const totalCount = computed(() => searchState.value.totalCount)
 
   const { sortedMessages } = useSortMessages(searchResult, currentSortKey)
 
-  const { currentOffset, pageCount, showingRange, jumpToPage } = usePaging(
+  const { currentOffset, pageCount, jumpToPage } = usePaging(
     limit,
     currentPage,
     totalCount
   )
 
   const fetchingSearchResult = ref(false)
+  let requestId = 0
 
-  const fetchAndRenderMessagesOnCurrentPageBySearch = async (query: string) => {
-    if (query === '') {
+  onScopeDispose(() => {
+    requestId++
+    if (fetchingSearchResult.value) searchState.value.executed = false
+  })
+
+  const fetchCurrentSearchPage = async () => {
+    const request = searchRequest.value
+    const id = ++requestId
+
+    if (!request?.serializedQuery) {
+      fetchingSearchResult.value = false
       resetPaging()
+
       return
     }
 
     fetchingSearchResult.value = true
-    const { normalizedQuery, queryObject } = await parseQuery(query)
-    addSearchHistory(normalizedQuery)
 
     const option = {
       limit,
       offset: currentOffset.value,
       sort: currentSortKey.value
     }
-    const {
-      data: { hits, totalHits }
-    } = await apis.searchMessages(...toSearchMessageParam(queryObject, option))
-    extendMessagesMap(hits)
-    fetchingSearchResult.value = false
 
-    setSearchResult(true, hits, totalHits)
+    try {
+      const { serializedQuery, queryObject } = request
+
+      addSearchHistory(serializedQuery)
+
+      const {
+        data: { hits, totalHits }
+      } = await apis.searchMessages(
+        ...toSearchMessageParam(queryObject, option)
+      )
+
+      if (id !== requestId) return
+
+      extendMessagesMap(hits)
+      setSearchResult(true, hits, totalHits)
+    } catch {
+      if (id === requestId) addErrorToast('メッセージの検索に失敗しました')
+    } finally {
+      if (id === requestId) fetchingSearchResult.value = false
+    }
   }
+
+  watch(currentSortKey, resetPaging, { flush: 'sync' })
+
+  watch([searchRequest, currentSortKey, currentPage], () => {
+    void fetchCurrentSearchPage()
+  })
+
+  onMounted(() => {
+    if (!executed.value) void fetchCurrentSearchPage()
+  })
 
   return {
     resetPaging,
 
     query,
+    searchRequest,
     currentPage,
     totalCount,
     currentSortKey,
@@ -138,11 +178,9 @@ const useSearchMessages = () => {
     executed,
 
     pageCount,
-    showingRange,
     jumpToPage,
 
-    fetchingSearchResult,
-    executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch
+    fetchingSearchResult
   }
 }
 

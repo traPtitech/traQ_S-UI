@@ -1,9 +1,13 @@
 <template>
   <IconButton
     :class="$style.container"
+    type="button"
     title="プレビュー表示"
+    aria-label="プレビュー表示"
+    :aria-pressed="modelValue"
     icon-name="markdown"
     :data-is-enabled="modelValue"
+    @mousedown.prevent
     @click="toggle"
   />
 </template>
@@ -23,9 +27,11 @@ const toggle = () => {
   @include color-ui-secondary;
   transform: scale(1);
   transition: transform 0.1s;
+
   &:hover {
     transform: scale(1.1);
   }
+
   &[data-is-enabled='true'] {
     @include color-accent-primary;
   }

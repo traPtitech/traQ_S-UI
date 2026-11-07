@@ -1,0 +1,94 @@
+import { effectScope, nextTick, ref, unref } from 'vue'
+
+import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
+import { getResizedFile } from '/@/lib/resize'
+import { useMessageInputStateStore } from '/@/store/ui/messageInputStateStore'
+
+vi.mock('/@/lib/resize', () => ({ getResizedFile: vi.fn() }))
+vi.mock('/@/store/ui/messageInputStateStore', async () => {
+  const { reactive, unref } = await import('vue')
+  const values = reactive(new Map())
+
+  return {
+    createDefaultValue: () => ({ text: '', attachments: [] }),
+    useMessageInputStateStore: () => ({
+      getDraft: (key: unknown) => values.get(unref(key)),
+      replaceDraft: (key: unknown, value: unknown) =>
+        values.set(unref(key), value),
+      getDocumentKey: (key: unknown) => unref(key),
+      updateDraft: (
+        key: unknown,
+        update: (draft: { text: string; attachments: unknown[] }) => void
+      ) => {
+        const current = values.get(unref(key)) ?? { text: '', attachments: [] }
+        const draft = { ...current, attachments: [...current.attachments] }
+
+        update(draft)
+        values.set(unref(key), draft)
+      }
+    })
+  }
+})
+
+it('keeps a pending batch and later files in its starting draft', async () => {
+  const { getDraft, replaceDraft } = useMessageInputStateStore()
+  replaceDraft('first', { text: 'first draft', attachments: [] })
+  replaceDraft('second', { text: 'second draft', attachments: [] })
+  const key = ref('first')
+  const scope = effectScope()
+  const error = vi.fn()
+  const input = scope.run(() => useMessageInputStateAttachment(key, error))
+  if (!input) throw new Error('Missing input state')
+  const pending = Promise.withResolvers<File>()
+  const first = new File(['first'], 'first.txt', { type: 'text/plain' })
+  const second = new File(['second'], 'second.txt', { type: 'text/plain' })
+  vi.mocked(getResizedFile)
+    .mockReturnValueOnce(pending.promise)
+    .mockResolvedValueOnce(second)
+
+  try {
+    const uploading = input.addAttachments([first, second])
+    await nextTick()
+    key.value = 'second'
+    await nextTick()
+    pending.resolve(first)
+    await uploading
+    await nextTick()
+
+    expect(
+      getDraft('first')?.attachments.map(attachment => attachment.file.name)
+    ).toEqual(['first.txt', 'second.txt'])
+    expect(getDraft(unref(key))).toMatchObject({
+      text: 'second draft',
+      attachments: []
+    })
+    expect(error).not.toHaveBeenCalled()
+  } finally {
+    scope.stop()
+  }
+})
+
+it('captures the target before asynchronous clipboard files are available', async () => {
+  const { getDraft, replaceDraft } = useMessageInputStateStore()
+  replaceDraft('first', { text: 'first', attachments: [] })
+  replaceDraft('second', { text: 'second', attachments: [] })
+  const key = ref('first')
+  const scope = effectScope()
+  const input = scope.run(() => useMessageInputStateAttachment(key, vi.fn()))
+  if (!input) throw new Error('Missing input state')
+  const files = Promise.withResolvers<File[]>()
+  const file = new File(['svg'], 'image.svg', { type: 'image/svg+xml' })
+  vi.mocked(getResizedFile).mockResolvedValue(file)
+
+  try {
+    const pending = input.addAttachments(files.promise)
+    key.value = 'second'
+    await nextTick()
+    files.resolve([file])
+    await pending
+    expect(getDraft('first')?.attachments).toHaveLength(1)
+    expect(getDraft('second')?.attachments).toHaveLength(0)
+  } finally {
+    scope.stop()
+  }
+})

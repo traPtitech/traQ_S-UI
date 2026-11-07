@@ -11,13 +11,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { computed } from 'vue'
 
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
+import { useRenderedMarkdown } from '/@/composables/markdown/useRenderedMarkdown'
 import useResponsive from '/@/composables/useResponsive'
 import { isMessage } from '/@/lib/guard/embeddingOrUrl'
-import { render } from '/@/lib/markdown/markdown'
-import type { MessageId } from '/@/types/entity-ids'
+import { normalizeMessageSource } from '/@/lib/message/content'
 
 import MessageQuoteList from '../MessageElement/Embeddings/MessageQuoteList.vue'
 
@@ -27,14 +27,13 @@ const props = defineProps<{
 }>()
 
 const { isMobile } = useResponsive()
+const { rendered, renderedContent: previewRendered } = useRenderedMarkdown(() =>
+  normalizeMessageSource(props.text)
+)
 
-const previewRendered = ref('')
-const quoteMessageIds = ref<MessageId[]>([])
-watchEffect(async () => {
-  const { renderedText, embeddings } = await render(props.text)
-  previewRendered.value = renderedText
-  quoteMessageIds.value = embeddings.filter(isMessage).map(({ id }) => id)
-})
+const quoteMessageIds = computed(
+  () => rendered.value?.embeddings.filter(isMessage).map(({ id }) => id) ?? []
+)
 </script>
 
 <style lang="scss" module>

@@ -9,16 +9,18 @@
           name="code-grater-than"
         />
       </div>
-      <input
+
+      <ReferenceInput
         ref="inputRef"
         v-model="currentInput"
         :class="$style.input"
         :placeholder="placeholder"
+        mode="search"
         dir="auto"
-        @keydown.esc="onEsc"
-        @keydown.enter="onEnter"
+        @keydown="onKeyDown"
       />
     </div>
+
     <CloseButton
       :class="$style.closeIcon"
       :size="24"
@@ -33,15 +35,17 @@ import { computed, shallowRef } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
+import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
 import useResponsive from '/@/composables/useResponsive'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 
 const { isMobile } = useResponsive()
-const inputRef = shallowRef<HTMLInputElement | null>(null)
+const inputRef = shallowRef<InstanceType<typeof ReferenceInput> | null>(null)
 
 const focus = () => {
   inputRef.value?.focus()
 }
+
 defineExpose({ focus })
 
 const { presentation, currentInput, settleQuery, closeCommandPalette } =
@@ -55,8 +59,20 @@ const onEnter = () => {
   if (presentation.value?.mode === 'command') {
     // exec command
   }
+
   if (presentation.value?.mode === 'search') {
     settleQuery()
+  }
+}
+
+const onKeyDown = (event: KeyboardEvent) => {
+  if (event.isComposing) return
+
+  if (event.key === 'Escape') onEsc()
+
+  if (event.key === 'Enter') {
+    event.preventDefault()
+    onEnter()
   }
 }
 
@@ -119,9 +135,8 @@ const placeholder = computed(() => {
   flex: 1;
 
   .container:not([data-is-mobile]) & {
-    &::placeholder {
-      @include color-ui-secondary-inactive;
-    }
+    --input-placeholder-color: #{$theme-ui-secondary-inactive};
+    --input-placeholder-opacity: 1;
   }
 }
 </style>
