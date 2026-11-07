@@ -29,12 +29,11 @@ const animation: ChannelTreeAnimationState = {
       key: '/root/child',
       item: { node, depth: 1, key: '/root/child' },
       start: 0,
+      size: 36,
       isOpened: false
     }
   ],
-  rowKeys: new Set(['/root/child']),
-  movingRows: [],
-  movingRowKeys: new Set()
+  movingRows: []
 }
 
 describe('ChannelTreeAnimation', () => {
@@ -48,5 +47,6 @@ describe('ChannelTreeAnimation', () => {
     await wrapper.find('[data-direction="expand"]').trigger('animationend')
 
     expect(wrapper.emitted('finish')).toEqual([[animation.id]])
+    wrapper.unmount()
   })
 })

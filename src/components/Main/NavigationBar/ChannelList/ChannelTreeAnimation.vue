@@ -5,6 +5,7 @@
     :style="{ paddingTop: `${animation.origin}px` }"
   >
     <div
+      ref="treeElement"
       :class="$style.tree"
       :data-direction="animation.direction"
       :style="{
@@ -61,13 +62,17 @@
 </template>
 
 <script lang="ts" setup>
+import { useTemplateRef } from 'vue'
+
+import { useResizeObserver } from '@vueuse/core'
+
 import ChannelElement from './ChannelElement.vue'
 import {
   CHANNEL_TREE_ANIMATION_DURATION_MS,
   type ChannelTreeAnimationState
 } from './channelTreeAnimation'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     animation: ChannelTreeAnimationState
     showShortenedPath?: boolean
@@ -87,7 +92,21 @@ withDefaults(
 
 const emit = defineEmits<{
   (event: 'finish', animationId: number): void
+  (event: 'resize', animationId: number, height: number): void
 }>()
+
+const treeElement = useTemplateRef<HTMLElement>('treeElement')
+
+useResizeObserver(
+  treeElement,
+  entries => {
+    const entry = entries[0]
+    if (!entry) return
+    const height = entry.borderBoxSize[0]?.blockSize ?? entry.contentRect.height
+    emit('resize', props.animation.id, height)
+  },
+  { box: 'border-box' }
+)
 </script>
 
 <style lang="scss" module>
@@ -99,6 +118,7 @@ const emit = defineEmits<{
 }
 .flow {
   pointer-events: none;
+  overflow-anchor: none;
 }
 .tree {
   overflow: hidden;

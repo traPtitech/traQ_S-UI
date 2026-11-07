@@ -1,4 +1,5 @@
-import { computed, ref, shallowRef } from 'vue'
+import { computed, effectScope, ref, shallowRef } from 'vue'
+import type { EffectScope } from 'vue'
 
 import type { VirtualItem, Virtualizer } from '@tanstack/vue-virtual'
 
@@ -14,6 +15,7 @@ const childNode: ChannelTreeNode = {
   active: true,
   archived: false
 }
+
 const rootNode: ChannelTreeNode = {
   id: 'root' as ChannelId,
   name: 'root',
@@ -21,6 +23,7 @@ const rootNode: ChannelTreeNode = {
   active: true,
   archived: false
 }
+
 const siblingNode: ChannelTreeNode = {
   id: 'sibling' as ChannelId,
   name: 'sibling',
@@ -30,11 +33,13 @@ const siblingNode: ChannelTreeNode = {
 }
 
 const rootItem: FlatChannelItem = { node: rootNode, depth: 0, key: '/root' }
+
 const childItem: FlatChannelItem = {
   node: childNode,
   depth: 1,
   key: '/root/child'
 }
+
 const siblingItem: FlatChannelItem = {
   node: siblingNode,
   depth: 0,
@@ -54,39 +59,124 @@ const virtualItem = (
   lane: 0
 })
 
-const setup = (initiallyExpanded: boolean) => {
+const scopes: EffectScope[] = []
+
+const setup = (initiallyExpanded: boolean, childCount = 1) => {
+  const scope = effectScope()
+  scopes.push(scope)
+  const scrollElement = shallowRef(document.createElement('div'))
+  const visibleIndices = ref<Set<number> | null>(null)
+  const children = Array.from({ length: childCount }, (_, index) =>
+    index === 0
+      ? childItem
+      : {
+          ...childItem,
+          key: `/root/child-${index}`,
+          node: { ...childNode, id: `child-${index}` as ChannelId }
+        }
+  )
   const isExpanded = ref(initiallyExpanded)
   const expandedNodeKeys = ref(new Set(initiallyExpanded ? ['/root'] : []))
   const flatItems = computed(() =>
     isExpanded.value
-      ? [rootItem, childItem, siblingItem]
+      ? [rootItem, ...children, siblingItem]
       : [rootItem, siblingItem]
   )
+
+  const measurements = computed(() =>
+    flatItems.value.map((item, index) =>
+      virtualItem(index, item.key, index * 36)
+    )
+  )
+  const resizeItem = vi.fn()
   const virtualizer = shallowRef({
+    options: { overscan: 5 },
+    scrollRect: { height: 108 },
+    get measurementsCache() {
+      // TanStack の単一列キャッシュは、添字アクセスで値を生成する疎な配列。
+      const items = measurements.value
+      return new Proxy(new Array<VirtualItem>(items.length), {
+        get: (target, property, receiver) =>
+          typeof property === 'string' && /^\d+$/.test(property)
+            ? items[Number(property)]
+            : Reflect.get(target, property, receiver)
+      })
+    },
     getVirtualItems: () =>
-      isExpanded.value
-        ? [
-            virtualItem(0, '/root', 0),
-            virtualItem(1, '/root/child', 36),
-            virtualItem(2, '/sibling', 72)
-          ]
-        : [virtualItem(0, '/root', 0), virtualItem(1, '/sibling', 36)],
-    getTotalSize: () => (isExpanded.value ? 108 : 72)
+      measurements.value.filter(
+        item => !visibleIndices.value || visibleIndices.value.has(item.index)
+      ),
+    getTotalSize: () => flatItems.value.length * 36,
+    resizeItem
   } as unknown as Virtualizer<HTMLElement, HTMLElement>)
 
-  return useChannelTreeAnimation({
-    virtualizer,
-    flatItems,
-    expandedNodeKeys,
-    scrollMargin: computed(() => 0),
-    toggle: () => {
-      isExpanded.value = !isExpanded.value
-      expandedNodeKeys.value = new Set(isExpanded.value ? ['/root'] : [])
-    }
-  })
+  const animation = scope.run(() =>
+    useChannelTreeAnimation({
+      virtualizer,
+      flatItems,
+      expandedNodeKeys,
+      scrollElement,
+      scrollMargin: computed(() => 0),
+      toggle: () => {
+        isExpanded.value = !isExpanded.value
+        expandedNodeKeys.value = new Set(isExpanded.value ? ['/root'] : [])
+      }
+    })
+  )
+  if (!animation) throw new Error('Animation scope is inactive')
+  return { ...animation, scrollElement, visibleIndices, resizeItem }
 }
 
 describe('useChannelTreeAnimation', () => {
+  afterEach(() => {
+    for (const scope of scopes.splice(0)) scope.stop()
+  })
+
+  it('展開後の仮想範囲から外れた後続行も、アニメーション中は保持する', async () => {
+    const { treeAnimation, handleToggle, visibleIndices } = setup(false, 1000)
+    visibleIndices.value = new Set([0, 1])
+    handleToggle('/root')
+    await vi.waitFor(() => expect(treeAnimation.value).not.toBeNull())
+
+    expect(treeAnimation.value?.movingRows.map(row => row.key)).toContain(
+      '/sibling'
+    )
+    expect(treeAnimation.value?.rows.length).toBeLessThan(20)
+  })
+
+  it.each([false, true])(
+    '展開状態 %s からのアニメーション中にスクロールしても、表示範囲を更新し、次の操作を待機させる',
+    async open => {
+      const {
+        treeAnimation,
+        handleToggle,
+        updateTreeAnimationHeight,
+        scrollElement,
+        visibleIndices
+      } = setup(open, 1000)
+      visibleIndices.value = new Set([0, 1])
+      handleToggle('/root')
+      handleToggle('/root')
+      await vi.waitFor(() => expect(treeAnimation.value).not.toBeNull())
+      const first = treeAnimation.value
+      if (!first) throw new Error('Animation did not start')
+
+      updateTreeAnimationHeight(first.id, 20000)
+      scrollElement.value.scrollTop = 18000
+      scrollElement.value.dispatchEvent(new Event('scroll'))
+
+      const scrolled = treeAnimation.value
+      expect(scrolled?.id).toBe(first.id)
+      expect(scrolled?.direction).toBe(first.direction)
+      expect(scrolled?.rows.some(row => row.key === '/root/child-500')).toBe(
+        true
+      )
+      expect(scrolled?.rows.length).toBeLessThan(25)
+      await Promise.resolve()
+      expect(treeAnimation.value?.id).toBe(first.id)
+    }
+  )
+
   it.each([
     ['collapse', true],
     ['expand', false]

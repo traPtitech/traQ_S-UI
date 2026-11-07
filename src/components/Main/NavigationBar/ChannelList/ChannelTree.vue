@@ -53,6 +53,7 @@
       :show-star="showStar"
       :show-notified="showNotified"
       @finish="finishTreeAnimation"
+      @resize="updateTreeAnimationHeight"
     />
   </div>
 </template>
@@ -105,14 +106,20 @@ const virtualizer = useVirtualizer(
   }))
 )
 
-const { displayedRows, treeAnimation, finishTreeAnimation, handleToggle } =
-  useChannelTreeAnimation({
-    virtualizer,
-    flatItems,
-    expandedNodeKeys,
-    scrollMargin: computed(() => props.scrollMargin),
-    toggle
-  })
+const {
+  displayedRows,
+  treeAnimation,
+  finishTreeAnimation,
+  updateTreeAnimationHeight,
+  handleToggle
+} = useChannelTreeAnimation({
+  virtualizer,
+  flatItems,
+  expandedNodeKeys,
+  scrollElement: toRef(props, 'scrollElement'),
+  scrollMargin: computed(() => props.scrollMargin),
+  toggle
+})
 
 const virtualPadding = computed(() => {
   const first = displayedRows.value[0]?.vItem

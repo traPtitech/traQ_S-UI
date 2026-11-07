@@ -1,13 +1,15 @@
-import { computed, nextTick, shallowRef } from 'vue'
+import { computed, nextTick, ref, shallowRef, watch } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 
 import type { Virtualizer } from '@tanstack/vue-virtual'
+import { useEventListener } from '@vueuse/core'
 
 import {
   CHANNEL_TREE_ANIMATION_DURATION_MS,
-  type ChannelTreeAnimationState,
+  type ChannelTreeAnimationSnapshot,
   type VirtualChannelRow,
-  createChannelTreeAnimation
+  createChannelTreeAnimation,
+  getVisibleChannelTreeAnimation
 } from '../channelTreeAnimation'
 import type { FlatChannelItem } from './useChannelFlatList'
 
@@ -20,6 +22,7 @@ interface ChannelTreeAnimationOptions<
   virtualizer: Ref<Virtualizer<TScrollElement, TItemElement>>
   flatItems: ComputedRef<FlatChannelItem[]>
   expandedNodeKeys: Ref<Set<string>>
+  scrollElement: Readonly<Ref<TScrollElement | null>>
   scrollMargin: ComputedRef<number>
   toggle: (itemKey: string) => void
 }
@@ -31,6 +34,7 @@ const useChannelTreeAnimation = <
   virtualizer,
   flatItems,
   expandedNodeKeys,
+  scrollElement,
   scrollMargin,
   toggle
 }: ChannelTreeAnimationOptions<TScrollElement, TItemElement>) => {
@@ -41,38 +45,76 @@ const useChannelTreeAnimation = <
     })
   )
 
-  const treeAnimation = shallowRef<ChannelTreeAnimationState | null>(null)
+  const animationSnapshot = shallowRef<ChannelTreeAnimationSnapshot | null>(
+    null
+  )
+  const currentHeight = ref(0)
+  const scrollOffset = ref(0)
+
+  const updateScrollOffset = () => {
+    scrollOffset.value = scrollElement.value?.scrollTop ?? 0
+  }
+
+  watch(scrollElement, updateScrollOffset, { immediate: true })
+  useEventListener(scrollElement, 'scroll', updateScrollOffset, {
+    passive: true
+  })
+
+  const treeAnimation = computed(() => {
+    const animation = animationSnapshot.value
+    if (!animation) return null
+
+    const viewportStart = scrollOffset.value - scrollMargin.value
+    const viewportHeight =
+      virtualizer.value.scrollRect?.height ??
+      scrollElement.value?.clientHeight ??
+      0
+    return getVisibleChannelTreeAnimation(
+      animation,
+      viewportStart,
+      viewportStart + viewportHeight,
+      currentHeight.value,
+      virtualizer.value.options.overscan
+    )
+  })
+
   let treeAnimationId = 0
   let resolveTreeAnimation: (() => void) | undefined
 
   const displayedRows = computed(() => {
-    const animation = treeAnimation.value
+    const animation = animationSnapshot.value
     if (!animation) return virtualItemRows.value
 
     return virtualItemRows.value.filter(
-      ({ key }) =>
-        !animation.rowKeys.has(key) && !animation.movingRowKeys.has(key)
+      ({ vItem }) => vItem.start - scrollMargin.value < animation.origin
     )
   })
 
   const finishTreeAnimation = (animationId: number) => {
-    if (treeAnimation.value?.id === animationId) {
-      treeAnimation.value = null
+    if (animationSnapshot.value?.id === animationId) {
+      animationSnapshot.value = null
       resolveTreeAnimation?.()
       resolveTreeAnimation = undefined
     }
   }
 
+  const updateTreeAnimationHeight = (animationId: number, height: number) => {
+    if (animationSnapshot.value?.id === animationId)
+      currentHeight.value = height
+  }
+
+  const snapshotRows = (): VirtualChannelRow[] =>
+    // 計測キャッシュは遅延生成される疎な配列なので、未描画の行も読み出す。
+    Array.from(virtualizer.value.measurementsCache).flatMap(vItem => {
+      const item = flatItems.value[vItem.index]
+      return item ? [{ vItem: { ...vItem }, item, key: String(vItem.key) }] : []
+    })
+
   const toggleWithAnimation = async (itemKey: string) => {
-    const prePositions = new Map(
-      virtualizer.value
-        .getVirtualItems()
-        .map(item => [String(item.key), item.start])
-    )
-    const preRows = virtualItemRows.value
+    const retainedKeys = new Set(virtualItemRows.value.map(row => row.key))
     const preExpandedNodeKeys = new Set(expandedNodeKeys.value)
-    const preKeys = new Set(flatItems.value.map(item => item.key))
     const preTotalSize = virtualizer.value.getTotalSize()
+    const preRows = snapshotRows()
     const parent = virtualizer.value
       .getVirtualItems()
       .find(item => String(item.key) === itemKey)
@@ -91,28 +133,28 @@ const useChannelTreeAnimation = <
     toggle(itemKey)
     await nextTick()
 
-    const postRows = virtualItemRows.value
     const postTotalSize = virtualizer.value.getTotalSize()
+    const postRows = snapshotRows()
+    for (const row of virtualItemRows.value) retainedKeys.add(row.key)
     const totalSizeDelta = postTotalSize - preTotalSize
 
     if (totalSizeDelta === 0) {
-      treeAnimation.value = null
+      animationSnapshot.value = null
       return
     }
 
     const animationId = ++treeAnimationId
-    treeAnimation.value = createChannelTreeAnimation({
+    currentHeight.value = direction === 'expand' ? 0 : Math.abs(totalSizeDelta)
+    animationSnapshot.value = createChannelTreeAnimation({
       id: animationId,
       direction,
       origin,
       scrollMargin: scrollMargin.value,
       preRows,
       postRows,
-      prePositions,
-      preKeys,
+      retainedKeys,
       preExpandedNodeKeys,
       expandedNodeKeys: expandedNodeKeys.value,
-      postFlatItems: flatItems.value,
       postTotalSize,
       totalSizeDelta,
       descendantKeyPrefix
@@ -135,6 +177,7 @@ const useChannelTreeAnimation = <
     displayedRows,
     treeAnimation,
     finishTreeAnimation,
+    updateTreeAnimationHeight,
     handleToggle
   }
 }

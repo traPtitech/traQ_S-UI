@@ -14,6 +14,8 @@ export interface ChannelTreeAnimationRow {
   key: string
   item: FlatChannelItem
   start: number
+  size: number
+  index?: number
   isOpened: boolean
 }
 
@@ -24,9 +26,12 @@ export interface ChannelTreeAnimationState {
   height: number
   trailingHeight: number
   rows: ChannelTreeAnimationRow[]
-  rowKeys: Set<string>
   movingRows: ChannelTreeAnimationRow[]
-  movingRowKeys: Set<string>
+}
+
+export interface ChannelTreeAnimationSnapshot extends ChannelTreeAnimationState {
+  retainedRowIndexes: number[]
+  retainedMovingRowIndexes: number[]
 }
 
 interface CreateChannelTreeAnimationOptions {
@@ -36,45 +41,27 @@ interface CreateChannelTreeAnimationOptions {
   scrollMargin: number
   preRows: VirtualChannelRow[]
   postRows: VirtualChannelRow[]
-  prePositions: Map<string, number>
-  preKeys: Set<string>
+  retainedKeys: Set<string>
   preExpandedNodeKeys: Set<string>
   expandedNodeKeys: Set<string>
-  postFlatItems: FlatChannelItem[]
   postTotalSize: number
   totalSizeDelta: number
   descendantKeyPrefix: string
-}
-
-const getMovingRowKeys = (
-  postRows: VirtualChannelRow[],
-  prePositions: Map<string, number>,
-  preKeys: Set<string>,
-  isCollapsing: boolean
-) => {
-  const keys = new Set<string>()
-  for (const { key, vItem } of postRows) {
-    const preStart = prePositions.get(key)
-    if (
-      (preStart !== undefined && preStart !== vItem.start) ||
-      (isCollapsing && preStart === undefined && preKeys.has(key))
-    ) {
-      keys.add(key)
-    }
-  }
-  return keys
 }
 
 const toAnimationRows = (
   rows: VirtualChannelRow[],
   expandedNodeKeys: Set<string>,
   origin: number,
-  scrollMargin: number
+  scrollMargin: number,
+  hasCurrentIndex = true
 ): ChannelTreeAnimationRow[] =>
   rows.map(({ item, key, vItem }) => ({
     key,
     item,
     start: vItem.start - scrollMargin - origin,
+    size: vItem.size,
+    index: hasCurrentIndex ? vItem.index : undefined,
     isOpened: expandedNodeKeys.has(key)
   }))
 
@@ -85,41 +72,30 @@ export const createChannelTreeAnimation = ({
   scrollMargin,
   preRows,
   postRows,
-  prePositions,
-  preKeys,
+  retainedKeys,
   preExpandedNodeKeys,
   expandedNodeKeys,
-  postFlatItems,
   postTotalSize,
   totalSizeDelta,
   descendantKeyPrefix
-}: CreateChannelTreeAnimationOptions): ChannelTreeAnimationState => {
+}: CreateChannelTreeAnimationOptions): ChannelTreeAnimationSnapshot => {
   const isExpanding = direction === 'expand'
   const sourceRows = isExpanding ? postRows : preRows
   const rows = toAnimationRows(
     sourceRows.filter(({ key }) => key.startsWith(descendantKeyPrefix)),
     isExpanding ? expandedNodeKeys : preExpandedNodeKeys,
     origin,
-    scrollMargin
-  )
-  const rowKeys = isExpanding
-    ? new Set(
-        postFlatItems
-          .filter(({ key }) => key.startsWith(descendantKeyPrefix))
-          .map(({ key }) => key)
-      )
-    : new Set(rows.map(row => row.key))
-
-  const movingRowKeys = getMovingRowKeys(
-    postRows,
-    prePositions,
-    preKeys,
-    !isExpanding
+    scrollMargin,
+    isExpanding
   )
   const height = Math.abs(totalSizeDelta)
   const finalTreeHeight = isExpanding ? height : 0
   const movingRows = toAnimationRows(
-    postRows.filter(({ key }) => movingRowKeys.has(key)),
+    postRows.filter(
+      ({ key, vItem }) =>
+        !key.startsWith(descendantKeyPrefix) &&
+        vItem.start - scrollMargin >= origin + finalTreeHeight
+    ),
     expandedNodeKeys,
     origin + finalTreeHeight,
     scrollMargin
@@ -132,8 +108,88 @@ export const createChannelTreeAnimation = ({
     height,
     trailingHeight: Math.max(postTotalSize - origin - finalTreeHeight, 0),
     rows,
-    rowKeys,
     movingRows,
-    movingRowKeys
+    retainedRowIndexes: rows.flatMap((row, index) =>
+      retainedKeys.has(row.key) ? [index] : []
+    ),
+    retainedMovingRowIndexes: movingRows.flatMap((row, index) =>
+      retainedKeys.has(row.key) ? [index] : []
+    )
+  }
+}
+
+const lowerBound = (
+  rows: ChannelTreeAnimationRow[],
+  offset: number,
+  useEnd: boolean
+) => {
+  let left = 0
+  let right = rows.length
+
+  while (left < right) {
+    const middle = Math.floor((left + right) / 2)
+    const row = rows[middle]
+
+    if (row && row.start + (useEnd ? row.size : 0) < offset) {
+      left = middle + 1
+    } else {
+      right = middle
+    }
+  }
+
+  return left
+}
+
+const selectRows = (
+  rows: ChannelTreeAnimationRow[],
+  retainedIndexes: number[],
+  start: number,
+  end: number,
+  overscan: number
+) => {
+  const indexes = new Set(retainedIndexes)
+
+  if (end > start) {
+    const first = Math.max(lowerBound(rows, start, true) - overscan, 0)
+    const last = Math.min(lowerBound(rows, end, false) + overscan, rows.length)
+    for (let index = first; index < last; index++) indexes.add(index)
+  }
+
+  return [...indexes]
+    .sort((a, b) => a - b)
+    .flatMap(index => {
+      const row = rows[index]
+      return row ? [row] : []
+    })
+}
+
+export const getVisibleChannelTreeAnimation = (
+  animation: ChannelTreeAnimationSnapshot,
+  viewportStart: number,
+  viewportEnd: number,
+  currentHeight: number,
+  overscan: number
+): ChannelTreeAnimationState => {
+  const height = Math.max(0, currentHeight)
+  const childStart = Math.max(viewportStart - animation.origin, 0)
+  const childEnd = Math.min(viewportEnd - animation.origin, height)
+  const movingOrigin = animation.origin + height
+
+  return {
+    ...animation,
+    rows: selectRows(
+      animation.rows,
+      animation.retainedRowIndexes,
+      childStart,
+      childEnd,
+      overscan
+    ),
+    movingRows: selectRows(
+      animation.movingRows,
+      animation.retainedMovingRowIndexes,
+      Math.max(viewportStart - movingOrigin, 0),
+      viewportEnd - movingOrigin,
+      overscan
+    )
   }
 }
