@@ -96,4 +96,23 @@ export const compareDateString = (
   str1: string,
   str2: string,
   inverse = false
-) => compareDate(new Date(str1), new Date(str2), inverse)
+) => {
+  const date1 = new Date(str1)
+  const date2 = new Date(str2)
+  const comparison = compareDate(date1, date2, inverse)
+  if (
+    comparison !== 0 ||
+    Number.isNaN(date1.getTime()) ||
+    Number.isNaN(date2.getTime())
+  ) {
+    return comparison
+  }
+
+  // APIの日時にはDateで切り捨てられるミリ秒未満の精度がある
+  const fraction = (date: string) =>
+    Number(`0.${date.match(/\.(\d+)/)?.[1] ?? '0'}`)
+
+  const precision = Math.sign(fraction(str1) - fraction(str2))
+
+  return precision === 0 ? 0 : inverse ? -precision : precision
+}

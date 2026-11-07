@@ -148,6 +148,19 @@ describe('compareDate', () => {
 })
 
 describe('compareDateString', () => {
+  it.each([
+    ['2026-11-07T00:00:00Z', '2026-11-07T00:00:00.000000001Z', -1],
+    ['2026-11-07T00:00:00.000000002Z', '2026-11-07T00:00:00.000000001Z', 1],
+    ['2026-11-07T00:00:00.1Z', '2026-11-07T00:00:00.100000000Z', 0],
+    ['2026-11-07T09:00:00.000000001+09:00', '2026-11-07T00:00:00Z', 1]
+  ])(
+    'compares full timestamp precision (%s, %s)',
+    (first, second, expected) => {
+      expect(compareDateString(first, second)).toBe(expected)
+      expect(compareDateString(first, second, true)).toBe(-expected || 0)
+    }
+  )
+
   it('can compare time', () => {
     expect(
       compareDateString(
