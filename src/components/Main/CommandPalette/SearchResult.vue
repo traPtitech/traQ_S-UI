@@ -65,12 +65,11 @@ import SearchResultMessageElement from './SearchResultMessageElement.vue'
 import useKeepScrollPosition from './composables/useKeepScrollPosition'
 import useSearchMessages from './composables/useSearchMessages'
 
-const selectorItems: PopupSelectorItem<SearchMessageSortKey>[] &
-  { value: SearchMessageSortKey }[] = [
+const selectorItems = [
   { value: 'createdAt', title: '新しい順' },
   { value: '-createdAt', title: '古い順' },
   { value: 'updatedAt', title: '最近更新された順' }
-]
+] satisfies PopupSelectorItem<SearchMessageSortKey>[]
 
 const {
   executeSearchForCurrentPage,
@@ -87,7 +86,12 @@ const {
 
 watch(
   // クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
-  () => [query.value, currentSortKey.value, currentPage.value] as const,
+  () =>
+    [query.value, currentSortKey.value, currentPage.value] satisfies [
+      string,
+      SearchMessageSortKey,
+      number
+    ],
   ([query, key], [oldQuery, oldKey]) => {
     // クエリの変更時・ソートキーの変更時はページングをリセット
     if (query !== oldQuery || key !== oldKey) {

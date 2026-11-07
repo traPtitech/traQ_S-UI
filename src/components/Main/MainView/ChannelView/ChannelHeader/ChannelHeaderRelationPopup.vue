@@ -96,13 +96,13 @@ const formattedSiblings = computed(() =>
 )
 
 const tabNames = ['siblings', 'children'] as const
-const tabNameRefs: Record<
-  (typeof tabNames)[number],
-  Ref<InstanceType<typeof ATab> | null>
-> = {
+const tabNameRefs = {
   siblings: siblingTab,
   children: childrenTab
-}
+} satisfies Record<
+  (typeof tabNames)[number],
+  Ref<InstanceType<typeof ATab> | null>
+>
 const currentTab = ref<(typeof tabNames)[number]>('siblings')
 const onKeydown = (e: KeyboardEvent) => {
   const index = tabNames.indexOf(currentTab.value)

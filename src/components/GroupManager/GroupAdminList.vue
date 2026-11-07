@@ -51,7 +51,7 @@ const onClickAdd = () => {
   })
 }
 
-const onDelete = async (id: string) => {
+const onDelete = async (id: UserId) => {
   if (props.admins.length <= 1) return
   if (!confirm('本当にこのグループ管理者を削除しますか？')) return
   try {
