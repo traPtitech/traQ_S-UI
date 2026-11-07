@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig.json",
+  "include": [
+    "./App.vue",
+    "./main.ts",
+    "./harness.ts",
+    "../../../src/types/**/*.ts",
+    "../../../config.d.ts"
+  ]
+}

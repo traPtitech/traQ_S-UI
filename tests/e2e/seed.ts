@@ -8,10 +8,11 @@ export const seed = async (): Promise<TestData> => {
   const backendOrigin = getBackendOrigin()
   const id = randomUUID().replaceAll('-', '').slice(0, 12)
 
-  const data: TestData = {
+  const data = {
     username: `e2e_${id}`,
     password: 'e2e-test-password',
-    channelName: `e2e-${id}`
+    channelName: `e2e-${id}`,
+    secondChannelName: `e2e-b-${id}`
   }
 
   let cookie = ''
@@ -46,7 +47,7 @@ export const seed = async (): Promise<TestData> => {
 
   await request('POST', '/login', { name: 'traq', password: 'traq' })
 
-  await request('POST', '/users', {
+  const user = await request<{ id: string }>('POST', '/users', {
     name: data.username,
     password: data.password
   })
@@ -61,6 +62,8 @@ export const seed = async (): Promise<TestData> => {
     name: data.channelName
   })
 
+  await request('POST', '/channels', { name: data.secondChannelName })
+
   await request('PATCH', '/users/me', {
     bio: userBio,
     homeChannel: channel.id
@@ -72,5 +75,5 @@ export const seed = async (): Promise<TestData> => {
 
   await request('POST', '/logout')
 
-  return data
+  return { ...data, userId: user.id, channelId: channel.id }
 }

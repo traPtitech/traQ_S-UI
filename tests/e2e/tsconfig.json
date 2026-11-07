@@ -4,5 +4,11 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "types": ["node"]
   },
-  "include": ["./**/*.ts", "../../playwright.config.ts"]
+  "include": [
+    "./**/*.ts",
+    "../../src/types/**/*.ts",
+    "../../config.d.ts",
+    "../../playwright.config.ts",
+    "../../playwright.editor.config.ts"
+  ]
 }
