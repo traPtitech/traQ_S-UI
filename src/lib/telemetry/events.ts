@@ -3,6 +3,7 @@ import type { FeatureFlagKey } from '/@/store/app/featureFlagSettings'
 export type FeatureFlagSource = 'default' | 'override' | 'expired'
 
 export type TelemetryEvents = {
+  app_started: Record<string, never>
   feature_flag_snapshot: {
     flag: FeatureFlagKey
     enabled: boolean

@@ -15,7 +15,6 @@ import type {
 import { Apis, Configuration } from '@traptitech/traq'
 
 import type { AxiosError } from 'axios'
-import axios from 'axios'
 
 import { DEV_SERVER } from '/@/lib/define'
 import { constructFilesPath } from '/@/router'
@@ -50,10 +49,7 @@ export let embeddingOrigin: string
 
 const fetchEmbeddingOrigin = async () => {
   try {
-    const { data } = await axios.get<{ canonicalOrigin: string }>(
-      `${BASE_PATH}/meta`,
-      { timeout: 5000 }
-    )
+    const { data } = await apis.getMeta({ timeout: 5000 })
 
     if (typeof data.canonicalOrigin !== 'string') return
 
