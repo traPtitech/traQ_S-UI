@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <NavigationContentTitle current-navigation="activity" />
+    <NavigationContentTitle>アクティビティ</NavigationContentTitle>
     <div :class="$style.buttons">
       <ToggleButton
         v-model="isNotAll"

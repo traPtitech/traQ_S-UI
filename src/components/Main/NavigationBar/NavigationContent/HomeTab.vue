@@ -1,7 +1,7 @@
 <template>
   <div ref="scrollEl" :class="$style.container">
     <div ref="titleSectionRef" :class="$style.titleSection">
-      <NavigationContentTitle current-navigation="home" />
+      <NavigationContentTitle>ホーム</NavigationContentTitle>
     </div>
 
     <template v-if="homeChannelWithTree.length > 0">
