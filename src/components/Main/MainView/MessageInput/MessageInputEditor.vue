@@ -10,6 +10,7 @@
       :class="$style.editor"
       :style="inputStyle"
       :readonly="isPosting"
+      :markdown="isMarkdownEnabled"
       placeholder="メッセージを入力"
       :data-simple-padding="simplePadding"
       :data-shrink-to-one-line="shrinkToOneLine"
@@ -40,6 +41,7 @@ import useSendKeyWatcher from '/@/composables/messageComposer/useSendKeyWatcher'
 import useResponsive from '/@/composables/useResponsive'
 import { isFirefox } from '/@/lib/dom/browser'
 import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
 const modelValue = defineModel<string>({ default: '' })
 
@@ -78,6 +80,11 @@ const emit = defineEmits<{
 const firefoxFlag = isFirefox()
 
 const { isMobile } = useResponsive()
+const { featureFlags } = useFeatureFlagSettings()
+
+const isMarkdownEnabled = computed(
+  () => featureFlags.value.inline_markdown.enabled
+)
 
 const inputRef = shallowRef<InstanceType<typeof ReferenceInput>>()
 const inputHandle = computed(() => inputRef.value)
@@ -91,7 +98,11 @@ const {
   onKeyDown,
   onKeyUp,
   onBlur: onBlurSendKeyWatcher
-} = useSendKeyWatcher(emit, options => inputRef.value?.insertLineBreak(options))
+} = useSendKeyWatcher(
+  emit,
+  options => inputRef.value?.insertLineBreak(options),
+  isMarkdownEnabled
+)
 
 const onFocus = () => {
   emit('focus')

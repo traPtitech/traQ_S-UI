@@ -1,3 +1,5 @@
+import { type MaybeRefOrGetter, toValue, watch } from 'vue'
+
 import type { MarkdownLineBreakOptions } from '@traq-flavored-markdown/vue-editor'
 
 import { isMac, isMobilePlatform } from '/@/lib/dom/browser'
@@ -80,14 +82,21 @@ const useSendKeyWatcher = (
   emit: ((event: 'postMessage') => void) &
     ((event: 'modifierKeyDown') => void) &
     ((event: 'modifierKeyUp') => void),
-  insertLineBreak: (options?: MarkdownLineBreakOptions) => void
+  insertLineBreak: (options?: MarkdownLineBreakOptions) => void,
+  markdown: MaybeRefOrGetter<boolean> = false
 ) => {
   const { sendWithModifierKey, modifierKey } = useBrowserSettings()
+
+  watch(
+    () => toValue(markdown),
+    () => emit('modifierKeyUp')
+  )
 
   const onBeforeInput = (event: Event) => {
     if (event instanceof InputEvent) {
       if (
         !usesMobileSubmissionPolicy &&
+        !(toValue(markdown) && event.inputType === 'insertLineBreak') &&
         isSendKeyInput(event, sendWithModifierKey.value)
       ) {
         event.preventDefault()
@@ -106,6 +115,13 @@ const useSendKeyWatcher = (
       if (sendWithModifierKey.value === 'modifier' && modifierPressed) {
         event.preventDefault()
         emit('postMessage')
+        return
+      }
+
+      if (toValue(markdown) && event.shiftKey) {
+        event.preventDefault()
+        insertLineBreak({ continueItem: true })
+
         return
       }
 

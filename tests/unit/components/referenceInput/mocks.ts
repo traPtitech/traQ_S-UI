@@ -50,6 +50,13 @@ vi.mock('/@/store/app/browserSettings', async () => {
   return { useBrowserSettings: () => ({ sendWithModifierKey, modifierKey }) }
 })
 
+vi.mock('/@/store/app/featureFlagSettings', async () => {
+  const { ref } = await import('vue')
+  const featureFlags = ref({ inline_markdown: { enabled: true } })
+
+  return { useFeatureFlagSettings: () => ({ featureFlags }) }
+})
+
 vi.mock('/@/store/domain/stampHistory', () => ({
   useStampHistory: () => ({ upsertLocalStampHistory: vi.fn() })
 }))
