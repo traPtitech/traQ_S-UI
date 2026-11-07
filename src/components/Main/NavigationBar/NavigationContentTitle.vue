@@ -1,26 +1,8 @@
 <template>
   <h2 :class="$style.container">
-    {{ title }}
+    <slot />
   </h2>
 </template>
-
-<script lang="ts" setup>
-import { computed } from 'vue'
-
-import type { NavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
-import { navigationTypeNameMap } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
-
-const props = withDefaults(
-  defineProps<{
-    currentNavigation?: NavigationItemType
-  }>(),
-  {
-    currentNavigation: 'home' as const
-  }
-)
-
-const title = computed(() => navigationTypeNameMap[props.currentNavigation])
-</script>
 
 <style lang="scss" module>
 .container {

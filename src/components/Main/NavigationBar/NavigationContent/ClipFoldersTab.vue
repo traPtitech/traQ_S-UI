@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <NavigationContentTitle current-navigation="clips" />
+    <NavigationContentTitle>クリップ</NavigationContentTitle>
     <NavigationContentContainer subtitle="クリップフォルダ">
       <template #control>
         <button :class="$style.button" @click="onClickButton">

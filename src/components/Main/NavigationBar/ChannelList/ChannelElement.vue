@@ -59,9 +59,8 @@
       </router-link>
     </div>
 
-    <div :class="$style.slot">
-      <ChannelElementTopic v-if="showTopic" :channel-id="channel.id" />
-      <slot />
+    <div v-if="showTopic" :class="$style.topic">
+      <ChannelElementTopic :channel-id="channel.id" />
     </div>
 
     <!-- チャンネルの背景 -->
@@ -258,7 +257,7 @@ $bgLeftShift: 8px;
     background: $theme-ui-primary-background;
   }
 }
-.slot {
+.topic {
   padding-left: $bgLeftShift;
 }
 </style>
