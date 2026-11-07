@@ -7,6 +7,7 @@ import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
 import { encodeReference } from '/@/lib/references'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useCommandPalette } from '/@/store/app/commandPalette'
+import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
@@ -156,6 +157,7 @@ export const installReferenceInputFixture = () => {
     }
 
     useBrowserSettings().sendWithModifierKey.value = 'none'
+    useFeatureFlagSettings().featureFlags.value.inline_markdown.enabled = true
     useCommandPalette().presentation.value = undefined
     useCommandPalette().currentInput.value = ''
   })
