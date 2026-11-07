@@ -1,5 +1,7 @@
 import type { ResourceCard } from '@traq-flavored-markdown/sdk/renderer'
 
+export type SourceRange = Readonly<{ from: number; to: number }>
+
 export interface MarkdownRenderResult {
   rawText: string
   renderedText: string

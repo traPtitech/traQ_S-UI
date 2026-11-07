@@ -1,3 +1,4 @@
+import { parseInput, partsToDisplayText } from '/@/lib/references'
 import type { StoreForParser } from '/@/lib/searchMessage/parserBase'
 import {
   createQueryParser,
@@ -111,13 +112,13 @@ describe('parseQuery', () => {
       description: 'with user-filter (prefix: `from:`, user)',
       query: `lorem ipsum from:${mockUserName}`,
       expectedNormalizedQuery: `lorem ipsum from:${mockUserName}`,
-      expectedQueryObject: { word: 'lorem ipsum', from: mockUserId }
+      expectedQueryObject: { word: 'lorem ipsum', from: [mockUserId] }
     },
     {
       description: 'with user-filter (prefix: `to:`, user)',
       query: `lorem ipsum to:${mockUserName}`,
       expectedNormalizedQuery: `lorem ipsum to:${mockUserName}`,
-      expectedQueryObject: { word: 'lorem ipsum', to: mockUserId }
+      expectedQueryObject: { word: 'lorem ipsum', to: [mockUserId] }
     },
     {
       description: 'with user-filter (prefix: `to:`, group 0)',
@@ -125,7 +126,7 @@ describe('parseQuery', () => {
       expectedNormalizedQuery: `lorem ipsum to:${mockUserGroupNames[0]}`,
       expectedQueryObject: {
         word: 'lorem ipsum',
-        to: mockUserGroupIds[0]
+        to: [mockUserGroupIds[0]]
       }
     },
     {
@@ -134,14 +135,14 @@ describe('parseQuery', () => {
       expectedNormalizedQuery: `lorem ipsum to:${mockUserGroupNames[1]}`,
       expectedQueryObject: {
         word: 'lorem ipsum',
-        to: mockUserGroupIds[1]
+        to: [mockUserGroupIds[1]]
       }
     },
     {
       description: 'with user-filter (prefix: `@`, user)',
       query: `lorem ipsum @${mockUserName}`,
       expectedNormalizedQuery: `lorem ipsum @${mockUserName}`,
-      expectedQueryObject: { word: 'lorem ipsum', to: mockUserId }
+      expectedQueryObject: { word: 'lorem ipsum', to: [mockUserId] }
     },
     {
       description: 'with user-filter (prefix: `@`, group 0)',
@@ -149,7 +150,7 @@ describe('parseQuery', () => {
       expectedNormalizedQuery: `lorem ipsum @${mockUserGroupNames[0]}`,
       expectedQueryObject: {
         word: 'lorem ipsum',
-        to: mockUserGroupIds[0]
+        to: [mockUserGroupIds[0]]
       }
     },
     {
@@ -158,20 +159,20 @@ describe('parseQuery', () => {
       expectedNormalizedQuery: `lorem ipsum @${mockUserGroupNames[1]}`,
       expectedQueryObject: {
         word: 'lorem ipsum',
-        to: mockUserGroupIds[1]
+        to: [mockUserGroupIds[1]]
       }
     },
     {
       description: 'with user-filter (prefix: `from:@`, user)',
       query: `lorem ipsum from:@${mockUserName}`,
       expectedNormalizedQuery: `lorem ipsum from:@${mockUserName}`,
-      expectedQueryObject: { word: 'lorem ipsum', from: mockUserId }
+      expectedQueryObject: { word: 'lorem ipsum', from: [mockUserId] }
     },
     {
       description: 'with user-filter (prefix: `@!`, user)',
       query: `lorem ipsum @!${mockUserName}`,
       expectedNormalizedQuery: `lorem ipsum @!${mockUserName}`,
-      expectedQueryObject: { word: 'lorem ipsum', to: mockUserId }
+      expectedQueryObject: { word: 'lorem ipsum', to: [mockUserId] }
     },
     {
       description: 'with user-filter (prefix: `@!`, group 0)',
@@ -195,7 +196,7 @@ describe('parseQuery', () => {
       description: 'with user-filter (prefix: `from:@!`, user)',
       query: `lorem ipsum from:@!${mockUserName}`,
       expectedNormalizedQuery: `lorem ipsum from:@!${mockUserName}`,
-      expectedQueryObject: { word: 'lorem ipsum', from: mockUserId }
+      expectedQueryObject: { word: 'lorem ipsum', from: [mockUserId] }
     },
     {
       description: 'with user-filter (prefix: `@&`, user)',
@@ -212,7 +213,7 @@ describe('parseQuery', () => {
       expectedNormalizedQuery: `lorem ipsum @&${mockUserGroupNames[0]}`,
       expectedQueryObject: {
         word: 'lorem ipsum',
-        to: mockUserGroupIds[0]
+        to: [mockUserGroupIds[0]]
       }
     },
     {
@@ -221,7 +222,7 @@ describe('parseQuery', () => {
       expectedNormalizedQuery: `lorem ipsum @&${mockUserGroupNames[1]}`,
       expectedQueryObject: {
         word: 'lorem ipsum',
-        to: mockUserGroupIds[1]
+        to: [mockUserGroupIds[1]]
       }
     },
     {
@@ -237,7 +238,7 @@ describe('parseQuery', () => {
       description: 'with me',
       query: 'lorem ipsum to:me',
       expectedNormalizedQuery: `lorem ipsum to:@!${mockMyUserName}`,
-      expectedQueryObject: { word: 'lorem ipsum', to: mockMyUserId }
+      expectedQueryObject: { word: 'lorem ipsum', to: [mockMyUserId] }
     },
     {
       description: 'with an invalid prefix',
@@ -324,10 +325,13 @@ describe('parseQuery', () => {
   ]
 
   const store: StoreForParser = {
-    getCurrentChannelId: () => mockCurrentChannelId,
+    getCurrentChannel: () => ({
+      kind: 'channel',
+      id: mockCurrentChannelId,
+      label: mockCurrentChannelPath
+    }),
     getMyDmChannelId: () => mockMyDmChannelId,
     getMyUserId: () => mockMyUserId,
-    getCurrentChannelPathOrUserName: () => mockCurrentChannelPath,
     getMyUserName: () => mockMyUserName,
     channelPathToId: channelPath => {
       if (channelPath === mockChannelName) {
@@ -369,9 +373,11 @@ describe('parseQuery', () => {
     test.each(TEST_CASES)(
       '$description',
       async ({ query, expectedNormalizedQuery, expectedQueryObject }) => {
-        const { normalizedQuery, queryObject } = await parseQuery(query)
+        const { serializedQuery, queryObject } = await parseQuery(query)
 
-        expect(normalizedQuery).toBe(expectedNormalizedQuery)
+        expect(partsToDisplayText(parseInput(serializedQuery, 'search'))).toBe(
+          expectedNormalizedQuery
+        )
 
         Object.entries(expectedQueryObject).forEach(([key, value]) => {
           expect(queryObject[key as keyof typeof queryObject]).toEqual(value)
