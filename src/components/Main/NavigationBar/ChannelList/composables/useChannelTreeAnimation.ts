@@ -6,10 +6,12 @@ import { useEventListener } from '@vueuse/core'
 
 import {
   CHANNEL_TREE_ANIMATION_DURATION_MS,
+  type ChannelTreeAnimationMeasurement,
   type ChannelTreeAnimationSnapshot,
   type VirtualChannelRow,
   createChannelTreeAnimation,
-  getVisibleChannelTreeAnimation
+  getVisibleChannelTreeAnimation,
+  resizeChannelTreeAnimation
 } from '../channelTreeAnimation'
 import type { FlatChannelItem } from './useChannelFlatList'
 
@@ -103,6 +105,51 @@ const useChannelTreeAnimation = <
       currentHeight.value = height
   }
 
+  const measureTreeAnimationRows = (
+    animationId: number,
+    measurements: ChannelTreeAnimationMeasurement[]
+  ) => {
+    const animation = animationSnapshot.value
+    if (!animation || animation.id !== animationId) return
+
+    const sizes = new Map(measurements.map(row => [row.key, row.size]))
+    const changedRows = [...animation.rows, ...animation.movingRows].filter(
+      row => {
+        const size = sizes.get(row.key)
+        return size !== undefined && size > 0 && size !== row.size
+      }
+    )
+    if (changedRows.length === 0) return
+
+    animationSnapshot.value = resizeChannelTreeAnimation(
+      animation,
+      measurements
+    )
+
+    const instance = virtualizer.value
+    const shouldAdjustScroll =
+      instance.shouldAdjustScrollPositionOnItemSizeChange
+
+    // アニメーションの表示位置と完了後の仮想座標は異なるため補正しない。
+    instance.shouldAdjustScrollPositionOnItemSizeChange = () => false
+
+    try {
+      for (const row of changedRows) {
+        const size = sizes.get(row.key)
+
+        if (
+          size !== undefined &&
+          row.index !== undefined &&
+          flatItems.value[row.index]?.key === row.key
+        ) {
+          instance.resizeItem(row.index, size)
+        }
+      }
+    } finally {
+      instance.shouldAdjustScrollPositionOnItemSizeChange = shouldAdjustScroll
+    }
+  }
+
   const snapshotRows = (): VirtualChannelRow[] =>
     // 計測キャッシュは遅延生成される疎な配列なので、未描画の行も読み出す。
     Array.from(virtualizer.value.measurementsCache).flatMap(vItem => {
@@ -178,6 +225,7 @@ const useChannelTreeAnimation = <
     treeAnimation,
     finishTreeAnimation,
     updateTreeAnimationHeight,
+    measureTreeAnimationRows,
     handleToggle
   }
 }

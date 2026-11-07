@@ -177,6 +177,43 @@ describe('useChannelTreeAnimation', () => {
     }
   )
 
+  it('新たに表示したトピックの高さを、後続行と仮想スクロールの計測値に反映する', async () => {
+    const {
+      treeAnimation,
+      handleToggle,
+      measureTreeAnimationRows,
+      resizeItem
+    } = setup(false)
+    handleToggle('/root')
+    await vi.waitFor(() => expect(treeAnimation.value).not.toBeNull())
+    const animation = treeAnimation.value
+    if (!animation) throw new Error('Animation did not start')
+
+    measureTreeAnimationRows(animation.id, [{ key: '/root/child', size: 72 }])
+
+    expect(treeAnimation.value?.id).toBe(animation.id)
+    expect(treeAnimation.value?.height).toBe(72)
+    expect(resizeItem).toHaveBeenCalledWith(1, 72)
+  })
+
+  it('折りたたみで削除された子行の計測値を、同じ添字になった後続行に適用しない', async () => {
+    const {
+      treeAnimation,
+      handleToggle,
+      measureTreeAnimationRows,
+      resizeItem
+    } = setup(true)
+    handleToggle('/root')
+    await vi.waitFor(() => expect(treeAnimation.value).not.toBeNull())
+    const animation = treeAnimation.value
+    if (!animation) throw new Error('Animation did not start')
+
+    measureTreeAnimationRows(animation.id, [{ key: '/root/child', size: 72 }])
+
+    expect(treeAnimation.value?.height).toBe(72)
+    expect(resizeItem).not.toHaveBeenCalled()
+  })
+
   it.each([
     ['collapse', true],
     ['expand', false]

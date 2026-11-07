@@ -34,6 +34,11 @@ export interface ChannelTreeAnimationSnapshot extends ChannelTreeAnimationState 
   retainedMovingRowIndexes: number[]
 }
 
+export interface ChannelTreeAnimationMeasurement {
+  key: string
+  size: number
+}
+
 interface CreateChannelTreeAnimationOptions {
   id: number
   direction: ChannelTreeAnimationState['direction']
@@ -191,5 +196,43 @@ export const getVisibleChannelTreeAnimation = (
       viewportEnd - movingOrigin,
       overscan
     )
+  }
+}
+
+const resizeRows = (
+  rows: ChannelTreeAnimationRow[],
+  sizes: Map<string, number>
+) => {
+  let delta = 0
+
+  const resizedRows = rows.map(row => {
+    const size = sizes.get(row.key) ?? row.size
+    const resizedRow = { ...row, start: row.start + delta, size }
+    delta += size - row.size
+    return resizedRow
+  })
+
+  return { rows: resizedRows, delta }
+}
+
+export const resizeChannelTreeAnimation = (
+  animation: ChannelTreeAnimationSnapshot,
+  measurements: ChannelTreeAnimationMeasurement[]
+): ChannelTreeAnimationSnapshot => {
+  const sizes = new Map(
+    measurements
+      .filter(({ size }) => size > 0)
+      .map(({ key, size }) => [key, size])
+  )
+
+  const children = resizeRows(animation.rows, sizes)
+  const trailing = resizeRows(animation.movingRows, sizes)
+
+  return {
+    ...animation,
+    height: animation.height + children.delta,
+    trailingHeight: animation.trailingHeight + trailing.delta,
+    rows: children.rows,
+    movingRows: trailing.rows
   }
 }

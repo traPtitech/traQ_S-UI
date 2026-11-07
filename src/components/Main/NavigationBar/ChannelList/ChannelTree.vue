@@ -54,6 +54,7 @@
       :show-notified="showNotified"
       @finish="finishTreeAnimation"
       @resize="updateTreeAnimationHeight"
+      @measure="measureTreeAnimationRows"
     />
   </div>
 </template>
@@ -111,6 +112,7 @@ const {
   treeAnimation,
   finishTreeAnimation,
   updateTreeAnimationHeight,
+  measureTreeAnimationRows,
   handleToggle
 } = useChannelTreeAnimation({
   virtualizer,

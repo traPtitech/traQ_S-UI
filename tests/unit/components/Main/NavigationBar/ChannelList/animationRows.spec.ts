@@ -1,6 +1,7 @@
 import {
   createChannelTreeAnimation,
-  getVisibleChannelTreeAnimation
+  getVisibleChannelTreeAnimation,
+  resizeChannelTreeAnimation
 } from '/@/components/Main/NavigationBar/ChannelList/channelTreeAnimation'
 import type { VirtualChannelRow } from '/@/components/Main/NavigationBar/ChannelList/channelTreeAnimation'
 import type { ChannelId } from '/@/types/entity-ids'
@@ -130,5 +131,20 @@ describe('channelTreeAnimation', () => {
     expect(snapshot.movingRows).toHaveLength(1000)
     expect(animation.movingRows[0]?.key).toBe('/sibling-0')
     expect(animation.rows.length + animation.movingRows.length).toBeLessThan(30)
+  })
+
+  it('トピックの実測で高さが変わった場合、各レイヤーの後続行の位置を補正する', () => {
+    const snapshot = setup('expand')
+    const resized = resizeChannelTreeAnimation(snapshot, [
+      { key: '/root/child-0', size: 72 },
+      { key: '/sibling-0', size: 60 }
+    ])
+
+    expect(resized.id).toBe(snapshot.id)
+    expect(resized.height).toBe(36036)
+    expect(resized.rows[1]?.start).toBe(72)
+    expect(resized.movingRows[1]?.start).toBe(60)
+    expect(resized.trailingHeight).toBe(snapshot.trailingHeight + 24)
+    expect(snapshot.rows[1]?.start).toBe(36)
   })
 })
