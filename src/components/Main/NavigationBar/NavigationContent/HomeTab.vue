@@ -12,7 +12,7 @@
         <ChannelTree
           :channels="homeChannelWithTree"
           :scroll-element="scrollEl"
-          :scroll-margin="homeScrollMargin"
+          :scroll-margin="scrollMargins.home"
           show-shortened-path
         />
       </div>
@@ -33,7 +33,7 @@
           v-if="noticeableChannelNodes.length > 0"
           :channels="noticeableChannelNodes"
           :scroll-element="scrollEl"
-          :scroll-margin="mentionScrollMargin"
+          :scroll-margin="scrollMargins.mention"
           show-shortened-path
           :show-star="prioritizeStarredChannel"
         />
@@ -48,7 +48,7 @@
         <ChannelTree
           :channels="unreadChannelNodes"
           :scroll-element="scrollEl"
-          :scroll-margin="unreadScrollMargin"
+          :scroll-margin="scrollMargins.unread"
           show-shortened-path
           :show-star="prioritizeStarredChannel"
           :show-notified="prioritizeNotifiedChannel"
@@ -64,7 +64,7 @@
         v-if="topLevelChannels.length > 0"
         :channels="topLevelChannels"
         :scroll-element="scrollEl"
-        :scroll-margin="channelsScrollMargin"
+        :scroll-margin="scrollMargins.channels"
       />
       <EmptyState v-else> 購読していません </EmptyState>
     </div>
@@ -76,7 +76,7 @@
       <ChannelTree
         :channels="qallingChannelNodes"
         :scroll-element="scrollEl"
-        :scroll-margin="qallScrollMargin"
+        :scroll-margin="scrollMargins.qall"
         show-shortened-path
       />
     </template>
@@ -86,10 +86,7 @@
 <script lang="ts" setup>
 import type { Channel } from '@traptitech/traq'
 
-import type { Ref } from 'vue'
-import { computed, ref, toRaw, watch } from 'vue'
-
-import { useElementSize } from '@vueuse/core'
+import { computed, ref, toRaw } from 'vue'
 
 import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
@@ -107,6 +104,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import type { ChannelId } from '/@/types/entity-ids'
 
 import ChannelTree from '../ChannelList/ChannelTree.vue'
+import useScrollMargins from './composables/useScrollMargins'
 
 const toNode = (
   ch: Pick<Channel, 'id' | 'name' | 'archived'>
@@ -165,61 +163,13 @@ const mentionTreeWrapperRef = ref<HTMLElement | null>(null)
 const unreadTreeWrapperRef = ref<HTMLElement | null>(null)
 const channelContentRef = ref<HTMLElement | null>(null)
 
-const useCachedElementHeight = (target: Readonly<Ref<HTMLElement | null>>) => {
-  const { height: observedHeight } = useElementSize(target, undefined, {
-    box: 'border-box'
-  })
-  const height = ref(0)
-  watch(
-    [target, observedHeight],
-    ([element, nextHeight]) => {
-      height.value = element ? nextHeight || height.value : 0
-    },
-    { immediate: true }
-  )
-  return height
-}
-
-const titleSectionHeight = useCachedElementHeight(titleSectionRef)
-const homeSectionHeaderHeight = useCachedElementHeight(homeSectionHeaderRef)
-const mentionSectionHeight = useCachedElementHeight(mentionSectionRef)
-const unreadSectionHeaderHeight = useCachedElementHeight(unreadSectionHeaderRef)
-const channelSectionHeaderHeight = useCachedElementHeight(
-  channelSectionHeaderRef
-)
-const homeTreeWrapperHeight = useCachedElementHeight(homeTreeWrapperRef)
-const mentionTreeWrapperHeight = useCachedElementHeight(mentionTreeWrapperRef)
-const unreadTreeWrapperHeight = useCachedElementHeight(unreadTreeWrapperRef)
-const channelContentHeight = useCachedElementHeight(channelContentRef)
-const qallSectionHeaderHeight = useCachedElementHeight(qallSectionHeaderRef)
-
-const homeScrollMargin = computed(
-  () => titleSectionHeight.value + homeSectionHeaderHeight.value
-)
-const mentionScrollMargin = computed(
-  () =>
-    homeScrollMargin.value +
-    homeTreeWrapperHeight.value +
-    mentionSectionHeight.value
-)
-const unreadScrollMargin = computed(
-  () =>
-    mentionScrollMargin.value +
-    mentionTreeWrapperHeight.value +
-    unreadSectionHeaderHeight.value
-)
-const channelsScrollMargin = computed(
-  () =>
-    unreadScrollMargin.value +
-    unreadTreeWrapperHeight.value +
-    channelSectionHeaderHeight.value
-)
-const qallScrollMargin = computed(
-  () =>
-    channelsScrollMargin.value +
-    channelContentHeight.value +
-    qallSectionHeaderHeight.value
-)
+const scrollMargins = useScrollMargins({
+  home: [titleSectionRef, homeSectionHeaderRef],
+  mention: [homeTreeWrapperRef, mentionSectionRef],
+  unread: [mentionTreeWrapperRef, unreadSectionHeaderRef],
+  channels: [unreadTreeWrapperRef, channelSectionHeaderRef],
+  qall: [channelContentRef, qallSectionHeaderRef]
+})
 </script>
 
 <style lang="scss" module>
