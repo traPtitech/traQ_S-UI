@@ -1,20 +1,21 @@
 <template>
   <div :class="$style.container">
-    <label :for="id" :class="$style.label">メッセージ</label>
+    <div :id="labelId" :class="$style.label" @click="focus">メッセージ</div>
+
     <div ref="wrapperEle" :class="$style.wrapper">
       <div :class="$style.inputContainer">
         <div :class="$style.inputWrapper">
-          <textarea
-            :id="id"
-            ref="textareaRef"
+          <ReferenceInput
+            ref="inputRef"
+            v-model="state.text"
+            :document-key="documentKey"
             :class="$style.input"
-            :value="state.text"
-            @input="
-              event =>
-                (state.text = (event.target as HTMLTextAreaElement).value)
-            "
+            placeholder="メッセージ"
+            :labelled-by="labelId"
+            :prepare-paste="preparePaste"
           />
         </div>
+
         <div :class="$style.controls">
           <MessageInputInsertStampButton
             :class="$style.button"
@@ -22,10 +23,11 @@
           />
           <MessageInputUploadButton
             :class="$style.button"
-            @click="addAttachment"
+            @click="openAttachmentPicker"
           />
         </div>
       </div>
+
       <MessageInputFileList
         :class="$style.fileList"
         channel-id="share-target"
@@ -40,6 +42,10 @@ import { onMounted, ref, shallowRef, toRef, useId } from 'vue'
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
+import ReferenceInput from '/@/components/UI/ReferenceInput.vue'
+import useAttachmentPicker from '/@/composables/messageComposer/useAttachmentPicker'
+import usePaste from '/@/composables/messageComposer/usePaste'
+import useTextStampPickerInvoker from '/@/composables/messageComposer/useTextStampPickerInvoker'
 import useMessageInputState from '/@/composables/messageInputState/useMessageInputState'
 import useMessageInputStateAttachment from '/@/composables/messageInputState/useMessageInputStateAttachment'
 import { useStampHistory } from '/@/store/domain/stampHistory'
@@ -48,33 +54,41 @@ import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useToastStore } from '/@/store/ui/toast'
 
-import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
-import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
-
 const { fetchStampHistory } = useStampHistory()
 const { fetchStampRecommendations } = useStampRecommendations()
 const { fetchStamps } = useStampsStore()
 const { fetchStampPalettes } = useStampPalettesStore()
-const { state } = useMessageInputState('share-target')
+const { state, documentKey } = useMessageInputState('share-target')
 const { addErrorToast } = useToastStore()
-const { addAttachment: addStateAttachment } = useMessageInputStateAttachment(
+const { captureDraftTarget } = useMessageInputStateAttachment(
   'share-target',
   addErrorToast
 )
-const { addAttachment } = useAttachments(addStateAttachment)
 
-const textareaRef = shallowRef<HTMLTextAreaElement>()
+const { openAttachmentPicker } = useAttachmentPicker(
+  () => captureDraftTarget().addAttachments
+)
+
+const labelId = useId()
+const inputRef = shallowRef<InstanceType<typeof ReferenceInput>>()
+
+const { preparePaste } = usePaste((_event, files) => {
+  void captureDraftTarget().addAttachments(files)
+})
+
 const focus = () => {
-  textareaRef.value?.focus()
+  inputRef.value?.focus()
 }
+
 onMounted(() => {
   focus()
 })
 
 const wrapperEle = ref<HTMLDivElement>()
+
 const { toggleStampPicker } = useTextStampPickerInvoker(
   toRef(state, 'text'),
-  textareaRef,
+  inputRef,
   wrapperEle
 )
 
@@ -83,8 +97,6 @@ fetchStamps()
 fetchStampPalettes()
 fetchStampHistory()
 fetchStampRecommendations()
-
-const id = useId()
 </script>
 
 <style lang="scss" module>

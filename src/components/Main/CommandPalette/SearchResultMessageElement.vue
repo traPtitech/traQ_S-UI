@@ -51,17 +51,16 @@
 import type { Message } from '@traptitech/traq'
 
 import type { DeepReadonly } from 'vue'
-import { computed, ref, shallowRef, watchEffect } from 'vue'
+import { computed, shallowRef } from 'vue'
 
 import MessageQuoteList from '/@/components/Main/MainView/MessageElement/Embeddings/MessageQuoteList.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import MarkdownContent from '/@/components/UI/MarkdownContent.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import useBoxSize from '/@/composables/dom/useBoxSize'
+import { useRenderedMarkdown } from '/@/composables/markdown/useRenderedMarkdown'
 import useToggle from '/@/composables/utils/useToggle'
 import { isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
-import { render } from '/@/lib/markdown/markdown'
-import type { MarkdownRenderResult } from '/@/lib/markdown/types'
 import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useUsersStore } from '/@/store/entities/users'
@@ -99,21 +98,18 @@ const date = computed(() => {
 })
 const { fetchFileMetaData } = useMessagesStore()
 
-const renderedResult = ref<MarkdownRenderResult>()
-watchEffect(async () => {
-  renderedResult.value = await render(props.message.content)
-  const filePromises = renderedResult.value.embeddings.filter(isFile).map(e =>
-    fetchFileMetaData({
-      fileId: e.id
-    })
-  )
-  // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
-  await Promise.allSettled(filePromises)
-  // renderedを発火したあとにレイアウトシフトなどがおこると
-  // スクロール位置のリストアが壊れるので注意すること
-  emit('rendered')
-})
-const renderedContent = computed(() => renderedResult.value?.renderedText ?? '')
+const { rendered: renderedResult, renderedContent } = useRenderedMarkdown(
+  () => props.message.content,
+  {
+    prepareLayout: result =>
+      Promise.allSettled(
+        result.embeddings
+          .filter(isFile)
+          .map(({ id }) => fetchFileMetaData({ fileId: id }))
+      ),
+    onRendered: () => emit('rendered')
+  }
+)
 const fileIds = computed(
   () =>
     renderedResult.value?.embeddings.filter(isFile).map(({ id }) => id) ?? []

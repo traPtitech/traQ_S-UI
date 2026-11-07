@@ -19,6 +19,7 @@ import useDocumentTitle from '/@/composables/document/useDocumentTitle'
 import useHtmlDataset from '/@/composables/document/useHtmlDataset'
 import { useThemeVariables } from '/@/composables/document/useThemeVariables'
 import { useBeforeUnload } from '/@/composables/dom/useBeforeUnload'
+import useRecentKeyboardInput from '/@/composables/dom/useRecentKeyboardInput'
 import useResponsive from '/@/composables/useResponsive'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useThemeSettings } from '/@/store/app/themeSettings'
@@ -107,6 +108,7 @@ const { isMobile } = useResponsive()
 
 useDocumentTitle()
 useQallConfirmer()
+useRecentKeyboardInput()
 
 useThemeObserver()
 useEcoModeObserver()

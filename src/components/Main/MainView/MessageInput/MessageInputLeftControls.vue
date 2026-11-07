@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.outerContainer" :style="outerContainerStyle">
     <IconButton
-      v-if="showTextAreaExpandButton"
-      :class="$style.textAreaExpandButton"
-      :icon-name="isInputTextAreaExpanded ? 'chevron-down' : 'chevron-up'"
+      v-if="showExpandButton"
+      :class="$style.expandButton"
+      :icon-name="isExpanded ? 'chevron-down' : 'chevron-up'"
       icon-mdi
-      @click="toggleIsInputTextAreaExpanded"
+      @click="toggleExpanded"
     />
     <div :class="$style.innerContainer" :data-is-mobile="$boolAttr(isMobile)">
       <template v-if="!isMobile || isLeftControlsExpanded">
@@ -41,18 +41,17 @@ import MessageInputUploadButton from './MessageInputUploadButton.vue'
 const isLeftControlsExpanded = defineModel<boolean>('isLeftControlsExpanded', {
   required: true
 })
+
 const isPreviewShown = defineModel<boolean>('isPreviewShown', {
   required: true
 })
-const isInputTextAreaExpanded = defineModel<boolean>(
-  'isInputTextAreaExpanded',
-  {
-    required: true
-  }
-)
+
+const isExpanded = defineModel<boolean>('isExpanded', {
+  required: true
+})
 
 const props = defineProps<{
-  showTextAreaExpandButton: boolean
+  showExpandButton: boolean
 }>()
 
 const emit = defineEmits<{
@@ -61,18 +60,21 @@ const emit = defineEmits<{
 }>()
 
 const { isMobile } = useResponsive()
+
 const toggleLeftControlsExpanded = () => {
   isLeftControlsExpanded.value = !isLeftControlsExpanded.value
   emit('toggleLeftControlsExpanded')
 }
-const toggleIsInputTextAreaExpanded = () => {
-  isInputTextAreaExpanded.value = !isInputTextAreaExpanded.value
+
+const toggleExpanded = () => {
+  isExpanded.value = !isExpanded.value
 }
 
 const isPreviewShownValue = computed<boolean>({
   get() {
     return isPreviewShown.value
   },
+
   set(v) {
     isPreviewShown.value = v
     isLeftControlsExpanded.value = false
@@ -81,9 +83,7 @@ const isPreviewShownValue = computed<boolean>({
 })
 
 const outerContainerStyle = computed(() => ({
-  '--justify-content': props.showTextAreaExpandButton
-    ? 'space-between'
-    : 'flex-end'
+  '--justify-content': props.showExpandButton ? 'space-between' : 'flex-end'
 }))
 </script>
 
@@ -95,10 +95,12 @@ const outerContainerStyle = computed(() => ({
   align-items: end;
   justify-content: var(--justify-content);
 }
+
 .innerContainer {
   @include color-ui-secondary;
   display: flex;
 }
+
 .button {
   @include color-ui-secondary;
   margin: 0 4px;
@@ -106,11 +108,13 @@ const outerContainerStyle = computed(() => ({
   &:first-child:first-child {
     margin-left: 0;
   }
+
   &:last-child:last-child {
     margin-right: 0;
   }
 }
-.textAreaExpandButton {
+
+.expandButton {
   @include color-ui-secondary;
 }
 </style>

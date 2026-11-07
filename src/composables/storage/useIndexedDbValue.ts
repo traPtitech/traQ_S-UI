@@ -13,7 +13,8 @@ const useIndexedDbValue = <T extends object>(
   dbName: string,
   version: number,
   migrations: Migrations,
-  initialValue: T
+  initialValue: T,
+  mergeRestored: (saved: T) => T = saved => saved
 ) => {
   const store = createStoreWithMigrations(
     dbName,
@@ -27,7 +28,7 @@ const useIndexedDbValue = <T extends object>(
   const restoringPromise = (async () => {
     const v = await get<T | undefined>(key, store)
     if (v) {
-      for (const [key, val] of Object.entries(v)) {
+      for (const [key, val] of Object.entries(mergeRestored(v))) {
         // @ts-expect-error valueとvは型が一致する
         value[key] = val
       }
@@ -36,7 +37,7 @@ const useIndexedDbValue = <T extends object>(
   })()
 
   watch(
-    value,
+    [value, restoring],
     async () => {
       if (restoring.value) return
       // indexedDBにはproxyされたobjectは入らないのでtoRawする

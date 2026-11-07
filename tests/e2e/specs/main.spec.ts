@@ -24,7 +24,7 @@ test.describe('Main', () => {
 
   test('can send message', async ({ authenticatedPage: page }) => {
     const message = 'E2E message send test'
-    await page.getByTestId('message-input-textarea').fill(message)
+    await page.getByTestId('message-input-editor').fill(message)
     const response = page.waitForResponse(
       response =>
         response.request().method() === 'POST' &&

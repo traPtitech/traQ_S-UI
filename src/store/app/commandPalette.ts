@@ -1,6 +1,6 @@
 import type { Message } from '@traptitech/traq'
 
-import { computed, ref, toRefs, triggerRef } from 'vue'
+import { computed, ref, shallowRef, toRefs, watch } from 'vue'
 
 import { promisifyRequest } from 'idb-keyval'
 import { acceptHMRUpdate, defineStore } from 'pinia'
@@ -8,7 +8,11 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import useQueryParser from '/@/composables/searchMessage/useQueryParser'
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import { isObjectAndHasKey } from '/@/lib/basic/object'
-import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
+import type {
+  ResolvedSearchQuery,
+  SearchMessageSortKey
+} from '/@/lib/searchMessage/queryParser'
+import { useToastStore } from '/@/store/ui/toast'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { getVuexData } from '/@/store/utils/migrateFromVuex'
 
@@ -60,12 +64,14 @@ type CommandPalettePresentation = {
 
 const useCommandPalettePinia = defineStore('app/commandPalette', () => {
   const { parseQuery } = useQueryParser()
+  const { addErrorToast } = useToastStore()
 
   /** パレットの表示状態とフォーカス先 */
   const presentation = ref<CommandPalettePresentation>()
 
   /** 決定された入力内容 */
-  const query = ref('')
+  const searchRequest = shallowRef<ResolvedSearchQuery>()
+  const query = computed(() => searchRequest.value?.serializedQuery ?? '')
 
   /** 現在入力中の文字列 */
   const currentInput = ref('')
@@ -83,11 +89,12 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
   })
 
   const initialValue: IndexedDBState = { searchHistories: [] }
+
   const [state] = useIndexedDbValue(
     'store/app/commandPalette',
     1,
     {
-      // migrate from vuex
+      // Vuex から移行
       1: async getStore => {
         const vuexStore = await getVuexData()
         if (!vuexStore) return
@@ -124,20 +131,41 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
     () => presentation.value?.mode !== undefined
   )
 
+  let settlement = 0
+
+  watch(
+    currentInput,
+    () => {
+      settlement++
+    },
+    { flush: 'sync' }
+  )
+
   const settleQuery = async () => {
-    const { normalizedQuery } = await parseQuery(currentInput.value)
-    currentInput.value = normalizedQuery
-    query.value = normalizedQuery
-    triggerRef(query)
+    const id = ++settlement
+    const input = currentInput.value
+
+    try {
+      const request = await parseQuery(input)
+      if (id !== settlement) return
+
+      currentInput.value = request.serializedQuery
+      searchRequest.value = request
+      resetPaging()
+    } catch {
+      if (id === settlement) addErrorToast('検索条件を解決できませんでした')
+    }
   }
 
   const addSearchHistory = (newHistory: string) => {
     removeSearchHistory(newHistory)
     state.searchHistories.unshift(newHistory)
+
     if (state.searchHistories.length > 5) {
       state.searchHistories.pop()
     }
   }
+
   const removeSearchHistory = (oldHistory: string) => {
     const index = state.searchHistories.indexOf(oldHistory)
     if (index !== -1) {
@@ -166,6 +194,7 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
     ...toRefs(state),
     presentation,
     query,
+    searchRequest,
     currentInput,
     currentScrollTop,
     searchState,

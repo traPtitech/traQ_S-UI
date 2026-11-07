@@ -9,7 +9,7 @@ import router from './router'
 import store from './store'
 import './styles/global.scss'
 
-import('katex/dist/katex.css')
+import('./styles/markdown-assets.scss')
 
 const bootstrap = async () => {
   await initializeMeta()

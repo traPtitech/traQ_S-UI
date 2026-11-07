@@ -14,12 +14,14 @@
       :example="suggestion.example"
       @select="onSelectQuerySuggestion(suggestion.insertQuery)"
     />
+
     <template v-if="searchHistories.length > 0">
       <div :class="$style.header">過去の検索</div>
+
       <SearchSuggestionHistoryItem
         v-for="suggestion in searchHistories"
         :key="suggestion"
-        :label="suggestion"
+        :label="displayQuery(suggestion)"
         @select="onSelectHistorySuggestion(suggestion)"
         @remove="removeSearchHistory(suggestion)"
       />
@@ -30,6 +32,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 
+import useReferenceLabels from '/@/composables/referenceInput/useReferenceLabels'
 import useResponsive from '/@/composables/useResponsive'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 
@@ -43,6 +46,8 @@ const emit = defineEmits<{
 }>()
 
 const { isMobile } = useResponsive()
+const { displayInput } = useReferenceLabels()
+const displayQuery = (query: string) => displayInput(query, 'search')
 
 const querySuggestions = computed(() => [
   {
@@ -78,10 +83,12 @@ const querySuggestions = computed(() => [
 
 const { currentInput, searchHistories, settleQuery, removeSearchHistory } =
   useCommandPalette()
+
 const searchConfirmItem = computed((): SuggestionItem => ({
   type: 'search',
-  value: currentInput.value
+  value: displayQuery(currentInput.value)
 }))
+
 const onSelectQuerySuggestion = (query: string) => {
   if (currentInput.value !== '') {
     currentInput.value += ` ${query}`
