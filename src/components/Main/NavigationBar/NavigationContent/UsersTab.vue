@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <NavigationContentTitle current-navigation="users" />
+    <NavigationContentTitle>ユーザー</NavigationContentTitle>
     <UnreadDMs />
     <UserList />
     <GroupManagerOpener />

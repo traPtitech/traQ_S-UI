@@ -1,7 +1,7 @@
 <template>
   <div ref="scrollEl" :class="$style.container">
     <div ref="headerRef" :class="$style.header">
-      <NavigationContentTitle current-navigation="channels" />
+      <NavigationContentTitle>チャンネル</NavigationContentTitle>
       <NavigationContentContainer subtitle="チャンネルリスト">
         <template #control>
           <button :class="$style.button" @click="onClickButton">
