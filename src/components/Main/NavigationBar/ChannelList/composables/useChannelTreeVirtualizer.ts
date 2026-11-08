@@ -32,6 +32,7 @@ const useChannelTreeVirtualizer = ({
       getScrollElement: () => scrollElement.value,
       initialOffset: () => scrollElement.value?.scrollTop ?? 0,
       estimateSize: () => 36,
+      useAnimationFrameWithResizeObserver: true,
       overscan: 5,
       getItemKey: (index: number) => flatItems.value[index]?.key ?? index,
       scrollMargin: scrollMargin.value,

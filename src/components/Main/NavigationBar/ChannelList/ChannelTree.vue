@@ -124,8 +124,10 @@ const virtualPadding = computed(() => {
   }
 
   const scrollMargin = virtualizer.value.options.scrollMargin
+
   return {
     start: Math.max(first.start - scrollMargin, 0),
+
     end: Math.max(
       virtualizer.value.getTotalSize() - (last.end - scrollMargin),
       0
@@ -137,15 +139,19 @@ const virtualPadding = computed(() => {
 <style lang="scss" module>
 .inner {
   position: relative;
+  overflow-anchor: none;
 }
+
 .row {
   width: 100%;
+
   &[data-is-animating] {
     position: absolute;
     top: 0;
     transform: translateY(var(--row-y));
   }
 }
+
 .element {
   margin: 0;
 }
