@@ -35,6 +35,7 @@ import { computed, nextTick, ref } from 'vue'
 import ChannelTree from '/@/components/Main/NavigationBar/ChannelList/ChannelTree.vue'
 import ChannelsTab from '/@/components/Main/NavigationBar/NavigationContent/ChannelsTab.vue'
 import HomeTab from '/@/components/Main/NavigationBar/NavigationContent/HomeTab.vue'
+import { provideNavigationVisibility } from '/@/components/Main/NavigationBar/composables/useNavigationVisibility'
 import { constructTreeFromIds } from '/@/lib/channelTree'
 import { isWebKit } from '/@/lib/dom/browser'
 import { renderInline } from '/@/lib/markdown/markdown'
@@ -74,6 +75,8 @@ const generation = ref(0)
 const view = ref<ChannelFixture['view']>('channels')
 const width = ref(320)
 const visible = ref(true)
+provideNavigationVisibility(visible)
+
 const showTopics = ref(true)
 const headerHeight = ref(100)
 const scrollElement = ref<HTMLElement | null>(null)

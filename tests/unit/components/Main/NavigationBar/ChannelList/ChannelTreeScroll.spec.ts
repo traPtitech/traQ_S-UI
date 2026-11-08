@@ -1,9 +1,10 @@
-import { type ComputedRef, nextTick } from 'vue'
+import { type ComputedRef, defineComponent, h, nextTick, ref } from 'vue'
 
 import type * as VueVirtual from '@tanstack/vue-virtual'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 
 import ChannelTree from '/@/components/Main/NavigationBar/ChannelList/ChannelTree.vue'
+import { provideNavigationVisibility } from '/@/components/Main/NavigationBar/composables/useNavigationVisibility'
 import type { ChannelId } from '/@/types/entity-ids'
 
 const scrollMock = vi.hoisted(() => ({
@@ -89,7 +90,7 @@ const createScrollElement = (roundOffset = false) => {
   return scrollElement
 }
 
-const setup = async (roundOffset = false) => {
+const setup = async (roundOffset = false, initiallyVisible = true) => {
   const channels = Array.from({ length: 50 }, (_, index) => ({
     id: String(index) as ChannelId,
     name: String(index),
@@ -98,9 +99,20 @@ const setup = async (roundOffset = false) => {
     archived: false
   }))
   const scrollElement = createScrollElement(roundOffset)
+  const isVisible = ref(initiallyVisible)
 
-  const wrapper = mount(ChannelTree, {
-    props: { channels, scrollElement }
+  const VisibilityProvider = defineComponent({
+    props: { scrollElement: { type: HTMLElement, required: true } },
+    setup(props) {
+      provideNavigationVisibility(isVisible)
+
+      return () =>
+        h(ChannelTree, { channels, scrollElement: props.scrollElement })
+    }
+  })
+
+  const wrapper = mount(VisibilityProvider, {
+    props: { scrollElement }
   })
 
   await nextTick()
@@ -110,7 +122,12 @@ const setup = async (roundOffset = false) => {
 
   vi.mocked(scrollElement.scrollTo).mockClear()
 
-  return { instance, scrollElement, wrapper }
+  const setVisible = async (visible: boolean) => {
+    isVisible.value = visible
+    await nextTick()
+  }
+
+  return { instance, scrollElement, wrapper, setVisible }
 }
 
 describe('ChannelTree scroll correction', () => {
@@ -197,6 +214,98 @@ describe('ChannelTree scroll correction', () => {
     instance.resizeItem(30, 72)
 
     expect(scrollElement.scrollTo).not.toHaveBeenCalled()
+  })
+
+  describe('表示状態に応じた計測', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    const measureRow = (
+      instance: VueVirtual.Virtualizer<HTMLElement, HTMLElement>,
+      size: number
+    ) => {
+      const element = document.createElement('div')
+      element.dataset['index'] = '0'
+
+      const entry = {
+        borderBoxSize: [{ inlineSize: 320, blockSize: size }]
+      } as unknown as ResizeObserverEntry
+
+      instance.resizeItem(
+        0,
+        instance.options.measureElement(element, entry, instance)
+      )
+    }
+
+    it('初期状態が非表示の場合も推定した行の高さを保つ', async () => {
+      const { instance, scrollElement } = await setup(false, false)
+
+      measureRow(instance, 0)
+      await nextTick()
+
+      expect(instance.measurementsCache[0]?.size).toBe(36)
+      expect(instance.getTotalSize()).toBe(1800)
+      expect(scrollElement.scrollTo).not.toHaveBeenCalled()
+    })
+
+    it.each([false, true])(
+      '非表示中と再表示直後は高さを保持し、その後は実測を再開する (計測済み: %s)',
+      async measured => {
+        const { instance, scrollElement, setVisible } = await setup()
+
+        if (measured) {
+          instance.resizeItem(0, 72)
+          await nextTick()
+        }
+
+        const scrollTop = scrollElement.scrollTop
+        const totalSize = instance.getTotalSize()
+        vi.mocked(scrollElement.scrollTo).mockClear()
+
+        await setVisible(false)
+        measureRow(instance, 0)
+        await nextTick()
+
+        expect(instance.getTotalSize()).toBe(totalSize)
+        expect(instance.scrollOffset).toBe(scrollTop)
+
+        await setVisible(true)
+        measureRow(instance, 0)
+        await nextTick()
+
+        expect(instance.measurementsCache[0]?.size).toBe(measured ? 72 : 36)
+        expect(instance.getTotalSize()).toBe(totalSize)
+        expect(scrollElement.scrollTo).not.toHaveBeenCalled()
+
+        await vi.advanceTimersByTimeAsync(50)
+        measureRow(instance, 108)
+        await nextTick()
+
+        expect(instance.itemSizeCache.get('/0')).toBe(108)
+        expect(scrollElement.scrollTop).toBe(scrollTop + (measured ? 36 : 72))
+      }
+    )
+
+    it('再表示直後に隠した場合は実測の再開を取り消す', async () => {
+      const { instance, scrollElement, setVisible } = await setup()
+
+      await setVisible(false)
+      await setVisible(true)
+      await setVisible(false)
+      await vi.advanceTimersByTimeAsync(50)
+
+      measureRow(instance, 0)
+      await nextTick()
+
+      expect(instance.getTotalSize()).toBe(1800)
+      expect(instance.scrollOffset).toBe(180)
+      expect(scrollElement.scrollTo).not.toHaveBeenCalled()
+    })
   })
 
   describe('タッチ操作中の補正', () => {

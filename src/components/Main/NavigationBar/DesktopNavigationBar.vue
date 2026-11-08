@@ -49,6 +49,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
+
 import DesktopNavigationSelector from '/@/components/Main/NavigationBar/DesktopNavigationSelector.vue'
 import DesktopToolBox from '/@/components/Main/NavigationBar/DesktopToolBox.vue'
 import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue'
@@ -57,6 +59,7 @@ import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
 
 import useNavigation from './composables/useNavigation'
 import useNavigationResizer from './composables/useNavigationResizer'
+import { provideNavigationVisibility } from './composables/useNavigationVisibility'
 
 const {
   navigationSelectorState,
@@ -73,6 +76,8 @@ const {
   navigationRef,
   resizerRef: navigationResizerRef
 } = useNavigationLayoutStore()
+
+provideNavigationVisibility(computed(() => !isNavigationClosed.value))
 
 const { onDragStart, onDragging, onDragEnd, navigationWidth } =
   useNavigationResizer()
