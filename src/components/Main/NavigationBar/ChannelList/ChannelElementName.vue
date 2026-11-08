@@ -21,8 +21,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { Channel } from '@traptitech/traq'
-
 import { computed } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
@@ -30,12 +28,11 @@ import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import { useQall } from '/@/composables/qall/useQall'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 
-import type { TypedProps } from './composables/usePath'
 import { usePath } from './composables/usePath'
 
 const props = withDefaults(
   defineProps<{
-    channel: ChannelTreeNode | Channel
+    channel: ChannelTreeNode
     showShortenedPath: boolean
     isSelected?: boolean
   }>(),
@@ -44,9 +41,7 @@ const props = withDefaults(
   }
 )
 
-const typedProps = props as TypedProps
-
-const { pathToShow, pathTooltip } = usePath(typedProps)
+const { pathToShow, pathTooltip } = usePath(props)
 const { rooms } = useQall()
 const qallUserIds = computed(
   () =>
