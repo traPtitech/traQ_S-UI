@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 
 import ChannelTreeAnimation from '/@/components/Main/NavigationBar/ChannelList/ChannelTreeAnimation.vue'
-import type { ChannelTreeAnimationState } from '/@/components/Main/NavigationBar/ChannelList/channelTreeAnimation'
+import type { VisibleChannelTreeAnimation } from '/@/components/Main/NavigationBar/ChannelList/channelTreeAnimation'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 import type { ChannelId } from '/@/types/entity-ids'
 
@@ -18,7 +18,7 @@ const node: ChannelTreeNode = {
   archived: false
 }
 
-const animation: ChannelTreeAnimationState = {
+const animation: VisibleChannelTreeAnimation = {
   id: 1,
   direction: 'expand',
   origin: 36,

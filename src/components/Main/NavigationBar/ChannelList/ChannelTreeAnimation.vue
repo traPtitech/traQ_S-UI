@@ -72,12 +72,12 @@ import ChannelElement from './ChannelElement.vue'
 import {
   CHANNEL_TREE_ANIMATION_DURATION_MS,
   type ChannelTreeAnimationMeasurement,
-  type ChannelTreeAnimationState
+  type VisibleChannelTreeAnimation
 } from './channelTreeAnimation'
 
 const props = withDefaults(
   defineProps<{
-    animation: ChannelTreeAnimationState
+    animation: VisibleChannelTreeAnimation
     showShortenedPath?: boolean
     showTopic?: boolean
     showChildTopic?: boolean

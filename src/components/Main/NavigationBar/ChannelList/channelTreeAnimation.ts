@@ -1,5 +1,7 @@
 import type { VirtualItem } from '@tanstack/vue-virtual'
 
+import { lowerBound } from '/@/lib/basic/array'
+
 import type { FlatChannelItem } from './composables/useChannelFlatList'
 
 export const CHANNEL_TREE_ANIMATION_DURATION_MS = 150
@@ -19,7 +21,7 @@ export interface ChannelTreeAnimationRow {
   isOpened: boolean
 }
 
-export interface ChannelTreeAnimationState {
+export interface VisibleChannelTreeAnimation {
   id: number
   direction: 'expand' | 'collapse'
   origin: number
@@ -29,7 +31,7 @@ export interface ChannelTreeAnimationState {
   movingRows: ChannelTreeAnimationRow[]
 }
 
-export interface ChannelTreeAnimationSnapshot extends ChannelTreeAnimationState {
+export interface ActiveChannelTreeAnimation extends VisibleChannelTreeAnimation {
   retainedRowIndexes: number[]
   retainedMovingRowIndexes: number[]
 }
@@ -41,7 +43,7 @@ export interface ChannelTreeAnimationMeasurement {
 
 interface CreateChannelTreeAnimationOptions {
   id: number
-  direction: ChannelTreeAnimationState['direction']
+  direction: VisibleChannelTreeAnimation['direction']
   origin: number
   scrollMargin: number
   preRows: VirtualChannelRow[]
@@ -83,7 +85,7 @@ export const createChannelTreeAnimation = ({
   postTotalSize,
   totalSizeDelta,
   descendantKeyPrefix
-}: CreateChannelTreeAnimationOptions): ChannelTreeAnimationSnapshot => {
+}: CreateChannelTreeAnimationOptions): ActiveChannelTreeAnimation => {
   const isExpanding = direction === 'expand'
   const sourceRows = isExpanding ? postRows : preRows
   const rows = toAnimationRows(
@@ -123,28 +125,6 @@ export const createChannelTreeAnimation = ({
   }
 }
 
-const lowerBound = (
-  rows: ChannelTreeAnimationRow[],
-  offset: number,
-  useEnd: boolean
-) => {
-  let left = 0
-  let right = rows.length
-
-  while (left < right) {
-    const middle = Math.floor((left + right) / 2)
-    const row = rows[middle]
-
-    if (row && row.start + (useEnd ? row.size : 0) < offset) {
-      left = middle + 1
-    } else {
-      right = middle
-    }
-  }
-
-  return left
-}
-
 const selectRows = (
   rows: ChannelTreeAnimationRow[],
   retainedIndexes: number[],
@@ -155,8 +135,16 @@ const selectRows = (
   const indexes = new Set(retainedIndexes)
 
   if (end > start) {
-    const first = Math.max(lowerBound(rows, start, true) - overscan, 0)
-    const last = Math.min(lowerBound(rows, end, false) + overscan, rows.length)
+    const first = Math.max(
+      lowerBound(rows, row => row.start + row.size - start) - overscan,
+      0
+    )
+
+    const last = Math.min(
+      lowerBound(rows, row => row.start - end) + overscan,
+      rows.length
+    )
+
     for (let index = first; index < last; index++) indexes.add(index)
   }
 
@@ -169,29 +157,29 @@ const selectRows = (
 }
 
 export const getVisibleChannelTreeAnimation = (
-  animation: ChannelTreeAnimationSnapshot,
+  activeAnimation: ActiveChannelTreeAnimation,
   viewportStart: number,
   viewportEnd: number,
   currentHeight: number,
   overscan: number
-): ChannelTreeAnimationState => {
+): VisibleChannelTreeAnimation => {
   const height = Math.max(0, currentHeight)
-  const childStart = Math.max(viewportStart - animation.origin, 0)
-  const childEnd = Math.min(viewportEnd - animation.origin, height)
-  const movingOrigin = animation.origin + height
+  const childStart = Math.max(viewportStart - activeAnimation.origin, 0)
+  const childEnd = Math.min(viewportEnd - activeAnimation.origin, height)
+  const movingOrigin = activeAnimation.origin + height
 
   return {
-    ...animation,
+    ...activeAnimation,
     rows: selectRows(
-      animation.rows,
-      animation.retainedRowIndexes,
+      activeAnimation.rows,
+      activeAnimation.retainedRowIndexes,
       childStart,
       childEnd,
       overscan
     ),
     movingRows: selectRows(
-      animation.movingRows,
-      animation.retainedMovingRowIndexes,
+      activeAnimation.movingRows,
+      activeAnimation.retainedMovingRowIndexes,
       Math.max(viewportStart - movingOrigin, 0),
       viewportEnd - movingOrigin,
       overscan
@@ -216,22 +204,22 @@ const resizeRows = (
 }
 
 export const resizeChannelTreeAnimation = (
-  animation: ChannelTreeAnimationSnapshot,
+  activeAnimation: ActiveChannelTreeAnimation,
   measurements: ChannelTreeAnimationMeasurement[]
-): ChannelTreeAnimationSnapshot => {
+): ActiveChannelTreeAnimation => {
   const sizes = new Map(
     measurements
       .filter(({ size }) => size > 0)
       .map(({ key, size }) => [key, size])
   )
 
-  const children = resizeRows(animation.rows, sizes)
-  const trailing = resizeRows(animation.movingRows, sizes)
+  const children = resizeRows(activeAnimation.rows, sizes)
+  const trailing = resizeRows(activeAnimation.movingRows, sizes)
 
   return {
-    ...animation,
-    height: animation.height + children.delta,
-    trailingHeight: animation.trailingHeight + trailing.delta,
+    ...activeAnimation,
+    height: activeAnimation.height + children.delta,
+    trailingHeight: activeAnimation.trailingHeight + trailing.delta,
     rows: children.rows,
     movingRows: trailing.rows
   }

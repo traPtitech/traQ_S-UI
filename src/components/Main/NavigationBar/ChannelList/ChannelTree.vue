@@ -2,7 +2,7 @@
   <div
     :class="$style.inner"
     :style="
-      treeAnimation
+      visibleAnimation
         ? undefined
         : {
             paddingTop: `${virtualPadding.start}px`,
@@ -21,9 +21,9 @@
       :class="$style.row"
       :data-index="vItem.index"
       :data-key="key"
-      :data-is-animating="treeAnimation ? '' : undefined"
+      :data-is-animating="visibleAnimation ? '' : undefined"
       :style="
-        treeAnimation
+        visibleAnimation
           ? {
               '--row-y': `${vItem.start - virtualizer.options.scrollMargin}px`
             }
@@ -44,9 +44,9 @@
     </div>
 
     <ChannelTreeAnimation
-      v-if="treeAnimation"
-      :key="treeAnimation.id"
-      :animation="treeAnimation"
+      v-if="visibleAnimation"
+      :key="visibleAnimation.id"
+      :animation="visibleAnimation"
       :show-topic="showTopic"
       :show-child-topic="showChildTopic"
       :show-shortened-path="showShortenedPath"
@@ -109,7 +109,7 @@ const virtualizer = useVirtualizer(
 
 const {
   displayedRows,
-  treeAnimation,
+  visibleAnimation,
   finishTreeAnimation,
   updateTreeAnimationHeight,
   measureTreeAnimationRows,

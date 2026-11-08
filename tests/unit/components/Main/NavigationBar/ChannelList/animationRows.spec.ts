@@ -62,89 +62,105 @@ describe('channelTreeAnimation', () => {
   it.each(['expand', 'collapse'] as const)(
     '%s中、現在のクリップ境界を使って子行と後続行を仮想化する',
     direction => {
-      const snapshot = setup(direction)
-      const animation = getVisibleChannelTreeAnimation(
-        snapshot,
+      const activeAnimation = setup(direction)
+      const visibleAnimation = getVisibleChannelTreeAnimation(
+        activeAnimation,
         18000,
         18360,
         20000,
         5
       )
 
-      expect(animation.rows.some(row => row.key === '/root/child-500')).toBe(
-        true
-      )
-      expect(animation.rows.length).toBeLessThan(25)
-      expect(animation.movingRows.map(row => row.key)).toEqual(['/sibling-0'])
       expect(
-        animation.rows.find(row => row.key === '/root/child-500')?.index
+        visibleAnimation.rows.some(row => row.key === '/root/child-500')
+      ).toBe(true)
+      expect(visibleAnimation.rows.length).toBeLessThan(25)
+      expect(visibleAnimation.movingRows.map(row => row.key)).toEqual([
+        '/sibling-0'
+      ])
+      expect(
+        visibleAnimation.rows.find(row => row.key === '/root/child-500')?.index
       ).toBe(direction === 'expand' ? 501 : undefined)
     }
   )
 
   it('まだ下へ移動しきっていない後続行を、完了後の座標とは別の範囲から選ぶ', () => {
-    const snapshot = setup('expand')
-    const animation = getVisibleChannelTreeAnimation(snapshot, 9000, 9360, 0, 5)
-
-    expect(animation.movingRows.some(row => row.key === '/sibling-250')).toBe(
-      true
+    const activeAnimation = setup('expand')
+    const visibleAnimation = getVisibleChannelTreeAnimation(
+      activeAnimation,
+      9000,
+      9360,
+      0,
+      5
     )
-    expect(animation.movingRows.length).toBeLessThan(25)
-    expect(animation.rows.map(row => row.key)).toEqual(['/root/child-0'])
+
+    expect(
+      visibleAnimation.movingRows.some(row => row.key === '/sibling-250')
+    ).toBe(true)
+    expect(visibleAnimation.movingRows.length).toBeLessThan(25)
+    expect(visibleAnimation.rows.map(row => row.key)).toEqual(['/root/child-0'])
   })
 
   it('クリップ範囲より下にある子行を描画しない', () => {
-    const snapshot = setup('collapse')
-    const animation = getVisibleChannelTreeAnimation(
-      snapshot,
+    const activeAnimation = setup('collapse')
+    const visibleAnimation = getVisibleChannelTreeAnimation(
+      activeAnimation,
       18000,
       18360,
       300,
       5
     )
 
-    expect(animation.rows.map(row => row.key)).toEqual(['/root/child-0'])
-    expect(animation.movingRows.length).toBeLessThan(25)
+    expect(visibleAnimation.rows.map(row => row.key)).toEqual(['/root/child-0'])
+    expect(visibleAnimation.movingRows.length).toBeLessThan(25)
   })
 
   it('目標の高さを補正した直後も、CSS が描画している実際の高さを使う', () => {
-    const snapshot = setup('expand')
-    const animation = getVisibleChannelTreeAnimation(
-      snapshot,
+    const activeAnimation = setup('expand')
+    const visibleAnimation = getVisibleChannelTreeAnimation(
+      activeAnimation,
       40036,
       40396,
       40000,
       5
     )
 
-    expect(animation.movingRows.some(row => row.key === '/sibling-1')).toBe(
-      true
-    )
-    expect(animation.movingRows.length).toBeLessThan(25)
+    expect(
+      visibleAnimation.movingRows.some(row => row.key === '/sibling-1')
+    ).toBe(true)
+    expect(visibleAnimation.movingRows.length).toBeLessThan(25)
   })
 
   it('表示前後の行を保持しても、アニメーション行を全件 DOM に載せない', () => {
-    const snapshot = setup('expand')
-    const animation = getVisibleChannelTreeAnimation(snapshot, 0, 360, 0, 5)
+    const activeAnimation = setup('expand')
+    const visibleAnimation = getVisibleChannelTreeAnimation(
+      activeAnimation,
+      0,
+      360,
+      0,
+      5
+    )
 
-    expect(snapshot.rows).toHaveLength(1000)
-    expect(snapshot.movingRows).toHaveLength(1000)
-    expect(animation.movingRows[0]?.key).toBe('/sibling-0')
-    expect(animation.rows.length + animation.movingRows.length).toBeLessThan(30)
+    expect(activeAnimation.rows).toHaveLength(1000)
+    expect(activeAnimation.movingRows).toHaveLength(1000)
+    expect(visibleAnimation.movingRows[0]?.key).toBe('/sibling-0')
+    expect(
+      visibleAnimation.rows.length + visibleAnimation.movingRows.length
+    ).toBeLessThan(30)
   })
 
   it('トピックの実測で高さが変わった場合、各レイヤーの後続行の位置を補正する', () => {
-    const snapshot = setup('expand')
-    const resized = resizeChannelTreeAnimation(snapshot, [
+    const activeAnimation = setup('expand')
+    const resized = resizeChannelTreeAnimation(activeAnimation, [
       { key: '/root/child-0', size: 72 },
       { key: '/sibling-0', size: 60 }
     ])
 
-    expect(resized.id).toBe(snapshot.id)
+    expect(resized.id).toBe(activeAnimation.id)
     expect(resized.height).toBe(36036)
     expect(resized.rows[1]?.start).toBe(72)
     expect(resized.movingRows[1]?.start).toBe(60)
-    expect(resized.trailingHeight).toBe(snapshot.trailingHeight + 24)
-    expect(snapshot.rows[1]?.start).toBe(36)
+    expect(resized.trailingHeight).toBe(activeAnimation.trailingHeight + 24)
+    expect(activeAnimation.rows[1]?.start).toBe(36)
   })
 })

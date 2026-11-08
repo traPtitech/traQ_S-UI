@@ -5,9 +5,9 @@ import type { Virtualizer } from '@tanstack/vue-virtual'
 import { useEventListener } from '@vueuse/core'
 
 import {
+  type ActiveChannelTreeAnimation,
   CHANNEL_TREE_ANIMATION_DURATION_MS,
   type ChannelTreeAnimationMeasurement,
-  type ChannelTreeAnimationSnapshot,
   type VirtualChannelRow,
   createChannelTreeAnimation,
   getVisibleChannelTreeAnimation,
@@ -47,9 +47,7 @@ const useChannelTreeAnimation = <
     })
   )
 
-  const animationSnapshot = shallowRef<ChannelTreeAnimationSnapshot | null>(
-    null
-  )
+  const activeAnimation = shallowRef<ActiveChannelTreeAnimation | null>(null)
   const currentHeight = ref(0)
   const scrollOffset = ref(0)
 
@@ -62,8 +60,8 @@ const useChannelTreeAnimation = <
     passive: true
   })
 
-  const treeAnimation = computed(() => {
-    const animation = animationSnapshot.value
+  const visibleAnimation = computed(() => {
+    const animation = activeAnimation.value
     if (!animation) return null
 
     const viewportStart = scrollOffset.value - scrollMargin.value
@@ -84,7 +82,7 @@ const useChannelTreeAnimation = <
   let resolveTreeAnimation: (() => void) | undefined
 
   const displayedRows = computed(() => {
-    const animation = animationSnapshot.value
+    const animation = activeAnimation.value
     if (!animation) return virtualItemRows.value
 
     return virtualItemRows.value.filter(
@@ -93,23 +91,22 @@ const useChannelTreeAnimation = <
   })
 
   const finishTreeAnimation = (animationId: number) => {
-    if (animationSnapshot.value?.id === animationId) {
-      animationSnapshot.value = null
+    if (activeAnimation.value?.id === animationId) {
+      activeAnimation.value = null
       resolveTreeAnimation?.()
       resolveTreeAnimation = undefined
     }
   }
 
   const updateTreeAnimationHeight = (animationId: number, height: number) => {
-    if (animationSnapshot.value?.id === animationId)
-      currentHeight.value = height
+    if (activeAnimation.value?.id === animationId) currentHeight.value = height
   }
 
   const measureTreeAnimationRows = (
     animationId: number,
     measurements: ChannelTreeAnimationMeasurement[]
   ) => {
-    const animation = animationSnapshot.value
+    const animation = activeAnimation.value
     if (!animation || animation.id !== animationId) return
 
     const sizes = new Map(measurements.map(row => [row.key, row.size]))
@@ -121,10 +118,7 @@ const useChannelTreeAnimation = <
     )
     if (changedRows.length === 0) return
 
-    animationSnapshot.value = resizeChannelTreeAnimation(
-      animation,
-      measurements
-    )
+    activeAnimation.value = resizeChannelTreeAnimation(animation, measurements)
 
     const instance = virtualizer.value
     const shouldAdjustScroll =
@@ -186,13 +180,13 @@ const useChannelTreeAnimation = <
     const totalSizeDelta = postTotalSize - preTotalSize
 
     if (totalSizeDelta === 0) {
-      animationSnapshot.value = null
+      activeAnimation.value = null
       return
     }
 
     const animationId = ++treeAnimationId
     currentHeight.value = direction === 'expand' ? 0 : Math.abs(totalSizeDelta)
-    animationSnapshot.value = createChannelTreeAnimation({
+    activeAnimation.value = createChannelTreeAnimation({
       id: animationId,
       direction,
       origin,
@@ -222,7 +216,7 @@ const useChannelTreeAnimation = <
 
   return {
     displayedRows,
-    treeAnimation,
+    visibleAnimation,
     finishTreeAnimation,
     updateTreeAnimationHeight,
     measureTreeAnimationRows,

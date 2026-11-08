@@ -133,22 +133,25 @@ describe('useChannelTreeAnimation', () => {
   })
 
   it('展開後の仮想範囲から外れた後続行も、アニメーション中は保持する', async () => {
-    const { treeAnimation, handleToggle, visibleIndices } = setup(false, 1000)
+    const { visibleAnimation, handleToggle, visibleIndices } = setup(
+      false,
+      1000
+    )
     visibleIndices.value = new Set([0, 1])
     handleToggle('/root')
-    await vi.waitFor(() => expect(treeAnimation.value).not.toBeNull())
+    await vi.waitFor(() => expect(visibleAnimation.value).not.toBeNull())
 
-    expect(treeAnimation.value?.movingRows.map(row => row.key)).toContain(
+    expect(visibleAnimation.value?.movingRows.map(row => row.key)).toContain(
       '/sibling'
     )
-    expect(treeAnimation.value?.rows.length).toBeLessThan(20)
+    expect(visibleAnimation.value?.rows.length).toBeLessThan(20)
   })
 
   it.each([false, true])(
     '展開状態 %s からのアニメーション中にスクロールしても、表示範囲を更新し、次の操作を待機させる',
     async open => {
       const {
-        treeAnimation,
+        visibleAnimation,
         handleToggle,
         updateTreeAnimationHeight,
         scrollElement,
@@ -157,15 +160,15 @@ describe('useChannelTreeAnimation', () => {
       visibleIndices.value = new Set([0, 1])
       handleToggle('/root')
       handleToggle('/root')
-      await vi.waitFor(() => expect(treeAnimation.value).not.toBeNull())
-      const first = treeAnimation.value
+      await vi.waitFor(() => expect(visibleAnimation.value).not.toBeNull())
+      const first = visibleAnimation.value
       if (!first) throw new Error('Animation did not start')
 
       updateTreeAnimationHeight(first.id, 20000)
       scrollElement.value.scrollTop = 18000
       scrollElement.value.dispatchEvent(new Event('scroll'))
 
-      const scrolled = treeAnimation.value
+      const scrolled = visibleAnimation.value
       expect(scrolled?.id).toBe(first.id)
       expect(scrolled?.direction).toBe(first.direction)
       expect(scrolled?.rows.some(row => row.key === '/root/child-500')).toBe(
@@ -173,44 +176,44 @@ describe('useChannelTreeAnimation', () => {
       )
       expect(scrolled?.rows.length).toBeLessThan(25)
       await Promise.resolve()
-      expect(treeAnimation.value?.id).toBe(first.id)
+      expect(visibleAnimation.value?.id).toBe(first.id)
     }
   )
 
   it('新たに表示したトピックの高さを、後続行と仮想スクロールの計測値に反映する', async () => {
     const {
-      treeAnimation,
+      visibleAnimation,
       handleToggle,
       measureTreeAnimationRows,
       resizeItem
     } = setup(false)
     handleToggle('/root')
-    await vi.waitFor(() => expect(treeAnimation.value).not.toBeNull())
-    const animation = treeAnimation.value
+    await vi.waitFor(() => expect(visibleAnimation.value).not.toBeNull())
+    const animation = visibleAnimation.value
     if (!animation) throw new Error('Animation did not start')
 
     measureTreeAnimationRows(animation.id, [{ key: '/root/child', size: 72 }])
 
-    expect(treeAnimation.value?.id).toBe(animation.id)
-    expect(treeAnimation.value?.height).toBe(72)
+    expect(visibleAnimation.value?.id).toBe(animation.id)
+    expect(visibleAnimation.value?.height).toBe(72)
     expect(resizeItem).toHaveBeenCalledWith(1, 72)
   })
 
   it('折りたたみで削除された子行の計測値を、同じ添字になった後続行に適用しない', async () => {
     const {
-      treeAnimation,
+      visibleAnimation,
       handleToggle,
       measureTreeAnimationRows,
       resizeItem
     } = setup(true)
     handleToggle('/root')
-    await vi.waitFor(() => expect(treeAnimation.value).not.toBeNull())
-    const animation = treeAnimation.value
+    await vi.waitFor(() => expect(visibleAnimation.value).not.toBeNull())
+    const animation = visibleAnimation.value
     if (!animation) throw new Error('Animation did not start')
 
     measureTreeAnimationRows(animation.id, [{ key: '/root/child', size: 72 }])
 
-    expect(treeAnimation.value?.height).toBe(72)
+    expect(visibleAnimation.value?.height).toBe(72)
     expect(resizeItem).not.toHaveBeenCalled()
   })
 
@@ -220,12 +223,12 @@ describe('useChannelTreeAnimation', () => {
   ] as const)(
     '%s時にクリップ境界と後続行の位置を一致させる',
     async (direction, open) => {
-      const { treeAnimation, displayedRows, handleToggle } = setup(open)
+      const { visibleAnimation, displayedRows, handleToggle } = setup(open)
 
       handleToggle('/root')
-      await vi.waitFor(() => expect(treeAnimation.value).not.toBeNull())
+      await vi.waitFor(() => expect(visibleAnimation.value).not.toBeNull())
 
-      const animation = treeAnimation.value
+      const animation = visibleAnimation.value
       expect(animation).not.toBeNull()
       if (!animation) return
 
@@ -242,15 +245,15 @@ describe('useChannelTreeAnimation', () => {
     vi.useFakeTimers()
 
     try {
-      const { treeAnimation, displayedRows, handleToggle } = setup(false)
+      const { visibleAnimation, displayedRows, handleToggle } = setup(false)
 
       handleToggle('/root')
       await Promise.resolve()
       await Promise.resolve()
-      expect(treeAnimation.value).not.toBeNull()
+      expect(visibleAnimation.value).not.toBeNull()
 
       vi.runOnlyPendingTimers()
-      expect(treeAnimation.value).toBeNull()
+      expect(visibleAnimation.value).toBeNull()
       expect(displayedRows.value.map(row => row.key)).toEqual([
         '/root',
         '/root/child',
@@ -265,14 +268,15 @@ describe('useChannelTreeAnimation', () => {
     vi.useFakeTimers()
 
     try {
-      const { treeAnimation, finishTreeAnimation, handleToggle } = setup(false)
+      const { visibleAnimation, finishTreeAnimation, handleToggle } =
+        setup(false)
 
       handleToggle('/root')
       handleToggle('/root')
       await Promise.resolve()
       await Promise.resolve()
 
-      const firstAnimation = treeAnimation.value
+      const firstAnimation = visibleAnimation.value
       expect(firstAnimation?.direction).toBe('expand')
       if (!firstAnimation) return
 
@@ -282,7 +286,7 @@ describe('useChannelTreeAnimation', () => {
       await Promise.resolve()
       await Promise.resolve()
 
-      expect(treeAnimation.value?.direction).toBe('collapse')
+      expect(visibleAnimation.value?.direction).toBe('collapse')
     } finally {
       vi.runOnlyPendingTimers()
       vi.useRealTimers()
