@@ -78,10 +78,7 @@ import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 import { computed, toRef } from 'vue'
 
-import {
-  type TypedProps,
-  usePath
-} from '/@/components/Main/NavigationBar/ChannelList/composables/usePath'
+import { usePath } from '/@/components/Main/NavigationBar/ChannelList/composables/usePath'
 import useFocus from '/@/composables/dom/useFocus'
 import useHover from '/@/composables/dom/useHover'
 import useChannelPath from '/@/composables/useChannelPath'
@@ -144,7 +141,7 @@ const openChannel = (event: MouseEvent) => {
   openLink(event, channelIdToLink(props.channel.id) as string)
 }
 
-const { pathToShow, pathTooltip } = usePath(props as TypedProps)
+const { pathToShow, pathTooltip } = usePath(props)
 
 const notificationState = useNotificationState(toRef(props, 'channel'))
 
