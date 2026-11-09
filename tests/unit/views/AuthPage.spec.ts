@@ -17,7 +17,9 @@ import router, { RouteName } from '/@/router'
 import { useMeStore } from '/@/store/domain/me'
 import useLoginCheck from '/@/views/composables/useLoginCheck'
 
-vi.mock('/@/lib/telemetry', () => ({ telemetry: { track: vi.fn() } }))
+vi.mock('/@/lib/telemetry', () => ({
+  telemetry: { trackAppStarted: vi.fn() }
+}))
 
 vi.mock('/@/lib/websocket', () => ({
   wsListener: { on: vi.fn() }
@@ -88,7 +90,7 @@ describe('AuthPage', () => {
   }
 
   beforeEach(() => {
-    vi.mocked(telemetry.track).mockClear()
+    vi.mocked(telemetry.trackAppStarted).mockClear()
     getMe = vi.spyOn(apis, 'getMe').mockRejectedValue({
       isAxiosError: true,
       response: { status: 401 }
@@ -143,12 +145,12 @@ describe('AuthPage', () => {
     const { fetchMe } = useMeStore(storePinia)
 
     expect(await fetchMe(false)).toBeUndefined()
-    expect(telemetry.track).not.toHaveBeenCalled()
+    expect(telemetry.trackAppStarted).not.toHaveBeenCalled()
 
     getMe.mockResolvedValue(meResponse)
     await Promise.all([fetchMe(), fetchMe()])
 
-    expect(telemetry.track).toHaveBeenCalledExactlyOnceWith('app_started', {})
+    expect(telemetry.trackAppStarted).toHaveBeenCalledOnce()
   })
 
   it('keeps the registration page open when logged out without retrying 401', async () => {

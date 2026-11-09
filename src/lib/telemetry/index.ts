@@ -2,6 +2,7 @@ import type { Faro } from '@grafana/faro-web-sdk'
 
 import { VERSION } from '/@/lib/define'
 
+import { getAppStartAttributes } from './appStart'
 import type { TelemetryEvents } from './events'
 
 type TelemetryClient = { faro: Faro; clientId: string }
@@ -62,7 +63,7 @@ const initialize = async () => {
 
 const track = async <Name extends keyof TelemetryEvents>(
   name: Name,
-  attributes: TelemetryEvents[Name]
+  attributes: TelemetryEvents[Name] | (() => Promise<TelemetryEvents[Name]>)
 ): Promise<void> => {
   if (!window.isSecureContext) return
   const config = traQConfig.telemetry
@@ -72,11 +73,6 @@ const track = async <Name extends keyof TelemetryEvents>(
   }
 
   const timestamp = Date.now()
-  const values = Object.fromEntries(
-    Object.entries(attributes)
-      .filter(([, value]) => value !== undefined)
-      .map(([key, value]) => [key, String(value)])
-  )
 
   try {
     initialization ??= initialize().catch(() => {
@@ -85,6 +81,15 @@ const track = async <Name extends keyof TelemetryEvents>(
     })
     const client = await initialization
     if (!client) return
+
+    const eventAttributes =
+      typeof attributes === 'function' ? await attributes() : attributes
+    const values = Object.fromEntries(
+      Object.entries(eventAttributes)
+        .filter(([, value]) => value !== undefined)
+        .map(([key, value]) => [key, String(value)])
+    )
+
     client.faro.api.pushEvent(
       name,
       {
@@ -101,7 +106,9 @@ const track = async <Name extends keyof TelemetryEvents>(
   }
 }
 
-export const telemetry = { track }
+const trackAppStarted = () => track('app_started', getAppStartAttributes)
+
+export const telemetry = { track, trackAppStarted }
 
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {

@@ -52,6 +52,50 @@ describe('telemetry', () => {
     expect(storage.size).toBe(0)
   })
 
+  it.each([
+    {
+      userAgent:
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.2903.86',
+      standalone: true,
+      expected: {
+        browser_name: 'Edge',
+        browser_major_version: '131',
+        os_name: 'Windows',
+        launch_mode: 'pwa'
+      }
+    },
+    {
+      userAgent: 'Unknown',
+      standalone: false,
+      expected: { launch_mode: 'browser' }
+    }
+  ])(
+    'sends only selected environment attributes on app start',
+    async ({ userAgent, standalone, expected }) => {
+      vi.stubGlobal('traQConfig', {
+        telemetry: { endpoint: '/telemetry/collect' }
+      })
+      vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(userAgent)
+      vi.stubGlobal('matchMedia', (query: string) => ({
+        matches: standalone && query === '(display-mode: standalone)'
+      }))
+
+      await telemetry.trackAppStarted()
+      await vi.advanceTimersByTimeAsync(1000)
+
+      const body = sentBody()
+      expect(body.events).toHaveLength(1)
+      expect(body.events?.[0]?.name).toBe('app_started')
+      expect(body.events?.[0]?.attributes).toEqual({
+        ...expected,
+        client_id: expect.any(String),
+        event_id: expect.any(String),
+        schema_version: '1'
+      })
+      expect(Object.keys(body.meta).sort()).toEqual(['app', 'sdk'])
+    }
+  )
+
   it('sends repeated events without collecting page or user metadata', async () => {
     vi.stubGlobal('traQConfig', {
       telemetry: { endpoint: '/telemetry/collect' }
