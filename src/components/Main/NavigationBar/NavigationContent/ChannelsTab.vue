@@ -18,12 +18,19 @@
               title="アーカイブされたチャンネルを表示する"
             />
           </div>
-          <ChannelListSelector
+          <HideOnScroll
             v-if="query.length === 0"
-            v-model:is-starred="filterStarChannel"
-            :all-panel-id="allPanelId"
-            :starred-panel-id="starredPanelId"
-          />
+            :scroll-element="scrollEl"
+          >
+            <ChannelListSelector
+              v-model:is-starred="filterStarChannel"
+              :all-panel-id="allPanelId"
+              :starred-panel-id="starredPanelId"
+            />
+            <template #collapsed-decoration>
+              <div :class="$style.divider" />
+            </template>
+          </HideOnScroll>
         </template>
       </NavigationContentContainer>
     </div>
@@ -92,6 +99,7 @@ import NavigationContentContainer from '/@/components/Main/NavigationBar/Navigat
 import NavigationContentTitle from '/@/components/Main/NavigationBar/NavigationContentTitle.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
+import HideOnScroll from '/@/components/UI/HideOnScroll.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { filterTrees } from '/@/lib/basic/tree'
 import { sortByChannelPath } from '/@/lib/channel'
@@ -178,6 +186,11 @@ const scrollEl = ref<HTMLElement | null>(null)
   flex-shrink: 0;
   padding-top: 24px;
 }
+.divider {
+  height: 1px;
+  background-color: $theme-ui-tertiary-default;
+  opacity: 0.45;
+}
 .scroller {
   flex: 1;
   min-height: 0;
@@ -189,7 +202,7 @@ const scrollEl = ref<HTMLElement | null>(null)
   display: flex;
   gap: 1rem;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   margin-right: 1rem;
 }
 .filter {

@@ -23,6 +23,40 @@ test('固定高の行を仮想化し、大きな一覧の先頭と末尾へ移�
   await expect(row(scroller, `/${flatId(0)}`)).toBeVisible()
 })
 
+test('一覧を下へスクロールすると切り替えが隠れ、少し上へ戻すと表示される', async ({
+  load,
+  page
+}) => {
+  const scroller = await load({ topics: false })
+  const tabs = page.getByRole('tablist')
+  const input = page.getByRole('textbox')
+
+  await expect(tabs.getByRole('tab', { name: 'すべて' })).toBeVisible()
+  await expect(tabs.getByRole('tab', { name: 'お気に入り' })).toBeVisible()
+
+  await scroller.evaluate(el => {
+    el.scrollTop = 160
+  })
+  await expect(tabs).toBeHidden()
+  await expect(input).toBeInViewport()
+
+  await scroller.evaluate(el => {
+    el.scrollTop -= 12
+  })
+  await expect(tabs).toBeVisible()
+  expect(await scroller.evaluate(el => el.scrollTop)).toBeGreaterThan(0)
+
+  await scroller.evaluate(el => {
+    el.scrollTop = el.scrollHeight
+  })
+  await expect(tabs).toBeHidden()
+
+  await scroller.evaluate(el => {
+    el.scrollTop -= 12
+  })
+  await expect(tabs).toBeVisible()
+})
+
 test('検索後に未計測のトピック行へスクロールしても表示領域が行で埋まる', async ({
   page,
   load
