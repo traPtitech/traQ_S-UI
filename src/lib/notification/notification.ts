@@ -1,15 +1,16 @@
+import type { FirebaseApp } from 'firebase/app'
 import {
   deleteToken as deleteTokenFb,
   getMessaging,
   getToken as getTokenFb,
+  isSupported,
   onMessage
 } from 'firebase/messaging'
 
 import apis from '/@/lib/apis'
 import { wait } from '/@/lib/basic/timer'
-import { isIOSApp, isPWA, isWebKit } from '/@/lib/dom/browser'
+import { isIOSApp, isWebKit } from '/@/lib/dom/browser'
 import router from '/@/router'
-import { useToastStore } from '/@/store/ui/toast'
 import type { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
 import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
 
@@ -50,62 +51,16 @@ const notify = async (
       return regist.showNotification(notificationTitle, notificationOptions)
     }
   }
-  if (Notification?.permission === 'granted') {
-    return new Notification(notificationTitle, notificationOptions)
+  if (window.Notification?.permission === 'granted') {
+    return new window.Notification(notificationTitle, notificationOptions)
   }
   return null
 }
 
-export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
-  if (isIOSApp(window)) {
-    // iOSはNotificationがないため、先にFCMトークンを登録する
-    const token = window.iOSToken
-    if (token && token !== 'No Token') {
-      apis.registerFCMDevice({ token })
-    }
-  }
-
-  if (Notification) {
-    if (Notification.permission === 'default') {
-      // 上で Notification が存在していることを確認している
-      const permission = await (() => {
-        // WebKit ではユーザージェスチャーを起点としたポップアップのみ許可される
-        if (isWebKit() && isPWA()) {
-          const { addToast, deleteToast } = useToastStore()
-
-          return new Promise<NotificationPermission>((resolve, reject) => {
-            addToast({
-              type: 'info',
-              text: '【通知を有効にしてください】\nメッセージ受信時に通知が届くようになります。（クリックで許可）',
-              timeout: Infinity,
-              onClick: id => {
-                deleteToast(id)
-                Notification.requestPermission().then(resolve).catch(reject)
-              }
-            })
-          })
-        } else {
-          return Notification.requestPermission()
-        }
-      })()
-
-      if (permission === 'granted') {
-        notify({ title: `ようこそ${appName}へ！！` }, true)
-      } else {
-        // eslint-disable-next-line no-console
-        console.warn(`[Notification] permission ${permission}`)
-      }
-    }
-  } else {
-    // eslint-disable-next-line no-console
-    console.warn(`[Notification] Notification does not exists`)
-  }
-
-  const firebaseApp = setupFirebaseApp()
-
-  if (import.meta.env.DEV || !navigator?.serviceWorker) {
-    return
-  }
+const setupServiceWorker = async (onCanUpdate: OnCanUpdate) => {
+  const registration = await navigator.serviceWorker.register('/sw.js', {
+    scope: '/'
+  })
 
   navigator.serviceWorker.addEventListener(
     'message',
@@ -118,23 +73,40 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     }
   )
 
-  const registration = await navigator.serviceWorker.register('/sw.js', {
-    scope: '/'
-  })
-
   setupUpdateToast(registration, onCanUpdate)
 
-  if (Notification?.permission !== 'granted') {
-    // eslint-disable-next-line no-console
-    console.warn(`[Notification] permission ${Notification?.permission}`)
-    return
-  }
-  if (!firebaseApp) {
-    return
-  }
-  const messaging = getMessaging(firebaseApp)
+  return registration
+}
 
-  onMessage(messaging, async payload => {
+let serviceWorkerRegistration:
+  | Promise<ServiceWorkerRegistration | undefined>
+  | undefined
+let pushConnection: Promise<void> | undefined
+let stopListeningForPush: (() => void) | undefined
+
+const registerPush = async (
+  registration: Promise<ServiceWorkerRegistration | undefined>,
+  firebaseApp: FirebaseApp
+) => {
+  const serviceWorker = await registration
+  if (!serviceWorker || !(await isSupported())) return
+
+  const messaging = getMessaging(firebaseApp)
+  const token = await Promise.race([
+    getTokenFb(messaging, {
+      vapidKey,
+      serviceWorkerRegistration: serviceWorker
+    }),
+    wait(5000)
+  ])
+
+  if (!token) {
+    throw new Error('getToken timed out')
+  }
+
+  await apis.registerFCMDevice({ token })
+
+  stopListeningForPush = onMessage(messaging, async payload => {
     const data = payload.data as FirebasePayloadData | undefined
     if (!data) return
 
@@ -165,30 +137,83 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
       }
     }
   })
-
-  const token = await Promise.race([
-    getTokenFb(messaging, {
-      vapidKey,
-      serviceWorkerRegistration: registration
-    }),
-    wait(5000)
-  ])
-  if (!token) {
-    // 何故かregistration.pushManager.subscribe(～)が終わらないことで、
-    // getTokenFbのawaitが終わらないことがある
-    // eslint-disable-next-line no-console
-    console.warn('[Notification] getToken timed out')
-    return
-  }
-  apis.registerFCMDevice({ token })
 }
 
-export const deleteToken = () => {
-  if (Notification?.permission !== 'granted') return
+const connectPush = () => {
+  const firebaseApp = getFirebaseApp()
+  if (
+    window.Notification?.permission !== 'granted' ||
+    !serviceWorkerRegistration ||
+    !firebaseApp
+  ) {
+    return
+  }
+
+  pushConnection ??= registerPush(serviceWorkerRegistration, firebaseApp).catch(
+    error => {
+      pushConnection = undefined
+      // eslint-disable-next-line no-console
+      console.warn('[Notification] failed to register push', error)
+    }
+  )
+
+  return pushConnection
+}
+
+export const requestNotificationPermission = async () => {
+  const permission = await window.Notification?.requestPermission()
+  if (permission === 'granted') connectPush()
+
+  return permission
+}
+
+export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
+  if (isIOSApp(window)) {
+    // iOSのネイティブアプリから渡されたFCMトークンを登録する
+    const token = window.iOSToken
+    if (token && token !== 'No Token') {
+      apis.registerFCMDevice({ token })
+    }
+  }
+
+  setupFirebaseApp()
+
+  if (!import.meta.env.DEV && navigator.serviceWorker) {
+    serviceWorkerRegistration ??= setupServiceWorker(onCanUpdate).catch(error => {
+      serviceWorkerRegistration = undefined
+      // eslint-disable-next-line no-console
+      console.warn('[Notification] failed to register service worker', error)
+      return undefined
+    })
+    await serviceWorkerRegistration
+  }
+
+  // WebKit では設定画面のユーザージェスチャーを起点に許可を求める。
+  if (!isWebKit() && window.Notification?.permission === 'default') {
+    const permission = await requestNotificationPermission()
+    if (permission === 'granted' && serviceWorkerRegistration) {
+      notify({ title: `ようこそ${appName}へ！！` }, true)
+    }
+
+    return
+  }
+
+  await connectPush()
+}
+
+export const deleteToken = async () => {
+  if (window.Notification?.permission !== 'granted') return
 
   const firebaseApp = getFirebaseApp()
-  const messaging = getMessaging(firebaseApp)
-  deleteTokenFb(messaging)
+  if (!firebaseApp || !pushConnection) return
+
+  await pushConnection
+  if (!(await isSupported())) return
+
+  stopListeningForPush?.()
+  stopListeningForPush = undefined
+  pushConnection = undefined
+  await deleteTokenFb(getMessaging(firebaseApp))
 }
 
 export const removeNotification = async (
@@ -201,5 +226,5 @@ export const removeNotification = async (
   const notifications = await registration.getNotifications?.({
     tag: `c:${channelId}`
   })
-  notifications.forEach(notification => notification.close())
+  notifications?.forEach(notification => notification.close())
 }
