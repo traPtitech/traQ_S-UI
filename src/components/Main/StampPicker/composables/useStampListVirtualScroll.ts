@@ -1,44 +1,53 @@
-import type { Ref, ShallowRef } from 'vue'
+import type { CSSProperties, Ref, ShallowRef } from 'vue'
 import { computed } from 'vue'
 
-import useBoxSize from '/@/composables/dom/useBoxSize'
-import useScrollPosition from '/@/composables/dom/useScrollPosition'
-import useThrottled from '/@/composables/utils/useThrottled'
+import { useElementSize } from '@vueuse/core'
 
-const stampHeight = 32
-const stampWidth = 32
+import useScrollPosition from '/@/composables/dom/useScrollPosition'
 
 /**
  * 構造としては
  *
- * - frame (スクロールしない)
- *   - container (スクロールする、描画はしない)
+ * - frame (スクロールする)
+ *   - container (一覧全体の高さを確保する)
  *     - panel (frameに表示される部分だけ描画されてる)
  *
  * になっている
  */
 const useStampListVirtualScroll = (
   targetRef: ShallowRef<HTMLElement | null>,
+  cellSizeRef: ShallowRef<HTMLElement | null>,
   count: Ref<number>
 ) => {
-  const { height, width } = useBoxSize(targetRef, false)
+  const { height, width } = useElementSize(targetRef)
+  const { width: cellSize } = useElementSize(cellSizeRef)
   const { scrollTop, onScroll } = useScrollPosition(targetRef)
 
   /** 表示できる列の数 */
-  const columns = computed(() => Math.floor((width.value ?? 0) / stampWidth))
+  const columns = computed(() =>
+    cellSize.value ? Math.max(1, Math.floor(width.value / cellSize.value)) : 1
+  )
   /** 表示できる行の数 */
-  const visibleRows = computed(
-    () => Math.ceil((height.value ?? 0) / stampHeight) + 1
+  const visibleRows = computed(() =>
+    cellSize.value ? Math.ceil(height.value / cellSize.value) + 1 : 0
   )
 
   /** スクロールできる高さ */
   const scrollHeight = computed(
-    () => Math.ceil(count.value / columns.value) * stampHeight
+    () => Math.ceil(count.value / columns.value) * cellSize.value
   )
   /** 表示されている部分よりも上の非表示になっている行の数 */
-  const topHiddenRows = useThrottled(
-    computed(() => Math.max(0, Math.floor(scrollTop.value / stampHeight)))
-  )
+  const topHiddenRows = computed(() => {
+    if (!cellSize.value) return 0
+
+    const maxScrollTop = Math.max(0, scrollHeight.value - height.value)
+    const clampedScrollTop = Math.min(
+      Math.max(0, scrollTop.value),
+      maxScrollTop
+    )
+
+    return Math.floor(clampedScrollTop / cellSize.value)
+  })
 
   /** 表示されるものの最初のindex */
   const showStartIndex = computed(() => topHiddenRows.value * columns.value)
@@ -47,19 +56,11 @@ const useStampListVirtualScroll = (
     () => showStartIndex.value + visibleRows.value * columns.value
   )
 
-  const transformTranslateY = computed(() =>
-    Math.max(
-      Math.min(
-        topHiddenRows.value * 32,
-        scrollHeight.value - (height?.value ?? 0)
-      ),
-      0
-    )
-  )
-
   const containerStyle = computed(() => ({ height: `${scrollHeight.value}px` }))
-  const panelStyle = computed(() => ({
-    transform: `translateY(${transformTranslateY.value}px)`
+  const panelStyle = computed<CSSProperties>(() => ({
+    display: 'grid',
+    gridTemplateColumns: `repeat(${columns.value}, ${cellSize.value}px)`,
+    transform: `translateY(${topHiddenRows.value * cellSize.value}px)`
   }))
 
   return {
