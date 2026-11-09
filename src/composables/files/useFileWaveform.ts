@@ -13,20 +13,21 @@ const useFileWaveform = (props: { fileId: string }) => {
   )
 
   const name = computed(() => fileMeta.value?.name ?? '')
-  const fileWaveformPath = computed(() =>
-    fileMeta.value && fileWaveform.value
-      ? buildFileWaveformPath(fileMeta.value.id)
-      : undefined
-  )
-  const fileWaveformSize = computed(() => ({
-    height: fileWaveform.value?.height,
-    width: fileWaveform.value?.width
-  }))
+  const fileWaveformPath = computed(() => {
+    if (!fileMeta.value || !fileWaveform.value) return
+
+    const path = buildFileWaveformPath(fileMeta.value.id)
+    const { width = 0, height = 0 } = fileWaveform.value
+    if (width <= 0 || height <= 0) return path
+
+    // WebKit でも SVG マスクが再生欄の幅に合わせて伸縮するようにする。
+    return `${path}#svgView(viewBox(0,0,${width},${height});preserveAspectRatio(none))`
+  })
+
   return {
     name,
     fileLink,
-    fileWaveformPath,
-    fileWaveformSize
+    fileWaveformPath
   }
 }
 

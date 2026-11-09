@@ -36,7 +36,7 @@ const playedPercentage = computed(() =>
   props.duration === 0 ? 0 : (currentTime.value / props.duration) * 100
 )
 const waveformStyle = computed(() => {
-  const value = `url(${props.waveformPath})`
+  const value = `url("${props.waveformPath}")`
   return {
     '-webkit-mask-image': value,
     'mask-image': value
