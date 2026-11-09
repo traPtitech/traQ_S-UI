@@ -25,45 +25,27 @@ export interface SwipeDetectorState {
 
 const scrollableOverflowValue = new Set(['scroll', 'auto', 'overlay'])
 
-const isHorizontalScrollable = (e: Readonly<TouchEvent>) => {
-  if (!e.target) return false
+const isInsideScrollableOrFixedElement = (e: Readonly<TouchEvent>) => {
+  let element = e.target instanceof Element ? e.target : null
 
-  let inspectingTarget = e.target as HTMLElement
+  while (element && element !== e.currentTarget) {
+    const { position, overflowX } = getComputedStyle(element)
 
-  while (inspectingTarget !== e.currentTarget) {
-    const scrollWidth = inspectingTarget.scrollWidth
-    const clientWidth = inspectingTarget.clientWidth
-    if (scrollWidth > clientWidth) {
-      const overflowX =
-        getComputedStyle(inspectingTarget).getPropertyValue('overflow-x')
-      return scrollableOverflowValue.has(overflowX)
-    }
-    if (!inspectingTarget.parentElement) {
-      return false
-    }
-    inspectingTarget = inspectingTarget.parentElement
-  }
-  return false
-}
-
-const isInsidePositionFixed = (e: Readonly<TouchEvent>) => {
-  if (!e.target) return false
-
-  let inspectingTarget = e.target as HTMLElement
-
-  while (inspectingTarget !== e.currentTarget) {
-    const position =
-      getComputedStyle(inspectingTarget).getPropertyValue('position')
-    if (position === 'fixed') {
+    if (
+      position === 'fixed' ||
+      (element.scrollWidth > element.clientWidth &&
+        scrollableOverflowValue.has(overflowX))
+    ) {
       return true
     }
-    if (!inspectingTarget.parentElement) {
-      return false
-    }
-    inspectingTarget = inspectingTarget.parentElement
+
+    element = element.parentElement
   }
+
   return false
 }
+
+const hasTextSelection = () => document.getSelection()?.isCollapsed === false
 
 /**
  * x方向のスワイプを検出する
@@ -81,8 +63,8 @@ const useSwipeDetector = (isEnabled: Ref<boolean>) => {
   const touchstartHandler = (e: Readonly<TouchEvent>) => {
     if (!isEnabled.value) return
     if (e.touches.length !== 1 || !e.touches[0]) return
-    if (isHorizontalScrollable(e)) return
-    if (isInsidePositionFixed(e)) return
+    if (hasTextSelection() || isInsideScrollableOrFixedElement(e)) return
+
     const x = e.touches[0].clientX
     const y = e.touches[0].clientY
     state.lastTouchPosX = x
@@ -92,7 +74,7 @@ const useSwipeDetector = (isEnabled: Ref<boolean>) => {
     state.isStartingSwipe = true
   }
 
-  const touchendHandler = (_: Readonly<TouchEvent>) => {
+  const touchendHandler = () => {
     state.lastTouchPosX = -1
     state.lastTouchPosY = -1
     state.isStartingSwipe = false
@@ -126,7 +108,13 @@ const useSwipeDetector = (isEnabled: Ref<boolean>) => {
 
   const touchmoveHandler = (e: Readonly<TouchEvent>) => {
     if (!isEnabled.value) return
+
     if (state.isStartingSwipe) {
+      if (hasTextSelection()) {
+        touchendHandler()
+        return
+      }
+
       checkSwipeStarted(e)
       return
     }
