@@ -6,6 +6,10 @@ on:
       - 'master'
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions: {}
 
 jobs:
@@ -74,6 +78,9 @@ jobs:
           node-version-file: ./.node-version
           cache: npm
 
+      - name: npm ci
+        run: npm ci
+
       - name: restore Prettier cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -81,9 +88,6 @@ jobs:
           key: prettier-cache-${{ runner.os }}-${{ hashFiles('.prettierrc', '.prettierignore', 'package-lock.json') }}
           restore-keys: |
             prettier-cache-${{ runner.os }}-
-
-      - name: npm ci
-        run: npm ci
 
       - name: run format
         run: npx prettier --cache --check .
@@ -191,11 +195,104 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
+  test-e2e-virtual-scroll:
+    name: virtual scroll E2E (${{ matrix.os }}, ${{ matrix.project || matrix.browser }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+
+    permissions:
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            browser: chromium
+          - os: ubuntu-latest
+            browser: firefox
+          - os: ubuntu-latest
+            browser: webkit
+          - os: windows-latest
+            browser: chromium
+          - os: windows-latest
+            browser: firefox
+          - os: macos-latest
+            browser: chromium
+          - os: macos-latest
+            browser: firefox
+          - os: macos-latest
+            browser: webkit
+          - os: ubuntu-latest
+            browser: chromium
+            project: mobile-chromium
+          - os: macos-latest
+            browser: webkit
+            project: mobile-webkit
+          - os: macos-latest
+            browser: webkit
+            project: tablet-webkit
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: ./.node-version
+          cache: npm
+
+      - name: npm ci
+        run: npm ci
+
+      - name: install Playwright browser
+        if: ${{ runner.os != 'Windows' || matrix.browser != 'chromium' }}
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: install Chromium headless shell on Windows
+        if: ${{ runner.os == 'Windows' && matrix.browser == 'chromium' }}
+        run: npx playwright install --only-shell chromium
+
+      - name: check Chromium launch on Windows
+        id: chromium-launch
+        if: ${{ runner.os == 'Windows' && matrix.browser == 'chromium' }}
+        continue-on-error: true
+        timeout-minutes: 1
+        shell: pwsh
+        run: |
+          @'
+          import { chromium } from '@playwright/test'
+
+          const browser = await chromium.launch({ timeout: 10_000 })
+          try {
+            const page = await browser.newPage()
+            await page.evaluate(() => document.readyState)
+          } finally {
+            await browser.close()
+          }
+          '@ | node --input-type=module
+
+      - name: install Chromium system dependencies on Windows
+        if: ${{ steps.chromium-launch.outcome == 'failure' }}
+        run: npx playwright install-deps chromium
+
+      - name: run virtual scroll E2E
+        run: npm run test:e2e-virtual-scroll -- --project=${{ matrix.project || matrix.browser }}
+
+      - name: upload virtual scroll E2E failure artifacts
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ failure() }}
+        with:
+          name: virtual-scroll-e2e-${{ matrix.os }}-${{ matrix.project || matrix.browser }}
+          path: |
+            ./tests/e2e/results/virtual-scroll
+            ./tests/e2e/report/virtual-scroll
+
   test-e2e:
     name: run test:e2e
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [packages]
     permissions:
       contents: read
 

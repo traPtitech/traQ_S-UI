@@ -15,7 +15,7 @@
       :key="key"
       :ref="
         showTopic
-          ? el => virtualizer.measureElement(el as Element | null)
+          ? el => virtualizer.measureElement(el as HTMLElement | null)
           : undefined
       "
       :class="$style.row"
@@ -62,14 +62,13 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue'
 
-import { useVirtualizer } from '@tanstack/vue-virtual'
-
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 
 import ChannelElement from './ChannelElement.vue'
 import ChannelTreeAnimation from './ChannelTreeAnimation.vue'
 import useChannelFlatList from './composables/useChannelFlatList'
 import useChannelTreeAnimation from './composables/useChannelTreeAnimation'
+import useChannelTreeVirtualizer from './composables/useChannelTreeVirtualizer'
 
 interface ChannelTreeProps {
   channels: ReadonlyArray<ChannelTreeNode>
@@ -95,17 +94,11 @@ const { flatItems, expandedNodeKeys, toggle } = useChannelFlatList(
   toRef(props, 'channels')
 )
 
-const virtualizer = useVirtualizer(
-  computed(() => ({
-    count: flatItems.value.length,
-    getScrollElement: () => props.scrollElement,
-    initialOffset: () => props.scrollElement?.scrollTop ?? 0,
-    estimateSize: () => 36,
-    overscan: 5,
-    getItemKey: (index: number) => flatItems.value[index]?.key ?? index,
-    scrollMargin: props.scrollMargin
-  }))
-)
+const virtualizer = useChannelTreeVirtualizer({
+  flatItems,
+  scrollElement: toRef(props, 'scrollElement'),
+  scrollMargin: computed(() => props.scrollMargin)
+})
 
 const {
   displayedRows,
@@ -131,8 +124,10 @@ const virtualPadding = computed(() => {
   }
 
   const scrollMargin = virtualizer.value.options.scrollMargin
+
   return {
     start: Math.max(first.start - scrollMargin, 0),
+
     end: Math.max(
       virtualizer.value.getTotalSize() - (last.end - scrollMargin),
       0
@@ -144,15 +139,19 @@ const virtualPadding = computed(() => {
 <style lang="scss" module>
 .inner {
   position: relative;
+  overflow-anchor: none;
 }
+
 .row {
   width: 100%;
+
   &[data-is-animating] {
     position: absolute;
     top: 0;
     transform: translateY(var(--row-y));
   }
 }
+
 .element {
   margin: 0;
 }
