@@ -3,6 +3,7 @@ export interface ChannelFixture {
   view?: 'channels' | 'tree' | 'home'
   topics?: boolean
   count?: number
+  starredChannelIds?: string[]
 }
 
 declare global {

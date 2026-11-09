@@ -57,6 +57,63 @@ test('一覧を下へスクロールすると切り替えが隠れ、少し上�
   await expect(tabs).toBeVisible()
 })
 
+test('検索中のタブは毎回すべてから始まり、通常時に保存したタブから独立する', async ({
+  load,
+  page
+}) => {
+  const scroller = await load({
+    scenario: 'tree',
+    count: 3,
+    topics: false,
+    starredChannelIds: [childId(0), 'missing-channel']
+  })
+
+  const input = page.getByRole('textbox')
+  const allTab = page.getByRole('tab', { name: 'すべて' })
+  const starredTab = page.getByRole('tab', { name: 'お気に入り' })
+  const starredChannel = row(scroller, `/${childId(0)}`)
+  const unstarredChannel = row(scroller, `/${childId(1)}`)
+  const unstarredDescendant = row(scroller, '/grandchild')
+  const savedStarredTab = () =>
+    page.evaluate(() => {
+      const settings = localStorage.getItem('traQ_S-store/app/browserSettings')
+      return settings ? JSON.parse(settings).data.filterStarChannel : undefined
+    })
+
+  await starredTab.click()
+  await expect.poll(savedStarredTab).toBe(true)
+
+  await input.fill('child')
+  await expect(allTab).toHaveAttribute('aria-selected', 'true')
+  await expect(unstarredChannel).toBeVisible()
+  await expect(unstarredDescendant).toBeVisible()
+
+  await starredTab.click()
+  await expect(starredChannel).toBeVisible()
+  await expect(starredChannel.getByRole('button')).toHaveCount(0)
+  await expect(unstarredDescendant).toHaveCount(0)
+  await expect(unstarredChannel).toHaveCount(0)
+
+  await allTab.click()
+  await expect(unstarredChannel).toBeVisible()
+  await expect.poll(savedStarredTab).toBe(true)
+  await input.fill('')
+  await expect(starredTab).toHaveAttribute('aria-selected', 'true')
+
+  await allTab.click()
+  await expect.poll(savedStarredTab).toBe(false)
+  await input.fill('child')
+  await starredTab.click()
+  await expect(unstarredChannel).toHaveCount(0)
+  await expect.poll(savedStarredTab).toBe(false)
+
+  await input.fill('')
+  await expect(allTab).toHaveAttribute('aria-selected', 'true')
+  await input.fill('child')
+  await expect(allTab).toHaveAttribute('aria-selected', 'true')
+  await expect(unstarredChannel).toBeVisible()
+})
+
 test('検索後に未計測のトピック行へスクロールしても表示領域が行で埋まる', async ({
   page,
   load

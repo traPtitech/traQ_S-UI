@@ -19,11 +19,11 @@
             />
           </div>
           <HideOnScroll
-            v-if="query.length === 0"
+            :key="isSearching ? 'search' : 'browse'"
             :scroll-element="scrollEl"
           >
             <ChannelListSelector
-              v-model:is-starred="filterStarChannel"
+              v-model:is-starred="isStarredTabSelected"
               :all-panel-id="allPanelId"
               :starred-panel-id="starredPanelId"
             />
@@ -42,7 +42,9 @@
       aria-label="チャンネル一覧"
     >
       <ChannelTree
-        v-if="query.length > 0"
+        v-if="isSearching"
+        :id="searchStarredOnly ? starredPanelId : allPanelId"
+        role="tabpanel"
         :channels="filteredChannelTree"
         :scroll-element="scrollEl"
         show-topic
@@ -93,7 +95,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, toRaw, useId } from 'vue'
+import { computed, ref, toRaw, useId, watch } from 'vue'
 
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import NavigationContentTitle from '/@/components/Main/NavigationBar/NavigationContentTitle.vue'
@@ -150,19 +152,47 @@ const starredChannels = computed(() => {
   )
 })
 
-const channelListForFilter = computed(() =>
-  [...channelsMap.value.values()].filter(
-    channel => showArchivedChannels.value || !channel.archived
-  )
+const searchStarredOnly = ref(false)
+const searchChannelMap = computed(
+  () =>
+    new Map(
+      [...channelsMap.value].filter(
+        ([id, channel]) =>
+          (showArchivedChannels.value || !channel.archived) &&
+          (!searchStarredOnly.value || starredChannelSet.value.has(id))
+      )
+    )
 )
+
+const channelListForFilter = computed(() => [
+  ...searchChannelMap.value.values()
+])
+
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
+const isSearching = computed(() => query.value.length > 0)
+const isStarredTabSelected = computed({
+  get: () =>
+    isSearching.value ? searchStarredOnly.value : filterStarChannel.value,
+  set: isStarred => {
+    if (isSearching.value) {
+      searchStarredOnly.value = isStarred
+    } else {
+      filterStarChannel.value = isStarred
+    }
+  }
+})
+
+watch(
+  isSearching,
+  searching => {
+    if (!searching) searchStarredOnly.value = false
+  },
+  { flush: 'sync' }
+)
 
 const filteredChannelTree = computed(() => {
   const rootIds = filteredChannels.value.map(c => c.id)
-  return filterTrees(
-    constructTreeFromIds(rootIds, channelsMap.value),
-    channel => showArchivedChannels.value || !channel.archived
-  )
+  return constructTreeFromIds(rootIds, searchChannelMap.value)
 })
 
 const onClickButton = () => {
