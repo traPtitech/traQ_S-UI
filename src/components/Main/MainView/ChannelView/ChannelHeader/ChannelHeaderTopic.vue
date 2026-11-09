@@ -40,6 +40,8 @@ const topic = computed(() => channelsMap.value.get(props.channelId)?.topic)
     color: $theme-ui-tertiary-default;
   }
   [data-is-mobile] & {
+    flex-shrink: 0;
+    width: max-content;
     padding-left: 12px;
     padding-right: 4px;
   }
@@ -51,5 +53,9 @@ const topic = computed(() => channelsMap.value.get(props.channelId)?.topic)
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  [data-is-mobile] & {
+    overflow: visible;
+  }
 }
 </style>
