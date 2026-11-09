@@ -77,7 +77,7 @@ const showExpandButton = computed(
   padding-bottom: 16px;
 
   &[data-show-expand-button='false'] {
-    overflow: scroll;
+    scrollbar-gutter: stable;
     margin-right: -4px;
   }
 

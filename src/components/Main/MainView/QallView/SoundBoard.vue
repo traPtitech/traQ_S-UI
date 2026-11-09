@@ -80,10 +80,9 @@ onMounted(() => {
   bottom: 48px;
   left: 0;
   height: 32rem;
-  overflow-y: scroll;
+  overflow: auto;
   border-radius: 0.5rem;
   @include background-primary;
-  overflow: scroll;
 }
 .elementContainer {
   width: 30.5rem;

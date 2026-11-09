@@ -46,7 +46,7 @@ const onStampSetSelect = (stampSet: StampSet) => {
   display: flex;
   align-items: center;
   height: fit-content;
-  overflow-x: scroll;
+  overflow-x: auto;
   &::-webkit-scrollbar {
     display: none;
   }

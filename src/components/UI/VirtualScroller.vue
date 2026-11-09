@@ -306,7 +306,8 @@ watch(
 <style lang="scss" module>
 .root {
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 .viewport {

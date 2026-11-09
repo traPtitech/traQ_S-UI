@@ -44,7 +44,7 @@ const tags = computed(() => props.detail?.tags ?? [])
 }
 
 .list {
-  overflow-y: scroll;
+  overflow-y: auto;
   flex: 1 1;
 }
 
