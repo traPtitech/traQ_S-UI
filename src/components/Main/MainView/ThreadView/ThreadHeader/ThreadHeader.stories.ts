@@ -1,5 +1,3 @@
-import type { Channel } from '@traptitech/traq'
-
 import { createMemoryHistory, createRouter } from 'vue-router'
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
@@ -20,11 +18,12 @@ setup(app => {
   )
 })
 
-const channels: Channel[] = [
+const channels = [
   {
     id: 'thread-header-root',
     name: 'team',
     parentId: null,
+    parentMessageId: null,
     children: ['thread-header-parent'],
     topic: '',
     archived: false,
@@ -34,6 +33,7 @@ const channels: Channel[] = [
     id: 'thread-header-parent',
     name: 'traQ',
     parentId: 'thread-header-root',
+    parentMessageId: null,
     children: ['thread-header-channel'],
     topic: '',
     archived: false,
@@ -43,6 +43,7 @@ const channels: Channel[] = [
     id: 'thread-header-channel',
     name: 'client',
     parentId: 'thread-header-parent',
+    parentMessageId: null,
     children: [],
     topic: '',
     archived: false,
