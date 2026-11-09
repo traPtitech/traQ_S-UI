@@ -178,7 +178,13 @@ const withClose = async (func: () => MaybePromise<void>) => {
 }
 
 .text {
-  margin: 2px 0;
+  margin: 0 -8px;
+  padding: 2px 8px;
+  border-radius: 4px;
   cursor: pointer;
+
+  &:hover {
+    @include background-secondary;
+  }
 }
 </style>
