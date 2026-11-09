@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { computed, defineAsyncComponent, reactive } from 'vue'
+import { computed, defineAsyncComponent, reactive, watch } from 'vue'
 
 import { useEventListener } from '@vueuse/core'
 
@@ -48,6 +48,7 @@ import useSidebar from '/@/composables/mainView/useSidebar'
 import useResponsive from '/@/composables/useResponsive'
 import { connectFirebase } from '/@/lib/notification/notification'
 import { useCommandPalette } from '/@/store/app/commandPalette'
+import { useStampPicker } from '/@/store/ui/stampPicker'
 import { useToastStore } from '/@/store/ui/toast'
 
 import useInitialFetch from './composables/useInitialFetch'
@@ -130,6 +131,11 @@ const {
   isMainViewActive
 } = useMainViewLayout(navWidth, sidebarWidth)
 const { addToast } = useToastStore()
+const { closeStampPicker } = useStampPicker()
+
+watch(isMainViewActive, isActive => {
+  if (!isActive) closeStampPicker()
+})
 
 useCommandPaletteShortcutKey()
 
