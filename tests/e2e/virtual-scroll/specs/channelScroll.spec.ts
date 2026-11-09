@@ -88,9 +88,13 @@ test('検索中のタブは毎回すべてから始まり、通常時に保存�
   await expect(unstarredChannel).toBeVisible()
   await expect(unstarredDescendant).toBeVisible()
 
+  await input.fill('child-0000')
+  await expect(starredChannel.getByRole('button')).toBeVisible()
   await starredTab.click()
-  await expect(starredChannel).toBeVisible()
   await expect(starredChannel.getByRole('button')).toHaveCount(0)
+
+  await input.fill('child')
+  await expect(starredChannel).toBeVisible()
   await expect(unstarredDescendant).toHaveCount(0)
   await expect(unstarredChannel).toHaveCount(0)
 
