@@ -1,4 +1,4 @@
-import { flatId, longTopic } from '../data'
+import { childId, flatId, longTopic } from '../data'
 import { sampleRows } from '../geometry'
 import {
   expect,
@@ -24,11 +24,12 @@ test('固定高の行を仮想化し、大きな一覧の先頭と末尾へ移�
 })
 
 test('検索後に未計測のトピック行へスクロールしても表示領域が行で埋まる', async ({
+  page,
   load
 }) => {
   const scroller = await load()
-  await scroller.getByRole('textbox').fill('channel')
-  await scroller.getByRole('textbox').blur()
+  await page.getByRole('textbox').fill('channel')
+  await page.getByRole('textbox').blur()
 
   // 未計測のトピック行へのスクロールを再現するため、Markdown の描画・高さ計測中に移動を始める。
   await scrollAndCheckCoverage(scroller, 14000, 0)
@@ -36,13 +37,67 @@ test('検索後に未計測のトピック行へスクロールしても表示�
   await scrollAndCheckCoverage(scroller, 17000)
 })
 
+test('変換中に一覧をスクロールしても検索欄の位置を保ち、チャンネルへ移動できる', async ({
+  hasTouch,
+  load,
+  page
+}) => {
+  const scroller = await load({ scenario: 'tree', topics: false })
+  const input = page.getByRole('textbox')
+
+  await input.focus()
+  await input.evaluate((el: HTMLInputElement) => {
+    el.dispatchEvent(
+      new CompositionEvent('compositionstart', { bubbles: true })
+    )
+    el.value = 'child'
+    el.dispatchEvent(
+      new InputEvent('input', {
+        bubbles: true,
+        inputType: 'insertCompositionText',
+        data: 'child',
+        isComposing: true
+      })
+    )
+  })
+
+  await expect(row(scroller, `/${childId(0)}`)).toBeInViewport()
+
+  const offset = 400
+  await scroller.evaluate((el, offset) => {
+    el.scrollTop = offset
+  }, offset)
+
+  const link = row(scroller, `/${childId(14)}`).getByRole('link')
+  await expect(link).toBeInViewport()
+  await expect(input).toBeInViewport()
+  await expect(input).toBeFocused()
+
+  // IME が検索欄を表示し直す場合も、結果のスクロール位置を保つ。
+  await input.evaluate(el => el.scrollIntoView({ block: 'nearest' }))
+  expect(await scroller.evaluate(el => el.scrollTop)).toBe(offset)
+
+  if (hasTouch) {
+    await link.tap()
+  } else {
+    await link.click()
+  }
+
+  await expect(page.getByTestId('panel')).toHaveAttribute(
+    'data-route-path',
+    '/channels/a-branch/child-0014'
+  )
+  await expect(input).toHaveValue('child')
+  await expect(input).not.toBeFocused()
+})
+
 test('タッチ操作中の高さ変更が停止時のスクロール補正に持ち越されない @touch', async ({
   page,
   load
 }) => {
   const scroller = await load({ topics: false })
-  await scroller.getByRole('textbox').fill('channel')
-  await scroller.getByRole('textbox').blur()
+  await page.getByRole('textbox').fill('channel')
+  await page.getByRole('textbox').blur()
   await scrollAndCheckCoverage(scroller, 14000, 0)
 
   const key = await scroller.evaluate(el => {
@@ -98,10 +153,11 @@ test('タッチ操作中の高さ変更が停止時のスクロール補正に�
 })
 
 test('スクロール後に検索結果が減少・消失・復元しても表示範囲が追従する', async ({
+  page,
   load
 }) => {
   const scroller = await load()
-  const input = scroller.getByRole('textbox')
+  const input = page.getByRole('textbox')
   await input.fill('channel')
   await scrollAndCheckCoverage(scroller, 14000, 0)
 
@@ -117,7 +173,7 @@ test('スクロール後に検索結果が減少・消失・復元しても表�
   expectCovered(await scroller.evaluate(sampleRows, { duration: 250 }))
 
   await input.fill('')
-  await expect(scroller.getByRole('tab', { name: 'すべて' })).toBeVisible()
+  await expect(page.getByRole('tab', { name: 'すべて' })).toBeVisible()
   expectCovered(await scroller.evaluate(sampleRows))
 })
 
@@ -266,8 +322,8 @@ for (const topics of [false, true]) {
     const scroller = await load({ topics })
 
     if (topics) {
-      await scroller.getByRole('textbox').fill('channel')
-      await scroller.getByRole('textbox').blur()
+      await page.getByRole('textbox').fill('channel')
+      await page.getByRole('textbox').blur()
     }
 
     await scrollAndCheckCoverage(scroller, 14000, 0)
@@ -383,8 +439,8 @@ test('ネイティブのタッチ入力で大きな検索結果の一覧をス�
   load
 }) => {
   const scroller = await load()
-  await scroller.getByRole('textbox').fill('channel')
-  await scroller.getByRole('textbox').blur()
+  await page.getByRole('textbox').fill('channel')
+  await page.getByRole('textbox').blur()
   await scrollAndCheckCoverage(scroller, 14000, 0)
 
   const session = await page.context().newCDPSession(page)

@@ -87,10 +87,11 @@ test('素早く連続して開閉しても各行が過不足なく表示され�
 })
 
 test('子チャンネルを個別に展開し、検索結果に重複して現れるチャンネルを区別する', async ({
-  load
+  load,
+  page
 }) => {
   const scroller = await load({ scenario: 'tree', topics: false, count: 3 })
-  await scroller.getByRole('textbox').fill('child')
+  await page.getByRole('textbox').fill('child')
 
   const child = row(scroller, `/${childId(0)}`)
   await child.getByRole('button').click()

@@ -83,7 +83,13 @@ export const test = base.extend<{
         fixture
       )
 
-      const scroller = page.getByTestId(`${fixture.view ?? 'channels'}-scroll`)
+      const view = fixture.view ?? 'channels'
+      const scroller =
+        view === 'channels'
+          ? page.getByTestId('channels-tab').getByRole('region', {
+              name: 'チャンネル一覧'
+            })
+          : page.getByTestId(`${view}-scroll`)
       await expect(scroller.locator('[data-key]').first()).toBeVisible()
 
       if (fixture.view !== 'home') {

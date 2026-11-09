@@ -1,6 +1,6 @@
 <template>
-  <div ref="scrollEl" :class="$style.container">
-    <div ref="headerRef" :class="$style.header">
+  <div :class="$style.container">
+    <div :class="$style.header">
       <NavigationContentTitle>チャンネル</NavigationContentTitle>
       <NavigationContentContainer subtitle="チャンネルリスト">
         <template #control>
@@ -28,65 +28,65 @@
       </NavigationContentContainer>
     </div>
 
-    <template v-if="query.length > 0">
+    <div
+      ref="scrollEl"
+      :class="$style.scroller"
+      role="region"
+      aria-label="チャンネル一覧"
+    >
       <ChannelTree
+        v-if="query.length > 0"
         :channels="filteredChannelTree"
         :scroll-element="scrollEl"
-        :scroll-margin="scrollMargin"
         show-topic
         show-shortened-path
         :show-child-topic="false"
       />
-    </template>
-    <template v-else-if="filterStarChannel">
-      <template v-if="strictStarredChannelTree">
-        <ChannelTree
-          v-if="starredTopLevelChannels.length > 0"
-          :id="starredPanelId"
-          role="tabpanel"
-          :channels="starredTopLevelChannels"
-          :scroll-element="scrollEl"
-          :scroll-margin="scrollMargin"
-        />
-        <EmptyState v-else :id="starredPanelId" role="tabpanel">
-          お気に入りチャンネルはありません
-        </EmptyState>
+      <template v-else-if="filterStarChannel">
+        <template v-if="strictStarredChannelTree">
+          <ChannelTree
+            v-if="starredTopLevelChannels.length > 0"
+            :id="starredPanelId"
+            role="tabpanel"
+            :channels="starredTopLevelChannels"
+            :scroll-element="scrollEl"
+          />
+          <EmptyState v-else :id="starredPanelId" role="tabpanel">
+            お気に入りチャンネルはありません
+          </EmptyState>
+        </template>
+        <template v-else>
+          <ChannelTree
+            v-if="starredChannels.length > 0"
+            :id="starredPanelId"
+            role="tabpanel"
+            :channels="starredChannels"
+            show-shortened-path
+            :scroll-element="scrollEl"
+          />
+          <EmptyState v-else :id="starredPanelId" role="tabpanel">
+            お気に入りチャンネルはありません
+          </EmptyState>
+        </template>
       </template>
       <template v-else>
         <ChannelTree
-          v-if="starredChannels.length > 0"
-          :id="starredPanelId"
+          v-if="topLevelChannels.length > 0"
+          :id="allPanelId"
           role="tabpanel"
-          :channels="starredChannels"
-          show-shortened-path
+          :channels="topLevelChannels"
           :scroll-element="scrollEl"
-          :scroll-margin="scrollMargin"
         />
-        <EmptyState v-else :id="starredPanelId" role="tabpanel">
-          お気に入りチャンネルはありません
+        <EmptyState v-else :id="allPanelId" role="tabpanel">
+          チャンネルがありません
         </EmptyState>
       </template>
-    </template>
-    <template v-else>
-      <ChannelTree
-        v-if="topLevelChannels.length > 0"
-        :id="allPanelId"
-        role="tabpanel"
-        :channels="topLevelChannels"
-        :scroll-element="scrollEl"
-        :scroll-margin="scrollMargin"
-      />
-      <EmptyState v-else :id="allPanelId" role="tabpanel">
-        チャンネルがありません
-      </EmptyState>
-    </template>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, toRaw, useId } from 'vue'
-
-import { useElementSize } from '@vueuse/core'
 
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import NavigationContentTitle from '/@/components/Main/NavigationBar/NavigationContentTitle.vue'
@@ -165,22 +165,25 @@ const allPanelId = useId()
 const starredPanelId = useId()
 
 const scrollEl = ref<HTMLElement | null>(null)
-const headerRef = ref<HTMLElement | null>(null)
-const { height: headerHeight } = useElementSize(headerRef, undefined, {
-  box: 'border-box'
-})
-const scrollMargin = computed(() => headerHeight.value)
 </script>
 
 <style lang="scss" module>
 .container {
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  overflow-y: auto;
-  scrollbar-gutter: stable;
-  padding: 0 0 24px 8px;
+  padding-left: 8px;
 }
 .header {
+  flex-shrink: 0;
   padding-top: 24px;
+}
+.scroller {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding-bottom: 24px;
 }
 .filterContainer {
   display: flex;

@@ -4,9 +4,10 @@
       v-show="visible"
       :key="generation"
       data-testid="panel"
+      :data-route-path="route.path"
       :class="$style.panel"
     >
-      <ChannelsTab v-if="view === 'channels'" data-testid="channels-scroll" />
+      <ChannelsTab v-if="view === 'channels'" data-testid="channels-tab" />
       <HomeTab v-else-if="view === 'home'" data-testid="home-scroll" />
       <div
         v-else
@@ -31,6 +32,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 import ChannelTree from '/@/components/Main/NavigationBar/ChannelList/ChannelTree.vue'
 import ChannelsTab from '/@/components/Main/NavigationBar/NavigationContent/ChannelsTab.vue'
@@ -70,6 +72,7 @@ channels.bothChannelsMapFetched.value = true
 const settings = useBrowserSettings()
 const subscription = useSubscriptionStore()
 const me = useMeStore()
+const route = useRoute()
 
 const generation = ref(0)
 const view = ref<ChannelFixture['view']>('channels')
