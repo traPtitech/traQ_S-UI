@@ -72,6 +72,7 @@ const emit = defineEmits<{
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 24px;
 }
 
 .title {
@@ -86,7 +87,10 @@ const emit = defineEmits<{
 .badge {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
+  justify-content: center;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
 }
 
 .preview {

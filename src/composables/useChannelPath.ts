@@ -1,12 +1,10 @@
-import { watch } from 'vue'
-
 import type { SimpleChannel } from '/@/lib/channel'
 import { channelIdToSimpleChannelPath as libChannelIdToSimpleChannelPath } from '/@/lib/channel'
 import { channelPathToId as channelPathToIdImpl } from '/@/lib/channelTree'
-import { memoizeWithPurge } from '/@/lib/memoize'
 import { constructChannelPath, constructUserPath } from '/@/router'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useThreadsStore } from '/@/store/entities/threads'
 import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
 
 import { useUsersStore } from '../store/entities/users'
@@ -16,6 +14,7 @@ const MAX_SHORT_PATH_LENGTH = 20
 const useChannelPath = () => {
   const { channelsMap, dmChannelsMap, bothChannelsMapFetched } =
     useChannelsStore()
+  const { threadsMap } = useThreadsStore()
   const { usersMap } = useUsersStore()
   const { channelTree, topLevelChannels } = useChannelTree()
 
@@ -49,8 +48,14 @@ const useChannelPath = () => {
       return libChannelIdToSimpleChannelPath(id, channelsMap.value)
     }
 
-    if (!bothChannelsMapFetched.value) return null
-    throw new Error(`channelIdToPath: No channel: ${id}`)
+    const thread = threadsMap.value.get(id)
+    if (thread && channelsMap.value.has(thread.parentId)) {
+      return [
+        ...libChannelIdToSimpleChannelPath(thread.parentId, channelsMap.value),
+        { id: thread.id, name: thread.name }
+      ]
+    }
+    return null
   }
 
   const channelIdToPath = (id: ChannelId | DMChannelId) =>
@@ -65,7 +70,8 @@ const useChannelPath = () => {
   ) => {
     if (!bothChannelsMapFetched.value) return null
     if (dmChannelsMap.value.has(id)) return dmChannelIdToPathString(id, hashed)
-    return (hashed ? '#' : '') + channelIdToPath(id)?.join('/')
+    const path = channelIdToPath(id)
+    return path ? (hashed ? '#' : '') + path.join('/') : null
   }
 
   /**
@@ -147,14 +153,16 @@ const useChannelPath = () => {
   const channelIdToShortPathString = (
     id: ChannelId | DMChannelId,
     hashed = false
-  ) => {
+  ): string | null => {
     if (dmChannelsMap.value.has(id)) {
       return dmChannelIdToPathString(id, hashed)
     }
 
     if (!channelsMap.value.has(id)) {
-      if (!bothChannelsMapFetched.value) return null
-      throw new Error(`channelIdToShortPathString: No channel: ${id}`)
+      const thread = threadsMap.value.get(id)
+      if (!thread || !channelsMap.value.has(thread.parentId)) return null
+      const parentPath = channelIdToShortPathString(thread.parentId, hashed)
+      return parentPath ? `${parentPath}/${thread.name}` : null
     }
 
     // channelIdToSimpleChannelPath が null になるような場合はこの部分に到達しない
@@ -268,18 +276,18 @@ const useChannelPath = () => {
     )
   }
 
-  const memoizedChannelIdToShortPathString = memoizeWithPurge(
-    channelIdToShortPathString
-  )
-
-  watch(channelsMap, () => {
-    memoizedChannelIdToShortPathString.purge()
-  })
-
   const channelIdToLink = (id: ChannelId | DMChannelId) => {
     if (!bothChannelsMapFetched.value) return null
 
-    const pathString = channelIdToPathString(id, false) as string
+    const thread = threadsMap.value.get(id)
+    if (thread) {
+      const parentPath = channelIdToPathString(thread.parentId)
+      return parentPath
+        ? constructChannelPath(`${parentPath}/${thread.id}`)
+        : null
+    }
+    const pathString = channelIdToPathString(id, false)
+    if (!pathString) return null
     if (dmChannelsMap.value.has(id)) {
       return constructUserPath(pathString)
     }
@@ -292,7 +300,7 @@ const useChannelPath = () => {
     channelIdToPath,
     channelIdToSimpleChannelPath,
     channelIdToPathString,
-    channelIdToShortPathString: memoizedChannelIdToShortPathString.memoized,
+    channelIdToShortPathString,
     channelIdToLink
   }
 }

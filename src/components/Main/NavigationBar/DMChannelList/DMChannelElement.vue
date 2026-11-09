@@ -17,7 +17,7 @@
         />
       </div>
       <DMChannelElementName :name="user.name" />
-      <ChannelElementUnreadBadge
+      <UnreadBadge
         is-noticeable
         :unread-count="notificationState.unreadCount"
       />
@@ -37,7 +37,7 @@ import type { DMChannel } from '@traptitech/traq'
 
 import { computed, toRef } from 'vue'
 
-import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
+import UnreadBadge from '/@/components/UI/UnreadBadge.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import useHover from '/@/composables/dom/useHover'
 import useChannelPath from '/@/composables/useChannelPath'

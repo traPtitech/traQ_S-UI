@@ -77,6 +77,7 @@ import useResponsive from '/@/composables/useResponsive'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useThreadsStore } from '/@/store/entities/threads'
 import { useToastStore } from '/@/store/ui/toast'
 import type { ChannelId, DMChannelId, UserId } from '/@/types/entity-ids'
 
@@ -116,13 +117,17 @@ const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
   useModifierKey()
 const { sendWithModifierKey } = useBrowserSettings()
 const { channelsMap } = useChannelsStore()
+const { threadsMap } = useThreadsStore()
 const isLeftControlsExpanded = ref(false)
 const isPreviewShown = ref(false)
 const isInputTextAreaExpanded = ref(true)
 const showTextAreaExpandButton = ref(false)
 
 const isArchived = computed(
-  () => channelsMap.value.get(props.channelId)?.archived ?? false
+  () =>
+    threadsMap.value.get(props.channelId)?.archived ??
+    channelsMap.value.get(props.channelId)?.archived ??
+    false
 )
 
 const { isFocused, onFocus, onBlur } = useFocus()

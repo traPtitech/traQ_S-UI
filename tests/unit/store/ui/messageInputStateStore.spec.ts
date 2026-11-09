@@ -124,6 +124,7 @@ const channel = ({ archived }: { archived: boolean }): Channel => ({
   id: channelId,
   name: 'general',
   parentId: null,
+  parentMessageId: null,
   archived,
   force: false,
   topic: '',

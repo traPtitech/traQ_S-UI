@@ -8,7 +8,6 @@ import brotli from 'rollup-plugin-brotli'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import svgLoader from 'vite-svg-loader'
-import GithubActionsReporter from 'vitest-github-actions-reporter'
 
 import { DEV_SERVER_PROXY_HOST } from './dev.config'
 import packageJson from './package.json'
@@ -163,7 +162,10 @@ export default defineConfig(({ mode }) => ({
       'fake-indexeddb/auto'
     ],
     environment: 'jsdom',
-    reporters: process.env.CI ? new GithubActionsReporter() : 'default',
+    reporters:
+      process.env.GITHUB_ACTIONS === 'true'
+        ? ['default', 'github-actions']
+        : 'default',
     coverage: {
       reporter: ['text', 'lcov']
     }

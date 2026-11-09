@@ -28,6 +28,7 @@ import { type DeepReadonly, computed } from 'vue'
 import MessageLink from '/@/components/UI/MessageLink.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useDateRepresentation } from '/@/composables/useDateRepresentation'
+import useEnsureThread from '/@/composables/useEnsureThread'
 
 const props = withDefaults(
   defineProps<{
@@ -39,6 +40,8 @@ const props = withDefaults(
     disableLinks: false
   }
 )
+
+useEnsureThread(() => props.message.channelId)
 
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
 

@@ -1,5 +1,11 @@
-import { computed, reactive, watch } from 'vue'
-import type { LocationQuery } from 'vue-router'
+import {
+  computed,
+  getCurrentInstance,
+  onDeactivated,
+  onScopeDispose,
+  reactive,
+  watch
+} from 'vue'
 import { useRoute } from 'vue-router'
 
 import { dequal } from 'dequal'
@@ -7,15 +13,18 @@ import { dequal } from 'dequal'
 import { useRenderKey } from '/@/composables/dom/useRenderKey'
 import useNavigationController from '/@/composables/mainView/useNavigationController'
 import useChannelPath from '/@/composables/useChannelPath'
-import { useMessageQuery } from '/@/composables/utils/useMessageQuery'
+import { waitWithAbort } from '/@/lib/basic/async'
 import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import { getFirstQuery } from '/@/lib/basic/url'
 import { getFirstParam } from '/@/lib/basic/url'
+import { isUUID } from '/@/lib/basic/uuid'
 import router, { RouteName, constructChannelPath } from '/@/router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useThreadsStore } from '/@/store/entities/threads'
 import { useUsersStore } from '/@/store/entities/users'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import { useModalStore } from '/@/store/ui/modal'
@@ -24,15 +33,18 @@ type Views = 'none' | 'main' | 'not-found'
 
 const useRouteWatcher = () => {
   const route = useRoute()
+  const { fetchThread } = useThreadsStore()
   const {
     primaryView,
     changePrimaryViewToChannel,
+    changePrimaryViewToThread,
     changePrimaryViewToDM,
     changePrimaryViewToClip,
-    changePrimaryViewToChannelOrDM
+    resolveChannelView
   } = useMainViewStore()
   const { fetchMessage, fetchFileMetaData } = useMessagesStore()
-  const { channelPathStringToId, channelIdToLink } = useChannelPath()
+  const { channelPathStringToId, channelIdToLink, channelIdToPathString } =
+    useChannelPath()
   const { closeNav } = useNavigationController()
   const { isOnInitialModalRoute, replaceModal, clearModalState } =
     useModalStore()
@@ -48,7 +60,6 @@ const useRouteWatcher = () => {
   const { usersMap, usersMapInitialFetchPromise, fetchUserByName } =
     useUsersStore()
   const { fetchClipFolder } = useClipFoldersStore()
-  const messageQuery = useMessageQuery()
 
   const state = reactive({
     currentRouteName: computed(() => route.name ?? ''),
@@ -63,24 +74,43 @@ const useRouteWatcher = () => {
     isInitialView: true
   })
 
-  const onRouteChangedToIndex = async () => {
-    await router
-      .replace(constructChannelPath(await getStartupChannelPath()))
-      // 同じ場所に移動しようとした際のエラーを消す
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      .catch(() => {})
+  const snapshotRoute = () => ({
+    name: route.name,
+    idParam: getFirstParam(route.params['id']),
+    channelParam: getFirstParam(route.params['channel']),
+    userParam: getFirstParam(route.params['user']),
+    currentRouteParam: state.currentRouteParam,
+    query: { ...route.query },
+    hash: route.hash,
+    entryMessageId: getFirstQuery(route.query['message']) ?? undefined
+  })
+  type RouteContext = {
+    snapshot: ReturnType<typeof snapshotRoute>
+    signal: AbortSignal
+    wait: <T>(promise: T | Promise<T>) => Promise<T>
   }
 
-  const onRouteChangedToChannel = async () => {
+  const onRouteChangedToIndex = async (context: RouteContext) => {
+    const startupPath = await context.wait(getStartupChannelPath())
+    context.signal.throwIfAborted()
+    await context.wait(router.replace(constructChannelPath(startupPath)))
+    context.signal.throwIfAborted()
+  }
+
+  let normalizedThreadRoute: string | undefined
+  const onRouteChangedToChannel = async (context: RouteContext) => {
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise
+    await context.wait(bothChannelsMapInitialFetchPromise)
+    context.signal.throwIfAborted()
 
     if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
 
-    const pathOrId = state.channelParam ?? ''
+    const pathOrId = context.snapshot.channelParam ?? ''
+    const isNormalization = normalizedThreadRoute === pathOrId
+    normalizedThreadRoute = undefined
 
     const id = (() => {
       if (channelsMap.value.has(pathOrId)) {
@@ -93,50 +123,107 @@ const useRouteWatcher = () => {
     })()
 
     if (!id) {
-      return router.replace(constructChannelPath(await getStartupChannelPath()))
+      const threadId = pathOrId.split('/').at(-1) ?? ''
+      if (isUUID(threadId)) {
+        const entryMessageId = context.snapshot.entryMessageId
+        let channel
+        try {
+          channel = await context.wait(
+            fetchThread(threadId, { force: !isNormalization })
+          )
+          context.signal.throwIfAborted()
+        } catch {
+          context.signal.throwIfAborted()
+          state.view = 'not-found'
+          return
+        }
+
+        // SDKにスレッドの型が追加されるまでは応答のフィールドを確認する
+        if (
+          channel &&
+          'parentMessageId' in channel &&
+          typeof channel.parentMessageId === 'string' &&
+          channel.parentMessageId
+        ) {
+          changePrimaryViewToThread({
+            channelId: channel.id,
+            entryMessageId
+          })
+          state.view = 'main'
+
+          const parentId = channel.parentId
+          const parentPath = parentId ? channelIdToPathString(parentId) : null
+          if (parentPath) {
+            const threadPath = `${parentPath}/${channel.id}`
+            if (pathOrId !== threadPath) {
+              normalizedThreadRoute = threadPath
+              await context.wait(
+                router.replace({
+                  path: constructChannelPath(threadPath),
+                  query: context.snapshot.query,
+                  hash: context.snapshot.hash
+                })
+              )
+              context.signal.throwIfAborted()
+            }
+          }
+          return
+        }
+      }
+      const startupPath = await context.wait(getStartupChannelPath())
+      context.signal.throwIfAborted()
+      return router.replace(constructChannelPath(startupPath))
     }
 
     changePrimaryViewToChannel({
       channelId: id,
-      entryMessageId: messageQuery.value
+      entryMessageId: context.snapshot.entryMessageId
     })
 
     state.view = 'main'
   }
 
-  const onRouteChangedToUser = async () => {
+  const onRouteChangedToUser = async (context: RouteContext) => {
     try {
-      const user = await fetchUserByName({
-        userName: state.currentRouteParam,
-        cacheStrategy: 'useCache'
-      })
+      const user = await context.wait(
+        fetchUserByName({
+          userName: context.snapshot.currentRouteParam,
+          cacheStrategy: 'useCache'
+        })
+      )
+      context.signal.throwIfAborted()
       if (!user) throw new Error('user not found')
 
       const dmChannelId =
         userIdToDmChannelIdMap.value.get(user.id) ??
-        (await fetchUserDMChannel(user.id))
+        (await context.wait(fetchUserDMChannel(user.id)))
+      context.signal.throwIfAborted()
 
       if (!dmChannelId) throw new Error('failed to fetch DM channel ID')
 
       changePrimaryViewToDM({
         channelId: dmChannelId,
         userName: user.name,
-        entryMessageId: messageQuery.value
+        entryMessageId: context.snapshot.entryMessageId
       })
       state.view = 'main'
     } catch {
+      context.signal.throwIfAborted()
       state.view = 'not-found'
       return
     }
   }
 
-  const onRouteChangedToClipFolders = async () => {
+  const onRouteChangedToClipFolders = async (context: RouteContext) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const id = state.idParam!
-    const clipFolder = await fetchClipFolder({
-      clipFolderId: id,
-      cacheStrategy: 'useCache'
-    })
+    const id = context.snapshot.idParam!
+    const clipFolder = await context.wait(
+      fetchClipFolder({
+        clipFolderId: id,
+        cacheStrategy: 'useCache'
+      })
+    )
+    context.signal.throwIfAborted()
     if (!clipFolder) {
       state.view = 'not-found'
       return
@@ -145,10 +232,11 @@ const useRouteWatcher = () => {
     state.view = 'main'
   }
 
-  const onRouteChangedToFile = async () => {
+  const onRouteChangedToFile = async (context: RouteContext) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const fileId = state.idParam!
-    const file = await fetchFileMetaData({ fileId })
+    const fileId = context.snapshot.idParam!
+    const file = await context.wait(fetchFileMetaData({ fileId }))
+    context.signal.throwIfAborted()
 
     if (!file) {
       // ファイルがなかった
@@ -157,29 +245,41 @@ const useRouteWatcher = () => {
     }
 
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise
+    await context.wait(bothChannelsMapInitialFetchPromise)
+    context.signal.throwIfAborted()
 
     if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
 
-    const channelId = await (() => {
-      if (file.channelId) {
-        return file.channelId
-      } else {
-        return getStartupChannelId()
-      }
-    })()
+    const channelId = await context.wait(
+      (() => {
+        if (file.channelId) {
+          return file.channelId
+        } else {
+          return getStartupChannelId()
+        }
+      })()
+    )
+    context.signal.throwIfAborted()
 
     // チャンネルが表示されていないときはそのファイルのチャンネルを表示する
     if (
       primaryView.value.type === 'channel' &&
       primaryView.value.channelId === ''
     ) {
-      changePrimaryViewToChannelOrDM({
-        channelId: channelId
-      })
+      const view = await context.wait(resolveChannelView({ channelId }))
+      context.signal.throwIfAborted()
+      // 非同期取得が終わった後にも、背景画面が未設定か確認する。
+      if (
+        primaryView.value.type === 'channel' &&
+        primaryView.value.channelId === ''
+      ) {
+        if (view.type === 'channel') changePrimaryViewToChannel(view)
+        else if (view.type === 'thread') changePrimaryViewToThread(view)
+        else changePrimaryViewToDM(view)
+      }
     }
 
     replaceModal({
@@ -190,9 +290,11 @@ const useRouteWatcher = () => {
     state.view = 'main'
   }
 
-  const onRouteChangedToMessage = async () => {
+  const onRouteChangedToMessage = async (context: RouteContext) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const message = await fetchMessage({ messageId: state.idParam! })
+    const messageId = context.snapshot.idParam!
+    const message = await context.wait(fetchMessage({ messageId }))
+    context.signal.throwIfAborted()
     if (!message?.channelId) {
       // チャンネルがなかった
       state.view = 'not-found'
@@ -202,23 +304,43 @@ const useRouteWatcher = () => {
     const channelId = message.channelId
 
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise
+    await context.wait(bothChannelsMapInitialFetchPromise)
+    context.signal.throwIfAborted()
     if (channelTree.value.children.length === 0) {
       return
     }
 
-    if (channelsMap.value.has(channelId)) {
+    if (!dmChannelsMap.value.has(channelId)) {
+      if (!channelsMap.value.has(channelId)) {
+        try {
+          await context.wait(fetchThread(channelId, { force: true }))
+          context.signal.throwIfAborted()
+        } catch {
+          context.signal.throwIfAborted()
+          state.view = 'not-found'
+          return
+        }
+      }
+      const link = channelIdToLink(channelId)
+      if (!link) {
+        state.view = 'not-found'
+        return
+      }
+      if (!channelsMap.value.has(channelId)) {
+        normalizedThreadRoute = link.slice('/channels/'.length)
+      }
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
-        path: channelIdToLink(message.channelId) as string,
+        path: link,
         query: { message: message.id }
       })
     } else if (dmChannelsMap.value.has(channelId)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const dmChannel = dmChannelsMap.value.get(channelId)!
       // ユーザーIDからユーザー名への変換に必要
-      await usersMapInitialFetchPromise
+      await context.wait(usersMapInitialFetchPromise)
+      context.signal.throwIfAborted()
       const user = usersMap.value.get(dmChannel.userId)
       router.replace({
         name: RouteName.User,
@@ -234,75 +356,79 @@ const useRouteWatcher = () => {
     useRenderKey('messages').refresh()
   }
 
-  type RouteParamWithQuery = readonly [
-    routeParam: string | null,
-    query: LocationQuery
-  ]
+  let controller: AbortController | undefined
+  const cancelRoute = () => controller?.abort()
+  onScopeDispose(cancelRoute)
+  if (getCurrentInstance()) onDeactivated(cancelRoute)
 
-  const onRouteParamChange = async (
-    [routeParam, query]: RouteParamWithQuery,
-    [prevRouteParam, prevQuery]: RouteParamWithQuery
-  ) => {
-    isOnInitialModalRoute.value = false
-    const routeName = state.currentRouteName
-
-    if (routeName === RouteName.Index) {
-      await onRouteChangedToIndex()
-      return
+  const runRoute = async () => {
+    cancelRoute()
+    const current = new AbortController()
+    controller = current
+    const context: RouteContext = {
+      snapshot: snapshotRoute(),
+      signal: current.signal,
+      wait: promise => waitWithAbort(Promise.resolve(promise), current.signal)
     }
+    const routeName = context.snapshot.name
+    try {
+      isOnInitialModalRoute.value = false
+      switch (routeName) {
+        case RouteName.Index:
+          await onRouteChangedToIndex(context)
+          return
+        case RouteName.Channel:
+          await onRouteChangedToChannel(context)
+          break
+        case RouteName.User:
+          await onRouteChangedToUser(context)
+          break
+        case RouteName.ClipFolders:
+          await onRouteChangedToClipFolders(context)
+          break
+        case RouteName.File:
+          await onRouteChangedToFile(context)
+          break
+        case RouteName.Message:
+          await onRouteChangedToMessage(context)
+          break
+        default:
+          return
+      }
+      current.signal.throwIfAborted()
+      // ファイルURLを踏むなどして、アクセス時点のURLでモーダルを表示する場合
+      const isOnInitialModalRouteValue =
+        state.isInitialView &&
+        history.state?.modalState &&
+        !!history.state?.modalState[0]?.relatedRoute
+      isOnInitialModalRoute.value = isOnInitialModalRouteValue
 
-    if (routeParam === prevRouteParam && dequal(query, prevQuery)) {
-      return
+      if (state.isInitialView && !isOnInitialModalRouteValue) {
+        // 初回表示かつモーダルを表示する必要がない状態なので、stateをクリア
+        clearModalState()
+      }
+
+      state.isInitialView = false
+      closeNav()
+    } catch {
+      if (current.signal.aborted) return
+      state.view = 'not-found'
     }
-
-    switch (routeName) {
-      case RouteName.Channel:
-        await onRouteChangedToChannel()
-        break
-      case RouteName.User:
-        await onRouteChangedToUser()
-        break
-      case RouteName.ClipFolders:
-        await onRouteChangedToClipFolders()
-        break
-      case RouteName.File:
-        await onRouteChangedToFile()
-        break
-      case RouteName.Message:
-        await onRouteChangedToMessage()
-        break
-    }
-
-    // ファイルURLを踏むなどして、アクセス時点のURLでモーダルを表示する場合
-    const isOnInitialModalRouteValue =
-      state.isInitialView &&
-      history.state?.modalState &&
-      !!history.state?.modalState[0]?.relatedRoute
-    isOnInitialModalRoute.value = isOnInitialModalRouteValue
-
-    if (state.isInitialView && !isOnInitialModalRouteValue) {
-      // 初回表示かつモーダルを表示する必要がない状態なので、stateをクリア
-      clearModalState()
-    }
-
-    state.isInitialView = false
-    closeNav()
   }
 
-  watch<RouteParamWithQuery>(
-    () => [state.currentRouteParam, state.query] as const,
-    onRouteParamChange
+  watch(
+    () => snapshotRoute(),
+    (to, from) => {
+      if (!dequal(to, from)) void runRoute()
+    },
+    { flush: 'sync' }
   )
 
   const triggerRouteParamChange = () => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    onRouteParamChange([state.channelParam!, {}], [null, {}])
+    void runRoute()
   }
 
-  return {
-    routeWatcherState: state,
-    triggerRouteParamChange
-  }
+  return { routeWatcherState: state, triggerRouteParamChange }
 }
 
 export default useRouteWatcher

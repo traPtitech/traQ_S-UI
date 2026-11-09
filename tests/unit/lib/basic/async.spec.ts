@@ -1,4 +1,8 @@
-import { createMutex, createSingleflight } from '/@/lib/basic/async'
+import {
+  createMutex,
+  createSingleflight,
+  waitWithAbort
+} from '/@/lib/basic/async'
 
 describe('createSingleFlight', () => {
   const createSff = () => {
@@ -145,5 +149,49 @@ describe('createMutex', () => {
       mutex.unlock()
       mutex.unlock()
     }).rejects.toThrow('mutex: tried to unlock unlocked mutex.')
+  })
+})
+
+describe('waitWithAbort', () => {
+  test('cancels one waiter without cancelling another consumer of the shared result', async () => {
+    let resolve!: (value: number) => void
+    const shared = new Promise<number>(yes => {
+      resolve = yes
+    })
+    const first = new AbortController()
+    const second = new AbortController()
+    const cancelled = waitWithAbort(shared, first.signal)
+    const active = waitWithAbort(shared, second.signal)
+    const assertion = expect(cancelled).rejects.toMatchObject({
+      name: 'AbortError'
+    })
+    first.abort()
+    await assertion
+    resolve(42)
+    await expect(active).resolves.toBe(42)
+  })
+
+  test('consumes a late rejection after cancellation', async () => {
+    let reject!: (error: Error) => void
+    const shared = new Promise<never>((_resolve, no) => {
+      reject = no
+    })
+    const controller = new AbortController()
+    const cancelled = waitWithAbort(shared, controller.signal)
+    const assertion = expect(cancelled).rejects.toMatchObject({
+      name: 'AbortError'
+    })
+    controller.abort()
+    await assertion
+    reject(new Error('late failure'))
+    await Promise.resolve()
+  })
+
+  test('rejects an already aborted waiter while consuming the underlying promise', async () => {
+    const controller = new AbortController()
+    controller.abort()
+    await expect(
+      waitWithAbort(Promise.reject(new Error('offline')), controller.signal)
+    ).rejects.toMatchObject({ name: 'AbortError' })
   })
 })

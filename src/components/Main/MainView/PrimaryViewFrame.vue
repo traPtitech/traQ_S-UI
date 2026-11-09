@@ -25,7 +25,7 @@ defineProps<{
 }
 
 .content {
-  min-width: 0;
+  min-width: 56px;
   width: 100%;
 }
 
@@ -33,5 +33,9 @@ defineProps<{
   height: 100%;
   flex-shrink: 0;
   z-index: $z-index-sidebar;
+}
+
+[data-is-mobile] .content {
+  min-width: 0;
 }
 </style>

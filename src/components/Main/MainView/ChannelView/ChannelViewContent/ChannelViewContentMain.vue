@@ -62,10 +62,10 @@ import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getFullDayString } from '/@/lib/basic/date'
 import { unrefElement } from '/@/lib/dom/unrefElement'
-import { constructChannelPath, constructUserPath } from '/@/router'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useThreadsStore } from '/@/store/entities/threads'
 import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 
 import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
@@ -113,9 +113,13 @@ const createdDate = (id: MessageId) => {
   return getFullDayString(new Date(message.createdAt))
 }
 
-const { channelsMap, dmChannelsMap } = useChannelsStore()
+const { channelsMap } = useChannelsStore()
+const { threadsMap } = useThreadsStore()
 const isArchived = computed(
-  () => channelsMap.value.get(props.channelId)?.archived ?? false
+  () =>
+    threadsMap.value.get(props.channelId)?.archived ??
+    channelsMap.value.get(props.channelId)?.archived ??
+    false
 )
 const messagePinnedUserMap = computed(
   () => new Map(props.pinnedMessages.map(pin => [pin.message.id, pin.userId]))
@@ -128,15 +132,11 @@ const resetIsReachedLatest = () => {
 }
 
 const showToNewMessageButton = ref(false)
-const { channelIdToPathString } = useChannelPath()
-const toNewMessage = () => {
+const { channelIdToLink } = useChannelPath()
+const toNewMessage = async () => {
   if (props.entryMessageId) {
-    const channelPath = channelIdToPathString(props.channelId) as string
-    if (dmChannelsMap.value.has(props.channelId)) {
-      router.replace(constructUserPath(channelPath))
-    } else {
-      router.replace(constructChannelPath(channelPath))
-    }
+    const link = channelIdToLink(props.channelId)
+    if (link) await router.replace(link)
   }
 
   const element = unrefElement(scrollerRef)

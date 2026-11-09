@@ -19,7 +19,7 @@ import { computed } from 'vue'
 import useFileMeta from '/@/composables/files/useFileMeta'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useDateRepresentation } from '/@/composables/useDateRepresentation'
-import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import useEnsureThread from '/@/composables/useEnsureThread'
 import { fallbackChannelPath } from '/@/lib/config'
 import { useUsersStore } from '/@/store/entities/users'
 
@@ -46,25 +46,20 @@ const user = computed(() =>
 )
 const createdAt = useDateRepresentation(() => fileMeta.value?.createdAt ?? '')
 
+useEnsureThread(() => fileMeta.value?.channelId)
+
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
 
-const channelPath = computed(() =>
-  setFallbackForNullishOrOnError(fallbackChannelPath).exec(() => {
-    const channelId = fileMeta.value?.channelId
-    if (!channelId) return null
-
-    return channelIdToPathString(channelId, true)
-  })
-)
+const channelPath = computed(() => {
+  const channelId = fileMeta.value?.channelId
+  return channelId
+    ? (channelIdToPathString(channelId, true) ?? fallbackChannelPath)
+    : fallbackChannelPath
+})
 
 const channelLink = computed(() => {
-  try {
-    return fileMeta.value?.channelId
-      ? channelIdToLink(fileMeta.value?.channelId)
-      : ''
-  } catch {
-    return ''
-  }
+  const channelId = fileMeta.value?.channelId
+  return channelId ? (channelIdToLink(channelId) ?? '') : ''
 })
 
 const onClick = async (event: MouseEvent) => {

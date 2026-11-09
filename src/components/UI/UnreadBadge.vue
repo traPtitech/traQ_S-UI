@@ -38,6 +38,7 @@ const unreadCountString = computed(() => {
   flex-shrink: 0;
   border-radius: 4px;
   text-align: center;
+  font-weight: normal;
   cursor: pointer;
   &[data-is-noticeable] {
     background: $theme-accent-notification-background;

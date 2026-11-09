@@ -1,4 +1,10 @@
-import type { Message, User } from '@traptitech/traq'
+import type {
+  Message,
+  UnreadChannel,
+  User,
+  UserSubscribeState
+} from '@traptitech/traq'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 // traQ v3 API (threads) の ThreadChannel。SDKで公開されたらimportに置き換える。
 // https://github.com/traPtitech/traQ/blob/feat/thread/docs/v3-api.yaml
@@ -451,6 +457,57 @@ export const mockThreadMessages: Message[] = [
   }
 ]
 
+// 未読と購読設定はThreadChannelの属性ではなく、既存チャンネルと同じAPIで取得する。
+// GET /users/me/unread と GET /users/me/subscriptions のレスポンス相当。
+const mockThreadNotificationStates = [
+  { count: 3, noticeable: true, level: ChannelSubscribeLevel.notified },
+  { count: 2, noticeable: false, level: ChannelSubscribeLevel.subscribed },
+  { count: 0, noticeable: false, level: ChannelSubscribeLevel.none },
+  { count: 120, noticeable: false, level: ChannelSubscribeLevel.notified },
+  { count: 1, noticeable: true, level: ChannelSubscribeLevel.none },
+  { count: 2, noticeable: false, level: ChannelSubscribeLevel.subscribed },
+  { count: 0, noticeable: false, level: ChannelSubscribeLevel.notified },
+  { count: 0, noticeable: false, level: ChannelSubscribeLevel.none }
+]
+
+const getMockThreadNotificationState = (index: number) => {
+  const state = mockThreadNotificationStates[index]
+  if (!state) throw new Error('通知設定のモックがありません')
+  return state
+}
+
+export const mockThreadSubscriptions: UserSubscribeState[] = mockThreads.map(
+  (thread, index) => ({
+    channelId: thread.id,
+    level: getMockThreadNotificationState(index).level
+  })
+)
+
+export const mockThreadUnreadChannels: UnreadChannel[] = mockThreads.flatMap(
+  (thread, index) => {
+    const { count, noticeable } = getMockThreadNotificationState(index)
+    if (count === 0) return []
+    const messages = mockThreadMessages.filter(
+      message => message.channelId === thread.id
+    )
+    const oldestMessage = messages[0]
+    const latestMessage = messages.at(-1)
+    if (!oldestMessage || !latestMessage) {
+      throw new Error('未読メッセージのモックがありません')
+    }
+    return [
+      {
+        channelId: thread.id,
+        count,
+        noticeable,
+        since: oldestMessage.createdAt,
+        updatedAt: latestMessage.createdAt,
+        oldestMessageId: oldestMessage.id
+      }
+    ]
+  }
+)
+
 /** スレッドIDを指定して発言一覧を古い順で取得する。存在しないIDは空配列。 */
 export const getMockThreadMessages = (threadId: string): Message[] =>
   mockThreadMessages.filter(message => message.channelId === threadId)
@@ -487,6 +544,12 @@ export const getMockThreadItems = (
     return {
       thread: { ...thread, parentChannelId },
       latestMessage,
-      author
+      author,
+      unread: mockThreadUnreadChannels.find(
+        unread => unread.channelId === thread.id
+      ),
+      subscription: mockThreadSubscriptions.find(
+        subscription => subscription.channelId === thread.id
+      )
     }
   })

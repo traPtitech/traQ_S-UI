@@ -1,6 +1,6 @@
 <template>
   <router-link :to="to">
-    <div :class="$style.container">
+    <div :class="$style.container" :data-embedded="$boolAttr(embedded)">
       <div :class="$style.header">
         <UserName
           v-if="titleType === 'user'"
@@ -53,7 +53,7 @@ import { computed } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
 import useChannelPath from '/@/composables/useChannelPath'
-import { setFallbackForNullishOrOnError } from '/@/lib/basic/fallback'
+import useEnsureThread from '/@/composables/useEnsureThread'
 import { useUsersStore } from '/@/store/entities/users'
 
 import ChannelName from './ChannelName.vue'
@@ -67,13 +67,15 @@ const props = withDefaults(
     message: Message | ActivityTimelineMessage
     lineClampContent?: boolean
     showContextMenuButton?: boolean
+    embedded?: boolean
     to: string
   }>(),
   {
     titleType: 'channel' as const,
     hideSubtitle: false,
     lineClampContent: false,
-    showContextMenuButton: false
+    showContextMenuButton: false,
+    embedded: false
   }
 )
 
@@ -88,12 +90,12 @@ if (userState.value === undefined) {
   fetchUser({ userId: props.message.userId })
 }
 
+useEnsureThread(() => props.message.channelId)
+
 const { channelIdToShortPathString } = useChannelPath()
 
-const path = computed(() =>
-  setFallbackForNullishOrOnError('unknown').exec(() =>
-    channelIdToShortPathString(props.message.channelId)
-  )
+const path = computed(
+  () => channelIdToShortPathString(props.message.channelId) ?? 'unknown'
 )
 
 const onClickContextMenuButton = (e: MouseEvent) => {
@@ -106,6 +108,10 @@ const onClickContextMenuButton = (e: MouseEvent) => {
   @include background-primary;
   border-radius: 4px;
   padding: 8px 16px;
+  &[data-embedded] {
+    padding: 0;
+    background: transparent;
+  }
 }
 .header {
   display: flex;
