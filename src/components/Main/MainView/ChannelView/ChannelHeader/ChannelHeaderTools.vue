@@ -24,6 +24,7 @@
 
 <script lang="ts" setup>
 import ClickOutside from '/@/components/UI/ClickOutside'
+import { useCloseOnMainViewInactive } from '/@/composables/mainView/useMainViewActivity'
 import useToggle from '/@/composables/utils/useToggle'
 import type { ChannelId } from '/@/types/entity-ids'
 
@@ -40,6 +41,8 @@ const {
   toggle: togglePopupMenu,
   close: closePopupMenu
 } = useToggle(false)
+useCloseOnMainViewInactive(closePopupMenu)
+
 const { channelState } = useChannelState(props)
 </script>
 

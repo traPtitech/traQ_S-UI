@@ -43,6 +43,7 @@ import { computed, defineAsyncComponent, reactive, watch } from 'vue'
 
 import { useEventListener } from '@vueuse/core'
 
+import { provideMainViewActivity } from '/@/composables/mainView/useMainViewActivity'
 import useNavigationController from '/@/composables/mainView/useNavigationController'
 import useSidebar from '/@/composables/mainView/useSidebar'
 import useResponsive from '/@/composables/useResponsive'
@@ -133,6 +134,7 @@ const {
 const { addToast } = useToastStore()
 const { closeStampPicker } = useStampPicker()
 
+provideMainViewActivity(isMainViewActive)
 watch(isMainViewActive, isActive => {
   if (!isActive) closeStampPicker()
 })
