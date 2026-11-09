@@ -1,17 +1,19 @@
 import { isIOS, isIOSApp, isPWA } from '/@/lib/dom/browser'
 
 import type { TelemetryEvents } from './events'
+import { track } from './events'
 
 const getLaunchMode = (): TelemetryEvents['app_started']['launch_mode'] => {
   if (isIOSApp(window)) return 'ios_app'
   return isPWA() ? 'pwa' : 'browser'
 }
 
-export const getAppStartAttributes = async (): Promise<
+const getAppStartAttributes = async (): Promise<
   TelemetryEvents['app_started']
 > => {
   const { browserMeta, osMeta, unknownString } =
     await import('@grafana/faro-web-sdk')
+
   const { browser } =
     typeof browserMeta === 'function' ? browserMeta() : browserMeta
   const { os } = typeof osMeta === 'function' ? osMeta() : osMeta
@@ -30,3 +32,5 @@ export const getAppStartAttributes = async (): Promise<
     launch_mode: getLaunchMode()
   }
 }
+
+export const trackAppStarted = () => track('app_started', getAppStartAttributes)

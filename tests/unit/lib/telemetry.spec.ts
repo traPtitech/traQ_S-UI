@@ -15,6 +15,7 @@ const macSafariUserAgent =
 
 describe('telemetry', () => {
   let telemetry: typeof ActivityTelemetry
+  let stopErrorCollection: (() => void) | undefined
 
   beforeEach(async () => {
     vi.resetModules()
@@ -38,6 +39,8 @@ describe('telemetry', () => {
   })
 
   afterEach(() => {
+    stopErrorCollection?.()
+    stopErrorCollection = undefined
     vi.restoreAllMocks()
     vi.clearAllTimers()
     vi.useRealTimers()
@@ -48,6 +51,7 @@ describe('telemetry', () => {
     JSON.parse(fetchMock.mock.calls[0]?.[1].body)
 
   it('does not send or create an identifier without configuration', async () => {
+    expect(telemetry.startErrorCollection()).toBeUndefined()
     await telemetry.track('feature_used', { feature: 'search' })
     await vi.advanceTimersByTimeAsync(2000)
 
@@ -154,6 +158,108 @@ describe('telemetry', () => {
     }
   )
 
+  it('reports browser and console errors with safe diagnostic fields', async () => {
+    vi.stubGlobal('traQConfig', {
+      telemetry: { endpoint: '/telemetry/collect' }
+    })
+    const consoleError = vi
+      .spyOn(window.console, 'error')
+      .mockImplementation(() => undefined)
+    stopErrorCollection = telemetry.startErrorCollection()
+    expect(telemetry.startErrorCollection()).toBe(stopErrorCollection)
+
+    window.dispatchEvent(
+      new ErrorEvent('error', {
+        message: 'private exception text',
+        filename: `${location.origin}/assets/main-hash.js?private=token`,
+        lineno: 24,
+        colno: 5
+      })
+    )
+
+    const error = new TypeError('private error message', {
+      cause: { authorization: 'private credential' }
+    })
+    error.stack = [
+      'TypeError: private error message',
+      `    at privateFunction (${location.origin}/assets/main-hash.js?private=token:31:8)`,
+      `    at fetch (${location.origin}/api/v3/files/private-id:4:1)`,
+      '    at thirdParty (https://example.org/assets/extension.js:1:2)'
+    ].join('\n')
+    const rejection = new Event('unhandledrejection')
+    Object.defineProperty(rejection, 'reason', { value: error })
+    window.dispatchEvent(rejection)
+    window.console.error('private console text', error)
+
+    await vi.advanceTimersByTimeAsync(1000)
+
+    expect(consoleError).toHaveBeenCalledExactlyOnceWith(
+      'private console text',
+      error
+    )
+    expect(fetchMock).toHaveBeenCalledOnce()
+    const body = sentBody()
+    const clientId = window.localStorage.getItem('telemetry/client-id')
+    expect(body.exceptions).toEqual([
+      {
+        timestamp: expect.any(String),
+        type: 'Error',
+        value: 'window_error',
+        context: { client_id: clientId, source: 'window_error' },
+        stacktrace: {
+          frames: [
+            {
+              filename: '/assets/main-hash.js',
+              function: '?',
+              lineno: 24,
+              colno: 5
+            }
+          ]
+        }
+      },
+      {
+        timestamp: expect.any(String),
+        type: 'TypeError',
+        value: 'unhandled_rejection',
+        context: { client_id: clientId, source: 'unhandled_rejection' },
+        stacktrace: {
+          frames: [
+            {
+              filename: '/assets/main-hash.js',
+              function: '?',
+              lineno: 31,
+              colno: 8
+            }
+          ]
+        }
+      },
+      {
+        timestamp: expect.any(String),
+        type: 'TypeError',
+        value: 'console_error',
+        context: { client_id: clientId, source: 'console_error' }
+      }
+    ])
+    expect(Object.keys(body.meta).sort()).toEqual(['app', 'sdk'])
+  })
+
+  it('limits error bursts while allowing activity events in the same batch', async () => {
+    vi.stubGlobal('traQConfig', {
+      telemetry: { endpoint: '/telemetry/collect' }
+    })
+    stopErrorCollection = telemetry.startErrorCollection()
+
+    for (let i = 0; i < 11; i++) {
+      window.dispatchEvent(new ErrorEvent('error'))
+    }
+
+    await telemetry.track('feature_used', { feature: 'search' })
+    await vi.advanceTimersByTimeAsync(1000)
+
+    expect(sentBody().exceptions).toHaveLength(10)
+    expect(sentBody().events).toHaveLength(1)
+  })
+
   it('sends repeated events without collecting page or user metadata', async () => {
     vi.stubGlobal('traQConfig', {
       telemetry: { endpoint: '/telemetry/collect' }
@@ -244,6 +350,7 @@ describe('telemetry', () => {
     vi.stubGlobal('location', new URL(`https://${host}`))
     vi.stubGlobal('traQConfig', { telemetry: deployedTelemetry })
 
+    expect(telemetry.startErrorCollection()).toBeUndefined()
     await telemetry.track('feature_used', { feature: 'search' })
     await vi.advanceTimersByTimeAsync(2000)
 
@@ -279,6 +386,7 @@ describe('telemetry', () => {
 
   it('ignores an invalid endpoint without breaking feature usage', async () => {
     vi.stubGlobal('traQConfig', { telemetry: { endpoint: 'http://[' } })
+    expect(telemetry.startErrorCollection()).toBeUndefined()
     await expect(
       telemetry.track('feature_used', { feature: 'search' })
     ).resolves.toBeUndefined()
