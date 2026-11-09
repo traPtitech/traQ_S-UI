@@ -79,8 +79,7 @@ const setupServiceWorker = async (onCanUpdate: OnCanUpdate) => {
 }
 
 let serviceWorkerRegistration:
-  | Promise<ServiceWorkerRegistration | undefined>
-  | undefined
+  Promise<ServiceWorkerRegistration | undefined> | undefined
 let pushConnection: Promise<void> | undefined
 let stopListeningForPush: (() => void) | undefined
 
@@ -179,12 +178,14 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
   setupFirebaseApp()
 
   if (!import.meta.env.DEV && navigator.serviceWorker) {
-    serviceWorkerRegistration ??= setupServiceWorker(onCanUpdate).catch(error => {
-      serviceWorkerRegistration = undefined
-      // eslint-disable-next-line no-console
-      console.warn('[Notification] failed to register service worker', error)
-      return undefined
-    })
+    serviceWorkerRegistration ??= setupServiceWorker(onCanUpdate).catch(
+      error => {
+        serviceWorkerRegistration = undefined
+        // eslint-disable-next-line no-console
+        console.warn('[Notification] failed to register service worker', error)
+        return undefined
+      }
+    )
     await serviceWorkerRegistration
   }
 
