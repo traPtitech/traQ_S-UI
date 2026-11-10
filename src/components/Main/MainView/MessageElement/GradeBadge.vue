@@ -67,11 +67,11 @@ const onClick = () => {
   }
 
   // fontSize
-  &[data-fontSize='body1'] {
+  &[data-font-size='body1'] {
     @include size-body1;
   }
 
-  &[data-fontSize='body2'] {
+  &[data-font-size='body2'] {
     @include size-body2;
   }
 
