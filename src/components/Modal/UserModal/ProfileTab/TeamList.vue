@@ -1,8 +1,7 @@
 <template>
-  <section>
+  <section v-if="userGroupsMapFetched">
     <ProfileHeader text="所属班" />
-    <template v-if="!userGroupsMapFetched"> 読み込み中... </template>
-    <template v-else-if="teamGroups.length === 0">
+    <template v-if="teamGroups.length === 0">
       所属している班はありません
     </template>
     <div v-else :class="$style.container">
