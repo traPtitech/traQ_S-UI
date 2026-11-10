@@ -103,7 +103,7 @@ import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 import type { ChannelId } from '/@/types/entity-ids'
 
-import ChannelTree from '../ChannelList/ChannelTree.vue'
+import ChannelTree from '../ChannelList/ChannelTreeWithFeatureFlag.vue'
 import useScrollMargins from './composables/useScrollMargins'
 
 const toNode = (

@@ -104,7 +104,7 @@ import { useModalStore } from '/@/store/ui/modal'
 
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
-import ChannelTree from '../ChannelList/ChannelTree.vue'
+import ChannelTree from '../ChannelList/ChannelTreeWithFeatureFlag.vue'
 import ToggleButton from './ToggleButton.vue'
 import useChannelFilter from './composables/useChannelFilter'
 

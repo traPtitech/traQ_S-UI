@@ -62,26 +62,14 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue'
 
-import type { ChannelTreeNode } from '/@/lib/channelTree'
-
 import ChannelElement from './ChannelElement.vue'
 import ChannelTreeAnimation from './ChannelTreeAnimation.vue'
+import type { VirtualChannelTreeProps } from './channelTreeProps'
 import useChannelFlatList from './composables/useChannelFlatList'
 import useChannelTreeAnimation from './composables/useChannelTreeAnimation'
 import useChannelTreeVirtualizer from './composables/useChannelTreeVirtualizer'
 
-interface ChannelTreeProps {
-  channels: ReadonlyArray<ChannelTreeNode>
-  scrollElement: HTMLElement | null
-  scrollMargin?: number
-  showShortenedPath?: boolean
-  showTopic?: boolean
-  showChildTopic?: boolean
-  showStar?: boolean
-  showNotified?: boolean
-}
-
-const props = withDefaults(defineProps<ChannelTreeProps>(), {
+const props = withDefaults(defineProps<VirtualChannelTreeProps>(), {
   scrollMargin: 0,
   showShortenedPath: false,
   showTopic: false,
