@@ -17,10 +17,7 @@ export type NavigationItemType =
   | 'feature-flag'
 
 // TODO: 言語系リソースの置き場所
-export const navigationRouteNameTitleMap: Record<
-  SettingsRouteName | SettingsStampPaletteRouteName,
-  string
-> = {
+export const navigationRouteNameTitleMap = {
   settingsProfile: 'プロフィール',
   settingsSession: 'セッション',
   settingsBrowser: 'ブラウザ',
@@ -32,7 +29,7 @@ export const navigationRouteNameTitleMap: Record<
   settingsTheme: 'テーマ',
   settingsAudio: '音声',
   settingsFeatureFlag: '実験的機能'
-}
+} satisfies Record<SettingsRouteName | SettingsStampPaletteRouteName, string>
 
 export const navigations: {
   routeName: SettingsRouteName

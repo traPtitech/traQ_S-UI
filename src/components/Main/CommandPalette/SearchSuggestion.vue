@@ -78,10 +78,13 @@ const querySuggestions = computed(() => [
 
 const { currentInput, searchHistories, settleQuery, removeSearchHistory } =
   useCommandPalette()
-const searchConfirmItem = computed((): SuggestionItem => ({
-  type: 'search',
-  value: currentInput.value
-}))
+const searchConfirmItem = computed(
+  () =>
+    ({
+      type: 'search',
+      value: currentInput.value
+    }) satisfies SuggestionItem
+)
 const onSelectQuerySuggestion = (query: string) => {
   if (currentInput.value !== '') {
     currentInput.value += ` ${query}`

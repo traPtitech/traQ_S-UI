@@ -5,10 +5,7 @@ type QallScope = 'qall'
 
 export type KnownScope = OAuth2Scope | QallScope
 
-export const scopeInfoMap: Record<
-  KnownScope,
-  { name: string; permissions: string[] }
-> = {
+export const scopeInfoMap = {
   [OAuth2Scope.Openid]: {
     name: 'ユーザーID取得',
     permissions: ['traQ IDの取得']
@@ -85,7 +82,7 @@ export const scopeInfoMap: Record<
       'サウンドボードの利用/追加'
     ]
   }
-}
+} satisfies Record<KnownScope, { name: string; permissions: string[] }>
 
 export const isKnownScope = (scope: string): scope is KnownScope =>
   Object.hasOwn(scopeInfoMap, scope)

@@ -18,11 +18,11 @@ import { computed, onMounted, onUnmounted } from 'vue'
 import type { Toast } from '/@/store/ui/toast'
 import { useToastStore } from '/@/store/ui/toast'
 
-const iconNameMap: Record<Toast['type'], string> = {
+const iconNameMap = {
   success: 'info',
   error: 'alert',
   info: 'info'
-}
+} satisfies Record<Toast['type'], string>
 
 const useAutoHide = (props: { toast: Toast }) => {
   const { deleteToast } = useToastStore()
