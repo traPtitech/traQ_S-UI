@@ -1,4 +1,4 @@
-import { isIOSApp, isPWA } from '/@/lib/dom/browser'
+import { isIOS, isIOSApp, isPWA } from '/@/lib/dom/browser'
 
 import type { TelemetryEvents } from './events'
 
@@ -17,12 +17,16 @@ export const getAppStartAttributes = async (): Promise<
   const { os } = typeof osMeta === 'function' ? osMeta() : osMeta
   const name = browser?.name
   const version = browser?.version
+  const osName = os?.name
+
+  // Mac 形式の UA とタッチイベントが揃うと、macOS と iOS 系の両方が候補になる。
+  const isAmbiguousMacUA = osName === 'Mac OS' && isIOS()
 
   return {
     browser_name: name === unknownString ? undefined : name,
     browser_major_version:
       version === unknownString ? undefined : version?.split('.')[0],
-    os_name: os?.name,
+    os_name: isAmbiguousMacUA ? 'macOS or iOS/iPadOS' : osName,
     launch_mode: getLaunchMode()
   }
 }

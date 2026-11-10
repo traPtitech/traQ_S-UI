@@ -10,6 +10,9 @@ const deployedTelemetry = {
   hosts: ['q-dev.trapti.tech', 'q.trapti.tech']
 }
 
+const macSafariUserAgent =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15'
+
 describe('telemetry', () => {
   let telemetry: typeof ActivityTelemetry
 
@@ -52,8 +55,9 @@ describe('telemetry', () => {
     expect(storage.size).toBe(0)
   })
 
-  it.each([
+  it.for([
     {
+      name: 'Edge on Windows',
       userAgent:
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.2903.86',
       standalone: true,
@@ -65,13 +69,53 @@ describe('telemetry', () => {
       }
     },
     {
+      name: 'a touch-enabled device with the Mac UA',
+      userAgent: macSafariUserAgent,
+      touchEvents: true,
+      standalone: false,
+      expected: {
+        browser_name: 'Safari',
+        browser_major_version: '26',
+        os_name: 'macOS or iOS/iPadOS',
+        launch_mode: 'browser'
+      }
+    },
+    {
+      name: 'an iPad with the mobile UA',
+      userAgent:
+        'Mozilla/5.0 (iPad; CPU OS 26_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1',
+      standalone: false,
+      expected: {
+        browser_name: 'Mobile Safari',
+        browser_major_version: '26',
+        os_name: 'iOS',
+        launch_mode: 'browser'
+      }
+    },
+    {
+      name: 'Safari on a Mac',
+      userAgent: macSafariUserAgent,
+      touchEvents: false,
+      standalone: false,
+      expected: {
+        browser_name: 'Safari',
+        browser_major_version: '26',
+        os_name: 'Mac OS',
+        launch_mode: 'browser'
+      }
+    },
+    {
+      name: 'an unknown UA',
       userAgent: 'Unknown',
       standalone: false,
       expected: { launch_mode: 'browser' }
     }
   ])(
-    'sends only selected environment attributes on app start',
-    async ({ userAgent, standalone, expected }) => {
+    'sends only selected environment attributes on app start for $name',
+    async (
+      { userAgent, touchEvents, standalone, expected },
+      { onTestFinished }
+    ) => {
       vi.stubGlobal('traQConfig', {
         telemetry: { endpoint: '/telemetry/collect' }
       })
@@ -80,6 +124,20 @@ describe('telemetry', () => {
         matches: standalone && query === '(display-mode: standalone)'
       }))
 
+      const touchEnd = Object.getOwnPropertyDescriptor(
+        Document.prototype,
+        'ontouchend'
+      )
+
+      if (touchEvents === false && touchEnd) {
+        Reflect.deleteProperty(Document.prototype, 'ontouchend')
+        onTestFinished(() => {
+          Object.defineProperty(Document.prototype, 'ontouchend', touchEnd)
+        })
+      }
+
+      vi.resetModules()
+      telemetry = (await import('/@/lib/telemetry')).telemetry
       await telemetry.trackAppStarted()
       await vi.advanceTimersByTimeAsync(1000)
 
