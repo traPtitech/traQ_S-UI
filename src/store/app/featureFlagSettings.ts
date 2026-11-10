@@ -39,6 +39,13 @@ export const featureFlagDescriptions = {
     defaultValue: isWebKit(),
     endAt: new Date('9999-12-31T00:00')
   },
+  channel_virtual_scroll: {
+    title: 'チャンネルリストの仮想スクロール',
+    description:
+      'ホームとチャンネルタブで、表示範囲の近くにあるチャンネルだけを描画します。',
+    defaultValue: true,
+    endAt: new Date('2026-11-30T23:59')
+  },
   // 旧フラグの保存値を引き継がず、既存ユーザーも有効な状態から始める
   stamp_recommendation_v3: {
     title: 'スタンプのレコメンデーション',
