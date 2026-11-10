@@ -114,6 +114,7 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
     getGradeGroupsByUserId,
     getTeamGroupsByUserId,
     getUserGroupByName,
+    fetchUserGroup,
     fetchUserGroups
   }
 })
