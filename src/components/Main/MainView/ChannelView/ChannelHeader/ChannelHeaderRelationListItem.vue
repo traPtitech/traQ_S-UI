@@ -22,7 +22,7 @@ const props = defineProps<{
 const linkId = useId()
 const focus = () => {
   // HACK: RouterLink が focus できないので、id から HTMLElement を取得して focus する
-  const link = document.getElementById(linkId) as HTMLElement | null
+  const link = document.getElementById(linkId)
   link?.focus()
 }
 
