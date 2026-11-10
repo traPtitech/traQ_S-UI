@@ -11,21 +11,6 @@ export type NavigationItemType =
 export type EphemeralNavigationItemType =
   'qallController' | 'draftList' | 'audioController' | undefined
 
-// TODO: 言語系リソースの置き場所
-export const navigationTypeNameMap = {
-  home: 'ホーム',
-  channels: 'チャンネル',
-  activity: 'アクティビティ',
-  users: 'ユーザー',
-  clips: 'クリップ'
-} satisfies Record<NavigationItemType, string>
-
-export const ephemeralNavigationTypeNameMap = {
-  qallController: 'Qall',
-  draftList: '下書き一覧',
-  audioController: '音楽'
-} satisfies Record<NonNullable<EphemeralNavigationItemType>, string>
-
 export const { useNavigation, useNavigationSelectorItem } = createNavigation<
   NavigationItemType,
   'navigationChange'

@@ -120,7 +120,6 @@ async function main() {
         order: c.order,
         category: c.category,
         category_label: c.category_label,
-        // emojis: [] satisfies Category['emojis']
         emojis: []
       }
     ])
