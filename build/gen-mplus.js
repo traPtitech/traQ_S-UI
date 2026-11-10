@@ -19,13 +19,17 @@ const brotliCompress = promisify(zlib.brotliCompress)
 /**
  * M PLUS 1p のヒンティングを除去して Windows でのジャギーを防ぐ。
  * @see https://github.com/traPtitech/traQ_S-UI/issues/311
- * Nerd Fonts Symbols Only の記号を私用領域に限定した別 face として配信する。
+ * Nerd Fonts Symbols Only（Mono 版）の記号を私用領域に限定した別 face として配信する。
  */
 const FONT_CSS_URL =
   'https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700&display=swap'
 const NERD_FONTS_BASE_URL =
   'https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/patched-fonts/NerdFontsSymbolsOnly'
 const NERD_UNICODE_RANGE = 'U+E000-F8FF, U+F0000-FFFFD'
+// コードブロック用の記号 family（src/styles/_markdown.scss で参照）。
+const SYMBOL_CODE_FAMILY = 'traQ Symbols Mono'
+// Mono 版の字形幅は 1em なので、等幅フォントの 1 文字幅（約 0.6em）に縮める。
+const SYMBOL_CODE_SIZE_ADJUST = '60%'
 const outputPath = './public/fonts'
 const rootUrl = '/fonts'
 const MAX_REQUESTS_COUNT = 8
@@ -109,10 +113,11 @@ const downloadAndTransform = async (fontInfo, outputPath) => {
 }
 
 // Nerd Fonts の記号を独立したフォントとして出力する。
+// 全字形の幅が揃った Mono 版を使い、本文とコードブロックで同じファイルを共有する。
 // unicode-range で私用領域に限定するため、記号を表示したときだけ読み込まれる。
 const generateSymbolFont = async outputPath => {
   const res = await request(
-    `${NERD_FONTS_BASE_URL}/SymbolsNerdFont-Regular.ttf`,
+    `${NERD_FONTS_BASE_URL}/SymbolsNerdFontMono-Regular.ttf`,
     'arraybuffer'
   )
   const font = createFont(Buffer.from(res.data), {
@@ -138,8 +143,8 @@ const generateSymbolFont = async outputPath => {
   const remaining = new Set(font.get().glyf)
   font.get().glyf.push(...blankGlyphs.filter(g => !remaining.has(g)))
   const buffer = Buffer.from(font.write({ type: 'woff2', hinting: false }))
-  assertWoff2(buffer, 'SymbolsNerdFont')
-  const filename = generateFilename('SymbolsNerdFont', buffer)
+  assertWoff2(buffer, 'SymbolsNerdFontMono')
+  const filename = generateFilename('SymbolsNerdFontMono', buffer)
   await fs.writeFile(path.join(outputPath, filename), buffer)
   return filename
 }
@@ -237,9 +242,19 @@ const main = async () => {
         }
       ])
     ).values()
+    // コードブロック用。family 内の face が 1 つなので weight は範囲指定でよい。
+    // URL は本文用と共通なので、ダウンロードは 1 回で済む。
+    const symbolCodeFontFace = {
+      'font-family': `'${SYMBOL_CODE_FAMILY}'`,
+      'font-style': 'normal',
+      'font-weight': '100 900',
+      'font-display': 'swap',
+      'size-adjust': SYMBOL_CODE_SIZE_ADJUST,
+      'unicode-range': NERD_UNICODE_RANGE
+    }
     const cssText = [
       ...fonts.map(font => generateFontFace(font, filenames.get(font))),
-      ...[...symbolFontFaces].map(face =>
+      ...[...symbolFontFaces, symbolCodeFontFace].map(face =>
         generateFontFace(face, symbolFilename)
       )
     ].join('\n')

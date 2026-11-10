@@ -42,6 +42,25 @@ export const setupWorkbox = () => {
     })
   )
 
+  // 記号フォントは大きいので precache せず、使われたときにキャッシュする
+  // ファイル名に内容のハッシュが付与されているのでCacheFirst
+  registerRoute(
+    ({ url, sameOrigin }) =>
+      sameOrigin && /^\/fonts\/SymbolsNerdFont[^/]*\.woff2$/.test(url.pathname),
+    new CacheFirst({
+      cacheName: 'symbol-fonts-cache',
+      plugins: [
+        new CacheableResponsePlugin({
+          statuses: [0, 200]
+        }),
+        // 古いハッシュのファイルが溜まらないようにする
+        new ExpirationPlugin({
+          maxEntries: 2
+        })
+      ]
+    })
+  )
+
   // index.htmlが返ってくる箇所は予め指定 (refs src/router/index.ts)
   registerRoute(
     new NavigationRoute(createHandlerBoundToURL('/index.html'), {

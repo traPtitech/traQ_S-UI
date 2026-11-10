@@ -123,7 +123,8 @@ export default defineConfig(({ mode }) => ({
       injectRegister: null,
       srcDir: 'src',
       filename: 'sw.ts',
-      includeAssets: ['fonts/*.woff2'],
+      // 記号フォント (SymbolsNerdFont*) は大きいので precache せず、SW の runtime cache に任せる
+      includeAssets: ['fonts/MPLUS1p.*.woff2'],
       injectManifest: {
         globPatterns: ['**/*.{js,css,html}' /* default */, '**/assets/**/*.svg']
       }

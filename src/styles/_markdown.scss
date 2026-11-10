@@ -56,6 +56,8 @@ html[data-stamp-edge='true'] {
 .markdown-body code,
 .markdown-body pre,
 .markdown-inline-body code {
+  // 'traQ Symbols Mono' は私用領域のみを持つ（build/gen-mplus.js で生成）
   font-family:
-    SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace, 'M PLUS 1p';
+    'traQ Symbols Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo,
+    monospace, 'M PLUS 1p';
 }
