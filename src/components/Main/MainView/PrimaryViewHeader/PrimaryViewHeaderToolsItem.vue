@@ -3,6 +3,8 @@
     :class="$style.container"
     :data-is-disabled="$boolAttr(disabled)"
     :data-header-style="headerStyle"
+    :data-hover-scale="$boolAttr(hoverScale)"
+    :data-animation="animation"
     :title="tooltip"
     @click="onClick"
   >
@@ -20,10 +22,13 @@ const props = withDefaults(
     iconMdi?: boolean
     disabled?: boolean
     tooltip?: string
+    hoverScale?: boolean
+    animation?: 'shake' | 'spinAndPress'
   }>(),
   {
     iconMdi: false,
-    disabled: false
+    disabled: false,
+    hoverScale: false
   }
 )
 
@@ -45,12 +50,54 @@ const onClick = () => {
   cursor: pointer;
   width: 40px;
   height: 40px;
+  &[data-hover-scale] {
+    transition: transform 0.1s;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  &[data-animation='shake'] {
+    animation: shake 0.2s 2;
+  }
+  &[data-animation='spinAndPress'] {
+    animation: spinAndPress 0.5s;
+  }
   &[data-is-disabled] {
     @include color-ui-primary-inactive;
     cursor: not-allowed;
   }
   &[data-header-style='dark'] {
     @include color-common-text-white-primary;
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: scale(1.1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(-10deg);
+  }
+  75% {
+    transform: scale(1.1) rotate(10deg);
+  }
+  100% {
+    transform: scale(1.1) rotate(0deg);
+  }
+}
+
+@keyframes spinAndPress {
+  0% {
+    transform: scale(1.1) rotate(0deg);
+  }
+  60% {
+    transform: scale(1.1) rotate(360deg);
+  }
+  80% {
+    transform: scale(1.3) rotate(360deg);
+  }
+  100% {
+    transform: scale(1.1) rotate(360deg);
   }
 }
 </style>

@@ -4,6 +4,7 @@ import { createTestingPinia } from '@pinia/testing'
 
 import useChannel from '/@/composables/useChannelPath'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useThreadsStore } from '/@/store/entities/threads'
 
 describe('useChannelPath', () => {
   beforeEach(() => {
@@ -20,6 +21,30 @@ describe('useChannelPath', () => {
     }))
     channelsMap.value = new Map(refinedChannels.map(c => [c.id, c]))
     bothChannelsMapFetched.value = true
+  })
+
+  test('thread path contains its parent channel hierarchy and thread name', () => {
+    const { channelsMap } = useChannelsStore()
+    const { threadsMap } = useThreadsStore()
+    const parentId = '442154db-b6c2-4941-801f-60fe14bae4e2'
+    const parent = channelsMap.value.get(parentId)
+    if (!parent) throw new Error('Missing parent channel fixture')
+    threadsMap.value.set('thread-header-thread', {
+      ...parent,
+      id: 'thread-header-thread',
+      name: 'スレッド名',
+      parentId,
+      parentMessageId: 'parent-message',
+      children: []
+    })
+
+    expect(useChannel().channelIdToPath('thread-header-thread')).toEqual([
+      'gps',
+      'times',
+      'traPer1',
+      'sub',
+      'スレッド名'
+    ])
   })
 
   test('channel tree', () => {
