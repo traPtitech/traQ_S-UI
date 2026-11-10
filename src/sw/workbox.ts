@@ -9,6 +9,8 @@ import {
 import { NavigationRoute, registerRoute } from 'workbox-routing'
 import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies'
 
+import { createStaticAssetCachePlugin } from './staticAssetCachePlugin'
+
 declare const self: ServiceWorkerGlobalScope
 
 /**
@@ -34,9 +36,25 @@ export const setupWorkbox = () => {
     // ファイル名にハッシュが付与されているのでCacheFirst
     new CacheFirst({
       cacheName: 'assets-custom-cache',
+      plugins: [createStaticAssetCachePlugin(['audio/mpeg'])]
+    })
+  )
+
+  // 記号フォントと Monaspace は precache せず、使われたときにキャッシュする
+  // ファイル名に内容のハッシュが付与されているのでCacheFirst
+  registerRoute(
+    ({ url, sameOrigin }) =>
+      sameOrigin &&
+      /^\/fonts\/(SymbolsNerdFont|MonaspaceNeon)[^/]*\.woff2$/.test(
+        url.pathname
+      ),
+    new CacheFirst({
+      cacheName: 'runtime-fonts-cache',
       plugins: [
-        new CacheableResponsePlugin({
-          statuses: [0, 200]
+        createStaticAssetCachePlugin(['font/woff2']),
+        // 古いハッシュのファイルが溜まらないようにする
+        new ExpirationPlugin({
+          maxEntries: 6
         })
       ]
     })
