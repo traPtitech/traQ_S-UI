@@ -48,7 +48,7 @@
 <script lang="ts" setup>
 import type { Pin } from '@traptitech/traq'
 
-import { computed, ref, shallowRef } from 'vue'
+import { computed, nextTick, ref, shallowRef } from 'vue'
 import { useRouter } from 'vue-router'
 
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
@@ -61,10 +61,10 @@ import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getFullDayString } from '/@/lib/basic/date'
 import { unrefElement } from '/@/lib/dom/unrefElement'
-import { constructChannelPath, constructUserPath } from '/@/router'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useToastStore } from '/@/store/ui/toast'
 import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 
 import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
@@ -87,6 +87,7 @@ const {
   isLoading,
   lastLoadingDirection,
   unreadSince,
+  loadLatestMessages,
   onLoadFormerMessagesRequest,
   onLoadLatterMessagesRequest
 } = useChannelMessageFetcher(scrollerRef, props)
@@ -111,7 +112,7 @@ const createdDate = (id: MessageId) => {
   return getFullDayString(new Date(message.createdAt))
 }
 
-const { channelsMap, dmChannelsMap } = useChannelsStore()
+const { channelsMap } = useChannelsStore()
 const isArchived = computed(
   () => channelsMap.value.get(props.channelId)?.archived ?? false
 )
@@ -125,17 +126,44 @@ const resetIsReachedLatest = () => {
   isReachedLatest.value = false
 }
 
-const showToNewMessageButton = ref(false)
-const { channelIdToPathString } = useChannelPath()
-const toNewMessage = () => {
+const isFarFromLatest = ref(false)
+const showToNewMessageButton = computed(
+  () => isFarFromLatest.value || (!isLoading.value && !isReachedLatest.value)
+)
+const handleScroll = () => {
+  const element = unrefElement(scrollerRef)
+  if (!element) return
+
+  const { scrollTop, scrollHeight, clientHeight } = element
+  isFarFromLatest.value = scrollHeight - 2 * clientHeight > scrollTop
+}
+
+const { channelIdToLink } = useChannelPath()
+const { addErrorToast } = useToastStore()
+const toNewMessage = async () => {
+  const channelId = props.channelId
+
   if (props.entryMessageId) {
-    const channelPath = channelIdToPathString(props.channelId) as string
-    if (dmChannelsMap.value.has(props.channelId)) {
-      router.replace(constructUserPath(channelPath))
-    } else {
-      router.replace(constructChannelPath(channelPath))
+    const link = channelIdToLink(channelId)
+    if (link) {
+      await router.replace(link)
+
+      return
     }
   }
+
+  try {
+    if (!(await loadLatestMessages())) return
+  } catch {
+    if (props.channelId === channelId && scrollerRef.value) {
+      addErrorToast('最新メッセージを取得できませんでした')
+    }
+
+    return
+  }
+
+  await nextTick()
+  if (props.channelId !== channelId) return
 
   const element = unrefElement(scrollerRef)
   if (!element) return
@@ -143,16 +171,7 @@ const toNewMessage = () => {
   element.scrollTo({
     top: element.scrollHeight
   })
-}
-
-const handleScroll = () => {
-  const element = unrefElement(scrollerRef)
-  if (!element || isLoading.value) return
-  const { scrollTop, scrollHeight, clientHeight } = element
-  showToNewMessageButton.value = scrollHeight - 2 * clientHeight > scrollTop
-  if (!isReachedLatest.value) {
-    showToNewMessageButton.value = true
-  }
+  handleScroll()
 }
 </script>
 
