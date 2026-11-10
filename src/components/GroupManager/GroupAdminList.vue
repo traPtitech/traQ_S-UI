@@ -1,7 +1,12 @@
 <template>
   <div>
     <div :class="$style.header">
-      <div :class="$style.label">管理者</div>
+      <div :class="$style.label">
+        管理者
+        <span :class="$style.count">
+          <SpinNumber :value="admins.length" />
+        </span>
+      </div>
       <AIcon
         name="plus-circle-outline"
         mdi
@@ -14,6 +19,7 @@
         v-for="admin in admins"
         :id="admin"
         :key="admin"
+        :disabled="admins.length <= 1"
         @delete="onDelete(admin)"
       />
     </div>
@@ -22,6 +28,7 @@
 
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
+import SpinNumber from '/@/components/UI/SpinNumber.vue'
 import apis from '/@/lib/apis'
 import { useModalStore } from '/@/store/ui/modal'
 import { useToastStore } from '/@/store/ui/toast'
@@ -45,6 +52,7 @@ const onClickAdd = () => {
 }
 
 const onDelete = async (id: string) => {
+  if (props.admins.length <= 1) return
   if (!confirm('本当にこのグループ管理者を削除しますか？')) return
   try {
     await apis.removeUserGroupAdmin(props.groupId, id)
@@ -64,6 +72,19 @@ const onDelete = async (id: string) => {
   flex: 1;
   margin-bottom: 4px;
   font-weight: bold;
+}
+.count {
+  margin-left: 0.2em;
+  overflow: hidden;
+  display: inline-flex;
+  &::before {
+    content: '(';
+    display: block;
+  }
+  &::after {
+    content: ')';
+    display: block;
+  }
 }
 .addIcon {
   @include color-ui-primary-inactive;

@@ -25,10 +25,9 @@ const usePageSwitch = (props: { type: PageType }) => {
   })
 
   const isConsent = computed(() => props.type === 'consent')
-  const isRegistration = computed(() => props.type === 'registration')
 
   const updateState = async () => {
-    await fetchMe(isRegistration.value ? false : true)
+    await fetchMe(false)
     const isLoggedIn = detail.value !== undefined
 
     if (isConsent.value) {

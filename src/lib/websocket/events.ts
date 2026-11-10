@@ -3,7 +3,8 @@ import type {
   MyChannelViewState,
   QallRoomStateChangedEvent,
   QallSoundboardItemCreatedEvent,
-  QallSoundboardItemDeletedEvent
+  QallSoundboardItemDeletedEvent,
+  UserOfflineEvent
 } from '@traptitech/traq'
 
 import type { WebRTCUserStateSessions } from '/@/lib/apis'
@@ -62,10 +63,6 @@ export type UserTagsUpdatedEvent = {
 
 export type UserIconUpdatedEvent = UserIdBody
 export type UserOnlineEvent = UserIdBody
-export type UserOfflineEvent = UserIdBody & {
-  // Optional for compatibility with servers that only send the user ID.
-  last_online?: string
-}
 
 export type UserWebRTCStateChangedEvent = {
   user_id: UserId

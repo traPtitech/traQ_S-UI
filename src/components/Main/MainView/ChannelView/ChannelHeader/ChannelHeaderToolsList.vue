@@ -12,30 +12,32 @@
         :tooltip="'Qallボタン'"
         @click="joinQall(props.channelId)"
       />
-      <HeaderToolsItem
-        :class="$style.notificationIcon"
-        :data-state="subscriptionChangeInfo.state"
-        :icon-name="subscriptionChangeInfo.iconName"
-        :disabled="!subscriptionChangeInfo.canChange"
-        :tooltip="subscriptionChangeInfo.tooltip"
-        @click="changeToNextSubscriptionLevel"
-      />
     </template>
     <HeaderToolsItem
-      v-if="isStarred"
-      :class="$style.starIcon"
-      data-is-starred
-      icon-name="star"
-      tooltip="お気に入りから外す"
-      @click="unstarChannel"
+      :class="$style.notificationIcon"
+      :data-state="subscriptionChangeInfo.state"
+      :icon-name="subscriptionChangeInfo.iconName"
+      :disabled="!subscriptionChangeInfo.canChange"
+      :tooltip="subscriptionChangeInfo.tooltip"
+      @click="changeToNextSubscriptionLevel"
     />
-    <HeaderToolsItem
-      v-else
-      :class="$style.starIcon"
-      icon-name="star-outline"
-      tooltip="お気に入りに追加する"
-      @click="starChannel"
-    />
+    <template v-if="!isMobile">
+      <HeaderToolsItem
+        v-if="isStarred"
+        :class="$style.starIcon"
+        data-is-starred
+        icon-name="star"
+        tooltip="お気に入りから外す"
+        @click="unstarChannel"
+      />
+      <HeaderToolsItem
+        v-else
+        :class="$style.starIcon"
+        icon-name="star-outline"
+        tooltip="お気に入りに追加する"
+        @click="starChannel"
+      />
+    </template>
     <div :class="$style.moreButton">
       <slot />
       <HeaderToolsItem

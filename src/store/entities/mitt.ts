@@ -20,6 +20,7 @@ export type EntityEventMap = {
     oldChannel: Channel
     oldPath: string
   }
+  deleteChannel: void
 
   setStamp: Stamp
   setStamps: void

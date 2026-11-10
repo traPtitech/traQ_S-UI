@@ -13,6 +13,7 @@
           :class="$style.toolsMenu"
           :channel-id="channelId"
           :show-notification-setting-btn="!channelState.forced"
+          :is-starred="channelState.starred"
           :is-archived="channelState.archived"
           @click-item="closePopupMenu"
         />

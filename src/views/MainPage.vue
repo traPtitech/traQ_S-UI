@@ -67,7 +67,8 @@ const useStyles = (
   })
 
 const useCommandPaletteShortcutKey = () => {
-  const { mode, openCommandPalette, closeCommandPalette } = useCommandPalette()
+  const { presentation, openCommandPalette, closeCommandPalette } =
+    useCommandPalette()
 
   const isSearchEnabled = window.traQConfig.enableSearch ?? false
 
@@ -76,7 +77,7 @@ const useCommandPaletteShortcutKey = () => {
       if (e.key.toLowerCase() === 'f' && e.shiftKey && e.ctrlKey) {
         e.preventDefault()
 
-        if (mode.value === 'search') {
+        if (presentation.value?.mode === 'search') {
           closeCommandPalette()
         } else {
           openCommandPalette('search')
@@ -86,10 +87,10 @@ const useCommandPaletteShortcutKey = () => {
       if (e.key === '/' && e.ctrlKey) {
         e.preventDefault()
 
-        if (mode.value === 'search') {
+        if (presentation.value?.mode === 'search') {
           closeCommandPalette()
         } else {
-          openCommandPalette('search', 'in:here ')
+          openCommandPalette('search', { initialInput: 'in:here ' })
         }
         return
       }
@@ -109,6 +110,7 @@ import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPa
 import MainView from '/@/components/Main/MainView/MainView.vue'
 import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue'
 import NavigationBar from '/@/components/Main/NavigationBar/NavigationBar.vue'
+import { provideNavigationVisibility } from '/@/components/Main/NavigationBar/composables/useNavigationVisibility'
 
 import useViewStateSender from './composables/useViewStateSender'
 
@@ -132,6 +134,8 @@ useCommandPaletteShortcutKey()
 
 const { isMobile } = useResponsive()
 const shouldShowNav = computed(() => !isMobile.value || isNavAppeared.value)
+provideNavigationVisibility(shouldShowNav)
+
 const { closeNav } = useNavigationController()
 const hideOuter = computed(
   () => isMobile.value && isNavCompletelyAppeared.value

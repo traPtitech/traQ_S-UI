@@ -9,7 +9,7 @@
           :name="iconName"
           :mdi="iconMdi"
         />
-        {{ title }}
+        <slot name="title" />
       </h1>
       <h2 :class="$style.subtitle" :data-has-icon="$boolAttr(!iconName)">
         <slot name="subtitle" />
@@ -35,14 +35,11 @@ withDefaults(
   defineProps<{
     iconMdi?: boolean
     iconName?: string
-    title: string
-    subtitle?: string
     returnButton?: boolean
     editButton?: boolean
   }>(),
   {
     iconMdi: false,
-    subtitle: '',
     returnButton: false,
     editButton: false
   }
@@ -61,6 +58,8 @@ const emit = defineEmits<{
 }
 .content {
   width: 100%;
+  flex: 1;
+  min-width: 0;
 }
 .returnButton {
   @include color-ui-primary;
@@ -99,5 +98,6 @@ const emit = defineEmits<{
 .editButton {
   @include color-ui-secondary;
   cursor: pointer;
+  flex-shrink: 0;
 }
 </style>

@@ -15,12 +15,14 @@
         :class="$style.controlIcon"
         @click="emit('edit')"
       />
-      <AIcon
-        name="close"
-        mdi
+      <button
+        aria-label="ユーザーを削除"
+        :disabled
         :class="$style.controlIcon"
         @click="emit('delete')"
-      />
+      >
+        <AIcon name="close" mdi />
+      </button>
     </div>
   </div>
 </template>
@@ -37,9 +39,11 @@ const props = withDefaults(
   defineProps<{
     id: UserId
     showEditButton?: boolean
+    disabled?: boolean
   }>(),
   {
-    showEditButton: false
+    showEditButton: false,
+    disabled: false
   }
 )
 
@@ -81,11 +85,26 @@ const user = computed(() => usersMap.value.get(props.id))
     opacity: 1;
   }
 }
+.controls:has(.controlIcon:focus-visible) {
+  opacity: 1;
+}
+
 .controlIcon {
   @include color-ui-secondary-inactive;
+  display: flex;
+  align-items: center;
   cursor: pointer;
   &:hover {
     @include color-ui-secondary;
+  }
+  &:disabled {
+    cursor: not-allowed;
+    @include color-ui-secondary-inactive;
+  }
+  &:focus {
+    @include color-ui-secondary;
+    outline: 2px solid #6698aa;
+    outline-offset: 2px;
   }
 }
 </style>

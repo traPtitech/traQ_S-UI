@@ -69,3 +69,25 @@ export const isDefined = <T>(o: T): o is Exclude<T, undefined> => {
 }
 
 export const unique = <T>(a: T[]) => [...new Set(a)]
+
+/** 比較結果が負から非負へ切り替わる先頭の添字。該当するものがなければ配列長を返す。 */
+export const lowerBound = <T>(
+  values: readonly T[],
+  compare: (value: T) => number
+): number => {
+  let left = 0
+  let right = values.length
+
+  while (left < right) {
+    const middle = Math.floor((left + right) / 2)
+    const value = values[middle] as T
+
+    if (compare(value) < 0) {
+      left = middle + 1
+    } else {
+      right = middle
+    }
+  }
+
+  return left
+}

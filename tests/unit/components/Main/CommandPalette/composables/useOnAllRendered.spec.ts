@@ -1,0 +1,28 @@
+import { nextTick, ref } from 'vue'
+
+import useOnAllRenderedWithoutSetup from '/@/components/Main/CommandPalette/composables/useOnAllRendered'
+
+import { withSetup } from '../../../../testUtils'
+
+const useOnAllRendered = withSetup(useOnAllRenderedWithoutSetup)
+
+describe('useOnAllRendered', () => {
+  it('should work', async () => {
+    const list = ref(['a', 'b'])
+    const f = vi.fn()
+
+    const [{ onAllRendered, didRender }] = useOnAllRendered(list)
+    onAllRendered(f)
+    expect(f).not.toHaveBeenCalled()
+
+    didRender('a')
+    await nextTick()
+    expect(f).not.toHaveBeenCalled()
+
+    didRender('b')
+    await nextTick()
+    expect(f).toHaveBeenCalledOnce()
+  })
+
+  // listはreactiveではない
+})

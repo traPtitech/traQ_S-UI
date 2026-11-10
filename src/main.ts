@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 
 import App from './App.vue'
 import boolAttr from './bool-attr'
+import { initializeMeta } from './lib/apis'
 import { deleteStampCacheIDB } from './lib/stampCache'
 import { setupGlobalFuncs } from './markdown-bridge'
 import router from './router'
@@ -10,18 +11,24 @@ import './styles/global.scss'
 
 import('katex/dist/katex.css')
 
-setupGlobalFuncs()
+const bootstrap = async () => {
+  await initializeMeta()
 
-const app = createApp(App)
-app.use(router)
-app.use(store)
+  setupGlobalFuncs()
 
-app.use(boolAttr)
+  const app = createApp(App)
+  app.use(router)
+  app.use(store)
 
-app.mount('#app')
+  app.use(boolAttr)
 
-if (import.meta.env.MODE === 'development') {
-  app.config.performance = true
+  app.mount('#app')
+
+  if (import.meta.env.MODE === 'development') {
+    app.config.performance = true
+  }
+
+  deleteStampCacheIDB()
 }
 
-deleteStampCacheIDB()
+bootstrap()
