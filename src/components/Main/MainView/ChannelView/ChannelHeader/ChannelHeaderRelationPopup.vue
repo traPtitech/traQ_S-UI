@@ -65,12 +65,13 @@ import useBoxSize from '/@/composables/dom/useBoxSize'
 import useRelatedChannels from '/@/composables/useRelatedChannels'
 import { safeMod } from '/@/lib/basic/arithmetic'
 import type { Point } from '/@/lib/basic/point'
+import type { ChannelId } from '/@/types/entity-ids'
 
 import ChannelHeaderRelationPanel from './ChannelHeaderRelationPanel.vue'
 
 interface Props {
   rightPosition: Point
-  channelId: string
+  channelId: ChannelId
   popupId: string
 }
 const props = defineProps<Props>()

@@ -99,10 +99,7 @@ type EmojiCategory = {
   category: string
   category_label: string
 }
-type Category = {
-  order: number
-  category: string
-  category_label: string
+type EmojiCategoryWithEntries = EmojiCategory & {
   emojis: { name: string; order: number }[]
 }
 async function fetchData() {
@@ -116,7 +113,7 @@ async function fetchData() {
 async function main() {
   const { emojis, categories } = await fetchData()
 
-  const categoryMap: Record<string, Category> = Object.fromEntries(
+  const categoryMap = Object.fromEntries<EmojiCategoryWithEntries>(
     categories.map(c => [
       c.category,
       {
@@ -125,7 +122,7 @@ async function main() {
         category_label: c.category_label,
         // emojis: [] satisfies Category['emojis']
         emojis: []
-      } satisfies Category
+      }
     ])
   )
   categoryMap['regional'] = {
