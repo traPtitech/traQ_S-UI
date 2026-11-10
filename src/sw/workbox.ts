@@ -9,6 +9,8 @@ import {
 import { NavigationRoute, registerRoute } from 'workbox-routing'
 import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies'
 
+import { createStaticAssetCachePlugin } from './staticAssetCachePlugin'
+
 declare const self: ServiceWorkerGlobalScope
 
 /**
@@ -34,11 +36,7 @@ export const setupWorkbox = () => {
     // ファイル名にハッシュが付与されているのでCacheFirst
     new CacheFirst({
       cacheName: 'assets-custom-cache',
-      plugins: [
-        new CacheableResponsePlugin({
-          statuses: [0, 200]
-        })
-      ]
+      plugins: [createStaticAssetCachePlugin(['audio/mpeg'])]
     })
   )
 
@@ -53,9 +51,7 @@ export const setupWorkbox = () => {
     new CacheFirst({
       cacheName: 'runtime-fonts-cache',
       plugins: [
-        new CacheableResponsePlugin({
-          statuses: [0, 200]
-        }),
+        createStaticAssetCachePlugin(['font/woff2']),
         // 古いハッシュのファイルが溜まらないようにする
         new ExpirationPlugin({
           maxEntries: 6
