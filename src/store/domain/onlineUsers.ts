@@ -9,7 +9,6 @@ import type { UserId } from '/@/types/entity-ids'
 
 const useOnlineUsersPinia = defineStore('domain/onlineUsers', () => {
   const onlineUsers = ref(new Set<UserId>())
-  // Last offline timestamps supplied by the server, never the browser clock.
   const lastOnlineAt = ref(new Map<UserId, string>())
   const onlineUsersFetched = ref(false)
   let pendingFetch:
