@@ -12,58 +12,55 @@ const useOnlineUsersPinia = defineStore('domain/onlineUsers', () => {
   // Last offline timestamps supplied by the server, never the browser clock.
   const lastOnlineAt = ref(new Map<UserId, string>())
   const onlineUsersFetched = ref(false)
-  let changesDuringFetch: Map<UserId, boolean> | undefined
-  let currentFetch: Promise<Set<UserId>> | undefined
+  let pendingFetch:
+    { changes: Map<UserId, boolean>; promise: Promise<void> } | undefined
 
-  const fetchOnlineUsersFromApi = async () => {
+  const fetchOnlineUsersFromApi = async (changes: Map<UserId, boolean>) => {
+    const { data } = await apis.getOnlineUsers()
+    if (pendingFetch?.changes !== changes) return
+
+    const userIds = new Set(data)
+    changes.forEach((online, id) => {
+      if (online) userIds.add(id)
+      else userIds.delete(id)
+    })
+
+    onlineUsers.value = userIds
+    onlineUsersFetched.value = true
+  }
+
+  const fetchOnlineUsers = async () => {
+    if (onlineUsersFetched.value) return
+    if (pendingFetch) return pendingFetch.promise
+
     const changes = new Map<UserId, boolean>()
-    changesDuringFetch = changes
+    const promise = fetchOnlineUsersFromApi(changes)
+    pendingFetch = { changes, promise }
+
     try {
-      const { data: userIdsArray } = await apis.getOnlineUsers()
-      const userIds = new Set(userIdsArray)
-      changes.forEach((online, id) => {
-        if (online) userIds.add(id)
-        else userIds.delete(id)
-      })
-      onlineUsers.value = userIds
-      onlineUsersFetched.value = true
-      return userIds
+      await promise
     } finally {
-      changesDuringFetch = undefined
+      if (pendingFetch?.changes === changes) pendingFetch = undefined
     }
   }
 
-  const fetchOnlineUsers = async ({
-    ignoreCache = false
-  }: { ignoreCache?: boolean } = {}) => {
-    if (onlineUsersFetched.value && !ignoreCache) {
-      return onlineUsers.value
-    }
-
-    if (currentFetch) return currentFetch
-
-    currentFetch = fetchOnlineUsersFromApi()
-    try {
-      return await currentFetch
-    } finally {
-      currentFetch = undefined
-    }
+  const setUserOnline = (id: UserId, online: boolean) => {
+    if (online) onlineUsers.value.add(id)
+    else onlineUsers.value.delete(id)
+    pendingFetch?.changes.set(id, online)
   }
 
-  wsListener.on('USER_ONLINE', ({ id }) => {
-    onlineUsers.value.add(id)
-    changesDuringFetch?.set(id, true)
-  })
+  wsListener.on('USER_ONLINE', ({ id }) => setUserOnline(id, true))
+
   wsListener.on('USER_OFFLINE', ({ id, last_online }) => {
-    onlineUsers.value.delete(id)
+    setUserOnline(id, false)
     if (last_online) lastOnlineAt.value.set(id, last_online)
-    changesDuringFetch?.set(id, false)
   })
 
-  wsListener.on('reconnect', async () => {
-    const pendingFetch = currentFetch
-    if (pendingFetch) await pendingFetch.catch(() => undefined)
-    await fetchOnlineUsers({ ignoreCache: true }).catch(() => undefined)
+  wsListener.on('reconnect', () => {
+    pendingFetch = undefined
+    onlineUsersFetched.value = false
+    fetchOnlineUsers().catch(() => undefined)
   })
 
   return {

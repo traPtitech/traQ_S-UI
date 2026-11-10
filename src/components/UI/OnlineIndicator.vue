@@ -34,7 +34,8 @@ const props = withDefaults(
 
 const { onlineUsers, fetchOnlineUsers } = useOnlineUsers()
 
-fetchOnlineUsers()
+fetchOnlineUsers().catch(() => void 0)
+
 const isOnline = computed(() => onlineUsers.value.has(props.userId))
 
 const statusText = computed(() =>
