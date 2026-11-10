@@ -145,6 +145,19 @@ $ npm run test:e2e:only-run-headless
 $ npm run test:e2e:only-run-headless -- --spec tests/e2e/specs/login.spec.ts
 ```
 
+#### チャンネル一覧のバーチャルスクロールの e2e テスト
+
+```shell
+$ npx playwright install chromium firefox webkit
+$ npm run test:e2e-virtual-scroll
+```
+
+環境を限定する場合は Playwright の project を指定します。
+
+```shell
+$ npm run test:e2e-virtual-scroll -- --project=mobile-chromium --project=mobile-webkit --project=tablet-webkit
+```
+
 #### lint の実行と auto-fix による修正
 
 ```shell
