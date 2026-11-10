@@ -1,6 +1,6 @@
 services:
   backend:
-    image: ghcr.io/traptitech/traq:3.30.0@sha256:5b6ff1cc83c6413e0e5c96dd8279caa36c4ef2441beeed342c714f748215e769
+    image: ghcr.io/traptitech/traq:3.31.0@sha256:e362c1eb05a107410e325314bdb4233a431cd302a7a4ae677553204ac1ff1de7
     command: [serve, --dev, --skip-init-emojis]
     environment:
       TRAQ_PORT: '3000'
