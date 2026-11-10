@@ -52,12 +52,3 @@ html[data-stamp-edge='true'] {
 .markdown-body a {
   font-variant-ligatures: no-contextual;
 }
-
-.markdown-body code,
-.markdown-body pre,
-.markdown-inline-body code {
-  // 'traQ Symbols Mono'（私用領域のみ）と 'Monaspace Neon' は build/gen-mplus.js で配信
-  font-family:
-    'traQ Symbols Mono', 'Monaspace Neon', SFMono-Regular, Consolas,
-    'Liberation Mono', Menlo, monospace, 'M PLUS 1p';
-}
