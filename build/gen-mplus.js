@@ -20,6 +20,7 @@ const brotliCompress = promisify(zlib.brotliCompress)
  * M PLUS 1p のヒンティングを除去して Windows でのジャギーを防ぐ。
  * @see https://github.com/traPtitech/traQ_S-UI/issues/311
  * Nerd Fonts Symbols Only（Mono 版）の記号を私用領域に限定した別 face として配信する。
+ * コードブロック用に Monaspace Neon を配信する。
  */
 const FONT_CSS_URL =
   'https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700&display=swap'
@@ -28,8 +29,16 @@ const NERD_FONTS_BASE_URL =
 const NERD_UNICODE_RANGE = 'U+E000-F8FF, U+F0000-FFFFD'
 // コードブロック用の記号 family（src/styles/_markdown.scss で参照）。
 const SYMBOL_CODE_FAMILY = 'traQ Symbols Mono'
-// Mono 版の字形幅は 1em なので、等幅フォントの 1 文字幅（約 0.6em）に縮める。
-const SYMBOL_CODE_SIZE_ADJUST = '60%'
+// Mono 版の字形幅は 1em なので、Monaspace の 1 文字幅（0.62em）に縮める。
+const SYMBOL_CODE_SIZE_ADJUST = '62%'
+// コードブロック用の等幅フォント（src/styles/_markdown.scss で参照）。
+const MONASPACE_BASE_URL =
+  'https://raw.githubusercontent.com/githubnext/monaspace/v1.400'
+const MONASPACE_FAMILY = 'Monaspace Neon'
+const MONASPACE_FACES = [
+  { weight: '400', file: 'MonaspaceNeon-Regular.woff2' },
+  { weight: '700', file: 'MonaspaceNeon-Bold.woff2' }
+]
 const outputPath = './public/fonts'
 const rootUrl = '/fonts'
 const MAX_REQUESTS_COUNT = 8
@@ -149,6 +158,21 @@ const generateSymbolFont = async outputPath => {
   return filename
 }
 
+// Monaspace は OFL の予約フォント名を持ち、改変版はその名前を使えないため、
+// 配布されている WOFF2 をそのまま配信する（texture healing 用の GSUB も保たれる）。
+const downloadMonaspace = async (face, outputPath) => {
+  const url = `${MONASPACE_BASE_URL}/fonts/Web%20Fonts/Static%20Web%20Fonts/Monaspace%20Neon/${face.file}`
+  const res = await request(url, 'arraybuffer')
+  const buffer = Buffer.from(res.data)
+  assertWoff2(buffer, url)
+  const filename = generateFilename(
+    `${MONASPACE_FAMILY}.${face.weight}`,
+    buffer
+  )
+  await fs.writeFile(path.join(outputPath, filename), buffer)
+  return filename
+}
+
 const generateFontFace = (font, filename) => {
   const newFont = {
     ...font,
@@ -169,7 +193,8 @@ const hasFontCache = async (outputPath, version) => {
     for (const filename of [
       'fonts.css',
       'fonts.css.br',
-      'NerdFonts-LICENSE.txt'
+      'NerdFonts-LICENSE.txt',
+      'Monaspace-LICENSE.txt'
     ]) {
       if (!manifest.files[filename]) return false
     }
@@ -204,6 +229,18 @@ const main = async () => {
     let symbolFilename
     const jobs = fonts.map(font => async () => {
       filenames.set(font, await downloadAndTransform(font, stagingPath))
+    })
+    for (const face of MONASPACE_FACES) {
+      jobs.push(async () => {
+        filenames.set(face, await downloadMonaspace(face, stagingPath))
+      })
+    }
+    jobs.push(async () => {
+      const res = await request(`${MONASPACE_BASE_URL}/LICENSE`)
+      await fs.writeFile(
+        path.join(stagingPath, 'Monaspace-LICENSE.txt'),
+        res.data
+      )
     })
     jobs.push(async () => {
       symbolFilename = await generateSymbolFont(stagingPath)
@@ -252,8 +289,20 @@ const main = async () => {
       'size-adjust': SYMBOL_CODE_SIZE_ADJUST,
       'unicode-range': NERD_UNICODE_RANGE
     }
+    const monaspaceFontFaces = MONASPACE_FACES.map(face =>
+      generateFontFace(
+        {
+          'font-family': `'${MONASPACE_FAMILY}'`,
+          'font-style': 'normal',
+          'font-weight': face.weight,
+          'font-display': 'swap'
+        },
+        filenames.get(face)
+      )
+    )
     const cssText = [
       ...fonts.map(font => generateFontFace(font, filenames.get(font))),
+      ...monaspaceFontFaces,
       ...[...symbolFontFaces, symbolCodeFontFace].map(face =>
         generateFontFace(face, symbolFilename)
       )

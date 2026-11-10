@@ -42,20 +42,23 @@ export const setupWorkbox = () => {
     })
   )
 
-  // 記号フォントは大きいので precache せず、使われたときにキャッシュする
+  // 記号フォントと Monaspace は precache せず、使われたときにキャッシュする
   // ファイル名に内容のハッシュが付与されているのでCacheFirst
   registerRoute(
     ({ url, sameOrigin }) =>
-      sameOrigin && /^\/fonts\/SymbolsNerdFont[^/]*\.woff2$/.test(url.pathname),
+      sameOrigin &&
+      /^\/fonts\/(SymbolsNerdFont|MonaspaceNeon)[^/]*\.woff2$/.test(
+        url.pathname
+      ),
     new CacheFirst({
-      cacheName: 'symbol-fonts-cache',
+      cacheName: 'runtime-fonts-cache',
       plugins: [
         new CacheableResponsePlugin({
           statuses: [0, 200]
         }),
         // 古いハッシュのファイルが溜まらないようにする
         new ExpirationPlugin({
-          maxEntries: 2
+          maxEntries: 6
         })
       ]
     })

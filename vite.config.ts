@@ -123,7 +123,8 @@ export default defineConfig(({ mode }) => ({
       injectRegister: null,
       srcDir: 'src',
       filename: 'sw.ts',
-      // 記号フォント (SymbolsNerdFont*) は大きいので precache せず、SW の runtime cache に任せる
+      // 記号フォント (SymbolsNerdFont*) と Monaspace (MonaspaceNeon*) はコードブロック等でしか
+      // 使わないので precache せず、SW の runtime cache に任せる
       includeAssets: ['fonts/MPLUS1p.*.woff2'],
       injectManifest: {
         globPatterns: ['**/*.{js,css,html}' /* default */, '**/assets/**/*.svg']
