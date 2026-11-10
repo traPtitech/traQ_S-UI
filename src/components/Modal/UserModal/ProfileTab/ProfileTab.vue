@@ -22,6 +22,7 @@ import type { User, UserDetail } from '@traptitech/traq'
 
 import { computed } from 'vue'
 
+import { compareDateString } from '/@/lib/basic/date'
 import { useOnlineUsers } from '/@/store/domain/onlineUsers'
 
 import AccountList from './AccountList.vue'
@@ -46,9 +47,7 @@ const lastOnline = computed(() => {
   if (!eventLastOnline) return serverLastOnline ?? undefined
   if (!serverLastOnline) return eventLastOnline
 
-  // Both values come from the server; a delayed HTTP response may be older
-  // than an event, while a reconnect may have missed a newer offline event.
-  return Date.parse(eventLastOnline) > Date.parse(serverLastOnline)
+  return compareDateString(eventLastOnline, serverLastOnline) > 0
     ? eventLastOnline
     : serverLastOnline
 })
