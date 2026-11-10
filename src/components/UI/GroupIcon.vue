@@ -1,9 +1,13 @@
 <template>
   <div
     :role="preventModal ? 'img' : 'button'"
+    :tabindex="preventModal ? undefined : 0"
+    :aria-label="group?.name"
     :class="[$style.container]"
     :style="styles.container"
     @click="onClick"
+    @keydown.enter="onClick"
+    @keydown.space.prevent="onClick"
   ></div>
 </template>
 
@@ -38,7 +42,10 @@ watch(
   () => props.groupId,
   groupId => {
     if (!groupId) return
-    fetchUserGroup({ userGroupId: groupId })
+    fetchUserGroup({ userGroupId: groupId }).catch(e => {
+      // eslint-disable-next-line no-console
+      console.warn('Failed to fetch group for GroupIcon', e)
+    })
   },
   { immediate: true }
 )
@@ -58,7 +65,7 @@ const styles = reactive({
 })
 
 const onClick = () => {
-  if (!group.value) return
+  if (props.preventModal || !group.value) return
   pushModal({
     type: 'group',
     id: group.value?.id

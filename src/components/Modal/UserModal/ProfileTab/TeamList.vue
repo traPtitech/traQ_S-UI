@@ -1,6 +1,7 @@
 <template>
   <section>
     <ProfileHeader text="所属班" />
+    <template v-if="!userGroupsMapFetched"> 読み込み中... </template>
     <template v-if="teamGroups.length === 0">
       所属している班はありません
     </template>
@@ -27,7 +28,7 @@ const props = defineProps<{
   userId: string
 }>()
 
-const { getTeamGroupsByUserId } = useGroupsStore()
+const { getTeamGroupsByUserId, userGroupsMapFetched } = useGroupsStore()
 const teamGroups = computed(() => getTeamGroupsByUserId(props.userId))
 </script>
 
