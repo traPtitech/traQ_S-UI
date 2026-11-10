@@ -223,18 +223,25 @@ const main = async () => {
       )
     }
 
-    // 記号は同じ family の別 face とし、1 ファイルで 400〜700 を兼ねる。
+    // 記号 face も既存の各 weight/style と同じ記述子で定義する。
     // unicode-range が重なる場合は後に定義した face が優先されるため最後に置く。
-    const symbolFontFace = {
-      'font-family': fonts[0]['font-family'],
-      'font-style': 'normal',
-      'font-weight': '400 700',
-      'font-display': 'swap',
-      'unicode-range': NERD_UNICODE_RANGE
-    }
+    const symbolFontFaces = new Map(
+      fonts.map(font => [
+        `${font['font-family']}:${font['font-style']}:${font['font-weight']}`,
+        {
+          'font-family': font['font-family'],
+          'font-style': font['font-style'],
+          'font-weight': font['font-weight'],
+          'font-display': font['font-display'] ?? 'swap',
+          'unicode-range': NERD_UNICODE_RANGE
+        }
+      ])
+    ).values()
     const cssText = [
       ...fonts.map(font => generateFontFace(font, filenames.get(font))),
-      generateFontFace(symbolFontFace, symbolFilename)
+      ...[...symbolFontFaces].map(face =>
+        generateFontFace(face, symbolFilename)
+      )
     ].join('\n')
     const { code: minifiedCss } = lightningcss.transform({
       filename: 'fonts.css',
