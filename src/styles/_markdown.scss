@@ -52,3 +52,10 @@ html[data-stamp-edge='true'] {
 .markdown-body a {
   font-variant-ligatures: no-contextual;
 }
+
+.markdown-body code,
+.markdown-body pre,
+.markdown-inline-body code {
+  font-family:
+    SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace, 'M PLUS 1p';
+}
