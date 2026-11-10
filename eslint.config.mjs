@@ -1,37 +1,27 @@
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import stylistic from '@stylistic/eslint-plugin'
+import tsLint from '@typescript-eslint/eslint-plugin'
 import prettier from 'eslint-config-prettier'
 import unusedImports from 'eslint-plugin-unused-imports'
 import vueLint from 'eslint-plugin-vue'
 import globals from 'globals'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all
-})
 
 export default [
   {
     ignores: [
       '**/coverage',
       '**/dist',
+      '**/storybook',
       '**/node_modules',
-      'public/new-relic.js',
       'tests/e2e/report/**',
       'tests/e2e/results/**'
     ]
   },
-  ...compat.extends(
-    'eslint:recommended',
-    './eslint-vue-ts-recommended.cjs',
-    'plugin:@typescript-eslint/recommended'
+  js.configs.recommended,
+  ...tsLint.configs['flat/recommended'].map(config =>
+    config.name === 'typescript-eslint/eslint-recommended'
+      ? { ...config, files: [...config.files, '**/*.vue'] }
+      : config
   ),
   ...vueLint.configs['flat/recommended'],
   prettier,
@@ -151,7 +141,7 @@ export default [
     }
   },
   {
-    files: ['**/tests/e2e/**/*.{js,cjs,jsx,ts,tsx}'],
+    files: ['**/tests/e2e/**/*.{js,cjs,jsx,ts,tsx}', 'scripts/**/*.mjs'],
 
     languageOptions: {
       globals: {

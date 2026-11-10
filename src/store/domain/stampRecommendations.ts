@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import apis from '/@/lib/apis'
+import { createSingleflight } from '/@/lib/basic/async'
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampsStore } from '/@/store/entities/stamps'
@@ -44,21 +45,25 @@ const useStampRecommendationsPinia = defineStore(
       )
     }
 
+    const syncStampRecommendations = createSingleflight(async () => {
+      const { data } = await apis.getMyStampRecommendations()
+      stampToRecommendationScore.value = new Map(
+        data.map(h => [h.stampId, h.score])
+      )
+      stampRecommendationsFetched.value = true
+    })
+
     const fetchStampRecommendations = async ({
       ignoreCache = false
     }: { ignoreCache?: boolean } = {}) => {
       if (!ignoreCache && stampRecommendationsFetched.value) return
 
-      await apis.getMyStampRecommendations().then(res => {
-        stampToRecommendationScore.value = new Map(
-          res.data.map(h => [h.stampId, h.score])
-        )
-      })
-      stampRecommendationsFetched.value = true
+      await syncStampRecommendations()
     }
 
     return {
       stampRecommendations,
+      stampRecommendationsFetched,
       recordStampUsage,
       fetchStampRecommendations
     }
@@ -71,16 +76,26 @@ export const useStampRecommendations = convertToRefsStore(
 
 export const useTopStampIds = () => {
   const { featureFlags } = useFeatureFlagSettings()
-  const { stampRecommendations } = useStampRecommendations()
-  const { recentStampIds } = useStampHistory()
+  const { stampRecommendations, stampRecommendationsFetched } =
+    useStampRecommendations()
+  const { recentStampIds, stampHistoryFetched } = useStampHistory()
+  const { stampsMapFetched } = useStampsStore()
 
   const topStampIds = computed(() =>
-    featureFlags.value.stamp_recommendation_v2.enabled
+    featureFlags.value.stamp_recommendation_v3.enabled
       ? stampRecommendations.value
       : recentStampIds.value
   )
 
-  return { topStampIds }
+  const topStampIdsFetched = computed(
+    () =>
+      stampsMapFetched.value &&
+      (featureFlags.value.stamp_recommendation_v3.enabled
+        ? stampRecommendationsFetched.value
+        : stampHistoryFetched.value)
+  )
+
+  return { topStampIds, topStampIdsFetched }
 }
 
 if (import.meta.hot) {

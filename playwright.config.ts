@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const baseURL = 'http://127.0.0.1:4173'
+import { frontendOrigin, getBackendOrigin } from './tests/e2e/config'
+
+getBackendOrigin()
 
 export default defineConfig({
   testDir: './tests/e2e/specs',
@@ -15,15 +17,10 @@ export default defineConfig({
   ],
   outputDir: 'tests/e2e/results',
   use: {
-    baseURL,
+    baseURL: frontendOrigin,
     serviceWorkers: 'block',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure'
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
-  webServer: {
-    command: 'npm run preview -- --strictPort',
-    url: baseURL,
-    reuseExistingServer: false
-  }
+  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }]
 })

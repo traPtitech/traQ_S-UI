@@ -1,30 +1,23 @@
 import { test as base, expect } from '@playwright/test'
 import type { Page } from '@playwright/test'
 
-interface Credentials {
-  username: string
-  password: string
-}
+import { seed } from '../seed'
+import type { TestData } from './testData'
 
 export const test = base.extend<{
-  credentials: Credentials
+  testData: TestData
   authenticatedPage: Page
 }>({
   // eslint-disable-next-line no-empty-pattern
-  credentials: async ({}, use) => {
-    const username = process.env['E2E_USERNAME']
-    const password = process.env['E2E_PASSWORD']
-    if (!username || !password) {
-      throw new Error(
-        'Set E2E_USERNAME and E2E_PASSWORD to run authenticated E2E tests'
-      )
-    }
-    await use({ username, password })
+  testData: async ({}, use) => {
+    await use(await seed())
   },
-  authenticatedPage: async ({ page, context, credentials }, use) => {
+
+  authenticatedPage: async ({ page, context, testData }, use) => {
     const response = await context.request.post('/api/v3/login', {
-      data: { name: credentials.username, password: credentials.password }
+      data: { name: testData.username, password: testData.password }
     })
+
     expect(response.status()).toBe(204)
     await use(page)
     await context.request.post('/api/v3/logout')
