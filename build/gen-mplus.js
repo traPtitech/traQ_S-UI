@@ -36,7 +36,7 @@ const MONASPACE_BASE_URL =
   'https://raw.githubusercontent.com/githubnext/monaspace/v1.400'
 const MONASPACE_FAMILY = 'Monaspace Neon'
 const MONASPACE_FACES = [
-  { weight: '400', file: 'MonaspaceNeon-Regular.woff2' },
+  { weight: '400', file: 'MonaspaceNeon-Light.woff2' },
   { weight: '700', file: 'MonaspaceNeon-Bold.woff2' }
 ]
 const outputPath = './public/fonts'
