@@ -1,5 +1,5 @@
 {
-    admin off
+	admin off
 }
 
 :80
@@ -7,9 +7,19 @@
 encode zstd gzip
 header /sw.js Cache-Control "max-age=0"
 
-file_server {
-    precompressed br gzip
-}
 root * /usr/share/caddy
 
-try_files {path} /index.html
+@spa not path /assets /assets/*
+@html path / /index.html
+
+route {
+	route @spa {
+		try_files {path} /index.html
+	}
+
+	header @html Cache-Control "no-cache"
+
+	file_server {
+		precompressed br gzip
+	}
+}
