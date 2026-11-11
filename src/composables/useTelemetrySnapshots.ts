@@ -10,13 +10,22 @@ import {
 } from '/@/store/app/featureFlagSettings'
 import { useMeStore } from '/@/store/domain/me'
 
-export const useFeatureFlagTelemetry = () => {
+export const useTelemetrySnapshots = () => {
   const { restoring, getFeatureFlagState } = useFeatureFlagSettings()
   const { myId } = useMeStore()
   const visibility = useDocumentVisibility()
 
-  const snapshot = () => {
-    if (!myId.value || restoring.value || visibility.value !== 'visible') return
+  const canSendSnapshot = () =>
+    Boolean(myId.value) && visibility.value === 'visible'
+
+  const snapshotClientEnvironment = () => {
+    if (!canSendSnapshot()) return
+    void telemetry.trackClientEnvironmentSnapshot()
+  }
+
+  const snapshotFeatureFlags = () => {
+    if (restoring.value || !canSendSnapshot()) return
+
     for (const flag of Object.keys(
       featureFlagDescriptions
     ) as FeatureFlagKey[]) {
@@ -27,6 +36,15 @@ export const useFeatureFlagTelemetry = () => {
     }
   }
 
-  watch([myId, restoring, visibility], snapshot, { immediate: true })
-  useIntervalFn(snapshot, 15 * 60 * 1000)
+  watch([myId, visibility], snapshotClientEnvironment, { immediate: true })
+  watch([myId, restoring, visibility], snapshotFeatureFlags, {
+    immediate: true
+  })
+  useIntervalFn(
+    () => {
+      snapshotClientEnvironment()
+      snapshotFeatureFlags()
+    },
+    15 * 60 * 1000
+  )
 }

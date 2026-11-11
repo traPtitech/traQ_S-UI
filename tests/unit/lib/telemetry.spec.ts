@@ -115,7 +115,7 @@ describe('telemetry', () => {
       expected: { launch_mode: 'browser' }
     }
   ])(
-    'sends only selected environment attributes on app start for $name',
+    'sends selected environment attributes in both events for $name',
     async (
       { userAgent, touchEvents, standalone, expected },
       { onTestFinished }
@@ -143,17 +143,26 @@ describe('telemetry', () => {
       vi.resetModules()
       telemetry = (await import('/@/lib/telemetry')).telemetry
       await telemetry.trackAppStarted()
+      await telemetry.trackClientEnvironmentSnapshot()
       await vi.advanceTimersByTimeAsync(1000)
 
       const body = sentBody()
-      expect(body.events).toHaveLength(1)
-      expect(body.events?.[0]?.name).toBe('app_started')
-      expect(body.events?.[0]?.attributes).toEqual({
-        ...expected,
-        client_id: expect.any(String),
-        event_id: expect.any(String),
-        schema_version: '1'
-      })
+      expect(body.events?.map(event => event.name)).toEqual([
+        'app_started',
+        'client_environment_snapshot'
+      ])
+
+      const clientId = body.events?.[0]?.attributes?.['client_id']
+      expect(clientId).toEqual(expect.any(String))
+      for (const event of body.events ?? []) {
+        expect(event.attributes).toEqual({
+          ...expected,
+          client_id: clientId,
+          event_id: expect.any(String),
+          schema_version: '1'
+        })
+      }
+
       expect(Object.keys(body.meta).sort()).toEqual(['app', 'sdk'])
     }
   )

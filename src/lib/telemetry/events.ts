@@ -1,16 +1,13 @@
 import type { FeatureFlagKey } from '/@/store/app/featureFlagSettings'
 
 import { publish } from './client'
+import type { ClientEnvironmentAttributes } from './clientEnvironment'
 
 export type FeatureFlagSource = 'default' | 'override' | 'expired'
 
 export type TelemetryEvents = {
-  app_started: {
-    browser_name?: string
-    browser_major_version?: string
-    os_name?: string
-    launch_mode: 'browser' | 'pwa' | 'ios_app'
-  }
+  app_started: ClientEnvironmentAttributes
+  client_environment_snapshot: ClientEnvironmentAttributes
   feature_flag_snapshot: {
     flag: FeatureFlagKey
     enabled: boolean
