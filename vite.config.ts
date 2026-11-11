@@ -125,6 +125,7 @@ export default defineConfig(({ mode }) => ({
       filename: 'sw.ts',
       includeAssets: ['fonts/*.woff2'],
       injectManifest: {
+        globIgnores: ['**/node_modules/**/*', 'config.js'],
         globPatterns: ['**/*.{js,css,html}' /* default */, '**/assets/**/*.svg']
       }
     }),

@@ -7,7 +7,11 @@ import {
   precacheAndRoute
 } from 'workbox-precaching'
 import { NavigationRoute, registerRoute } from 'workbox-routing'
-import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies'
+import {
+  CacheFirst,
+  NetworkFirst,
+  StaleWhileRevalidate
+} from 'workbox-strategies'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -28,6 +32,25 @@ export const setupWorkbox = () => {
   cleanupOutdatedCaches()
   // 静的ファイルのprecache
   precacheAndRoute(self.__WB_MANIFEST)
+
+  const configPath = '/config.js'
+  const configStrategy = new NetworkFirst({
+    cacheName: 'runtime-config-cache',
+    networkTimeoutSeconds: 3,
+    fetchOptions: { cache: 'no-cache' }
+  })
+
+  // 次回の起動がオフラインでも設定を読み込めるようにする。
+  self.addEventListener('install', event => {
+    event.waitUntil(
+      Promise.all(configStrategy.handleAll({ event, request: configPath }))
+    )
+  })
+
+  registerRoute(
+    ({ sameOrigin, url }) => sameOrigin && url.pathname === configPath,
+    configStrategy
+  )
 
   registerRoute(
     new RegExp('/assets/.+\\.mp3$'),

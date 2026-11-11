@@ -6,6 +6,7 @@
 
 encode zstd gzip
 header /sw.js Cache-Control "max-age=0"
+header /config.js Cache-Control "no-cache"
 
 file_server {
     precompressed br gzip
