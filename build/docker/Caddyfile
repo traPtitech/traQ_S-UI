@@ -9,8 +9,12 @@ header /sw.js Cache-Control "max-age=0"
 
 root * /usr/share/caddy
 
-@spa not path /assets /assets/*
+@spa not path /assets /assets/* /fonts/*.woff2
 @html path / /index.html
+@missingAsset {
+	path /assets/* /fonts/*.woff2
+	not file
+}
 
 route {
 	route @spa {
@@ -18,6 +22,7 @@ route {
 	}
 
 	header @html Cache-Control "no-cache"
+	root @missingAsset /app/retained-release
 
 	file_server {
 		precompressed br gzip

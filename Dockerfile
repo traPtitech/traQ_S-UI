@@ -6,6 +6,7 @@ COPY scripts/patch-dependencies.js ./scripts/
 COPY build/deepmerge ./build/deepmerge/
 RUN npm ci
 COPY . .
+RUN mkdir -p /app/.retained-release/assets
 RUN NODE_ENV=production npm run build:with-font
 
 
@@ -17,6 +18,7 @@ COPY build/docker/startup.sh /startup.sh
 RUN chmod 755 /startup.sh
 
 COPY --from=build /app/dist /usr/share/caddy
+COPY --from=build /app/.retained-release /app/retained-release
 
 ENV APP_NAME=traQ
 ENV THEME_COLOR=#0D67EA
