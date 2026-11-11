@@ -125,7 +125,12 @@ export default defineConfig(({ mode }) => ({
       filename: 'sw.ts',
       includeAssets: ['fonts/*.woff2'],
       injectManifest: {
-        globPatterns: ['**/*.{js,css,html}' /* default */, '**/assets/**/*.svg']
+        // Keep the shared Markdown Wasm available offline (about 2.3 MiB).
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+        globPatterns: [
+          '**/*.{js,css,html,wasm}' /* default */,
+          '**/assets/**/*.svg'
+        ]
       }
     }),
     VuePlugin(),

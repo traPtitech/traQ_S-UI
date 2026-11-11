@@ -7,9 +7,9 @@ import { nilUuid } from '/@/lib/basic/uuid'
 const EMBEDDING_ORIGIN = 'https://q.example.com'
 
 vi.mock('/@/lib/markdown/markdown', () => ({
-  isEmbeddedLink: vi.fn((text: string) => {
+  endsWithEmbeddedLink: vi.fn((text: string) => {
     try {
-      const url = new URL(text)
+      const url = new URL(text.split('\n').at(-1) ?? '')
       return url.protocol === 'http:' || url.protocol === 'https:'
     } catch {
       return false

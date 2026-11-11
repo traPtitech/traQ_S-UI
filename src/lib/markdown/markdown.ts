@@ -1,78 +1,121 @@
-import type { Store, traQMarkdownIt } from '@traptitech/traq-markdown-it'
+import type {
+  Extractor,
+  Parser,
+  ReferenceKind
+} from '@traq-flavored-markdown/sdk'
+import type { HtmlRendererOptions } from '@traq-flavored-markdown/sdk/renderer'
+import type { messageRenderers } from '@traq-flavored-markdown/sdk/renderer'
 
 import useChannelPath from '/@/composables/useChannelPath'
-import { embeddingOrigin } from '/@/lib/apis'
+import { buildFilePath, embeddingOrigin } from '/@/lib/apis'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
 
-import { isDefined } from '../basic/array'
+import type { MarkdownRenderResult } from './types'
 
-const storeProvider: Store = {
-  getUser(id) {
-    const { usersMap } = useUsersStore()
-    return usersMap.value.get(id)
+const presentation: HtmlRendererOptions = {
+  references: {
+    resolve(reference) {
+      const { detail } = useMeStore()
+      switch (reference.type) {
+        case 'channel': {
+          const { channelIdToLink } = useChannelPath()
+          return { href: `${embeddingOrigin}${channelIdToLink(reference.id)}` }
+        }
+        case 'user':
+          return {
+            href: `${embeddingOrigin}/users/${encodeURIComponent(reference.id)}`,
+            highlight: reference.id === detail.value?.id
+          }
+        case 'group': {
+          const { userGroupsMap } = useGroupsStore()
+          return {
+            href: `${embeddingOrigin}/groups/${encodeURIComponent(reference.id)}`,
+            highlight: userGroupsMap.value
+              .get(reference.id)
+              ?.members.some(member => member.id === detail.value?.id)
+          }
+        }
+      }
+    }
   },
-  getChannel(id) {
-    const { channelsMap } = useChannelsStore()
-    return channelsMap.value.get(id)
-  },
-  getUserGroup(id) {
-    const { userGroupsMap } = useGroupsStore()
-    return userGroupsMap.value.get(id)
-  },
-  getMe() {
-    const { detail } = useMeStore()
-    return detail.value
-  },
-  getStampByName(name) {
-    const { getStampByName } = useStampsStore()
-    return getStampByName(name)
-  },
-  getUserByName(name) {
-    const { findUserByName } = useUsersStore()
-    return findUserByName(name)
-  },
-  generateChannelHref(id) {
-    const { channelIdToLink } = useChannelPath()
-    return `${embeddingOrigin}${channelIdToLink(id) as string}`
-  },
-  generateUserHref(id) {
-    return `javascript:openUserModal(${encodeURIComponent(JSON.stringify(id))})`
-  },
-  generateUserGroupHref(id) {
-    return `javascript:openGroupModal(${encodeURIComponent(
-      JSON.stringify(id)
-    )})`
+  stamps: {
+    resolve(stamp) {
+      const fileId =
+        stamp.type === 'normal'
+          ? useStampsStore().getStampByName(stamp.name)?.fileId
+          : useUsersStore().findUserByName(stamp.name)?.iconFileId
+      return fileId
+        ? {
+            url: buildFilePath(fileId),
+            title: stamp.type === 'user' ? `@${stamp.name}` : stamp.name
+          }
+        : undefined
+    }
   }
 }
 
-let md: traQMarkdownIt
+let parser: Parser
+let extractor: Extractor
+let renderers: ReturnType<typeof messageRenderers>
+let loading: Promise<void> | undefined
 
-const autoDirectionTokenTypes = new Set([
-  'paragraph_open',
-  'heading_open',
-  'list_item_open',
-  'th_open',
-  'td_open'
-])
+const toRenderResult = (
+  result: ReturnType<ReturnType<typeof messageRenderers>['standard']['render']>
+): MarkdownRenderResult => ({
+  rawText: result.rawText,
+  embeddings: result.cards,
+  renderedText: result.html.replace(
+    /<(p|h[1-6]|li|th|td)(?=[\s>])/g,
+    '<$1 dir="auto"'
+  )
+})
 
-const loadMd = async () => {
-  if (md) return
-  const { traQMarkdownIt } = await import('./traq-markdown-it')
-  md = new traQMarkdownIt(storeProvider, [], embeddingOrigin)
-  md.md.core.ruler.after('inline', 'bidi-auto-direction', state => {
-    for (const token of state.tokens) {
-      if (autoDirectionTokenTypes.has(token.type)) {
-        token.attrSet('dir', 'auto')
-      }
-    }
-  })
+const fallbackRender = (text: string): MarkdownRenderResult => ({
+  rawText: text,
+  renderedText: text
+    .replace(/[&<>"']/g, character => `&#${character.charCodeAt(0)};`)
+    .replace(/\r?\n/g, '<br>'),
+  embeddings: []
+})
+
+const withFallback = async <T>(
+  fallback: T,
+  action: () => Promise<T>
+): Promise<T> => {
+  try {
+    return await action()
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Markdown の処理に失敗しました', error)
+    return fallback
+  }
 }
 
-const waitForInitialFetch = () => {
+const loadMarkdown = () =>
+  (loading ??= (async () => {
+    const { loadRuntime, presets, messageRenderers, withDefaultAdapters } =
+      await import('./runtime')
+
+    const runtime = await loadRuntime()
+
+    parser = runtime.createParser(presets.traq.v1)
+    extractor = runtime.createExtractor({
+      origin: embeddingOrigin
+    })
+    renderers = messageRenderers({
+      ...withDefaultAdapters(presentation),
+      origin: embeddingOrigin
+    })
+  })().catch(error => {
+    loading = undefined
+    throw error
+  }))
+
+const waitForMarkdownReady = () => {
   const { usersMapInitialFetchPromise } = useUsersStore()
   const { userGroupsMapInitialFetchPromise } = useGroupsStore()
   const { bothChannelsMapInitialFetchPromise } = useChannelsStore()
@@ -83,26 +126,68 @@ const waitForInitialFetch = () => {
     userGroupsMapInitialFetchPromise,
     bothChannelsMapInitialFetchPromise,
     stampsMapInitialFetchPromise,
-    loadMd()
+    loadMarkdown()
   ])
 }
 
-export const render = async (text: string) => {
-  await waitForInitialFetch()
-  return md.render(text)
-}
-
-export const renderInline = async (text: string) => {
-  await waitForInitialFetch()
-  return md.renderInline(text)
-}
-
 export const parse = async (text: string) => {
-  await waitForInitialFetch()
-  return md.md.parse(text, {})
+  await waitForMarkdownReady()
+
+  return parser.parse(text)
 }
 
-export const isEmbeddedLink = async (text: string) => {
-  await waitForInitialFetch()
-  return isDefined(md.embeddingExtractor.urlToEmbeddingData(text))
+export const render = (text: string) =>
+  withFallback(fallbackRender(text), async () => {
+    const document = await parse(text)
+    return toRenderResult(renderers.standard.render(document))
+  })
+
+export const renderCondensed = (text: string) =>
+  withFallback(fallbackRender(text), async () => {
+    const document = await parse(text)
+    return toRenderResult(renderers.condensed.render(document))
+  })
+
+export const endsWithEmbeddedLink = (text: string) =>
+  withFallback(false, async () => {
+    await waitForMarkdownReady()
+
+    const { endsWithResourceCard } = await import('./runtime')
+
+    return endsWithResourceCard(parser.parse(text), embeddingOrigin)
+  })
+
+const extractMarkdown = async (text: string) => {
+  await loadMarkdown()
+
+  return extractor.extract(parser.parse(text))
+}
+
+export const embedInternalLinks = (
+  text: string,
+  resolve: (kind: ReferenceKind, name: string) => string | undefined
+) =>
+  withFallback(text, async () => {
+    const result = await extractMarkdown(text)
+    const { embedReferences } = await import('./runtime')
+
+    return embedReferences(text, result.referenceEmbedding, resolve)
+  })
+
+export const unembedInternalLinks = (text: string) =>
+  withFallback(text, async () => {
+    const result = await extractMarkdown(text)
+
+    return result.referenceEmbedding.unembeddedText
+  })
+
+export const detectMentionOfMe = async (
+  text: string,
+  userId: string,
+  groupIds: readonly string[]
+) => {
+  const result = await extractMarkdown(text)
+  const { mentionsUser } = await import('./runtime')
+
+  return mentionsUser(result.references, userId, groupIds)
 }

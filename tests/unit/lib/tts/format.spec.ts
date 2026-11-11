@@ -1,30 +1,28 @@
-import type { Store } from '@traptitech/traq-markdown-it'
-import { traQMarkdownIt } from '@traptitech/traq-markdown-it'
+import { readFile } from 'node:fs/promises'
+
+import { createRuntime, presets } from '@traq-flavored-markdown/sdk'
 
 import { format } from '/@/lib/tts/format'
 
 const embeddingOrigin = 'https://example.com'
-const storeProvider: Store = {
-  getChannel: id => ({ id }),
-  getMe: () => ({ id: '' }),
-  getStampByName: name => ({ name, fileId: '' }),
-  getUser: id => ({ id }),
-  getUserByName: _name => ({ iconFileId: '' }),
-  getUserGroup: _id => ({ members: [] }),
-  generateChannelHref: () => '',
-  generateUserHref: () => '',
-  generateUserGroupHref: () => ''
-}
-const md = new traQMarkdownIt(storeProvider, [], embeddingOrigin)
-const parse = (text: string) => {
-  return md.md.parse(text, {})
-}
-
+const runtime = await createRuntime(
+  await readFile('node_modules/@traq-flavored-markdown/sdk/dist/parser.wasm')
+)
+const parser = runtime.createParser(presets.traq.v1)
+const parse = (text: string) => parser.parse(text)
+afterAll(() => runtime.dispose())
 describe('tts format', () => {
   it('can format', () => {
     expect(format(parse(input), embeddingOrigin).replace(/ +$/gm, '')).toEqual(
       output
     )
+  })
+
+  it.each([
+    ['two trailing spaces', 'first  \nsecond'],
+    ['a trailing backslash', 'first\\\nsecond']
+  ])('preserves a hard break from %s', (_name, input) => {
+    expect(format(parse(input), embeddingOrigin)).toEqual('first\nsecond')
   })
 })
 

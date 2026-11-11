@@ -7,8 +7,10 @@ import useChannelPath from '/@/composables/useChannelPath'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { countLength } from '/@/lib/basic/string'
 import { nilUuid } from '/@/lib/basic/uuid'
-import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
-import { isEmbeddedLink } from '/@/lib/markdown/markdown'
+import {
+  embedInternalLinks,
+  endsWithEmbeddedLink
+} from '/@/lib/markdown/markdown'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useGroupsStore } from '/@/store/entities/groups'
@@ -61,12 +63,7 @@ export const createContent = async (
     return joinContents('\n', [embeddedText, embeddedUrls])
   }
 
-  const trimmedEmbeddedTextLines = trimmedEmbeddedText.split(`\n`)
-
-  if (
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    await isEmbeddedLink(trimmedEmbeddedTextLines.at(-1)!)
-  ) {
+  if (await endsWithEmbeddedLink(trimmedEmbeddedText)) {
     return joinContents('\n', [trimmedEmbeddedText, embeddedUrls])
   }
 
@@ -116,18 +113,28 @@ const usePostMessage = (
       bothChannelsMapInitialFetchPromise
     ])
 
-    const embeddedText = embedInternalLink(state.text, {
-      getUser: findUserByName,
-      getGroup: getUserGroupByName,
-      getChannel: path => {
-        try {
-          const id = channelPathStringToId(path)
-          return { id }
-        } catch {
-          return undefined
+    let embeddedText: string
+    try {
+      embeddedText = await embedInternalLinks(state.text, (kind, name) => {
+        switch (kind) {
+          case 'user':
+            return findUserByName(name)?.id
+          case 'group':
+            return getUserGroupByName(name)?.id
+          case 'channel':
+            try {
+              return channelPathStringToId(name)
+            } catch {
+              return undefined
+            }
         }
-      }
-    })
+      })
+    } catch (error) {
+      addErrorToast(
+        formatResizeError(error, 'メッセージの埋め込み変換に失敗しました')
+      )
+      return false
+    }
 
     const dummyFileUrls = state.attachments.map(() =>
       buildFilePathForPost(nilUuid)

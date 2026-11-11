@@ -49,7 +49,6 @@
 
 <script lang="ts" setup>
 import type { Message } from '@traptitech/traq'
-import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 
 import type { DeepReadonly } from 'vue'
 import { computed, ref, shallowRef, watchEffect } from 'vue'
@@ -62,6 +61,7 @@ import useBoxSize from '/@/composables/dom/useBoxSize'
 import useToggle from '/@/composables/utils/useToggle'
 import { isFile, isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
+import type { MarkdownRenderResult } from '/@/lib/markdown/types'
 import type { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useUsersStore } from '/@/store/entities/users'

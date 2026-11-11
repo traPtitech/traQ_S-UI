@@ -21,7 +21,7 @@ import { computed, ref, watchEffect } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
 import useChannelPath from '/@/composables/useChannelPath'
-import { renderInline } from '/@/lib/markdown/markdown'
+import { renderCondensed } from '/@/lib/markdown/markdown'
 import type { MessageInputState } from '/@/store/ui/messageInputStateStore'
 import type { ChannelId } from '/@/types/entity-ids'
 
@@ -40,7 +40,7 @@ const hasAttachments = computed(() => props.state.attachments.length > 0)
 
 const renderedContent = ref()
 watchEffect(async () => {
-  const { renderedText } = await renderInline(props.state.text)
+  const { renderedText } = await renderCondensed(props.state.text)
   renderedContent.value = renderedText
 })
 </script>
