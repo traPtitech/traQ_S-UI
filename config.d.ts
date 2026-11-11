@@ -30,7 +30,7 @@ export type Config = Readonly<{
    */
   enableSearch?: boolean
   /**
-   * アクティビティの送信先。省略時は収集しない。
+   * アクティビティとエラーの送信先。省略時は収集しない。
    * HTTPS または localhost などの安全なコンテキストでのみ利用可能。
    */
   telemetry?: Readonly<{

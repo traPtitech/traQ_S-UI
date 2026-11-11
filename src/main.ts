@@ -4,12 +4,15 @@ import App from './App.vue'
 import boolAttr from './bool-attr'
 import { initializeMeta } from './lib/apis'
 import { deleteStampCacheIDB } from './lib/stampCache'
+import { telemetry } from './lib/telemetry'
 import { setupGlobalFuncs } from './markdown-bridge'
 import router from './router'
 import store from './store'
 import './styles/global.scss'
 
 import('katex/dist/katex.css')
+
+telemetry.startErrorCollection()
 
 const bootstrap = async () => {
   await initializeMeta()

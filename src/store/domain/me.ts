@@ -40,10 +40,12 @@ const useMeStorePinia = defineStore('domain/me', () => {
       try {
         const { data } = await apis.getMe()
         state.detail = data
+
         if (!hasTrackedAppStart) {
           hasTrackedAppStart = true
-          void telemetry.track('app_started', {})
+          void telemetry.trackAppStarted()
         }
+
         return data
       } catch (error) {
         state.detail = undefined
