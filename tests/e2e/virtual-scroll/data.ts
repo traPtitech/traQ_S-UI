@@ -33,7 +33,9 @@ const channel = (id: string, overrides: Partial<Channel> = {}): Channel => ({
 export const createChannels = ({
   scenario = 'flat',
   count = 1200,
-  topics: withTopics = true
+  topics: withTopics = true,
+  leadingCount = 0,
+  trailingCount = 300
 }: ChannelFixture): Channel[] => {
   if (scenario === 'flat') {
     return Array.from({ length: count }, (_, i) =>
@@ -54,6 +56,13 @@ export const createChannels = ({
   )
 
   return [
+    ...Array.from({ length: leadingCount }, (_, i) =>
+      channel(`leading-${pad(i)}`, {
+        name: `0-leading-${pad(i)}`,
+        topic: withTopics ? topics[i % topics.length] : ''
+      })
+    ),
+
     channel('branch', {
       name: 'a-branch',
       children: children.map(c => c.id),
@@ -63,7 +72,7 @@ export const createChannels = ({
     ...children,
     channel('grandchild', { parentId: childId(0), topic: 'Grandchild topic' }),
 
-    ...Array.from({ length: 300 }, (_, i) =>
+    ...Array.from({ length: trailingCount }, (_, i) =>
       channel(trailingId(i), {
         name: `z-trailing-${pad(i)}`,
         topic: withTopics ? topics[i % topics.length] : ''

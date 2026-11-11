@@ -13,6 +13,7 @@ import {
   getVisibleChannelTreeAnimation,
   resizeChannelTreeAnimation
 } from '../channelTreeAnimation'
+import { measureChannelTreeHeight } from '../channelTreeMeasurement'
 import type { FlatChannelItem } from './useChannelFlatList'
 
 const TREE_ANIMATION_FALLBACK_MS = CHANNEL_TREE_ANIMATION_DURATION_MS + 50
@@ -24,6 +25,7 @@ interface ChannelTreeAnimationOptions<
   virtualizer: Ref<Virtualizer<TScrollElement, TItemElement>>
   flatItems: ComputedRef<FlatChannelItem[]>
   expandedNodeKeys: Ref<Set<string>>
+  treeElement: Readonly<Ref<HTMLElement | null>>
   scrollElement: Readonly<Ref<TScrollElement | null>>
   scrollMargin: ComputedRef<number>
   toggle: (itemKey: string) => void
@@ -36,6 +38,7 @@ const useChannelTreeAnimation = <
   virtualizer,
   flatItems,
   expandedNodeKeys,
+  treeElement,
   scrollElement,
   scrollMargin,
   toggle
@@ -90,12 +93,30 @@ const useChannelTreeAnimation = <
     )
   })
 
-  const finishTreeAnimation = (animationId: number) => {
-    if (activeAnimation.value?.id === animationId) {
-      activeAnimation.value = null
-      resolveTreeAnimation?.()
-      resolveTreeAnimation = undefined
+  const holdTreeHeight = () => {
+    const element = treeElement.value
+
+    if (element) {
+      // 行の入れ替え中にスクロール範囲が縮むとブラウザーが位置を補正しようとする
+      element.style.setProperty(
+        '--tree-min-height',
+        `${measureChannelTreeHeight(element)}px`
+      )
     }
+
+    return () => element?.style.removeProperty('--tree-min-height')
+  }
+
+  const finishTreeAnimation = async (animationId: number) => {
+    if (activeAnimation.value?.id !== animationId) return
+
+    const releaseHeight = holdTreeHeight()
+    const resolve = resolveTreeAnimation
+    resolveTreeAnimation = undefined
+    activeAnimation.value = null
+
+    await nextTick(releaseHeight)
+    resolve?.()
   }
 
   const updateTreeAnimationHeight = (animationId: number, height: number) => {
@@ -171,47 +192,58 @@ const useChannelTreeAnimation = <
     const descendantKeyPrefix = `${itemKey}/`
     const origin = parent.end - scrollMargin.value
 
-    toggle(itemKey)
-    await nextTick()
+    const releaseHeight = holdTreeHeight()
+    let finished: Promise<void>
 
-    const postTotalSize = virtualizer.value.getTotalSize()
-    const postRows = snapshotRows()
-    for (const row of virtualItemRows.value) retainedKeys.add(row.key)
-    const totalSizeDelta = postTotalSize - preTotalSize
+    try {
+      toggle(itemKey)
+      await nextTick()
 
-    if (totalSizeDelta === 0) {
-      activeAnimation.value = null
-      return
+      const postTotalSize = virtualizer.value.getTotalSize()
+      const postRows = snapshotRows()
+      for (const row of virtualItemRows.value) retainedKeys.add(row.key)
+
+      const totalSizeDelta = postTotalSize - preTotalSize
+      if (totalSizeDelta === 0) return
+
+      const animationId = ++treeAnimationId
+      currentHeight.value =
+        direction === 'expand' ? 0 : Math.abs(totalSizeDelta)
+
+      activeAnimation.value = createChannelTreeAnimation({
+        id: animationId,
+        direction,
+        origin,
+        scrollMargin: scrollMargin.value,
+        preRows,
+        postRows,
+        retainedKeys,
+        preExpandedNodeKeys,
+        expandedNodeKeys: expandedNodeKeys.value,
+        postTotalSize,
+        totalSizeDelta,
+        descendantKeyPrefix
+      })
+
+      finished = new Promise<void>(resolve => {
+        resolveTreeAnimation = resolve
+        setTimeout(
+          () => void finishTreeAnimation(animationId),
+          TREE_ANIMATION_FALLBACK_MS
+        )
+      })
+    } finally {
+      await nextTick(releaseHeight)
     }
 
-    const animationId = ++treeAnimationId
-    currentHeight.value = direction === 'expand' ? 0 : Math.abs(totalSizeDelta)
-    activeAnimation.value = createChannelTreeAnimation({
-      id: animationId,
-      direction,
-      origin,
-      scrollMargin: scrollMargin.value,
-      preRows,
-      postRows,
-      retainedKeys,
-      preExpandedNodeKeys,
-      expandedNodeKeys: expandedNodeKeys.value,
-      postTotalSize,
-      totalSizeDelta,
-      descendantKeyPrefix
-    })
-    await new Promise<void>(resolve => {
-      resolveTreeAnimation = resolve
-      setTimeout(
-        () => finishTreeAnimation(animationId),
-        TREE_ANIMATION_FALLBACK_MS
-      )
-    })
+    await finished
   }
 
   let toggleQueue = Promise.resolve()
   const handleToggle = (itemKey: string) => {
     toggleQueue = toggleQueue.then(() => toggleWithAnimation(itemKey))
+
+    return toggleQueue
   }
 
   return {

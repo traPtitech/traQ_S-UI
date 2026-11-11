@@ -101,7 +101,7 @@ export const createChannelTreeAnimation = ({
     postRows.filter(
       ({ key, vItem }) =>
         !key.startsWith(descendantKeyPrefix) &&
-        vItem.start - scrollMargin >= origin + finalTreeHeight
+        vItem.start - scrollMargin >= origin
     ),
     expandedNodeKeys,
     origin + finalTreeHeight,
