@@ -13,6 +13,8 @@ RUN NODE_ENV=production npm run build:with-font
 FROM docker.io/library/caddy:2.11.6-alpine@sha256:d44355d3c2149dc580ce2cac735955d1c08d3d00882c30489c241aa51a5c10d9
 EXPOSE 80
 
+RUN apk add --no-cache jq
+
 COPY build/docker/Caddyfile /etc/caddy/Caddyfile
 COPY build/docker/startup.sh /startup.sh
 RUN chmod 755 /startup.sh
