@@ -1,15 +1,31 @@
 {
-    admin off
+	admin off
 }
 
 :80
 
 encode zstd gzip
 header /sw.js Cache-Control "max-age=0"
+header /config.js Cache-Control "no-cache"
 
-file_server {
-    precompressed br gzip
-}
 root * /usr/share/caddy
 
-try_files {path} /index.html
+@spa not path /assets /assets/* /fonts/*.woff2
+@html path / /index.html
+@missingAsset {
+	path /assets/* /fonts/*.woff2
+	not file
+}
+
+route {
+	route @spa {
+		try_files {path} /index.html
+	}
+
+	header @html Cache-Control "no-cache"
+	root @missingAsset /app/retained-release
+
+	file_server {
+		precompressed br gzip
+	}
+}

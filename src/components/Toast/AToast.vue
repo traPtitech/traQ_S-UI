@@ -1,71 +1,55 @@
 <template>
-  <div
+  <component
+    :is="toast.onClick ? 'button' : 'div'"
+    :type="toast.onClick ? 'button' : undefined"
     :class="$style.container"
     :data-type="toast.type"
-    :role="role"
     @click="onClick"
   >
     <AIcon :class="$style.icon" :name="iconName" mdi :size="32" />
-    <div :class="$style.text">
+    <span :class="$style.text">
       {{ toast.text }}
-    </div>
-  </div>
+    </span>
+  </component>
 </template>
 
-<script lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue'
+<script lang="ts" setup>
+import { computed, watch } from 'vue'
 
+import AIcon from '/@/components/UI/AIcon.vue'
 import type { Toast } from '/@/store/ui/toast'
 import { useToastStore } from '/@/store/ui/toast'
 
-const iconNameMap: Record<Toast['type'], string> = {
+const iconNameMap = {
   success: 'info',
   error: 'alert',
   info: 'info'
-}
-
-const useAutoHide = (props: { toast: Toast }) => {
-  const { deleteToast } = useToastStore()
-
-  let timer: NodeJS.Timeout
-
-  const remove = () => {
-    deleteToast(props.toast.id)
-  }
-
-  if (props.toast.timeout < Infinity) {
-    onMounted(() => {
-      timer = setTimeout(() => {
-        remove()
-      }, props.toast.timeout)
-    })
-    onUnmounted(() => {
-      clearTimeout(timer)
-    })
-  }
-
-  return { remove }
-}
-</script>
-
-<script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
+} satisfies Record<Toast['type'], string>
 
 const props = defineProps<{
   toast: Toast
 }>()
 
-const { remove } = useAutoHide(props)
+const { deleteToast } = useToastStore()
+
+watch(
+  () => props.toast,
+  ({ id, timeout }, _, onCleanup) => {
+    if (timeout === Infinity) return
+
+    const timer = setTimeout(() => deleteToast(id), timeout)
+    onCleanup(() => clearTimeout(timer))
+  },
+  { immediate: true }
+)
 
 const onClick = () => {
   if (props.toast.onClick) {
     props.toast.onClick(props.toast.id)
   } else {
-    remove()
+    deleteToast(props.toast.id)
   }
 }
-
-const role = computed(() => (props.toast.onClick ? 'button' : undefined))
 
 const iconName = computed(() => iconNameMap[props.toast.type])
 </script>
@@ -92,8 +76,14 @@ const iconName = computed(() => iconNameMap[props.toast.type])
   &[data-type='info'] {
     background: $theme-ui-secondary-background;
   }
-  &[role='button'] {
+  &[type='button'] {
     cursor: pointer;
+    text-align: start;
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: -4px;
+    }
   }
 }
 .icon {

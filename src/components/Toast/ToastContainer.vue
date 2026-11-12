@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div :class="$style.container" aria-live="polite">
     <transition-group name="toast-slide">
       <AToast v-for="toast in toasts" :key="toast.id" :toast="toast" />
     </transition-group>

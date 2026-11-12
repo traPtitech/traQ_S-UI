@@ -29,10 +29,20 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
     [...userGroupsMap.value.values()].filter(group => group.type === 'grade')
   )
 
+  const teamGroups = computed(() =>
+    [...userGroupsMap.value.values()].filter(group => group.type === 'team')
+  )
+
   const getGradeGroupsByUserId = (userId: UserId) =>
     gradeGroups.value.find(userGroup =>
       userGroup.members.some(member => member.id === userId)
     )
+
+  const getTeamGroupsByUserId = (userId: UserId) =>
+    teamGroups.value.filter(userGroup =>
+      userGroup.members.some(member => member.id === userId)
+    )
+
   const getUserGroupByName = (name: string) => {
     const loweredName = name.toLowerCase()
     return [...userGroupsMap.value.values()].find(
@@ -140,10 +150,14 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
     userGroupsMap,
     userGroupsMapInitialFetchPromise,
     gradeGroups,
+    teamGroups,
     getGradeGroupsByUserId,
+    getTeamGroupsByUserId,
     getUserGroupByName,
+    fetchUserGroup,
     fetchUserGroups,
-    fetchUserGroupByName
+    fetchUserGroupByName,
+    userGroupsMapFetched
   }
 })
 
