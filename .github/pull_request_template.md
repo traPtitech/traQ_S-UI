@@ -5,6 +5,7 @@
 ## Why
 
 - なぜか
+
 <!-- close: #0000 のみでも OK -->
 
 ## Verification
