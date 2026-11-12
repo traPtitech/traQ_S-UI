@@ -76,6 +76,7 @@ import {
   type ChannelTreeAnimationMeasurement,
   type VisibleChannelTreeAnimation
 } from './channelTreeAnimation'
+import { measureChannelTreeHeight } from './channelTreeMeasurement'
 
 const props = withDefaults(
   defineProps<{
@@ -122,7 +123,7 @@ useRafFn(async () => {
 
   const element = treeElement.value
   if (element) {
-    emit('resize', props.animation.id, element.getBoundingClientRect().height)
+    emit('resize', props.animation.id, measureChannelTreeHeight(element))
   }
 })
 
@@ -155,7 +156,8 @@ watch(
     const measurements = [...elements].flatMap(([key, element]) => {
       if (previousElements.get(key) === element) return []
 
-      const size = Math.round(element.getBoundingClientRect().height)
+      const size = measureChannelTreeHeight(element)
+
       return size > 0 ? [{ key, size }] : []
     })
 
@@ -170,11 +172,13 @@ useResizeObserver(
   observedElements,
   entries => {
     for (const entry of entries) {
-      const height =
-        entry.borderBoxSize[0]?.blockSize ?? entry.contentRect.height
-
       const key = (entry.target as HTMLElement).dataset['rowKey']
-      if (key) pendingMeasurements.set(key, Math.round(height))
+      if (key) {
+        pendingMeasurements.set(
+          key,
+          measureChannelTreeHeight(entry.target, entry)
+        )
+      }
     }
   },
   { box: 'border-box' }
@@ -210,9 +214,8 @@ useResizeObserver(
 .row {
   overflow: hidden;
   position: absolute;
-  top: 0;
+  top: var(--row-y);
   width: 100%;
-  transform: translateY(var(--row-y));
 }
 
 .element {
