@@ -22,7 +22,8 @@ fi
 # アプリ名設定
 ###
 echo "Startup: set app name to $APP_NAME"
-sed -i -e "s/<title>traQ<\/title>/<title>$APP_NAME<\/title>/" /usr/share/caddy/index.html
+jq -Rs --arg name "$APP_NAME" 'gsub("<title>traQ</title>"; "<title>" + ($name | @html) + "</title>")' /usr/share/caddy/index.html > /tmp/index.html &&
+  mv /tmp/index.html /usr/share/caddy/index.html
 jq --arg name "$APP_NAME" \
   '.name = $name | .short_name = $name' \
   /usr/share/caddy/manifest.webmanifest > /tmp/manifest.webmanifest &&
