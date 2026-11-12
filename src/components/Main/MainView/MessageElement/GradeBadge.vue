@@ -3,6 +3,9 @@
     v-if="isBot || isGrade"
     :class="$style.body"
     :data-is-grade="isGrade"
+    :data-background="props.background"
+    :data-font-size="props.fontSize"
+    :data-color="props.color"
     @click="onClick"
   >
     <span v-if="isBot">Bot</span>
@@ -21,9 +24,15 @@ const props = withDefaults(
   defineProps<{
     userId: UserId
     isBot?: boolean
+    background?: 'primary' | 'secondary' | 'tertiary' | 'none'
+    fontSize?: 'body1' | 'body2'
+    color?: 'ui-primary' | 'ui-secondary' | 'ui-tertiary'
   }>(),
   {
-    isBot: false
+    isBot: false,
+    background: 'secondary',
+    fontSize: 'body2',
+    color: 'ui-secondary'
   }
 )
 
@@ -44,9 +53,41 @@ const onClick = () => {
 
 <style lang="scss" module>
 .body {
-  @include background-secondary;
-  @include color-ui-secondary;
-  @include size-body2;
+  // background
+  &[data-background='primary'] {
+    @include background-primary;
+  }
+
+  &[data-background='secondary'] {
+    @include background-secondary;
+  }
+
+  &[data-background='tertiary'] {
+    @include background-tertiary;
+  }
+
+  // fontSize
+  &[data-font-size='body1'] {
+    @include size-body1;
+  }
+
+  &[data-font-size='body2'] {
+    @include size-body2;
+  }
+
+  // color
+  &[data-color='ui-primary'] {
+    @include color-ui-primary;
+  }
+
+  &[data-color='ui-secondary'] {
+    @include color-ui-secondary;
+  }
+
+  &[data-color='ui-tertiary'] {
+    @include color-ui-tertiary;
+  }
+
   display: inline-flex;
   align-items: center;
   font-weight: bold;

@@ -22,14 +22,14 @@ describe('initializeMeta', () => {
         VERSION: 'test'
       }))
       const { default: axios } = await import('axios')
-      const get = vi.spyOn(axios, 'get').mockResolvedValue({
+      const request = vi.spyOn(axios, 'request').mockResolvedValue({
         data: { canonicalOrigin: 'https://canonical.example.com' }
       })
       const apis = await import('/@/lib/apis')
 
       await apis.initializeMeta()
 
-      expect(get).toHaveBeenCalledTimes(mode === 'development' ? 0 : 1)
+      expect(request).toHaveBeenCalledTimes(mode === 'development' ? 0 : 1)
       expect(apis.embeddingOrigin).toBe(
         mode === 'development'
           ? 'https://dev.example.com'
@@ -55,14 +55,14 @@ describe('initializeMeta', () => {
         VERSION: 'test'
       }))
       const { default: axios } = await import('axios')
-      const get = vi.spyOn(axios, 'get').mockResolvedValue({
+      const request = vi.spyOn(axios, 'request').mockResolvedValue({
         data: { canonicalOrigin: 'https://canonical.example.com' }
       })
       const apis = await import('/@/lib/apis')
 
       await apis.initializeMeta()
 
-      expect(get).not.toHaveBeenCalled()
+      expect(request).not.toHaveBeenCalled()
       expect(apis.embeddingOrigin).toBe(expectedOrigin)
       expect(apis.buildFilePathForPost('file-id')).toBe(
         `${expectedOrigin}/files/file-id`
@@ -78,14 +78,20 @@ describe('initializeMeta', () => {
     'http://[::1]:3000'
   ])('uses %s for shared links without changing API paths', async origin => {
     const { default: axios } = await import('axios')
-    const get = vi.spyOn(axios, 'get').mockResolvedValue({
+    const request = vi.spyOn(axios, 'request').mockResolvedValue({
       data: { canonicalOrigin: origin }
     })
     const apis = await import('/@/lib/apis')
 
     await apis.initializeMeta()
 
-    expect(get).toHaveBeenCalledWith('/api/v3/meta', { timeout: 5000 })
+    expect(request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: 'GET',
+        url: '/api/v3/meta',
+        timeout: 5000
+      })
+    )
     expect(apis.embeddingOrigin).toBe(origin)
     expect(apis.buildFilePathForPost('file-id')).toBe(`${origin}/files/file-id`)
     expect(apis.buildUserIconPathPublic('user')).toBe(
@@ -102,14 +108,20 @@ describe('initializeMeta', () => {
         backendOrigin
       })
       const { default: axios } = await import('axios')
-      const get = vi
-        .spyOn(axios, 'get')
+      const request = vi
+        .spyOn(axios, 'request')
         .mockRejectedValue(new Error('Network Error'))
       const apis = await import('/@/lib/apis')
 
       await expect(apis.initializeMeta()).resolves.toBeUndefined()
 
-      expect(get).toHaveBeenCalledWith('/api/v3/meta', { timeout: 5000 })
+      expect(request).toHaveBeenCalledWith(
+        expect.objectContaining({
+          method: 'GET',
+          url: '/api/v3/meta',
+          timeout: 5000
+        })
+      )
       expect(apis.embeddingOrigin).toBe(location.origin)
     }
   )
@@ -129,12 +141,18 @@ describe('initializeMeta', () => {
     { canonicalOrigin: 'blob:https://q.example.com/id' }
   ])('uses the current origin for an invalid response: %j', async data => {
     const { default: axios } = await import('axios')
-    const get = vi.spyOn(axios, 'get').mockResolvedValue({ data })
+    const request = vi.spyOn(axios, 'request').mockResolvedValue({ data })
     const apis = await import('/@/lib/apis')
 
     await apis.initializeMeta()
 
-    expect(get).toHaveBeenCalledWith('/api/v3/meta', { timeout: 5000 })
+    expect(request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: 'GET',
+        url: '/api/v3/meta',
+        timeout: 5000
+      })
+    )
     expect(apis.embeddingOrigin).toBe(location.origin)
   })
 })

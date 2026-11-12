@@ -8,7 +8,7 @@ import { MainViewComponentState, useMainViewStore } from '/@/store/ui/mainView'
 
 type DrawerType = 'none' | 'nav' | 'sidebar'
 
-const stateMachineDrawerTypeMap: Record<MainViewComponentState, DrawerType> = {
+const stateMachineDrawerTypeMap = {
   [MainViewComponentState.Hidden]: 'none',
   [MainViewComponentState.NavShown]: 'nav',
   [MainViewComponentState.NavAppearing]: 'nav',
@@ -24,7 +24,7 @@ const stateMachineDrawerTypeMap: Record<MainViewComponentState, DrawerType> = {
   [MainViewComponentState.SidebarDisappearingAuto]: 'sidebar',
   [MainViewComponentState.SidebarDisappearing]: 'sidebar',
   [MainViewComponentState.SidebarDisappearingWaitingTouchEnd]: 'sidebar'
-}
+} satisfies Record<MainViewComponentState, DrawerType>
 
 const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
   const { currentMainViewComponentState: mState } = useMainViewStore()

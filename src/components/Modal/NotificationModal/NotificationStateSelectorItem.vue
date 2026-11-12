@@ -22,11 +22,12 @@ const props = withDefaults(
     isSelected: false
   }
 )
-
-const subscribeLevelInfoMap: Record<
-  ChannelSubscribeLevel,
-  { title: string; description: string; icon: string }
-> = {
+type SubscribeLevelInfo = {
+  title: string
+  description: string
+  icon: string
+}
+const subscribeLevelInfoMap = {
   [ChannelSubscribeLevel.notified]: {
     title: '通知オン',
     description: '新規メッセージの通知を送信します',
@@ -43,7 +44,7 @@ const subscribeLevelInfoMap: Record<
     description: '未読の管理・通知を行いません',
     icon: 'not-subscribed'
   }
-}
+} satisfies Record<ChannelSubscribeLevel, SubscribeLevelInfo>
 
 const info = computed(() => subscribeLevelInfoMap[props.subscriptionLevel])
 </script>
