@@ -3,6 +3,8 @@ export interface ChannelFixture {
   view?: 'channels' | 'tree' | 'home'
   topics?: boolean
   count?: number
+  leadingCount?: number
+  trailingCount?: number
 }
 
 declare global {

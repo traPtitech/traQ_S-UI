@@ -115,6 +115,7 @@ const setup = (initiallyExpanded: boolean, childCount = 1) => {
       virtualizer,
       flatItems,
       expandedNodeKeys,
+      treeElement: shallowRef(null),
       scrollElement,
       scrollMargin: computed(() => 0),
       toggle: () => {
@@ -271,7 +272,7 @@ describe('useChannelTreeAnimation', () => {
       const { visibleAnimation, finishTreeAnimation, handleToggle } =
         setup(false)
 
-      handleToggle('/root')
+      const finished = handleToggle('/root')
       handleToggle('/root')
       await Promise.resolve()
       await Promise.resolve()
@@ -280,13 +281,12 @@ describe('useChannelTreeAnimation', () => {
       expect(firstAnimation?.direction).toBe('expand')
       if (!firstAnimation) return
 
-      finishTreeAnimation(firstAnimation.id)
-      await Promise.resolve()
-      await Promise.resolve()
-      await Promise.resolve()
-      await Promise.resolve()
+      await finishTreeAnimation(firstAnimation.id)
+      await finished
 
-      expect(visibleAnimation.value?.direction).toBe('collapse')
+      await vi.waitFor(() =>
+        expect(visibleAnimation.value?.direction).toBe('collapse')
+      )
     } finally {
       vi.runOnlyPendingTimers()
       vi.useRealTimers()
