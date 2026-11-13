@@ -76,10 +76,8 @@ export const useStampRecommendations = convertToRefsStore(
 
 export const useTopStampIds = () => {
   const { featureFlags } = useFeatureFlagSettings()
-  const { stampRecommendations, stampRecommendationsFetched } =
-    useStampRecommendations()
-  const { recentStampIds, stampHistoryFetched } = useStampHistory()
-  const { stampsMapFetched } = useStampsStore()
+  const { stampRecommendations } = useStampRecommendations()
+  const { recentStampIds } = useStampHistory()
 
   const topStampIds = computed(() =>
     featureFlags.value.stamp_recommendation_v3.enabled
@@ -87,15 +85,7 @@ export const useTopStampIds = () => {
       : recentStampIds.value
   )
 
-  const topStampIdsFetched = computed(
-    () =>
-      stampsMapFetched.value &&
-      (featureFlags.value.stamp_recommendation_v3.enabled
-        ? stampRecommendationsFetched.value
-        : stampHistoryFetched.value)
-  )
-
-  return { topStampIds, topStampIdsFetched }
+  return { topStampIds }
 }
 
 if (import.meta.hot) {

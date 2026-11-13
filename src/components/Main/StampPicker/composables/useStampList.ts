@@ -2,70 +2,91 @@ import type { Ref } from 'vue'
 import { computed, shallowRef, watch } from 'vue'
 
 import { isDefined } from '/@/lib/basic/array'
-import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 import { useStampCategory } from '/@/store/domain/stampCategory'
-import { useTopStampIds } from '/@/store/domain/stampRecommendations'
+import { useStampHistory } from '/@/store/domain/stampHistory'
+import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
+import type { StampSet } from '/@/store/ui/stampPickerSettings'
 import type { StampId } from '/@/types/entity-ids'
 
 import useStampFilter from './useStampFilter'
-import type { StampSet } from './useStampSetSelector'
 
 const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { traQStampCategory, unicodeStampCategories } = useStampCategory()
-  const { featureFlags } = useFeatureFlagSettings()
-  const { topStampIds, topStampIdsFetched } = useTopStampIds()
-  const { stampsMap } = useStampsStore()
+  const { stampRecommendations, stampRecommendationsFetched } =
+    useStampRecommendations()
+  const { recentStampIds } = useStampHistory()
+  const { stampsMap, stampsMapFetched } = useStampsStore()
   const { stampPalettesMap } = useStampPalettesStore()
   const { filterState } = useStampFilter()
-  const shouldFreezeTopStampIds = computed(
+  const shouldFreezeRecommendations = computed(
     () =>
-      featureFlags.value.stamp_recommendation_v3.enabled &&
-      currentStampSet.value.type === 'history' &&
+      currentStampSet.value.type === 'recommendation' &&
       filterState.query === ''
   )
 
-  const initialTopStampIds = shallowRef<readonly StampId[]>()
+  const initialRecommendations = shallowRef<readonly StampId[]>()
   watch(
-    [shouldFreezeTopStampIds, topStampIds, topStampIdsFetched],
-    ([shouldFreeze, ids, fetched]) => {
+    [
+      shouldFreezeRecommendations,
+      stampRecommendations,
+      stampRecommendationsFetched,
+      stampsMapFetched
+    ],
+    ([shouldFreeze, ids, recommendationsFetched, stampsFetched]) => {
       if (!shouldFreeze) {
-        initialTopStampIds.value = undefined
+        initialRecommendations.value = undefined
         return
       }
-      if (initialTopStampIds.value !== undefined || !fetched) return
-      initialTopStampIds.value = [...ids]
+
+      if (
+        initialRecommendations.value === undefined &&
+        recommendationsFetched &&
+        stampsFetched
+      ) {
+        initialRecommendations.value = [...ids]
+      }
     },
     { immediate: true, flush: 'sync' }
   )
 
   const stampIds = computed((): readonly StampId[] => {
-    if (currentStampSet.value.type === 'history') {
-      return initialTopStampIds.value ?? topStampIds.value
+    if (currentStampSet.value.type === 'recommendation') {
+      return initialRecommendations.value ?? stampRecommendations.value
     }
+
+    if (currentStampSet.value.type === 'history') {
+      return recentStampIds.value
+    }
+
     if (currentStampSet.value.type === 'palette') {
       const id = currentStampSet.value.id
       const stampPalette = stampPalettesMap.value.get(id)
       return stampPalette?.stamps ?? []
     }
+
     if (currentStampSet.value.type === 'category') {
       const name = currentStampSet.value.id
       if (name === traQStampCategory.value.name) {
         return traQStampCategory.value.stampIds
       }
+
       return (
         unicodeStampCategories.value.find(
           category => name === `unicode-${category.name}`
         )?.stampIds ?? []
       )
     }
+
     return []
   })
+
   const stamps = computed(() => {
     if (filterState.query === '') {
       return stampIds.value.map(id => stampsMap.value.get(id)).filter(isDefined)
     }
+
     return filterState.filteredItems
   })
 
