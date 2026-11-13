@@ -1,9 +1,10 @@
 <template>
   <div
+    ref="treeElement"
     :class="$style.inner"
     :style="
       visibleAnimation
-        ? undefined
+        ? {}
         : {
             paddingTop: `${virtualPadding.start}px`,
             paddingBottom: `${virtualPadding.end}px`
@@ -39,7 +40,7 @@
         :show-shortened-path="showShortenedPath && item.depth === 0"
         :show-star="showStar"
         :show-notified="showNotified"
-        @click-hash="() => handleToggle(item.key)"
+        @click-hash="handleToggle(item.key)"
       />
     </div>
 
@@ -60,28 +61,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRef } from 'vue'
-
-import type { ChannelTreeNode } from '/@/lib/channelTree'
+import { computed, toRef, useTemplateRef } from 'vue'
 
 import ChannelElement from './ChannelElement.vue'
 import ChannelTreeAnimation from './ChannelTreeAnimation.vue'
+import type { VirtualChannelTreeProps } from './channelTreeProps'
 import useChannelFlatList from './composables/useChannelFlatList'
 import useChannelTreeAnimation from './composables/useChannelTreeAnimation'
 import useChannelTreeVirtualizer from './composables/useChannelTreeVirtualizer'
 
-interface ChannelTreeProps {
-  channels: ReadonlyArray<ChannelTreeNode>
-  scrollElement: HTMLElement | null
-  scrollMargin?: number
-  showShortenedPath?: boolean
-  showTopic?: boolean
-  showChildTopic?: boolean
-  showStar?: boolean
-  showNotified?: boolean
-}
-
-const props = withDefaults(defineProps<ChannelTreeProps>(), {
+const props = withDefaults(defineProps<VirtualChannelTreeProps>(), {
   scrollMargin: 0,
   showShortenedPath: false,
   showTopic: false,
@@ -100,6 +89,8 @@ const virtualizer = useChannelTreeVirtualizer({
   scrollMargin: computed(() => props.scrollMargin)
 })
 
+const treeElement = useTemplateRef<HTMLElement>('treeElement')
+
 const {
   displayedRows,
   visibleAnimation,
@@ -111,6 +102,7 @@ const {
   virtualizer,
   flatItems,
   expandedNodeKeys,
+  treeElement,
   scrollElement: toRef(props, 'scrollElement'),
   scrollMargin: computed(() => props.scrollMargin),
   toggle
@@ -139,6 +131,7 @@ const virtualPadding = computed(() => {
 <style lang="scss" module>
 .inner {
   position: relative;
+  min-height: var(--tree-min-height, 0px);
   overflow-anchor: none;
 }
 
@@ -147,8 +140,7 @@ const virtualPadding = computed(() => {
 
   &[data-is-animating] {
     position: absolute;
-    top: 0;
-    transform: translateY(var(--row-y));
+    top: var(--row-y);
   }
 }
 

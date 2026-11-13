@@ -1,10 +1,11 @@
 import { computed, ref, watch } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 
-import { useVirtualizer } from '@tanstack/vue-virtual'
+import { type VirtualizerOptions, useVirtualizer } from '@tanstack/vue-virtual'
 import { useRafFn } from '@vueuse/core'
 
 import { useNavigationVisibility } from '../../composables/useNavigationVisibility'
+import { measureChannelTreeHeight } from '../channelTreeMeasurement'
 import { createScrollCorrectionHandlers } from '../virtualizerScrollCorrection'
 import type { FlatChannelItem } from './useChannelFlatList'
 import useTouchScrollInteraction from './useTouchScrollInteraction'
@@ -15,6 +16,27 @@ interface ChannelTreeVirtualizerOptions {
   flatItems: ComputedRef<FlatChannelItem[]>
   scrollElement: Readonly<Ref<HTMLElement | null>>
   scrollMargin: ComputedRef<number>
+}
+
+const measureRow: VirtualizerOptions<
+  HTMLElement,
+  HTMLElement
+>['measureElement'] = (element, entry, instance) => {
+  if (!entry || instance.options.useCachedMeasurements) {
+    const index = instance.indexFromElement(element)
+    const cachedSize = instance.itemSizeCache.get(
+      instance.options.getItemKey(index)
+    )
+
+    if (instance.options.useCachedMeasurements) {
+      return cachedSize ?? instance.options.estimateSize(index)
+    }
+
+    if (cachedSize !== undefined) return cachedSize
+  }
+
+  // 通常の表示と開閉アニメーションで行の位置を揃えるために端数も保持
+  return measureChannelTreeHeight(element, entry)
 }
 
 const useChannelTreeVirtualizer = ({
@@ -50,6 +72,7 @@ const useChannelTreeVirtualizer = ({
       getScrollElement: () => scrollElement.value,
       initialOffset: () => scrollElement.value?.scrollTop ?? 0,
       estimateSize: () => 36,
+      measureElement: measureRow,
       useCachedMeasurements: useCachedMeasurements.value,
       useAnimationFrameWithResizeObserver: true,
       overscan: 5,

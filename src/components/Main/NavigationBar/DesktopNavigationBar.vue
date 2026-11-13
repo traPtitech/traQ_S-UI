@@ -24,6 +24,7 @@
       :class="[$style.navigations, { [$style.hidden]: isNavigationClosed }]"
     >
       <NavigationContent
+        :class="$style.navigationContent"
         :current-navigation="navigationSelectorState.currentNavigation"
       />
       <transition name="fade-bottom">
@@ -111,6 +112,9 @@ $ephemeralNavigationMinHeight: 64px;
   flex-direction: column;
   min-width: 0;
   flex: 1;
+}
+.navigationContent {
+  min-height: 0;
 }
 .ephemeralNavigation {
   width: #{calc(100% - #{$ephemeralNavigationSideMargin * 2})};

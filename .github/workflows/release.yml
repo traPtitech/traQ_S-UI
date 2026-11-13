@@ -14,6 +14,7 @@ env:
 
 jobs:
   make-dist:
+    needs: image
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -76,6 +77,11 @@ jobs:
           registry: ghcr.io
           username: traptitech
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Retain assets from previous releases
+        run: bash build/docker/retain-release-assets.sh "ghcr.io/traptitech/$IMAGE_NAME" "$GITHUB_REF_NAME" .retained-release
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Build and push
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0

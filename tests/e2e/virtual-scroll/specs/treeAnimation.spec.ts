@@ -68,6 +68,98 @@ for (const topics of [false, true]) {
   })
 }
 
+test('小数の高さのトピックがあっても開閉する行より上は動かない', async ({
+  page,
+  load
+}) => {
+  await page.addStyleTag({
+    content: 'div:has(> .markdown-inline-body) { padding-bottom: 0.25px; }'
+  })
+
+  const scroller = await load({
+    view: 'tree',
+    scenario: 'tree',
+    count: 4,
+    leadingCount: 4
+  })
+
+  const keys = ['/leading-0002', '/branch']
+  const { frames: before } = await scroller.evaluate(sampleRows)
+
+  for (const direction of ['expand', 'collapse'] as const) {
+    const { frames } = await scroller.evaluate(sampleRows, {
+      animation: { direction, toggleSelector: '[data-key="/branch"] button' }
+    })
+
+    expect(frames.some(frame => frame.animation === direction)).toBe(true)
+
+    for (const key of keys) {
+      const initialRow = before[0]?.rows.find(row => row.key === key)
+      if (!initialRow) throw new Error(`Initial row not found: ${key}`)
+
+      for (const frame of frames) {
+        const row = frame.rows.find(row => row.key === key)
+        expect(row?.rawTop).toBeCloseTo(initialRow.rawTop, 1)
+      }
+    }
+  }
+})
+
+test('一覧末尾付近で展開してもスクロール位置と後続のトピック行の高さを保つ', async ({
+  load
+}) => {
+  const scroller = await load({
+    view: 'tree',
+    scenario: 'tree',
+    count: 1,
+    leadingCount: 8,
+    trailingCount: 7
+  })
+
+  const tailKey = `/${trailingId(3)}`
+  const tail = row(scroller, tailKey)
+
+  await expect(tail.locator('.markdown-inline-body')).not.toBeEmpty()
+
+  const before = await scroller.evaluate(async element => {
+    for (let frame = 0; frame < 4; frame++) {
+      element.scrollTop = element.scrollHeight
+      await new Promise(requestAnimationFrame)
+    }
+
+    return element.scrollTop
+  })
+
+  expect(before).toBeGreaterThan(0)
+  await expect(row(scroller, '/branch').getByRole('button')).toBeInViewport()
+
+  const initialHeight = await tail.evaluate(
+    element => element.getBoundingClientRect().height
+  )
+
+  expect(initialHeight).toBeGreaterThan(40)
+
+  const { frames } = await scroller.evaluate(sampleRows, {
+    animation: {
+      direction: 'expand' as const,
+      toggleSelector: '[data-key="/branch"] button'
+    }
+  })
+
+  expect(frames.some(frame => frame.animation === 'expand')).toBe(true)
+
+  for (const frame of frames) {
+    const trailingRow = frame.rows.find(row => row.key === tailKey)
+    expect(trailingRow).toBeDefined()
+    expect(
+      Math.abs(
+        (trailingRow?.bottom ?? 0) - (trailingRow?.top ?? 0) - initialHeight
+      )
+    ).toBeLessThanOrEqual(1)
+    expect(Math.abs(frame.scrollTop - before)).toBeLessThanOrEqual(1)
+  }
+})
+
 test('素早く連続して開閉しても各行が過不足なく表示される', async ({ load }) => {
   const scroller = await load({ view: 'tree', scenario: 'tree', topics: false })
   const toggle = row(scroller, '/branch').getByRole('button')

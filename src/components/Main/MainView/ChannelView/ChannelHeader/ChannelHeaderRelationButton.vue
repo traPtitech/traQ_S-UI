@@ -33,11 +33,12 @@ import { useEventListener } from '@vueuse/core'
 
 import AIcon from '/@/components/UI/AIcon.vue'
 import type { Point } from '/@/lib/basic/point'
+import type { ChannelId } from '/@/types/entity-ids'
 
 import ChannelHeaderRelationPopup from './ChannelHeaderRelationPopup.vue'
 
 const props = defineProps<{
-  channelId: string
+  channelId: ChannelId
 }>()
 
 const trigger = ref<HTMLElement | null>(null)

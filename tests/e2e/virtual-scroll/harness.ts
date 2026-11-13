@@ -4,6 +4,8 @@ export interface ChannelFixture {
   topics?: boolean
   count?: number
   starredChannelIds?: string[]
+  leadingCount?: number
+  trailingCount?: number
 }
 
 declare global {
