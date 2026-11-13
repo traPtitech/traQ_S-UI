@@ -12,8 +12,9 @@ import { computed, shallowRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import useChannelPath from '/@/composables/useChannelPath'
+import useMittListener from '/@/composables/utils/useMittListener'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
-import { useMessagesStore } from '/@/store/entities/messages'
+import { messageMitt, useMessagesStore } from '/@/store/entities/messages'
 import { useThreadsStore } from '/@/store/entities/threads'
 import type { MessageId, ThreadChannelId } from '/@/types/entity-ids'
 
@@ -42,6 +43,26 @@ const latestMessage = computed(() =>
     : undefined
 )
 
+useMittListener(messageMitt, 'addMessage', ({ message }) => {
+  if (message.channelId !== props.threadId) return
+  latestMessageId.value = message.id
+})
+
+useMittListener(messageMitt, 'deleteMessage', async messageId => {
+  if (latestMessageId.value !== messageId) return
+  const threadId = props.threadId
+
+  try {
+    const message = await fetchLatestMessage(threadId)
+    if (props.threadId === threadId && latestMessageId.value === messageId) {
+      latestMessageId.value = message?.id
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console -- API取得失敗の調査用
+    console.error('スレッドの最新メッセージの取得に失敗しました', error)
+  }
+})
+
 watch(
   () => props.threadId,
   async (threadId, _, onCleanup) => {
@@ -56,7 +77,9 @@ watch(
       if (!fetchedThread || cancelled) return
 
       const message = await fetchLatestMessage(threadId)
-      if (!cancelled) latestMessageId.value = message?.id
+      if (!cancelled && !latestMessageId.value) {
+        latestMessageId.value = message?.id
+      }
     } catch (error) {
       // eslint-disable-next-line no-console -- API取得失敗の調査用
       if (!cancelled) console.error('スレッドの取得に失敗しました', error)
