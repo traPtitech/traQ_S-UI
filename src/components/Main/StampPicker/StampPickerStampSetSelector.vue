@@ -1,34 +1,36 @@
 <template>
-  <div ref="tabStrip" :class="$style.container">
-    <div
-      ref="tabList"
-      :class="[$style.innerContainer, { [$style.dragging]: isDragging }]"
-      role="group"
-      aria-label="スタンプ一覧の切り替え"
-      @contextmenu="onTabContextMenu"
-    >
-      <StampPickerStampSetSelectorItem
-        v-for="set in stampSets"
-        :key="getStampSetKey(set)"
-        :class="$style.item"
-        :data-id="getStampSetKey(set)"
-        :stamp-set="set"
-        :is-active="getStampSetKey(currentStampSet) === getStampSetKey(set)"
-        @click="currentStampSet = set"
-      />
-    </div>
-    <template v-if="sortable && tabOrder.length > 0">
-      <span :class="$style.divider" aria-hidden="true" />
-      <button
-        ref="resetButton"
-        type="button"
-        title="タブの並び順をリセット"
-        :class="$style.resetButton"
-        :disabled="isDragging"
+  <div ref="tabStrip" :class="$style.scrollArea">
+    <div :class="[$style.row, { [$style.dragging]: isDragging }]">
+      <div
+        ref="tabList"
+        :class="$style.tabList"
+        role="group"
+        aria-label="スタンプ一覧の切り替え"
+        @contextmenu="onTabContextMenu"
       >
-        <AIcon mdi name="refresh" aria-hidden="true" />
-      </button>
-    </template>
+        <StampPickerStampSetSelectorItem
+          v-for="set in stampSets"
+          :key="getStampSetKey(set)"
+          :class="$style.item"
+          :data-id="getStampSetKey(set)"
+          :stamp-set="set"
+          :is-active="getStampSetKey(currentStampSet) === getStampSetKey(set)"
+          @click="currentStampSet = set"
+        />
+      </div>
+      <template v-if="sortable && tabOrder.length > 0">
+        <span :class="$style.divider" aria-hidden="true" />
+        <button
+          ref="resetButton"
+          type="button"
+          title="タブの並び順をリセット"
+          :class="$style.resetButton"
+          :disabled="isDragging"
+        >
+          <AIcon mdi name="refresh" aria-hidden="true" />
+        </button>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -103,27 +105,33 @@ useEventListener(
 </script>
 
 <style lang="scss" module>
-.container {
+.scrollArea {
   @include background-secondary;
-  display: flex;
-  align-items: center;
   position: relative;
-  height: fit-content;
-  padding-inline: 8px;
   overflow-x: auto;
 
   @media (pointer: coarse) {
     overscroll-behavior: none;
   }
 }
-.innerContainer {
+.row,
+.tabList {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
+}
+.row {
+  inline-size: max-content;
+  padding-inline: 8px;
+  // オーバーレイスクロールバーとタブの選択線が重ならないようにする
+  padding-block-end: 8px;
+}
+.tabList {
+  flex: none;
 }
 .item,
 .resetButton {
-  flex: 0 0 32px;
+  flex: none;
+  inline-size: 32px;
 }
 .item {
   -webkit-touch-callout: none;
@@ -151,8 +159,8 @@ useEventListener(
     outline-offset: -2px;
   }
 }
-.dragging ~ .divider,
-.dragging ~ .resetButton {
+.dragging .divider,
+.dragging .resetButton {
   visibility: hidden;
 }
 .dragPreview {
