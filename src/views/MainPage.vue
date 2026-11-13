@@ -168,6 +168,10 @@ useViewStateSender()
 </script>
 
 <style lang="scss" module>
+:root:has(.homeWrapper) {
+  overflow-y: hidden;
+}
+
 .homeWrapper {
   height: 100%;
 }

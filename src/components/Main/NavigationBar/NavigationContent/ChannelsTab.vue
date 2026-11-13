@@ -1,6 +1,6 @@
 <template>
-  <div ref="scrollEl" :class="$style.container">
-    <div ref="headerRef" :class="$style.header">
+  <div :class="$style.container">
+    <div :class="$style.header">
       <NavigationContentTitle>チャンネル</NavigationContentTitle>
       <NavigationContentContainer subtitle="チャンネルリスト">
         <template #control>
@@ -18,80 +18,90 @@
               title="アーカイブされたチャンネルを表示する"
             />
           </div>
-          <ChannelListSelector
-            v-if="query.length === 0"
-            v-model:is-starred="filterStarChannel"
-            :all-panel-id="allPanelId"
-            :starred-panel-id="starredPanelId"
-          />
+          <HideOnScroll
+            :key="isSearching ? 'search' : 'browse'"
+            :scroll-element="scrollEl"
+          >
+            <ChannelListSelector
+              v-model:is-starred="isStarredTabSelected"
+              :all-panel-id="allPanelId"
+              :starred-panel-id="starredPanelId"
+            />
+            <template #collapsed-decoration>
+              <div :class="$style.divider" />
+            </template>
+          </HideOnScroll>
         </template>
       </NavigationContentContainer>
     </div>
 
-    <template v-if="query.length > 0">
+    <div
+      ref="scrollEl"
+      :class="$style.scroller"
+      role="region"
+      aria-label="チャンネル一覧"
+    >
       <ChannelTree
+        v-if="isSearching"
+        :id="searchStarredOnly ? starredPanelId : allPanelId"
+        role="tabpanel"
         :channels="filteredChannelTree"
         :scroll-element="scrollEl"
-        :scroll-margin="scrollMargin"
         show-topic
         show-shortened-path
         :show-child-topic="false"
       />
-    </template>
-    <template v-else-if="filterStarChannel">
-      <template v-if="strictStarredChannelTree">
-        <ChannelTree
-          v-if="starredTopLevelChannels.length > 0"
-          :id="starredPanelId"
-          role="tabpanel"
-          :channels="starredTopLevelChannels"
-          :scroll-element="scrollEl"
-          :scroll-margin="scrollMargin"
-        />
-        <EmptyState v-else :id="starredPanelId" role="tabpanel">
-          お気に入りチャンネルはありません
-        </EmptyState>
+      <template v-else-if="filterStarChannel">
+        <template v-if="strictStarredChannelTree">
+          <ChannelTree
+            v-if="starredTopLevelChannels.length > 0"
+            :id="starredPanelId"
+            role="tabpanel"
+            :channels="starredTopLevelChannels"
+            :scroll-element="scrollEl"
+          />
+          <EmptyState v-else :id="starredPanelId" role="tabpanel">
+            お気に入りチャンネルはありません
+          </EmptyState>
+        </template>
+        <template v-else>
+          <ChannelTree
+            v-if="starredChannels.length > 0"
+            :id="starredPanelId"
+            role="tabpanel"
+            :channels="starredChannels"
+            show-shortened-path
+            :scroll-element="scrollEl"
+          />
+          <EmptyState v-else :id="starredPanelId" role="tabpanel">
+            お気に入りチャンネルはありません
+          </EmptyState>
+        </template>
       </template>
       <template v-else>
         <ChannelTree
-          v-if="starredChannels.length > 0"
-          :id="starredPanelId"
+          v-if="topLevelChannels.length > 0"
+          :id="allPanelId"
           role="tabpanel"
-          :channels="starredChannels"
-          show-shortened-path
+          :channels="topLevelChannels"
           :scroll-element="scrollEl"
-          :scroll-margin="scrollMargin"
         />
-        <EmptyState v-else :id="starredPanelId" role="tabpanel">
-          お気に入りチャンネルはありません
+        <EmptyState v-else :id="allPanelId" role="tabpanel">
+          チャンネルがありません
         </EmptyState>
       </template>
-    </template>
-    <template v-else>
-      <ChannelTree
-        v-if="topLevelChannels.length > 0"
-        :id="allPanelId"
-        role="tabpanel"
-        :channels="topLevelChannels"
-        :scroll-element="scrollEl"
-        :scroll-margin="scrollMargin"
-      />
-      <EmptyState v-else :id="allPanelId" role="tabpanel">
-        チャンネルがありません
-      </EmptyState>
-    </template>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, toRaw, useId } from 'vue'
-
-import { useElementSize } from '@vueuse/core'
+import { computed, ref, toRaw, useId, watch } from 'vue'
 
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import NavigationContentTitle from '/@/components/Main/NavigationBar/NavigationContentTitle.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
+import HideOnScroll from '/@/components/UI/HideOnScroll.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { filterTrees } from '/@/lib/basic/tree'
 import { sortByChannelPath } from '/@/lib/channel'
@@ -142,19 +152,47 @@ const starredChannels = computed(() => {
   )
 })
 
-const channelListForFilter = computed(() =>
-  [...channelsMap.value.values()].filter(
-    channel => showArchivedChannels.value || !channel.archived
-  )
+const searchStarredOnly = ref(false)
+const searchChannelMap = computed(
+  () =>
+    new Map(
+      [...channelsMap.value].filter(
+        ([id, channel]) =>
+          (showArchivedChannels.value || !channel.archived) &&
+          (!searchStarredOnly.value || starredChannelSet.value.has(id))
+      )
+    )
 )
+
+const channelListForFilter = computed(() => [
+  ...searchChannelMap.value.values()
+])
+
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
+const isSearching = computed(() => query.value.length > 0)
+const isStarredTabSelected = computed({
+  get: () =>
+    isSearching.value ? searchStarredOnly.value : filterStarChannel.value,
+  set: isStarred => {
+    if (isSearching.value) {
+      searchStarredOnly.value = isStarred
+    } else {
+      filterStarChannel.value = isStarred
+    }
+  }
+})
+
+watch(
+  isSearching,
+  searching => {
+    if (!searching) searchStarredOnly.value = false
+  },
+  { flush: 'sync' }
+)
 
 const filteredChannelTree = computed(() => {
   const rootIds = filteredChannels.value.map(c => c.id)
-  return filterTrees(
-    constructTreeFromIds(rootIds, channelsMap.value),
-    channel => showArchivedChannels.value || !channel.archived
-  )
+  return constructTreeFromIds(rootIds, searchChannelMap.value)
 })
 
 const onClickButton = () => {
@@ -165,28 +203,36 @@ const allPanelId = useId()
 const starredPanelId = useId()
 
 const scrollEl = ref<HTMLElement | null>(null)
-const headerRef = ref<HTMLElement | null>(null)
-const { height: headerHeight } = useElementSize(headerRef, undefined, {
-  box: 'border-box'
-})
-const scrollMargin = computed(() => headerHeight.value)
 </script>
 
 <style lang="scss" module>
 .container {
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  overflow-y: auto;
-  scrollbar-gutter: stable;
-  padding: 0 0 24px 8px;
+  padding-left: 8px;
 }
 .header {
+  flex-shrink: 0;
   padding-top: 24px;
+}
+.divider {
+  height: 1px;
+  background-color: $theme-ui-tertiary-default;
+  opacity: 0.45;
+}
+.scroller {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding-bottom: 24px;
 }
 .filterContainer {
   display: flex;
   gap: 1rem;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   margin-right: 1rem;
 }
 .filter {

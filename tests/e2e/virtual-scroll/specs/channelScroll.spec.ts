@@ -1,4 +1,4 @@
-import { flatId, longTopic } from '../data'
+import { childId, flatId, longTopic } from '../data'
 import { sampleRows } from '../geometry'
 import {
   expect,
@@ -23,12 +23,108 @@ test('固定高の行を仮想化し、大きな一覧の先頭と末尾へ移�
   await expect(row(scroller, `/${flatId(0)}`)).toBeVisible()
 })
 
+test('一覧を下へスクロールすると切り替えが隠れ、少し上へ戻すと表示される', async ({
+  load,
+  page
+}) => {
+  const scroller = await load({ topics: false })
+  const tabs = page.getByRole('tablist')
+  const input = page.getByRole('textbox')
+
+  await expect(tabs.getByRole('tab', { name: 'すべて' })).toBeVisible()
+  await expect(tabs.getByRole('tab', { name: 'お気に入り' })).toBeVisible()
+
+  await scroller.evaluate(el => {
+    el.scrollTop = 160
+  })
+  await expect(tabs).toBeHidden()
+  await expect(input).toBeInViewport()
+
+  await scroller.evaluate(el => {
+    el.scrollTop -= 12
+  })
+  await expect(tabs).toBeVisible()
+  expect(await scroller.evaluate(el => el.scrollTop)).toBeGreaterThan(0)
+
+  await scroller.evaluate(el => {
+    el.scrollTop = el.scrollHeight
+  })
+  await expect(tabs).toBeHidden()
+
+  await scroller.evaluate(el => {
+    el.scrollTop -= 12
+  })
+  await expect(tabs).toBeVisible()
+})
+
+test('検索中のタブは毎回すべてから始まり、通常時に保存したタブから独立する', async ({
+  load,
+  page
+}) => {
+  const scroller = await load({
+    scenario: 'tree',
+    count: 3,
+    topics: false,
+    starredChannelIds: [childId(0), 'missing-channel']
+  })
+
+  const input = page.getByRole('textbox')
+  const allTab = page.getByRole('tab', { name: 'すべて' })
+  const starredTab = page.getByRole('tab', { name: 'お気に入り' })
+  const starredChannel = row(scroller, `/${childId(0)}`)
+  const unstarredChannel = row(scroller, `/${childId(1)}`)
+  const unstarredDescendant = row(scroller, '/grandchild')
+  const savedStarredTab = () =>
+    page.evaluate(() => {
+      const settings = localStorage.getItem('traQ_S-store/app/browserSettings')
+      return settings ? JSON.parse(settings).data.filterStarChannel : undefined
+    })
+
+  await starredTab.click()
+  await expect.poll(savedStarredTab).toBe(true)
+
+  await input.fill('child')
+  await expect(allTab).toHaveAttribute('aria-selected', 'true')
+  await expect(unstarredChannel).toBeVisible()
+  await expect(unstarredDescendant).toBeVisible()
+
+  await input.fill('child-0000')
+  await expect(starredChannel.getByRole('button')).toBeVisible()
+  await starredTab.click()
+  await expect(starredChannel.getByRole('button')).toHaveCount(0)
+
+  await input.fill('child')
+  await expect(starredChannel).toBeVisible()
+  await expect(unstarredDescendant).toHaveCount(0)
+  await expect(unstarredChannel).toHaveCount(0)
+
+  await allTab.click()
+  await expect(unstarredChannel).toBeVisible()
+  await expect.poll(savedStarredTab).toBe(true)
+  await input.fill('')
+  await expect(starredTab).toHaveAttribute('aria-selected', 'true')
+
+  await allTab.click()
+  await expect.poll(savedStarredTab).toBe(false)
+  await input.fill('child')
+  await starredTab.click()
+  await expect(unstarredChannel).toHaveCount(0)
+  await expect.poll(savedStarredTab).toBe(false)
+
+  await input.fill('')
+  await expect(allTab).toHaveAttribute('aria-selected', 'true')
+  await input.fill('child')
+  await expect(allTab).toHaveAttribute('aria-selected', 'true')
+  await expect(unstarredChannel).toBeVisible()
+})
+
 test('検索後に未計測のトピック行へスクロールしても表示領域が行で埋まる', async ({
+  page,
   load
 }) => {
   const scroller = await load()
-  await scroller.getByRole('textbox').fill('channel')
-  await scroller.getByRole('textbox').blur()
+  await page.getByRole('textbox').fill('channel')
+  await page.getByRole('textbox').blur()
 
   // 未計測のトピック行へのスクロールを再現するため、Markdown の描画・高さ計測中に移動を始める。
   await scrollAndCheckCoverage(scroller, 14000, 0)
@@ -36,13 +132,67 @@ test('検索後に未計測のトピック行へスクロールしても表示�
   await scrollAndCheckCoverage(scroller, 17000)
 })
 
+test('変換中に一覧をスクロールしても検索欄の位置を保ち、チャンネルへ移動できる', async ({
+  hasTouch,
+  load,
+  page
+}) => {
+  const scroller = await load({ scenario: 'tree', topics: false })
+  const input = page.getByRole('textbox')
+
+  await input.focus()
+  await input.evaluate((el: HTMLInputElement) => {
+    el.dispatchEvent(
+      new CompositionEvent('compositionstart', { bubbles: true })
+    )
+    el.value = 'child'
+    el.dispatchEvent(
+      new InputEvent('input', {
+        bubbles: true,
+        inputType: 'insertCompositionText',
+        data: 'child',
+        isComposing: true
+      })
+    )
+  })
+
+  await expect(row(scroller, `/${childId(0)}`)).toBeInViewport()
+
+  const offset = 400
+  await scroller.evaluate((el, offset) => {
+    el.scrollTop = offset
+  }, offset)
+
+  const link = row(scroller, `/${childId(14)}`).getByRole('link')
+  await expect(link).toBeInViewport()
+  await expect(input).toBeInViewport()
+  await expect(input).toBeFocused()
+
+  // IME が検索欄を表示し直す場合も、結果のスクロール位置を保つ。
+  await input.evaluate(el => el.scrollIntoView({ block: 'nearest' }))
+  expect(await scroller.evaluate(el => el.scrollTop)).toBe(offset)
+
+  if (hasTouch) {
+    await link.tap()
+  } else {
+    await link.click()
+  }
+
+  await expect(page.getByTestId('panel')).toHaveAttribute(
+    'data-route-path',
+    '/channels/a-branch/child-0014'
+  )
+  await expect(input).toHaveValue('child')
+  await expect(input).not.toBeFocused()
+})
+
 test('タッチ操作中の高さ変更が停止時のスクロール補正に持ち越されない @touch', async ({
   page,
   load
 }) => {
   const scroller = await load({ topics: false })
-  await scroller.getByRole('textbox').fill('channel')
-  await scroller.getByRole('textbox').blur()
+  await page.getByRole('textbox').fill('channel')
+  await page.getByRole('textbox').blur()
   await scrollAndCheckCoverage(scroller, 14000, 0)
 
   const key = await scroller.evaluate(el => {
@@ -98,10 +248,11 @@ test('タッチ操作中の高さ変更が停止時のスクロール補正に�
 })
 
 test('スクロール後に検索結果が減少・消失・復元しても表示範囲が追従する', async ({
+  page,
   load
 }) => {
   const scroller = await load()
-  const input = scroller.getByRole('textbox')
+  const input = page.getByRole('textbox')
   await input.fill('channel')
   await scrollAndCheckCoverage(scroller, 14000, 0)
 
@@ -117,7 +268,7 @@ test('スクロール後に検索結果が減少・消失・復元しても表�
   expectCovered(await scroller.evaluate(sampleRows, { duration: 250 }))
 
   await input.fill('')
-  await expect(scroller.getByRole('tab', { name: 'すべて' })).toBeVisible()
+  await expect(page.getByRole('tab', { name: 'すべて' })).toBeVisible()
   expectCovered(await scroller.evaluate(sampleRows))
 })
 
@@ -266,8 +417,8 @@ for (const topics of [false, true]) {
     const scroller = await load({ topics })
 
     if (topics) {
-      await scroller.getByRole('textbox').fill('channel')
-      await scroller.getByRole('textbox').blur()
+      await page.getByRole('textbox').fill('channel')
+      await page.getByRole('textbox').blur()
     }
 
     await scrollAndCheckCoverage(scroller, 14000, 0)
@@ -383,8 +534,8 @@ test('ネイティブのタッチ入力で大きな検索結果の一覧をス�
   load
 }) => {
   const scroller = await load()
-  await scroller.getByRole('textbox').fill('channel')
-  await scroller.getByRole('textbox').blur()
+  await page.getByRole('textbox').fill('channel')
+  await page.getByRole('textbox').blur()
   await scrollAndCheckCoverage(scroller, 14000, 0)
 
   const session = await page.context().newCDPSession(page)
