@@ -77,9 +77,10 @@ const useMessageFetcher = (
   }
 
   const onLoadFormerMessagesRequest = async () => {
-    if (isReachedEnd.value) {
+    if (isLoading.value || isReachedEnd.value) {
       return
     }
+
     isLoading.value = true
 
     await runWithIdentifierCheck(
@@ -116,9 +117,10 @@ const useMessageFetcher = (
   }
 
   const onLoadLatterMessagesRequest = async () => {
-    if (!fetchLatterMessages || isReachedLatest.value) {
+    if (isLoading.value || !fetchLatterMessages || isReachedLatest.value) {
       return
     }
+
     isLoading.value = true
 
     await runWithIdentifierCheck(

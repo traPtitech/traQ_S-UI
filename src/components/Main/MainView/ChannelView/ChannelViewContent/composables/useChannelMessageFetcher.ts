@@ -41,10 +41,7 @@ const useChannelMessageFetcher = (
     unreadChannelsMapInitialFetchPromise,
     deleteUnreadChannelWithSend
   } = useSubscriptionStore()
-  const { fetchLimit, waitHeightResolved } = useFetchLimit(
-    scrollerRef,
-    MESSAGE_HEIGHT
-  )
+  const getFetchLimit = useFetchLimit(scrollerRef, MESSAGE_HEIGHT)
   const loadedMessageLatestDate = ref<Date>()
   const loadedMessageOldestDate = ref<Date>()
   const unreadSince = ref()
@@ -97,10 +94,10 @@ const useChannelMessageFetcher = (
   }
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
-    await waitHeightResolved
+    const limit = await getFetchLimit()
     const { messages: messagesDesc, hasMore } = await fetchMessagesByChannelId({
       channelId: props.channelId,
-      limit: fetchLimit.value,
+      limit,
       order: 'desc',
       until: loadedMessageOldestDate.value
     })
@@ -118,10 +115,10 @@ const useChannelMessageFetcher = (
   const fetchLatterMessages = async (
     isReachedLatest: Ref<boolean>
   ): Promise<ChannelId[]> => {
-    await waitHeightResolved
+    const limit = await getFetchLimit()
     const { messages: messagesAsc, hasMore } = await fetchMessagesByChannelId({
       channelId: props.channelId,
-      limit: fetchLimit.value,
+      limit,
       order: 'asc',
       since: loadedMessageLatestDate.value
     })
@@ -144,7 +141,6 @@ const useChannelMessageFetcher = (
     loadedMessageLatestDate.value = date
     loadedMessageOldestDate.value = date
 
-    await waitHeightResolved
     const [formerMessageIds, latterMessageIds] = await Promise.all([
       fetchFormerMessages(isReachedEnd),
       fetchLatterMessages(isReachedLatest)
@@ -156,10 +152,10 @@ const useChannelMessageFetcher = (
 
   // 直近のメッセージを取得し作成日時昇順で並べ替えて返す
   const fetchNewMessages = async (isReachedLatest: Ref<boolean>) => {
-    await waitHeightResolved
+    const limit = await getFetchLimit()
     const { messages: messagesDesc, hasMore } = await fetchMessagesByChannelId({
       channelId: props.channelId,
-      limit: fetchLimit.value,
+      limit,
       order: 'desc',
       since: loadedMessageLatestDate.value
     })
