@@ -109,6 +109,9 @@ useEventListener(
   @include background-secondary;
   position: relative;
   overflow-x: auto;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 
   @media (pointer: coarse) {
     overscroll-behavior: none;
@@ -132,9 +135,6 @@ useEventListener(
 .resetButton {
   flex: none;
   inline-size: 32px;
-}
-.item {
-  -webkit-touch-callout: none;
 }
 .divider {
   flex: 0 0 1px;
