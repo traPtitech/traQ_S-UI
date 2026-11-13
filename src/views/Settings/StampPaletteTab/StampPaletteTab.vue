@@ -6,7 +6,11 @@
         :class="$style.quickReaction"
         :aria-labelledby="quickReactionHeadingId"
       >
-        <h3 :id="quickReactionHeadingId">ホバーメニューのスタンプ</h3>
+        <h3 :id="quickReactionHeadingId">クイックアクセス</h3>
+        <p>
+          メッセージのホバーメニューに、選択したスタンプパレットの先頭 3
+          件が表示されます。
+        </p>
         <FormSelectorFilterable
           v-model="quickReactionSource"
           :labelled-by="quickReactionHeadingId"
