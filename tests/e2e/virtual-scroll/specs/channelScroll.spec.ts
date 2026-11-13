@@ -23,38 +23,61 @@ test('固定高の行を仮想化し、大きな一覧の先頭と末尾へ移�
   await expect(row(scroller, `/${flatId(0)}`)).toBeVisible()
 })
 
-test('一覧を下へスクロールすると切り替えが隠れ、少し上へ戻すと表示される', async ({
+test('タブの表示位置が変わってもチャンネル一覧のスクロール範囲を保つ', async ({
   load,
   page
 }) => {
   const scroller = await load({ topics: false })
-  const tabs = page.getByRole('tablist')
+  const tabs = scroller.getByRole('tablist')
+  const tabsContent = tabs.locator('..')
   const input = page.getByRole('textbox')
+  const bounds = () =>
+    scroller.evaluate(el => ({
+      top: el.getBoundingClientRect().top,
+      height: el.clientHeight,
+      scrollHeight: el.scrollHeight
+    }))
 
-  await expect(tabs.getByRole('tab', { name: 'すべて' })).toBeVisible()
-  await expect(tabs.getByRole('tab', { name: 'お気に入り' })).toBeVisible()
+  const tabsTop = () => tabs.evaluate(el => el.getBoundingClientRect().top)
+  const scrollTo = (top: number) =>
+    scroller.evaluate(async (el, top) => {
+      el.scrollTop = top
+      await new Promise(resolve => requestAnimationFrame(resolve))
+    }, top)
 
-  await scroller.evaluate(el => {
-    el.scrollTop = 160
-  })
+  const initialBounds = await bounds()
+  const initialInputBox = await input.boundingBox()
+
+  await expect.poll(tabsTop).toBeCloseTo(initialBounds.top)
+
+  await expect(tabsContent).toHaveCSS('transition', 'clip-path 0.18s ease-out')
+
+  await scrollTo(31)
+  await expect(tabs).toBeInViewport()
+
+  await scrollTo(32)
   await expect(tabs).toBeHidden()
-  await expect(input).toBeInViewport()
+  expect(await bounds()).toEqual(initialBounds)
 
-  await scroller.evaluate(el => {
-    el.scrollTop -= 12
-  })
-  await expect(tabs).toBeVisible()
-  expect(await scroller.evaluate(el => el.scrollTop)).toBeGreaterThan(0)
-
-  await scroller.evaluate(el => {
-    el.scrollTop = el.scrollHeight
-  })
+  await scrollTo(initialBounds.scrollHeight)
+  const bottom = initialBounds.scrollHeight - initialBounds.height
   await expect(tabs).toBeHidden()
 
-  await scroller.evaluate(el => {
-    el.scrollTop -= 12
-  })
-  await expect(tabs).toBeVisible()
+  await scrollTo(bottom - 31)
+  await expect(tabs).toBeHidden()
+
+  await scrollTo(bottom - 32)
+  await expect(tabs).toBeInViewport()
+  await expect.poll(tabsTop).toBeCloseTo(initialBounds.top)
+  expect(await scroller.evaluate(el => el.scrollTop)).toBe(bottom - 32)
+  expect(await bounds()).toEqual(initialBounds)
+  expect(await input.boundingBox()).toEqual(initialInputBox)
+
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  const duration = await tabsContent.evaluate(el =>
+    Number.parseFloat(getComputedStyle(el).transitionDuration)
+  )
+  expect(duration).toBeLessThan(0.001)
 })
 
 test('検索中のタブは毎回すべてから始まり、通常時に保存したタブから独立する', async ({
