@@ -96,13 +96,16 @@ export const useSortableOutside = (
     { flush: 'sync' }
   )
 
+  const updatePointer = (event: MouseEvent | TouchEvent) => {
+    pointer = 'touches' in event ? event.touches[0] : event
+    reorderOutsideList()
+  }
+
   useEventListener(
     () => draggingList.value?.ownerDocument,
-    'pointermove',
-    (event: PointerEvent) => {
-      pointer = event
-      reorderOutsideList()
-    }
+    ['pointermove', 'mousemove', 'touchmove'],
+    updatePointer,
+    { passive: true }
   )
   useEventListener(scrollContainer, 'scroll', reorderOutsideList)
 }

@@ -5,6 +5,7 @@
       :class="[$style.innerContainer, { [$style.dragging]: isDragging }]"
       role="group"
       aria-label="スタンプ一覧の切り替え"
+      @contextmenu="onTabContextMenu"
     >
       <StampPickerStampSetSelectorItem
         v-for="set in stampSets"
@@ -57,6 +58,7 @@ const props = defineProps<{
   sortable: boolean
 }>()
 
+const TOUCH_REORDER_DELAY = 350
 const tabStrip = useTemplateRef('tabStrip')
 const tabList = useTemplateRef('tabList')
 const styles = useCssModule()
@@ -68,13 +70,19 @@ const { isDragging } = useSortable(
   {
     sortOutside: 'horizontal',
     scroll: tabStrip,
-    delay: 200,
+    delay: TOUCH_REORDER_DELAY,
     delayOnTouchOnly: true,
+    // タッチの並べ替えが始まったら touchmove でブラウザーのスクロールを止める
+    supportPointer: false,
     touchStartThreshold: 4,
     fallbackTolerance: 4,
     fallbackClass: styles.dragPreview
   }
 )
+
+const onTabContextMenu = (event: PointerEvent) => {
+  if (props.sortable && event.pointerType === 'touch') event.preventDefault()
+}
 
 const resetButton = useTemplateRef('resetButton')
 
@@ -103,6 +111,10 @@ useEventListener(
   height: fit-content;
   padding-inline: 8px;
   overflow-x: auto;
+
+  @media (pointer: coarse) {
+    overscroll-behavior: none;
+  }
 }
 .innerContainer {
   display: flex;
@@ -112,6 +124,9 @@ useEventListener(
 .item,
 .resetButton {
   flex: 0 0 32px;
+}
+.item {
+  -webkit-touch-callout: none;
 }
 .divider {
   flex: 0 0 1px;

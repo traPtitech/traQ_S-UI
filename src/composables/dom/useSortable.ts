@@ -22,6 +22,7 @@ type Options = Omit<
   /** リストの外でも指定した軸に沿って並べ替える */
   sortOutside?: Sortable.Direction
   scroll?: MaybeRefOrGetter<Sortable.Options['scroll'] | null>
+  supportPointer?: boolean
 }
 
 export const useSortable = (
