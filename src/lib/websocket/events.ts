@@ -89,6 +89,8 @@ type ChannelEvent = {
   CHANNEL_STARED: ChannelStarredEvent
   CHANNEL_UNSTARED: ChannelUnstarredEvent
   CHANNEL_VIEWERS_CHANGED: ChannelViewersChangedEvent
+  THREAD_SUBSCRIBERS_CHANGED: ChannelIdBody
+  THREAD_DEFAULT_SUBSCRIBERS_CHANGED: ChannelIdBody
   CHANNEL_SUBSCRIBERS_CHANGED: ChannelSubscribersChangedEvent
 }
 
