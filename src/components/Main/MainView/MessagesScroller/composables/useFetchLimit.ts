@@ -1,6 +1,7 @@
 import type { ShallowRef } from 'vue'
-import { nextTick, watch } from 'vue'
+import { computed, watch } from 'vue'
 
+import useBoxSize from '/@/composables/dom/useBoxSize'
 import { unrefElement } from '/@/lib/dom/unrefElement'
 
 import type { MessageScrollerInstance } from '../MessagesScroller.vue'
@@ -11,25 +12,29 @@ const useFetchLimit = (
   scrollerRef: ShallowRef<MessageScrollerInstance | undefined>,
   messageHeight: number
 ) => {
-  const scrollerMounted = new Promise<void>(resolve => {
-    const stop = watch(scrollerRef, scroller => {
-      if (!scroller) return
+  const { height } = useBoxSize(
+    computed(() => unrefElement(scrollerRef) ?? null),
+    false
+  )
 
-      stop()
-      resolve()
-    })
+  const fetchLimit = computed(() =>
+    Math.min(Math.ceil((height.value ?? 0) / messageHeight), MAX_COUNT)
+  )
+
+  const waitHeightResolved = new Promise<void>(resolve => {
+    const stop = watch(
+      height,
+      newHeight => {
+        if (newHeight !== undefined) {
+          stop()
+          resolve()
+        }
+      },
+      { immediate: true }
+    )
   })
 
-  return async () => {
-    await scrollerMounted
-    // 遷移先の入力欄が反映されてから一覧の高さを測る
-    await nextTick()
-
-    const height = unrefElement(scrollerRef)?.clientHeight
-    return height
-      ? Math.min(Math.ceil(height / messageHeight), MAX_COUNT)
-      : MAX_COUNT
-  }
+  return { fetchLimit, waitHeightResolved }
 }
 
 export default useFetchLimit
