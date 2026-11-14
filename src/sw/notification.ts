@@ -3,7 +3,7 @@ import { getMessaging, onBackgroundMessage } from 'firebase/messaging/sw'
 
 import { wait } from '/@/lib/basic/timer'
 import type { FirebasePayloadData } from '/@/lib/notification/firebase'
-import type { ServiceWorkerNavigateMessage } from '/@/lib/notification/notification'
+import type { ServiceWorkerNavigateMessage } from '/@/lib/notification/navigation'
 import { createNotificationArgumentsCreator } from '/@/lib/notification/notificationArguments'
 import { getMeStore } from '/@/sw/store'
 import type { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
