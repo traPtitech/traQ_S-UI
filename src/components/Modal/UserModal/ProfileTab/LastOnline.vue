@@ -13,10 +13,10 @@ import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import ProfileHeader from './ProfileHeader.vue'
 
 const props = defineProps<{
-  lastOnline?: string
+  lastOnline: string
 }>()
 
 const lastOnlineString = computed(() =>
-  props.lastOnline ? getFullDayWithTimeString(new Date(props.lastOnline)) : ''
+  getFullDayWithTimeString(new Date(props.lastOnline))
 )
 </script>

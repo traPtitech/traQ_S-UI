@@ -3,46 +3,69 @@ import { readonly, ref } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import apis from '/@/lib/apis'
-import { createSingleflight } from '/@/lib/basic/async'
 import { wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { UserId } from '/@/types/entity-ids'
 
-const getOnlineUsers = createSingleflight(apis.getOnlineUsers.bind(apis))
-
 const useOnlineUsersPinia = defineStore('domain/onlineUsers', () => {
   const onlineUsers = ref(new Set<UserId>())
+  const lastOnlineAt = ref(new Map<UserId, string>())
   const onlineUsersFetched = ref(false)
+  let pendingFetch:
+    { changes: Map<UserId, boolean>; promise: Promise<void> } | undefined
 
-  const fetchOnlineUsers = async ({
-    ignoreCache = false
-  }: { ignoreCache?: boolean } = {}) => {
-    if (onlineUsersFetched.value && !ignoreCache) {
-      return onlineUsers.value
-    }
+  const fetchOnlineUsersFromApi = async (changes: Map<UserId, boolean>) => {
+    const { data } = await apis.getOnlineUsers()
+    if (pendingFetch?.changes !== changes) return
 
-    const [{ data: userIdsArray }, shared] = await getOnlineUsers()
-    const userIds = new Set(userIdsArray)
-    if (!shared) {
-      onlineUsers.value = new Set(userIds)
-      onlineUsersFetched.value = true
-    }
-    return userIds
+    const userIds = new Set(data)
+    changes.forEach((online, id) => {
+      if (online) userIds.add(id)
+      else userIds.delete(id)
+    })
+
+    onlineUsers.value = userIds
+    onlineUsersFetched.value = true
   }
 
-  wsListener.on('USER_ONLINE', ({ id }) => {
-    onlineUsers.value.add(id)
-  })
-  wsListener.on('USER_OFFLINE', ({ id }) => {
-    onlineUsers.value.delete(id)
+  const fetchOnlineUsers = async () => {
+    if (onlineUsersFetched.value) return
+    if (pendingFetch) return pendingFetch.promise
+
+    const changes = new Map<UserId, boolean>()
+    const promise = fetchOnlineUsersFromApi(changes)
+    pendingFetch = { changes, promise }
+
+    try {
+      await promise
+    } finally {
+      if (pendingFetch?.changes === changes) pendingFetch = undefined
+    }
+  }
+
+  const setUserOnline = (id: UserId, online: boolean) => {
+    if (online) onlineUsers.value.add(id)
+    else onlineUsers.value.delete(id)
+    pendingFetch?.changes.set(id, online)
+  }
+
+  wsListener.on('USER_ONLINE', ({ id }) => setUserOnline(id, true))
+
+  wsListener.on('USER_OFFLINE', ({ id, last_online }) => {
+    setUserOnline(id, false)
+    if (last_online) lastOnlineAt.value.set(id, last_online)
   })
 
   wsListener.on('reconnect', () => {
-    fetchOnlineUsers({ ignoreCache: true })
+    pendingFetch = undefined
+    onlineUsersFetched.value = false
+    fetchOnlineUsers().catch(() => undefined)
   })
 
   return {
     onlineUsers: readonly(onlineUsers),
+    onlineUsersFetched: readonly(onlineUsersFetched),
+    lastOnlineAt: readonly(lastOnlineAt),
     fetchOnlineUsers
   }
 })
