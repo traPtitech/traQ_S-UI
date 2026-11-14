@@ -22,7 +22,12 @@ const useInitialFetch_ = () => {
   const { fetchStamps } = useStampsStore()
   const { fetchStampPalettes } = useStampPalettesStore()
   const { fetchClipFolders } = useClipFoldersStore()
-  const { fetchUnreadChannels, fetchSubscriptions } = useSubscriptionStore()
+  const {
+    fetchUnreadChannels,
+    fetchSubscriptions,
+    fetchThreadSubscriptions,
+    fetchThreadSubscriptionDefaults
+  } = useSubscriptionStore()
   const { fetchViewStates } = useViewStatesStore()
   const { fetchStampHistory } = useStampHistory()
   const { fetchStampRecommendations } = useStampRecommendations()
@@ -38,6 +43,8 @@ const useInitialFetch_ = () => {
 
     fetchUnreadChannels()
     fetchSubscriptions()
+    fetchThreadSubscriptions()
+    fetchThreadSubscriptionDefaults()
     fetchViewStates()
 
     fetchStampHistory()

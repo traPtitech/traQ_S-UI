@@ -10,6 +10,7 @@ import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { messageMitt } from '/@/store/entities/messages'
+import { useThreadsStore } from '/@/store/entities/threads'
 import type { ChannelId } from '/@/types/entity-ids'
 
 export const ACTIVITY_LENGTH = 50
@@ -20,8 +21,10 @@ const getActivityTimeline = createSingleflight(
 
 const useActivityStream = () => {
   const { activityMode: mode } = useBrowserSettings()
-  const { isChannelSubscribed } = useSubscriptionStore()
-  const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
+  const { getEffectiveSubscriptionLevel } = useSubscriptionStore()
+  const { channelsMap, dmChannelsMap, bothChannelsMapInitialFetchPromise } =
+    useChannelsStore()
+  const { fetchThread } = useThreadsStore()
 
   /**
    * 新しいもの順
@@ -66,51 +69,66 @@ const useActivityStream = () => {
     { deep: true }
   )
 
-  useMittListener(messageMitt, 'addMessage', ({ message: addedMessage }) => {
-    // 通常のチャンネルではない、つまりDMのときは無視
-    if (!channelsMap.value.has(addedMessage.channelId)) return
+  useMittListener(
+    messageMitt,
+    'addMessage',
+    async ({ message: addedMessage }) => {
+      // DMのときは無視
+      if (dmChannelsMap.value.has(addedMessage.channelId)) return
 
-    // 購読チャンネルのみを表示するときに購読してないチャンネルのメッセージは処理しない
-    if (!mode.value.all && !isChannelSubscribed(addedMessage.channelId)) {
-      return
-    }
-
-    // メッセージが重複した場合を無視
-    // WebSocket の再接続による refetch と `MESSAGE_CREATED` イベントが同時に発生して、どちらからも同じメッセージを受け取る場合への対応
-    if (timeline.value.some(({ id }) => id === addedMessage.id)) {
-      return
-    }
-
-    // チャンネルアクティビティのとき、同じチャンネルのメッセージを消す
-    if (mode.value.perChannel) {
-      const sameChannelActivity = timelineChannelMap.value.get(
-        addedMessage.channelId
-      )
-      if (sameChannelActivity) {
-        const sameChannelActivityIndex = timeline.value.findIndex(
-          a => a.id === sameChannelActivity.id
-        )
-        timeline.value.splice(sameChannelActivityIndex, 1)
+      if (!channelsMap.value.has(addedMessage.channelId)) {
+        try {
+          await fetchThread(addedMessage.channelId)
+        } catch {
+          return
+        }
       }
-    }
-    timeline.value.unshift(addedMessage)
-    timelineChannelMap.value.set(addedMessage.channelId, addedMessage)
 
-    // ガーベッジコレクタ
-    if (timeline.value.length > ACTIVITY_LENGTH * 2) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const lastActivity = timeline.value.pop()!
+      // 購読チャンネルのみを表示するときに購読してないチャンネルのメッセージは処理しない
       if (
-        timelineChannelMap.value.get(lastActivity.channelId)?.id ===
-        lastActivity.id
+        !mode.value.all &&
+        (getEffectiveSubscriptionLevel(addedMessage.channelId) ?? 0) === 0
       ) {
-        timelineChannelMap.value.delete(lastActivity.channelId)
+        return
+      }
+
+      // メッセージが重複した場合を無視
+      // WebSocket の再接続による refetch と `MESSAGE_CREATED` イベントが同時に発生して、どちらからも同じメッセージを受け取る場合への対応
+      if (timeline.value.some(({ id }) => id === addedMessage.id)) {
+        return
+      }
+
+      // チャンネルアクティビティのとき、同じチャンネルのメッセージを消す
+      if (mode.value.perChannel) {
+        const sameChannelActivity = timelineChannelMap.value.get(
+          addedMessage.channelId
+        )
+        if (sameChannelActivity) {
+          const sameChannelActivityIndex = timeline.value.findIndex(
+            a => a.id === sameChannelActivity.id
+          )
+          timeline.value.splice(sameChannelActivityIndex, 1)
+        }
+      }
+      timeline.value.unshift(addedMessage)
+      timelineChannelMap.value.set(addedMessage.channelId, addedMessage)
+
+      // ガーベッジコレクタ
+      if (timeline.value.length > ACTIVITY_LENGTH * 2) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const lastActivity = timeline.value.pop()!
+        if (
+          timelineChannelMap.value.get(lastActivity.channelId)?.id ===
+          lastActivity.id
+        ) {
+          timelineChannelMap.value.delete(lastActivity.channelId)
+        }
       }
     }
-  })
+  )
   useMittListener(messageMitt, 'updateMessage', updatedMessage => {
-    // 通常のチャンネルではない、つまりDMのときは無視
-    if (!channelsMap.value.has(updatedMessage.channelId)) return
+    // DMのときは無視
+    if (dmChannelsMap.value.has(updatedMessage.channelId)) return
 
     const sameMessageIndex = timeline.value.findIndex(
       a => a.id === updatedMessage.id

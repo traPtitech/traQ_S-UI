@@ -1,5 +1,9 @@
 import type { Message, UnreadChannel } from '@traptitech/traq'
-import { ChannelSubscribeLevel } from '@traptitech/traq'
+import {
+  ChannelSubscribeLevel,
+  ThreadSubscribeLevel,
+  ThreadSubscriptionDefaultLevel
+} from '@traptitech/traq'
 
 import { computed, ref } from 'vue'
 
@@ -12,9 +16,14 @@ import { removeNotification } from '/@/lib/notification/notification'
 import { wsListener } from '/@/lib/websocket'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { messageMitt } from '/@/store/entities/messages'
+import { useThreadsStore } from '/@/store/entities/threads'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { useTrueChangedPromise } from '/@/store/utils/promise'
-import type { ChannelId, DMChannelId } from '/@/types/entity-ids'
+import type {
+  ChannelId,
+  DMChannelId,
+  ThreadChannelId
+} from '/@/types/entity-ids'
 
 import { useMeStore } from './me'
 import { useViewStatesStore } from './viewStates'
@@ -39,6 +48,7 @@ const updateBadge = async (
 
 const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
   const channelsStore = useChannelsStore()
+  const threadsStore = useThreadsStore()
   const meStore = useMeStore()
   const viewStatesStore = useViewStatesStore()
 
@@ -172,6 +182,79 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
     subscriptionMap.value.set(channelId, subscriptionLevel)
   }
 
+  const threadSubscriptionMap = ref(
+    new Map<ThreadChannelId, ThreadSubscribeLevel>()
+  )
+  const threadSubscriptionMapFetched = ref(false)
+
+  const fetchThreadSubscriptions = async ({
+    ignoreCache = false
+  }: { ignoreCache?: boolean } = {}) => {
+    if (!ignoreCache && threadSubscriptionMapFetched.value) return
+
+    const res = await apis.getMyThreadSubscriptions()
+    threadSubscriptionMap.value = new Map(
+      res.data.map(s => [s.channelId, s.level])
+    )
+    threadSubscriptionMapFetched.value = true
+  }
+
+  const getThreadSubscriptionLevel = (channelId: ThreadChannelId) =>
+    threadSubscriptionMap.value.get(channelId) ?? ThreadSubscribeLevel.inherit
+
+  const threadSubscriptionDefaultMap = ref(
+    new Map<ChannelId, ThreadSubscriptionDefaultLevel>()
+  )
+  const threadSubscriptionDefaultMapFetched = ref(false)
+
+  const fetchThreadSubscriptionDefaults = async ({
+    ignoreCache = false
+  }: { ignoreCache?: boolean } = {}) => {
+    if (!ignoreCache && threadSubscriptionDefaultMapFetched.value) return
+
+    const res = await apis.getMyThreadSubscriptionDefaults()
+    threadSubscriptionDefaultMap.value = new Map(
+      res.data.map(s => [s.channelId, s.level])
+    )
+    threadSubscriptionDefaultMapFetched.value = true
+  }
+
+  const getThreadSubscriptionDefaultLevel = (channelId: ChannelId) =>
+    threadSubscriptionDefaultMap.value.get(channelId) ??
+    ThreadSubscriptionDefaultLevel.inherit
+
+  /**
+   * 取得済みの設定から継承を解決する。継承に必要なスレッド・親情報が
+   * 未取得の場合は undefined を返すため、呼び出し元で先に取得すること。
+   */
+  const getEffectiveSubscriptionLevel = (
+    channelId: ChannelId
+  ): ChannelSubscribeLevel | undefined => {
+    const channel = channelsStore.channelsMap.value.get(channelId)
+    if (channel) {
+      return channel.force
+        ? ChannelSubscribeLevel.notified
+        : getSubscriptionLevel(channelId)
+    }
+
+    const level = getThreadSubscriptionLevel(channelId)
+    if (level !== ThreadSubscribeLevel.inherit) return level
+
+    const thread = threadsStore.threadsMap.value.get(channelId)
+    if (!thread) return undefined
+
+    const defaultLevel = getThreadSubscriptionDefaultLevel(thread.parentId)
+    if (defaultLevel !== ThreadSubscriptionDefaultLevel.inherit) {
+      return defaultLevel
+    }
+
+    const parent = channelsStore.channelsMap.value.get(thread.parentId)
+    if (!parent) return undefined
+    return parent.force
+      ? ChannelSubscribeLevel.notified
+      : getSubscriptionLevel(thread.parentId)
+  }
+
   wsListener.on('MESSAGE_READ', ({ id }) => {
     deleteUnreadChannel(id)
   })
@@ -179,10 +262,20 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
   wsListener.on('reconnect', () => {
     fetchUnreadChannels({ ignoreCache: true })
     fetchSubscriptions({ ignoreCache: true })
+    fetchThreadSubscriptions({ ignoreCache: true })
+    fetchThreadSubscriptionDefaults({ ignoreCache: true })
   })
 
   wsListener.on('CHANNEL_SUBSCRIBERS_CHANGED', () => {
     fetchSubscriptions({ ignoreCache: true })
+  })
+
+  wsListener.on('THREAD_SUBSCRIBERS_CHANGED', () => {
+    fetchThreadSubscriptions({ ignoreCache: true })
+  })
+
+  wsListener.on('THREAD_DEFAULT_SUBSCRIBERS_CHANGED', () => {
+    fetchThreadSubscriptionDefaults({ ignoreCache: true })
   })
 
   messageMitt.on('addMessage', async ({ message, isCiting }) => {
@@ -212,6 +305,13 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
     unreadChannelsMap,
     unreadChannelsMapInitialFetchPromise,
     subscriptionMap,
+    threadSubscriptionMap,
+    threadSubscriptionDefaultMap,
+    fetchThreadSubscriptions,
+    fetchThreadSubscriptionDefaults,
+    getThreadSubscriptionLevel,
+    getThreadSubscriptionDefaultLevel,
+    getEffectiveSubscriptionLevel,
     subscribedChannels,
     deleteUnreadChannelWithSend,
     fetchUnreadChannels,
