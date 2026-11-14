@@ -1,6 +1,7 @@
 <template>
   <bdi
     v-if="props.inline"
+    v-stamp-shadow="renderedContent"
     class="markdown-inline-body"
     :class="$style.content"
     :data-accept-action="acceptAction"
@@ -9,6 +10,7 @@
   />
   <div
     v-else
+    v-stamp-shadow="renderedContent"
     class="markdown-body"
     :class="$style.content"
     :data-accept-action="acceptAction"
@@ -28,6 +30,7 @@ import {
   renderInline,
   renderInlineIfReady
 } from '/@/lib/markdown/markdown'
+import { stampShadowDirective as vStampShadow } from '/@/lib/stampShadowDirective'
 
 const props = withDefaults(
   defineProps<{

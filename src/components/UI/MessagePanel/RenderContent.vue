@@ -16,6 +16,7 @@
       :size="20"
     />
     <bdi
+      v-stamp-shadow="renderedContent"
       class="markdown-inline-body"
       :class="$style.content"
       v-html="renderedContent"
@@ -55,6 +56,7 @@ const getUniqueFileTypes = (fileTypes: Array<[AttachmentType, boolean]>) => {
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
+import { stampShadowDirective as vStampShadow } from '/@/lib/stampShadowDirective'
 
 const props = withDefaults(
   defineProps<{

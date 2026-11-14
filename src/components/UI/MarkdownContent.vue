@@ -1,6 +1,7 @@
 <template>
   <div
     ref="contentRef"
+    v-stamp-shadow="content"
     class="markdown-body"
     :class="$style.content"
     @click="onClick"
@@ -12,6 +13,7 @@
 import { createVNode, onMounted, ref, render, watch } from 'vue'
 
 import useMarkdownInternalHandler from '/@/composables/markdown/useMarkdownInternalHandler'
+import { stampShadowDirective as vStampShadow } from '/@/lib/stampShadowDirective'
 
 import FoldableCodeBlock from './FoldableCodeBlock.vue'
 

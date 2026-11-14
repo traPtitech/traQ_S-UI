@@ -4,6 +4,7 @@
       <div :class="$style.state">
         <AIcon v-if="hasAttachments" name="file" mdi :class="$style.icon" />
         <bdi
+          v-stamp-shadow="renderedContent"
           class="markdown-inline-body"
           :class="$style.text"
           v-html="renderedContent"
@@ -22,6 +23,7 @@ import { computed, ref, watchEffect } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { renderInline } from '/@/lib/markdown/markdown'
+import { stampShadowDirective as vStampShadow } from '/@/lib/stampShadowDirective'
 import type { MessageInputState } from '/@/store/ui/messageInputStateStore'
 import type { ChannelId } from '/@/types/entity-ids'
 
@@ -38,7 +40,7 @@ const channelPath = computed(
 const channelLink = computed(() => channelIdToLink(props.channelId) ?? '')
 const hasAttachments = computed(() => props.state.attachments.length > 0)
 
-const renderedContent = ref()
+const renderedContent = ref<string>()
 watchEffect(async () => {
   const { renderedText } = await renderInline(props.state.text)
   renderedContent.value = renderedText

@@ -2,8 +2,10 @@
   <div :class="$style.container" :style="containerStyle">
     <img
       v-if="imageUrl.length > 0"
+      v-stamp-shadow="stamp?.isUnicode ? undefined : stamp?.fileId"
       class="stamp-image"
       :class="$style.img"
+      :data-unicode-stamp="stamp?.isUnicode || undefined"
       :src="imageUrl"
       :alt="name"
       :title="!withoutTitle ? name : undefined"
@@ -17,6 +19,7 @@
 import { computed } from 'vue'
 
 import { buildFilePath } from '/@/lib/apis'
+import { stampShadowDirective as vStampShadow } from '/@/lib/stampShadowDirective'
 import { useStampsStore } from '/@/store/entities/stamps'
 import type { StampId } from '/@/types/entity-ids'
 
@@ -35,11 +38,10 @@ const props = withDefaults(
 
 const { stampsMap } = useStampsStore()
 
-const name = computed(
-  () => stampsMap.value.get(props.stampId)?.name ?? 'unknown stamp'
-)
+const stamp = computed(() => stampsMap.value.get(props.stampId))
+const name = computed(() => stamp.value?.name ?? 'unknown stamp')
 const imageUrl = computed(() => {
-  const fileId = stampsMap.value.get(props.stampId)?.fileId
+  const fileId = stamp.value?.fileId
   return fileId ? buildFilePath(fileId) : ''
 })
 

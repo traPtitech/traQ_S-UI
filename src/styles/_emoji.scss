@@ -4,6 +4,18 @@
 
 html[data-stamp-edge='true'] :is(.emoji, .stamp-image) {
   filter: drop-shadow(0 0 0.5px rgb(255 255 255 / 60%));
+
+  &[data-stamp-shadow='strong'] {
+    filter: drop-shadow(0.1px 0.1px 0 rgb(255 255 255 / 10%))
+      drop-shadow(0.1px -0.1px 0 rgb(255 255 255 / 10%))
+      drop-shadow(-0.1px 0.1px 0 rgb(255 255 255 / 10%))
+      drop-shadow(-0.1px -0.1px 0 rgb(255 255 255 / 10%));
+  }
+
+  &[data-stamp-shadow='none'],
+  &[data-unicode-stamp] {
+    filter: none;
+  }
 }
 
 html[data-eco-mode='false'] {

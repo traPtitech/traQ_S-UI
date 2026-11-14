@@ -20,6 +20,7 @@ import useHtmlDataset from '/@/composables/document/useHtmlDataset'
 import { useThemeVariables } from '/@/composables/document/useThemeVariables'
 import { useBeforeUnload } from '/@/composables/dom/useBeforeUnload'
 import useResponsive from '/@/composables/useResponsive'
+import { updateStampShadowTheme } from '/@/lib/stampShadowDirective'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 import { useTts } from '/@/store/app/tts'
@@ -54,6 +55,12 @@ const useThemeObserver = () => {
 
   const stampEdge = computed(() => currentTheme.value.specific.stampEdgeEnable)
   useHtmlDataset('stampEdge', stampEdge)
+
+  watch(
+    currentTheme,
+    theme => updateStampShadowTheme(theme.specific.stampEdgeEnable),
+    { immediate: true, flush: 'post' }
+  )
 }
 
 const useEcoModeObserver = () => {
