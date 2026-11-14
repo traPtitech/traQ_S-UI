@@ -20,7 +20,11 @@
       :class="$style.preview"
       :text="state.text"
     />
-    <MessageInputFileList :class="$style.fileList" :channel-id="channelId" />
+    <MessageInputFileList
+      :class="$style.fileList"
+      :channel-id="channelId"
+      :is-posting="isPosting"
+    />
     <div v-if="isArchived" :class="$style.inputContainer" data-is-archived>
       <AIcon :class="$style.controls" name="archive" mdi />
       <div>アーカイブチャンネルのため、投稿できません</div>
