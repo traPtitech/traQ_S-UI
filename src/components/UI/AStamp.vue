@@ -2,6 +2,7 @@
   <div :class="$style.container" :style="containerStyle">
     <img
       v-if="imageUrl.length > 0"
+      class="stamp-image"
       :class="$style.img"
       :src="imageUrl"
       :alt="name"
@@ -58,11 +59,5 @@ const containerStyle = computed(() => ({
 .img {
   max-height: 100%;
   margin: auto;
-  html[data-stamp-edge='true'] & {
-    filter: drop-shadow(0.1px 0.1px 0 rgb(255, 255, 255, 0.1))
-      drop-shadow(0.1px -0.1px 0 rgb(255, 255, 255, 0.1))
-      drop-shadow(-0.1px 0.1px 0 rgb(255, 255, 255, 0.1))
-      drop-shadow(-0.1px -0.1px 0 rgb(255, 255, 255, 0.1));
-  }
 }
 </style>

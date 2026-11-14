@@ -33,15 +33,6 @@ html[data-code-highlight='dark'] {
 
 // KaTeXのCSSは遅延読み込みするのでmain.tsを参照
 
-html[data-stamp-edge='true'] {
-  .emoji {
-    filter: drop-shadow(0.1px 0.1px 0 rgb(255, 255, 255, 0.1))
-      drop-shadow(0.1px -0.1px 0 rgb(255, 255, 255, 0.1))
-      drop-shadow(-0.1px 0.1px 0 rgb(255, 255, 255, 0.1))
-      drop-shadow(-0.1px -0.1px 0 rgb(255, 255, 255, 0.1));
-  }
-}
-
 .markdown-body .katex {
   display: inline-flex;
   max-width: 100%;

@@ -1,5 +1,10 @@
 @use 'sass:meta';
+
 @include meta.load-css('@traptitech/traq-markdown-it/src/css/stamp');
+
+html[data-stamp-edge='true'] :is(.emoji, .stamp-image) {
+  filter: drop-shadow(0 0 0.5px rgb(255 255 255 / 60%));
+}
 
 html[data-eco-mode='false'] {
   @include meta.load-css('@traptitech/traq-markdown-it/src/css/stampEffect');
