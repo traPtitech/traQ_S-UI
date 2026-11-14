@@ -3,24 +3,20 @@ import type { Stamp } from '@traptitech/traq'
 import { computed, effectScope, nextTick, ref } from 'vue'
 
 import useStampList from '/@/components/Main/StampPicker/composables/useStampList'
-import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
 import { useStampCategory } from '/@/store/domain/stampCategory'
-import { useTopStampIds } from '/@/store/domain/stampRecommendations'
+import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
+import type { StampSet } from '/@/store/ui/stampPickerSettings'
 
-vi.mock('/@/store/app/featureFlagSettings', () => ({
-  useFeatureFlagSettings: () => ({
-    featureFlags: computed(() => ({
-      stamp_recommendation_v3: { enabled: true }
-    }))
-  })
-}))
 vi.mock('/@/store/domain/stampCategory', () => ({
   useStampCategory: vi.fn()
 }))
+vi.mock('/@/store/domain/stampHistory', () => ({
+  useStampHistory: () => ({ recentStampIds: ref([]) })
+}))
 vi.mock('/@/store/domain/stampRecommendations', () => ({
-  useTopStampIds: vi.fn()
+  useStampRecommendations: vi.fn()
 }))
 vi.mock('/@/store/entities/stampPalettes', () => ({
   useStampPalettesStore: vi.fn()
@@ -35,7 +31,9 @@ describe('useStampList', () => {
   const stampsMap = ref(new Map<string, Stamp>())
   const scopes: ReturnType<typeof effectScope>[] = []
 
-  const openPicker = (stampSet: StampSet = { type: 'history', id: '' }) => {
+  const openPicker = (
+    stampSet: StampSet = { type: 'recommendation', id: '' }
+  ) => {
     const scope = effectScope()
     scopes.push(scope)
     const currentStampSet = ref<StampSet>(stampSet)
@@ -48,11 +46,14 @@ describe('useStampList', () => {
     topStampIds.value = ['a', 'b']
     topStampIdsFetched.value = true
     stampsMap.value = new Map(['a', 'b', 'c'].map(id => [id, createStamp(id)]))
-    vi.mocked(useTopStampIds).mockReturnValue({
-      topStampIds: computed(() => topStampIds.value),
-      topStampIdsFetched: computed(() => topStampIdsFetched.value)
+    vi.mocked(useStampRecommendations, { partial: true }).mockReturnValue({
+      stampRecommendations: computed(() => topStampIds.value),
+      stampRecommendationsFetched: topStampIdsFetched
     })
-    vi.mocked(useStampsStore, { partial: true }).mockReturnValue({ stampsMap })
+    vi.mocked(useStampsStore, { partial: true }).mockReturnValue({
+      stampsMap,
+      stampsMapFetched: ref(true)
+    })
     vi.mocked(useStampCategory, { partial: true }).mockReturnValue({
       traQStampCategory: ref({ name: 'traq', stampIds: ['a', 'b', 'c'] }),
       unicodeStampCategories: ref([])
@@ -108,7 +109,7 @@ describe('useStampList', () => {
 
     topStampIds.value = ['c', 'b', 'a']
     await nextTick()
-    picker.currentStampSet.value = { type: 'history', id: '' }
+    picker.currentStampSet.value = { type: 'recommendation', id: '' }
     expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['c', 'b', 'a'])
 
     topStampIds.value = ['a', 'b', 'c']
@@ -121,7 +122,7 @@ describe('useStampList', () => {
     topStampIds.value = ['c', 'b', 'a']
     await nextTick()
 
-    picker.currentStampSet.value = { type: 'history', id: '' }
+    picker.currentStampSet.value = { type: 'recommendation', id: '' }
     expect(picker.stamps.value.map(stamp => stamp.id)).toEqual(['c', 'b', 'a'])
   })
 

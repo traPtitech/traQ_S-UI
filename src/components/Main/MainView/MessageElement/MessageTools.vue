@@ -8,7 +8,7 @@
     <transition v-if="!isMinimum" name="quick-reaction">
       <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
         <AStamp
-          v-for="stamp in topStamps"
+          v-for="stamp in quickReactionStampIds"
           :key="stamp"
           :stamp-id="stamp"
           :size="28"
@@ -84,8 +84,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { Stamp } from '@traptitech/traq'
-
 import { computed, ref, toRef, watch } from 'vue'
 
 import AIcon from '/@/components/UI/AIcon.vue'
@@ -97,11 +95,10 @@ import useToggle from '/@/composables/utils/useToggle'
 import { isDefined } from '/@/lib/basic/array'
 import { useStampUpdater } from '/@/lib/updater/stamp'
 import { useMeStore } from '/@/store/domain/me'
-import { useTopStampIds } from '/@/store/domain/stampRecommendations'
 import { useMessagesStore } from '/@/store/entities/messages'
-import { useStampsStore } from '/@/store/entities/stamps'
 import { useMessageEditingStateStore } from '/@/store/ui/messageEditingStateStore'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
+import { useStampPickerSettings } from '/@/store/ui/stampPickerSettings'
 import type { MessageId, StampId } from '/@/types/entity-ids'
 
 import MessageContextMenu from './MessageContextMenu.vue'
@@ -120,30 +117,9 @@ const props = withDefaults(
 
 const isActive = defineModel<boolean>('isActive', { default: false })
 
-const { topStampIds } = useTopStampIds()
+const { quickReactionStampIds } = useStampPickerSettings()
 const { addStampOptimistically } = useStampUpdater()
-const { initialRecentStamps } = useStampsStore()
 
-const pushInitialRecentStampsIfNeeded = (
-  initialRecentStamps: Stamp[],
-  recents: StampId[]
-) => {
-  if (recents.length >= 3) return
-
-  const initials = initialRecentStamps.map(stamp => stamp.id)
-  for (const s of initials) {
-    if (recents.length >= 3) return
-    if (recents.includes(s)) return
-
-    recents.push(s)
-  }
-}
-
-const topStamps = computed(() => {
-  const tops = topStampIds.value.slice(0, 3)
-  pushInitialRecentStampsIfNeeded(initialRecentStamps.value, tops)
-  return tops
-})
 const addStamp = async (stampId: StampId) =>
   addStampOptimistically(props.messageId, stampId)
 
