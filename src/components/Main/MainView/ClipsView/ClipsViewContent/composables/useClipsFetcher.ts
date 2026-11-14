@@ -1,14 +1,8 @@
-import {
-  type Ref,
-  type ShallowRef,
-  computed,
-  onMounted,
-  reactive,
-  watch
-} from 'vue'
+import { computed, onMounted, watch } from 'vue'
 
-import type { MessageScrollerInstance } from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
-import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
+import useFetchLimit, {
+  type MessageScrollerRef
+} from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
@@ -19,88 +13,50 @@ import type { ClipFolderId, MessageId } from '/@/types/entity-ids'
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 80
 
-interface GetClipsParam {
-  folderId: string
-  limit?: number
-  offset?: number
-  order?: 'asc' | 'desc'
-}
-
 const useClipsFetcher = (
-  scrollerRef: ShallowRef<MessageScrollerInstance | undefined>,
+  scrollerRef: MessageScrollerRef,
   props: {
     clipFolderId: ClipFolderId
     entryMessageId?: MessageId
   }
 ) => {
-  const { fetchMessage, extendMessagesMap } = useMessagesStore()
+  const { fetchMessage } = useMessagesStore()
   const getFetchLimit = useFetchLimit(scrollerRef, MESSAGE_HEIGHT)
-  const state = reactive({
-    nextLoadOffset: 0
-  })
+  let nextLoadOffset = 0
 
-  const reset = () => {
-    messagesFetcher.reset()
-    state.nextLoadOffset = 0
-  }
-  const init = () => {
-    messagesFetcher.init()
-  }
-
-  const fetchMessagesInClipFolder = async (params: GetClipsParam) => {
-    const { data, headers } = await apis.getClips(
-      params.folderId,
-      params.limit,
-      params.offset,
-      params.order
-    )
-    extendMessagesMap(data.map(c => c.message))
-    return {
-      clips: data,
-      hasMore: headers['x-traq-more'] === 'true'
-    }
-  }
-
-  const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
+  const fetchFormerMessages = async () => {
+    const { clipFolderId } = props
+    const offset = nextLoadOffset
     const limit = await getFetchLimit()
-    const { clips, hasMore } = await fetchMessagesInClipFolder({
-      folderId: props.clipFolderId,
-      limit,
-      offset: state.nextLoadOffset
-    })
+    const { data, headers } = await apis.getClips(clipFolderId, limit, offset)
+    const hasMore = headers['x-traq-more'] === 'true'
 
-    if (!hasMore) {
-      isReachedEnd.value = true
-    } else {
-      state.nextLoadOffset += limit
+    return {
+      messages: data.toReversed().map(clip => clip.message),
+      isReachedEnd: !hasMore,
+      nextOffset: hasMore ? offset + limit : offset
     }
-
-    return clips.toReversed().map(clip => clip.message.id)
   }
 
   const messagesFetcher = useMessageFetcher(
     {},
     computed(() => `cf:${props.clipFolderId}`),
-    fetchFormerMessages,
-    undefined,
-    undefined,
-    undefined
-  )
-
-  onMounted(() => {
-    reset()
-    init()
-  })
-  watch(
-    () => props.clipFolderId,
-    (newVal, oldVal) => {
-      if (newVal === oldVal) {
-        return
+    {
+      fetchFormerMessages,
+      applyPagination: page => {
+        nextLoadOffset = page.nextOffset
       }
-      reset()
-      init()
     }
   )
+
+  const initialize = () => {
+    nextLoadOffset = 0
+    messagesFetcher.reset()
+    return messagesFetcher.init()
+  }
+
+  onMounted(initialize)
+  watch(() => props.clipFolderId, initialize)
 
   // クリップフォルダは、wsの再接続時にうまく取得ができないので、
   // 自動で再取得するのはあきらめる

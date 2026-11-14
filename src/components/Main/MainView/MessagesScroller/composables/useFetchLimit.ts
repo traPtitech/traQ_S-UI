@@ -1,14 +1,12 @@
 import type { ShallowRef } from 'vue'
 import { nextTick, watch } from 'vue'
 
-import { unrefElement } from '/@/lib/dom/unrefElement'
-
-import type { MessageScrollerInstance } from '../MessagesScroller.vue'
+export type MessageScrollerRef = ShallowRef<{ $el: HTMLDivElement } | undefined>
 
 const MAX_COUNT = 20
 
 const useFetchLimit = (
-  scrollerRef: ShallowRef<MessageScrollerInstance | undefined>,
+  scrollerRef: MessageScrollerRef,
   messageHeight: number
 ) => {
   const scrollerMounted = new Promise<void>(resolve => {
@@ -25,7 +23,7 @@ const useFetchLimit = (
     // 遷移先の入力欄が反映されてから一覧の高さを測る
     await nextTick()
 
-    const height = unrefElement(scrollerRef)?.clientHeight
+    const height = scrollerRef.value?.$el.clientHeight
     return height
       ? Math.min(Math.ceil(height / messageHeight), MAX_COUNT)
       : MAX_COUNT

@@ -1,17 +1,17 @@
 import type { Message } from '@traptitech/traq'
 
-import type { Ref, ShallowRef } from 'vue'
 import { computed, onActivated, onMounted, ref, watch } from 'vue'
 
-import type { MessageScrollerInstance } from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
-import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
+import useFetchLimit, {
+  type MessageScrollerRef
+} from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
-import { messageMitt, useMessagesStore } from '/@/store/entities/messages'
+import { messageMitt } from '/@/store/entities/messages'
 import type { ChannelId, MessageId } from '/@/types/entity-ids'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
@@ -19,22 +19,18 @@ const MESSAGE_HEIGHT = 60
 
 interface GetMessagesParams {
   channelId: string
-  limit?: number
-  offset?: number
   since?: Date
   until?: Date
-  inclusive?: boolean
-  order?: 'asc' | 'desc'
+  order: 'asc' | 'desc'
 }
 
 const useChannelMessageFetcher = (
-  scrollerRef: ShallowRef<MessageScrollerInstance | undefined>,
+  scrollerRef: MessageScrollerRef,
   props: {
     channelId: ChannelId
     entryMessageId?: MessageId
   }
 ) => {
-  const { extendMessagesMap } = useMessagesStore()
   const { renderMessageContent } = useMessagesView()
   const {
     unreadChannelsMap,
@@ -46,135 +42,90 @@ const useChannelMessageFetcher = (
   const loadedMessageOldestDate = ref<Date>()
   const unreadSince = ref()
 
-  const updateDates = (messagesAsc: Message[]) => {
-    if (messagesAsc.length <= 0) return
+  const applyPagination = ({ messages }: { messages: Message[] }) => {
+    const first = messages.at(0)
+    const last = messages.at(-1)
+    if (!first || !last) return
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const firstMessage = messagesAsc[0]!
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const lastMessage = messagesAsc.at(-1)!
-
-    const firstMessageDate = new Date(firstMessage.createdAt)
-    const lastMessageDate = new Date(lastMessage.createdAt)
-
-    const oldDate =
-      firstMessageDate < lastMessageDate ? firstMessageDate : lastMessageDate
-    const newDate =
-      firstMessageDate < lastMessageDate ? lastMessageDate : firstMessageDate
+    const oldestDate = new Date(first.createdAt)
+    const latestDate = new Date(last.createdAt)
 
     if (
       !loadedMessageOldestDate.value ||
-      oldDate < loadedMessageOldestDate.value
+      oldestDate < loadedMessageOldestDate.value
     ) {
-      loadedMessageOldestDate.value = oldDate
+      loadedMessageOldestDate.value = oldestDate
     }
+
     if (
       !loadedMessageLatestDate.value ||
-      loadedMessageLatestDate.value < newDate
+      loadedMessageLatestDate.value < latestDate
     ) {
-      loadedMessageLatestDate.value = newDate
+      loadedMessageLatestDate.value = latestDate
     }
   }
 
   const fetchMessagesByChannelId = async (params: GetMessagesParams) => {
-    const res = await apis.getMessages(
+    const limit = await getFetchLimit()
+    const { data, headers } = await apis.getMessages(
       params.channelId,
-      params.limit,
-      params.offset,
+      limit,
+      undefined,
       params.since?.toISOString(),
       params.until?.toISOString(),
-      params.inclusive,
+      undefined,
       params.order
     )
-    extendMessagesMap(res.data)
+
     return {
-      messages: res.data,
-      hasMore: res.headers['x-traq-more'] === 'true'
+      messages: params.order === 'asc' ? data : data.toReversed(),
+      hasMore: headers['x-traq-more'] === 'true'
     }
   }
 
-  const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
-    const limit = await getFetchLimit()
-    const { messages: messagesDesc, hasMore } = await fetchMessagesByChannelId({
+  const fetchFormerMessages = async () => {
+    const { messages, hasMore } = await fetchMessagesByChannelId({
       channelId: props.channelId,
-      limit,
       order: 'desc',
       until: loadedMessageOldestDate.value
     })
 
-    if (!hasMore) {
-      isReachedEnd.value = true
-    }
-
-    const messagesAsc = messagesDesc.toReversed()
-    updateDates(messagesAsc)
-
-    return messagesAsc.map(message => message.id)
+    return { messages, isReachedEnd: !hasMore }
   }
 
-  const fetchLatterMessages = async (
-    isReachedLatest: Ref<boolean>
-  ): Promise<ChannelId[]> => {
-    const limit = await getFetchLimit()
-    const { messages: messagesAsc, hasMore } = await fetchMessagesByChannelId({
+  const fetchLaterMessages = async (order: 'asc' | 'desc') => {
+    const { messages, hasMore } = await fetchMessagesByChannelId({
       channelId: props.channelId,
-      limit,
-      order: 'asc',
+      order,
       since: loadedMessageLatestDate.value
     })
 
-    if (!hasMore) {
-      isReachedLatest.value = true
-    }
-
-    updateDates(messagesAsc)
-
-    return messagesAsc.map(message => message.id)
+    return { messages, isReachedLatest: !hasMore }
   }
 
-  const fetchAroundMessages = async (
-    entryMessage: Message,
-    isReachedLatest: Ref<boolean>,
-    isReachedEnd: Ref<boolean>
-  ) => {
+  const fetchAroundMessages = async (entryMessage: Message) => {
+    const { channelId } = props
     const date = new Date(entryMessage.createdAt)
-    loadedMessageLatestDate.value = date
-    loadedMessageOldestDate.value = date
-
-    const [formerMessageIds, latterMessageIds] = await Promise.all([
-      fetchFormerMessages(isReachedEnd),
-      fetchLatterMessages(isReachedLatest)
+    const [former, latter] = await Promise.all([
+      fetchMessagesByChannelId({ channelId, order: 'desc', until: date }),
+      fetchMessagesByChannelId({ channelId, order: 'asc', since: date })
     ])
-    return [
-      ...new Set([...formerMessageIds, entryMessage.id, ...latterMessageIds])
-    ]
-  }
 
-  // 直近のメッセージを取得し作成日時昇順で並べ替えて返す
-  const fetchNewMessages = async (isReachedLatest: Ref<boolean>) => {
-    const limit = await getFetchLimit()
-    const { messages: messagesDesc, hasMore } = await fetchMessagesByChannelId({
-      channelId: props.channelId,
-      limit,
-      order: 'desc',
-      since: loadedMessageLatestDate.value
-    })
-
-    if (!hasMore) {
-      isReachedLatest.value = true
+    return {
+      messages: [...former.messages, entryMessage, ...latter.messages],
+      isReachedEnd: !former.hasMore,
+      isReachedLatest: !latter.hasMore
     }
-
-    const messagesAsc = messagesDesc.toReversed()
-    updateDates(messagesAsc)
-
-    return messagesAsc.map(message => message.id)
   }
 
-  const onReachedLatest = async () => {
+  const onReachedLatest = async (isCurrentView: () => boolean) => {
+    const { channelId } = props
+
     // 未読を取得していないと未読を表示できないため
     await unreadChannelsMapInitialFetchPromise
+    if (!isCurrentView()) return
 
-    const unreadChannel = unreadChannelsMap.value.get(props.channelId)
+    const unreadChannel = unreadChannelsMap.value.get(channelId)
     if (unreadChannel) {
       // 未読表示を**追加してから**未読を削除
       // 未読の削除は最新メッセージ読み込み完了時
@@ -182,54 +133,32 @@ const useChannelMessageFetcher = (
     }
 
     // 未読の削除
-    await deleteUnreadChannelWithSend(props.channelId)
+    await deleteUnreadChannelWithSend(channelId)
   }
 
   const messagesFetcher = useMessageFetcher(
     props,
     computed(() => `ch:${props.channelId}`),
-    fetchFormerMessages,
-    fetchLatterMessages,
-    fetchAroundMessages,
-    fetchNewMessages,
-    onReachedLatest
+    {
+      fetchFormerMessages,
+      fetchLatterMessages: () => fetchLaterMessages('asc'),
+      fetchAroundMessages,
+      fetchNewMessages: () => fetchLaterMessages('desc'),
+      applyPagination,
+      onReachedLatest
+    }
   )
 
-  const reset = () => {
+  const initialize = () => {
     messagesFetcher.reset()
     loadedMessageOldestDate.value = undefined
     loadedMessageLatestDate.value = undefined
     unreadSince.value = undefined
+    return messagesFetcher.init()
   }
 
-  const init = () => {
-    messagesFetcher.init()
-  }
-
-  onMounted(() => {
-    reset()
-    init()
-  })
-  watch(
-    () => props.entryMessageId,
-    (newVal, oldVal) => {
-      if (newVal === oldVal) {
-        return
-      }
-      reset()
-      init()
-    }
-  )
-  watch(
-    () => props.channelId,
-    (newVal, oldVal) => {
-      if (newVal === oldVal) {
-        return
-      }
-      reset()
-      init()
-    }
-  )
+  onMounted(initialize)
+  watch([() => props.channelId, () => props.entryMessageId], initialize)
 
   useMittListener(messageMitt, 'addMessage', ({ message }) => {
     if (props.channelId !== message.channelId) return

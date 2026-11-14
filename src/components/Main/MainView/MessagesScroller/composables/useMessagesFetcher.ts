@@ -1,7 +1,7 @@
 import type { Message } from '@traptitech/traq'
 
 import type { Ref } from 'vue'
-import { ref, watchEffect } from 'vue'
+import { onScopeDispose, ref, watchEffect } from 'vue'
 
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
@@ -11,221 +11,178 @@ import type { MaybePromise } from '/@/types/utility'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
-const useMessageFetcher = (
+interface MessagePage {
+  messages: Message[]
+  isReachedEnd?: boolean
+  isReachedLatest?: boolean
+}
+
+interface MessagePageLoader<Page extends MessagePage> {
+  fetchFormerMessages: () => Promise<Page>
+  fetchLatterMessages?: () => Promise<Page>
+  fetchAroundMessages?: (entryMessage: Message) => Promise<Page>
+  fetchNewMessages?: () => Promise<Page>
+  applyPagination: (page: Page) => void
+  onReachedLatest?: (isCurrentView: () => boolean) => MaybePromise<void>
+}
+
+const useMessageFetcher = <Page extends MessagePage>(
   props: { entryMessageId?: MessageId },
-  /**
-   * 表示チャンネル/クリップフォルダによって一意に定まるもの
-   *
-   * 非同期処理を行う際は表示しようとしてるものが変化しているかチェックする必要があるため、
-   * そのチェックの際に前後で変化していないかという形で利用する
-   */
   id: Ref<string>,
-  fetchFormerMessages: (isReachedEnd: Ref<boolean>) => Promise<MessageId[]>,
-  fetchLatterMessages:
-    ((isReachedLatest: Ref<boolean>) => Promise<MessageId[]>) | undefined,
-  fetchAroundMessages:
-    | ((
-        entryMessage: Message,
-        isReachedLatest: Ref<boolean>,
-        isReachedEnd: Ref<boolean>
-      ) => Promise<MessageId[]>)
-    | undefined,
-  fetchNewMessages:
-    ((isReachedLatest: Ref<boolean>) => Promise<MessageId[]>) | undefined,
-  onReachedLatest?: () => MaybePromise<void>
+  {
+    fetchFormerMessages,
+    fetchLatterMessages,
+    fetchAroundMessages,
+    fetchNewMessages,
+    applyPagination,
+    onReachedLatest
+  }: MessagePageLoader<Page>
 ) => {
   const { renderMessageContent, resetRenderedContent } = useMessagesView()
   const { shouldReceiveLatestMessages } = useViewStateSenderStore()
-  const { fetchMessage } = useMessagesStore()
+  const { fetchMessage, extendMessagesMap } = useMessagesStore()
 
   const messageIds = ref<MessageId[]>([])
   const isReachedEnd = ref(false)
   const isReachedLatest = ref(false)
   const isLoading = ref(false)
-  const isInitialLoad = ref(false)
   const lastLoadingDirection = ref<LoadingDirection>('latest')
+  let viewGeneration = 0
+  let pendingLoad: Promise<void> | undefined
 
-  /**
-   * 表示チャンネル/クリップフォルダが変化していないかチェックをして適用する
-   *
-   * @param fetch 取得する関数。データを返す
-   * @param apply 適用する関数。表示チャンネル/クリップフォルダが変化していないときに実行される。fetchで返したデータを引数で受け取れる
-   */
-  const runWithIdentifierCheck = async <T>(
-    fetch: () => Promise<T>,
-    apply: (result: T) => MaybePromise<void>
-  ) => {
-    const beforeId = id.value
-    const result = await fetch()
-    if (id.value !== beforeId) return
-    await apply(result)
-  }
+  const captureView = () => {
+    const generation = viewGeneration
+    const viewId = id.value
+    const entryMessageId = props.entryMessageId
 
-  const renderMessageFromIds = async (messageIdsToRender: MessageId[]) => {
-    await Promise.all(
-      messageIdsToRender.map(messageId => renderMessageContent(messageId))
-    )
+    return () =>
+      viewGeneration === generation &&
+      id.value === viewId &&
+      props.entryMessageId === entryMessageId
   }
 
   const reset = () => {
+    viewGeneration += 1
+    pendingLoad = undefined
     messageIds.value = []
     isReachedEnd.value = false
     isReachedLatest.value = false
     isLoading.value = false
-    isInitialLoad.value = false
     lastLoadingDirection.value = 'latest'
   }
 
-  const onLoadFormerMessagesRequest = async () => {
-    if (isLoading.value || isReachedEnd.value) {
-      return
-    }
+  onScopeDispose(() => {
+    viewGeneration += 1
+  })
 
+  const loadPage = (
+    direction: LoadingDirection,
+    fetchPage: (isCurrentView: () => boolean) => Promise<Page | undefined>
+  ) => {
+    if (isLoading.value) return
+
+    const isCurrentView = captureView()
     isLoading.value = true
 
-    await runWithIdentifierCheck(
-      async () => {
-        const newMessageIds = await fetchFormerMessages(isReachedEnd)
-        await renderMessageFromIds(newMessageIds)
-        return newMessageIds
-      },
-      newMessageIds => {
-        isLoading.value = false
-        isInitialLoad.value = false
-        lastLoadingDirection.value = 'former'
-        messageIds.value = [...new Set([...newMessageIds, ...messageIds.value])]
+    const load = async () => {
+      try {
+        const page = await fetchPage(isCurrentView)
+        if (!page || !isCurrentView()) return
+
+        extendMessagesMap(page.messages)
+        const pageIds = [...new Set(page.messages.map(message => message.id))]
+        await Promise.all(pageIds.map(renderMessageContent))
+        if (!isCurrentView()) return
+
+        applyPagination(page)
+
+        if (page.isReachedEnd !== undefined) {
+          isReachedEnd.value = page.isReachedEnd
+        }
+
+        if (page.isReachedLatest !== undefined) {
+          isReachedLatest.value = page.isReachedLatest
+        }
+
+        lastLoadingDirection.value = direction
+
+        switch (direction) {
+          case 'around':
+            messageIds.value = pageIds
+            break
+          case 'latter':
+            messageIds.value = [...new Set([...messageIds.value, ...pageIds])]
+            break
+          case 'former':
+          case 'latest':
+            messageIds.value = [...new Set([...pageIds, ...messageIds.value])]
+            break
+        }
+      } finally {
+        if (isCurrentView()) {
+          pendingLoad = undefined
+          isLoading.value = false
+        }
       }
-    )
-  }
-
-  const onLoadLatestMessagesRequest = async () => {
-    isLoading.value = true
-
-    await runWithIdentifierCheck(
-      async () => {
-        const newMessageIds = await fetchFormerMessages(isReachedEnd)
-        await renderMessageFromIds(newMessageIds)
-        return newMessageIds
-      },
-      newMessageIds => {
-        isLoading.value = false
-        isInitialLoad.value = false
-        lastLoadingDirection.value = 'latest'
-        messageIds.value = [...new Set([...newMessageIds, ...messageIds.value])]
-      }
-    )
-  }
-
-  const onLoadLatterMessagesRequest = async () => {
-    if (isLoading.value || !fetchLatterMessages || isReachedLatest.value) {
-      return
     }
 
-    isLoading.value = true
-
-    await runWithIdentifierCheck(
-      async () => {
-        const newMessageIds = await fetchLatterMessages(isReachedLatest)
-        await renderMessageFromIds(newMessageIds)
-        return newMessageIds
-      },
-      newMessageIds => {
-        isLoading.value = false
-        isInitialLoad.value = false
-        lastLoadingDirection.value = 'latter'
-        messageIds.value = [...new Set([...messageIds.value, ...newMessageIds])]
-      }
-    )
+    pendingLoad = load()
+    return pendingLoad
   }
 
-  const onLoadAroundMessagesRequest = async (messageId: MessageId) => {
-    if (
-      !fetchAroundMessages ||
-      isReachedLatest.value ||
-      isReachedEnd.value ||
-      isLoading.value
-    ) {
-      return
-    }
-    const entryMessage = await fetchMessage({ messageId })
-    if (!entryMessage) {
-      return
-    }
-    isLoading.value = true
+  const onLoadFormerMessagesRequest = () => {
+    if (isReachedEnd.value) return
 
-    await runWithIdentifierCheck(
-      async () => {
-        const newMessageIds = await fetchAroundMessages(
-          entryMessage,
-          isReachedLatest,
-          isReachedEnd
-        )
-        await renderMessageFromIds(newMessageIds)
-        return newMessageIds
-      },
-      newMessageIds => {
-        isLoading.value = false
-        isInitialLoad.value = false
-        lastLoadingDirection.value = 'around'
-        messageIds.value = newMessageIds
-      }
-    )
+    return loadPage('former', fetchFormerMessages)
   }
 
-  /**
-   * 再取得が必要な場合に最新メッセージを再取得する
-   * 過去メッセージ閲覧中は何もしない
-   */
+  const onLoadLatterMessagesRequest = () => {
+    if (!fetchLatterMessages || isReachedLatest.value) return
+
+    return loadPage('latter', fetchLatterMessages)
+  }
+
   const loadNewMessages = async () => {
-    if (!fetchNewMessages || !isReachedLatest.value) {
-      return
-    }
-    isReachedLatest.value = false
-    isLoading.value = true
+    if (!fetchNewMessages || !isReachedLatest.value) return
 
-    await runWithIdentifierCheck(
-      async () => {
-        const newMessageIds = await fetchNewMessages(isReachedLatest)
-        await renderMessageFromIds(newMessageIds)
-        return newMessageIds
-      },
-      newMessageIds => {
-        isLoading.value = false
-        lastLoadingDirection.value = 'latter'
-        messageIds.value = [...new Set([...messageIds.value, ...newMessageIds])]
-      }
-    )
+    const isCurrentView = captureView()
+    if (pendingLoad) {
+      await pendingLoad
+      if (!isCurrentView() || !isReachedLatest.value || isLoading.value) return
+    }
+
+    isReachedLatest.value = false
+    await loadPage('latter', fetchNewMessages)
   }
 
   const addNewMessage = async (messageId: MessageId) => {
-    const beforeId = id.value
+    const isCurrentView = captureView()
     await renderMessageContent(messageId)
-
-    // すでに追加済みの場合は追加しない
-    // https://github.com/traPtitech/traQ_S-UI/issues/1748
-    if (messageIds.value.includes(messageId)) return
-    // チャンネルの移動などで id が変化していたら追加しない
-    // https://github.com/traPtitech/traQ_S-UI/issues/4218
-    if (beforeId !== id.value) return
+    if (!isCurrentView() || messageIds.value.includes(messageId)) return
 
     messageIds.value.push(messageId)
   }
 
   const init = () => {
     resetRenderedContent()
-    if (props.entryMessageId) {
-      onLoadAroundMessagesRequest(props.entryMessageId)
-    } else {
-      isReachedLatest.value = true
-      onLoadLatestMessagesRequest()
+
+    const { entryMessageId } = props
+    if (entryMessageId && fetchAroundMessages) {
+      return loadPage('around', async isCurrentView => {
+        const entryMessage = await fetchMessage({ messageId: entryMessageId })
+        if (!entryMessage || !isCurrentView()) return
+
+        return fetchAroundMessages(entryMessage)
+      })
     }
+
+    isReachedLatest.value = true
+    return loadPage('latest', fetchFormerMessages)
   }
 
-  watchEffect(async () => {
-    if (isReachedLatest.value) {
-      await onReachedLatest?.()
-    }
+  watchEffect(() => {
     shouldReceiveLatestMessages.value = isReachedLatest.value
+    if (isReachedLatest.value) return onReachedLatest?.(captureView())
   })
 
   return {
@@ -233,14 +190,11 @@ const useMessageFetcher = (
     isReachedEnd,
     isReachedLatest,
     isLoading,
-    isInitialLoad,
     lastLoadingDirection,
     reset,
     init,
-    renderMessageFromIds,
     onLoadFormerMessagesRequest,
     onLoadLatterMessagesRequest,
-    onLoadAroundMessagesRequest,
     loadNewMessages,
     addNewMessage
   }
