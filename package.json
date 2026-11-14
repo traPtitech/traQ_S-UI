@@ -58,7 +58,7 @@
     "@sapphi-red/web-noise-suppressor": "0.4.1",
     "@shiguredo/virtual-background": "2023.2.0",
     "@tanstack/vue-virtual": "3.13.32",
-    "@traptitech/traq": "0.0.0-thread.41310095832.1.g148f31ee2cac",
+    "@traptitech/traq": "0.0.0-thread.43429745231.1.geb43bc5ce5cb",
     "@traptitech/traq-markdown-it": "7.1.0",
     "@vueuse/core": "15.0.0",
     "autosize": "6.0.1",

@@ -476,12 +476,12 @@ const getMockThreadNotificationState = (index: number) => {
   return state
 }
 
-export const mockThreadSubscriptions: UserSubscribeState[] = mockThreads.map(
-  (thread, index) => ({
-    channelId: thread.id,
-    level: getMockThreadNotificationState(index).level
+export const mockThreadSubscriptions: UserSubscribeState[] =
+  mockThreads.flatMap((thread, index) => {
+    const { level } = getMockThreadNotificationState(index)
+    if (level === ChannelSubscribeLevel.none) return []
+    return [{ channelId: thread.id, level }]
   })
-)
 
 export const mockThreadUnreadChannels: UnreadChannel[] = mockThreads.flatMap(
   (thread, index) => {
