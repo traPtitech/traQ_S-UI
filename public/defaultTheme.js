@@ -57,9 +57,6 @@
         primary: '#FFFFFF',
         secondary: '#BAC2C9'
       }
-    },
-    specific: {
-      stampEdgeEnable: true
     }
   }
 
