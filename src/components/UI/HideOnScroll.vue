@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :data-is-collapsed="$boolAttr(!isVisible)">
+  <div
+    ref="element"
+    :class="$style.container"
+    :data-is-collapsed="$boolAttr(!isVisible)"
+  >
     <div :class="$style.content">
       <slot />
     </div>
@@ -14,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref, useTemplateRef, watch } from 'vue'
 
 import { useEventListener } from '@vueuse/core'
 
@@ -22,18 +26,18 @@ const props = defineProps<{
   scrollElement: HTMLElement | null
 }>()
 
-const SCROLL_THRESHOLD_PX = 8
+const element = useTemplateRef<HTMLElement>('element')
+
+const SCROLL_THRESHOLD_PX = 32
 const isVisible = ref(true)
 let scrollAnchor = 0
 
-watch(
-  () => props.scrollElement,
-  scroller => {
-    isVisible.value = true
-    scrollAnchor = Math.max(0, scroller?.scrollTop ?? 0)
-  },
-  { immediate: true }
-)
+const reveal = () => {
+  isVisible.value = true
+  scrollAnchor = Math.max(0, props.scrollElement?.scrollTop ?? 0)
+}
+
+watch(() => props.scrollElement, reveal, { immediate: true })
 
 const onScroll = () => {
   const scroller = props.scrollElement
@@ -46,12 +50,10 @@ const onScroll = () => {
 
   const scrollTop = Math.min(Math.max(0, scroller.scrollTop), maxScrollTop)
   if (scrollTop === 0) {
-    isVisible.value = true
-    scrollAnchor = 0
+    reveal()
     return
   }
 
-  // 折りたたみで表示領域が広がったときの末尾補正と上方向へのスクロールを区別
   const anchor = Math.min(scrollAnchor, maxScrollTop)
   scrollAnchor = isVisible.value
     ? Math.min(anchor, scrollTop)
@@ -66,47 +68,56 @@ const onScroll = () => {
 useEventListener(() => props.scrollElement, 'scroll', onScroll, {
   passive: true
 })
+
+defineExpose({ element, reveal })
 </script>
 
 <style lang="scss" module>
 .container {
-  --hide-on-scroll-duration: 150ms;
+  --hide-on-scroll-duration: 180ms;
 
-  position: relative;
-  display: grid;
-  grid-template-rows: 1fr;
-  transition: grid-template-rows var(--hide-on-scroll-duration) ease-out;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  overflow-anchor: none;
+  pointer-events: none;
 
   @media (prefers-reduced-motion: reduce) {
     --hide-on-scroll-duration: 0ms;
   }
 
   &[data-is-collapsed]:not(:has(:focus-visible)) {
-    grid-template-rows: 0fr;
-
     .content {
+      clip-path: inset(0 0 100%);
       visibility: hidden;
-      transition: visibility 0s var(--hide-on-scroll-duration);
+      transition:
+        clip-path var(--hide-on-scroll-duration) ease-out,
+        visibility 0s var(--hide-on-scroll-duration);
     }
 
     .collapsedDecoration {
+      top: 0;
       visibility: visible;
-      transition: none;
+      transition: top var(--hide-on-scroll-duration) ease-out;
     }
   }
 }
 
 .content {
-  min-height: 0;
-  overflow: hidden;
+  display: flow-root;
+  background: var(--hide-on-scroll-background, transparent);
+  clip-path: inset(0);
+  pointer-events: auto;
+  transition: clip-path var(--hide-on-scroll-duration) ease-out;
 }
 
 .collapsedDecoration {
   position: absolute;
   inset-inline: 0;
-  bottom: 0;
+  top: 100%;
   visibility: hidden;
-  transition: visibility 0s var(--hide-on-scroll-duration);
-  pointer-events: none;
+  transition:
+    top var(--hide-on-scroll-duration) ease-out,
+    visibility 0s var(--hide-on-scroll-duration);
 }
 </style>

@@ -18,19 +18,6 @@
               title="アーカイブされたチャンネルを表示する"
             />
           </div>
-          <HideOnScroll
-            :key="isSearching ? 'search' : 'browse'"
-            :scroll-element="scrollEl"
-          >
-            <ChannelListSelector
-              v-model:is-starred="isStarredTabSelected"
-              :all-panel-id="allPanelId"
-              :starred-panel-id="starredPanelId"
-            />
-            <template #collapsed-decoration>
-              <div :class="$style.divider" />
-            </template>
-          </HideOnScroll>
         </template>
       </NavigationContentContainer>
     </div>
@@ -41,12 +28,27 @@
       role="region"
       aria-label="チャンネル一覧"
     >
+      <HideOnScroll
+        ref="scopeTabs"
+        :class="$style.scopeTabs"
+        :scroll-element="scrollEl"
+      >
+        <ChannelListSelector
+          v-model:is-starred="isStarredTabSelected"
+          :all-panel-id="allPanelId"
+          :starred-panel-id="starredPanelId"
+        />
+        <template #collapsed-decoration>
+          <div :class="$style.divider" />
+        </template>
+      </HideOnScroll>
       <ChannelTree
         v-if="isSearching"
         :id="searchStarredOnly ? starredPanelId : allPanelId"
         role="tabpanel"
         :channels="filteredChannelTree"
         :scroll-element="scrollEl"
+        :scroll-margin="scrollMargins.channels"
         show-topic
         show-shortened-path
         :show-child-topic="false"
@@ -59,6 +61,7 @@
             role="tabpanel"
             :channels="starredTopLevelChannels"
             :scroll-element="scrollEl"
+            :scroll-margin="scrollMargins.channels"
           />
           <EmptyState v-else :id="starredPanelId" role="tabpanel">
             お気に入りチャンネルはありません
@@ -72,6 +75,7 @@
             :channels="starredChannels"
             show-shortened-path
             :scroll-element="scrollEl"
+            :scroll-margin="scrollMargins.channels"
           />
           <EmptyState v-else :id="starredPanelId" role="tabpanel">
             お気に入りチャンネルはありません
@@ -85,6 +89,7 @@
           role="tabpanel"
           :channels="topLevelChannels"
           :scroll-element="scrollEl"
+          :scroll-margin="scrollMargins.channels"
         />
         <EmptyState v-else :id="allPanelId" role="tabpanel">
           チャンネルがありません
@@ -95,7 +100,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, toRaw, useId, watch } from 'vue'
+import { computed, ref, toRaw, useId, useTemplateRef, watch } from 'vue'
 
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import NavigationContentTitle from '/@/components/Main/NavigationBar/NavigationContentTitle.vue'
@@ -117,6 +122,7 @@ import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
 import ChannelTree from '../ChannelList/ChannelTreeWithFeatureFlag.vue'
 import ToggleButton from './ToggleButton.vue'
 import useChannelFilter from './composables/useChannelFilter'
+import useScrollMargins from './composables/useScrollMargins'
 
 const { pushModal } = useModalStore()
 const { channelTree, starredChannelTree } = useChannelTree()
@@ -203,6 +209,18 @@ const allPanelId = useId()
 const starredPanelId = useId()
 
 const scrollEl = ref<HTMLElement | null>(null)
+const scopeTabs = useTemplateRef<InstanceType<typeof HideOnScroll>>('scopeTabs')
+const scopeTabsElement = computed(() => scopeTabs.value?.element ?? null)
+const scrollMargins = useScrollMargins({ channels: [scopeTabsElement] })
+
+watch(
+  isSearching,
+  () => {
+    if (scrollEl.value) scrollEl.value.scrollTop = 0
+    scopeTabs.value?.reveal()
+  },
+  { flush: 'post' }
+)
 </script>
 
 <style lang="scss" module>
@@ -215,6 +233,9 @@ const scrollEl = ref<HTMLElement | null>(null)
 .header {
   flex-shrink: 0;
   padding-top: 24px;
+}
+.scopeTabs {
+  --hide-on-scroll-background: #{$theme-background-secondary-default};
 }
 .divider {
   height: 1px;
