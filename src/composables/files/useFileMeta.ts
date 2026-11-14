@@ -1,6 +1,8 @@
+import { ThumbnailType } from '@traptitech/traq'
+
 import { computed } from 'vue'
 
-import { buildFilePath } from '/@/lib/apis'
+import { buildFilePath, buildFileThumbnailPath } from '/@/lib/apis'
 import { mimeToFileType, prettifyFileSize } from '/@/lib/basic/file'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useMessagesStore } from '/@/store/entities/messages'
@@ -20,6 +22,11 @@ const useFileMeta = (props: {
   const { fileLink, onFileDownloadLinkClick } = useFileLink(props)
   const fileRawPath = computed(() =>
     fileMeta.value ? buildFilePath(fileMeta.value.id) : ''
+  )
+  const filePosterPath = computed(() =>
+    fileMeta.value?.thumbnails.some(({ type }) => type === ThumbnailType.Image)
+      ? buildFileThumbnailPath(fileMeta.value.id)
+      : undefined
   )
   const fileType = computed(() =>
     fileMeta.value ? mimeToFileType(fileMeta.value.mime) : 'file'
@@ -41,6 +48,7 @@ const useFileMeta = (props: {
     fileMeta,
     fileLink,
     fileRawPath,
+    filePosterPath,
     fileType,
     isAnimatedImage,
     fileSize,
