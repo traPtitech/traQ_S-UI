@@ -9,7 +9,6 @@ import apis from '/@/lib/apis'
 import { createSingleflight } from '/@/lib/basic/async'
 import { isUUID } from '/@/lib/basic/uuid'
 import { wsListener } from '/@/lib/websocket'
-import { useMainViewStore } from '/@/store/ui/mainView'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { ThreadChannelId } from '/@/types/entity-ids'
 
@@ -83,31 +82,11 @@ const useThreadsStorePinia = defineStore('entities/threads', () => {
     )
   }
 
-  const addThread = async (threadId: ThreadChannelId) => {
-    const { data: channel } = await apis.getChannel(threadId)
-    if (!isThreadChannel(channel)) return
-
-    const { primaryView } = useMainViewStore()
-    const view = primaryView.value
-
-    if (view.type !== 'channel' || view.channelId !== channel.parentId) {
-      return
-    }
-
-    setThread(channel)
-  }
-
   const updateThread = async (threadId: ThreadChannelId) => {
-    if (threadsMap.value.has(threadId)) {
-      await fetchThread(threadId, { force: true })
-      return
-    }
-    await addThread(threadId)
+    if (!threadsMap.value.has(threadId)) return
+    await fetchThread(threadId, { force: true })
   }
 
-  wsListener.on('THREAD_CREATED', ({ id }) => {
-    addThread(id)
-  })
   wsListener.on('THREAD_UPDATED', ({ id }) => {
     updateThread(id)
   })
