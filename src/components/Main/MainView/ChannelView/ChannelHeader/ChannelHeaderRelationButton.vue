@@ -32,6 +32,7 @@ import { computed, onMounted, reactive, ref, useId } from 'vue'
 import { useEventListener } from '@vueuse/core'
 
 import AIcon from '/@/components/UI/AIcon.vue'
+import { useCloseOnMainViewInactive } from '/@/composables/mainView/useMainViewActivity'
 import type { Point } from '/@/lib/basic/point'
 import type { ChannelId } from '/@/types/entity-ids'
 
@@ -47,6 +48,10 @@ const popup = ref<InstanceType<typeof ChannelHeaderRelationPopup> | null>(null)
 const popupId = useId()
 
 const isOpen = ref(false)
+useCloseOnMainViewInactive(() => {
+  isOpen.value = false
+})
+
 const toggle = () => {
   updateTriggerPosition()
 

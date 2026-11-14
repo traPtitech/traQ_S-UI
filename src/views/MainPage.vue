@@ -20,7 +20,7 @@
         :dim-inner="isSidebarCompletelyAppeared"
         :class="$style.mainViewWrapper"
         :style="styles.mainViewWrapper"
-        @click.capture="onClickMainViewFrame"
+        @click="onClickMainViewFrame"
       >
         <MainView :class="$style.mainView" />
       </MainViewFrame>
@@ -39,14 +39,17 @@
 
 <script lang="ts">
 import type { Ref } from 'vue'
-import { computed, defineAsyncComponent, reactive } from 'vue'
+import { computed, defineAsyncComponent, reactive, watch } from 'vue'
 
 import { useEventListener } from '@vueuse/core'
 
+import { provideMainViewActivity } from '/@/composables/mainView/useMainViewActivity'
 import useNavigationController from '/@/composables/mainView/useNavigationController'
+import useSidebar from '/@/composables/mainView/useSidebar'
 import useResponsive from '/@/composables/useResponsive'
 import { connectFirebase } from '/@/lib/notification/notification'
 import { useCommandPalette } from '/@/store/app/commandPalette'
+import { useStampPicker } from '/@/store/ui/stampPicker'
 import { useToastStore } from '/@/store/ui/toast'
 
 import useInitialFetch from './composables/useInitialFetch'
@@ -129,6 +132,12 @@ const {
   isMainViewActive
 } = useMainViewLayout(navWidth, sidebarWidth)
 const { addToast } = useToastStore()
+const { closeStampPicker } = useStampPicker()
+
+provideMainViewActivity(isMainViewActive)
+watch(isMainViewActive, isActive => {
+  if (!isActive) closeStampPicker()
+})
 
 useCommandPaletteShortcutKey()
 
@@ -137,6 +146,7 @@ const shouldShowNav = computed(() => !isMobile.value || isNavAppeared.value)
 provideNavigationVisibility(shouldShowNav)
 
 const { closeNav } = useNavigationController()
+const { closeSidebar } = useSidebar()
 const hideOuter = computed(
   () => isMobile.value && isNavCompletelyAppeared.value
 )
@@ -156,12 +166,14 @@ useInitialFetch(() => {
 
 const styles = useStyles(mainViewPosition, sidebarPosition)
 
-const onClickMainViewFrame = (e: MouseEvent) => {
-  if (!isMobile.value || !isNavCompletelyAppeared.value) {
-    return
+const onClickMainViewFrame = () => {
+  if (!isMobile.value) return
+
+  if (isSidebarCompletelyAppeared.value) {
+    closeSidebar()
+  } else if (isNavCompletelyAppeared.value) {
+    closeNav()
   }
-  e.stopPropagation()
-  closeNav()
 }
 
 useViewStateSender()

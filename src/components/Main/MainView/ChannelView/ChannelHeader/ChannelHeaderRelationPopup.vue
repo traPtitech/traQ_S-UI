@@ -1,12 +1,7 @@
 <template>
   <teleport to="#popup-header-relation">
     <ClickOutside @click-outside="e => emit('outside-click', e)">
-      <div
-        :id="props.popupId"
-        ref="popupWrap"
-        :class="$style.popup"
-        :style="positionStyle"
-      >
+      <div :id="props.popupId" :class="$style.popup" :style="positionStyle">
         <!-- NOTE: Popup から Shift + Tab で戻った際にトリガーのボタンに戻れるように Focus を管理する -->
         <div tabindex="0" @focus="emit('focus-return')" />
         <div
@@ -61,7 +56,6 @@ import type { Ref } from 'vue'
 
 import ATab from '/@/components/UI/ATab.vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
-import useBoxSize from '/@/composables/dom/useBoxSize'
 import useRelatedChannels from '/@/composables/useRelatedChannels'
 import { safeMod } from '/@/lib/basic/arithmetic'
 import type { Point } from '/@/lib/basic/point'
@@ -129,12 +123,9 @@ const emit = defineEmits<{
   (e: 'focus-return'): void
 }>()
 
-const popupWrap = ref<HTMLDivElement | null>(null)
-const { width } = useBoxSize(popupWrap)
-
 const positionStyle = computed(() => ({
-  '--x': `${props.rightPosition.x - (width.value ?? 0)}px`,
-  '--y': `${props.rightPosition.y}px`
+  '--anchor-right': `${props.rightPosition.x}px`,
+  '--anchor-bottom': `${props.rightPosition.y}px`
 }))
 
 const focus = () => {
@@ -149,16 +140,23 @@ defineExpose({ focus })
 
 <style lang="scss" module>
 .popup {
+  --viewport-margin: 16px;
   @include background-primary;
   @include drop-shadow-default;
   border-radius: 8px;
 
   position: fixed;
-  top: calc(var(--y) + 8px);
-  left: max(16px, var(--x));
+  top: calc(var(--anchor-bottom) + 8px);
+  left: 0;
+  width: max-content;
   padding: 16px 12px;
-  // NOTE: 最大でも左右に 16px の余白を残す
-  max-width: calc(100% - 16px * 2);
+  max-width: calc(100% - var(--viewport-margin) * 2);
+  transform: translateX(
+    max(
+      var(--viewport-margin),
+      min(var(--anchor-right), 100vw - var(--viewport-margin)) - 100%
+    )
+  );
   overflow: hidden;
 }
 

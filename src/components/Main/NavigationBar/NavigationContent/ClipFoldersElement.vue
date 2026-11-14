@@ -41,7 +41,13 @@ const isSelected = computed(
   @include size-body1;
   display: flex;
   padding: 2px;
+  border-radius: 4px;
   cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    @include background-primary;
+  }
 }
 .icon {
   flex-shrink: 0;

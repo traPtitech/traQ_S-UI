@@ -1,10 +1,6 @@
 <template>
-  <section :class="$style.container">
+  <div :class="$style.container">
     <div>
-      <div :class="$style.header">
-        <h2 :class="$style.title">設定</h2>
-        <CloseButton :size="36" @close="close" />
-      </div>
       <MobileTabSelectorItem
         v-for="navigation in navigations"
         :key="navigation.routeName"
@@ -15,43 +11,23 @@
       <SafariWarning :class="$style.safariWarning" />
     </div>
     <VersionInfo :class="$style.version" />
-  </section>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import CloseButton from '/@/components/UI/CloseButton.vue'
 import VersionInfo from '/@/components/UI/VersionInfo.vue'
 
 import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
 import SafariWarning from './SafariWarning.vue'
-import useSettingsNavigation, { navigations } from './composables/useNavigation'
-
-const { close } = useSettingsNavigation()
+import { navigations } from './composables/useNavigation'
 </script>
 
 <style lang="scss" module>
 .container {
-  @include color-ui-primary;
-  @include background-secondary;
-  width: 100%;
-  height: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-
-.header {
-  display: flex;
-  padding: 20px 12px;
-  align-items: center;
-}
-.title {
-  @include size-h2;
-  display: flex;
-  align-items: center;
-  padding-left: 30px;
-  height: 40px;
-  flex: 1 0;
 }
 
 .safariWarning {

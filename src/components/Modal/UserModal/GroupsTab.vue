@@ -60,7 +60,7 @@ const onGroupClick = (id: UserGroupId) => {
 }
 
 .list {
-  overflow-y: scroll;
+  overflow-y: auto;
   min-height: 100%;
 }
 

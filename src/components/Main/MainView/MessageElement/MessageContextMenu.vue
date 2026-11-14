@@ -63,6 +63,7 @@ import { computed, toRef } from 'vue'
 import useCopyLink from '/@/composables/contextMenu/useCopyLink'
 import usePinToggler from '/@/composables/contextMenu/usePinToggler'
 import useSearchLink from '/@/composables/contextMenu/useSearchLink'
+import { useCloseOnMainViewInactive } from '/@/composables/mainView/useMainViewActivity'
 import useCopyText from '/@/composables/toast/useCopyText'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import apis from '/@/lib/apis'
@@ -159,6 +160,8 @@ const { showClipCreateModal } = useShowClipCreateModal(messageId)
 const close = () => {
   emit('close')
 }
+useCloseOnMainViewInactive(close)
+
 const withClose = async (func: () => MaybePromise<void>) => {
   await func()
   close()
@@ -178,7 +181,13 @@ const withClose = async (func: () => MaybePromise<void>) => {
 }
 
 .text {
-  margin: 2px 0;
+  margin: 0 -8px;
+  padding: 2px 8px;
+  border-radius: 4px;
   cursor: pointer;
+
+  &:hover {
+    @include background-secondary;
+  }
 }
 </style>
