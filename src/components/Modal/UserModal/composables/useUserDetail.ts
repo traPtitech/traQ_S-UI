@@ -1,39 +1,25 @@
-import type { UserDetail } from '@traptitech/traq'
-
-import { onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 
 import useMittListener from '/@/composables/utils/useMittListener'
-import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
-import type {
-  UserIconUpdatedEvent,
-  UserTagsUpdatedEvent,
-  UserUpdatedEvent
-} from '/@/lib/websocket/events'
+import { useUsersStore } from '/@/store/entities/users'
 import type { UserId } from '/@/types/entity-ids'
 
 const useUserDetail = (props: { id: UserId }) => {
-  const userDetail = ref<UserDetail>()
+  const { userDetailsMap, fetchUserDetail } = useUsersStore()
+
+  // 取得済みの詳細があればそれをすぐに表示し、開くたびに裏で取り直して最新にする
+  // USER_UPDATED などによる更新は users store 側で反映される
+  const userDetail = computed(() => userDetailsMap.value.get(props.id))
 
   const fetch = async () => {
-    const { data: res } = await apis.getUser(props.id)
-    userDetail.value = res
+    await fetchUserDetail({ userId: props.id, cacheStrategy: 'forceFetch' })
   }
   onMounted(() => {
     fetch()
   })
 
-  const onUserUpdated = ({
-    id
-  }: UserUpdatedEvent | UserTagsUpdatedEvent | UserIconUpdatedEvent) => {
-    if (id !== props.id) return
-    fetch()
-  }
-
   useMittListener(wsListener, 'reconnect', fetch)
-  useMittListener(wsListener, 'USER_UPDATED', onUserUpdated)
-  useMittListener(wsListener, 'USER_TAGS_UPDATED', onUserUpdated)
-  useMittListener(wsListener, 'USER_ICON_UPDATED', onUserUpdated)
 
   return { userDetail }
 }
