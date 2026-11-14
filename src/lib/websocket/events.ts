@@ -20,6 +20,7 @@ import type {
 
 export type WebSocketEvent = UserEvent &
   ChannelEvent &
+  ThreadEvent &
   MessageEvent &
   StampEvent &
   ClipFolderEvent &
@@ -111,6 +112,17 @@ export interface ChannelViewersChangedEvent {
 }
 
 export type ChannelSubscribersChangedEvent = ChannelIdBody
+
+/*
+ * Thread
+ */
+type ThreadEvent = {
+  THREAD_CREATED: ThreadCreatedEvent
+  THREAD_UPDATED: ThreadUpdatedEvent
+}
+
+export type ThreadCreatedEvent = ChannelIdBody
+export type ThreadUpdatedEvent = ChannelIdBody
 
 /*
  * Message

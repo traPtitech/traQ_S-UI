@@ -82,6 +82,14 @@ const useThreadsStorePinia = defineStore('entities/threads', () => {
     )
   }
 
+  const updateThread = async (threadId: ThreadChannelId) => {
+    if (!threadsMap.value.has(threadId)) return
+    await fetchThread(threadId, { force: true })
+  }
+
+  wsListener.on('THREAD_UPDATED', ({ id }) => {
+    updateThread(id)
+  })
   wsListener.on('CHANNEL_DELETED', ({ id }) => {
     deleteThread(id)
   })
