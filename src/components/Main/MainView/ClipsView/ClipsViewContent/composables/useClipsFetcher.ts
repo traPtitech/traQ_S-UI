@@ -34,7 +34,10 @@ const useClipsFetcher = (
   }
 ) => {
   const { fetchMessage, extendMessagesMap } = useMessagesStore()
-  const getFetchLimit = useFetchLimit(scrollerRef, MESSAGE_HEIGHT)
+  const { fetchLimit, waitHeightResolved } = useFetchLimit(
+    scrollerRef,
+    MESSAGE_HEIGHT
+  )
   const state = reactive({
     nextLoadOffset: 0
   })
@@ -62,17 +65,17 @@ const useClipsFetcher = (
   }
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
-    const limit = await getFetchLimit()
+    await waitHeightResolved
     const { clips, hasMore } = await fetchMessagesInClipFolder({
       folderId: props.clipFolderId,
-      limit,
+      limit: fetchLimit.value,
       offset: state.nextLoadOffset
     })
 
     if (!hasMore) {
       isReachedEnd.value = true
     } else {
-      state.nextLoadOffset += limit
+      state.nextLoadOffset += fetchLimit.value
     }
 
     return clips.toReversed().map(clip => clip.message.id)

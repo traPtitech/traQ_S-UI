@@ -11,7 +11,6 @@
   >
     <div
       v-if="stampsMapFetched"
-      ref="viewportRef"
       :class="$style.viewport"
       data-testid="channel-viewport"
     >
@@ -37,7 +36,7 @@ import type { ComponentPublicInstance, Ref } from 'vue'
 import { nextTick, onMounted, reactive, shallowRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { useEventListener, useResizeObserver } from '@vueuse/core'
+import { useEventListener } from '@vueuse/core'
 import { throttle } from 'throttle-debounce'
 
 import { isMessageScrollerRoute } from '/@/router'
@@ -110,7 +109,6 @@ const { lastScrollPosition } = useMainViewStore()
 const { stampsMapFetched } = useStampsStore()
 
 const rootRef = shallowRef<HTMLElement | null>(null)
-const viewportRef = shallowRef<HTMLElement | null>(null)
 const state = reactive({
   height: 0,
   scrollTop: lastScrollPosition.value,
@@ -212,7 +210,8 @@ const requestLoadMessages = () => {
   if (props.isLoading) return
   if (state.scrollTop < LOAD_MORE_THRESHOLD && !props.isReachedEnd) {
     emit('requestLoadFormer')
-  } else if (
+  }
+  if (
     scrollHeight - state.scrollTop - clientHeight < LOAD_MORE_THRESHOLD &&
     !props.isReachedLatest
   ) {
@@ -221,23 +220,6 @@ const requestLoadMessages = () => {
 }
 
 const handleScroll = throttle(17, requestLoadMessages)
-
-const loadIfContentFits = () => {
-  const root = rootRef.value
-  if (!root || !viewportRef.value || !props.messageIds.length) return
-
-  // 一覧が表示領域に収まる場合はスクロール操作で追加取得を始められない
-  if (root.clientHeight > 0 && root.scrollHeight <= root.clientHeight) {
-    requestLoadMessages()
-  }
-}
-
-useResizeObserver([rootRef, viewportRef], loadIfContentFits)
-watch(
-  [() => props.isLoading, () => props.messageIds.length],
-  loadIfContentFits,
-  { flush: 'post' }
-)
 
 const visibilitychangeListener = () => {
   if (document.visibilityState === 'visible') {
