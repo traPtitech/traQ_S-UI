@@ -5,9 +5,11 @@
       :to="ancestorsPath[0].link"
       :class="$style.ancestorHash"
     >
-      #
+      <slot name="icon">#</slot>
     </router-link>
-    <span v-else :class="$style.currentHash">#</span>
+    <span v-else :class="$style.currentHash">
+      <slot name="icon">#</slot>
+    </span>
     <span v-for="(ancestor, i) in ancestorsPath" :key="i">
       <router-link :to="ancestor.link" :class="$style.ancestor">{{
         isMobile ? ancestor.name[0] : ancestor.name
@@ -91,12 +93,12 @@ const currentChannelLastPath = computed(
 .currentHash {
   @include size-h1;
   user-select: none;
-  margin-right: 0.125rem;
+  margin-right: 0.375rem;
 }
 .ancestorHash {
   @include color-ui-primary-inactive;
   @include size-h1;
-  margin-right: 0.125rem;
+  margin-right: 0.5rem;
   user-select: none;
   &:hover {
     @include color-ui-primary;
