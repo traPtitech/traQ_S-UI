@@ -1,13 +1,6 @@
 <template>
   <div :class="$style.container">
-    <router-link
-      v-if="ancestorsPath[0]"
-      :to="ancestorsPath[0].link"
-      :class="$style.ancestorHash"
-    >
-      <slot name="icon">#</slot>
-    </router-link>
-    <span v-else :class="$style.currentHash">
+    <span :class="ancestorsPath[0] ? $style.ancestorHash : $style.currentHash">
       <slot name="icon">#</slot>
     </span>
     <span v-for="(ancestor, i) in ancestorsPath" :key="i">
@@ -100,8 +93,5 @@ const currentChannelLastPath = computed(
   @include size-h1;
   margin-right: 0.5rem;
   user-select: none;
-  &:hover {
-    @include color-ui-primary;
-  }
 }
 </style>
