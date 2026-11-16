@@ -11,7 +11,7 @@
         <template #default>
           <div :class="$style.filterContainer">
             <ChannelFilter v-model="query" :class="$style.filter" />
-            <ToggleButton
+            <IconToggleButton
               v-model="showArchivedChannels"
               icon-name="archive"
               icon-mdi
@@ -92,6 +92,7 @@ import NavigationContentContainer from '/@/components/Main/NavigationBar/Navigat
 import NavigationContentTitle from '/@/components/Main/NavigationBar/NavigationContentTitle.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
+import IconToggleButton from '/@/components/UI/IconToggleButton.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { filterTrees } from '/@/lib/basic/tree'
 import { sortByChannelPath } from '/@/lib/channel'
@@ -105,7 +106,6 @@ import { useModalStore } from '/@/store/ui/modal'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
 import ChannelTree from '../ChannelList/ChannelTreeWithFeatureFlag.vue'
-import ToggleButton from './ToggleButton.vue'
 import useChannelFilter from './composables/useChannelFilter'
 
 const { pushModal } = useModalStore()

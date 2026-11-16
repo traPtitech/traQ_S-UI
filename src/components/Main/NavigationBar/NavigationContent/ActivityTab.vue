@@ -2,13 +2,13 @@
   <div :class="$style.container">
     <NavigationContentTitle>アクティビティ</NavigationContentTitle>
     <div :class="$style.buttons">
-      <ToggleButton
+      <IconToggleButton
         v-model="isNotAll"
         :class="$style.button"
         title="通知/未読購読チャンネルのみ表示"
         icon-name="notified"
       />
-      <ToggleButton
+      <IconToggleButton
         v-model="isPerChannel"
         :class="$style.button"
         title="同じチャンネルでは一つしかメッセージを表示しない"
@@ -62,9 +62,9 @@ const useActivityMode = () => {
 <script lang="ts" setup>
 import NavigationContentTitle from '/@/components/Main/NavigationBar/NavigationContentTitle.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
+import IconToggleButton from '/@/components/UI/IconToggleButton.vue'
 
 import ActivityElement from './ActivityElement.vue'
-import ToggleButton from './ToggleButton.vue'
 
 const { timeline } = useActivityStream()
 const { isNotAll, isPerChannel } = useActivityMode()

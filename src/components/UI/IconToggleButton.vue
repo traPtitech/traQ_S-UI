@@ -1,5 +1,6 @@
 <template>
   <button
+    type="button"
     :class="$style.container"
     :title="title"
     :aria-pressed="modelValue"
@@ -33,11 +34,29 @@ const toggle = () => {
 <style lang="scss" module>
 .container {
   @include background-primary;
+  position: relative;
+  isolation: isolate;
   padding: 4px 14px;
   border-radius: 4px;
   text-align: center;
   cursor: pointer;
-  &:hover .icon,
+  &::after {
+    @include background-accent-primary;
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+  }
+  &[aria-pressed='true']::after {
+    opacity: 0.2;
+  }
+  &:focus-visible {
+    outline: 2px solid $theme-accent-focus-default;
+    outline-offset: 2px;
+  }
   &:focus-visible .icon {
     @include color-ui-secondary;
   }
