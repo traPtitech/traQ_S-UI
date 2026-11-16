@@ -2,7 +2,11 @@
   <PrimaryViewHeader>
     <template #header>
       <div :class="$style.header">
-        <ChannelHeaderChannelName :channel-id="channelId" />
+        <ChannelHeaderChannelName :channel-id="channelId">
+          <template #icon>
+            <AIcon :class="$style.icon" name="message-text-outline" mdi />
+          </template>
+        </ChannelHeaderChannelName>
       </div>
     </template>
     <template #tools>
@@ -14,6 +18,7 @@
 <script lang="ts" setup>
 import ChannelHeaderChannelName from '/@/components/Main/MainView/ChannelView/ChannelHeader/ChannelHeaderChannelName.vue'
 import PrimaryViewHeader from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeader.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import type { ChannelId } from '/@/types/entity-ids'
 
 import ThreadHeaderTools from './ThreadHeaderTools.vue'
@@ -28,6 +33,10 @@ const emit = defineEmits<{
 </script>
 
 <style lang="scss" module>
+.icon {
+  vertical-align: middle;
+}
+
 .header {
   display: flex;
   align-items: center;
