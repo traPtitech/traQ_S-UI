@@ -1,10 +1,7 @@
 <template>
-  <div>
-    <ChannelThreadsSidebarNotification :class="$style.sidebarItem" />
-    <ChannelThreadsSidebarThreads
-      :channel-id="channelId"
-      :class="$style.sidebarItem"
-    />
+  <div :class="$style.container">
+    <ChannelThreadsSidebarNotification />
+    <ChannelThreadsSidebarThreads :channel-id="channelId" />
   </div>
 </template>
 
@@ -18,13 +15,9 @@ defineProps<{
 </script>
 
 <style lang="scss" module>
-.sidebarItem {
-  margin: 16px 0;
-  &:first-child {
-    margin-top: 0;
-  }
-  &:last-child {
-    margin-bottom: 0;
-  }
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 </style>

@@ -1,29 +1,14 @@
 import type {
   Message,
+  ThreadChannel,
   UnreadChannel,
   User,
   UserSubscribeState
 } from '@traptitech/traq'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 
-// traQ v3 API (threads) の ThreadChannel。SDKで公開されたらimportに置き換える。
-// https://github.com/traPtitech/traQ/blob/feat/thread/docs/v3-api.yaml
-export interface ThreadChannel {
-  id: string
-  parentChannelId: string
-  parentMessageId: string
-  archived: boolean
-  name: string
-}
-
-// 発言者リストのAPIは未定義のため、モック専用の仮フィールド。
-export interface MockThreadChannel extends ThreadChannel {
-  participantUserIds: string[]
-}
-
 export const mockThreadParentChannelId = '10000000-0000-4000-8000-000000000001'
 
-// UUIDはすべて架空。実サーバーのユーザー・アイコン取得には使用しない。
 export const mockThreadUsers: User[] = [
   {
     id: '20000000-0000-4000-8000-000000000001',
@@ -63,19 +48,13 @@ export const mockThreadUsers: User[] = [
   }
 ]
 
-// GET /channels/{channelId}/threads 相当 + 仮の発言者リスト。
-export const mockThreads: MockThreadChannel[] = [
+export const mockThreads: ThreadChannel[] = [
   {
     id: '30000000-0000-4000-8000-000000000001',
     parentChannelId: '10000000-0000-4000-8000-000000000001',
     parentMessageId: '40000000-0000-4000-8000-000000000001',
     archived: false,
-    participantUserIds: [
-      '20000000-0000-4000-8000-000000000001',
-      '20000000-0000-4000-8000-000000000002',
-      '20000000-0000-4000-8000-000000000003',
-      '20000000-0000-4000-8000-000000000004'
-    ],
+    creatorId: '20000000-0000-4000-8000-000000000001',
     name: '次回のミーティング'
   },
   {
@@ -83,11 +62,7 @@ export const mockThreads: MockThreadChannel[] = [
     parentChannelId: '10000000-0000-4000-8000-000000000001',
     parentMessageId: '40000000-0000-4000-8000-000000000002',
     archived: false,
-    participantUserIds: [
-      '20000000-0000-4000-8000-000000000001',
-      '20000000-0000-4000-8000-000000000002',
-      '20000000-0000-4000-8000-000000000003'
-    ],
+    creatorId: '20000000-0000-4000-8000-000000000002',
     name: 'サイドバーのデザイン相談'
   },
   {
@@ -95,11 +70,7 @@ export const mockThreads: MockThreadChannel[] = [
     parentChannelId: '10000000-0000-4000-8000-000000000001',
     parentMessageId: '40000000-0000-4000-8000-000000000003',
     archived: false,
-    participantUserIds: [
-      '20000000-0000-4000-8000-000000000001',
-      '20000000-0000-4000-8000-000000000002',
-      '20000000-0000-4000-8000-000000000003'
-    ],
+    creatorId: '20000000-0000-4000-8000-000000000003',
     name: '動作確認メモ'
   },
   {
@@ -107,11 +78,7 @@ export const mockThreads: MockThreadChannel[] = [
     parentChannelId: '10000000-0000-4000-8000-000000000001',
     parentMessageId: '40000000-0000-4000-8000-000000000004',
     archived: false,
-    participantUserIds: [
-      '20000000-0000-4000-8000-000000000001',
-      '20000000-0000-4000-8000-000000000002',
-      '20000000-0000-4000-8000-000000000003'
-    ],
+    creatorId: '20000000-0000-4000-8000-000000000002',
     name: 'タイトルが長いスレッドをサイドバーに表示したときの省略と折り返しを確認するための相談'
   },
   {
@@ -119,11 +86,7 @@ export const mockThreads: MockThreadChannel[] = [
     parentChannelId: '10000000-0000-4000-8000-000000000001',
     parentMessageId: '40000000-0000-4000-8000-000000000005',
     archived: false,
-    participantUserIds: [
-      '20000000-0000-4000-8000-000000000001',
-      '20000000-0000-4000-8000-000000000002',
-      '20000000-0000-4000-8000-000000000003'
-    ],
+    creatorId: '20000000-0000-4000-8000-000000000004',
     name: 'リリース後の振り返り'
   },
   {
@@ -131,10 +94,7 @@ export const mockThreads: MockThreadChannel[] = [
     parentChannelId: '10000000-0000-4000-8000-000000000001',
     parentMessageId: '40000000-0000-4000-8000-000000000006',
     archived: true,
-    participantUserIds: [
-      '20000000-0000-4000-8000-000000000001',
-      '20000000-0000-4000-8000-000000000002'
-    ],
+    creatorId: '20000000-0000-4000-8000-000000000001',
     name: '今日アーカイブしたミーティング'
   },
   {
@@ -142,10 +102,7 @@ export const mockThreads: MockThreadChannel[] = [
     parentChannelId: '10000000-0000-4000-8000-000000000001',
     parentMessageId: '40000000-0000-4000-8000-000000000007',
     archived: true,
-    participantUserIds: [
-      '20000000-0000-4000-8000-000000000002',
-      '20000000-0000-4000-8000-000000000003'
-    ],
+    creatorId: '20000000-0000-4000-8000-000000000002',
     name: '解決済みの不具合相談'
   },
   {
@@ -153,16 +110,64 @@ export const mockThreads: MockThreadChannel[] = [
     parentChannelId: '10000000-0000-4000-8000-000000000001',
     parentMessageId: '40000000-0000-4000-8000-000000000008',
     archived: true,
-    participantUserIds: [
-      '20000000-0000-4000-8000-000000000003',
-      '20000000-0000-4000-8000-000000000004'
-    ],
+    creatorId: '20000000-0000-4000-8000-000000000004',
     name: '終了したイベントの準備'
   }
 ]
 
-// GET /channels/{channelId}/messages のレスポンス相当。
-// 投稿日時の古い順（order=asc）で保持する。
+const mockParentMessages: Pick<
+  Message,
+  'id' | 'userId' | 'content' | 'createdAt'
+>[] = [
+  {
+    id: '40000000-0000-4000-8000-000000000001',
+    userId: '20000000-0000-4000-8000-000000000001',
+    content:
+      '次回のミーティングで相談したいことがあるので、議題をまとめましょう。',
+    createdAt: '2026-10-29T08:30:00.000Z'
+  },
+  {
+    id: '40000000-0000-4000-8000-000000000002',
+    userId: '20000000-0000-4000-8000-000000000001',
+    content:
+      'サイドバーの案を見比べて、タイトルと本文の見え方を確認したいです。',
+    createdAt: '2026-10-29T08:35:00.000Z'
+  },
+  {
+    id: '40000000-0000-4000-8000-000000000003',
+    userId: '20000000-0000-4000-8000-000000000001',
+    content:
+      '気づいたことがあれば、このスレッドに動作確認のメモを残してください。',
+    createdAt: '2026-10-29T08:40:00.000Z'
+  },
+  {
+    id: '40000000-0000-4000-8000-000000000004',
+    userId: '20000000-0000-4000-8000-000000000001',
+    content: 'PR出しました\nhttps://github.com/traPtitech/traQ/pull/3620',
+    createdAt: '2026-10-29T08:42:00.000Z'
+  },
+  {
+    id: '40000000-0000-4000-8000-000000000006',
+    userId: '20000000-0000-4000-8000-000000000001',
+    content: 'ミーティングの記録と次回までに進める作業をここにまとめます。',
+    createdAt: '2026-10-29T08:44:00.000Z'
+  },
+  {
+    id: '40000000-0000-4000-8000-000000000007',
+    userId: '20000000-0000-4000-8000-000000000001',
+    content: '同じ手順で再現するか、確認した結果を教えてください。',
+    createdAt: '2026-10-29T08:46:00.000Z'
+  },
+  {
+    id: '40000000-0000-4000-8000-000000000008',
+    userId: '20000000-0000-4000-8000-000000000001',
+    content:
+      'イベント準備の分担と当日までの進捗をこのスレッドで共有しましょう。',
+    createdAt: '2026-10-29T08:48:00.000Z'
+  }
+]
+
+// 末尾を最新投稿として使うため、各スレッドの投稿を古い順に並べる。
 export const mockThreadMessages: Message[] = [
   {
     id: '50000000-0000-4000-8000-000000000001',
@@ -251,51 +256,6 @@ export const mockThreadMessages: Message[] = [
       'スレッドのタイトルと最新メッセージを並べたときに、本文が長くなっても読みやすいように省略表示や余白を調整したいです。まずはこの文章で表示を確認してみます。',
     createdAt: '2026-10-29T08:30:00.000Z',
     updatedAt: '2026-10-29T08:30:00.000Z',
-    pinned: false,
-    stamps: []
-  },
-  {
-    id: '50000000-0000-4000-8000-000000000009',
-    userId: '20000000-0000-4000-8000-000000000003',
-    channelId: '30000000-0000-4000-8000-000000000003',
-    threadId: '30000000-0000-4000-8000-000000000003',
-    content: 'ここに動作確認の結果を残していきます。',
-    createdAt: '2026-10-29T06:45:00.000Z',
-    updatedAt: '2026-10-29T06:45:00.000Z',
-    pinned: false,
-    stamps: []
-  },
-  {
-    id: '50000000-0000-4000-8000-000000000010',
-    userId: '20000000-0000-4000-8000-000000000001',
-    channelId: '30000000-0000-4000-8000-000000000003',
-    threadId: '30000000-0000-4000-8000-000000000003',
-    content: 'デスクトップではスレッドの切り替えができました。',
-    createdAt: '2026-10-29T06:50:00.000Z',
-    updatedAt: '2026-10-29T06:50:00.000Z',
-    pinned: false,
-    stamps: []
-  },
-  {
-    id: '50000000-0000-4000-8000-000000000011',
-    userId: '20000000-0000-4000-8000-000000000002',
-    channelId: '30000000-0000-4000-8000-000000000003',
-    threadId: '30000000-0000-4000-8000-000000000003',
-    content:
-      '確認項目:\n- 一覧の表示\n- 長い本文の省略\n- 狭い画面での折り返し',
-    createdAt: '2026-10-29T06:55:00.000Z',
-    updatedAt: '2026-10-29T06:55:00.000Z',
-    pinned: false,
-    stamps: []
-  },
-  {
-    id: '50000000-0000-4000-8000-000000000012',
-    userId: '20000000-0000-4000-8000-000000000003',
-    channelId: '30000000-0000-4000-8000-000000000003',
-    threadId: '30000000-0000-4000-8000-000000000003',
-    content: '確認しました :thumbsup:\nスマートフォンでも問題なさそうです。',
-    createdAt: '2026-10-29T07:00:00.000Z',
-    updatedAt: '2026-10-29T07:00:00.000Z',
     pinned: false,
     stamps: []
   },
@@ -457,8 +417,6 @@ export const mockThreadMessages: Message[] = [
   }
 ]
 
-// 未読と購読設定はThreadChannelの属性ではなく、既存チャンネルと同じAPIで取得する。
-// GET /users/me/unread と GET /users/me/subscriptions のレスポンス相当。
 const mockThreadNotificationStates = [
   { count: 3, noticeable: true, level: ChannelSubscribeLevel.notified },
   { count: 2, noticeable: false, level: ChannelSubscribeLevel.subscribed },
@@ -508,43 +466,29 @@ export const mockThreadUnreadChannels: UnreadChannel[] = mockThreads.flatMap(
   }
 )
 
-/** スレッドIDを指定して発言一覧を古い順で取得する。存在しないIDは空配列。 */
 export const getMockThreadMessages = (threadId: string): Message[] =>
   mockThreadMessages.filter(message => message.channelId === threadId)
 
-// 最新メッセージは発言一覧から取り出し、表示内容を一致させる。
-export const mockThreadLatestMessages: Message[] = mockThreads.map(thread => {
-  const latestMessage = getMockThreadMessages(thread.id).at(-1)
-  if (!latestMessage) throw new Error('最新メッセージのモックがありません')
-  return latestMessage
-})
-
-/**
- * 表示用にスレッド・最新メッセージ・発言者をまとめる。
- * 引数を省略すると固定の親チャンネル、指定するとそのチャンネル配下の8件を返す。
- * API通信やストアの変更は行わない。
- *
- * const threads = getMockThreadItems()
- * // チャンネル切り替えに追従させる場合:
- * const threads = computed(() => getMockThreadItems(channelId.value))
- */
 export const getMockThreadItems = (
   parentChannelId = mockThreadParentChannelId
 ) =>
   mockThreads.map(thread => {
-    const latestMessage = mockThreadLatestMessages.find(
-      message => message.channelId === thread.id
+    const creator = mockThreadUsers.find(user => user.id === thread.creatorId)
+    const parentMessage = mockParentMessages.find(
+      message => message.id === thread.parentMessageId
     )
-    if (!latestMessage) throw new Error('最新メッセージのモックがありません')
-    const author = mockThreadUsers.find(
-      user => user.id === latestMessage.userId
+    const parentAuthor = mockThreadUsers.find(
+      user => user.id === parentMessage?.userId
     )
-    if (!author) throw new Error('発言者のモックがありません')
 
     return {
       thread: { ...thread, parentChannelId },
-      latestMessage,
-      author,
+      latestMessage: getMockThreadMessages(thread.id).at(-1),
+      creator,
+      parentPreview:
+        parentMessage && parentAuthor
+          ? { message: parentMessage, author: parentAuthor }
+          : undefined,
       unread: mockThreadUnreadChannels.find(
         unread => unread.channelId === thread.id
       ),
