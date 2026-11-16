@@ -3,6 +3,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import boolAttr from './bool-attr'
 import { initializeMeta } from './lib/apis'
+import { setupNotificationNavigation } from './lib/notification/navigation'
 import { deleteStampCacheIDB } from './lib/stampCache'
 import { telemetry } from './lib/telemetry'
 import { setupGlobalFuncs } from './markdown-bridge'
@@ -30,6 +31,8 @@ window.addEventListener('vite:preloadError', () => {
 })
 
 import('katex/dist/katex.css')
+
+setupNotificationNavigation()
 
 const bootstrap = async () => {
   await initializeMeta()
