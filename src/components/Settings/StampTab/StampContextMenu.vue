@@ -120,14 +120,10 @@ const deleteStamp = () => {
 
 <style lang="scss" module>
 .container {
-  @include background-primary;
-  @include drop-shadow-default;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: max-content;
   padding: 16px 16px;
-  border-radius: 4px;
 }
 
 .button {
