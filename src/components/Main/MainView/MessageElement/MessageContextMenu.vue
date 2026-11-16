@@ -167,13 +167,9 @@ const withClose = async (func: () => MaybePromise<void>) => {
 
 <style lang="scss" module>
 .container {
-  @include background-primary;
   @include color-ui-secondary;
-  @include drop-shadow-default;
   display: grid;
-  width: max-content;
   padding: 8px 16px;
-  border-radius: 4px;
   contain: content;
 }
 
