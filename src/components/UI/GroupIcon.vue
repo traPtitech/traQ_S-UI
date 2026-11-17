@@ -5,6 +5,7 @@
     :aria-label="group?.name"
     :class="[$style.container]"
     :style="styles.container"
+    :data-clip-icon="props.clipIcon"
     @click="onClick"
     @keydown.enter="onClick"
     @keydown.space.prevent="onClick"
@@ -28,10 +29,12 @@ const props = withDefaults(
     fallbackIconFileId?: FileId
     size?: IconSize
     preventModal?: boolean
+    clipIcon?: boolean
   }>(),
   {
     size: 36,
-    preventModal: false
+    preventModal: false,
+    clipIcon: true
   }
 )
 
@@ -77,7 +80,6 @@ const onClick = () => {
 .container {
   @include color-ui-secondary;
   position: relative;
-  border-radius: 100vw;
   flex: {
     shrink: 0;
     grow: 0;
@@ -89,6 +91,9 @@ const onClick = () => {
   }
   &[role='button'] {
     cursor: pointer;
+  }
+  &[data-clip-icon='true'] {
+    border-radius: 100vw;
   }
 }
 </style>
