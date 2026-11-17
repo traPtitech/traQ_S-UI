@@ -10,6 +10,7 @@
         :key="team.id"
         :group-id="team.id"
         :size="32"
+        :clip-icon="false"
       />
     </div>
   </section>
