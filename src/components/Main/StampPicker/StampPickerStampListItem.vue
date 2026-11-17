@@ -9,7 +9,7 @@
       <!-- keyにしてアニメーションが動くようにしている -->
       <AStamp
         :stamp-id="stamp.id"
-        :size="32"
+        :size="size"
         :class="$style.item"
         no-context-menu
       />
@@ -25,6 +25,7 @@ import type { StampId } from '/@/types/entity-ids'
 
 const props = defineProps<{
   stamp: Readonly<Stamp>
+  size: number
   pressedAnimationKey: string
 }>()
 

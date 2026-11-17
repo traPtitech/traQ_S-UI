@@ -43,7 +43,7 @@ const { value: isExpanded, toggle: toggleExpanded } = useToggle(false)
 .list {
   padding: 0 12px 8px 12px;
   max-height: 120px;
-  overflow: scroll;
+  overflow: auto;
   transition: 0.5s max-height ease-out;
   &[data-is-expanded] {
     max-height: 600px;

@@ -236,7 +236,8 @@ useScrollRestoration(rootRef, state)
 <style lang="scss" module>
 .root {
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
   padding: 12px 0;
   backface-visibility: hidden;
   contain: var(--contain-strict);

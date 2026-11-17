@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :data-hide-outer="$boolAttr(hideOuter)">
-    <div :class="$style.body">
+    <div :class="$style.body" :inert="!isActive">
       <slot />
       <div :class="$style.overlay" :data-dim-inner="$boolAttr(dimInner)" />
     </div>

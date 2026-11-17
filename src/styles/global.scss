@@ -13,6 +13,7 @@
 :root {
   color-scheme: var(--color-scheme);
   caret-color: var(--caret);
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -27,7 +28,6 @@ body {
   text-autospace: normal;
   text-rendering: optimizeLegibility;
   touch-action: manipulation;
-  overscroll-behavior-y: contain;
 }
 
 img {

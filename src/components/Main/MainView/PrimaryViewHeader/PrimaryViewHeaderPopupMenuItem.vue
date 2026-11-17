@@ -1,12 +1,13 @@
 <template>
-  <div
+  <button
+    type="button"
     :class="$style.container"
-    :data-is-disabled="$boolAttr(disabled)"
+    :disabled="disabled"
     @click="onClick"
   >
     <AIcon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
     <span :class="$style.label">{{ label }}</span>
-  </div>
+  </button>
 </template>
 
 <script lang="ts" setup>
@@ -42,8 +43,19 @@ const onClick = () => {
 .container {
   @include color-ui-primary;
   display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: 4px;
+  text-align: left;
   cursor: pointer;
-  &[data-is-disabled] {
+
+  &:enabled:hover,
+  &:focus-visible {
+    @include background-secondary;
+  }
+
+  &:disabled {
     @include color-ui-primary-inactive;
     cursor: not-allowed;
   }

@@ -57,13 +57,11 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'clickAddAttachment'): void
-  (e: 'toggleLeftControlsExpanded'): void
 }>()
 
 const { isMobile } = useResponsive()
 const toggleLeftControlsExpanded = () => {
   isLeftControlsExpanded.value = !isLeftControlsExpanded.value
-  emit('toggleLeftControlsExpanded')
 }
 const toggleIsInputTextAreaExpanded = () => {
   isInputTextAreaExpanded.value = !isInputTextAreaExpanded.value
@@ -76,7 +74,6 @@ const isPreviewShownValue = computed<boolean>({
   set(v) {
     isPreviewShown.value = v
     isLeftControlsExpanded.value = false
-    emit('toggleLeftControlsExpanded')
   }
 })
 

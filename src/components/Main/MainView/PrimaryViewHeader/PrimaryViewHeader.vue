@@ -42,6 +42,7 @@ $headerHeight: 80px;
 }
 .icon {
   @include color-ui-primary;
+  flex-shrink: 0;
   height: 36px;
   width: 36px;
   margin-right: 8px;

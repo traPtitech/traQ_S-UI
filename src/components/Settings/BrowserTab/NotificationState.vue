@@ -21,15 +21,13 @@
 import { ref } from 'vue'
 
 import AToggle from '/@/components/UI/AToggle.vue'
+import { requestNotificationPermission } from '/@/lib/notification/notification'
 
 const useNotificationPermission = () => {
-  const permission = ref<NotificationPermission>()
-  permission.value = Notification?.permission
+  const permission = ref(window.Notification?.permission)
 
   const requestPermission = async () => {
-    // permission.valueがundefinedでないときは、
-    // 上の取得の仕方からNotificationが存在していることが確定している
-    permission.value = await Notification.requestPermission()
+    permission.value = await requestNotificationPermission()
   }
 
   return { permission, requestPermission }

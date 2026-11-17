@@ -1,11 +1,18 @@
 <template>
   <div ref="targetRef" :class="$style.frame" @scroll.passive="onScroll">
+    <div
+      ref="cellSizeRef"
+      :class="$style.cellSizeProbe"
+      :style="{ width: `${stampSize / 16}rem` }"
+      aria-hidden="true"
+    />
     <div :style="containerStyle">
-      <div :class="$style.panel" :style="panelStyle">
+      <div :style="panelStyle">
         <StampPickerStampListItem
           v-for="{ stamp, key } in stampsWithAnimationKey"
           :key="stamp.id"
           :stamp="stamp"
+          :size="stampSize"
           :pressed-animation-key="key"
           @input-stamp="onInputStamp"
           @hover-stamp="onHoverStamp"
@@ -36,9 +43,12 @@ const emit = defineEmits<{
 }>()
 
 const targetRef = shallowRef<HTMLElement | null>(null)
+const cellSizeRef = shallowRef<HTMLElement | null>(null)
+const stampSize = 32
 const { onScroll, showStartIndex, showEndIndex, containerStyle, panelStyle } =
   useStampListVirtualScroll(
     targetRef,
+    cellSizeRef,
     computed(() => props.stamps.length)
   )
 
@@ -59,14 +69,16 @@ const onHoverStamp = (id: StampId) => {
 
 <style lang="scss" module>
 .frame {
+  position: relative;
   height: 100%;
-  overflow-y: scroll;
+  overflow: hidden auto;
+  scrollbar-gutter: stable;
   backface-visibility: hidden;
   contain: content;
 }
 
-.panel {
-  display: grid;
-  grid-template-columns: repeat(10, min-content);
+.cellSizeProbe {
+  position: absolute;
+  visibility: hidden;
 }
 </style>

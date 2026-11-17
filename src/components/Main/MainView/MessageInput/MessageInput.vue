@@ -33,9 +33,6 @@
         :show-text-area-expand-button="showTextAreaExpandButton"
         :class="$style.leftControls"
         @click-add-attachment="addAttachment"
-        @toggle-left-controls-expanded="
-          textareaComponentRef?.textareaAutosizeRef?.autosizeUpdateTextarea
-        "
       />
       <MessageInputTextArea
         ref="textareaComponentRef"

@@ -1,17 +1,11 @@
 <template>
   <div :class="$style.container">
-    <router-link
-      v-if="ancestorsPath[0]"
-      :to="ancestorsPath[0].link"
-      :class="$style.ancestorHash"
-    >
-      #
-    </router-link>
-    <span v-else :class="$style.currentHash">#</span>
+    <span v-if="ancestorsPath.length === 0" :class="$style.currentHash">#</span>
     <span v-for="(ancestor, i) in ancestorsPath" :key="i">
-      <router-link :to="ancestor.link" :class="$style.ancestor">{{
-        isMobile ? ancestor.name[0] : ancestor.name
-      }}</router-link>
+      <router-link :to="ancestor.link" :class="$style.ancestor">
+        <span v-if="i === 0" :class="$style.ancestorHash">#</span>
+        <span>{{ isMobile ? ancestor.name[0] : ancestor.name }}</span>
+      </router-link>
       <span
         :class="$style.ancestorSeparator"
         :data-is-primary="$boolAttr(pathInfoList.length <= 1)"
@@ -71,8 +65,13 @@ const currentChannelLastPath = computed(
   @include color-ui-secondary-inactive;
   @include size-body1;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus-visible {
     @include color-ui-secondary;
+
+    .ancestorHash {
+      @include color-ui-primary;
+    }
   }
 }
 .ancestorSeparator {
@@ -98,8 +97,5 @@ const currentChannelLastPath = computed(
   @include size-h1;
   margin-right: 0.125rem;
   user-select: none;
-  &:hover {
-    @include color-ui-primary;
-  }
 }
 </style>

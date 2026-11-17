@@ -90,7 +90,7 @@ const scrollToSelectedCandidate = (
   z-index: $z-index-word-suggester;
 }
 .scroll {
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 32px * 4.5;
 }
 </style>

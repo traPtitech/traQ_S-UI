@@ -146,7 +146,7 @@ const { didRender, noRestore } = useKeepScrollPosition(
   margin: 1rem;
 }
 .resultList {
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-gutter: stable;
 }
 .elementContainer {

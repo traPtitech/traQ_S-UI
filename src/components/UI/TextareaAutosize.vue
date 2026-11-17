@@ -24,6 +24,7 @@ import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useEventListener } from '@vueuse/core'
 import autosize from 'autosize'
 
+import useBoxSize from '/@/composables/dom/useBoxSize'
 import useOnInput from '/@/composables/useOnInput'
 
 const modelValue = defineModel<string>({
@@ -50,6 +51,7 @@ const emit = defineEmits<{
 const onInput = useOnInput(modelValue)
 
 const textareaEle = ref<HTMLTextAreaElement | null>(null)
+const { width } = useBoxSize(textareaEle)
 
 const focus = () => {
   textareaEle.value?.focus()
@@ -71,7 +73,13 @@ onMounted(() => {
     autosize(textareaEle.value)
   }
 })
-watch([modelValue], autosizeUpdateTextarea)
+
+watch(modelValue, autosizeUpdateTextarea)
+watch(width, () => {
+  // ResizeObserver の通知中に高さを変更すると、同じ要素の再計測が発生する。
+  requestAnimationFrame(autosizeUpdateTextarea)
+})
+
 onBeforeUnmount(() => {
   if (textareaEle.value) {
     autosize.destroy(textareaEle.value)

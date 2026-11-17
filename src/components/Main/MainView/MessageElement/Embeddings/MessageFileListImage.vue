@@ -69,7 +69,10 @@ const {
     style: solid;
     color: $theme-background-secondary-border;
   }
+
   img {
+    max-height: 100%;
+    object-fit: contain;
     cursor: pointer;
   }
 }

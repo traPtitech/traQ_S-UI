@@ -37,7 +37,7 @@ const { attachments, removeAttachmentAt } = useMessageInputStateAttachment(
   display: flex;
   padding-top: 4px;
   padding-bottom: 6px;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .element {
   margin: 0 8px;

@@ -110,7 +110,7 @@ const { query, subscribers, subscriptionStateSorted, onChangeNotification } =
   height: 300px;
   margin-top: 4px;
   padding: 0 4px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .item {
   margin: 16px 0;
