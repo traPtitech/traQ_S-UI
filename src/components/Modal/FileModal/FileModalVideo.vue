@@ -20,13 +20,17 @@
 <script lang="ts" setup>
 import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
 import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
-import useFileMeta from '/@/composables/files/useFileMeta'
+import useFileThumbnail from '/@/composables/files/useFileThumbnail'
 
 const props = defineProps<{
   fileId: string
 }>()
 
-const { fileMeta, fileRawPath, filePosterPath } = useFileMeta(props)
+const {
+  fileMeta,
+  fileRawPath,
+  imageThumbnailPath: filePosterPath
+} = useFileThumbnail(props)
 </script>
 
 <style lang="scss" module>

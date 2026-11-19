@@ -14,10 +14,13 @@ const useFileThumbnail = (props: { fileId: FileId; channelId?: ChannelId }) => {
   )
 
   const name = computed(() => fileMeta.value?.name ?? '')
-  const fileThumbnailPath = computed(() =>
+  const imageThumbnailPath = computed(() =>
     fileMeta.value && fileThumbnail.value
       ? buildFileThumbnailPath(fileMeta.value.id)
-      : fileRawPath.value
+      : undefined
+  )
+  const fileThumbnailPath = computed(
+    () => imageThumbnailPath.value ?? fileRawPath.value
   )
   const fileThumbnailSize = computed(() => ({
     height: fileThumbnail.value?.height,
@@ -28,9 +31,13 @@ const useFileThumbnail = (props: { fileId: FileId; channelId?: ChannelId }) => {
   )
   return {
     name,
+    fileMeta,
     fileLink,
+    fileRawPath,
     canShow,
     fileThumbnailPath,
+    fileThumbnail,
+    imageThumbnailPath,
     fileThumbnailSize,
     isAnimatedImage
   }

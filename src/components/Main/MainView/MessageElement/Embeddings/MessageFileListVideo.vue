@@ -29,7 +29,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-import useFileMeta from '/@/composables/files/useFileMeta'
+import useFileThumbnail from '/@/composables/files/useFileThumbnail'
 import type { ChannelId, DMChannelId, FileId } from '/@/types/entity-ids'
 
 import MessageFileListItemContent from './MessageFileListItemContent.vue'
@@ -44,7 +44,11 @@ const props = withDefaults(
   }
 )
 
-const { fileRawPath, filePosterPath, canShow } = useFileMeta(props)
+const {
+  fileRawPath,
+  imageThumbnailPath: filePosterPath,
+  canShow
+} = useFileThumbnail(props)
 const container = ref<HTMLDivElement>()
 const isLoaded = ref(false)
 const hasPlayed = ref(false)
@@ -81,8 +85,8 @@ const onPlay = () => {
 }
 
 .thumbnail {
-  box-sizing: content-box;
-  max-width: min(360px, calc(100% - 4px));
+  box-sizing: border-box;
+  max-width: min(360px, 100%);
 
   video {
     width: 100%;
