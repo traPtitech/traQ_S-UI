@@ -39,16 +39,18 @@
         :anime-effects="selectedAnimeEffects"
       />
       <StampPickerStampSetSelector
-        v-model:current-stamp-set="currentStampSet"
+        v-model:current-stamp-set="selectedStampSet"
+        v-model:tab-order="tabOrder"
         :class="$style.paletteSelector"
-        :stamp-sets="stampSetState.stampSets"
+        :stamp-sets="stampSets"
+        :sortable="isRecommendationEnabled"
       />
     </div>
   </ClickOutside>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'
@@ -56,6 +58,7 @@ import useResponsive from '/@/composables/useResponsive'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStampRecommendations } from '/@/store/domain/stampRecommendations'
 import { useStampPicker } from '/@/store/ui/stampPicker'
+import { useStampPickerSettings } from '/@/store/ui/stampPickerSettings'
 import type { StampId } from '/@/types/entity-ids'
 
 import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
@@ -68,13 +71,8 @@ import useStampList from './composables/useStampList'
 import useStampPreselector from './composables/useStampPreselector'
 import useStampSetSelector from './composables/useStampSetSelector'
 
-const {
-  selectHandler,
-  isEffectEnabled,
-  currentStampSet,
-  validateCurrentStampSet,
-  closeStampPicker
-} = useStampPicker()
+const { selectHandler, isEffectEnabled, closeStampPicker } = useStampPicker()
+const { isRecommendationEnabled } = useStampPickerSettings()
 const { upsertLocalStampHistory } = useStampHistory()
 const { isMobile } = useResponsive()
 
@@ -84,8 +82,8 @@ const incrementAnimationKey = (id: StampId) => {
   animationKeys.value.set(id, currentVal + 1)
 }
 
-const { stamps, filterState } = useStampList(currentStampSet)
-const { stampSetState } = useStampSetSelector()
+const { stampSets, selectedStampSet, tabOrder } = useStampSetSelector()
+const { stamps, filterState } = useStampList(selectedStampSet)
 
 const {
   shouldShowEffectSelector,
@@ -119,8 +117,6 @@ const onFilterEnter = () => {
   if (!firstStamp) return
   onInputStamp(firstStamp.id)
 }
-
-onMounted(validateCurrentStampSet)
 </script>
 
 <style lang="scss" module>

@@ -7,12 +7,12 @@ import { useEventListener } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { throttle } from 'throttle-debounce'
 
-import type { StampSet } from '/@/components/Main/StampPicker/composables/useStampSetSelector'
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import type { Point } from '/@/lib/basic/point'
-import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { StampId } from '/@/types/entity-ids'
+
+import type { StampSet } from './stampPickerSettings'
 
 export type SelectedStampData = {
   id: StampId
@@ -61,36 +61,35 @@ const getPositionFromAlignment = (
   }
 }
 
+type StampPickerSelection = {
+  selected?: StampSet
+  type?: StampSet['type']
+  id?: string
+}
+
 const useStampPickerPinia = defineStore('ui/stampPicker', () => {
   const selectHandler = ref<StampSelectHandler>(defaultSelectHandler)
 
-  const initialStampSetValue: StampSet = {
-    type: 'history',
-    id: ''
-  }
-  const [state] = useIndexedDbValue(
+  const [state] = useIndexedDbValue<StampPickerSelection>(
     'store/ui/stampPicker/currentStampSet',
     1,
     {},
-    initialStampSetValue
+    {}
   )
 
-  const { nonEmptyStampPaletteIds } = useStampPalettesStore()
-  const currentStampSet = computed({
-    get: () => state,
-    set: (newValue: StampSet) => {
-      state.id = newValue.id
-      state.type = newValue.type
+  const currentStampSet = computed<StampSet>({
+    get: (): StampSet => {
+      const { selected, type, id } = state
+      if (selected) return selected
+      if (id && (type === 'palette' || type === 'category')) return { type, id }
+
+      // 旧履歴タブはフラグが有効な場合にレコメンデーションを表示していた
+      return { type: 'recommendation', id: '' }
+    },
+    set: ({ type, id }: StampSet) => {
+      state.selected = { type, id }
     }
   })
-
-  const validateCurrentStampSet = () => {
-    if (currentStampSet.value.type !== 'palette') return
-    if (!nonEmptyStampPaletteIds.value.includes(currentStampSet.value.id)) {
-      currentStampSet.value.type = 'history'
-      currentStampSet.value.id = ''
-    }
-  }
 
   const isEffectEnabled = ref(false)
   const position = ref<Point>()
@@ -107,7 +106,6 @@ const useStampPickerPinia = defineStore('ui/stampPicker', () => {
   return {
     selectHandler,
     currentStampSet,
-    validateCurrentStampSet,
     isEffectEnabled,
     position,
     alignment,

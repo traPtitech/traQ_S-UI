@@ -50,7 +50,7 @@ export const featureFlagDescriptions = {
   stamp_recommendation_v3: {
     title: 'スタンプのレコメンデーション',
     description:
-      'スタンプ履歴の代わりに、利用傾向に合わせたおすすめを表示するようにします。',
+      'スタンプピッカーにおすすめタブを追加し、タブの並び順を変更できるようにします。ホバーメニューの表示元は「スタンプパレット」設定で選べます。',
     defaultValue: true,
     endAt: new Date('2026-11-30T23:59')
   }

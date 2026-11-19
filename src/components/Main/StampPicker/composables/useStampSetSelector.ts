@@ -1,53 +1,55 @@
-import { computed, reactive } from 'vue'
+import { computed } from 'vue'
 
 import { useStampCategory } from '/@/store/domain/stampCategory'
-import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
-
-export type StampSetType = 'palette' | 'category' | 'history'
-
-export type StampSet = {
-  type: StampSetType
-
-  /** スタンプカテゴリ名かスタンプパレットID */
-  id: string
-}
+import { useStampPicker } from '/@/store/ui/stampPicker'
+import {
+  type StampPickerTab,
+  type StampSet,
+  getStampSetKey,
+  useStampPickerSettings
+} from '/@/store/ui/stampPickerSettings'
 
 const useStampSetSelector = () => {
   const { traQStampCategory, unicodeStampCategories } = useStampCategory()
-  const { nonEmptyStampPaletteIds } = useStampPalettesStore()
+  const { currentStampSet } = useStampPicker()
+  const { defaultTab, personalTabs, tabOrder, isRecommendationEnabled } =
+    useStampPickerSettings()
 
-  const state = reactive({
-    stampSets: computed((): StampSet[] => [
-      {
-        type: 'history',
-        id: ''
-      },
-      ...state.stampPalettes,
-      ...state.stampCategories
-    ]),
-    stampCategories: computed((): StampSet[] => [
-      {
-        type: 'category',
-        id: traQStampCategory.value.name
-      },
-      ...state.foldedStampSets
-    ]),
-    foldedStampSets: computed((): StampSet[] =>
-      unicodeStampCategories.value.map(c => ({
-        type: 'category',
-        id: 'unicode-' + c.name
+  const stampSets = computed((): StampPickerTab[] => {
+    const tabs: StampPickerTab[] = [
+      ...personalTabs.value,
+      { type: 'category', id: traQStampCategory.value.name, label: 'traQ' },
+      ...unicodeStampCategories.value.map(({ name }) => ({
+        type: 'category' as const,
+        id: `unicode-${name}`,
+        label: name
       }))
-    ),
-    stampPalettes: computed((): StampSet[] =>
-      nonEmptyStampPaletteIds.value.map(id => ({
-        type: 'palette',
-        id
-      }))
-    ),
-    hasStampPalette: computed((): boolean => state.stampPalettes.length > 0)
+    ]
+
+    if (!isRecommendationEnabled.value) return tabs
+
+    const positions = new Map(tabOrder.value.map((key, index) => [key, index]))
+    return tabs.sort(
+      (a, b) =>
+        (positions.get(getStampSetKey(a)) ?? positions.size) -
+        (positions.get(getStampSetKey(b)) ?? positions.size)
+    )
   })
 
-  return { stampSetState: state }
+  const selectedStampSet = computed<StampSet>({
+    get: () => {
+      const key = getStampSetKey(currentStampSet.value)
+      return (
+        stampSets.value.find(tab => getStampSetKey(tab) === key) ??
+        defaultTab.value
+      )
+    },
+    set: (tab: StampSet) => {
+      currentStampSet.value = tab
+    }
+  })
+
+  return { stampSets, selectedStampSet, tabOrder }
 }
 
 export default useStampSetSelector
