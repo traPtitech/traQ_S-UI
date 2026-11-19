@@ -237,6 +237,7 @@ useScrollRestoration(rootRef, state)
 .root {
   height: 100%;
   overflow-y: scroll;
+  overscroll-behavior-y: none;
   padding: 12px 0;
   backface-visibility: hidden;
   contain: var(--contain-strict);
