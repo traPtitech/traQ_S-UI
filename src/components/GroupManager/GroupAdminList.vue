@@ -19,6 +19,7 @@
         v-for="admin in admins"
         :id="admin"
         :key="admin"
+        :disabled="admins.length <= 1"
         @delete="onDelete(admin)"
       />
     </div>
@@ -50,7 +51,8 @@ const onClickAdd = () => {
   })
 }
 
-const onDelete = async (id: string) => {
+const onDelete = async (id: UserId) => {
+  if (props.admins.length <= 1) return
   if (!confirm('本当にこのグループ管理者を削除しますか？')) return
   try {
     await apis.removeUserGroupAdmin(props.groupId, id)

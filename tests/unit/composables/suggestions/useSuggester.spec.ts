@@ -238,6 +238,79 @@ describe('useSuggester', () => {
 
     expect($textarea.value).toEqual('prev #gps/times/ParentLongNameMayBeCut')
   })
+
+  test('Do not insert spaces when selecting a channel: #gp -> #gps', () => {
+    const $textarea = document.createElement('textarea')
+    document.body.appendChild($textarea)
+
+    const [{ suggestedCandidates, onKeyUp, onSelect }] = useSuggester($textarea)
+
+    $textarea.value = '#gp'
+    $textarea.selectionStart = $textarea.value.length
+    $textarea.selectionEnd = $textarea.value.length
+    onKeyUp(new KeyboardEvent('keyup'))
+
+    const candidate = suggestedCandidates.value.find(
+      c => c.word.type === 'channel' && c.word.text === '#gps'
+    )
+
+    expect(candidate).toBeDefined()
+    if (!candidate) {
+      $textarea.remove()
+      return
+    }
+
+    onSelect(candidate.word)
+
+    expect($textarea.value).toBe('#gps')
+    expect($textarea.selectionStart).toBe('#gps'.length)
+    expect($textarea.selectionEnd).toBe('#gps'.length)
+
+    $textarea.remove()
+  })
+
+  test('Allow autocompletion for child channels after selecting a parent: #gps/ti -> #gps/times', () => {
+    const $textarea = document.createElement('textarea')
+    document.body.appendChild($textarea)
+
+    const [{ suggestedCandidates, onKeyUp, onSelect }] = useSuggester($textarea)
+
+    $textarea.value = '#gps/ti'
+    $textarea.selectionStart = $textarea.value.length
+    $textarea.selectionEnd = $textarea.value.length
+    onKeyUp(new KeyboardEvent('keyup'))
+
+    const candidate = suggestedCandidates.value.find(
+      c => c.word.type === 'channel' && c.word.text === '#gps/times'
+    )
+
+    expect(candidate).toBeDefined()
+    if (!candidate) {
+      $textarea.remove()
+      return
+    }
+
+    onSelect(candidate.word)
+
+    expect($textarea.value).toBe('#gps/times')
+    expect($textarea.selectionStart).toBe('#gps/times'.length)
+    expect($textarea.selectionEnd).toBe('#gps/times'.length)
+
+    $textarea.value = '#gps/times/Long'
+    $textarea.selectionStart = $textarea.value.length
+    $textarea.selectionEnd = $textarea.value.length
+    onKeyUp(new KeyboardEvent('keyup'))
+
+    expect(
+      suggestedCandidates.value.some(
+        c =>
+          c.word.type === 'channel' &&
+          c.word.text === '#gps/times/LongNametraPer'
+      )
+    ).toBe(true)
+
+    $textarea.remove()
+  })
 })
 
 // prettier-ignore

@@ -61,7 +61,7 @@ const selectedGroupElement = ref<HTMLElement | null>(null)
 
 const selectedGroupId = computed<UserGroupId | undefined>({
   get: () => {
-    const id = route.hash.slice(1) as UserGroupId
+    const id = route.hash.slice(1)
 
     return groups.value.some(group => group.id === id) ? id : undefined
   },

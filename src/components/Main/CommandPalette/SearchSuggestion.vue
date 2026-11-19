@@ -39,7 +39,7 @@ import SearchSuggestionItem from './SearchSuggestionItem.vue'
 import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
 
 const emit = defineEmits<{
-  (e: 'queryInsert'): void
+  (e: 'requestInputFocus'): void
 }>()
 
 const { isMobile } = useResponsive()
@@ -78,17 +78,20 @@ const querySuggestions = computed(() => [
 
 const { currentInput, searchHistories, settleQuery, removeSearchHistory } =
   useCommandPalette()
-const searchConfirmItem = computed((): SuggestionItem => ({
-  type: 'search',
-  value: currentInput.value
-}))
+const searchConfirmItem = computed(
+  () =>
+    ({
+      type: 'search',
+      value: currentInput.value
+    }) satisfies SuggestionItem
+)
 const onSelectQuerySuggestion = (query: string) => {
   if (currentInput.value !== '') {
     currentInput.value += ` ${query}`
   } else {
     currentInput.value = query
   }
-  emit('queryInsert')
+  emit('requestInputFocus')
 }
 const onSelectSuggestion = (item: SuggestionItem) => {
   switch (item.type) {
@@ -98,6 +101,7 @@ const onSelectSuggestion = (item: SuggestionItem) => {
 }
 const onSelectHistorySuggestion = (label: string) => {
   currentInput.value = label
+  emit('requestInputFocus')
 }
 </script>
 

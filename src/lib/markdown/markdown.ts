@@ -50,6 +50,8 @@ const storeProvider: Store = {
 }
 
 let md: traQMarkdownIt
+let initialization: Promise<void> | undefined
+let isReady = false
 
 const autoDirectionTokenTypes = new Set([
   'paragraph_open',
@@ -72,37 +74,52 @@ const loadMd = async () => {
   })
 }
 
-const waitForInitialFetch = () => {
+const prepareMarkdown = () => {
+  if (initialization) return initialization
+
   const { usersMapInitialFetchPromise } = useUsersStore()
   const { userGroupsMapInitialFetchPromise } = useGroupsStore()
   const { bothChannelsMapInitialFetchPromise } = useChannelsStore()
   const { stampsMapInitialFetchPromise } = useStampsStore()
 
-  return Promise.all([
+  initialization = Promise.all([
     usersMapInitialFetchPromise,
     userGroupsMapInitialFetchPromise,
     bothChannelsMapInitialFetchPromise,
     stampsMapInitialFetchPromise,
     loadMd()
-  ])
+  ]).then(
+    () => {
+      isReady = true
+    },
+    (error: unknown) => {
+      initialization = undefined
+      throw error
+    }
+  )
+
+  return initialization
 }
 
 export const render = async (text: string) => {
-  await waitForInitialFetch()
+  await prepareMarkdown()
   return md.render(text)
 }
 
+export const renderInlineIfReady = (text: string) =>
+  isReady ? md.renderInline(text) : undefined
+
 export const renderInline = async (text: string) => {
-  await waitForInitialFetch()
+  await prepareMarkdown()
   return md.renderInline(text)
 }
 
 export const parse = async (text: string) => {
-  await waitForInitialFetch()
+  await prepareMarkdown()
   return md.md.parse(text, {})
 }
 
 export const isEmbeddedLink = async (text: string) => {
-  await waitForInitialFetch()
+  await prepareMarkdown()
   return isDefined(md.embeddingExtractor.urlToEmbeddingData(text))
 }

@@ -75,21 +75,16 @@ const { client, scopes, developer, disableButton, error, approve, deny } =
 
 .buttons {
   display: flex;
-  flex-wrap: wrap-reverse;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
+  flex-wrap: wrap;
+  gap: 16px 32px;
   margin-top: 48px;
 }
 .button {
-  width: calc(50% - 16px);
-  margin: 0 16px;
-  &:first-child {
-    margin-left: 0;
-  }
-  &:last-child {
-    margin-right: 0;
-  }
+  flex: 1;
+  white-space: nowrap;
+}
+.buttons .button[data-type='primary'] {
+  padding-inline: 12px;
 }
 .error {
   font-weight: bold;

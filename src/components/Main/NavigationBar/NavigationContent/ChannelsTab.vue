@@ -1,76 +1,115 @@
 <template>
-  <div>
-    <NavigationContentContainer subtitle="チャンネルリスト">
-      <template #control>
-        <button :class="$style.button" @click="onClickButton">
-          <AIcon :size="20" mdi name="plus-circle-outline" />
-        </button>
-      </template>
-      <template #default>
-        <div :class="$style.filterContainer">
-          <ChannelFilter v-model="query" :class="$style.filter" />
-          <ToggleButton
-            v-model="showArchivedChannels"
-            icon-name="archive"
-            icon-mdi
-            title="アーカイブされたチャンネルを表示する"
-          />
-        </div>
+  <div :class="$style.container">
+    <div :class="$style.header">
+      <NavigationContentTitle>チャンネル</NavigationContentTitle>
+      <NavigationContentContainer subtitle="チャンネルリスト">
+        <template #control>
+          <button :class="$style.button" @click="onClickButton">
+            <AIcon :size="20" mdi name="plus-circle-outline" />
+          </button>
+        </template>
+        <template #default>
+          <div :class="$style.filterContainer">
+            <ChannelFilter v-model="query" :class="$style.filter" />
+            <ToggleButton
+              v-model="showArchivedChannels"
+              icon-name="archive"
+              icon-mdi
+              title="アーカイブされたチャンネルを表示する"
+            />
+          </div>
+        </template>
+      </NavigationContentContainer>
+    </div>
+
+    <div
+      ref="scrollEl"
+      :class="$style.scroller"
+      role="region"
+      aria-label="チャンネル一覧"
+    >
+      <HideOnScroll
+        ref="scopeTabs"
+        :class="$style.scopeTabs"
+        :scroll-element="scrollEl"
+      >
         <ChannelListSelector
-          v-if="query.length === 0"
-          v-model:is-starred="filterStarChannel"
+          v-model:is-starred="isStarredTabSelected"
           :all-panel-id="allPanelId"
           :starred-panel-id="starredPanelId"
         />
-        <template v-if="topLevelChannels.length > 0">
-          <ChannelTreeComponent
-            v-if="query.length > 0"
-            :channels="filteredChannelTree"
-            show-topic
-            show-shortened-path
-            prevent-child-topic
-          />
-          <template v-else-if="filterStarChannel">
-            <template v-if="starredChannels.length > 0">
-              <ChannelTreeComponent
-                v-if="strictStarredChannelTree"
-                :id="starredPanelId"
-                :channels="starredTopLevelChannels"
-              />
-              <ChannelTreeComponent
-                v-else
-                :id="starredPanelId"
-                :channels="starredChannels"
-                show-shortened-path
-                role="tabpanel"
-              />
-            </template>
-            <EmptyState v-else :id="starredPanelId" role="tabpanel">
-              お気に入りチャンネルはありません
-            </EmptyState>
-          </template>
-          <ChannelTreeComponent
-            v-else
-            :id="allPanelId"
-            :channels="topLevelChannels"
-            role="tabpanel"
-          />
+        <template #collapsed-decoration>
+          <div :class="$style.divider" />
         </template>
-        <EmptyState v-else> チャンネルがありません </EmptyState>
+      </HideOnScroll>
+      <ChannelTree
+        v-if="isSearching"
+        :id="searchStarredOnly ? starredPanelId : allPanelId"
+        role="tabpanel"
+        :channels="filteredChannelTree"
+        :scroll-element="scrollEl"
+        :scroll-margin="scrollMargins.channels"
+        show-topic
+        show-shortened-path
+        :show-child-topic="false"
+      />
+      <template v-else-if="filterStarChannel">
+        <template v-if="strictStarredChannelTree">
+          <ChannelTree
+            v-if="starredTopLevelChannels.length > 0"
+            :id="starredPanelId"
+            role="tabpanel"
+            :channels="starredTopLevelChannels"
+            :scroll-element="scrollEl"
+            :scroll-margin="scrollMargins.channels"
+          />
+          <EmptyState v-else :id="starredPanelId" role="tabpanel">
+            お気に入りチャンネルはありません
+          </EmptyState>
+        </template>
+        <template v-else>
+          <ChannelTree
+            v-if="starredChannels.length > 0"
+            :id="starredPanelId"
+            role="tabpanel"
+            :channels="starredChannels"
+            show-shortened-path
+            :scroll-element="scrollEl"
+            :scroll-margin="scrollMargins.channels"
+          />
+          <EmptyState v-else :id="starredPanelId" role="tabpanel">
+            お気に入りチャンネルはありません
+          </EmptyState>
+        </template>
       </template>
-    </NavigationContentContainer>
+      <template v-else>
+        <ChannelTree
+          v-if="topLevelChannels.length > 0"
+          :id="allPanelId"
+          role="tabpanel"
+          :channels="topLevelChannels"
+          :scroll-element="scrollEl"
+          :scroll-margin="scrollMargins.channels"
+        />
+        <EmptyState v-else :id="allPanelId" role="tabpanel">
+          チャンネルがありません
+        </EmptyState>
+      </template>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, toRaw, useId } from 'vue'
+import { computed, ref, toRaw, useId, useTemplateRef, watch } from 'vue'
 
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import NavigationContentTitle from '/@/components/Main/NavigationBar/NavigationContentTitle.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
+import HideOnScroll from '/@/components/UI/HideOnScroll.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { filterTrees } from '/@/lib/basic/tree'
-import type { ChannelTreeNode } from '/@/lib/channelTree'
+import { sortByChannelPath } from '/@/lib/channel'
 import { constructTreeFromIds } from '/@/lib/channelTree'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
@@ -80,9 +119,10 @@ import { useModalStore } from '/@/store/ui/modal'
 
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import ChannelListSelector from '../ChannelList/ChannelListSelector.vue'
-import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
+import ChannelTree from '../ChannelList/ChannelTreeWithFeatureFlag.vue'
 import ToggleButton from './ToggleButton.vue'
 import useChannelFilter from './composables/useChannelFilter'
+import useScrollMargins from './composables/useScrollMargins'
 
 const { pushModal } = useModalStore()
 const { channelTree, starredChannelTree } = useChannelTree()
@@ -93,7 +133,6 @@ const { channelIdToPathString } = useChannelPath()
 const { showArchivedChannels, filterStarChannel, strictStarredChannelTree } =
   useBrowserSettings()
 
-// filterTreesは重いのと内部ではreactiveである必要がないのでtoRawする
 const topLevelChannels = computed(() =>
   filterTrees(
     toRaw(channelTree.value.children),
@@ -112,65 +151,109 @@ const starredChannels = computed(() => {
     [...starredChannelSet.value],
     channelsMap.value
   )
-  const sortedTrees = sortChannelTree(trees)
+  const getPath = (id: string) => channelIdToPathString(id)?.toUpperCase() ?? ''
   return filterTrees(
-    sortedTrees,
+    sortByChannelPath(trees, getPath),
     channel => showArchivedChannels.value || !channel.archived
   )
 })
 
-const sortChannelTree = (tree: ChannelTreeNode[]): ChannelTreeNode[] => {
-  const mapped = tree.map((node, index) => ({
-    index,
-    pathString: channelIdToPathString(node.id)?.toUpperCase() ?? ''
-  }))
-  mapped.sort((a, b) => {
-    if (a.pathString > b.pathString) {
-      return 1
-    }
-    if (a.pathString < b.pathString) {
-      return -1
-    }
-    return 0
-  })
-
-  return mapped
-    .map(v => tree[v.index])
-    .filter((v): v is ChannelTreeNode => v !== undefined)
-}
-
-const channelListForFilter = computed(() =>
-  [...channelsMap.value.values()].filter(
-    channel => showArchivedChannels.value || !channel.archived
-  )
+const searchStarredOnly = ref(false)
+const searchChannelMap = computed(
+  () =>
+    new Map(
+      [...channelsMap.value].filter(
+        ([id, channel]) =>
+          (showArchivedChannels.value || !channel.archived) &&
+          (!searchStarredOnly.value || starredChannelSet.value.has(id))
+      )
+    )
 )
+
+const channelListForFilter = computed(() => [
+  ...searchChannelMap.value.values()
+])
+
 const { query, filteredChannels } = useChannelFilter(channelListForFilter)
+const isSearching = computed(() => query.value.length > 0)
+const isStarredTabSelected = computed({
+  get: () =>
+    isSearching.value ? searchStarredOnly.value : filterStarChannel.value,
+  set: isStarred => {
+    if (isSearching.value) {
+      searchStarredOnly.value = isStarred
+    } else {
+      filterStarChannel.value = isStarred
+    }
+  }
+})
+
+watch(
+  isSearching,
+  searching => {
+    if (!searching) searchStarredOnly.value = false
+  },
+  { flush: 'sync' }
+)
 
 const filteredChannelTree = computed(() => {
   const rootIds = filteredChannels.value.map(c => c.id)
-
-  return filterTrees(
-    constructTreeFromIds(rootIds, channelsMap.value),
-    channel => !channel.archived
-  )
+  return constructTreeFromIds(rootIds, searchChannelMap.value)
 })
 
 const onClickButton = () => {
-  pushModal({
-    type: 'channel-create'
-  })
+  pushModal({ type: 'channel-create' })
 }
 
 const allPanelId = useId()
 const starredPanelId = useId()
+
+const scrollEl = ref<HTMLElement | null>(null)
+const scopeTabs = useTemplateRef<InstanceType<typeof HideOnScroll>>('scopeTabs')
+const scopeTabsElement = computed(() => scopeTabs.value?.element ?? null)
+const scrollMargins = useScrollMargins({ channels: [scopeTabsElement] })
+
+watch(
+  isSearching,
+  () => {
+    if (scrollEl.value) scrollEl.value.scrollTop = 0
+    scopeTabs.value?.reveal()
+  },
+  { flush: 'post' }
+)
 </script>
 
 <style lang="scss" module>
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-left: 8px;
+}
+.header {
+  flex-shrink: 0;
+  padding-top: 24px;
+}
+.scopeTabs {
+  --hide-on-scroll-background: #{$theme-background-secondary-default};
+}
+.divider {
+  height: 1px;
+  background-color: $theme-ui-tertiary-default;
+  opacity: 0.45;
+}
+.scroller {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding-bottom: 24px;
+}
 .filterContainer {
   display: flex;
   gap: 1rem;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   margin-right: 1rem;
 }
 .filter {

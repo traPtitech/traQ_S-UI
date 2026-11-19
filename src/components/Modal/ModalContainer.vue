@@ -86,7 +86,7 @@ import UserModal from './UserModal/UserModal.vue'
 
 const { shouldShowModal, currentState } = useModalStore()
 
-const components: Record<ModalStateType, Component> = {
+const components = {
   user: UserModal,
   notification: NotificationModal,
   tag: TagModal,
@@ -106,7 +106,7 @@ const components: Record<ModalStateType, Component> = {
   'settings-profile-icon-edit': ProfileIconEditModal,
   'settings-cache-clear': SettingsCacheClearModal,
   'settings-theme-edit': SettingsThemeEditModal
-}
+} satisfies Record<ModalStateType, Component>
 const component = computed(() => {
   if (currentState.value) {
     return components[currentState.value.type]

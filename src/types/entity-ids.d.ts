@@ -2,6 +2,7 @@ export type MessageId = string
 export type ChannelId = string
 export type DMChannelId = string
 export type UserId = string
+export type GroupId = string
 export type UserGroupId = string
 export type StampId = string
 export type StampPaletteId = string

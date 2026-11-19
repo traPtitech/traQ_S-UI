@@ -29,10 +29,20 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
     [...userGroupsMap.value.values()].filter(group => group.type === 'grade')
   )
 
+  const teamGroups = computed(() =>
+    [...userGroupsMap.value.values()].filter(group => group.type === 'team')
+  )
+
   const getGradeGroupsByUserId = (userId: UserId) =>
     gradeGroups.value.find(userGroup =>
       userGroup.members.some(member => member.id === userId)
     )
+
+  const getTeamGroupsByUserId = (userId: UserId) =>
+    teamGroups.value.filter(userGroup =>
+      userGroup.members.some(member => member.id === userId)
+    )
+
   const getUserGroupByName = (name: string) => {
     const loweredName = name.toLowerCase()
     return [...userGroupsMap.value.values()].find(
@@ -64,6 +74,46 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
       }
     )
     return userGroup
+  }
+
+  const fetchUserGroupByName = async ({
+    userGroupName,
+    cacheStrategy = 'waitForAllFetch'
+  }: {
+    userGroupName: string
+    cacheStrategy?: CacheStrategy
+  }): Promise<UserGroup | undefined> => {
+    // userGroupNameが空のものは存在しないので弾く
+    if (userGroupName === '') {
+      return undefined
+    }
+
+    const existing = getUserGroupByName(userGroupName)
+
+    if (existing) {
+      if (cacheStrategy === 'forceFetch') {
+        return fetchUserGroup({
+          userGroupId: existing.id,
+          cacheStrategy: 'forceFetch'
+        })
+      }
+      return existing
+    }
+
+    // キャッシュに存在してなかったかつ、全取得が完了してない場合は
+    // 全取得を待って含まれてるか確認する
+    if (!userGroupsMapFetched.value && cacheStrategy === 'waitForAllFetch') {
+      await userGroupsMapInitialFetchPromise
+
+      const res = getUserGroupByName(userGroupName)
+      if (res) {
+        return res
+      }
+    }
+
+    // それでもなかったら、グループ全体を再取得する
+    await fetchUserGroups({ ignoreCache: true })
+    return getUserGroupByName(userGroupName)
   }
 
   const fetchUserGroups = async ({
@@ -100,9 +150,14 @@ const useGroupsStorePinia = defineStore('entities/groups', () => {
     userGroupsMap,
     userGroupsMapInitialFetchPromise,
     gradeGroups,
+    teamGroups,
     getGradeGroupsByUserId,
+    getTeamGroupsByUserId,
     getUserGroupByName,
-    fetchUserGroups
+    fetchUserGroup,
+    fetchUserGroups,
+    fetchUserGroupByName,
+    userGroupsMapFetched
   }
 })
 

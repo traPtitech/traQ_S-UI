@@ -3,6 +3,7 @@
     <AccountState :class="$style.section" :state="user.state" />
     <BioText :class="$style.section" :bio="detail?.bio" />
     <HomeChannel :channel-id="detail?.homeChannel" :class="$style.section" />
+    <TeamList v-if="!user.bot" :class="$style.section" :user-id="user.id" />
     <AccountList
       :class="$style.section"
       :bot="user.bot"
@@ -24,6 +25,7 @@ import AccountState from './AccountState.vue'
 import BioText from './BioText.vue'
 import HomeChannel from './HomeChannel.vue'
 import LastOnline from './LastOnline.vue'
+import TeamList from './TeamList.vue'
 
 defineProps<{
   user: User

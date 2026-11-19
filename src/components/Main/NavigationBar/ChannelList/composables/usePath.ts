@@ -1,23 +1,14 @@
-import type { Channel } from '@traptitech/traq'
-
 import { computed } from 'vue'
 
 import useChannelPath from '/@/composables/useChannelPath'
 import type { ChannelTreeNode } from '/@/lib/channelTree'
 
-interface TreeProps {
+interface PathProps {
   channel: ChannelTreeNode
-  showShortenedPath: false
+  showShortenedPath: boolean
 }
 
-interface ListProps {
-  channel: Channel
-  showShortenedPath: true
-}
-
-export type TypedProps = TreeProps | ListProps
-
-export const usePath = (typedProps: TypedProps) => {
+export const usePath = (props: PathProps) => {
   const { channelIdToShortPathString, channelIdToPathString } = useChannelPath()
 
   const getPathWithAncestor = (skippedAncestorNames?: string[]) =>
@@ -26,14 +17,14 @@ export const usePath = (typedProps: TypedProps) => {
       : ''
 
   const pathToShow = computed(() =>
-    typedProps.showShortenedPath
-      ? channelIdToShortPathString(typedProps.channel.id)
-      : getPathWithAncestor(typedProps.channel.skippedAncestorNames) +
-        typedProps.channel.name
+    props.showShortenedPath
+      ? channelIdToShortPathString(props.channel.id)
+      : getPathWithAncestor(props.channel.skippedAncestorNames) +
+        props.channel.name
   )
   const pathTooltip = computed(() =>
-    typedProps.showShortenedPath
-      ? `${channelIdToPathString(typedProps.channel.id, true) ?? ''}`
+    props.showShortenedPath
+      ? `${channelIdToPathString(props.channel.id, true) ?? ''}`
       : undefined
   )
 

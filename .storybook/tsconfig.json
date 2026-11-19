@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "vueCompilerOptions": {
+    "fallthroughAttributes": false
+  },
+  "include": [
+    "./**/*.ts",
+    "./**/*.vue",
+    "../src/types/**/*.d.ts",
+    "../src/**/*.stories.ts",
+    "../config.d.ts"
+  ]
+}

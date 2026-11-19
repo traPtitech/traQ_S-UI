@@ -1,8 +1,51 @@
 import {
   getMatchedWithPriority,
   isDefined,
+  lowerBound,
   pickSomeAroundIndex
 } from '/@/lib/basic/array'
+
+describe('lowerBound', () => {
+  it.each([
+    { values: [], target: 3, expected: 0 },
+    { values: [1, 3, 3, 5], target: 0, expected: 0 },
+    { values: [1, 3, 3, 5], target: 1, expected: 0 },
+    { values: [1, 3, 3, 5], target: 3, expected: 1 },
+    { values: [1, 3, 3, 5], target: 4, expected: 3 },
+    { values: [1, 3, 3, 5], target: 5, expected: 3 },
+    { values: [1, 3, 3, 5], target: 6, expected: 4 }
+  ])(
+    'returns index $expected for target $target in $values',
+    ({ values, target, expected }) => {
+      expect(lowerBound(values, value => value - target)).toBe(expected)
+    }
+  )
+
+  it('supports readonly object arrays and projected boundaries', () => {
+    const rows = [
+      { start: 0, size: 12 },
+      { start: 12, size: 24 },
+      { start: 36, size: 36 }
+    ] as const
+
+    expect(lowerBound(rows, row => row.start + row.size - 20)).toBe(1)
+    expect(lowerBound(rows, row => row.start - 20)).toBe(2)
+  })
+
+  it('supports nonnumeric comparison keys', () => {
+    const values = ['alice', 'bob', 'bob', 'charlie'] as const
+
+    expect(lowerBound(values, value => value.localeCompare('bob'))).toBe(1)
+  })
+
+  it('finds a boundary with logarithmic comparisons', () => {
+    const values = Array.from({ length: 1024 }, (_, index) => index * 2)
+    const compare = vi.fn((value: number) => value - 1023)
+
+    expect(lowerBound(values, compare)).toBe(512)
+    expect(compare.mock.calls.length).toBeLessThanOrEqual(11)
+  })
+})
 
 describe('getMatchedWithPriority', () => {
   it('can get fullMatched', () => {

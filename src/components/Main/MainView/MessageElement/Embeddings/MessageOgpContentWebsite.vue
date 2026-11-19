@@ -8,6 +8,7 @@
     <img
       v-if="imageUrl"
       :src="imageUrl"
+      referrerpolicy="no-referrer"
       draggable="false"
       :class="$style.image"
     />

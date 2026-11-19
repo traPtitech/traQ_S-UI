@@ -2,9 +2,11 @@
   <teleport to="#message-menu-popup">
     <ClickOutside @click-outside="emit('close')">
       <div
-        ref="menuContainerRef"
-        :style="toolsMenuStyle"
         :class="$style.toolsMenu"
+        :style="{
+          '--anchor-y': `${position.y}px`,
+          left: `${position.x}px`
+        }"
       >
         <slot />
       </div>
@@ -13,40 +15,34 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, toRef } from 'vue'
-
 import ClickOutside from '/@/components/UI/ClickOutside'
-import useBoxSize from '/@/composables/dom/useBoxSize'
 import type { Point } from '/@/lib/basic/point'
 
-const props = defineProps<{
+defineProps<{
   position: Point
 }>()
 
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
-
-const position = toRef(props, 'position')
-
-const menuContainerRef = ref<HTMLDivElement | null>(null)
-const { height } = useBoxSize(menuContainerRef)
-
-const toolsMenuStyle = computed(() => {
-  const margin = 20
-  return {
-    top: `min(calc(100vh - ${(height?.value ?? 0) + margin}px), ${
-      position.value.y
-    }px)`,
-    left: `${position.value.x}px`
-  }
-})
 </script>
 
 <style lang="scss" module>
 .toolsMenu {
+  $viewport-margin: 20px;
+
+  @include background-primary;
+  @include drop-shadow-default;
   position: absolute;
+  top: 0;
   z-index: $z-index-message-element-tools-menu;
-  transform: translateX(-100%);
+  width: max-content;
+  max-height: calc(100dvh - 2 * $viewport-margin);
+  overflow-y: auto;
+  border-radius: 4px;
+  transform: translate(
+    -100%,
+    min(var(--anchor-y), calc(100dvh - $viewport-margin - 100%))
+  );
 }
 </style>

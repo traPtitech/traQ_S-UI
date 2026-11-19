@@ -16,4 +16,4 @@
 
 ## その他
 
-- [`patches`について](../patches/README.md)
+- [依存パッケージの型定義修正](./development.md#依存パッケージの型定義修正)

@@ -1,25 +1,27 @@
-FROM --platform=$BUILDPLATFORM docker.io/library/node:26.8.2-alpine@sha256:ef24c5053d50fdc3e4e56eb4e7ddb7861874ab0fdc797046ba897581deb8e868 AS build
+FROM --platform=$BUILDPLATFORM docker.io/library/node:26.12.1-alpine@sha256:ae8e1c19d56886270987e99b3cfcef13a919f0655b376ae322bc64ada76f88cd AS build
 WORKDIR /app
 
-ENV CYPRESS_INSTALL_BINARY=0
-
 COPY package*.json ./
-COPY patches/ ./patches/
+COPY scripts/patch-dependencies.js ./scripts/
+COPY build/deepmerge ./build/deepmerge/
 RUN npm ci
 COPY . .
+RUN mkdir -p /app/.retained-release/assets
 RUN NODE_ENV=production npm run build:with-font
 
 
-FROM docker.io/library/caddy:2.11.4-alpine@sha256:5f5c8640aae01df9654968d946d8f1a56c497f1dd5c5cda4cf95ab7c14d58648
+FROM docker.io/library/caddy:2.11.6-alpine@sha256:d44355d3c2149dc580ce2cac735955d1c08d3d00882c30489c241aa51a5c10d9
 EXPOSE 80
+
+RUN apk add --no-cache jq
 
 COPY build/docker/Caddyfile /etc/caddy/Caddyfile
 COPY build/docker/startup.sh /startup.sh
 RUN chmod 755 /startup.sh
 
 COPY --from=build /app/dist /usr/share/caddy
+COPY --from=build /app/.retained-release /app/retained-release
 
-ENV APP_NAME=traQ
 ENV THEME_COLOR=#0D67EA
 
 # 設定上書き処理用に、.brを消して、元の設定を別のディレクトリに保存しておく

@@ -38,7 +38,7 @@
   - unit: ユニットテスト
   - e2e: E2E テスト
 - coverage: テストのカバレッジ出力
-- patches: dependency のパッチ。詳細は`patches/README.md`を参照
+- scripts: JSON Schema の生成や依存パッケージの型定義修正
 
 ## 補足
 

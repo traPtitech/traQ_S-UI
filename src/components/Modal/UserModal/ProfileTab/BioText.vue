@@ -6,6 +6,7 @@
       :aria-busy="isLoading"
       :data-is-empty="$boolAttr(isEmpty)"
       :content="content"
+      :before-navigate="clearModal"
       accept-action
     />
   </section>
@@ -15,12 +16,15 @@
 import { computed } from 'vue'
 
 import MarkdownPreview from '/@/components/UI/MarkdownPreview.vue'
+import { useModalStore } from '/@/store/ui/modal'
 
 import ProfileHeader from './ProfileHeader.vue'
 
 const props = defineProps<{
   bio?: string
 }>()
+
+const { clearModal } = useModalStore()
 
 const isLoading = computed(() => props.bio === undefined)
 const isEmpty = computed(() =>

@@ -45,7 +45,7 @@ import SpinNumber from '/@/components/UI/SpinNumber.vue'
 import apis from '/@/lib/apis'
 import { useModalStore } from '/@/store/ui/modal'
 import { useToastStore } from '/@/store/ui/toast'
-import type { UserGroupId } from '/@/types/entity-ids'
+import type { UserGroupId, UserId } from '/@/types/entity-ids'
 
 import GroupUser from './GroupUser.vue'
 
@@ -74,7 +74,7 @@ const onClickDeleteAll = async () => {
   }
 }
 
-const onEdit = (id: string) => {
+const onEdit = (id: UserId) => {
   pushModal({
     type: 'group-member-edit',
     groupId: props.groupId,
@@ -82,7 +82,7 @@ const onEdit = (id: string) => {
   })
 }
 
-const onDelete = async (id: string) => {
+const onDelete = async (id: UserId) => {
   if (!confirm('本当にこのメンバーを削除しますか？')) return
   try {
     await apis.removeUserGroupMember(props.groupId, id)

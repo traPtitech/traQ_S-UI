@@ -45,11 +45,39 @@ export const buildFileThumbnailPath = (fileId: FileId) =>
 export const buildFileWaveformPath = (fileId: FileId) =>
   `${buildFileThumbnailPath(fileId)}?type=waveform`
 
-export const embeddingOrigin =
-  DEV_SERVER !== '' && import.meta.env.MODE === 'development'
-    ? DEV_SERVER
-    : (self.traQConfig.backendOrigin ??
-      `${location.protocol}//${location.host}`)
+export let embeddingOrigin: string
+
+const fetchEmbeddingOrigin = async () => {
+  try {
+    const { data } = await apis.getMeta({ timeout: 5000 })
+
+    if (typeof data.canonicalOrigin !== 'string') return
+
+    const url = new URL(data.canonicalOrigin)
+    if (
+      (url.protocol === 'http:' || url.protocol === 'https:') &&
+      url.origin === data.canonicalOrigin
+    ) {
+      return url.origin
+    }
+  } catch {}
+}
+
+const resolveEmbeddingOrigin = async () => {
+  if (import.meta.env.MODE === 'development' && DEV_SERVER) {
+    return DEV_SERVER
+  }
+
+  const configured = self.traQConfig.backendOrigin
+  if (configured) return configured
+
+  const fallback = `${location.protocol}//${location.host}`
+  return (await fetchEmbeddingOrigin()) ?? fallback
+}
+
+export const initializeMeta = async () => {
+  embeddingOrigin = await resolveEmbeddingOrigin()
+}
 
 export const buildFilePathForPost = (fileId: FileId) =>
   `${embeddingOrigin}${constructFilesPath(fileId)}`

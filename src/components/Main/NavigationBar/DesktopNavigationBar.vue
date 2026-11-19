@@ -24,6 +24,7 @@
       :class="[$style.navigations, { [$style.hidden]: isNavigationClosed }]"
     >
       <NavigationContent
+        :class="$style.navigationContent"
         :current-navigation="navigationSelectorState.currentNavigation"
       />
       <transition name="fade-bottom">
@@ -49,6 +50,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
+
 import DesktopNavigationSelector from '/@/components/Main/NavigationBar/DesktopNavigationSelector.vue'
 import DesktopToolBox from '/@/components/Main/NavigationBar/DesktopToolBox.vue'
 import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue'
@@ -57,6 +60,7 @@ import { useNavigationLayoutStore } from '/@/store/ui/navigationLayout'
 
 import useNavigation from './composables/useNavigation'
 import useNavigationResizer from './composables/useNavigationResizer'
+import { provideNavigationVisibility } from './composables/useNavigationVisibility'
 
 const {
   navigationSelectorState,
@@ -73,6 +77,8 @@ const {
   navigationRef,
   resizerRef: navigationResizerRef
 } = useNavigationLayoutStore()
+
+provideNavigationVisibility(computed(() => !isNavigationClosed.value))
 
 const { onDragStart, onDragging, onDragEnd, navigationWidth } =
   useNavigationResizer()
@@ -106,6 +112,9 @@ $ephemeralNavigationMinHeight: 64px;
   flex-direction: column;
   min-width: 0;
   flex: 1;
+}
+.navigationContent {
+  min-height: 0;
 }
 .ephemeralNavigation {
   width: #{calc(100% - #{$ephemeralNavigationSideMargin * 2})};

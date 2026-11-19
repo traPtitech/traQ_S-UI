@@ -1,6 +1,11 @@
 // APIに投げる検索クエリに対する実装
 import type apis from '/@/lib/apis'
-import type { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
+import type {
+  ChannelId,
+  MessageId,
+  UserGroupId,
+  UserId
+} from '/@/types/entity-ids'
 
 import type {
   ExtractedFilter,
@@ -17,7 +22,7 @@ import {
   messageParser,
   parseToFilter as parseToFilterBase,
   rawQuery,
-  userParser
+  userOrUserGroupParser
 } from './parserBase'
 
 /** APIに投げる型 */
@@ -58,8 +63,8 @@ export type Filter =
       raw: string
       value: typeof HereToken | typeof MeToken | ChannelId
     }
-  | { type: 'to'; raw: string; value: typeof MeToken | UserId }
-  | { type: 'from'; raw: string; value: typeof MeToken | UserId }
+  | { type: 'to'; raw: string; value: typeof MeToken | UserId | UserGroupId }
+  | { type: 'from'; raw: string; value: typeof MeToken | UserId | UserGroupId }
   | { type: 'citation'; raw: string; value: MessageId }
   | { type: 'attrFlag'; raw: string; value: AttrFlagFilterKey; negate: boolean }
   | {
@@ -146,7 +151,11 @@ const parser = async (
     }
     case 'to':
     case 'from': {
-      const result = await userParser(store.userNameToId, extracted)
+      const result = await userOrUserGroupParser(
+        store.userNameToId,
+        store.userGroupNameToId,
+        extracted
+      )
       return result
         ? { type, raw: rawQuery(extracted), value: result }
         : undefined
@@ -288,11 +297,11 @@ const parsedFilterToNormalizedString = (
 
   if (f.type === 'in') {
     if (f.value === HereToken) return `in:${currentChannelPathOrUserName}`
-    if (f.value === MeToken) return `in:${myUserName}`
+    if (f.value === MeToken) return `in:@${myUserName}`
   }
 
   if ((f.type === 'from' || f.type === 'to') && f.value === MeToken) {
-    return `${f.type}:${myUserName}`
+    return `${f.type}:@!${myUserName}`
   }
   return f.raw
 }

@@ -27,14 +27,13 @@ import {
 import { useBeforeUnload } from '/@/composables/dom/useBeforeUnload'
 import { useToastStore } from '/@/store/ui/toast'
 import type { StampPalette } from '/@/types/entity'
-import type { StampId, StampPaletteId } from '/@/types/entity-ids'
 
 const { addInfoToast, addErrorToast } = useToastStore()
 
 const initialPalette: StampPalette = {
-  id: '' as StampPaletteId,
+  id: '',
   name: '新規パレット',
-  stamps: [] as StampId[],
+  stamps: [],
   creatorId: '',
   createdAt: '',
   updatedAt: '',

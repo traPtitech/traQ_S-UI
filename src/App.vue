@@ -83,9 +83,12 @@ ${Object.entries(style.value)
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
+import { useTelemetrySnapshots } from '/@/composables/useTelemetrySnapshots'
 import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
 
 const { featureFlags } = useFeatureFlagSettings()
+
+useTelemetrySnapshots()
 
 watch(
   () => featureFlags.value.contain_strict_alternate.enabled,

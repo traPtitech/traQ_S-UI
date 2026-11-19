@@ -40,13 +40,21 @@ const useToastStorePinia = defineStore('ui/toast', () => {
   const toasts = ref<Toast[]>([])
   let nextId = 0
 
-  const addToast = (toast: ToastOption) => {
-    const id = nextId++
-    toasts.value.unshift({
+  const addToast = (toast: ToastOption, replaceId?: number) => {
+    const index = toasts.value.findIndex(entry => entry.id === replaceId)
+    const id = toasts.value[index]?.id ?? nextId++
+    const entry = {
       ...toast,
       timeout: toast.timeout ?? DEFAULT_TOAST_TIMEOUT,
       id
-    })
+    }
+
+    if (index >= 0) {
+      toasts.value[index] = entry
+      return id
+    }
+
+    toasts.value.unshift(entry)
 
     while (MAX_TOAST_COUNT < toasts.value.length) {
       toasts.value.pop()
@@ -61,7 +69,7 @@ const useToastStorePinia = defineStore('ui/toast', () => {
 
   const deleteToast = (id: number) => {
     const index = toasts.value.findIndex(toast => toast.id === id)
-    toasts.value.splice(index, 1)
+    if (index >= 0) toasts.value.splice(index, 1)
   }
 
   const clearToasts = () => {

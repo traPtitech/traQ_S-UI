@@ -1,6 +1,6 @@
 <template>
-  <button>
-    <AIcon :class="$style.button" :size="size" mdi name="chevron-left" />
+  <button :class="$style.button">
+    <AIcon :size="size" mdi name="chevron-left" />
   </button>
 </template>
 
@@ -20,5 +20,6 @@ withDefaults(
 <style lang="scss" module>
 .button {
   @include color-ui-primary;
+  cursor: pointer;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div v-if="topic" :class="$style.container">
     <MarkdownPreview :content="topic" :title="topic" inline />
   </div>
 </template>
@@ -28,7 +28,7 @@ const topic = computed(
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-left: 40px;
+  margin-left: calc(40px + var(--channel-indent, 0px));
   margin-right: 8px;
   margin-bottom: 4px;
   cursor: pointer;

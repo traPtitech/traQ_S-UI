@@ -7,7 +7,7 @@ import { RouteName } from '/@/router'
 
 type HTMLElementTargetMouseEvent = MouseEvent & { target: HTMLElement }
 
-const useMarkdownInternalHandler = () => {
+const useMarkdownInternalHandler = (beforeNavigate?: () => Promise<void>) => {
   const { origin } = new URL(embeddingOrigin)
   const router = useRouter()
   const { shouldOpenWithRouter } = useOpenLink()
@@ -28,7 +28,9 @@ const useMarkdownInternalHandler = () => {
   }
 
   // チャンネルのリンク(a.message-channel-link)もこれで処理される
-  const internalLinkClickHandler = (event: HTMLElementTargetMouseEvent) => {
+  const internalLinkClickHandler = async (
+    event: HTMLElementTargetMouseEvent
+  ) => {
     const $a = event.target.closest<HTMLAnchorElement>('a[href]')
     if (!$a || $a.origin !== origin) return
 
@@ -49,6 +51,15 @@ const useMarkdownInternalHandler = () => {
 
     event.preventDefault()
     event.stopPropagation()
+    if (beforeNavigate) {
+      try {
+        await beforeNavigate()
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e)
+        return
+      }
+    }
     router.push(linkPath)
   }
 

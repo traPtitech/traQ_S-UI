@@ -31,18 +31,18 @@ import type { SendKeys } from '/@/store/app/browserSettings'
 
 const modelValue = defineModel<SendKeys>('modifierKey', { required: true })
 
-const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
+const windowsModifierKeyTable = {
   alt: 'Alt',
   ctrl: 'Ctrl',
   shift: 'Shift',
   macCtrl: ''
-}
-const macModifierKeyTable: Record<keyof SendKeys, string> = {
+} satisfies Record<keyof SendKeys, string>
+const macModifierKeyTable = {
   alt: '⌥(Option)',
   ctrl: '⌘(Command)',
   shift: 'Shift',
   macCtrl: 'Ctrl'
-}
+} satisfies Record<keyof SendKeys, string>
 
 const macFlag = isMac()
 const getModifierKeyName = (key: keyof SendKeys) => {

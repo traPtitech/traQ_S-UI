@@ -9,6 +9,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import useIndexedDbValue from '/@/composables/storage/useIndexedDbValue'
 import apis from '/@/lib/apis'
 import { deleteToken } from '/@/lib/notification/notification'
+import { telemetry } from '/@/lib/telemetry'
 import { wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import type { UserId } from '/@/types/entity-ids'
@@ -27,6 +28,7 @@ const useMeStorePinia = defineStore('domain/me', () => {
   const [state] = useIndexedDbValue('store/domain/me', 1, {}, initialValue)
 
   const myId = computed(() => state.detail?.id)
+  let hasTrackedAppStart = false
 
   const fetchMe = async (
     riseAuthError = true
@@ -38,6 +40,12 @@ const useMeStorePinia = defineStore('domain/me', () => {
       try {
         const { data } = await apis.getMe()
         state.detail = data
+
+        if (!hasTrackedAppStart) {
+          hasTrackedAppStart = true
+          void telemetry.trackAppStarted()
+        }
+
         return data
       } catch (error) {
         state.detail = undefined

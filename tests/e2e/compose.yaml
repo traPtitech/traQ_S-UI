@@ -1,0 +1,45 @@
+services:
+  backend:
+    image: ghcr.io/traptitech/traq:3.30.0@sha256:5b6ff1cc83c6413e0e5c96dd8279caa36c4ef2441beeed342c714f748215e769
+    command: [serve, --dev, --skip-init-emojis]
+    environment:
+      TRAQ_PORT: '3000'
+      TRAQ_ORIGIN: http://127.0.0.1:4173
+      TRAQ_MARIADB_HOST: db
+      TRAQ_MARIADB_PASSWORD: e2e-password
+      TRAQ_ES_URL: ''
+      TRAQ_STORAGE_TYPE: local
+      TRAQ_STORAGE_LOCAL_DIR: /app/storage
+    ports:
+      - '127.0.0.1::3000'
+    volumes:
+      - storage:/app/storage
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, ./traQ, healthcheck]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+      start_period: 10s
+
+  db:
+    image: mariadb:10.11.19@sha256:0d0945c57f75b3a3b9ebe71aedaaad005fa5305054e8fca3d2e42a8c92b43b5e
+    environment:
+      MYSQL_ROOT_PASSWORD: e2e-password
+      MYSQL_DATABASE: traq
+    command:
+      [--character-set-server=utf8mb4, --collation-server=utf8mb4_general_ci]
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+      start_period: 10s
+
+volumes:
+  db:
+  storage:

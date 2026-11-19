@@ -65,12 +65,13 @@ import useBoxSize from '/@/composables/dom/useBoxSize'
 import useRelatedChannels from '/@/composables/useRelatedChannels'
 import { safeMod } from '/@/lib/basic/arithmetic'
 import type { Point } from '/@/lib/basic/point'
+import type { ChannelId } from '/@/types/entity-ids'
 
 import ChannelHeaderRelationPanel from './ChannelHeaderRelationPanel.vue'
 
 interface Props {
   rightPosition: Point
-  channelId: string
+  channelId: ChannelId
   popupId: string
 }
 const props = defineProps<Props>()
@@ -96,13 +97,13 @@ const formattedSiblings = computed(() =>
 )
 
 const tabNames = ['siblings', 'children'] as const
-const tabNameRefs: Record<
-  (typeof tabNames)[number],
-  Ref<InstanceType<typeof ATab> | null>
-> = {
+const tabNameRefs = {
   siblings: siblingTab,
   children: childrenTab
-}
+} satisfies Record<
+  (typeof tabNames)[number],
+  Ref<InstanceType<typeof ATab> | null>
+>
 const currentTab = ref<(typeof tabNames)[number]>('siblings')
 const onKeydown = (e: KeyboardEvent) => {
   const index = tabNames.indexOf(currentTab.value)

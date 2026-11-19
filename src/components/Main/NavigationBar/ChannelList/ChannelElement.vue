@@ -1,6 +1,7 @@
 <template>
   <div
     :class="$style.container"
+    :style="{ '--channel-indent': `${props.depth * 12}px` }"
     :data-is-selected="$boolAttr(isSelected)"
     :data-is-inactive="$boolAttr(!channel.active)"
   >
@@ -33,7 +34,7 @@
           :class="$style.channel"
           :href="href"
           :aria-current="isSelected && 'page'"
-          :aria-expanded="hasChildren && isOpened ? true : undefined"
+          :aria-expanded="hasChildren ? isOpened : undefined"
           :data-is-inactive="$boolAttr(!channel.active)"
           :aria-label="
             showShortenedPath ? pathTooltip : (pathToShow ?? undefined)
@@ -58,9 +59,8 @@
       </router-link>
     </div>
 
-    <div :class="$style.slot">
-      <ChannelElementTopic v-if="showTopic" :channel-id="channel.id" />
-      <slot />
+    <div v-if="showTopic" :class="$style.topic">
+      <ChannelElementTopic :channel-id="channel.id" />
     </div>
 
     <!-- チャンネルの背景 -->
@@ -78,10 +78,7 @@ import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 import { computed, toRef } from 'vue'
 
-import {
-  type TypedProps,
-  usePath
-} from '/@/components/Main/NavigationBar/ChannelList/composables/usePath'
+import { usePath } from '/@/components/Main/NavigationBar/ChannelList/composables/usePath'
 import useFocus from '/@/composables/dom/useFocus'
 import useHover from '/@/composables/dom/useHover'
 import useChannelPath from '/@/composables/useChannelPath'
@@ -97,21 +94,22 @@ import ChannelElementName from './ChannelElementName.vue'
 import ChannelElementTopic from './ChannelElementTopic.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 
-const props = withDefaults(
-  defineProps<{
-    channel: ChannelTreeNode
-    isOpened?: boolean
-    showShortenedPath?: boolean
-    showTopic?: boolean
-    showStar?: boolean
-    showNotified?: boolean
-  }>(),
-  {
-    isOpened: false,
-    showShortenedPath: false,
-    showTopic: false
-  }
-)
+interface ChannelElementProps {
+  channel: ChannelTreeNode
+  depth?: number
+  isOpened?: boolean
+  showShortenedPath?: boolean
+  showTopic?: boolean
+  showStar?: boolean
+  showNotified?: boolean
+}
+
+const props = withDefaults(defineProps<ChannelElementProps>(), {
+  depth: 0,
+  isOpened: false,
+  showShortenedPath: false,
+  showTopic: false
+})
 
 const emit = defineEmits<{
   (e: 'clickHash', channelId: ChannelId): void
@@ -143,7 +141,7 @@ const openChannel = (event: MouseEvent) => {
   openLink(event, channelIdToLink(props.channel.id) as string)
 }
 
-const { pathToShow, pathTooltip } = usePath(props as TypedProps)
+const { pathToShow, pathTooltip } = usePath(props)
 
 const notificationState = useNotificationState(toRef(props, 'channel'))
 
@@ -186,7 +184,7 @@ const iconSize = computed(() => (props.channel.archived ? 17 : undefined))
 </script>
 
 <style lang="scss" module>
-$elementHeight: 32px;
+$elementHeight: 36px;
 $bgHeight: 36px;
 $bgLeftShift: 8px;
 
@@ -207,7 +205,7 @@ $bgLeftShift: 8px;
   position: relative;
   display: flex;
   height: $elementHeight;
-  padding-left: 24px;
+  padding-left: calc(24px + var(--channel-indent));
   padding-right: 4px;
   margin-left: $bgLeftShift;
   z-index: 0;
@@ -228,15 +226,17 @@ $bgLeftShift: 8px;
   flex-shrink: 0;
   cursor: pointer;
   position: absolute;
-  left: 0;
+  left: var(--channel-indent);
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .selectedBg {
   position: absolute;
-  width: calc(100% + #{$bgLeftShift});
   height: $bgHeight;
-  top: -1 * math.div($bgHeight - $elementHeight, 2);
-  left: 0;
+  left: var(--channel-indent);
+  top: 0;
+  right: -$bgLeftShift;
   z-index: 0;
   border-top-left-radius: 100vw;
   border-bottom-left-radius: 100vw;
@@ -254,7 +254,7 @@ $bgLeftShift: 8px;
     background: $theme-ui-primary-background;
   }
 }
-.slot {
+.topic {
   padding-left: $bgLeftShift;
 }
 </style>
