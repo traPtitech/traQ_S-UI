@@ -1,4 +1,4 @@
-import type { User } from '@traptitech/traq'
+import type { User, UserDetail } from '@traptitech/traq'
 
 import { computed, ref } from 'vue'
 
@@ -18,7 +18,6 @@ import { entityMitt } from './mitt'
 import type { CacheStrategy } from './utils'
 import { fetchWithCacheStrategy } from './utils'
 
-const getUser = createSingleflight(apis.getUser.bind(apis))
 const getUserByName = createSingleflight(
   async (name: string): Promise<{ data: User | undefined }> => {
     const res = await apis.getUsers(undefined, name)
@@ -31,6 +30,15 @@ const useUsersStorePinia = defineStore('entities/users', () => {
   const usersMap = ref(new Map<UserId, User>())
   const usersMapFetched = ref(false)
   const usersMapInitialFetchPromise = useTrueChangedPromise(usersMapFetched)
+  const userDetailsMap = ref(new Map<UserId, UserDetail>())
+
+  // GET /users/:userID は UserDetail を返すので、取得したら詳細のキャッシュにも保存する
+  // singleflight の中で保存するので、他の取得とまとめられた場合も保存は1回だけになる
+  const getUser = createSingleflight(async (userId: UserId) => {
+    const res = await apis.getUser(userId)
+    userDetailsMap.value.set(userId, res.data)
+    return res
+  })
 
   const activeUsersMap = computed(
     () =>
@@ -53,6 +61,7 @@ const useUsersStorePinia = defineStore('entities/users', () => {
   }
   const deleteUser = (userId: UserId) => {
     usersMap.value.delete(userId)
+    userDetailsMap.value.delete(userId)
     entityMitt.emit('deleteUser')
   }
 
@@ -73,6 +82,32 @@ const useUsersStorePinia = defineStore('entities/users', () => {
       setUser
     )
     return user
+  }
+
+  /**
+   * ユーザーの詳細を取得する
+   * APIから取得したときは usersMap と userDetailsMap の両方を更新する
+   */
+  const fetchUserDetail = async ({
+    userId,
+    cacheStrategy = 'useCache'
+  }: {
+    userId: UserId
+    cacheStrategy?: Exclude<CacheStrategy, 'waitForAllFetch'>
+  }): Promise<UserDetail> => {
+    if (cacheStrategy === 'useCache') {
+      const cached = userDetailsMap.value.get(userId)
+      if (cached) {
+        return cached
+      }
+    }
+
+    const [{ data: res }, isShared] = await getUser(userId)
+    // 他の取得とまとめられていた場合は既にcommitされてるためcommitしない
+    if (!isShared) {
+      setUser(res)
+    }
+    return res
   }
 
   const fetchUserByName = async ({
@@ -143,6 +178,17 @@ const useUsersStorePinia = defineStore('entities/users', () => {
   wsListener.on('USER_ICON_UPDATED', ({ id }) => {
     fetchUser({ userId: id, cacheStrategy: 'forceFetch' })
   })
+  wsListener.on('USER_TAGS_UPDATED', ({ id }) => {
+    // 詳細を取得したことのあるユーザーだけ取り直す
+    if (!userDetailsMap.value.has(id)) return
+    fetchUserDetail({ userId: id, cacheStrategy: 'forceFetch' })
+  })
+  wsListener.on('USER_OFFLINE', ({ id, last_online }) => {
+    // 最終オンライン日時だけの更新では USER_UPDATED が来ないので、ここで反映する
+    const detail = userDetailsMap.value.get(id)
+    if (!detail) return
+    userDetailsMap.value.set(id, { ...detail, lastOnline: last_online })
+  })
   wsListener.on('reconnect', () => {
     fetchUsers({ ignoreCache: true })
   })
@@ -150,9 +196,11 @@ const useUsersStorePinia = defineStore('entities/users', () => {
   return {
     usersMap,
     usersMapInitialFetchPromise,
+    userDetailsMap,
     activeUsersMap,
     findUserByName,
     fetchUser,
+    fetchUserDetail,
     fetchUserByName,
     fetchUsers
   }
