@@ -1,68 +1,33 @@
 <template>
-  <div
+  <button
+    type="button"
     :class="$style.container"
-    :aria-selected="isActive"
-    @click="emit('click')"
+    :aria-pressed="isActive"
+    :aria-label="stampSet.label"
+    :title="stampSet.label"
   >
-    <div v-if="isActive" :class="$style.indicator" />
-    <AStamp
-      v-if="stampSet.type === 'palette'"
-      :stamp-id="pickThumbnail(stampSet.id)"
-      :size="24"
-      :class="$style.paletteStamp"
+    <span v-if="isActive" :class="$style.indicator" />
+    <StampSetIcon
+      :stamp-set="stampSet"
+      :class="stampSet.type === 'palette' ? $style.paletteStamp : $style.icon"
+      aria-hidden="true"
     />
-    <AIcon
-      v-else-if="stampSet.type === 'category'"
-      :name="`stampCategory/${stampSet.id}`"
-      :size="24"
-      :class="$style.icon"
-    />
-    <AIcon
-      v-else-if="stampSet.type === 'history'"
-      mdi
-      :name="
-        featureFlags.stamp_recommendation_v3.enabled ? 'creation' : 'history'
-      "
-      :size="24"
-      :class="$style.icon"
-    />
-  </div>
+  </button>
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
-import AStamp from '/@/components/UI/AStamp.vue'
-import { useFeatureFlagSettings } from '/@/store/app/featureFlagSettings'
-import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
-import type { StampPaletteId } from '/@/types/entity-ids'
-
-import type { StampSet } from './composables/useStampSetSelector'
+import StampSetIcon from '/@/components/UI/StampSetIcon.vue'
+import type { StampPickerTab } from '/@/store/ui/stampPickerSettings'
 
 withDefaults(
   defineProps<{
-    stampSet: StampSet
+    stampSet: StampPickerTab
     isActive?: boolean
   }>(),
   {
     isActive: false
   }
 )
-
-const emit = defineEmits<{
-  (e: 'click'): void
-}>()
-
-const { stampPalettesMap } = useStampPalettesStore()
-const { featureFlags } = useFeatureFlagSettings()
-const pickThumbnail = (paletteId: StampPaletteId) => {
-  const palette = stampPalettesMap.value.get(paletteId)
-  if (!palette) return ''
-  if ((palette.stamps?.length ?? 0) > 0) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return palette.stamps[0]!
-  }
-  return ''
-}
 </script>
 
 <style lang="scss" module>
@@ -70,25 +35,30 @@ const pickThumbnail = (paletteId: StampPaletteId) => {
   @include color-ui-secondary;
   display: flex;
   align-items: center;
+  justify-content: center;
   position: relative;
   height: 36px;
   cursor: pointer;
-  &[aria-selected='true'] {
+  &[aria-pressed='true'] {
     @include color-accent-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $theme-accent-focus-default;
+    outline-offset: -2px;
   }
 }
 .indicator {
   @include background-accent-primary;
   position: absolute;
-  width: 32px;
   height: 2px;
   bottom: 0;
-  left: -4px;
+  inset-inline: 0;
 }
 .paletteStamp {
   opacity: 0.5;
   filter: grayscale(1);
-  .container[aria-selected='true'] & {
+  .container[aria-pressed='true'] & {
     opacity: 1;
     filter: initial;
   }
@@ -98,7 +68,7 @@ const pickThumbnail = (paletteId: StampPaletteId) => {
 }
 .icon {
   opacity: 0.5;
-  .container[aria-selected='true'] &,
+  .container[aria-pressed='true'] &,
   .container:hover & {
     opacity: 1;
   }

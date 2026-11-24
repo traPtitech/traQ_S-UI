@@ -17,7 +17,6 @@
         :key="stampId"
         :class="[
           $style.stampListItem,
-          'js-sortable-item',
           { [$style.selected]: selectedStampIds.includes(stampId) }
         ]"
         :data-id="stampId"
@@ -43,12 +42,11 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
-
-import Sortable, { type SortableEvent } from 'sortablejs'
+import { ref, useTemplateRef } from 'vue'
 
 import AStamp from '/@/components/UI/AStamp.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
+import { useSortable } from '/@/composables/dom/useSortable'
 import type { StampId } from '/@/types/entity-ids'
 
 import StampPaletteEditorLimitIndicator from './StampPaletteEditorLimitIndicator.vue'
@@ -73,51 +71,10 @@ const removeSelectedStamps = () => {
   selectedStampIds.value = []
 }
 
-const stampListRef = ref<HTMLElement | null>(null)
-let sortableInstance: Sortable | null = null
-
-const setupSortable = () => {
-  if (sortableInstance) return
-  if (!stampListRef.value) return
-  if (stampIdsModel.value.length === 0) return
-
-  sortableInstance = Sortable.create(stampListRef.value, {
-    animation: 150,
-    draggable: '.js-sortable-item',
-    onUpdate: (event: SortableEvent) => {
-      if (
-        event.newDraggableIndex === undefined ||
-        event.oldDraggableIndex === undefined
-      )
-        return
-      const newStampIds = [...stampIdsModel.value]
-      const movedStampId = newStampIds.splice(event.oldDraggableIndex, 1)[0]
-      if (movedStampId === undefined) return
-      newStampIds.splice(event.newDraggableIndex, 0, movedStampId)
-      stampIdsModel.value = newStampIds
-    }
-  })
-}
-
-const destroySortableInstance = () => {
-  if (sortableInstance) {
-    sortableInstance.destroy()
-    sortableInstance = null
-  }
-}
-
-onMounted(setupSortable)
-onUnmounted(destroySortableInstance)
-watch(
-  () => stampIdsModel.value.length,
-  (newLength, oldLength) => {
-    if (newLength > 0 && oldLength === 0) {
-      nextTick(setupSortable)
-    } else if (newLength === 0 && oldLength > 0) {
-      destroySortableInstance()
-    }
-  }
-)
+const stampListRef = useTemplateRef('stampListRef')
+useSortable(stampListRef, ids => {
+  stampIdsModel.value = ids
+})
 </script>
 
 <style lang="scss" module>
