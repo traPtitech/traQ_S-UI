@@ -11,14 +11,20 @@
       :twitter-id="detail?.twitterId"
     />
     <LastOnline
+      v-if="onlineUsersFetched && !onlineUsers.has(user.id) && lastOnline"
       :class="$style.section"
-      :last-online="detail?.lastOnline ?? undefined"
+      :last-online="lastOnline"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { User, UserDetail } from '@traptitech/traq'
+
+import { computed } from 'vue'
+
+import { compareDateString } from '/@/lib/basic/date'
+import { useOnlineUsers } from '/@/store/domain/onlineUsers'
 
 import AccountList from './AccountList.vue'
 import AccountState from './AccountState.vue'
@@ -27,10 +33,26 @@ import HomeChannel from './HomeChannel.vue'
 import LastOnline from './LastOnline.vue'
 import TeamList from './TeamList.vue'
 
-defineProps<{
+const props = defineProps<{
   user: User
   detail?: UserDetail
 }>()
+
+const { onlineUsers, onlineUsersFetched, lastOnlineAt, fetchOnlineUsers } =
+  useOnlineUsers()
+fetchOnlineUsers().catch(() => undefined)
+
+const lastOnline = computed(() => {
+  const eventLastOnline = lastOnlineAt.value.get(props.user.id)
+  const serverLastOnline = props.detail?.lastOnline
+
+  if (!eventLastOnline) return serverLastOnline ?? undefined
+  if (!serverLastOnline) return eventLastOnline
+
+  return compareDateString(eventLastOnline, serverLastOnline) > 0
+    ? eventLastOnline
+    : serverLastOnline
+})
 </script>
 
 <style lang="scss" module>
