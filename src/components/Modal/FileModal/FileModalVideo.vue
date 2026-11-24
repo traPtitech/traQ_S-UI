@@ -4,7 +4,12 @@
       <div :class="$style.header">
         <FileModalContentHeader :file-id="fileMeta.id" is-white />
       </div>
-      <video controls draggable="false" :src="fileRawPath" />
+      <video
+        controls
+        draggable="false"
+        :src="fileRawPath"
+        :poster="filePosterPath"
+      />
       <div :class="$style.footer">
         <FileModalContentFooter :file-id="fileMeta.id" is-white />
       </div>
@@ -15,13 +20,17 @@
 <script lang="ts" setup>
 import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
 import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
-import useFileMeta from '/@/composables/files/useFileMeta'
+import useFileThumbnail from '/@/composables/files/useFileThumbnail'
 
 const props = defineProps<{
   fileId: string
 }>()
 
-const { fileMeta, fileRawPath } = useFileMeta(props)
+const {
+  fileMeta,
+  fileRawPath,
+  imageThumbnailPath: filePosterPath
+} = useFileThumbnail(props)
 </script>
 
 <style lang="scss" module>
