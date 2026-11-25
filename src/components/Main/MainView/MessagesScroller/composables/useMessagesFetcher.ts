@@ -1,7 +1,7 @@
 import type { Message } from '@traptitech/traq'
 
 import type { Ref } from 'vue'
-import { ref, watchEffect } from 'vue'
+import { computed, onScopeDispose, ref, shallowRef, watchEffect } from 'vue'
 
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useViewStateSenderStore } from '/@/store/domain/viewStateSenderStore'
@@ -41,25 +41,55 @@ const useMessageFetcher = (
   const messageIds = ref<MessageId[]>([])
   const isReachedEnd = ref(false)
   const isReachedLatest = ref(false)
-  const isLoading = ref(false)
+  const loadCompletion = shallowRef<Promise<void>>()
+  const isLoading = computed(() => loadCompletion.value !== undefined)
   const isInitialLoad = ref(false)
   const lastLoadingDirection = ref<LoadingDirection>('latest')
 
-  /**
-   * 表示チャンネル/クリップフォルダが変化していないかチェックをして適用する
-   *
-   * @param fetch 取得する関数。データを返す
-   * @param apply 適用する関数。表示チャンネル/クリップフォルダが変化していないときに実行される。fetchで返したデータを引数で受け取れる
-   */
-  const runWithIdentifierCheck = async <T>(
-    fetch: () => Promise<T>,
-    apply: (result: T) => MaybePromise<void>
-  ) => {
-    const beforeId = id.value
-    const result = await fetch()
-    if (id.value !== beforeId) return
-    await apply(result)
+  // 同じチャンネルを開き直した場合も、以前の取得結果を無効にする。
+  let viewRevision = 0
+  const resetLoadState = () => {
+    viewRevision++
+    loadCompletion.value = undefined
   }
+
+  /**
+   * 表示範囲の読み込みを直列化し、移動前の取得結果が表示に混ざるのを防ぐ。
+   */
+  const runMessageLoad = <T>(
+    fetch: () => Promise<T>,
+    apply: (result: T) => void
+  ) => {
+    if (isLoading.value) return Promise.resolve(false)
+
+    const revision = viewRevision
+    const beforeId = id.value
+    const request = Promise.resolve()
+      .then(fetch)
+      .then(result => {
+        if (revision !== viewRevision || id.value !== beforeId) return false
+
+        apply(result)
+
+        return true
+      })
+      .finally(() => {
+        if (revision === viewRevision) {
+          loadCompletion.value = undefined
+        }
+      })
+
+    loadCompletion.value = request.then(
+      () => undefined,
+      () => undefined
+    )
+
+    return request
+  }
+
+  const waitForMessageLoad = () => loadCompletion.value
+
+  onScopeDispose(resetLoadState)
 
   const renderMessageFromIds = async (messageIdsToRender: MessageId[]) => {
     await Promise.all(
@@ -68,10 +98,10 @@ const useMessageFetcher = (
   }
 
   const reset = () => {
+    resetLoadState()
     messageIds.value = []
     isReachedEnd.value = false
     isReachedLatest.value = false
-    isLoading.value = false
     isInitialLoad.value = false
     lastLoadingDirection.value = 'latest'
   }
@@ -80,16 +110,13 @@ const useMessageFetcher = (
     if (isReachedEnd.value) {
       return
     }
-    isLoading.value = true
-
-    await runWithIdentifierCheck(
+    await runMessageLoad(
       async () => {
         const newMessageIds = await fetchFormerMessages(isReachedEnd)
         await renderMessageFromIds(newMessageIds)
         return newMessageIds
       },
       newMessageIds => {
-        isLoading.value = false
         isInitialLoad.value = false
         lastLoadingDirection.value = 'former'
         messageIds.value = [...new Set([...newMessageIds, ...messageIds.value])]
@@ -98,16 +125,13 @@ const useMessageFetcher = (
   }
 
   const onLoadLatestMessagesRequest = async () => {
-    isLoading.value = true
-
-    await runWithIdentifierCheck(
+    await runMessageLoad(
       async () => {
         const newMessageIds = await fetchFormerMessages(isReachedEnd)
         await renderMessageFromIds(newMessageIds)
         return newMessageIds
       },
       newMessageIds => {
-        isLoading.value = false
         isInitialLoad.value = false
         lastLoadingDirection.value = 'latest'
         messageIds.value = [...new Set([...newMessageIds, ...messageIds.value])]
@@ -119,16 +143,13 @@ const useMessageFetcher = (
     if (!fetchLatterMessages || isReachedLatest.value) {
       return
     }
-    isLoading.value = true
-
-    await runWithIdentifierCheck(
+    await runMessageLoad(
       async () => {
         const newMessageIds = await fetchLatterMessages(isReachedLatest)
         await renderMessageFromIds(newMessageIds)
         return newMessageIds
       },
       newMessageIds => {
-        isLoading.value = false
         isInitialLoad.value = false
         lastLoadingDirection.value = 'latter'
         messageIds.value = [...new Set([...messageIds.value, ...newMessageIds])]
@@ -145,14 +166,11 @@ const useMessageFetcher = (
     ) {
       return
     }
-    const entryMessage = await fetchMessage({ messageId })
-    if (!entryMessage) {
-      return
-    }
-    isLoading.value = true
-
-    await runWithIdentifierCheck(
+    await runMessageLoad(
       async () => {
+        const entryMessage = await fetchMessage({ messageId })
+        if (!entryMessage) return
+
         const newMessageIds = await fetchAroundMessages(
           entryMessage,
           isReachedLatest,
@@ -162,7 +180,8 @@ const useMessageFetcher = (
         return newMessageIds
       },
       newMessageIds => {
-        isLoading.value = false
+        if (!newMessageIds) return
+
         isInitialLoad.value = false
         lastLoadingDirection.value = 'around'
         messageIds.value = newMessageIds
@@ -175,20 +194,18 @@ const useMessageFetcher = (
    * 過去メッセージ閲覧中は何もしない
    */
   const loadNewMessages = async () => {
-    if (!fetchNewMessages || !isReachedLatest.value) {
+    if (!fetchNewMessages || !isReachedLatest.value || isLoading.value) {
       return
     }
     isReachedLatest.value = false
-    isLoading.value = true
 
-    await runWithIdentifierCheck(
+    await runMessageLoad(
       async () => {
         const newMessageIds = await fetchNewMessages(isReachedLatest)
         await renderMessageFromIds(newMessageIds)
         return newMessageIds
       },
       newMessageIds => {
-        isLoading.value = false
         lastLoadingDirection.value = 'latter'
         messageIds.value = [...new Set([...messageIds.value, ...newMessageIds])]
       }
@@ -235,6 +252,8 @@ const useMessageFetcher = (
     lastLoadingDirection,
     reset,
     init,
+    runMessageLoad,
+    waitForMessageLoad,
     renderMessageFromIds,
     onLoadFormerMessagesRequest,
     onLoadLatterMessagesRequest,

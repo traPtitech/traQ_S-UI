@@ -1,13 +1,21 @@
 import type { Message } from '@traptitech/traq'
 
 import type { Ref, ShallowRef } from 'vue'
-import { computed, onActivated, onMounted, ref, watch } from 'vue'
+import {
+  computed,
+  onActivated,
+  onMounted,
+  onScopeDispose,
+  ref,
+  watch
+} from 'vue'
 
 import type { MessageScrollerInstance } from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/composables/useMessagesFetcher'
 import useMittListener from '/@/composables/utils/useMittListener'
 import apis from '/@/lib/apis'
+import { compareDateString } from '/@/lib/basic/date'
 import { wsListener } from '/@/lib/websocket'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useSubscriptionStore } from '/@/store/domain/subscription'
@@ -48,6 +56,9 @@ const useChannelMessageFetcher = (
   const loadedMessageLatestDate = ref<Date>()
   const loadedMessageOldestDate = ref<Date>()
   const unreadSince = ref()
+
+  // 最新ページの取得結果と合流できるよう、最新ページの取得・反映を待つ間に届いた新着投稿を保持
+  let pendingLiveMessages: Message[] | undefined
 
   const updateDates = (messagesAsc: Message[]) => {
     if (messagesAsc.length <= 0) return
@@ -199,7 +210,81 @@ const useChannelMessageFetcher = (
     onReachedLatest
   )
 
+  const loadLatestMessages = async () => {
+    if (pendingLiveMessages) return false
+
+    const channelId = props.channelId
+    const wasReachedLatest = messagesFetcher.isReachedLatest.value
+    const receivedMessages: Message[] = []
+    pendingLiveMessages = receivedMessages
+
+    try {
+      let pendingLoad = messagesFetcher.waitForMessageLoad()
+
+      while (pendingLoad) {
+        await pendingLoad
+        if (pendingLiveMessages !== receivedMessages) return false
+
+        pendingLoad = messagesFetcher.waitForMessageLoad()
+      }
+
+      if (wasReachedLatest && messagesFetcher.isReachedLatest.value) return true
+
+      return await messagesFetcher.runMessageLoad(
+        async () => {
+          await waitHeightResolved
+
+          const { messages: messagesDesc, hasMore } =
+            await fetchMessagesByChannelId({
+              channelId,
+              limit: fetchLimit.value,
+              order: 'desc'
+            })
+
+          const messages = messagesDesc.toReversed()
+          const ids = messages.map(message => message.id)
+
+          await messagesFetcher.renderMessageFromIds(ids)
+          return { messages, ids, hasMore }
+        },
+        ({ messages, ids, hasMore }) => {
+          loadedMessageOldestDate.value = undefined
+          loadedMessageLatestDate.value = undefined
+          updateDates(messages)
+
+          messagesFetcher.lastLoadingDirection.value = 'latest'
+          messagesFetcher.messageIds.value = ids
+          messagesFetcher.isReachedEnd.value = !hasMore
+          messagesFetcher.isReachedLatest.value = true
+
+          const latestDate = messages.at(-1)?.createdAt
+          const loadedIds = new Set(ids)
+
+          for (const message of receivedMessages) {
+            if (loadedIds.has(message.id)) continue
+
+            if (
+              !latestDate ||
+              compareDateString(message.createdAt, latestDate) >= 0
+            ) {
+              messagesFetcher.addNewMessage(message.id)
+            }
+          }
+        }
+      )
+    } finally {
+      if (pendingLiveMessages === receivedMessages) {
+        pendingLiveMessages = undefined
+      }
+    }
+  }
+
+  onScopeDispose(() => {
+    pendingLiveMessages = undefined
+  })
+
   const reset = () => {
+    pendingLiveMessages = undefined
     messagesFetcher.reset()
     loadedMessageOldestDate.value = undefined
     loadedMessageLatestDate.value = undefined
@@ -237,6 +322,7 @@ const useChannelMessageFetcher = (
 
   useMittListener(messageMitt, 'addMessage', ({ message }) => {
     if (props.channelId !== message.channelId) return
+    pendingLiveMessages?.push(message)
     if (!messagesFetcher.isReachedLatest.value) return
 
     messagesFetcher.addNewMessage(message.id)
@@ -259,6 +345,7 @@ const useChannelMessageFetcher = (
 
   return {
     ...messagesFetcher,
+    loadLatestMessages,
     unreadSince
   }
 }
