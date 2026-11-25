@@ -63,17 +63,24 @@ const useRouteWatcher = () => {
     isInitialView: true
   })
 
-  const onRouteChangedToIndex = async () => {
+  const replaceWithStartupChannel = async () => {
+    const currentRoute = router.currentRoute.value
+    const startupChannelPath = await getStartupChannelPath()
+    if (router.currentRoute.value !== currentRoute) return
+
     await router
-      .replace(constructChannelPath(await getStartupChannelPath()))
+      .replace(constructChannelPath(startupChannelPath))
       // 同じ場所に移動しようとした際のエラーを消す
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {})
   }
 
   const onRouteChangedToChannel = async () => {
+    const currentRoute = router.currentRoute.value
+
     // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
+    if (router.currentRoute.value !== currentRoute) return
 
     if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
@@ -93,7 +100,7 @@ const useRouteWatcher = () => {
     })()
 
     if (!id) {
-      return router.replace(constructChannelPath(await getStartupChannelPath()))
+      return replaceWithStartupChannel()
     }
 
     changePrimaryViewToChannel({
@@ -247,7 +254,7 @@ const useRouteWatcher = () => {
     const routeName = state.currentRouteName
 
     if (routeName === RouteName.Index) {
-      await onRouteChangedToIndex()
+      await replaceWithStartupChannel()
       return
     }
 
