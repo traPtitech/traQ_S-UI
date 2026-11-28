@@ -6,6 +6,7 @@ import {
   type TrackInfo,
   useLiveKitSDK
 } from '/@/composables/qall/useLiveKitSDK'
+import { clearParticipantVolumes } from '/@/composables/qall/useQallVolume'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { useTts } from '/@/store/app/tts'
 import { useMeStore } from '/@/store/domain/me'
@@ -86,9 +87,17 @@ export const useQall = () => {
           addErrorToast('接続に失敗しました')
           return
         }
+        if (!rtcSettings.isEnabled.value) {
+          addErrorToast(
+            'RTC機能が無効になっています。設定 > 通話 (Qall) から有効にしてください'
+          )
+          return
+        }
         await joinRoom(channelName, isWebinar)
         callingChannel.value = channelName
-      } catch {
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('[Qall] failed to join', e)
         addErrorToast('Qallへの参加に失敗しました')
       } finally {
         joiningPromise = null
@@ -102,9 +111,10 @@ export const useQall = () => {
     await leaveRoom()
     isSubView.value = false
     selectedTrack.value = undefined
-    isMicOn.value = true
+    isMicOn.value = false
     isCameraOn.value = false
     isScreenSharing.value = false
+    clearParticipantVolumes()
   }
 
   return {

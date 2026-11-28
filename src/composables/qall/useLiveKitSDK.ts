@@ -1,11 +1,13 @@
-import { type Ref, computed, ref } from 'vue'
+import { type Ref, computed, ref, watch } from 'vue'
 
 import {
+  NoiseGateWorkletNode,
   RnnoiseWorkletNode,
   SpeexWorkletNode,
   loadRnnoise as loadRnnoiseLib,
   loadSpeex as loadSpeexLib
 } from '@sapphi-red/web-noise-suppressor'
+import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWorklet.js?url'
 import rnnoiseWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise.wasm?url'
 import rnnoiseWorkletPath from '@sapphi-red/web-noise-suppressor/rnnoiseWorklet.js?url'
 import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.wasm?url'
@@ -33,6 +35,12 @@ import {
 import mitt from 'mitt'
 
 import apis from '/@/lib/apis'
+import {
+  isSoundboardIdentity,
+  setAudioContextSinkId,
+  userIdFromIdentity
+} from '/@/lib/qall/audio'
+import { configureLiveKitLogger } from '/@/lib/qall/livekitLogger'
 import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
 import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
@@ -60,9 +68,11 @@ const virtualBackgroundAssetsPath =
 type QallEventMap = {
   pushStamp: string
 }
-const { addErrorToast } = useToastStore()
+const { addErrorToast, addInfoToast } = useToastStore()
 const qallMitt = mitt<QallEventMap>()
 const rtcSettings = useRtcSettings()
+
+configureLiveKitLogger()
 
 export type TrackInfo = (
   | {
@@ -74,7 +84,14 @@ export type TrackInfo = (
       trackPublication: LocalTrackPublication | undefined
     }
 ) & {
+  /**
+   * ユーザーID
+   */
   userName: string
+  /**
+   * LiveKit の参加者の Identity (同じユーザーでも端末ごとに異なる)
+   */
+  identity: string
 }
 
 type CameraProcessor = {
@@ -90,6 +107,7 @@ const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
 const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
 const screenShareTrackSidMap = ref<Map<string, string>>(new Map())
 const mixer = ref<AudioStreamMixer>()
+const mixerAudioContext = ref<ExtendedAudioContext>()
 const audioTrackId = ref<string>()
 
 function handleTrackSubscribed(
@@ -102,7 +120,8 @@ function handleTrackSubscribed(
     tracksMap.value.set(publication.trackSid, {
       isRemote: true,
       trackPublication: publication,
-      userName: participant.identity.slice(0, -37)
+      userName: userIdFromIdentity(participant.identity),
+      identity: participant.identity
     })
   }
 }
@@ -135,7 +154,8 @@ function handleLocalTrackPublished(
   tracksMap.value.set(publication.trackSid, {
     isRemote: false,
     trackPublication: publication,
-    userName: participant.identity.slice(0, -37)
+    userName: userIdFromIdentity(participant.identity),
+    identity: participant.identity
   })
 }
 
@@ -165,14 +185,22 @@ function handleParticipantAttributesChanged(
   )
 }
 
-function handleParticipantConnected(_participant: Participant) {
+// サウンドボードの再生は参加者として入ってくるが、入退室の効果音は鳴らさない
+function handleParticipantConnected(participant: Participant) {
+  if (isSoundboardIdentity(participant.identity)) return
   mixer.value?.playFileSource('qall_joined')
 }
 
-function handleParticipantDisconnected(_participant: Participant) {
+function handleParticipantDisconnected(participant: Participant) {
+  if (isSoundboardIdentity(participant.identity)) return
   mixer.value?.playFileSource('qall_left')
 }
 
+/**
+ * ルームに参加する
+ *
+ * 接続に失敗した場合は後始末をしてから例外を投げる
+ */
 const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
   try {
     const endpoint = (await apis.getQallEndpoints()).data.endpoint
@@ -213,44 +241,111 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
       })
     })
 
-    const audioContext = new ExtendedAudioContext()
+    const mixerContext = new ExtendedAudioContext()
+    mixerAudioContext.value = mixerContext
+    void setAudioContextSinkId(
+      mixerContext,
+      rtcSettings.audioOutputDeviceId.value
+    )
     mixer.value = new AudioStreamMixer(
-      audioContext,
+      mixerContext,
       rtcSettings.masterVolume.value
     )
     await mixer.value.initializePromise
     await mixer.value.playFileSource('qall_start')
-  } catch {
-    addErrorToast('Qallの接続に失敗しました')
-    await leaveRoom()
+  } catch (e) {
+    await leaveRoom({ silent: true })
+    throw e
   }
 
-  window.addEventListener('beforeunload', leaveRoom)
+  window.addEventListener('beforeunload', handleBeforeUnload)
 }
+
+const handleBeforeUnload = () => {
+  void leaveRoom()
+}
+
+// 通話中に設定が変わったら反映する
+watch(rtcSettings.masterVolume, v => {
+  mixer.value?.setMasterVolume(v)
+})
+watch(rtcSettings.audioOutputDeviceId, deviceId => {
+  if (mixerAudioContext.value) {
+    void setAudioContextSinkId(mixerAudioContext.value, deviceId)
+  }
+})
 const screenShareTracks = computed(() =>
   Array.from(screenShareTrackSidMap.value.entries())
 )
 
-async function leaveRoom() {
+async function leaveRoom({ silent = false }: { silent?: boolean } = {}) {
   // Leave the room by calling 'disconnect' method over the Room object
   await room.value?.disconnect()
-  await mixer.value?.playFileSource('qall_end')
+  if (!silent) {
+    await mixer.value?.playFileSource('qall_end')
+  }
 
   await audioContext?.value?.close()
   audioContext.value = undefined
+  // 効果音の再生が終わるまで待ってから閉じる
+  const closingMixerContext = mixerAudioContext.value
+  mixerAudioContext.value = undefined
+  if (closingMixerContext) {
+    setTimeout(() => {
+      closingMixerContext.close().catch(e => {
+        // eslint-disable-next-line no-console
+        console.warn('[Qall] failed to close the audio context', e)
+      })
+    }, 2000)
+  }
 
   // Empty all variables
   room.value = undefined
   tracksMap.value.clear()
   screenShareTrackSidMap.value.clear()
   mixer.value = undefined
-  window.removeEventListener('beforeunload', leaveRoom)
+  window.removeEventListener('beforeunload', handleBeforeUnload)
+}
+
+/**
+ * マイクの入力を取得する
+ *
+ * 設定されたマイクが見つからない場合は既定のマイクを使う
+ */
+const getMicrophoneStream = async () => {
+  const { audioInputDeviceId, noiseSuppression } = rtcSettings
+  const constraints = (deviceId: string): MediaTrackConstraints => ({
+    ...(deviceId ? { deviceId: { exact: deviceId } } : {}),
+    autoGainControl: true,
+    echoCancellation: true,
+    // RNNoise / Speex を使うときや「無効」のときにブラウザのノイズ抑制が重ならないようにする
+    noiseSuppression: noiseSuppression.value === 'browser'
+  })
+
+  const deviceId = audioInputDeviceId.value
+  try {
+    return await navigator.mediaDevices.getUserMedia({
+      audio: constraints(deviceId)
+    })
+  } catch (e) {
+    // ブラウザによっては OverconstrainedError が DOMException ではないので名前で判定する
+    const name = (e as { name?: unknown } | null)?.name
+    const isDeviceMissing =
+      name === 'OverconstrainedError' || name === 'NotFoundError'
+    if (!deviceId || !isDeviceMissing) throw e
+  }
+
+  const stream = await navigator.mediaDevices.getUserMedia({
+    audio: constraints('')
+  })
+  addInfoToast('設定されたマイクが見つからないため、既定のマイクを使用します')
+  return stream
 }
 
 const addMicTrack = async () => {
   let stream: MediaStream | undefined
 
-  const { noiseSuppression, audioInputDeviceId } = useRtcSettings()
+  const { noiseSuppression, noiseGateThreshold } = rtcSettings
   try {
     if (!room.value?.localParticipant?.permissions?.canPublish) {
       throw new Error('権限がありません')
@@ -260,16 +355,7 @@ const addMicTrack = async () => {
       audioContext.value = new AudioContext()
     }
 
-    stream = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        deviceId: {
-          ideal: audioInputDeviceId.value
-        },
-        autoGainControl: true,
-        noiseSuppression: true,
-        echoCancellation: true
-      }
-    })
+    stream = await getMicrophoneStream()
     const source = audioContext.value.createMediaStreamSource(stream)
 
     let lastNode: AudioNode = source
@@ -296,6 +382,18 @@ const addMicTrack = async () => {
       })
       source.connect(speexNode)
       lastNode = speexNode
+    }
+
+    // -100dB のときはノイズゲートを無効にする
+    if (noiseGateThreshold.value > -100) {
+      await audioContext.value.audioWorklet.addModule(noiseGateWorkletPath)
+      const noiseGateNode = new NoiseGateWorkletNode(audioContext.value, {
+        openThreshold: noiseGateThreshold.value,
+        holdMs: 90,
+        maxChannels: 2
+      })
+      lastNode.connect(noiseGateNode)
+      lastNode = noiseGateNode
     }
 
     const destination = audioContext.value.createMediaStreamDestination()
@@ -327,7 +425,13 @@ const addMicTrack = async () => {
       await audioContext.value.close()
       audioContext.value = undefined
     }
-    addErrorToast('マイクの共有に失敗しました')
+    if (e instanceof DOMException && e.name === 'NotAllowedError') {
+      addErrorToast(
+        'マイクの使用が許可されていません。ブラウザの設定を確認してください'
+      )
+    } else {
+      addErrorToast('マイクの共有に失敗しました')
+    }
   }
 }
 const removeMicTrack = async () => {
@@ -491,15 +595,20 @@ const drawVideoToCanvas = (video: HTMLVideoElement) => {
   return canvas
 }
 
-const addScreenShareTrack = async () => {
+/**
+ * 画面共有を開始する
+ *
+ * @returns 画面共有を開始したかどうか (共有する画面の選択をキャンセルした場合は false)
+ */
+const addScreenShareTrack = async (): Promise<boolean> => {
   try {
     if (!room.value) {
       addErrorToast('ルームが存在しません')
-      return
+      return false
     }
     if (!room.value?.localParticipant?.permissions?.canPublish) {
       addErrorToast('権限がありません')
-      return
+      return false
     }
     const localTracks = await createLocalScreenTracks({
       audio: {
@@ -535,10 +644,19 @@ const addScreenShareTrack = async () => {
         [videoSid]: audioSid
       })
     }
-  } catch {
-    // TODO:シェアをキャンセルした時も失敗しましたメッセージがでるのはちょっと違和感があるかも
+    return true
+  } catch (e) {
+    // 共有する画面の選択をキャンセルしただけのときはエラーを出さない
+    if (
+      e instanceof DOMException &&
+      (e.name === 'NotAllowedError' || e.name === 'AbortError')
+    ) {
+      return false
+    }
+    // eslint-disable-next-line no-console
+    console.error(e)
     addErrorToast('スクリーン共有に失敗しました')
-    throw new Error('スクリーン共有に失敗しました')
+    return false
   }
 }
 

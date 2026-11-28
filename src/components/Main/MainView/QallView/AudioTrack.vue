@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, useTemplateRef, watchEffect } from 'vue'
+import { onMounted, onUnmounted, useTemplateRef, watch, watchEffect } from 'vue'
 
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
+import { masterVolumeToGain, setAudioContextSinkId } from '/@/lib/qall/audio'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 
 const { trackInfo, volume } = defineProps<{
@@ -11,15 +12,25 @@ const { trackInfo, volume } = defineProps<{
 const audioElement = useTemplateRef<HTMLMediaElement>('audioElement')
 const audioContext = new AudioContext()
 const gainNode = audioContext.createGain()
-const { masterVolume } = useRtcSettings()
-gainNode.gain.value = volume * masterVolume.value
+const { masterVolume, audioOutputDeviceId } = useRtcSettings()
+const targetGain = () => Number(volume) * masterVolumeToGain(masterVolume.value)
+gainNode.gain.value = targetGain()
 
 watchEffect(() => {
   gainNode.gain.exponentialRampToValueAtTime(
-    Math.max(volume * masterVolume.value, 1e-44),
+    Math.max(targetGain(), 1e-44),
     audioContext.currentTime + 0.2
   )
 })
+
+// 設定の出力デバイスから鳴らす (AudioContext.setSinkId に対応したブラウザのみ)
+watch(
+  audioOutputDeviceId,
+  deviceId => {
+    void setAudioContextSinkId(audioContext, deviceId)
+  },
+  { immediate: true }
+)
 
 onMounted(() => {
   if (audioElement.value) {

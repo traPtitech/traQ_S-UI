@@ -32,7 +32,7 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
     masterVolume: 0.5,
     audioInputDeviceId: '',
     audioOutputDeviceId: '',
-    noiseSuppression: 'none',
+    noiseSuppression: 'browser',
     noiseGateThreshold: -100,
     isTtsEnabled: false,
     voiceName: '',
@@ -44,7 +44,7 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
 
   const [state] = useIndexedDbValue(
     'store/app/rtcSettings',
-    3,
+    4,
     {
       // migrate from vuex
       1: async getStore => {
@@ -74,7 +74,24 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
 
       3: async getStore => {
         const store = getStore()
-        const setReq = store.put({ isMute: false }, key)
+        const getReq = store.get(key)
+        const state = await promisifyRequest<
+          Record<string, unknown> | undefined
+        >(getReq)
+        // ほかの設定を消さないように、既存の値に足す
+        const setReq = store.put({ ...state, isMute: false }, key)
+        await promisifyRequest(setReq)
+      },
+      // `noiseSuppression: 'none'` は以前から実際にはブラウザ標準のノイズ抑制がかかっていたので、
+      // 動作を変えないように新しく追加した 'browser' に移す
+      4: async getStore => {
+        const store = getStore()
+        const getReq = store.get(key)
+        const state = await promisifyRequest<
+          { noiseSuppression?: string } | undefined
+        >(getReq)
+        if (!state || state.noiseSuppression !== 'none') return
+        const setReq = store.put({ ...state, noiseSuppression: 'browser' }, key)
         await promisifyRequest(setReq)
       }
     },

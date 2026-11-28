@@ -39,14 +39,19 @@ const useRoomsStorePinia = defineStore('domain/rooms', () => {
   const roomsFetched = ref(false)
 
   const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
-  const { usersMap } = useUsersStore()
+  const { usersMap, usersMapInitialFetchPromise } = useUsersStore()
 
   const purifyRoomData = async (
     data:
       QallRoomStateChangedEventRoomStatesInner[] | QallRoomWithParticipants[]
   ): Promise<Rooms> => {
     if (!data) return []
-    await bothChannelsMapInitialFetchPromise
+    // 参加者のユーザー情報が引けないと参加者が捨てられてしまうので、
+    // チャンネルだけでなくユーザー一覧の初回取得も待つ
+    await Promise.all([
+      bothChannelsMapInitialFetchPromise,
+      usersMapInitialFetchPromise
+    ])
     return data
       .filter(room => room.participants && room.participants.length > 0)
       .map(room => {
@@ -80,14 +85,26 @@ const useRoomsStorePinia = defineStore('domain/rooms', () => {
 
     const [{ data }, shared] = await getRooms()
     if (!shared) {
-      rooms.value = await purifyRoomData(data)
-      roomsFetched.value = true
+      await setRooms(data)
     }
     return rooms.value
   }
 
+  // WebSocket のイベントと初回取得の結果が前後しても、新しい方で上書きされるようにする
+  let latestUpdateId = 0
+  const setRooms = async (
+    data:
+      QallRoomStateChangedEventRoomStatesInner[] | QallRoomWithParticipants[]
+  ) => {
+    const updateId = ++latestUpdateId
+    const purified = await purifyRoomData(data)
+    if (updateId !== latestUpdateId) return
+    rooms.value = purified
+    roomsFetched.value = true
+  }
+
   wsListener.on('QALL_ROOM_STATE_CHANGED', async ({ roomStates }) => {
-    rooms.value = await purifyRoomData(roomStates)
+    await setRooms(roomStates)
   })
 
   wsListener.on('reconnect', () => {

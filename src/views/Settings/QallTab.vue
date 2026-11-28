@@ -71,19 +71,24 @@
       <section :class="$style.element">
         <h3 :class="$style.heading">出力デバイス</h3>
         <div>
-          <FormSelector
-            v-if="!fetchFailed && audioOutputDevices.length"
-            v-model="state.audioOutputDeviceId"
-            :options="audioOutputDeviceOptions"
-          />
-          <p v-else>デバイスが取得できませんでした。</p>
+          <template v-if="isOutputDeviceSelectable">
+            <FormSelector
+              v-if="!fetchFailed && audioOutputDevices.length"
+              v-model="state.audioOutputDeviceId"
+              :options="audioOutputDeviceOptions"
+            />
+            <p v-else>デバイスが取得できませんでした。</p>
+          </template>
+          <p v-else>
+            このブラウザでは出力デバイスを選べません。端末やブラウザの設定で選ばれているデバイスから再生されます。
+          </p>
         </div>
       </section>
       <section :class="$style.element">
         <h3 :class="$style.heading">マスターボリューム</h3>
         <FormRangeWithValue
           v-model="state.masterVolume"
-          max-text="100%"
+          max-text="200%"
           :min="0"
           :max="1"
           :interval="0.005"
@@ -110,6 +115,9 @@
         v-model="state.noiseSuppression"
         :class="$style.element"
       />
+      <p :class="$style.note">
+        入力デバイス・ノイズゲート・ノイズ抑制の変更は、次に通話に参加したときから反映されます。
+      </p>
     </template>
   </section>
 </template>
@@ -228,6 +236,11 @@ const audioOutputDeviceOptions = computed(() =>
 )
 
 const voiceOptions = useVoices()
+
+// AudioContext.setSinkId に対応していないブラウザ (Safari / Firefox など) では出力先を変えられない
+const isOutputDeviceSelectable =
+  typeof (AudioContext.prototype as { setSinkId?: unknown }).setSinkId ===
+  'function'
 </script>
 
 <style lang="scss" module>
@@ -252,6 +265,10 @@ const voiceOptions = useVoices()
 }
 .noiseGate {
   margin-top: 4px;
+}
+.note {
+  @include color-ui-secondary;
+  @include size-caption;
 }
 .contents {
   display: flex;

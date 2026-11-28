@@ -1,15 +1,37 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  ref,
+  useTemplateRef,
+  watchEffect
+} from 'vue'
 
 import VideoComponent from '/@/components/Main/MainView/QallView/VideoComponent.vue'
 import { useQall } from '/@/composables/qall/useQall'
+import { isSoundboardIdentity } from '/@/lib/qall/audio'
 
 import ScreenShareComponent from './ScreenShareComponent.vue'
 import UserCard from './UserCard.vue'
 import UserSurplusCard from './UserSurplusCard.vue'
 
-const { tracksMap, screenShareTrackSidMap, screenShareTracks, selectedTrack } =
-  useQall()
+const {
+  tracksMap: allTracksMap,
+  screenShareTrackSidMap,
+  screenShareTracks,
+  selectedTrack
+} = useQall()
+
+// サウンドボードの再生は参加者として入ってくるが、カードには出さない (音声は QallAudio で再生される)
+const tracksMap = computed(
+  () =>
+    new Map(
+      [...allTracksMap.value].filter(
+        ([, track]) => !isSoundboardIdentity(track.identity)
+      )
+    )
+)
 
 const videoInputs = ref<MediaDeviceInfo[]>([])
 onMounted(async () => {

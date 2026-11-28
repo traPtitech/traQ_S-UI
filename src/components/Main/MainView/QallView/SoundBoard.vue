@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SoundboardItem } from '@traptitech/traq'
 
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import FormInput from '/@/components/UI/FormInput.vue'
 import { useQall } from '/@/composables/qall/useQall'
@@ -12,10 +12,18 @@ import SoundBoardElement from './SoundBoardElement.vue'
 
 const searchQuery = ref('')
 
-const { addErrorToast, addSuccessToast } = useToastStore()
+const { addErrorToast } = useToastStore()
 
 const { callingChannel } = useQall()
 const soundboardList = ref<SoundboardItem[]>([])
+const filteredSoundboardList = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase()
+  if (!query) return soundboardList.value
+  return soundboardList.value.filter(item =>
+    item.soundName.toLowerCase().includes(query)
+  )
+})
+
 /**
  * サウンド一覧を読み込み
  */
@@ -24,7 +32,9 @@ const loadSoundboardList = async () => {
     const list = (await apis.getSoundboardList()).data
     soundboardList.value = list
   } catch (e) {
-    addErrorToast(`サウンド一覧の取得に失敗しました: ${String(e)}`)
+    // eslint-disable-next-line no-console
+    console.error('[Soundboard] failed to load the list', e)
+    addErrorToast('サウンド一覧の取得に失敗しました')
   }
 }
 
@@ -37,16 +47,14 @@ const handlePlaySound = async (soundId: string) => {
     return
   }
   try {
-    const result = (
-      await apis.postSoundboardPlay({
-        soundId: soundId,
-        roomName: callingChannel.value
-      })
-    ).data
-    // resultには ingressId 等が返る
-    addSuccessToast(`サウンドを再生中 (IngressID: ${result.ingressId})`)
+    await apis.postSoundboardPlay({
+      soundId: soundId,
+      roomName: callingChannel.value
+    })
   } catch (e) {
-    addErrorToast(`サウンド再生に失敗しました: ${String(e)}`)
+    // eslint-disable-next-line no-console
+    console.error('[Soundboard] failed to play', e)
+    addErrorToast('サウンドの再生に失敗しました')
   }
 }
 
@@ -62,7 +70,7 @@ onMounted(() => {
     </div>
     <div :class="$style.elementContainer">
       <SoundBoardElement
-        v-for="item in soundboardList"
+        v-for="item in filteredSoundboardList"
         :key="item.soundId"
         :sound-name="item.soundName"
         :stamp-id="item.stampId"

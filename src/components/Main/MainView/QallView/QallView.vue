@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import type { User } from '@traptitech/traq'
+
 import { computed, onMounted, ref, useTemplateRef } from 'vue'
 
 import ClickOutside from '/@/components/UI/ClickOutside'
 import IconButton from '/@/components/UI/IconButton.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useQall } from '/@/composables/qall/useQall'
+import { isSoundboardIdentity } from '/@/lib/qall/audio'
 import { useUsersStore } from '/@/store/entities/users'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 
@@ -30,7 +33,6 @@ const {
   publishData,
   toggleMicMute,
   qallMitt,
-  rooms,
   isMicOn,
   isCameraOn,
   isScreenSharing,
@@ -80,8 +82,7 @@ const toggleVideo = async () => {
 const toggleScreen = async () => {
   try {
     if (!isScreenSharing.value) {
-      await addScreenShareTrack()
-      isScreenSharing.value = true
+      isScreenSharing.value = await addScreenShareTrack()
     } else {
       for (const trackInfo of tracksMap.value.values()) {
         if (
@@ -123,15 +124,6 @@ const handleReaction = () => {
 
 const showParticipants = ref(false)
 
-const currentRoomParticipants = computed(() => {
-  return (
-    rooms.value.find(
-      (room: { channel: { id: string } }) =>
-        room.channel.id === callingChannel.value
-    )?.participants ?? []
-  )
-})
-
 const handleGroup = () => {
   showParticipants.value = !showParticipants.value
 }
@@ -146,28 +138,40 @@ const backgroundImage = ref<File>()
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 
 const showSoundBoard = ref(false)
-const getParticipantTrackInfo = (participant: {
-  user: { name: string }
-}): TrackInfo | undefined => {
-  for (const [, trackInfo] of tracksMap.value.entries()) {
-    if (
-      usersMap.value.get(trackInfo.userName)?.name === participant.user.name &&
-      trackInfo.trackPublication?.kind === 'audio' &&
-      !screenShareTracks.value?.some?.(
-        ([_, valueSid]) => valueSid === trackInfo.trackPublication?.trackSid
-      )
-    ) {
-      return trackInfo
-    }
-  }
-  return undefined
-}
 
-const filteredParticipants = computed(() =>
-  currentRoomParticipants.value.filter(
-    participant => getParticipantTrackInfo(participant) !== undefined
+/**
+ * 音量を調整できる参加者の一覧 (マイクの音声トラックごと = 端末ごと)
+ *
+ * 同じユーザーが複数の端末で参加しているときは、端末ごとに別の行にする
+ */
+const filteredParticipants = computed(() => {
+  const screenShareAudioSids = new Set(
+    screenShareTracks.value.map(([, audioSid]) => audioSid)
   )
-)
+  const entries: { user: User; trackInfo: TrackInfo }[] = []
+  for (const [sid, trackInfo] of tracksMap.value.entries()) {
+    if (trackInfo.trackPublication?.kind !== 'audio') continue
+    if (screenShareAudioSids.has(sid)) continue
+    if (isSoundboardIdentity(trackInfo.identity)) continue
+    const user = usersMap.value.get(trackInfo.userName)
+    if (!user) continue
+    entries.push({ user, trackInfo })
+  }
+
+  const deviceCounts = new Map<string, number>()
+  for (const { user } of entries) {
+    deviceCounts.set(user.id, (deviceCounts.get(user.id) ?? 0) + 1)
+  }
+  const deviceIndexes = new Map<string, number>()
+  return entries.map(({ user, trackInfo }) => {
+    if ((deviceCounts.get(user.id) ?? 0) <= 1) {
+      return { user, trackInfo, deviceLabel: undefined }
+    }
+    const index = (deviceIndexes.get(user.id) ?? 0) + 1
+    deviceIndexes.set(user.id, index)
+    return { user, trackInfo, deviceLabel: `端末${index}` }
+  })
+})
 
 const handleBackgroundSave = (data: {
   backgroundType: 'original' | 'blur' | 'file' | 'screen'
@@ -279,9 +283,10 @@ const toggleDanmaku = () => {
                     <div :class="$style.participantsContent">
                       <ParticipantList
                         v-for="participant in filteredParticipants"
-                        :key="participant.user.id"
+                        :key="participant.trackInfo.identity"
                         :participant="participant.user"
-                        :track-info="getParticipantTrackInfo(participant)!"
+                        :track-info="participant.trackInfo"
+                        :device-label="participant.deviceLabel"
                       />
                     </div>
                   </div>

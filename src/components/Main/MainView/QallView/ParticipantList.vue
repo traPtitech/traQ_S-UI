@@ -5,29 +5,30 @@ import { computed, ref, useCssModule, watch } from 'vue'
 
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
-import { useUserVolume } from '/@/store/app/userVolume'
+import { useQallVolume } from '/@/composables/qall/useQallVolume'
 
-const { participant, trackInfo } = defineProps<{
+const { participant, trackInfo, deviceLabel } = defineProps<{
   participant: User
   trackInfo: TrackInfo
+  /**
+   * 同じユーザーが複数の端末で参加しているときの端末の表示名
+   *
+   * 指定されているときは、音量をこの端末だけ・通話中だけのものとして設定する
+   */
+  deviceLabel?: string
 }>()
 
-const { getStore, setStore } = useUserVolume()
-
-const parseToFloat = (value: number | string): number => {
-  if (typeof value === 'number') return value
-  return parseFloat(value)
-}
+const { getVolume, setVolume } = useQallVolume()
 
 const isMuted = ref(false)
 
 const style = useCssModule()
 const minValue = 0
 const maxValue = 2
-const volume = ref<number | string>(getStore(trackInfo.userName) ?? 1)
+const volume = ref<number | string>(getVolume(trackInfo))
 
 const sliderStyle = computed(() => {
-  const val = parseToFloat(volume.value)
+  const val = Number(volume.value)
   const percent = ((val - minValue) / (maxValue - minValue)) * 100
   const startColor = isMuted.value ? '#6b7d8a' : '#005BAC'
   // TODO ここもSCSS変数でかける？
@@ -42,21 +43,20 @@ const sliderStyle = computed(() => {
   }
 })
 watch(
-  () => getStore(trackInfo.userName),
+  () => getVolume(trackInfo),
   v => {
-    if (v) {
+    if (Number(volume.value) !== v) {
       volume.value = v
     }
-  },
-  { deep: true }
+  }
 )
-watch(
-  () => volume.value,
-  v => {
-    setStore(trackInfo.userName, parseToFloat(v))
-  },
-  { deep: true, immediate: true }
-)
+const onInput = (e: Event) => {
+  if (!(e.target instanceof HTMLInputElement)) return
+  volume.value = e.target.value
+  setVolume(trackInfo, Number(volume.value), {
+    perDevice: deviceLabel !== undefined
+  })
+}
 const volumeSliderClass = computed(() => ({
   [style.volumeSlider]: true,
   [style.muted]: isMuted.value
@@ -68,6 +68,9 @@ const volumeSliderClass = computed(() => ({
     <div :class="$style.leftSide">
       <UserIcon :size="40" :user-id="participant.id" />
       <bdi :class="$style.userName">{{ participant.displayName }}</bdi>
+      <span v-if="deviceLabel" :class="$style.deviceLabel">
+        {{ deviceLabel }}
+      </span>
       <!-- TODO: Qall: ミュートを実装する -->
       <!-- <button :class="$style.micIconButton">
         <a-icon v-if="isMuted" name="microphone-off" mdi />
@@ -79,13 +82,15 @@ const volumeSliderClass = computed(() => ({
         <a-icon v-else name="volume-high" mdi :size="24" />
       </button> -->
       <input
-        v-model="volume"
+        :value="volume"
         type="range"
         :min="minValue"
         :max="maxValue"
         step="0.01"
         :style="sliderStyle"
         :class="volumeSliderClass"
+        :title="deviceLabel ? 'この端末の音量 (通話中のみ)' : undefined"
+        @input="onInput"
       />
     </div>
   </div>
@@ -112,6 +117,12 @@ const volumeSliderClass = computed(() => ({
 .userName {
   line-height: 24px;
   margin-left: 12px;
+}
+
+.deviceLabel {
+  margin-left: 8px;
+  @include color-ui-secondary;
+  @include size-caption;
 }
 
 .micIconButton {

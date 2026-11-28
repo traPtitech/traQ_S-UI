@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
-import { useUserVolume } from '/@/store/app/userVolume'
+import { useQallVolume } from '/@/composables/qall/useQallVolume'
 
 import AudioTrack from './AudioTrack.vue'
 
@@ -10,21 +10,12 @@ const { trackInfo } = defineProps<{
   trackInfo: TrackInfo
 }>()
 
-const { getStore } = useUserVolume()
+const { getVolume } = useQallVolume()
 
-const volume = computed<number | string>(
-  () => getStore(trackInfo.userName) ?? 1
-)
-
-const parseToFloat = (value: number | string): number => {
-  if (typeof value === 'number') {
-    return value
-  }
-  return parseFloat(value)
-}
+const volume = computed(() => Number(getVolume(trackInfo)))
 </script>
 
 <template>
-  <AudioTrack :track-info="trackInfo" :volume="parseToFloat(volume)" />
+  <AudioTrack :track-info="trackInfo" :volume="volume" />
 </template>
 <style lang="scss" module></style>

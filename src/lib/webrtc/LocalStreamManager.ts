@@ -32,7 +32,17 @@ const loadSpeexWasmBinary = async () => {
   return speexWasmBinary
 }
 
-export const noiseSuppressionTypes = ['rnnoise', 'speex', 'none'] as const
+/**
+ * - browser: ブラウザ標準のノイズ抑制
+ * - rnnoise / speex: それぞれのライブラリによるノイズ抑制 (ブラウザ標準のものは使わない)
+ * - none: ノイズ抑制なし
+ */
+export const noiseSuppressionTypes = [
+  'browser',
+  'rnnoise',
+  'speex',
+  'none'
+] as const
 export type NoiseSuppressionType = (typeof noiseSuppressionTypes)[number]
 
 export const isNoiseSuppressionType = (

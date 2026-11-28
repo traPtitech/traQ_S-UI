@@ -8,6 +8,10 @@
           label="設定"
           @click="requestPermission"
         />
+        <p v-else-if="permission === undefined">
+          このブラウザは通知に対応していません。iPhone / iPad
+          の場合はホーム画面に追加すると通知を受け取れます
+        </p>
         <p v-else>ブラウザや端末の設定から変更できます</p>
       </div>
     </div>
@@ -21,15 +25,17 @@
 import { ref } from 'vue'
 
 import AToggle from '/@/components/UI/AToggle.vue'
+import { requestNotificationPermission } from '/@/lib/notification/notification'
 
 const useNotificationPermission = () => {
   const permission = ref<NotificationPermission>()
-  permission.value = Notification?.permission
+  // iOS の Safari (ホーム画面に追加していない場合) などでは Notification が存在しない
+  permission.value =
+    'Notification' in window ? Notification.permission : undefined
 
   const requestPermission = async () => {
-    // permission.valueがundefinedでないときは、
-    // 上の取得の仕方からNotificationが存在していることが確定している
-    permission.value = await Notification.requestPermission()
+    // 許可された場合はプッシュ通知の登録まで行う
+    permission.value = await requestNotificationPermission()
   }
 
   return { permission, requestPermission }

@@ -4,6 +4,7 @@ import qallEndMp3 from '/@/assets/se/qall_end.mp3'
 import qallJoinedMp3 from '/@/assets/se/qall_joined.mp3'
 import qallLeftMp3 from '/@/assets/se/qall_left.mp3'
 import qallStartMp3 from '/@/assets/se/qall_start.mp3'
+import { masterVolumeToGain } from '/@/lib/qall/audio'
 
 import type ExtendedAudioContext from './ExtendedAudioContext'
 import NodeMerger from './NodeMerger'
@@ -42,7 +43,6 @@ export default class AudioStreamMixer {
 
   private readonly maxFileGain = 1
   private readonly maxStreamGain = 5
-  private readonly maxMasterGain = 3
 
   readonly listener = mitt<AudioStreamMixerEvents>()
 
@@ -53,10 +53,8 @@ export default class AudioStreamMixer {
     this.masterVolume = masterVolume
 
     this.nodeMerger = new NodeMerger(context)
-    this.masterVolumeGain = this.context.createGainNode(
-      this.masterVolume,
-      this.maxMasterGain
-    )
+    this.masterVolumeGain = this.context.createGain()
+    this.setMasterVolume(this.masterVolume)
 
     this.nodeMerger.addOutput(this.masterVolumeGain)
     this.masterVolumeGain.connect(context.destination)
@@ -227,9 +225,14 @@ export default class AudioStreamMixer {
     this.listener.emit('streamVolumeChange', key)
   }
 
+  /**
+   * マスターボリュームを設定する
+   *
+   * 通話の音声 (AudioTrack.vue) と同じ変換を使い、設定画面の表示 (0.5 で 100%) と揃える
+   */
   setMasterVolume(volume: number) {
     const v = Math.max(0, Math.min(1, volume))
-    this.context.setGainNodeVolume(this.masterVolumeGain, v, this.maxMasterGain)
+    this.masterVolumeGain.gain.value = masterVolumeToGain(v)
   }
 
   /* analyze methods */

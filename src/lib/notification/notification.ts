@@ -50,85 +50,40 @@ const notify = async (
       return regist.showNotification(notificationTitle, notificationOptions)
     }
   }
-  if (Notification?.permission === 'granted') {
+  if (hasNotificationApi() && Notification.permission === 'granted') {
     return new Notification(notificationTitle, notificationOptions)
   }
   return null
 }
 
-export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
-  if (isIOSApp(window)) {
-    // iOSはNotificationがないため、先にFCMトークンを登録する
-    const token = window.iOSToken
-    if (token && token !== 'No Token') {
-      apis.registerFCMDevice({ token })
-    }
+const hasNotificationApi = () => 'Notification' in window
+
+/**
+ * 通知の許可を求める案内を、この端末で既に出したかどうかを記録するキー
+ */
+const notificationPromptShownKey = 'traQ_S-notificationPromptShown'
+
+const hasShownNotificationPrompt = () => {
+  try {
+    return localStorage.getItem(notificationPromptShownKey) !== null
+  } catch {
+    return false
   }
+}
 
-  if (Notification) {
-    if (Notification.permission === 'default') {
-      // 上で Notification が存在していることを確認している
-      const permission = await (() => {
-        // WebKit ではユーザージェスチャーを起点としたポップアップのみ許可される
-        if (isWebKit() && isPWA()) {
-          const { addToast, deleteToast } = useToastStore()
-
-          return new Promise<NotificationPermission>((resolve, reject) => {
-            addToast({
-              type: 'info',
-              text: '【通知を有効にしてください】\nメッセージ受信時に通知が届くようになります。（クリックで許可）',
-              timeout: Infinity,
-              onClick: id => {
-                deleteToast(id)
-                Notification.requestPermission().then(resolve).catch(reject)
-              }
-            })
-          })
-        } else {
-          return Notification.requestPermission()
-        }
-      })()
-
-      if (permission === 'granted') {
-        notify({ title: `ようこそ${appName}へ！！` }, true)
-      } else {
-        // eslint-disable-next-line no-console
-        console.warn(`[Notification] permission ${permission}`)
-      }
-    }
-  } else {
-    // eslint-disable-next-line no-console
-    console.warn(`[Notification] Notification does not exists`)
+const markNotificationPromptShown = () => {
+  try {
+    localStorage.setItem(notificationPromptShownKey, new Date().toISOString())
+  } catch {
+    // localStorage が使えない場合は毎回出ることになるが、動作には問題ない
   }
+}
 
-  const firebaseApp = setupFirebaseApp()
+let serviceWorkerRegistration: ServiceWorkerRegistration | undefined
+let messagingSetupPromise: Promise<void> | undefined
 
-  if (import.meta.env.DEV || !navigator?.serviceWorker) {
-    return
-  }
-
-  navigator.serviceWorker.addEventListener(
-    'message',
-    ({ data }: MessageEvent<ServiceWorkerMessage>) => {
-      if (data.type === 'navigate') {
-        // 同じ場所に移動しようとした際のエラーを消す
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        router.push(data.to).catch(() => {})
-      }
-    }
-  )
-
-  const registration = await navigator.serviceWorker.register('/sw.js', {
-    scope: '/'
-  })
-
-  setupUpdateToast(registration, onCanUpdate)
-
-  if (Notification?.permission !== 'granted') {
-    // eslint-disable-next-line no-console
-    console.warn(`[Notification] permission ${Notification?.permission}`)
-    return
-  }
+const setupMessaging = async (registration: ServiceWorkerRegistration) => {
+  const firebaseApp = getFirebaseApp()
   if (!firebaseApp) {
     return
   }
@@ -180,11 +135,140 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     console.warn('[Notification] getToken timed out')
     return
   }
-  apis.registerFCMDevice({ token })
+  await apis.registerFCMDevice({ token })
+}
+
+/**
+ * 通知が許可されていれば、プッシュ通知を受け取れるようにする (FCM トークンの登録など)
+ *
+ * 起動時のほか、あとから通知が許可されたときにも呼ぶ。何度呼んでも一度だけ行う
+ */
+const enableNotificationIfPermitted = async () => {
+  if (!hasNotificationApi() || Notification.permission !== 'granted') return
+  // Service Worker の登録が終わっていなければ、登録後に connectFirebase から呼ばれる
+  if (!serviceWorkerRegistration) return
+
+  messagingSetupPromise ??= setupMessaging(serviceWorkerRegistration).catch(
+    e => {
+      // 失敗したら次の機会にやり直せるようにする
+      messagingSetupPromise = undefined
+      // eslint-disable-next-line no-console
+      console.warn('[Notification] failed to set up messaging', e)
+    }
+  )
+  await messagingSetupPromise
+}
+
+/**
+ * 通知の許可を求める
+ *
+ * 許可された場合はプッシュ通知を受け取れるようにする。
+ * WebKit ではユーザー操作 (クリックなど) を起点に呼ぶ必要がある
+ */
+export const requestNotificationPermission =
+  async (): Promise<NotificationPermission> => {
+    if (!hasNotificationApi()) return 'denied'
+
+    const permission = await Notification.requestPermission()
+    if (permission === 'granted') {
+      notify({ title: `ようこそ${appName}へ！！` }, true)
+      await enableNotificationIfPermitted()
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn(`[Notification] permission ${permission}`)
+    }
+    return permission
+  }
+
+/**
+ * 通知の許可を求める
+ *
+ * WebKit (iOS / Safari) ではユーザー操作を起点にしないと許可のダイアログを出せず、
+ * 許可も拒否もしないと状態が 'default' のまま変わらない。
+ * そのため案内のトーストは端末ごとに一度だけ出し、あとは 設定 > ブラウザ から許可してもらう。
+ */
+const promptNotificationPermission = () => {
+  if (!hasNotificationApi() || Notification.permission !== 'default') return
+
+  if (!(isWebKit() && isPWA())) {
+    void requestNotificationPermission().catch(e => {
+      // eslint-disable-next-line no-console
+      console.warn('[Notification] failed to request permission', e)
+    })
+    return
+  }
+
+  if (hasShownNotificationPrompt()) return
+  markNotificationPromptShown()
+
+  const { addToast, deleteToast } = useToastStore()
+  addToast({
+    type: 'info',
+    text: '【通知を有効にしてください】\nメッセージ受信時に通知が届くようになります。（クリックで許可）\nあとから 設定 > ブラウザ でも変更できます。',
+    timeout: 30000,
+    onClick: id => {
+      deleteToast(id)
+      void requestNotificationPermission().catch(e => {
+        // eslint-disable-next-line no-console
+        console.warn('[Notification] failed to request permission', e)
+      })
+    }
+  })
+}
+
+export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
+  if (isIOSApp(window)) {
+    // iOSはNotificationがないため、先にFCMトークンを登録する
+    const token = window.iOSToken
+    if (token && token !== 'No Token') {
+      apis.registerFCMDevice({ token })
+    }
+  }
+
+  if (hasNotificationApi()) {
+    // 許可を待たずに Service Worker の登録などを進める
+    promptNotificationPermission()
+  } else {
+    // eslint-disable-next-line no-console
+    console.warn(`[Notification] Notification does not exists`)
+  }
+
+  setupFirebaseApp()
+
+  if (import.meta.env.DEV || !navigator?.serviceWorker) {
+    return
+  }
+
+  navigator.serviceWorker.addEventListener(
+    'message',
+    ({ data }: MessageEvent<ServiceWorkerMessage>) => {
+      if (data.type === 'navigate') {
+        // 同じ場所に移動しようとした際のエラーを消す
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        router.push(data.to).catch(() => {})
+      }
+    }
+  )
+
+  const registration = await navigator.serviceWorker.register('/sw.js', {
+    scope: '/'
+  })
+  serviceWorkerRegistration = registration
+
+  setupUpdateToast(registration, onCanUpdate)
+
+  if (!hasNotificationApi() || Notification.permission !== 'granted') {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[Notification] permission ${hasNotificationApi() ? Notification.permission : 'unsupported'}`
+    )
+    return
+  }
+  await enableNotificationIfPermitted()
 }
 
 export const deleteToken = () => {
-  if (Notification?.permission !== 'granted') return
+  if (!hasNotificationApi() || Notification.permission !== 'granted') return
 
   const firebaseApp = getFirebaseApp()
   const messaging = getMessaging(firebaseApp)
