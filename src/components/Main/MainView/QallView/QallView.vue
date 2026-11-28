@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import type { User } from '@traptitech/traq'
+
 import { computed, onMounted, ref, useTemplateRef } from 'vue'
 
 import ClickOutside from '/@/components/UI/ClickOutside'
 import IconButton from '/@/components/UI/IconButton.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useQall } from '/@/composables/qall/useQall'
+import { isSoundboardIdentity } from '/@/lib/qall/audio'
 import { useUsersStore } from '/@/store/entities/users'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 
@@ -31,6 +34,9 @@ const {
   toggleMicMute,
   qallMitt,
   rooms,
+  canPublish,
+  isWebinar,
+  changeSpeakingPermission,
   isMicOn,
   isCameraOn,
   isScreenSharing,
@@ -80,8 +86,7 @@ const toggleVideo = async () => {
 const toggleScreen = async () => {
   try {
     if (!isScreenSharing.value) {
-      await addScreenShareTrack()
-      isScreenSharing.value = true
+      isScreenSharing.value = await addScreenShareTrack()
     } else {
       for (const trackInfo of tracksMap.value.values()) {
         if (
@@ -123,15 +128,6 @@ const handleReaction = () => {
 
 const showParticipants = ref(false)
 
-const currentRoomParticipants = computed(() => {
-  return (
-    rooms.value.find(
-      (room: { channel: { id: string } }) =>
-        room.channel.id === callingChannel.value
-    )?.participants ?? []
-  )
-})
-
 const handleGroup = () => {
   showParticipants.value = !showParticipants.value
 }
@@ -146,28 +142,56 @@ const backgroundImage = ref<File>()
 const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 
 const showSoundBoard = ref(false)
-const getParticipantTrackInfo = (participant: {
-  user: { name: string }
-}): TrackInfo | undefined => {
-  for (const [, trackInfo] of tracksMap.value.entries()) {
-    if (
-      usersMap.value.get(trackInfo.userName)?.name === participant.user.name &&
-      trackInfo.trackPublication?.kind === 'audio' &&
-      !screenShareTracks.value?.some?.(
-        ([_, valueSid]) => valueSid === trackInfo.trackPublication?.trackSid
-      )
-    ) {
-      return trackInfo
-    }
-  }
-  return undefined
-}
 
-const filteredParticipants = computed(() =>
-  currentRoomParticipants.value.filter(
-    participant => getParticipantTrackInfo(participant) !== undefined
+const filteredParticipants = computed(() => {
+  const screenShareAudioSids = new Set(
+    screenShareTracks.value.map(([, audioSid]) => audioSid)
   )
-)
+  const micTracks = new Map<string, TrackInfo>()
+  for (const [sid, trackInfo] of tracksMap.value.entries()) {
+    if (trackInfo.trackPublication?.kind !== 'audio') continue
+    if (screenShareAudioSids.has(sid)) continue
+    if (isSoundboardIdentity(trackInfo.identity)) continue
+    micTracks.set(trackInfo.identity, trackInfo)
+  }
+
+  const room = rooms.value.find(r => r.channel.id === callingChannel.value)
+  const entries: {
+    user: User
+    identity: string
+    trackInfo: TrackInfo | undefined
+    canPublish: boolean
+  }[] = []
+  for (const participant of room?.participants ?? []) {
+    entries.push({
+      user: participant.user,
+      identity: participant.identity,
+      trackInfo: micTracks.get(participant.identity),
+      canPublish: participant.canPublish
+    })
+  }
+  const knownIdentities = new Set(entries.map(e => e.identity))
+  for (const [identity, trackInfo] of micTracks) {
+    if (knownIdentities.has(identity)) continue
+    const user = usersMap.value.get(trackInfo.userName)
+    if (!user) continue
+    entries.push({ user, identity, trackInfo, canPublish: true })
+  }
+
+  const deviceCounts = new Map<string, number>()
+  for (const { user } of entries) {
+    deviceCounts.set(user.id, (deviceCounts.get(user.id) ?? 0) + 1)
+  }
+  const deviceIndexes = new Map<string, number>()
+  return entries.map(entry => {
+    if ((deviceCounts.get(entry.user.id) ?? 0) <= 1) {
+      return { ...entry, deviceLabel: undefined }
+    }
+    const index = (deviceIndexes.get(entry.user.id) ?? 0) + 1
+    deviceIndexes.set(entry.user.id, index)
+    return { ...entry, deviceLabel: `端末${index}` }
+  })
+})
 
 const handleBackgroundSave = (data: {
   backgroundType: 'original' | 'blur' | 'file' | 'screen'
@@ -192,6 +216,7 @@ const toggleDanmaku = () => {
   <div :class="$style.Block">
     <QallMessageView :channel-id="callingChannel" :typing-users="[]">
       <DanmakuContainer v-if="showDanmaku" />
+      <span v-if="isWebinar" :class="$style.webinarBadge">ウェビナー</span>
       <div :class="$style.iconContainer">
         <IconButton
           :icon-name="`comment${showDanmaku ? '' : '-off'}-outline`"
@@ -211,7 +236,7 @@ const toggleDanmaku = () => {
         <div :class="$style.controlBarContainer">
           <div :class="$style.controlBar">
             <div :class="$style.smallButtonGroup">
-              <div :class="$style.soundBoardButton">
+              <div v-if="canPublish" :class="$style.soundBoardButton">
                 <CallControlButtonSmall
                   icon="sound_detection_loud_sound"
                   :on-click="handleSound"
@@ -228,7 +253,10 @@ const toggleDanmaku = () => {
               </div>
             </div>
             <div :class="$style.verticalBar" />
-            <div :class="$style.buttonWithDetail">
+            <p v-if="isWebinar && !canPublish" :class="$style.listenerNote">
+              ウェビナーのため視聴のみです（発言権限を持つ人が付与できます）
+            </p>
+            <div v-if="canPublish" :class="$style.buttonWithDetail">
               <CallControlButton
                 :icon="screenShareIcon"
                 :is-on="isScreenSharing"
@@ -243,7 +271,7 @@ const toggleDanmaku = () => {
                 @close="showShareScreenSettingDetail = false"
               />
             </div>
-            <div :class="$style.buttonWithDetail">
+            <div v-if="canPublish" :class="$style.buttonWithDetail">
               <CallControlButton
                 :icon="cameraIcon"
                 :is-on="isCameraOn"
@@ -260,6 +288,7 @@ const toggleDanmaku = () => {
               />
             </div>
             <CallControlButton
+              v-if="canPublish"
               :icon="micIcon"
               :is-on="isMicOn"
               :on-click="toggleAudio"
@@ -279,9 +308,22 @@ const toggleDanmaku = () => {
                     <div :class="$style.participantsContent">
                       <ParticipantList
                         v-for="participant in filteredParticipants"
-                        :key="participant.user.id"
+                        :key="participant.identity"
                         :participant="participant.user"
-                        :track-info="getParticipantTrackInfo(participant)!"
+                        :track-info="participant.trackInfo"
+                        :device-label="participant.deviceLabel"
+                        :webinar="
+                          isWebinar
+                            ? {
+                                canPublish: participant.canPublish,
+                                canManage: canPublish
+                              }
+                            : undefined
+                        "
+                        @change-speaking-permission="
+                          value =>
+                            changeSpeakingPermission(participant.user.id, value)
+                        "
                       />
                     </div>
                   </div>
@@ -308,6 +350,23 @@ const toggleDanmaku = () => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.listenerNote {
+  @include color-ui-secondary;
+  @include size-body2;
+  max-width: 20rem;
+}
+
+.webinarBadge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  @include background-secondary;
+  @include color-ui-primary;
+  @include size-caption;
 }
 
 .stackContainer {

@@ -5,29 +5,33 @@ import { computed, ref, useCssModule, watch } from 'vue'
 
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
-import { useUserVolume } from '/@/store/app/userVolume'
+import { useQallVolume } from '/@/composables/qall/useQallVolume'
 
-const { participant, trackInfo } = defineProps<{
+const { participant, trackInfo, deviceLabel, webinar } = defineProps<{
   participant: User
-  trackInfo: TrackInfo
+  trackInfo?: TrackInfo
+  deviceLabel?: string
+  webinar?: {
+    canPublish: boolean
+    canManage: boolean
+  }
 }>()
 
-const { getStore, setStore } = useUserVolume()
+const emit = defineEmits<{
+  (e: 'changeSpeakingPermission', canPublish: boolean): void
+}>()
 
-const parseToFloat = (value: number | string): number => {
-  if (typeof value === 'number') return value
-  return parseFloat(value)
-}
+const { getVolume, setVolume } = useQallVolume()
 
 const isMuted = ref(false)
 
 const style = useCssModule()
 const minValue = 0
 const maxValue = 2
-const volume = ref<number | string>(getStore(trackInfo.userName) ?? 1)
+const volume = ref<number | string>(trackInfo ? getVolume(trackInfo) : 1)
 
 const sliderStyle = computed(() => {
-  const val = parseToFloat(volume.value)
+  const val = Number(volume.value)
   const percent = ((val - minValue) / (maxValue - minValue)) * 100
   const startColor = isMuted.value ? '#6b7d8a' : '#005BAC'
   // TODO ここもSCSS変数でかける？
@@ -42,21 +46,20 @@ const sliderStyle = computed(() => {
   }
 })
 watch(
-  () => getStore(trackInfo.userName),
+  () => (trackInfo ? getVolume(trackInfo) : 1),
   v => {
-    if (v) {
+    if (Number(volume.value) !== v) {
       volume.value = v
     }
-  },
-  { deep: true }
+  }
 )
-watch(
-  () => volume.value,
-  v => {
-    setStore(trackInfo.userName, parseToFloat(v))
-  },
-  { deep: true, immediate: true }
-)
+const onInput = (e: Event) => {
+  if (!(e.target instanceof HTMLInputElement) || !trackInfo) return
+  volume.value = e.target.value
+  setVolume(trackInfo, Number(volume.value), {
+    perDevice: deviceLabel !== undefined
+  })
+}
 const volumeSliderClass = computed(() => ({
   [style.volumeSlider]: true,
   [style.muted]: isMuted.value
@@ -68,6 +71,12 @@ const volumeSliderClass = computed(() => ({
     <div :class="$style.leftSide">
       <UserIcon :size="40" :user-id="participant.id" />
       <bdi :class="$style.userName">{{ participant.displayName }}</bdi>
+      <span v-if="deviceLabel" :class="$style.deviceLabel">
+        {{ deviceLabel }}
+      </span>
+      <span v-if="webinar?.canPublish" :class="$style.speakerBadge">
+        発言可
+      </span>
       <!-- TODO: Qall: ミュートを実装する -->
       <!-- <button :class="$style.micIconButton">
         <a-icon v-if="isMuted" name="microphone-off" mdi />
@@ -78,14 +87,24 @@ const volumeSliderClass = computed(() => ({
         <a-icon v-if="isMuted" name="volume-off" :size="24" mdi />
         <a-icon v-else name="volume-high" mdi :size="24" />
       </button> -->
+      <button
+        v-if="webinar?.canManage"
+        :class="$style.permissionButton"
+        @click="emit('changeSpeakingPermission', !webinar.canPublish)"
+      >
+        {{ webinar.canPublish ? '発言権限を外す' : '発言権限を付与' }}
+      </button>
       <input
-        v-model="volume"
+        v-if="trackInfo"
+        :value="volume"
         type="range"
         :min="minValue"
         :max="maxValue"
         step="0.01"
         :style="sliderStyle"
         :class="volumeSliderClass"
+        :title="deviceLabel ? 'この端末の音量 (通話中のみ)' : undefined"
+        @input="onInput"
       />
     </div>
   </div>
@@ -112,6 +131,31 @@ const volumeSliderClass = computed(() => ({
 .userName {
   line-height: 24px;
   margin-left: 12px;
+}
+
+.deviceLabel {
+  margin-left: 8px;
+  @include color-ui-secondary;
+  @include size-caption;
+}
+
+.speakerBadge {
+  margin-left: 8px;
+  padding: 0 6px;
+  border-radius: 4px;
+  @include background-secondary;
+  @include color-ui-primary;
+  @include size-caption;
+}
+
+.permissionButton {
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid currentColor;
+  cursor: pointer;
+  white-space: nowrap;
+  @include color-ui-secondary;
+  @include size-caption;
 }
 
 .micIconButton {

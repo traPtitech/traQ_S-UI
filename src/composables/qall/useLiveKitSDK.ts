@@ -1,11 +1,13 @@
-import { type Ref, computed, ref } from 'vue'
+import { type Ref, computed, ref, shallowRef, watch } from 'vue'
 
 import {
+  NoiseGateWorkletNode,
   RnnoiseWorkletNode,
   SpeexWorkletNode,
   loadRnnoise as loadRnnoiseLib,
   loadSpeex as loadSpeexLib
 } from '@sapphi-red/web-noise-suppressor'
+import noiseGateWorkletPath from '@sapphi-red/web-noise-suppressor/noiseGateWorklet.js?url'
 import rnnoiseWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise.wasm?url'
 import rnnoiseWorkletPath from '@sapphi-red/web-noise-suppressor/rnnoiseWorklet.js?url'
 import rnnoiseSimdWasmPath from '@sapphi-red/web-noise-suppressor/rnnoise_simd.wasm?url'
@@ -33,6 +35,12 @@ import {
 import mitt from 'mitt'
 
 import apis from '/@/lib/apis'
+import {
+  isSoundboardIdentity,
+  setAudioContextSinkId,
+  userIdFromIdentity
+} from '/@/lib/qall/audio'
+import { configureLiveKitLogger } from '/@/lib/qall/livekitLogger'
 import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
 import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
@@ -60,9 +68,11 @@ const virtualBackgroundAssetsPath =
 type QallEventMap = {
   pushStamp: string
 }
-const { addErrorToast } = useToastStore()
+const { addErrorToast, addInfoToast } = useToastStore()
 const qallMitt = mitt<QallEventMap>()
 const rtcSettings = useRtcSettings()
+
+configureLiveKitLogger()
 
 export type TrackInfo = (
   | {
@@ -75,6 +85,7 @@ export type TrackInfo = (
     }
 ) & {
   userName: string
+  identity: string
 }
 
 type CameraProcessor = {
@@ -90,6 +101,10 @@ const tracksMap: Ref<Map<string, TrackInfo>> = ref(new Map())
 const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
 const screenShareTrackSidMap = ref<Map<string, string>>(new Map())
 const mixer = ref<AudioStreamMixer>()
+const mixerAudioContext = ref<ExtendedAudioContext>()
+const microphoneStream = shallowRef<MediaStream>()
+const canPublish = ref(false)
+const isWebinar = ref(false)
 const audioTrackId = ref<string>()
 
 function handleTrackSubscribed(
@@ -102,7 +117,8 @@ function handleTrackSubscribed(
     tracksMap.value.set(publication.trackSid, {
       isRemote: true,
       trackPublication: publication,
-      userName: participant.identity.slice(0, -37)
+      userName: userIdFromIdentity(participant.identity),
+      identity: participant.identity
     })
   }
 }
@@ -124,6 +140,61 @@ function handleLocalTrackUnpublished(
   // when local tracks are ended, update UI to remove them from rendering
   tracksMap.value.delete(publication.trackSid)
   screenShareTrackSidMap.value.delete(publication.trackSid)
+  stopCameraProcessor(publication.trackSid)
+}
+
+const stopCameraProcessor = (trackSid: string) => {
+  const cameraProcessor = cameraProcessorMap.value.get(trackSid)
+  if (!cameraProcessor) return
+  cameraProcessor.processor.stopProcessing()
+  cameraProcessor.track.stop()
+  cameraProcessor.backgroundImageSrc?.getTracks().forEach(track => track.stop())
+  cameraProcessorMap.value.delete(trackSid)
+}
+
+const parseIsWebinar = (metadata: string | undefined) => {
+  if (!metadata) return false
+  try {
+    const parsed: unknown = JSON.parse(metadata)
+    return (
+      typeof parsed === 'object' &&
+      parsed !== null &&
+      'isWebinar' in parsed &&
+      parsed.isWebinar === true
+    )
+  } catch {
+    return false
+  }
+}
+
+function handleRoomMetadataChanged(metadata: string) {
+  isWebinar.value = parseIsWebinar(metadata)
+}
+
+async function handleParticipantPermissionsChanged(
+  _prevPermissions: unknown,
+  participant: Participant
+) {
+  if (!room.value || participant !== room.value.localParticipant) return
+  const newCanPublish = participant.permissions?.canPublish ?? false
+  if (newCanPublish === canPublish.value) return
+  canPublish.value = newCanPublish
+
+  if (newCanPublish) {
+    await addMicTrack()
+    for (const trackInfo of tracksMap.value.values()) {
+      if (trackInfo.isRemote) continue
+      if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
+        await trackInfo.trackPublication?.track?.mute()
+      }
+    }
+    isMicOn.value = false
+    addInfoToast('発言権限が付与されました。マイクをオンにすると話せます')
+  } else {
+    stopMicrophone()
+    isMicOn.value = false
+    addInfoToast('発言権限がなくなりました')
+  }
 }
 
 function handleLocalTrackPublished(
@@ -135,7 +206,8 @@ function handleLocalTrackPublished(
   tracksMap.value.set(publication.trackSid, {
     isRemote: false,
     trackPublication: publication,
-    userName: participant.identity.slice(0, -37)
+    userName: userIdFromIdentity(participant.identity),
+    identity: participant.identity
   })
 }
 
@@ -165,18 +237,20 @@ function handleParticipantAttributesChanged(
   )
 }
 
-function handleParticipantConnected(_participant: Participant) {
+function handleParticipantConnected(participant: Participant) {
+  if (isSoundboardIdentity(participant.identity)) return
   mixer.value?.playFileSource('qall_joined')
 }
 
-function handleParticipantDisconnected(_participant: Participant) {
+function handleParticipantDisconnected(participant: Participant) {
+  if (isSoundboardIdentity(participant.identity)) return
   mixer.value?.playFileSource('qall_left')
 }
 
-const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
+const joinRoom = async (roomName: string, asWebinar: boolean = false) => {
   try {
     const endpoint = (await apis.getQallEndpoints()).data.endpoint
-    const token = (await apis.getLiveKitToken(roomName, isWebinar)).data.token
+    const token = (await apis.getLiveKitToken(roomName, asWebinar)).data.token
 
     // pre-warm connection, this can be called as early as your page is loaded
     //room.prepareConnection("https://livekit-test.trap.show:39357", token);
@@ -198,9 +272,17 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
       )
       .on(RoomEvent.ParticipantConnected, handleParticipantConnected)
       .on(RoomEvent.ParticipantDisconnected, handleParticipantDisconnected)
+      .on(
+        RoomEvent.ParticipantPermissionsChanged,
+        handleParticipantPermissionsChanged
+      )
+      .on(RoomEvent.RoomMetadataChanged, handleRoomMetadataChanged)
 
     // connect to room
     await room.value.connect(endpoint, token)
+    canPublish.value =
+      room.value.localParticipant?.permissions?.canPublish ?? false
+    isWebinar.value = parseIsWebinar(room.value.metadata)
 
     if (room.value.localParticipant?.permissions?.canPublish) {
       await addMicTrack()
@@ -213,44 +295,110 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
       })
     })
 
-    const audioContext = new ExtendedAudioContext()
+    const mixerContext = new ExtendedAudioContext()
+    mixerAudioContext.value = mixerContext
+    void setAudioContextSinkId(
+      mixerContext,
+      rtcSettings.audioOutputDeviceId.value
+    )
     mixer.value = new AudioStreamMixer(
-      audioContext,
+      mixerContext,
       rtcSettings.masterVolume.value
     )
     await mixer.value.initializePromise
     await mixer.value.playFileSource('qall_start')
-  } catch {
-    addErrorToast('Qallの接続に失敗しました')
-    await leaveRoom()
+  } catch (e) {
+    await leaveRoom({ silent: true })
+    throw e
   }
 
-  window.addEventListener('beforeunload', leaveRoom)
+  window.addEventListener('beforeunload', handleBeforeUnload)
 }
+
+const handleBeforeUnload = () => {
+  void leaveRoom()
+}
+
+watch(rtcSettings.masterVolume, v => {
+  mixer.value?.setMasterVolume(v)
+})
+watch(rtcSettings.audioOutputDeviceId, deviceId => {
+  if (mixerAudioContext.value) {
+    void setAudioContextSinkId(mixerAudioContext.value, deviceId)
+  }
+})
 const screenShareTracks = computed(() =>
   Array.from(screenShareTrackSidMap.value.entries())
 )
 
-async function leaveRoom() {
+async function leaveRoom({ silent = false }: { silent?: boolean } = {}) {
   // Leave the room by calling 'disconnect' method over the Room object
   await room.value?.disconnect()
-  await mixer.value?.playFileSource('qall_end')
+  if (!silent) {
+    await mixer.value?.playFileSource('qall_end')
+  }
 
-  await audioContext?.value?.close()
-  audioContext.value = undefined
+  stopMicrophone()
+  canPublish.value = false
+  isWebinar.value = false
+  const closingMixerContext = mixerAudioContext.value
+  mixerAudioContext.value = undefined
+  if (closingMixerContext) {
+    setTimeout(() => {
+      closingMixerContext.close().catch(e => {
+        // eslint-disable-next-line no-console
+        console.warn('[Qall] failed to close the audio context', e)
+      })
+    }, 2000)
+  }
 
   // Empty all variables
   room.value = undefined
   tracksMap.value.clear()
   screenShareTrackSidMap.value.clear()
   mixer.value = undefined
-  window.removeEventListener('beforeunload', leaveRoom)
+  window.removeEventListener('beforeunload', handleBeforeUnload)
+}
+
+const getMicrophoneStream = async () => {
+  const { audioInputDeviceId, noiseSuppression } = rtcSettings
+  const constraints = (deviceId: string): MediaTrackConstraints => ({
+    ...(deviceId ? { deviceId: { exact: deviceId } } : {}),
+    autoGainControl: true,
+    echoCancellation: true,
+    noiseSuppression: noiseSuppression.value === 'browser'
+  })
+
+  const deviceId = audioInputDeviceId.value
+  try {
+    return await navigator.mediaDevices.getUserMedia({
+      audio: constraints(deviceId)
+    })
+  } catch (e) {
+    const name = (e as { name?: unknown } | null)?.name
+    const isDeviceMissing =
+      name === 'OverconstrainedError' || name === 'NotFoundError'
+    if (!deviceId || !isDeviceMissing) throw e
+  }
+
+  const stream = await navigator.mediaDevices.getUserMedia({
+    audio: constraints('')
+  })
+  addInfoToast('設定されたマイクが見つからないため、既定のマイクを使用します')
+  return stream
+}
+
+const stopMicrophone = () => {
+  microphoneStream.value?.getTracks().forEach(track => track.stop())
+  microphoneStream.value = undefined
+  void audioContext.value?.close()
+  audioContext.value = undefined
 }
 
 const addMicTrack = async () => {
   let stream: MediaStream | undefined
 
-  const { noiseSuppression, audioInputDeviceId } = useRtcSettings()
+  const { noiseSuppression, noiseGateThreshold } = rtcSettings
   try {
     if (!room.value?.localParticipant?.permissions?.canPublish) {
       throw new Error('権限がありません')
@@ -260,16 +408,8 @@ const addMicTrack = async () => {
       audioContext.value = new AudioContext()
     }
 
-    stream = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        deviceId: {
-          ideal: audioInputDeviceId.value
-        },
-        autoGainControl: true,
-        noiseSuppression: true,
-        echoCancellation: true
-      }
-    })
+    stream = await getMicrophoneStream()
+    microphoneStream.value = stream
     const source = audioContext.value.createMediaStreamSource(stream)
 
     let lastNode: AudioNode = source
@@ -298,6 +438,17 @@ const addMicTrack = async () => {
       lastNode = speexNode
     }
 
+    if (noiseGateThreshold.value > -100) {
+      await audioContext.value.audioWorklet.addModule(noiseGateWorkletPath)
+      const noiseGateNode = new NoiseGateWorkletNode(audioContext.value, {
+        openThreshold: noiseGateThreshold.value,
+        holdMs: 90,
+        maxChannels: 2
+      })
+      lastNode.connect(noiseGateNode)
+      lastNode = noiseGateNode
+    }
+
     const destination = audioContext.value.createMediaStreamDestination()
     lastNode.connect(destination)
 
@@ -323,11 +474,18 @@ const addMicTrack = async () => {
     console.error(e)
     // Cleanup
     stream?.getTracks().forEach(track => track.stop())
+    microphoneStream.value = undefined
     if (audioContext.value) {
       await audioContext.value.close()
       audioContext.value = undefined
     }
-    addErrorToast('マイクの共有に失敗しました')
+    if (e instanceof DOMException && e.name === 'NotAllowedError') {
+      addErrorToast(
+        'マイクの使用が許可されていません。ブラウザの設定を確認してください'
+      )
+    } else {
+      addErrorToast('マイクの共有に失敗しました')
+    }
   }
 }
 const removeMicTrack = async () => {
@@ -491,15 +649,15 @@ const drawVideoToCanvas = (video: HTMLVideoElement) => {
   return canvas
 }
 
-const addScreenShareTrack = async () => {
+const addScreenShareTrack = async (): Promise<boolean> => {
   try {
     if (!room.value) {
       addErrorToast('ルームが存在しません')
-      return
+      return false
     }
     if (!room.value?.localParticipant?.permissions?.canPublish) {
       addErrorToast('権限がありません')
-      return
+      return false
     }
     const localTracks = await createLocalScreenTracks({
       audio: {
@@ -535,10 +693,18 @@ const addScreenShareTrack = async () => {
         [videoSid]: audioSid
       })
     }
-  } catch {
-    // TODO:シェアをキャンセルした時も失敗しましたメッセージがでるのはちょっと違和感があるかも
+    return true
+  } catch (e) {
+    if (
+      e instanceof DOMException &&
+      (e.name === 'NotAllowedError' || e.name === 'AbortError')
+    ) {
+      return false
+    }
+    // eslint-disable-next-line no-console
+    console.error(e)
     addErrorToast('スクリーン共有に失敗しました')
-    throw new Error('スクリーン共有に失敗しました')
+    return false
   }
 }
 
@@ -548,17 +714,7 @@ const removeVideoTrack = async (localpublication: LocalTrackPublication) => {
       addErrorToast('ルームが存在しません')
       return
     }
-    const cameraProcessor = cameraProcessorMap.value.get(
-      localpublication.trackSid
-    )
-    if (cameraProcessor) {
-      cameraProcessor.processor.stopProcessing()
-      cameraProcessor.track.stop()
-      cameraProcessor.backgroundImageSrc
-        ?.getTracks()
-        .forEach(track => track.stop())
-      cameraProcessorMap.value.delete(localpublication.trackSid)
-    }
+    stopCameraProcessor(localpublication.trackSid)
 
     const { [localpublication.trackSid]: audioSid, ...newAttributes } =
       room.value.localParticipant.attributes
@@ -630,6 +786,8 @@ export const useLiveKitSDK = () => {
     screenShareTracks,
     speakerIdentities,
     isMicOn,
+    canPublish,
+    isWebinar,
     qallMitt
   }
 }

@@ -32,7 +32,12 @@ const loadSpeexWasmBinary = async () => {
   return speexWasmBinary
 }
 
-export const noiseSuppressionTypes = ['rnnoise', 'speex', 'none'] as const
+export const noiseSuppressionTypes = [
+  'browser',
+  'rnnoise',
+  'speex',
+  'none'
+] as const
 export type NoiseSuppressionType = (typeof noiseSuppressionTypes)[number]
 
 export const isNoiseSuppressionType = (

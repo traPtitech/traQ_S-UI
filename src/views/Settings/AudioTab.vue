@@ -7,7 +7,7 @@
         <input
           ref="fileInput"
           type="file"
-          accept="audio/*"
+          accept=".mp3,.wav,.ogg,audio/mpeg,audio/wav,audio/ogg"
           style="display: none"
           @change="handleFileSelect"
         />
@@ -35,7 +35,7 @@
         <AStamp v-if="stampId" :stamp-id="stampId" :size="32" />
         <div ref="stampPickerButton">
           <FormButton
-            label="アイコンスタンプを選択"
+            label="アイコンスタンプを選択 (任意)"
             type="secondary"
             icon="plus"
             mdi
@@ -135,22 +135,21 @@ const handleUpload = async () => {
     addErrorToast('音声名が指定されていません')
     return
   }
-  if (!stampId.value) {
-    addErrorToast('スタンプIDが指定されていません')
-    return
-  }
-
   try {
     await apis.postSoundboard(
       selectedFile.value,
       audioName.value,
-      stampId.value
-    ) // 必須フィールドを送信
+      stampId.value || undefined
+    )
     addSuccessToast('アップロードが完了しました')
     await loadSoundboardList() // サウンド一覧を再取得
     resetUploadForm() // フォームリセット
   } catch (e) {
-    addErrorToast(`アップロードに失敗しました: ${String(e)}`)
+    // eslint-disable-next-line no-console
+    console.error('[Soundboard] failed to upload', e)
+    addErrorToast(
+      'アップロードに失敗しました (30秒以内の mp3 / wav / ogg に対応しています)'
+    )
   }
 }
 
@@ -171,7 +170,9 @@ const loadSoundboardList = async () => {
     const list = (await apis.getSoundboardList()).data
     soundboardList.value = list
   } catch (e) {
-    addErrorToast(`サウンド一覧の取得に失敗しました: ${String(e)}`)
+    // eslint-disable-next-line no-console
+    console.error('[Soundboard] failed to load the list', e)
+    addErrorToast('サウンド一覧の取得に失敗しました')
   }
 }
 

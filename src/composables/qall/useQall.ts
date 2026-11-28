@@ -1,11 +1,14 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
+import { isAxiosError } from 'axios'
 import type { LocalAudioTrack } from 'livekit-client'
 
 import {
   type TrackInfo,
   useLiveKitSDK
 } from '/@/composables/qall/useLiveKitSDK'
+import { clearParticipantVolumes } from '/@/composables/qall/useQallVolume'
+import apis from '/@/lib/apis'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { useTts } from '/@/store/app/tts'
 import { useMeStore } from '/@/store/domain/me'
@@ -28,6 +31,8 @@ const {
   screenShareTracks,
   speakerIdentities,
   isMicOn,
+  canPublish,
+  isWebinar,
   qallMitt
 } = useLiveKitSDK()
 const { myId } = useMeStore()
@@ -68,6 +73,33 @@ const isScreenSharing = ref(false)
 
 const selectedTrack = ref<TrackInfo>()
 
+watch(canPublish, value => {
+  if (value) return
+  isCameraOn.value = false
+  isScreenSharing.value = false
+})
+
+const changeSpeakingPermission = async (
+  userId: string,
+  newCanPublish: boolean
+) => {
+  if (!callingChannel.value) return
+  try {
+    await apis.changeParticipantRole(callingChannel.value, [
+      { users: [{ userId, canPublish: newCanPublish }] }
+    ])
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('[Qall] failed to change the speaking permission', e)
+    const status = isAxiosError(e) ? e.response?.status : undefined
+    if (status === 400 && !newCanPublish) {
+      addErrorToast('発言権限を持つ人が1人もいなくなるため、外せません')
+    } else {
+      addErrorToast('発言権限の変更に失敗しました')
+    }
+  }
+}
+
 export const useQall = () => {
   const { rooms } = useRoomsStore()
 
@@ -86,9 +118,17 @@ export const useQall = () => {
           addErrorToast('接続に失敗しました')
           return
         }
+        if (!rtcSettings.isEnabled.value) {
+          addErrorToast(
+            'RTC機能が無効になっています。設定 > 通話 (Qall) から有効にしてください'
+          )
+          return
+        }
         await joinRoom(channelName, isWebinar)
         callingChannel.value = channelName
-      } catch {
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('[Qall] failed to join', e)
         addErrorToast('Qallへの参加に失敗しました')
       } finally {
         joiningPromise = null
@@ -102,9 +142,10 @@ export const useQall = () => {
     await leaveRoom()
     isSubView.value = false
     selectedTrack.value = undefined
-    isMicOn.value = true
+    isMicOn.value = false
     isCameraOn.value = false
     isScreenSharing.value = false
+    clearParticipantVolumes()
   }
 
   return {
@@ -125,6 +166,9 @@ export const useQall = () => {
     qallMitt,
     getQallingState,
     isMicOn,
+    canPublish,
+    isWebinar,
+    changeSpeakingPermission,
     isCameraOn,
     isScreenSharing,
     speakerIdentities,

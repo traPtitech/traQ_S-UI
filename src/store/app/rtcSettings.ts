@@ -32,7 +32,7 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
     masterVolume: 0.5,
     audioInputDeviceId: '',
     audioOutputDeviceId: '',
-    noiseSuppression: 'none',
+    noiseSuppression: 'browser',
     noiseGateThreshold: -100,
     isTtsEnabled: false,
     voiceName: '',
@@ -44,7 +44,7 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
 
   const [state] = useIndexedDbValue(
     'store/app/rtcSettings',
-    3,
+    4,
     {
       // migrate from vuex
       1: async getStore => {
@@ -74,7 +74,21 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
 
       3: async getStore => {
         const store = getStore()
-        const setReq = store.put({ isMute: false }, key)
+        const getReq = store.get(key)
+        const state = await promisifyRequest<
+          Record<string, unknown> | undefined
+        >(getReq)
+        const setReq = store.put({ ...state, isMute: false }, key)
+        await promisifyRequest(setReq)
+      },
+      4: async getStore => {
+        const store = getStore()
+        const getReq = store.get(key)
+        const state = await promisifyRequest<
+          { noiseSuppression?: string } | undefined
+        >(getReq)
+        if (!state || state.noiseSuppression !== 'none') return
+        const setReq = store.put({ ...state, noiseSuppression: 'browser' }, key)
         await promisifyRequest(setReq)
       }
     },

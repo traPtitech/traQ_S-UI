@@ -3,14 +3,14 @@ import AStamp from '/@/components/UI/AStamp.vue'
 
 const { soundName, stampId } = defineProps<{
   soundName: string
-  stampId: string
+  stampId?: string | null
 }>()
 </script>
 
 <template>
   <div :class="$style.soundBoardContainer">
     <div>
-      <AStamp :stamp-id="stampId" :size="32" />
+      <AStamp v-if="stampId" :stamp-id="stampId" :size="32" />
     </div>
     <div :class="$style.soundNameContainer">
       {{ soundName }}

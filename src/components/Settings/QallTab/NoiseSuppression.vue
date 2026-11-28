@@ -5,6 +5,13 @@
       <FormRadio
         :model-value="noiseSuppressionValue"
         :class="$style.input"
+        label="ブラウザ標準"
+        input-value="browser"
+        @update:model-value="updateNoiseSuppressionValue"
+      />
+      <FormRadio
+        :model-value="noiseSuppressionValue"
+        :class="$style.input"
         label="Rnnoise"
         input-value="rnnoise"
         @update:model-value="updateNoiseSuppressionValue"
