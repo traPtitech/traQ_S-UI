@@ -237,9 +237,54 @@ const filterOrStringToSearchMessageQuery = (
   }
 }
 
-/**
- * クエリをパースし、検索ワードとフィルタに変換する
- */
+const isEscapableInQuote = (char: string | undefined) =>
+  char === '"' || char === '\\'
+
+const findClosingQuote = (query: string, start: number) => {
+  for (let index = start; index < query.length; index += 1) {
+    if (query[index] === '"') return index
+    if (query[index] === '\\' && isEscapableInQuote(query[index + 1]))
+      index += 1
+  }
+  return -1
+}
+
+const splitQueryForFilters = (query: string) => {
+  const fragments: { text: string; hasQuotedText: boolean }[] = []
+  let start = 0
+  let hasQuotedText = false
+
+  const finishFragment = (end: number) => {
+    if (start < end)
+      fragments.push({ text: query.slice(start, end), hasQuotedText })
+    hasQuotedText = false
+  }
+
+  for (let index = 0; index < query.length; index += 1) {
+    const char = query[index]
+    if (char === '\\' && isEscapableInQuote(query[index + 1])) {
+      index += 1
+    } else if (char === ' ') {
+      finishFragment(index)
+      start = index + 1
+    } else if (char === '"') {
+      const end = findClosingQuote(query, index + 1)
+      if (end > index + 1) {
+        hasQuotedText = true
+        index = end
+      } else {
+        // 空の引用と片方だけの引用符は検索語の区切りにする
+        finishFragment(index)
+        if (end !== -1) index = end
+        start = index + 1
+      }
+    }
+  }
+  finishFragment(query.length)
+  return fragments
+}
+
+/** クエリをパースし、検索ワードとフィルタに変換する */
 export const createQueryParser = (store: StoreForParser) => {
   const parseQueryFragmentToFilter =
     parseQueryFragmentToFilterWithoutStore(store)
@@ -251,10 +296,9 @@ export const createQueryParser = (store: StoreForParser) => {
     queryObject: SearchMessageQueryObject
   }> => {
     const parseds = await Promise.all(
-      query
-        .split(' ')
-        .filter(q => q)
-        .map(parseQueryFragmentToFilter)
+      splitQueryForFilters(query).map(({ text, hasQuotedText }) =>
+        hasQuotedText ? text : parseQueryFragmentToFilter(text)
+      )
     )
 
     const currentChannelPathOrUserName = store.getCurrentChannelPathOrUserName()
