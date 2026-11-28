@@ -7,15 +7,31 @@ import UserIcon from '/@/components/UI/UserIcon.vue'
 import type { TrackInfo } from '/@/composables/qall/useLiveKitSDK'
 import { useQallVolume } from '/@/composables/qall/useQallVolume'
 
-const { participant, trackInfo, deviceLabel } = defineProps<{
+const { participant, trackInfo, deviceLabel, webinar } = defineProps<{
   participant: User
-  trackInfo: TrackInfo
+  /**
+   * マイクの音声トラック。ウェビナーで発言権限のない参加者にはない
+   */
+  trackInfo?: TrackInfo
   /**
    * 同じユーザーが複数の端末で参加しているときの端末の表示名
    *
    * 指定されているときは、音量をこの端末だけ・通話中だけのものとして設定する
    */
   deviceLabel?: string
+  /**
+   * ウェビナーのときの発言権限の情報
+   */
+  webinar?: {
+    /** この参加者が発言権限を持っているか */
+    canPublish: boolean
+    /** 自分が発言権限 (= 管理権限) を持っていて、変更できるか */
+    canManage: boolean
+  }
+}>()
+
+const emit = defineEmits<{
+  (e: 'changeSpeakingPermission', canPublish: boolean): void
 }>()
 
 const { getVolume, setVolume } = useQallVolume()
@@ -25,7 +41,7 @@ const isMuted = ref(false)
 const style = useCssModule()
 const minValue = 0
 const maxValue = 2
-const volume = ref<number | string>(getVolume(trackInfo))
+const volume = ref<number | string>(trackInfo ? getVolume(trackInfo) : 1)
 
 const sliderStyle = computed(() => {
   const val = Number(volume.value)
@@ -43,7 +59,7 @@ const sliderStyle = computed(() => {
   }
 })
 watch(
-  () => getVolume(trackInfo),
+  () => (trackInfo ? getVolume(trackInfo) : 1),
   v => {
     if (Number(volume.value) !== v) {
       volume.value = v
@@ -51,7 +67,7 @@ watch(
   }
 )
 const onInput = (e: Event) => {
-  if (!(e.target instanceof HTMLInputElement)) return
+  if (!(e.target instanceof HTMLInputElement) || !trackInfo) return
   volume.value = e.target.value
   setVolume(trackInfo, Number(volume.value), {
     perDevice: deviceLabel !== undefined
@@ -71,6 +87,9 @@ const volumeSliderClass = computed(() => ({
       <span v-if="deviceLabel" :class="$style.deviceLabel">
         {{ deviceLabel }}
       </span>
+      <span v-if="webinar?.canPublish" :class="$style.speakerBadge">
+        発言可
+      </span>
       <!-- TODO: Qall: ミュートを実装する -->
       <!-- <button :class="$style.micIconButton">
         <a-icon v-if="isMuted" name="microphone-off" mdi />
@@ -81,7 +100,15 @@ const volumeSliderClass = computed(() => ({
         <a-icon v-if="isMuted" name="volume-off" :size="24" mdi />
         <a-icon v-else name="volume-high" mdi :size="24" />
       </button> -->
+      <button
+        v-if="webinar?.canManage"
+        :class="$style.permissionButton"
+        @click="emit('changeSpeakingPermission', !webinar.canPublish)"
+      >
+        {{ webinar.canPublish ? '発言権限を外す' : '発言権限を付与' }}
+      </button>
       <input
+        v-if="trackInfo"
         :value="volume"
         type="range"
         :min="minValue"
@@ -121,6 +148,25 @@ const volumeSliderClass = computed(() => ({
 
 .deviceLabel {
   margin-left: 8px;
+  @include color-ui-secondary;
+  @include size-caption;
+}
+
+.speakerBadge {
+  margin-left: 8px;
+  padding: 0 6px;
+  border-radius: 4px;
+  @include background-secondary;
+  @include color-ui-primary;
+  @include size-caption;
+}
+
+.permissionButton {
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid currentColor;
+  cursor: pointer;
+  white-space: nowrap;
   @include color-ui-secondary;
   @include size-caption;
 }

@@ -1,4 +1,4 @@
-import { type Ref, computed, ref, watch } from 'vue'
+import { type Ref, computed, ref, shallowRef, watch } from 'vue'
 
 import {
   NoiseGateWorkletNode,
@@ -108,6 +108,15 @@ const cameraProcessorMap: Ref<Map<string, CameraProcessor>> = ref(new Map())
 const screenShareTrackSidMap = ref<Map<string, string>>(new Map())
 const mixer = ref<AudioStreamMixer>()
 const mixerAudioContext = ref<ExtendedAudioContext>()
+const microphoneStream = shallowRef<MediaStream>()
+/**
+ * 発言できるかどうか (ウェビナーでは発言権限を持つユーザーだけ)
+ */
+const canPublish = ref(false)
+/**
+ * 参加中のルームがウェビナーかどうか
+ */
+const isWebinar = ref(false)
 const audioTrackId = ref<string>()
 
 function handleTrackSubscribed(
@@ -143,6 +152,70 @@ function handleLocalTrackUnpublished(
   // when local tracks are ended, update UI to remove them from rendering
   tracksMap.value.delete(publication.trackSid)
   screenShareTrackSidMap.value.delete(publication.trackSid)
+  // 発言権限がなくなってサーバーに止められた場合などにも、カメラを止める
+  stopCameraProcessor(publication.trackSid)
+}
+
+const stopCameraProcessor = (trackSid: string) => {
+  const cameraProcessor = cameraProcessorMap.value.get(trackSid)
+  if (!cameraProcessor) return
+  cameraProcessor.processor.stopProcessing()
+  cameraProcessor.track.stop()
+  cameraProcessor.backgroundImageSrc?.getTracks().forEach(track => track.stop())
+  cameraProcessorMap.value.delete(trackSid)
+}
+
+/**
+ * traQ はルームのメタデータに `{"status": ..., "isWebinar": ..., "publishers": [...]}` を入れている
+ */
+const parseIsWebinar = (metadata: string | undefined) => {
+  if (!metadata) return false
+  try {
+    const parsed: unknown = JSON.parse(metadata)
+    return (
+      typeof parsed === 'object' &&
+      parsed !== null &&
+      'isWebinar' in parsed &&
+      parsed.isWebinar === true
+    )
+  } catch {
+    return false
+  }
+}
+
+function handleRoomMetadataChanged(metadata: string) {
+  isWebinar.value = parseIsWebinar(metadata)
+}
+
+/**
+ * ウェビナーで発言権限が付与・剥奪されたときの処理
+ */
+async function handleParticipantPermissionsChanged(
+  _prevPermissions: unknown,
+  participant: Participant
+) {
+  if (!room.value || participant !== room.value.localParticipant) return
+  const newCanPublish = participant.permissions?.canPublish ?? false
+  if (newCanPublish === canPublish.value) return
+  canPublish.value = newCanPublish
+
+  if (newCanPublish) {
+    // 付与されてすぐ声が流れないように、ミュートした状態でマイクを用意する
+    await addMicTrack()
+    for (const trackInfo of tracksMap.value.values()) {
+      if (trackInfo.isRemote) continue
+      if (trackInfo.trackPublication?.track?.id === audioTrackId.value) {
+        await trackInfo.trackPublication?.track?.mute()
+      }
+    }
+    isMicOn.value = false
+    addInfoToast('発言権限が付与されました。マイクをオンにすると話せます')
+  } else {
+    // 公開していたトラックはサーバーが止める。マイクの入力もここで止める
+    stopMicrophone()
+    isMicOn.value = false
+    addInfoToast('発言権限がなくなりました')
+  }
 }
 
 function handleLocalTrackPublished(
@@ -201,10 +274,10 @@ function handleParticipantDisconnected(participant: Participant) {
  *
  * 接続に失敗した場合は後始末をしてから例外を投げる
  */
-const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
+const joinRoom = async (roomName: string, asWebinar: boolean = false) => {
   try {
     const endpoint = (await apis.getQallEndpoints()).data.endpoint
-    const token = (await apis.getLiveKitToken(roomName, isWebinar)).data.token
+    const token = (await apis.getLiveKitToken(roomName, asWebinar)).data.token
 
     // pre-warm connection, this can be called as early as your page is loaded
     //room.prepareConnection("https://livekit-test.trap.show:39357", token);
@@ -226,9 +299,17 @@ const joinRoom = async (roomName: string, isWebinar: boolean = false) => {
       )
       .on(RoomEvent.ParticipantConnected, handleParticipantConnected)
       .on(RoomEvent.ParticipantDisconnected, handleParticipantDisconnected)
+      .on(
+        RoomEvent.ParticipantPermissionsChanged,
+        handleParticipantPermissionsChanged
+      )
+      .on(RoomEvent.RoomMetadataChanged, handleRoomMetadataChanged)
 
     // connect to room
     await room.value.connect(endpoint, token)
+    canPublish.value =
+      room.value.localParticipant?.permissions?.canPublish ?? false
+    isWebinar.value = parseIsWebinar(room.value.metadata)
 
     if (room.value.localParticipant?.permissions?.canPublish) {
       await addMicTrack()
@@ -285,8 +366,9 @@ async function leaveRoom({ silent = false }: { silent?: boolean } = {}) {
     await mixer.value?.playFileSource('qall_end')
   }
 
-  await audioContext?.value?.close()
-  audioContext.value = undefined
+  stopMicrophone()
+  canPublish.value = false
+  isWebinar.value = false
   // 効果音の再生が終わるまで待ってから閉じる
   const closingMixerContext = mixerAudioContext.value
   mixerAudioContext.value = undefined
@@ -342,6 +424,16 @@ const getMicrophoneStream = async () => {
   return stream
 }
 
+/**
+ * マイクの入力と、その加工に使っている AudioContext を止める
+ */
+const stopMicrophone = () => {
+  microphoneStream.value?.getTracks().forEach(track => track.stop())
+  microphoneStream.value = undefined
+  void audioContext.value?.close()
+  audioContext.value = undefined
+}
+
 const addMicTrack = async () => {
   let stream: MediaStream | undefined
 
@@ -356,6 +448,7 @@ const addMicTrack = async () => {
     }
 
     stream = await getMicrophoneStream()
+    microphoneStream.value = stream
     const source = audioContext.value.createMediaStreamSource(stream)
 
     let lastNode: AudioNode = source
@@ -421,6 +514,7 @@ const addMicTrack = async () => {
     console.error(e)
     // Cleanup
     stream?.getTracks().forEach(track => track.stop())
+    microphoneStream.value = undefined
     if (audioContext.value) {
       await audioContext.value.close()
       audioContext.value = undefined
@@ -666,17 +760,7 @@ const removeVideoTrack = async (localpublication: LocalTrackPublication) => {
       addErrorToast('ルームが存在しません')
       return
     }
-    const cameraProcessor = cameraProcessorMap.value.get(
-      localpublication.trackSid
-    )
-    if (cameraProcessor) {
-      cameraProcessor.processor.stopProcessing()
-      cameraProcessor.track.stop()
-      cameraProcessor.backgroundImageSrc
-        ?.getTracks()
-        .forEach(track => track.stop())
-      cameraProcessorMap.value.delete(localpublication.trackSid)
-    }
+    stopCameraProcessor(localpublication.trackSid)
 
     const { [localpublication.trackSid]: audioSid, ...newAttributes } =
       room.value.localParticipant.attributes
@@ -748,6 +832,8 @@ export const useLiveKitSDK = () => {
     screenShareTracks,
     speakerIdentities,
     isMicOn,
+    canPublish,
+    isWebinar,
     qallMitt
   }
 }

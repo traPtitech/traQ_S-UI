@@ -18,6 +18,10 @@ import { useUsersStore } from '../entities/users'
 import { convertToRefsStore } from '../utils/convertToRefsStore'
 
 type Participant = {
+  /**
+   * LiveKit の参加者の Identity (同じユーザーでも端末ごとに異なる)
+   */
+  identity: string
   user: User
   joinedAt: string
   canPublish: boolean
@@ -60,6 +64,7 @@ const useRoomsStorePinia = defineStore('domain/rooms', () => {
           participants:
             room.participants
               ?.map(p => ({
+                identity: p.identity ?? '',
                 joinedAt: p.joinedAt,
                 user:
                   p.identity && usersMap.value.get(p.identity.slice(0, -37)),

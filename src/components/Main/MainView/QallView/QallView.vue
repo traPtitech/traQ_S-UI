@@ -33,6 +33,10 @@ const {
   publishData,
   toggleMicMute,
   qallMitt,
+  rooms,
+  canPublish,
+  isWebinar,
+  changeSpeakingPermission,
   isMicOn,
   isCameraOn,
   isScreenSharing,
@@ -140,22 +144,46 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 const showSoundBoard = ref(false)
 
 /**
- * 音量を調整できる参加者の一覧 (マイクの音声トラックごと = 端末ごと)
+ * 参加者の一覧 (端末ごと)
  *
- * 同じユーザーが複数の端末で参加しているときは、端末ごとに別の行にする
+ * ウェビナーで発言権限のない参加者はマイクの音声トラックを持たないので、
+ * traQ が持っているルームの参加者を元にし、マイクの音声トラックがあれば音量を調整できるようにする。
+ * 同じユーザーが複数の端末で参加しているときは、端末ごとに別の行にする。
  */
 const filteredParticipants = computed(() => {
   const screenShareAudioSids = new Set(
     screenShareTracks.value.map(([, audioSid]) => audioSid)
   )
-  const entries: { user: User; trackInfo: TrackInfo }[] = []
+  const micTracks = new Map<string, TrackInfo>()
   for (const [sid, trackInfo] of tracksMap.value.entries()) {
     if (trackInfo.trackPublication?.kind !== 'audio') continue
     if (screenShareAudioSids.has(sid)) continue
     if (isSoundboardIdentity(trackInfo.identity)) continue
+    micTracks.set(trackInfo.identity, trackInfo)
+  }
+
+  const room = rooms.value.find(r => r.channel.id === callingChannel.value)
+  const entries: {
+    user: User
+    identity: string
+    trackInfo: TrackInfo | undefined
+    canPublish: boolean
+  }[] = []
+  for (const participant of room?.participants ?? []) {
+    entries.push({
+      user: participant.user,
+      identity: participant.identity,
+      trackInfo: micTracks.get(participant.identity),
+      canPublish: participant.canPublish
+    })
+  }
+  // traQ の状態にまだ反映されていない参加者も、音声が届いていれば出す
+  const knownIdentities = new Set(entries.map(e => e.identity))
+  for (const [identity, trackInfo] of micTracks) {
+    if (knownIdentities.has(identity)) continue
     const user = usersMap.value.get(trackInfo.userName)
     if (!user) continue
-    entries.push({ user, trackInfo })
+    entries.push({ user, identity, trackInfo, canPublish: true })
   }
 
   const deviceCounts = new Map<string, number>()
@@ -163,13 +191,13 @@ const filteredParticipants = computed(() => {
     deviceCounts.set(user.id, (deviceCounts.get(user.id) ?? 0) + 1)
   }
   const deviceIndexes = new Map<string, number>()
-  return entries.map(({ user, trackInfo }) => {
-    if ((deviceCounts.get(user.id) ?? 0) <= 1) {
-      return { user, trackInfo, deviceLabel: undefined }
+  return entries.map(entry => {
+    if ((deviceCounts.get(entry.user.id) ?? 0) <= 1) {
+      return { ...entry, deviceLabel: undefined }
     }
-    const index = (deviceIndexes.get(user.id) ?? 0) + 1
-    deviceIndexes.set(user.id, index)
-    return { user, trackInfo, deviceLabel: `端末${index}` }
+    const index = (deviceIndexes.get(entry.user.id) ?? 0) + 1
+    deviceIndexes.set(entry.user.id, index)
+    return { ...entry, deviceLabel: `端末${index}` }
   })
 })
 
@@ -196,6 +224,7 @@ const toggleDanmaku = () => {
   <div :class="$style.Block">
     <QallMessageView :channel-id="callingChannel" :typing-users="[]">
       <DanmakuContainer v-if="showDanmaku" />
+      <span v-if="isWebinar" :class="$style.webinarBadge">ウェビナー</span>
       <div :class="$style.iconContainer">
         <IconButton
           :icon-name="`comment${showDanmaku ? '' : '-off'}-outline`"
@@ -215,7 +244,7 @@ const toggleDanmaku = () => {
         <div :class="$style.controlBarContainer">
           <div :class="$style.controlBar">
             <div :class="$style.smallButtonGroup">
-              <div :class="$style.soundBoardButton">
+              <div v-if="canPublish" :class="$style.soundBoardButton">
                 <CallControlButtonSmall
                   icon="sound_detection_loud_sound"
                   :on-click="handleSound"
@@ -232,7 +261,10 @@ const toggleDanmaku = () => {
               </div>
             </div>
             <div :class="$style.verticalBar" />
-            <div :class="$style.buttonWithDetail">
+            <p v-if="isWebinar && !canPublish" :class="$style.listenerNote">
+              ウェビナーのため視聴のみです（発言権限を持つ人が付与できます）
+            </p>
+            <div v-if="canPublish" :class="$style.buttonWithDetail">
               <CallControlButton
                 :icon="screenShareIcon"
                 :is-on="isScreenSharing"
@@ -247,7 +279,7 @@ const toggleDanmaku = () => {
                 @close="showShareScreenSettingDetail = false"
               />
             </div>
-            <div :class="$style.buttonWithDetail">
+            <div v-if="canPublish" :class="$style.buttonWithDetail">
               <CallControlButton
                 :icon="cameraIcon"
                 :is-on="isCameraOn"
@@ -264,6 +296,7 @@ const toggleDanmaku = () => {
               />
             </div>
             <CallControlButton
+              v-if="canPublish"
               :icon="micIcon"
               :is-on="isMicOn"
               :on-click="toggleAudio"
@@ -283,10 +316,22 @@ const toggleDanmaku = () => {
                     <div :class="$style.participantsContent">
                       <ParticipantList
                         v-for="participant in filteredParticipants"
-                        :key="participant.trackInfo.identity"
+                        :key="participant.identity"
                         :participant="participant.user"
                         :track-info="participant.trackInfo"
                         :device-label="participant.deviceLabel"
+                        :webinar="
+                          isWebinar
+                            ? {
+                                canPublish: participant.canPublish,
+                                canManage: canPublish
+                              }
+                            : undefined
+                        "
+                        @change-speaking-permission="
+                          value =>
+                            changeSpeakingPermission(participant.user.id, value)
+                        "
                       />
                     </div>
                   </div>
@@ -313,6 +358,23 @@ const toggleDanmaku = () => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.listenerNote {
+  @include color-ui-secondary;
+  @include size-body2;
+  max-width: 20rem;
+}
+
+.webinarBadge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  @include background-secondary;
+  @include color-ui-primary;
+  @include size-caption;
 }
 
 .stackContainer {

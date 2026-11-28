@@ -1,5 +1,6 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
+import { isAxiosError } from 'axios'
 import type { LocalAudioTrack } from 'livekit-client'
 
 import {
@@ -7,6 +8,7 @@ import {
   useLiveKitSDK
 } from '/@/composables/qall/useLiveKitSDK'
 import { clearParticipantVolumes } from '/@/composables/qall/useQallVolume'
+import apis from '/@/lib/apis'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { useTts } from '/@/store/app/tts'
 import { useMeStore } from '/@/store/domain/me'
@@ -29,6 +31,8 @@ const {
   screenShareTracks,
   speakerIdentities,
   isMicOn,
+  canPublish,
+  isWebinar,
   qallMitt
 } = useLiveKitSDK()
 const { myId } = useMeStore()
@@ -68,6 +72,37 @@ const isCameraOn = ref(false)
 const isScreenSharing = ref(false)
 
 const selectedTrack = ref<TrackInfo>()
+
+// 発言権限がなくなったら、カメラ・画面共有はサーバーに止められる
+watch(canPublish, value => {
+  if (value) return
+  isCameraOn.value = false
+  isScreenSharing.value = false
+})
+
+/**
+ * ウェビナーで、ユーザーに発言権限 (= 管理権限) を付与・剥奪する
+ */
+const changeSpeakingPermission = async (
+  userId: string,
+  newCanPublish: boolean
+) => {
+  if (!callingChannel.value) return
+  try {
+    await apis.changeParticipantRole(callingChannel.value, [
+      { users: [{ userId, canPublish: newCanPublish }] }
+    ])
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('[Qall] failed to change the speaking permission', e)
+    const status = isAxiosError(e) ? e.response?.status : undefined
+    if (status === 400 && !newCanPublish) {
+      addErrorToast('発言権限を持つ人が1人もいなくなるため、外せません')
+    } else {
+      addErrorToast('発言権限の変更に失敗しました')
+    }
+  }
+}
 
 export const useQall = () => {
   const { rooms } = useRoomsStore()
@@ -135,6 +170,9 @@ export const useQall = () => {
     qallMitt,
     getQallingState,
     isMicOn,
+    canPublish,
+    isWebinar,
+    changeSpeakingPermission,
     isCameraOn,
     isScreenSharing,
     speakerIdentities,
