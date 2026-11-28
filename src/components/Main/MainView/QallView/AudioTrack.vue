@@ -23,7 +23,6 @@ watchEffect(() => {
   )
 })
 
-// 設定の出力デバイスから鳴らす (AudioContext.setSinkId に対応したブラウザのみ)
 watch(
   audioOutputDeviceId,
   deviceId => {

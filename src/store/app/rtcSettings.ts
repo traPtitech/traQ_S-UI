@@ -78,12 +78,9 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
         const state = await promisifyRequest<
           Record<string, unknown> | undefined
         >(getReq)
-        // ほかの設定を消さないように、既存の値に足す
         const setReq = store.put({ ...state, isMute: false }, key)
         await promisifyRequest(setReq)
       },
-      // `noiseSuppression: 'none'` は以前から実際にはブラウザ標準のノイズ抑制がかかっていたので、
-      // 動作を変えないように新しく追加した 'browser' に移す
       4: async getStore => {
         const store = getStore()
         const getReq = store.get(key)

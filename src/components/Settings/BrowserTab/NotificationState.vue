@@ -29,12 +29,10 @@ import { requestNotificationPermission } from '/@/lib/notification/notification'
 
 const useNotificationPermission = () => {
   const permission = ref<NotificationPermission>()
-  // iOS の Safari (ホーム画面に追加していない場合) などでは Notification が存在しない
   permission.value =
     'Notification' in window ? Notification.permission : undefined
 
   const requestPermission = async () => {
-    // 許可された場合はプッシュ通知の登録まで行う
     permission.value = await requestNotificationPermission()
   }
 

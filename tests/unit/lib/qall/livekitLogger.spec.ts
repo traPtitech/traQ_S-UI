@@ -15,7 +15,6 @@ describe('configureLiveKitLogger', () => {
     const errorSpy = vi
       .spyOn(console, 'error')
       .mockImplementation(() => undefined)
-    // loglevel はメソッドを作るときに console のメソッドを束縛するので、spy の後に作り直す
     configureLiveKitLoggerAgain()
 
     getLogger(LoggerNames.Engine).error(
@@ -52,9 +51,6 @@ describe('configureLiveKitLogger', () => {
   })
 })
 
-/**
- * 現在のレベルのまま loglevel にメソッドを作り直させる
- */
 const configureLiveKitLoggerAgain = () => {
   const logger = getLogger(LoggerNames.Engine) as unknown as {
     getLevel: () => number

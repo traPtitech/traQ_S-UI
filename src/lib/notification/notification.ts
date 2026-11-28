@@ -58,9 +58,6 @@ const notify = async (
 
 const hasNotificationApi = () => 'Notification' in window
 
-/**
- * 通知の許可を求める案内を、この端末で既に出したかどうかを記録するキー
- */
 const notificationPromptShownKey = 'traQ_S-notificationPromptShown'
 
 const hasShownNotificationPrompt = () => {
@@ -74,9 +71,7 @@ const hasShownNotificationPrompt = () => {
 const markNotificationPromptShown = () => {
   try {
     localStorage.setItem(notificationPromptShownKey, new Date().toISOString())
-  } catch {
-    // localStorage が使えない場合は毎回出ることになるが、動作には問題ない
-  }
+  } catch {}
 }
 
 let serviceWorkerRegistration: ServiceWorkerRegistration | undefined
@@ -138,19 +133,12 @@ const setupMessaging = async (registration: ServiceWorkerRegistration) => {
   await apis.registerFCMDevice({ token })
 }
 
-/**
- * 通知が許可されていれば、プッシュ通知を受け取れるようにする (FCM トークンの登録など)
- *
- * 起動時のほか、あとから通知が許可されたときにも呼ぶ。何度呼んでも一度だけ行う
- */
 const enableNotificationIfPermitted = async () => {
   if (!hasNotificationApi() || Notification.permission !== 'granted') return
-  // Service Worker の登録が終わっていなければ、登録後に connectFirebase から呼ばれる
   if (!serviceWorkerRegistration) return
 
   messagingSetupPromise ??= setupMessaging(serviceWorkerRegistration).catch(
     e => {
-      // 失敗したら次の機会にやり直せるようにする
       messagingSetupPromise = undefined
       // eslint-disable-next-line no-console
       console.warn('[Notification] failed to set up messaging', e)
@@ -159,12 +147,6 @@ const enableNotificationIfPermitted = async () => {
   await messagingSetupPromise
 }
 
-/**
- * 通知の許可を求める
- *
- * 許可された場合はプッシュ通知を受け取れるようにする。
- * WebKit ではユーザー操作 (クリックなど) を起点に呼ぶ必要がある
- */
 export const requestNotificationPermission =
   async (): Promise<NotificationPermission> => {
     if (!hasNotificationApi()) return 'denied'
@@ -180,16 +162,10 @@ export const requestNotificationPermission =
     return permission
   }
 
-/**
- * 通知の許可を求める
- *
- * WebKit (iOS / Safari) ではユーザー操作を起点にしないと許可のダイアログを出せず、
- * 許可も拒否もしないと状態が 'default' のまま変わらない。
- * そのため案内のトーストは端末ごとに一度だけ出し、あとは 設定 > ブラウザ から許可してもらう。
- */
 const promptNotificationPermission = () => {
   if (!hasNotificationApi() || Notification.permission !== 'default') return
 
+  // WebKit ではユーザージェスチャーを起点としたポップアップのみ許可される
   if (!(isWebKit() && isPWA())) {
     void requestNotificationPermission().catch(e => {
       // eslint-disable-next-line no-console
@@ -226,7 +202,6 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
   }
 
   if (hasNotificationApi()) {
-    // 許可を待たずに Service Worker の登録などを進める
     promptNotificationPermission()
   } else {
     // eslint-disable-next-line no-console
@@ -243,7 +218,6 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     'message',
     ({ data }: MessageEvent<ServiceWorkerMessage>) => {
       if (data.type === 'navigate') {
-        // 同じ場所に移動しようとした際のエラーを消す
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         router.push(data.to).catch(() => {})
       }

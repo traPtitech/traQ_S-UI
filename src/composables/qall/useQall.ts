@@ -73,16 +73,12 @@ const isScreenSharing = ref(false)
 
 const selectedTrack = ref<TrackInfo>()
 
-// 発言権限がなくなったら、カメラ・画面共有はサーバーに止められる
 watch(canPublish, value => {
   if (value) return
   isCameraOn.value = false
   isScreenSharing.value = false
 })
 
-/**
- * ウェビナーで、ユーザーに発言権限 (= 管理権限) を付与・剥奪する
- */
 const changeSpeakingPermission = async (
   userId: string,
   newCanPublish: boolean

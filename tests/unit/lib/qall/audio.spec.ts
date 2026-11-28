@@ -6,7 +6,6 @@ import {
 
 describe('masterVolumeToGain', () => {
   it('maps the displayed percentage to the gain', () => {
-    // 設定画面では 0.5 が 100%、1 が 200% と表示される
     expect(masterVolumeToGain(0.5)).toBe(1)
     expect(masterVolumeToGain(1)).toBe(2)
     expect(masterVolumeToGain(0)).toBe(0)

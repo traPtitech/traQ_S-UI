@@ -18,9 +18,6 @@ import { useUsersStore } from '../entities/users'
 import { convertToRefsStore } from '../utils/convertToRefsStore'
 
 type Participant = {
-  /**
-   * LiveKit の参加者の Identity (同じユーザーでも端末ごとに異なる)
-   */
   identity: string
   user: User
   joinedAt: string
@@ -50,8 +47,6 @@ const useRoomsStorePinia = defineStore('domain/rooms', () => {
       QallRoomStateChangedEventRoomStatesInner[] | QallRoomWithParticipants[]
   ): Promise<Rooms> => {
     if (!data) return []
-    // 参加者のユーザー情報が引けないと参加者が捨てられてしまうので、
-    // チャンネルだけでなくユーザー一覧の初回取得も待つ
     await Promise.all([
       bothChannelsMapInitialFetchPromise,
       usersMapInitialFetchPromise
@@ -95,7 +90,6 @@ const useRoomsStorePinia = defineStore('domain/rooms', () => {
     return rooms.value
   }
 
-  // WebSocket のイベントと初回取得の結果が前後しても、新しい方で上書きされるようにする
   let latestUpdateId = 0
   const setRooms = async (
     data:

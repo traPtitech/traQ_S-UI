@@ -237,7 +237,6 @@ const audioOutputDeviceOptions = computed(() =>
 
 const voiceOptions = useVoices()
 
-// AudioContext.setSinkId に対応していないブラウザ (Safari / Firefox など) では出力先を変えられない
 const isOutputDeviceSelectable =
   typeof (AudioContext.prototype as { setSinkId?: unknown }).setSinkId ===
   'function'

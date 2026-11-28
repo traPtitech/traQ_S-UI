@@ -136,7 +136,6 @@ const handleUpload = async () => {
     return
   }
   try {
-    // アイコンのスタンプは任意
     await apis.postSoundboard(
       selectedFile.value,
       audioName.value,

@@ -225,11 +225,6 @@ export default class AudioStreamMixer {
     this.listener.emit('streamVolumeChange', key)
   }
 
-  /**
-   * マスターボリュームを設定する
-   *
-   * 通話の音声 (AudioTrack.vue) と同じ変換を使い、設定画面の表示 (0.5 で 100%) と揃える
-   */
   setMasterVolume(volume: number) {
     const v = Math.max(0, Math.min(1, volume))
     this.masterVolumeGain.gain.value = masterVolumeToGain(v)

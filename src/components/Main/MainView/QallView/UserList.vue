@@ -23,7 +23,6 @@ const {
   selectedTrack
 } = useQall()
 
-// サウンドボードの再生は参加者として入ってくるが、カードには出さない (音声は QallAudio で再生される)
 const tracksMap = computed(
   () =>
     new Map(

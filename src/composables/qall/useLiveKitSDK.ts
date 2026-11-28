@@ -84,13 +84,7 @@ export type TrackInfo = (
       trackPublication: LocalTrackPublication | undefined
     }
 ) & {
-  /**
-   * ユーザーID
-   */
   userName: string
-  /**
-   * LiveKit の参加者の Identity (同じユーザーでも端末ごとに異なる)
-   */
   identity: string
 }
 
@@ -109,13 +103,7 @@ const screenShareTrackSidMap = ref<Map<string, string>>(new Map())
 const mixer = ref<AudioStreamMixer>()
 const mixerAudioContext = ref<ExtendedAudioContext>()
 const microphoneStream = shallowRef<MediaStream>()
-/**
- * 発言できるかどうか (ウェビナーでは発言権限を持つユーザーだけ)
- */
 const canPublish = ref(false)
-/**
- * 参加中のルームがウェビナーかどうか
- */
 const isWebinar = ref(false)
 const audioTrackId = ref<string>()
 
@@ -152,7 +140,6 @@ function handleLocalTrackUnpublished(
   // when local tracks are ended, update UI to remove them from rendering
   tracksMap.value.delete(publication.trackSid)
   screenShareTrackSidMap.value.delete(publication.trackSid)
-  // 発言権限がなくなってサーバーに止められた場合などにも、カメラを止める
   stopCameraProcessor(publication.trackSid)
 }
 
@@ -165,9 +152,6 @@ const stopCameraProcessor = (trackSid: string) => {
   cameraProcessorMap.value.delete(trackSid)
 }
 
-/**
- * traQ はルームのメタデータに `{"status": ..., "isWebinar": ..., "publishers": [...]}` を入れている
- */
 const parseIsWebinar = (metadata: string | undefined) => {
   if (!metadata) return false
   try {
@@ -187,9 +171,6 @@ function handleRoomMetadataChanged(metadata: string) {
   isWebinar.value = parseIsWebinar(metadata)
 }
 
-/**
- * ウェビナーで発言権限が付与・剥奪されたときの処理
- */
 async function handleParticipantPermissionsChanged(
   _prevPermissions: unknown,
   participant: Participant
@@ -200,7 +181,6 @@ async function handleParticipantPermissionsChanged(
   canPublish.value = newCanPublish
 
   if (newCanPublish) {
-    // 付与されてすぐ声が流れないように、ミュートした状態でマイクを用意する
     await addMicTrack()
     for (const trackInfo of tracksMap.value.values()) {
       if (trackInfo.isRemote) continue
@@ -211,7 +191,6 @@ async function handleParticipantPermissionsChanged(
     isMicOn.value = false
     addInfoToast('発言権限が付与されました。マイクをオンにすると話せます')
   } else {
-    // 公開していたトラックはサーバーが止める。マイクの入力もここで止める
     stopMicrophone()
     isMicOn.value = false
     addInfoToast('発言権限がなくなりました')
@@ -258,7 +237,6 @@ function handleParticipantAttributesChanged(
   )
 }
 
-// サウンドボードの再生は参加者として入ってくるが、入退室の効果音は鳴らさない
 function handleParticipantConnected(participant: Participant) {
   if (isSoundboardIdentity(participant.identity)) return
   mixer.value?.playFileSource('qall_joined')
@@ -269,11 +247,6 @@ function handleParticipantDisconnected(participant: Participant) {
   mixer.value?.playFileSource('qall_left')
 }
 
-/**
- * ルームに参加する
- *
- * 接続に失敗した場合は後始末をしてから例外を投げる
- */
 const joinRoom = async (roomName: string, asWebinar: boolean = false) => {
   try {
     const endpoint = (await apis.getQallEndpoints()).data.endpoint
@@ -346,7 +319,6 @@ const handleBeforeUnload = () => {
   void leaveRoom()
 }
 
-// 通話中に設定が変わったら反映する
 watch(rtcSettings.masterVolume, v => {
   mixer.value?.setMasterVolume(v)
 })
@@ -369,7 +341,6 @@ async function leaveRoom({ silent = false }: { silent?: boolean } = {}) {
   stopMicrophone()
   canPublish.value = false
   isWebinar.value = false
-  // 効果音の再生が終わるまで待ってから閉じる
   const closingMixerContext = mixerAudioContext.value
   mixerAudioContext.value = undefined
   if (closingMixerContext) {
@@ -389,18 +360,12 @@ async function leaveRoom({ silent = false }: { silent?: boolean } = {}) {
   window.removeEventListener('beforeunload', handleBeforeUnload)
 }
 
-/**
- * マイクの入力を取得する
- *
- * 設定されたマイクが見つからない場合は既定のマイクを使う
- */
 const getMicrophoneStream = async () => {
   const { audioInputDeviceId, noiseSuppression } = rtcSettings
   const constraints = (deviceId: string): MediaTrackConstraints => ({
     ...(deviceId ? { deviceId: { exact: deviceId } } : {}),
     autoGainControl: true,
     echoCancellation: true,
-    // RNNoise / Speex を使うときや「無効」のときにブラウザのノイズ抑制が重ならないようにする
     noiseSuppression: noiseSuppression.value === 'browser'
   })
 
@@ -410,7 +375,6 @@ const getMicrophoneStream = async () => {
       audio: constraints(deviceId)
     })
   } catch (e) {
-    // ブラウザによっては OverconstrainedError が DOMException ではないので名前で判定する
     const name = (e as { name?: unknown } | null)?.name
     const isDeviceMissing =
       name === 'OverconstrainedError' || name === 'NotFoundError'
@@ -424,9 +388,6 @@ const getMicrophoneStream = async () => {
   return stream
 }
 
-/**
- * マイクの入力と、その加工に使っている AudioContext を止める
- */
 const stopMicrophone = () => {
   microphoneStream.value?.getTracks().forEach(track => track.stop())
   microphoneStream.value = undefined
@@ -477,7 +438,6 @@ const addMicTrack = async () => {
       lastNode = speexNode
     }
 
-    // -100dB のときはノイズゲートを無効にする
     if (noiseGateThreshold.value > -100) {
       await audioContext.value.audioWorklet.addModule(noiseGateWorkletPath)
       const noiseGateNode = new NoiseGateWorkletNode(audioContext.value, {
@@ -689,11 +649,6 @@ const drawVideoToCanvas = (video: HTMLVideoElement) => {
   return canvas
 }
 
-/**
- * 画面共有を開始する
- *
- * @returns 画面共有を開始したかどうか (共有する画面の選択をキャンセルした場合は false)
- */
 const addScreenShareTrack = async (): Promise<boolean> => {
   try {
     if (!room.value) {
@@ -740,7 +695,6 @@ const addScreenShareTrack = async (): Promise<boolean> => {
     }
     return true
   } catch (e) {
-    // 共有する画面の選択をキャンセルしただけのときはエラーを出さない
     if (
       e instanceof DOMException &&
       (e.name === 'NotAllowedError' || e.name === 'AbortError')

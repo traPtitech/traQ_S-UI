@@ -36,7 +36,6 @@ describe('useQallVolume', () => {
     setVolume(pc, 0.5, { perDevice: false })
 
     expect(userVolumes.get('user')).toBe(0.5)
-    // 同じユーザーのほかの端末にも効く
     expect(getVolume(phone)).toBe(0.5)
   })
 
@@ -47,7 +46,6 @@ describe('useQallVolume', () => {
 
     expect(getVolume(phone)).toBe(1.5)
     expect(getVolume(pc)).toBe(0.5)
-    // 保存される音量は変わらない
     expect(userVolumes.get('user')).toBe(0.5)
 
     clearParticipantVolumes()

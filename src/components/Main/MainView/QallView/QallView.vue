@@ -143,13 +143,6 @@ const backgroundType = ref<'original' | 'blur' | 'file' | 'screen'>('original')
 
 const showSoundBoard = ref(false)
 
-/**
- * 参加者の一覧 (端末ごと)
- *
- * ウェビナーで発言権限のない参加者はマイクの音声トラックを持たないので、
- * traQ が持っているルームの参加者を元にし、マイクの音声トラックがあれば音量を調整できるようにする。
- * 同じユーザーが複数の端末で参加しているときは、端末ごとに別の行にする。
- */
 const filteredParticipants = computed(() => {
   const screenShareAudioSids = new Set(
     screenShareTracks.value.map(([, audioSid]) => audioSid)
@@ -177,7 +170,6 @@ const filteredParticipants = computed(() => {
       canPublish: participant.canPublish
     })
   }
-  // traQ の状態にまだ反映されていない参加者も、音声が届いていれば出す
   const knownIdentities = new Set(entries.map(e => e.identity))
   for (const [identity, trackInfo] of micTracks) {
     if (knownIdentities.has(identity)) continue

@@ -9,23 +9,10 @@ import { useQallVolume } from '/@/composables/qall/useQallVolume'
 
 const { participant, trackInfo, deviceLabel, webinar } = defineProps<{
   participant: User
-  /**
-   * マイクの音声トラック。ウェビナーで発言権限のない参加者にはない
-   */
   trackInfo?: TrackInfo
-  /**
-   * 同じユーザーが複数の端末で参加しているときの端末の表示名
-   *
-   * 指定されているときは、音量をこの端末だけ・通話中だけのものとして設定する
-   */
   deviceLabel?: string
-  /**
-   * ウェビナーのときの発言権限の情報
-   */
   webinar?: {
-    /** この参加者が発言権限を持っているか */
     canPublish: boolean
-    /** 自分が発言権限 (= 管理権限) を持っていて、変更できるか */
     canManage: boolean
   }
 }>()
