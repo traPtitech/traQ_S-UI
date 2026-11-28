@@ -30,6 +30,94 @@ describe('parseQuery', () => {
       expectedQueryObject: { word: 'lorem ipsum' }
     },
     {
+      description: 'extracts filters only outside quoted text',
+      query:
+        '東京 -("a  b in:#current/channel has:image" | "東銀座") in:#general',
+      expectedNormalizedQuery:
+        '東京 -("a  b in:#current/channel has:image" | "東銀座") in:#general',
+      expectedQueryObject: {
+        word: '東京 -("a  b in:#current/channel has:image" | "東銀座")',
+        in: mockChannelId,
+        hasImage: undefined
+      }
+    },
+    {
+      description: 'preserves literal query escapes',
+      query: String.raw`"name=\"traQ\"" "C:\tmp\\"`,
+      expectedNormalizedQuery: String.raw`"name=\"traQ\"" "C:\tmp\\"`,
+      expectedQueryObject: {
+        word: String.raw`"name=\"traQ\"" "C:\tmp\\"`
+      }
+    },
+    {
+      description: 'leaves text adjacent to a closing quote in the expression',
+      query: '"あいうえお"かきく "a b"~1',
+      expectedNormalizedQuery: '"あいうえお"かきく "a b"~1',
+      expectedQueryObject: {
+        word: '"あいうえお"かきく "a b"~1'
+      }
+    },
+    {
+      description: 'applies filters after an unmatched quote',
+      query: '"テキスト in:#general',
+      expectedNormalizedQuery: 'テキスト in:#general',
+      expectedQueryObject: {
+        word: 'テキスト',
+        in: mockChannelId
+      }
+    },
+    {
+      description: 'preserves a complete quote before an unmatched quote',
+      query: '"東京" "渋谷',
+      expectedNormalizedQuery: '"東京" 渋谷',
+      expectedQueryObject: { word: '"東京" 渋谷' }
+    },
+    {
+      description: 'ignores empty quotes and preserves a quoted space',
+      query: '"" " "',
+      expectedNormalizedQuery: '" "',
+      expectedQueryObject: { word: '" "' }
+    },
+    {
+      description: 'treats a query with only empty quotes as empty',
+      query: '""',
+      expectedNormalizedQuery: '',
+      expectedQueryObject: { word: undefined }
+    },
+    {
+      description: 'applies filters when the only text is empty quotes',
+      query: '"" in:#general',
+      expectedNormalizedQuery: 'in:#general',
+      expectedQueryObject: { word: '', in: mockChannelId }
+    },
+    {
+      description: 'leaves negation before empty quotes in the search word',
+      query: '-"" in:#general',
+      expectedNormalizedQuery: '- in:#general',
+      expectedQueryObject: { word: '-', in: mockChannelId }
+    },
+    {
+      description: 'leaves parentheses around empty quotes in the search word',
+      query: '("") in:#general',
+      expectedNormalizedQuery: '( ) in:#general',
+      expectedQueryObject: { word: '( )', in: mockChannelId }
+    },
+    {
+      description:
+        'applies filters after an unquoted path ending in a backslash',
+      query: 'C:\\logs\\ in:#general',
+      expectedNormalizedQuery: 'C:\\logs\\ in:#general',
+      expectedQueryObject: { word: 'C:\\logs\\', in: mockChannelId }
+    },
+    {
+      description: 'preserves escaped quotes outside a literal',
+      query: String.raw`\"word`,
+      expectedNormalizedQuery: String.raw`\"word`,
+      expectedQueryObject: {
+        word: String.raw`\"word`
+      }
+    },
+    {
       description: 'with date-filter',
       query: 'lorem ipsum after:2021-01-23',
       expectedNormalizedQuery: 'lorem ipsum after:2021-01-23',
